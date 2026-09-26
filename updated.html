@@ -92,11 +92,7 @@
           <div class="span12">
             <div class="dashlet">
               <div class="bootstrap-widget-header">
-                <div class="pull-right" style="margin-top:-3px; display:inline-flex; gap:6px;">
-                  <button type="button" class="btn btn-mini btn-info" id="btn-chart-refresh" title="Reload chart monitoring entries">
-                    <i class="icon-refresh icon-white"></i> Refresh
-                  </button>
-                </div>
+
                 <h3>Clinical Flowsheet</h3>
               </div>
               <div class="bootstrap-widget-content" id="dashlet-vitals">
@@ -2823,11 +2819,7 @@
           renderClinicalMonitoring(currentRec);
         }
       }
-      if (e.target && (e.target.id === 'btn-chart-refresh' || e.target.closest('#btn-chart-refresh'))) {
-        var currentRec = getPatients().find(function(p) { return p.id === activePatientId; });
-        renderClinicalMonitoring(currentRec);
-        showLayoutStatus('Clinical chart monitoring refreshed.');
-      }
+
     });
 
     // ── Modal Handlers for Flowsheet Entry ──
@@ -3717,7 +3709,6 @@
         document.getElementById('save-referral-btn'),
         document.getElementById('clear-btn'),
         document.getElementById('btn-finalize-end-care'),
-        document.getElementById('btn-chart-refresh'),
         document.getElementById('open-care-modal-btn')
       ];
       actionBtns.forEach(function (btn) {
