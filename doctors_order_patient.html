@@ -30,6 +30,38 @@
             padding: 14mm 12mm 10mm;
             background: var(--page);
             box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-orders-body {
+            flex: 1;
+        }
+
+        .page-cont-header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .page-cont-header .hospital-name {
+            font-size: 11pt;
+            margin-bottom: 1px;
+        }
+
+        .page-cont-header .form-title {
+            font-size: 11pt;
+        }
+
+        .page-cont-note {
+            text-align: center;
+            font-size: 9pt;
+            font-style: italic;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        #pages-container > .page + .page {
+            margin-top: 32px;
         }
 
         .hospital-name {
@@ -82,6 +114,15 @@
 
         .field label {
             white-space: nowrap;
+        }
+
+        .field-val {
+            flex: 1;
+            min-width: 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 11pt;
+            padding: 0 2px 1px;
+            display: inline-block;
         }
 
         .field input,
@@ -347,6 +388,13 @@
                 width: auto;
                 min-height: auto;
                 padding: 10mm 10mm 8mm;
+                page-break-after: always;
+                break-after: page;
+            }
+
+            #pages-container > .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
             }
         }
 
@@ -373,121 +421,23 @@
         <span id="load-status" class="load-status"></span>
     </div>
 
-    <form class="page" id="doctors-order-form" autocomplete="off">
-        <p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>
-        <p class="hospital-address">Lacson - Burgos Streets, Bacolod City</p>
-
-        <h1 class="form-title">
-            PHYSICIAN'S ORDERS / PROGRESS NOTES<br>
-            NURSES' COMPLIANCE SHEET
-        </h1>
-        <p class="form-subtitle">(Authenticate all Orders)</p>
-
-        <div class="patient-grid">
-            <div class="field">
-                <label for="patient-name">Name of Patient</label>
-                <input id="patient-name" name="patientName" type="text">
-            </div>
-            <div class="field">
-                <label for="hospital-no">Hospital No.</label>
-                <input id="hospital-no" name="hospitalNo" type="text">
-            </div>
-            <div class="field">
-                <label for="address">Address</label>
-                <input id="address" name="address" type="text">
-            </div>
-            <div class="field">
-                <label for="ward-room">Ward / Room</label>
-                <input id="ward-room" name="wardRoom" type="text">
-            </div>
-            <div class="field span-2 split-row">
-                <div class="field age">
-                    <label for="age">Age</label>
-                    <input id="age" name="age" type="text">
-                </div>
-                <div class="field sex">
-                    <label for="sex">Sex</label>
-                    <select id="sex" name="sex">
-                        <option value=""></option>
-                        <option value="M">M</option>
-                        <option value="F">F</option>
-                    </select>
-                </div>
-                <div class="field admit">
-                    <label for="admission-date">Admission Date</label>
-                    <input id="admission-date" name="admissionDate" type="text">
-                </div>
-            </div>
-        </div>
-
-        <p class="legend">C – CARRIED &nbsp;&nbsp; A – ADMINISTERED &nbsp;&nbsp; R – REQUEST MADE &nbsp;&nbsp; E – ENDORSED &nbsp;&nbsp; D – DISCONTINUED</p>
-
-        <table class="orders" aria-label="Physician's orders and progress notes">
-            <colgroup>
-                <col class="date">
-                <col class="notes">
-                <col class="order">
-                <col class="mark">
-                <col class="mark">
-                <col class="mark">
-                <col class="mark">
-                <col class="mark">
-                <col class="sign">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>DATE<br>TIME</th>
-                    <th>PROGRESS NOTES</th>
-                    <th>PHYSICIAN'S ORDER</th>
-                    <th>C</th>
-                    <th>A</th>
-                    <th>R</th>
-                    <th>E</th>
-                    <th>D</th>
-                    <th>TIME<br>SIGNATURE</th>
-                </tr>
-            </thead>
-            <tbody id="main-rows"></tbody>
-        </table>
-
-        <!-- <div class="continuation">
-            <p class="legend">C – CARRIED &nbsp;&nbsp; A – ADMINISTERED &nbsp;&nbsp; R – REQUEST MADE &nbsp;&nbsp; E – ENDORSED &nbsp;&nbsp; D – DISCONTINUED</p>
-            <table class="orders" aria-label="Continuation orders">
-                <colgroup>
-                    <col class="date">
-                    <col class="notes">
-                    <col class="order">
-                    <col class="mark">
-                    <col class="mark">
-                    <col class="mark">
-                    <col class="mark">
-                    <col class="mark">
-                    <col class="sign">
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>DATE<br>TIME</th>
-                        <th>PROGRESS NOTES</th>
-                        <th>PHYSICIAN'S ORDER</th>
-                        <th>C</th>
-                        <th>A</th>
-                        <th>R</th>
-                        <th>E</th>
-                        <th>D</th>
-                        <th>TIME<br>SIGNATURE</th>
-                    </tr>
-                </thead>
-                <tbody id="cont-rows"></tbody>
-            </table>
-        </div> -->
-
-        <div class="footer">
-            Physician's Orders Form<br>
-            CLMMRH-MRS.F.032<br>
-            Issued: 2/5/14<br>
-            Issue No. 001
-        </div>
+    <!-- Hidden form: holds patient info inputs used by loadPatientRecord() -->
+    <form id="doctors-order-form" autocomplete="off" style="display:none;">
+        <input id="patient-name" name="patientName" type="text">
+        <input id="hospital-no" name="hospitalNo" type="text">
+        <input id="address" name="address" type="text">
+        <input id="ward-room" name="wardRoom" type="text">
+        <input id="age" name="age" type="text">
+        <select id="sex" name="sex">
+            <option value=""></option>
+            <option value="M">M</option>
+            <option value="F">F</option>
+        </select>
+        <input id="admission-date" name="admissionDate" type="text">
     </form>
+
+    <!-- A4 pages are generated here by renderPages() / buildEmptyPage() -->
+    <div id="pages-container"></div>
 
     <script>
         const STORAGE_KEY = "clmmrh_patients_v1";
@@ -1062,6 +1012,30 @@
             };
         }
 
+        function buildEmptyPage() {
+            // Build a single blank A4 page for initial state (no patient loaded)
+            var inner = '<p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>';
+            inner += '<p class="hospital-address">Lacson - Burgos Streets, Bacolod City</p>';
+            inner += '<h1 class="form-title">PHYSICIAN\'S ORDERS / PROGRESS NOTES<br>NURSES\'  COMPLIANCE SHEET</h1>';
+            inner += '<p class="form-subtitle">(Authenticate all Orders)</p>';
+            inner += '<div class="patient-grid">';
+            inner += '<div class="field"><label>Name of Patient</label><span class="field-val"></span></div>';
+            inner += '<div class="field"><label>Hospital No.</label><span class="field-val"></span></div>';
+            inner += '<div class="field"><label>Address</label><span class="field-val"></span></div>';
+            inner += '<div class="field"><label>Ward / Room</label><span class="field-val"></span></div>';
+            inner += '<div class="field span-2 split-row">';
+            inner += '<div class="field age"><label>Age</label><span class="field-val"></span></div>';
+            inner += '<div class="field sex"><label>Sex</label><span class="field-val"></span></div>';
+            inner += '<div class="field admit"><label>Admission Date</label><span class="field-val"></span></div>';
+            inner += '</div></div>';
+            inner += '<p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>';
+            inner += '<div class="page-orders-body"><table class="orders"><colgroup><col class="date"><col class="notes"><col class="order"><col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="sign"></colgroup><thead><tr><th>DATE<br>TIME</th><th>PROGRESS NOTES</th><th>PHYSICIAN\'S ORDER</th><th>C</th><th>A</th><th>R</th><th>E</th><th>D</th><th>TIME<br>SIGNATURE</th></tr></thead><tbody>';
+            for (var k = 1; k <= 18; k++) { inner += buildBlankRowHtml(k); }
+            inner += '</tbody></table></div>';
+            inner += '<div class="footer">Physician\'s Orders Form<br>CLMMRH-MRS.F.032<br>Issued: 2/5/14<br>Issue No. 001</div>';
+            return '<div class="page" aria-label="Compliance sheet">' + inner + '</div>';
+        }
+
         function ensureSeedPatient() {
             const records = getPatients();
             const index = records.findIndex(record => record.id === SEED_PATIENT_ID);
@@ -1475,8 +1449,233 @@
 
         function clearForm() {
             document.getElementById("doctors-order-form").reset();
-            fillRows("main-rows", "row", 18);
+            document.getElementById("pages-container").innerHTML = "";
             loadStatus.textContent = "";
+        }
+
+        // ---------------------------------------------------------------
+        // MULTI-PAGE A4 RENDERER
+        // Rows per page is calculated dynamically using actual DOM measurement.
+        // Page 1: full header + patient grid + legend + table + footer
+        // Page 2+: compact continuation header + legend + table + footer
+        // ---------------------------------------------------------------
+
+        function ordersTableColgroup() {
+            return '<colgroup>' +
+                '<col class="date"><col class="notes"><col class="order">' +
+                '<col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="mark">' +
+                '<col class="sign">' +
+                '</colgroup>';
+        }
+
+        function ordersTableHead() {
+            return '<thead><tr>' +
+                '<th>DATE<br>TIME</th>' +
+                '<th>PROGRESS NOTES</th>' +
+                '<th>PHYSICIAN\'S ORDER</th>' +
+                '<th>C</th><th>A</th><th>R</th><th>E</th><th>D</th>' +
+                '<th>TIME<br>SIGNATURE</th>' +
+                '</tr></thead>';
+        }
+
+        function ordersTableFooter() {
+            return '<div class="footer">Physician\'s Orders Form<br>CLMMRH-MRS.F.032<br>Issued: 2/5/14<br>Issue No. 001</div>';
+        }
+
+        function buildOrderRowHtml(item, rowIdx, isFirst, span) {
+            const cared = new Set(Array.isArray(item.cared) ? item.cared : []);
+            const caredKeys = ["C", "A", "R", "E", "D"];
+            let rowContent = "";
+
+            if (isFirst) {
+                const rowspanAttr = span > 1 ? ' rowspan="' + span + '"' : "";
+                rowContent += '<td' + rowspanAttr + ' class="cell-datetime"><textarea name="row-' + rowIdx + '-datetime" rows="2">' + escapeHtml(item.dateTime) + '</textarea></td>';
+            }
+
+            rowContent += '<td><textarea name="row-' + rowIdx + '-notes" rows="2">' + escapeHtml(item.noteLine) + '</textarea></td>';
+            rowContent += '<td><textarea name="row-' + rowIdx + '-order" rows="2">' + escapeHtml(item.orderText) + '</textarea></td>';
+            caredKeys.forEach(function(k) {
+                const checked = cared.has(k) ? " checked" : "";
+                rowContent += '<td class="mark"><input type="checkbox" name="row-' + rowIdx + '-' + k.toLowerCase() + '" aria-label="' + k + '"' + checked + '></td>';
+            });
+            rowContent += '<td><textarea name="row-' + rowIdx + '-sign" rows="2">' + escapeHtml(item.timeSignature) + '</textarea></td>';
+            return '<tr>' + rowContent + '</tr>';
+        }
+
+        function buildBlankRowHtml(rowIdx) {
+            return '<tr>' +
+                '<td><textarea name="row-' + rowIdx + '-datetime" rows="2"></textarea></td>' +
+                '<td><textarea name="row-' + rowIdx + '-notes" rows="2"></textarea></td>' +
+                '<td><textarea name="row-' + rowIdx + '-order" rows="2"></textarea></td>' +
+                '<td class="mark"><input type="checkbox" name="row-' + rowIdx + '-c" aria-label="C"></td>' +
+                '<td class="mark"><input type="checkbox" name="row-' + rowIdx + '-a" aria-label="A"></td>' +
+                '<td class="mark"><input type="checkbox" name="row-' + rowIdx + '-r" aria-label="R"></td>' +
+                '<td class="mark"><input type="checkbox" name="row-' + rowIdx + '-e" aria-label="E"></td>' +
+                '<td class="mark"><input type="checkbox" name="row-' + rowIdx + '-d" aria-label="D"></td>' +
+                '<td><textarea name="row-' + rowIdx + '-sign" rows="2"></textarea></td>' +
+                '</tr>';
+        }
+
+        // Estimate row height in pixels for pagination.
+        // A typical order row is ~38px (2 textarea rows + padding).
+        // Multiline progress notes add more; we add 16px per extra newline.
+        function estimateRowHeight(item) {
+            const BASE = 40; // px per row
+            var lines = 1;
+            if (item && item.noteLine) {
+                lines = Math.max(lines, String(item.noteLine).split("\n").length);
+            }
+            if (item && item.orderText) {
+                lines = Math.max(lines, Math.ceil(String(item.orderText).length / 42));
+            }
+            return BASE + Math.max(0, lines - 1) * 16;
+        }
+
+        // Split flatRows into pages based on available pixel height per page.
+        // Page 1 has a larger header; continuation pages have a compact header.
+        // Returns an array of arrays (each inner array = rows for that page).
+        function splitRowsIntoPages(flatRows) {
+            // A4 at 96 dpi = 1122px tall.
+            // Padding 14mm top + 10mm bottom = ~91px total padding.
+            // Page 1 header (hospital name, subtitle, patient grid, legend): ~260px
+            // Page 1 footer: ~55px
+            // Page 1 table head: ~30px
+            // Page 1 usable: 1122 - 91 - 260 - 55 - 30 = ~686px
+            //
+            // Continuation pages header: ~70px, footer: ~55px, table head: ~30px
+            // Cont usable: 1122 - 91 - 70 - 55 - 30 = ~876px
+
+            var PAGE1_BUDGET = 686;
+            var CONT_BUDGET = 876;
+            var BLANK_ROW_HEIGHT = 40;
+            var MIN_BLANK_ROWS = 3; // always leave a few blank rows at end
+
+            var pages = [];
+            var i = 0;
+            var globalRowIdx = 1;
+            var pageNum = 0;
+
+            while (i < flatRows.length || pageNum === 0) {
+                var budget = (pageNum === 0) ? PAGE1_BUDGET : CONT_BUDGET;
+                var usedHeight = 0;
+                var pageRows = [];
+
+                // Greedy fill this page
+                while (i < flatRows.length) {
+                    var h = estimateRowHeight(flatRows[i]);
+                    if (usedHeight + h > budget && pageRows.length > 0) break;
+                    pageRows.push({ item: flatRows[i], rowIdx: globalRowIdx });
+                    usedHeight += h;
+                    i++;
+                    globalRowIdx++;
+                }
+
+                // If no data rows remain, fill rest with blanks (at least MIN_BLANK_ROWS)
+                var remainingBudget = budget - usedHeight;
+                var blankCount = Math.max(MIN_BLANK_ROWS, Math.floor(remainingBudget / BLANK_ROW_HEIGHT));
+                for (var b = 0; b < blankCount; b++) {
+                    pageRows.push({ item: null, rowIdx: globalRowIdx });
+                    globalRowIdx++;
+                }
+
+                pages.push(pageRows);
+                pageNum++;
+
+                if (i >= flatRows.length) break;
+            }
+
+            return pages;
+        }
+
+        function renderPages(flatRows, patientData) {
+            var container = document.getElementById("pages-container");
+            container.innerHTML = "";
+
+            var pages = splitRowsIntoPages(flatRows);
+
+            var data = patientData || {};
+            var nameVal = document.getElementById("patient-name").value;
+            var hrnVal = document.getElementById("hospital-no").value;
+            var addrVal = document.getElementById("address").value;
+            var wardVal = document.getElementById("ward-room").value;
+            var ageVal = document.getElementById("age").value;
+            var sexVal = document.getElementById("sex").value;
+            var admitVal = document.getElementById("admission-date").value;
+
+            pages.forEach(function(pageRows, pgIdx) {
+                var pageEl = document.createElement("div");
+                pageEl.className = "page";
+                pageEl.setAttribute("aria-label", "Compliance sheet page " + (pgIdx + 1));
+
+                var inner = "";
+
+                if (pgIdx === 0) {
+                    // Full header for page 1
+                    inner += '<p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>';
+                    inner += '<p class="hospital-address">Lacson - Burgos Streets, Bacolod City</p>';
+                    inner += '<h1 class="form-title">PHYSICIAN\'S ORDERS / PROGRESS NOTES<br>NURSES\'  COMPLIANCE SHEET</h1>';
+                    inner += '<p class="form-subtitle">(Authenticate all Orders)</p>';
+                    inner += '<div class="patient-grid">';
+                    inner += '<div class="field"><label>Name of Patient</label><span class="field-val">' + escapeHtml(nameVal) + '</span></div>';
+                    inner += '<div class="field"><label>Hospital No.</label><span class="field-val">' + escapeHtml(hrnVal) + '</span></div>';
+                    inner += '<div class="field"><label>Address</label><span class="field-val">' + escapeHtml(addrVal) + '</span></div>';
+                    inner += '<div class="field"><label>Ward / Room</label><span class="field-val">' + escapeHtml(wardVal) + '</span></div>';
+                    inner += '<div class="field span-2 split-row">';
+                    inner += '<div class="field age"><label>Age</label><span class="field-val">' + escapeHtml(ageVal) + '</span></div>';
+                    inner += '<div class="field sex"><label>Sex</label><span class="field-val">' + escapeHtml(sexVal) + '</span></div>';
+                    inner += '<div class="field admit"><label>Admission Date</label><span class="field-val">' + escapeHtml(admitVal) + '</span></div>';
+                    inner += '</div></div>';
+                } else {
+                    // Compact continuation header for page 2+
+                    inner += '<div class="page-cont-header">';
+                    inner += '<p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>';
+                    inner += '<h1 class="form-title" style="font-size:11pt;">PHYSICIAN\'S ORDERS / NURSES\'  COMPLIANCE SHEET — Continuation (Page ' + (pgIdx + 1) + ')</h1>';
+                    inner += '</div>';
+                    inner += '<div class="page-cont-note">Patient: ' + escapeHtml(nameVal) + ' &nbsp;|&nbsp; HRN: ' + escapeHtml(hrnVal) + ' &nbsp;|&nbsp; Admission Date: ' + escapeHtml(admitVal) + '</div>';
+                }
+
+                inner += '<p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>';
+
+                inner += '<div class="page-orders-body">';
+                inner += '<table class="orders" aria-label="Physician orders page ' + (pgIdx + 1) + '">';
+                inner += ordersTableColgroup();
+                inner += ordersTableHead();
+                inner += '<tbody>';
+
+                // Build rows — group consecutive rows with same dateTime for rowspan
+                var r = 0;
+                while (r < pageRows.length) {
+                    var pr = pageRows[r];
+                    if (!pr.item) {
+                        // blank row
+                        inner += buildBlankRowHtml(pr.rowIdx);
+                        r++;
+                        continue;
+                    }
+                    // Count rowspan for same dateTime
+                    var normDt = normalizeDateTime(pr.item.dateTime);
+                    var span2 = 1;
+                    if (normDt) {
+                        while ((r + span2) < pageRows.length &&
+                               pageRows[r + span2].item &&
+                               normalizeDateTime(pageRows[r + span2].item.dateTime) === normDt) {
+                            span2++;
+                        }
+                    }
+                    for (var s = 0; s < span2; s++) {
+                        inner += buildOrderRowHtml(pageRows[r + s].item, pageRows[r + s].rowIdx, s === 0, span2);
+                    }
+                    r += span2;
+                }
+
+                inner += '</tbody></table></div>';
+                inner += ordersTableFooter();
+
+                pageEl.innerHTML = inner;
+                container.appendChild(pageEl);
+            });
+
+            resizeAllTextareas();
         }
 
         function populatePatientSelector() {
@@ -1710,62 +1909,8 @@
                 }
             });
 
-            const rowCount = Math.max(18, flatRows.length);
-            const body = document.getElementById("main-rows");
-            if (!body) return;
-
-            let html = "";
-            let i = 0;
-
-            // Group consecutive rows that share the same non-empty dateTime
-            while (i < flatRows.length) {
-                const dt = flatRows[i].dateTime || "";
-                const normDt = normalizeDateTime(dt);
-                let span = 1;
-                if (normDt) {
-                    while ((i + span) < flatRows.length && normalizeDateTime(flatRows[i + span].dateTime) === normDt) {
-                        span++;
-                    }
-                }
-
-                for (let j = 0; j < span; j++) {
-                    const rowIdx = i + j + 1;
-                    const item = flatRows[i + j];
-                    const cared = new Set(item.cared || []);
-                    const caredKeys = ["C", "A", "R", "E", "D"];
-
-                    let rowContent = "";
-
-                    // If j === 0, render the Date/Time cell with rowspan
-                    if (j === 0) {
-                        const rowspanAttr = span > 1 ? ` rowspan="${span}"` : "";
-                        rowContent += `<td${rowspanAttr} class="cell-datetime"><textarea name="row-${rowIdx}-datetime" rows="2">${escapeHtml(dt)}</textarea></td>`;
-                    }
-                    // If j > 0, the Date/Time cell is omitted because the first row spans across this row!
-
-                    rowContent += `<td><textarea name="row-${rowIdx}-notes" rows="2">${escapeHtml(item.noteLine)}</textarea></td>`;
-                    rowContent += `<td><textarea name="row-${rowIdx}-order" rows="2">${escapeHtml(item.orderText)}</textarea></td>`;
-
-                    caredKeys.forEach(k => {
-                        const checked = cared.has(k) ? " checked" : "";
-                        rowContent += `<td class="mark"><input type="checkbox" name="row-${rowIdx}-${k.toLowerCase()}" aria-label="${k}"${checked}></td>`;
-                    });
-
-                    rowContent += `<td><textarea name="row-${rowIdx}-sign" rows="2">${escapeHtml(item.timeSignature)}</textarea></td>`;
-
-                    html += `<tr>${rowContent}</tr>`;
-                }
-
-                i += span;
-            }
-
-            // Fill remaining blank rows up to rowCount
-            for (let k = flatRows.length + 1; k <= rowCount; k++) {
-                html += rowHtml("row", k);
-            }
-
-            body.innerHTML = html;
-            resizeAllTextareas();
+            // Multi-page A4 rendering
+            renderPages(flatRows, data);
         }
 
         function loadPatientRecord(record, targetEncounterDate) {
@@ -1872,7 +2017,7 @@
 
         try {
             ensureSeedPatient();
-            fillRows("main-rows", "row", 18);
+            document.getElementById("pages-container").innerHTML = buildEmptyPage();
             populatePatientSelector();
             loadFromUrl();
         } catch (error) {
