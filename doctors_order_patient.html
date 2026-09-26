@@ -291,6 +291,9 @@
         <select id="patient-selector" aria-label="Select saved patient">
             <option value="">Select saved patient...</option>
         </select>
+        <select id="encounter-selector" aria-label="Filter encounter" style="display:none; font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 5px 8px; border: 1px solid #777; border-radius: 3px; max-width: 280px; background: #fff;">
+            <option value="current">Current Admission (All Dates)</option>
+        </select>
         <button type="button" id="load-btn">Load patient</button>
         <button type="button" id="print-btn">Print compliance sheet</button>
         <button type="button" id="clear-btn">Clear entries</button>
@@ -419,7 +422,9 @@
         const SEED_PATIENT_ID = "patient_1790299677879";
         const BLANK_PATIENT_ID = "patient_new_blank_1790299677880";
         const selector = document.getElementById("patient-selector");
+        const encounterSelector = document.getElementById("encounter-selector");
         const loadStatus = document.getElementById("load-status");
+        let currentLoadedRecord = null;
 
         function safeParse(value, fallback) {
             try {
@@ -466,7 +471,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 14,
+                seedVersion: 15,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T10:45:00+08:00",
                 data: {
@@ -502,19 +507,12 @@
                     progress_notes: "Productive cough and dyspnea, improved after initial treatment.\nBP 138/86, HR 102, RR 24, Temp 38.2 C, SpO2 93%. Crackles at right lower lung field.\nCommunity-acquired pneumonia, moderate risk; hypertension.",
                     encounters: [
                         {
-                            date: "2026-06-12",
-                            time: "08:30 AM",
-                            registry: "ER",
-                            service: "Emergency Medicine",
-                            patient_record: "Initial assessment and stabilization",
-                            results: "Admitted to Medical Ward",
-                            progress_notes: "Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO₂ 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension"
-                        },
-                        {
                             date: "2026-06-13",
                             time: "10:15 AM",
                             registry: "IP",
                             service: "Internal Medicine",
+                            status_tag: "Current Visit",
+                            is_current: true,
                             patient_record: "Daily progress review",
                             results: "Clinically improving",
                             progress_notes: "Hospital Day 2. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO₂ 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics",
@@ -524,6 +522,48 @@
                                 { text: "Shift Azithromycin to oral 500 mg tablet once daily after meals.", dateTime: "2026-06-13T10:17:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:40 AM nurse\nA - 11:05 AM nurse" },
                                 { text: "Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.", dateTime: "2026-06-13T10:18:00+08:00", cared: ["R"], timeSignature: "R - 10:45 AM physician" },
                                 { text: "May ambulate inside room as tolerated. Regular diet.", dateTime: "2026-06-13T10:20:00+08:00", cared: ["C"], timeSignature: "C - 11:00 AM nurse" }
+                            ]
+                        },
+                        {
+                            date: "2026-06-12",
+                            time: "08:30 AM",
+                            registry: "ER",
+                            service: "Emergency Medicine",
+                            status_tag: "Initial Visit (ER)",
+                            patient_record: "Initial assessment and stabilization",
+                            results: "Admitted to Medical Ward",
+                            progress_notes: "Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO₂ 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension"
+                        },
+                        {
+                            date: "2026-05-20",
+                            time: "02:15 PM",
+                            registry: "OP",
+                            service: "Outpatient Department (OPD) - Pulmonary & Adult Medicine",
+                            status_tag: "Follow-up (OPD)",
+                            patient_record: "Routine adult pulmonary checkup and maintenance medication titration",
+                            results: "Spirometry normal; maintenance therapy continued",
+                            progress_notes: "Outpatient pulmonary routine follow-up. No dyspnea, no wheezing, good inhaler adherence.\nVital signs: BP 124/80 mmHg, HR 76 bpm, RR 16/min, Temp 36.5 °C, SpO2 99%\nChest: Clear and symmetric breath sounds throughout all lung zones.\nDiagnosis: Bronchial Asthma, Well-Controlled; Essential Hypertension Stage 1 (Controlled)",
+                            orders: [
+                                { text: "Continue Budesonide/Formoterol 160/4.5 mcg inhaler, 1 puff BID.", dateTime: "2026-05-20T14:30:00+08:00", cared: ["C"], timeSignature: "C - 2:45 PM nurse" },
+                                { text: "Continue Amlodipine 5 mg tablet once daily in the morning.", dateTime: "2026-05-20T14:32:00+08:00", cared: ["C"], timeSignature: "C - 2:50 PM nurse" },
+                                { text: "Follow-up at Adult Pulmonary Outpatient Clinic after 3 months.", dateTime: "2026-05-20T14:35:00+08:00", cared: ["C"], timeSignature: "C - 3:00 PM nurse" }
+                            ]
+                        },
+                        {
+                            date: "2026-04-10",
+                            time: "10:30 AM",
+                            registry: "IP",
+                            service: "General Surgery",
+                            status_tag: "Previous Admission",
+                            patient_record: "Post-operative surgical ward care and wound healing review",
+                            results: "Discharged clinically stable; surgical port sites healed",
+                            progress_notes: "Post-Operative Day 1. S/P Laparoscopic Appendectomy. Tolerating clear liquids, afebrile.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99%\nAbdomen: Soft, mild peri-incisional tenderness, surgical port sites clean, dry, and intact.\nDiagnosis: Acute Appendicitis, Non-perforated; Status Post Laparoscopic Appendectomy (K35.80)",
+                            orders: [
+                                { text: "NPO temporarily until fully awake, then may start clear liquids as tolerated.", dateTime: "2026-04-10T10:30:00+08:00", cared: ["C"], timeSignature: "C - 10:45 AM nurse" },
+                                { text: "PNSS 1 L at 100 mL/hour.", dateTime: "2026-04-10T10:32:00+08:00", cared: ["A"], timeSignature: "A - 11:00 AM nurse" },
+                                { text: "Cefuroxime 750 mg IV every 8 hours (Post-Op Day 1).", dateTime: "2026-04-10T10:35:00+08:00", cared: ["C", "A"], timeSignature: "C - 11:15 AM nurse\nA - 12:00 PM nurse" },
+                                { text: "Ketorolac 30 mg IV every 8 hours PRN for moderate to severe wound pain.", dateTime: "2026-04-10T10:36:00+08:00", cared: ["C"], timeSignature: "C - 11:20 AM nurse" },
+                                { text: "Monitor surgical dressing for bleeding or discharge; keep clean and dry.", dateTime: "2026-04-10T10:40:00+08:00", cared: ["C"], timeSignature: "C - 11:30 AM nurse" }
                             ]
                         }
                     ],
@@ -566,7 +606,7 @@
         function blankPatientRecord() {
             return {
                 id: BLANK_PATIENT_ID,
-                seedVersion: 14,
+                seedVersion: 15,
                 createdAt: "2026-09-25T10:30:00+08:00",
                 updatedAt: "2026-09-25T10:30:00+08:00",
                 data: {
@@ -589,10 +629,10 @@
             const records = getPatients();
             const index = records.findIndex(record => record.id === SEED_PATIENT_ID);
             if (index < 0) records.push(seedPatientRecord());
-            else if (Number(records[index].seedVersion || 0) < 14) records[index] = seedPatientRecord();
+            else if (Number(records[index].seedVersion || 0) < 15) records[index] = seedPatientRecord();
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
-            else if (Number(records[blankIndex].seedVersion || 0) < 14) records[blankIndex] = blankPatientRecord();
+            else if (Number(records[blankIndex].seedVersion || 0) < 15) records[blankIndex] = blankPatientRecord();
             localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
         }
 
@@ -883,12 +923,18 @@
         }
 
         function admissionDate(data, record) {
+            const firstDt = firstOrderDateTime(data, record);
+            if (firstDt && String(firstDt).length >= 10) return String(firstDt).slice(0, 10);
             if (Array.isArray(data?.encounters)) {
+                const initEnc = data.encounters.find(r => r?.status_tag === "Initial Visit (ER)" || (r?.registry === "ER" && r?.date));
+                if (initEnc?.date) return initEnc.date;
+                const activeEnc = data.encounters.find(r => r?.is_current || r?.isCurrent);
+                if (activeEnc?.date) return activeEnc.date;
                 const encounter = data.encounters.find(row => row?.date);
                 if (encounter?.date) return encounter.date;
             }
 
-            return record?.createdAt || "";
+            return record?.createdAt ? String(record.createdAt).slice(0, 10) : "";
         }
 
         function rowHtml(prefix, index) {
@@ -975,7 +1021,7 @@
                 .filter(Boolean);
         }
 
-        function getChronologicalEncounterBlocks(data, record) {
+        function getChronologicalEncounterBlocks(data, record, targetEncounterDate) {
             const encounters = Array.isArray(data?.encounters) ? [...data.encounters] : [];
             const primaryOrders = doctorOrderEntries(data);
             const admitDt = admissionDate(data, record);
@@ -996,10 +1042,21 @@
                 return da.localeCompare(db);
             });
 
+            const isSingle = Boolean(targetEncounterDate && targetEncounterDate !== "all" && targetEncounterDate !== "current");
             const blocks = [];
             let primaryAssigned = false;
 
-            encounters.forEach((enc, index) => {
+            encounters.forEach((enc) => {
+                const encDate = String(enc?.date || "").trim();
+                if (isSingle && encDate !== targetEncounterDate) {
+                    return;
+                }
+
+                const isPrevious = enc?.status_tag === "Previous Admission" || enc?.status_tag === "Follow-up (OPD)";
+                if (!isSingle && isPrevious) {
+                    return;
+                }
+
                 // Determine orders for this encounter
                 let orders = [];
                 if (Array.isArray(enc?.orders) && enc.orders.length > 0) {
@@ -1015,8 +1072,8 @@
 
                 // Check if this encounter represents the admission that holds data.orders
                 const isAdmission = !primaryAssigned && (
-                    (enc.date && admitDt && enc.date === admitDt) ||
-                    (!orders.length && (index === 0 || enc.status_tag === "Initial Visit (ER)" || enc.registry === "ER"))
+                    (encDate && admitDt && encDate === admitDt) ||
+                    (!isPrevious && (enc.status_tag === "Initial Visit (ER)" || enc.registry === "ER"))
                 );
 
                 if (!orders.length && isAdmission && primaryOrders.length > 0) {
@@ -1037,10 +1094,8 @@
                 const noteLines = extractProgressNoteLines(noteText);
                 const hasOrders = orders.length > 0;
                 const hasNotes = noteLines.length > 0;
-                const isCurrentStay = enc.status_tag !== "Previous Admission" && enc.status_tag !== "Follow-up (OPD)";
 
-                // Only include encounters that have orders, or current stay notes, or the admission encounter
-                if (hasOrders || (hasNotes && isCurrentStay) || isAdmission) {
+                if (hasOrders || hasNotes || isAdmission) {
                     let dt = "";
                     if (enc.date) {
                         dt = formatDate(enc.date) + (enc.time ? " " + enc.time : "");
@@ -1060,8 +1115,8 @@
                 }
             });
 
-            // Fallback: If primaryOrders was not assigned anywhere, attach to first block or create a new block
-            if (!primaryAssigned && primaryOrders.length > 0) {
+            // Fallback: If primaryOrders was not assigned anywhere and viewing current stay
+            if (!primaryAssigned && primaryOrders.length > 0 && !isSingle) {
                 if (blocks.length > 0) {
                     blocks[0].orders = primaryOrders;
                 } else {
@@ -1080,9 +1135,30 @@
             }];
         }
 
-        function populateClinicalRows(record) {
+        function populateEncounterSelector(record, selectedEncounter) {
+            if (!encounterSelector) return;
+            const encounters = Array.isArray(record?.data?.encounters) ? record.data.encounters : [];
+            if (encounters.length <= 1) {
+                encounterSelector.style.display = "none";
+                return;
+            }
+
+            encounterSelector.innerHTML = '<option value="current">Current Admission (All Dates)</option>';
+            encounters.forEach(enc => {
+                const option = document.createElement("option");
+                option.value = enc.date || "";
+                const tag = enc.status_tag || enc.registry || "";
+                option.textContent = `${formatDate(enc.date || "")} — ${enc.registry || ""} ${tag ? "(" + tag + ")" : ""}`;
+                encounterSelector.appendChild(option);
+            });
+
+            encounterSelector.value = selectedEncounter || "current";
+            encounterSelector.style.display = "inline-block";
+        }
+
+        function populateClinicalRows(record, targetEncounterDate) {
             const data = record.data || {};
-            const blocks = getChronologicalEncounterBlocks(data, record);
+            const blocks = getChronologicalEncounterBlocks(data, record, targetEncounterDate);
 
             // Calculate total rows needed across all encounter blocks
             let totalRowsNeeded = 0;
@@ -1151,8 +1227,9 @@
             resizeAllTextareas();
         }
 
-        function loadPatientRecord(record) {
+        function loadPatientRecord(record, targetEncounterDate) {
             if (!record) return;
+            currentLoadedRecord = record;
 
             const data = record.data || {};
 
@@ -1174,17 +1251,27 @@
                 sex === "male" ? "M" :
                 sex === "female" ? "F" : "";
 
-            document.getElementById("admission-date").value =
-                formatDate(admissionDate(data, record));
+            const targetEnc = Array.isArray(data.encounters) && targetEncounterDate && targetEncounterDate !== "current" && targetEncounterDate !== "all"
+                ? data.encounters.find(e => e.date === targetEncounterDate)
+                : null;
 
-            populateClinicalRows(record);
+            document.getElementById("admission-date").value =
+                formatDate(targetEnc?.date || admissionDate(data, record));
+
+            populateEncounterSelector(record, targetEncounterDate);
+            populateClinicalRows(record, targetEncounterDate);
 
             selector.value = record.id;
             loadStatus.textContent =
-                `Loaded: ${patientName(data) || data.hrn || "patient"}`;
+                `Loaded: ${patientName(data) || data.hrn || "patient"}${targetEnc ? " (" + formatDate(targetEnc.date) + ")" : ""}`;
 
             const url = new URL(window.location.href);
             url.searchParams.set("patient", record.id);
+            if (targetEncounterDate && targetEncounterDate !== "current" && targetEncounterDate !== "all") {
+                url.searchParams.set("encounter", targetEncounterDate);
+            } else {
+                url.searchParams.delete("encounter");
+            }
             history.replaceState(null, "", url);
 
             const dashBtn = document.getElementById("back-dashboard-btn");
@@ -1206,7 +1293,7 @@
                 return;
             }
 
-            loadPatientRecord(record);
+            loadPatientRecord(record, "current");
         }
 
         function loadFromUrl() {
@@ -1214,6 +1301,7 @@
             const patientId = params.get("patient");
             const hrn = params.get("hrn");
             const snapshotCreatedAt = params.get("snapshot");
+            const targetEncounter = params.get("encounter") || "current";
 
             const patients = getPatients();
             let record = getComplianceSnapshotRecord(patientId, snapshotCreatedAt);
@@ -1235,7 +1323,7 @@
             }
 
             if (record) {
-                loadPatientRecord(record);
+                loadPatientRecord(record, targetEncounter);
             } else if (patientId || hrn) {
                 loadStatus.textContent = "Patient not found in this browser storage.";
             }
@@ -1257,6 +1345,14 @@
             if (selector.value) loadSelectedPatient();
         });
 
+        if (encounterSelector) {
+            encounterSelector.addEventListener("change", function () {
+                if (currentLoadedRecord) {
+                    loadPatientRecord(currentLoadedRecord, encounterSelector.value);
+                }
+            });
+        }
+
         document.getElementById("print-btn").addEventListener("click", function () {
             resizeAllTextareas();
             window.print();
@@ -1265,10 +1361,16 @@
         document.getElementById("clear-btn").addEventListener("click", function () {
             clearForm();
             selector.value = "";
+            if (encounterSelector) {
+                encounterSelector.value = "current";
+                encounterSelector.style.display = "none";
+            }
+            currentLoadedRecord = null;
 
             const url = new URL(window.location.href);
             url.searchParams.delete("patient");
             url.searchParams.delete("hrn");
+            url.searchParams.delete("encounter");
             history.replaceState(null, "", url);
 
             const dashBtn = document.getElementById("back-dashboard-btn");

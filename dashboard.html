@@ -3378,7 +3378,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 14,
+        seedVersion: 15,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T10:45:00+08:00',
         data: {
@@ -3602,6 +3602,12 @@
                 history: 'Patient presented to the Adult Pulmonary Outpatient Clinic for routine evaluation. Denies acute shortness of breath, nocturnal cough, or wheezing over the preceding month. Compliant with maintenance Budesonide/Formoterol inhaler and Amlodipine 5 mg OD. BP 124/80 mmHg, HR 76 bpm, RR 16/min, SpO2 99% on ambient air. Chest auscultation revealed clear and symmetric breath sounds throughout all lung zones.',
                 final_diagnosis: 'Bronchial Asthma, Well-Controlled; Essential Hypertension Stage 1 (Controlled)'
               },
+              progress_notes: 'Outpatient pulmonary routine follow-up. No dyspnea, no wheezing, good inhaler adherence.\nVital signs: BP 124/80 mmHg, HR 76 bpm, RR 16/min, Temp 36.5 °C, SpO2 99%\nChest: Clear and symmetric breath sounds throughout all lung zones.\nDiagnosis: Bronchial Asthma, Well-Controlled; Essential Hypertension Stage 1 (Controlled)',
+              orders: [
+                { text: 'Continue Budesonide/Formoterol 160/4.5 mcg inhaler, 1 puff BID.', dateTime: '2026-05-20T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:45 PM nurse' },
+                { text: 'Continue Amlodipine 5 mg tablet once daily in the morning.', dateTime: '2026-05-20T14:32:00+08:00', cared: ['C'], timeSignature: 'C - 2:50 PM nurse' },
+                { text: 'Follow-up at Adult Pulmonary Outpatient Clinic after 3 months.', dateTime: '2026-05-20T14:35:00+08:00', cared: ['C'], timeSignature: 'C - 3:00 PM nurse' }
+              ],
               examinations: [
                 {
                   id: 'EXAM-20260520-01',
@@ -3648,6 +3654,14 @@
                 history: 'Patient was admitted through the ER due to a 2-day history of periumbilical pain migrating to the right lower quadrant, accompanied by low-grade fever and anorexia. Physical exam demonstrated marked tenderness at McBurney\'s point with rebound tenderness. Emergency ultrasound confirmed acute appendicitis (non-perforated). Patient underwent an uncomplicated laparoscopic appendectomy under general endotracheal anesthesia on 04/10/2026. Post-operative course was smooth; surgical port sites dry and intact, bowel sounds normoactive on Post-Op Day 1, afebrile, and pain well controlled on oral analgesics.',
                 final_diagnosis: 'Acute Appendicitis, Non-perforated; Status Post Laparoscopic Appendectomy (ICD-10: K35.80)'
               },
+              progress_notes: 'Post-Operative Day 1. S/P Laparoscopic Appendectomy. Tolerating clear liquids, afebrile.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99%\nAbdomen: Soft, mild peri-incisional tenderness, surgical port sites clean, dry, and intact.\nDiagnosis: Acute Appendicitis, Non-perforated; Status Post Laparoscopic Appendectomy (K35.80)',
+              orders: [
+                { text: 'NPO temporarily until fully awake, then may start clear liquids as tolerated.', dateTime: '2026-04-10T10:30:00+08:00', cared: ['C'], timeSignature: 'C - 10:45 AM nurse' },
+                { text: 'PNSS 1 L at 100 mL/hour.', dateTime: '2026-04-10T10:32:00+08:00', cared: ['A'], timeSignature: 'A - 11:00 AM nurse' },
+                { text: 'Cefuroxime 750 mg IV every 8 hours (Post-Op Day 1).', dateTime: '2026-04-10T10:35:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 11:15 AM nurse\nA - 12:00 PM nurse' },
+                { text: 'Ketorolac 30 mg IV every 8 hours PRN for moderate to severe wound pain.', dateTime: '2026-04-10T10:36:00+08:00', cared: ['C'], timeSignature: 'C - 11:20 AM nurse' },
+                { text: 'Monitor surgical dressing for bleeding or discharge; keep clean and dry.', dateTime: '2026-04-10T10:40:00+08:00', cared: ['C'], timeSignature: 'C - 11:30 AM nurse' }
+              ],
               examinations: [
                 {
                   id: 'EXAM-20260410-01',
@@ -3785,7 +3799,7 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 14) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 15) records[index] = seedPatientRecord();
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
       else if (Number(records[blankIndex].seedVersion || 0) < 10) records[blankIndex] = blankPatientRecord();
@@ -4778,7 +4792,8 @@
       var currentBadge = isCurrent ? ' <span class="badge badge-info" style="font-size:9px; background:#0066cc; vertical-align:middle; margin-left:3px;">Current</span>' : '';
 
       var pId = (currentPatientData() && currentPatientData().id) || SEED_PATIENT_ID;
-      var complianceUrl = 'doctors_order_patient.html?patient=' + encodeURIComponent(pId);
+      var encDate = (data && data.date) || '';
+      var complianceUrl = 'doctors_order_patient.html?patient=' + encodeURIComponent(pId) + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
 
       tr.innerHTML =
         '<td><strong>' + dateDisplay + '</strong>' + currentBadge + '</td>' +
