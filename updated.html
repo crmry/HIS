@@ -1468,6 +1468,9 @@
             <div>
               <div style="font-weight: 700; font-size: 14px; letter-spacing: 0.3px;" id="hist-banner-title">Viewing Historical Encounter (Locked / Static Record)</div>
               <div style="font-size: 12px; color: #cbd5e1; margin-top: 2px;" id="hist-banner-subtitle">Encounter details are propagated below in read-only mode per EHR audit standards.</div>
+              <div id="hist-banner-final-dx-wrap" style="display:none; margin-top:6px; padding:6px 12px; background:rgba(255,255,255,0.08); border-left:3px solid #10b981; border-radius:4px; font-size:13px;">
+                <strong style="color:#6ee7b7;">🎯 Signed Final Diagnosis:</strong> <span id="hist-banner-final-dx" style="font-weight:600; color:#f1f5f9;"></span>
+              </div>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
@@ -2129,12 +2132,13 @@
       </div>
       <div class="span6">
         <div class="dashlet">
-          <div class="bootstrap-widget-header">
+          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
             <h3>Final Diagnosis</h3>
+            <span id="final-dx-status-badge" style="display:none; font-size:11px; padding:2px 8px; border-radius:3px; background:#065f46; color:#a7f3d0; font-weight:600; text-transform:uppercase;">Signed / Finalized</span>
           </div>
           <div class="bootstrap-widget-content">
             <textarea id="final_dx" name="final_diagnosis" rows="5" class="input-block-level"
-              placeholder="Enter final diagnosis..."></textarea>
+              placeholder="Final Diagnosis is encoded when concluding consultation via End Patient Care..."></textarea>
           </div>
         </div>
       </div>
@@ -2357,6 +2361,9 @@
               <label for="referral-reason">Reason for Referral</label>
               <textarea id="referral-reason" rows="5"
                 placeholder="Enter the reason for referral or co-management..."></textarea>
+            </div>
+            <div id="referral-readonly-msg" style="display:none; margin-top:8px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; font-size:12px; color:#64748b; font-style:italic;">
+              🔒 Referrals are finalized and signed for this encounter. New referrals must be ordered on the current or next encounter.
             </div>
             <div style="margin-top:8px; text-align:right;">
               <span id="referral-save-status" role="status" aria-live="polite"></span>
@@ -3738,7 +3745,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 33,
+        seedVersion: 34,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T16:30:00+08:00',
         data: {
@@ -4193,7 +4200,7 @@
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 33,
+        seedVersion: 34,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -4233,7 +4240,7 @@
             { dateTime: '2026-09-26T09:30:00+08:00', bp: '124/78', hr: '72', rr: '16', temp: '36.5', wt: '68', ht: '168', weight: '68', height: '168', bmi: '24.1', spo2: '99', o2: '99' }
           ],
           admitting_diagnosis: 'E11.9 - Type 2 Diabetes Mellitus without complications; I10 - Essential (primary) Hypertension.',
-          final_diagnosis: 'Type 2 Diabetes Mellitus, well-controlled on oral hypoglycemic agents; Essential Hypertension, controlled.',
+          final_diagnosis: '', // Blank for current active consultation; finalized on historical encounters
           progress_notes: 'Outpatient Consultation (Adult Medicine OPD). Routine quarterly diabetes and hypertension follow-up.\nPatient feels well, asymptomatic. Good adherence with Metformin, Empagliflozin, and Losartan. No hypoglycemic symptoms or pedal swelling.\nVital signs: BP 124/78 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% ambient air. Weight 68 kg, BMI 24.1.\nPhysical Exam: Clear breath sounds, normal heart sounds, bilateral dorsalis pedis pulses palpable, monofilament foot screen normal.\nLaboratory Review: HbA1c 6.4%, FBS 108 mg/dL, Serum Creatinine 0.9 mg/dL, eGFR > 90 mL/min, Urine Albumin-Creatinine Ratio normal.\nDiagnosis: Type 2 Diabetes Mellitus, well-controlled; Essential Hypertension, controlled.\nPlan: Maintain current oral regimen. Diabetic low-salt diet. Follow-up after 3 months.',
           encounters: [
             {
@@ -4553,7 +4560,7 @@
     function blankPatientRecord() {
       return {
         id: BLANK_PATIENT_ID,
-        seedVersion: 33,
+        seedVersion: 34,
         createdAt: '2026-09-25T10:30:00+08:00',
         updatedAt: '2026-09-25T10:30:00+08:00',
         data: {
@@ -5971,7 +5978,27 @@
         btn.style.display = isReadOnly ? 'none' : '';
       });
 
-      // Strict lock down of Rx Writer (Prescription Writer) in historical inspection
+      // 1. Strict lock down of Referral / Co-Manage (No referrals allowed on signed historical encounters)
+      var refFields = document.querySelector('.referral-fields');
+      if (refFields) refFields.style.display = isReadOnly ? 'none' : '';
+      var saveRefBtn = document.getElementById('save-referral-btn');
+      if (saveRefBtn) saveRefBtn.style.display = isReadOnly ? 'none' : '';
+      var refReadOnlyMsg = document.getElementById('referral-readonly-msg');
+      if (refReadOnlyMsg) refReadOnlyMsg.style.display = isReadOnly ? 'block' : 'none';
+
+      // 2. Strict lock down of Clinical Requests (No request orders allowed on signed historical encounters)
+      var openReqBtn = document.getElementById('open-request-modal');
+      if (openReqBtn) openReqBtn.style.display = isReadOnly ? 'none' : '';
+      document.querySelectorAll('[data-remove-request]').forEach(function (btn) {
+        btn.style.display = isReadOnly ? 'none' : '';
+      });
+
+      // 3. Strict lock down of Medication & General Orders (No new medicines allowed on signed historical encounters)
+      document.querySelectorAll('.med-sub-add-btn, button[data-add-med], button[data-add], .rm-medication, .rm-order, .btn-add-order').forEach(function (btn) {
+        btn.style.display = isReadOnly ? 'none' : '';
+      });
+
+      // 4. Strict lock down of Rx Writer (Prescription Writer) in historical inspection
       var rxContainer = document.getElementById('rx-writer-main-container');
       if (rxContainer) {
         rxContainer.querySelectorAll('input, textarea, select').forEach(function (el) {
@@ -6006,11 +6033,6 @@
       ];
       actionBtns.forEach(function (btn) {
         if (btn) btn.style.display = isReadOnly ? 'none' : '';
-      });
-
-      var orderAddBtns = ordersBody ? ordersBody.querySelectorAll('button[data-add], button[data-add-med], .btn-add-order') : [];
-      orderAddBtns.forEach(function (btn) {
-        btn.style.display = isReadOnly ? 'none' : '';
       });
     }
 
@@ -6074,8 +6096,39 @@
       var admEl = document.getElementById('admitting_dx');
       if (admEl) admEl.value = enc.admitting_diagnosis || enc.diagnosis || '';
 
+      // Return Final Diagnosis prominently back to dashboard for historical encounters
+      var finalDx = (enc.clinical_record && enc.clinical_record.final_diagnosis) || enc.final_diagnosis || enc.diagnosis || 'Pending final diagnostic confirmation';
       var finalEl = document.getElementById('final_dx');
-      if (finalEl) finalEl.value = (enc.clinical_record && enc.clinical_record.final_diagnosis) || enc.final_diagnosis || enc.diagnosis || '';
+      if (finalEl) {
+        finalEl.value = finalDx;
+        finalEl.readOnly = true;
+        finalEl.disabled = true;
+        finalEl.style.backgroundColor = '#f1f5f9';
+        finalEl.style.color = '#0f172a';
+        finalEl.style.fontWeight = '600';
+      }
+      var fBadge = document.getElementById('final-dx-status-badge');
+      if (fBadge) {
+        fBadge.style.display = 'inline-block';
+        fBadge.textContent = 'Signed / Finalized (' + (formatDate(enc.date) || enc.date) + ')';
+      }
+      var bFinalDx = document.getElementById('hist-banner-final-dx');
+      if (bFinalDx) bFinalDx.textContent = finalDx;
+      var bFinalDxWrap = document.getElementById('hist-banner-final-dx-wrap');
+      if (bFinalDxWrap) bFinalDxWrap.style.display = 'block';
+
+      // 3b. Render referrals specific to this historical encounter
+      var encReferrals = Array.isArray(enc.referrals) ? enc.referrals : [];
+      if (referralRows) {
+        if (!encReferrals.length) {
+          referralRows.innerHTML = '<tr class="referral-empty"><td colspan="6" style="text-align:center; padding:15px; color:#64748b;">No referrals recorded for this historical encounter.</td></tr>';
+        } else {
+          referralRows.innerHTML = encReferrals.map(function (referral) {
+            return '<tr><td>' + esc(formatDate(referral.date)) + '</td><td>' + esc(referral.department) + '</td><td>' + esc(referral.reason) + '</td>' +
+              '<td>' + esc(referral.primaryPhysician) + '</td><td>' + esc(referral.coManagingPhysician) + '</td><td>' + esc(referral.receivingPhysician) + '</td></tr>';
+          }).join('');
+        }
+      }
 
       // 4. Physician's Orders (Plans) & Summary
       var savedOrders = {
@@ -6199,6 +6252,27 @@
       }
       var banner = document.getElementById('historical-encounter-banner');
       if (banner) banner.style.display = 'none';
+      var bFinalDxWrap = document.getElementById('hist-banner-final-dx-wrap');
+      if (bFinalDxWrap) bFinalDxWrap.style.display = 'none';
+
+      // Reset Final Diagnosis for current in-progress consultation
+      var finalEl = document.getElementById('final_dx');
+      if (finalEl) {
+        finalEl.value = '';
+        finalEl.readOnly = false;
+        finalEl.disabled = false;
+        finalEl.style.backgroundColor = '';
+        finalEl.style.color = '';
+        finalEl.style.fontWeight = '';
+        finalEl.placeholder = 'Final Diagnosis is encoded when concluding consultation via End Patient Care...';
+      }
+      var fBadge = document.getElementById('final-dx-status-badge');
+      if (fBadge) fBadge.style.display = 'none';
+
+      // Restore active patient referrals
+      if (typeof renderReferrals === 'function') {
+        renderReferrals();
+      }
 
       if (encRows) {
         encRows.querySelectorAll('tr').forEach(function (r) {
@@ -8810,6 +8884,10 @@
       // Add medication specific button (handles both sub-header and panel buttons)
       var addMedSpecificBtn = e.target.closest('[data-add-med]');
       if (addMedSpecificBtn) {
+        if (activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex >= 0) {
+          alert('Historical encounters are signed and finalized records. Medication orders cannot be modified on historical encounters. Changes must be made on the active encounter.');
+          return;
+        }
         e.stopPropagation();
         var mType = addMedSpecificBtn.dataset.addMed;
         var subItemForAdd = document.getElementById('med-sub-' + mType);
@@ -8859,6 +8937,10 @@
 
       var addBtn = e.target.closest('[data-add]');
       if (addBtn) {
+        if (activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex >= 0) {
+          alert('Historical encounters are signed and finalized records. Orders cannot be added to historical encounters.');
+          return;
+        }
         var list = ordersBody.querySelector('[data-order-list="' + addBtn.dataset.add + '"]');
         var entry = addOrderEntry(list);
         entry.querySelector('textarea').focus();
@@ -9046,6 +9128,10 @@
     }
 
     function openRequestModal(tabKey) {
+      if (activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex >= 0) {
+        alert('Historical encounters are signed and finalized records. Clinical requests cannot be added to historical encounters. New requests must be ordered on the current or next encounter.');
+        return;
+      }
       modalRequestTab = requestTabByKey(tabKey).key;
       requestCart = [];
       serviceSearch.value = '';
@@ -9499,6 +9585,10 @@
     }
 
     (document.getElementById('save-referral-btn') || { addEventListener: function() {} }).addEventListener('click', function () {
+      if (activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex >= 0) {
+        alert('Historical encounters are signed and finalized records. Referrals cannot be added to historical encounters. Other changes should be made to the next encounter.');
+        return;
+      }
       var doctor = document.getElementById('referral-doctor').value;
       var department = document.getElementById('referral-department').value;
       var reason = document.getElementById('referral-reason').value.trim();

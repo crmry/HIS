@@ -557,7 +557,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 33,
+                seedVersion: 34,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T16:30:00+08:00",
                 data: {
@@ -717,7 +717,7 @@
         function opPatientRecord() {
             return {
                 id: OP_PATIENT_ID,
-                seedVersion: 33,
+                seedVersion: 34,
                 createdAt: "2026-03-14T08:45:00+08:00",
                 updatedAt: "2026-09-26T09:30:00+08:00",
                 data: {
@@ -757,7 +757,7 @@
             { dateTime: '2026-09-26T09:30:00+08:00', bp: '124/78', hr: '72', rr: '16', temp: '36.5', wt: '68', ht: '168', weight: '68', height: '168', bmi: '24.1', spo2: '99', o2: '99' }
           ],
                     admitting_diagnosis: "E11.9 - Type 2 Diabetes Mellitus without complications; I10 - Essential (primary) Hypertension.",
-                    final_diagnosis: "Type 2 Diabetes Mellitus, well-controlled on oral hypoglycemic agents; Essential Hypertension, controlled.",
+                    final_diagnosis: "", // Blank for current active consultation
                     progress_notes: "Outpatient Consultation (Adult Medicine OPD). Routine quarterly diabetes and hypertension follow-up.\nPatient feels well, asymptomatic. Good adherence with Metformin, Empagliflozin, and Losartan. No hypoglycemic symptoms or pedal swelling.\nVital signs: BP 124/78 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% ambient air. Weight 68 kg, BMI 24.1.\nPhysical Exam: Clear breath sounds, normal heart sounds, bilateral dorsalis pedis pulses palpable, monofilament foot screen normal.\nLaboratory Review: HbA1c 6.4%, FBS 108 mg/dL, Serum Creatinine 0.9 mg/dL, eGFR > 90 mL/min, Urine Albumin-Creatinine Ratio normal.\nDiagnosis: Type 2 Diabetes Mellitus, well-controlled; Essential Hypertension, controlled.\nPlan: Maintain current oral regimen. Diabetic low-salt diet. Follow-up after 3 months.",
                     encounters: [
             {
@@ -1069,7 +1069,7 @@
         function blankPatientRecord() {
             return {
                 id: BLANK_PATIENT_ID,
-                seedVersion: 33,
+                seedVersion: 34,
                 createdAt: "2026-09-25T10:30:00+08:00",
                 updatedAt: "2026-09-25T10:30:00+08:00",
                 data: {
