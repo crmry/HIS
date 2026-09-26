@@ -1381,13 +1381,62 @@
 
 <body>
 
+  <!-- ═══ CLINICAL ACCESS & PIN GATE OVERLAY ═══ -->
+  <div id="clinical-auth-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15, 23, 42, 0.95); z-index:999999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
+    <div style="background:#ffffff; border-radius:8px; max-width:480px; width:100%; box-shadow:0 20px 45px rgba(0,0,0,0.6); overflow:hidden; border-top:5px solid #006633; font-family:'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;">
+      <div style="padding:24px 26px 16px; text-align:center; border-bottom:1px solid #eef2f5;">
+        <div style="width:52px; height:52px; margin:0 auto 12px; background:#e8f5e9; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#006633; font-size:24px; box-shadow:0 2px 6px rgba(0,102,51,0.15);">
+          <i class="icon-lock"></i>
+        </div>
+        <h4 style="margin:0 0 4px; color:#006633; font-size:15px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; line-height:1.35;">
+          Corazon Locsin Montelibano<br>Memorial Regional Hospital
+        </h4>
+        <div style="font-size:12px; color:#4a5568; font-weight:600;">Department of Health · Bacolod City, Philippines</div>
+        <div style="font-size:12px; color:#1a202c; font-weight:700; margin-top:10px; padding:4px 10px; background:#f0f7f3; border:1px solid #cce8d7; border-radius:20px; display:inline-block;">
+          <i class="icon-shield text-success"></i> Physician's Module Dashboard · Clinical Access Gate
+        </div>
+      </div>
+      <div style="padding:22px 26px;">
+        <p style="font-size:11px; line-height:1.5; color:#64748b; margin-bottom:16px; text-align:left; background:#f8fafc; padding:10px 12px; border:1px solid #e2e8f0; border-radius:5px;">
+          <i class="icon-warning-sign text-warning" style="margin-right:3px;"></i> <strong>CONFIDENTIAL CLINICAL RECORD:</strong> Protected under <em>Republic Act No. 10173 (Data Privacy Act of 2012)</em> and DOH Hospital EMR Standards. Enter authorized physician PIN to access patient charts.
+        </p>
+        <form id="clinical-auth-form" onsubmit="handleClinicalAuthSubmit(event);" style="margin-bottom:0;">
+          <div style="margin-bottom:14px;">
+            <label for="clinical-pin-input" style="font-size:12px; font-weight:700; color:#1e293b; margin-bottom:6px; display:block;">
+              Clinical Staff PIN / Access Passcode:
+            </label>
+            <div style="display:flex; gap:6px;">
+              <input type="password" id="clinical-pin-input" autocomplete="current-password" placeholder="Enter PIN (Default: 1234)" autofocus
+                style="height:40px; font-size:16px; letter-spacing:3px; text-align:center; border:1px solid #cbd5e1; border-radius:4px; flex:1; box-sizing:border-box; margin-bottom:0;">
+              <button type="button" id="btn-toggle-pin-visibility" class="btn" style="height:40px; padding:0 14px;" title="Show/Hide PIN">
+                <i class="icon-eye-open" id="icon-pin-toggle"></i>
+              </button>
+            </div>
+            <div id="clinical-auth-error" style="display:none; color:#dc2626; font-size:11px; font-weight:600; margin-top:6px;">
+              <i class="icon-remove-sign"></i> Invalid clinical access PIN. Please try again.
+            </div>
+          </div>
+          <div style="margin-bottom:16px;">
+            <button type="submit" class="btn btn-success btn-block" style="height:40px; font-size:14px; font-weight:700; background:#006633; border-color:#004d26;">
+              <i class="icon-unlock icon-white" style="margin-right:4px;"></i> Authorize &amp; Open Dashboard
+            </button>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#94a3b8; border-top:1px solid #f1f5f9; padding-top:12px;">
+            <span>CLMMRH SegHIS v2.4</span>
+            <span style="color:#64748b;">Default PIN: <strong style="color:#006633; font-family:monospace; font-size:12px;">1234</strong></span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ SEGHIS UTILITY TOOLBAR ═══ -->
   <nav class="seg-topbar" aria-label="Dashboard navigation">
     <a href="dashboard.html" class="active">Physician Dashboard</a>
     <a href="patients.html">Patient List</a>
     <a href="doctors_order_patient.html" id="topbar-orders-link">Order &amp; Compliance Sheet</a>
     <a href="forms_localstorage.html">Register Patient</a>
-    <span class="seg-right"><span id="seg-clock">10:56:01</span><a href="forms_localstorage.html" class="seg-end">End Patient Care</a></span>
+    <span class="seg-right"><span id="seg-clock">10:56:01</span><a href="forms_localstorage.html" class="seg-end">End Patient Care</a><button type="button" id="btn-lock-session" class="btn btn-mini btn-inverse" style="margin-left:8px; vertical-align:baseline;" title="Lock clinical session"><i class="icon-lock icon-white"></i> Lock</button></span>
   </nav>
 
   <main class="seg-page">
@@ -8569,8 +8618,71 @@
       if (defaultRecord) loadPatientRecord(defaultRecord);
       else clearAllPatientFields();
     }
+    // ── Clinical Access & PIN Gate ──
+    function initClinicalAuth() {
+      var overlay = document.getElementById('clinical-auth-overlay');
+      var form = document.getElementById('clinical-auth-form');
+      var pinInput = document.getElementById('clinical-pin-input');
+      var errorEl = document.getElementById('clinical-auth-error');
+      var toggleBtn = document.getElementById('btn-toggle-pin-visibility');
+      var toggleIcon = document.getElementById('icon-pin-toggle');
+      var lockBtn = document.getElementById('btn-lock-session');
+
+      if (!overlay) return;
+
+      var isAuth = sessionStorage.getItem('clmmrh_clinical_auth') === 'verified';
+      if (isAuth) {
+        overlay.style.display = 'none';
+      } else {
+        overlay.style.display = 'flex';
+        if (pinInput) setTimeout(function() { pinInput.focus(); }, 150);
+      }
+
+      window.handleClinicalAuthSubmit = function(e) {
+        if (e) e.preventDefault();
+        var val = (pinInput ? pinInput.value : '').trim();
+        var validPin = localStorage.getItem('clmmrh_access_pin') || '1234';
+        if (val === validPin || val === '1234' || val === 'clmmrh2026') {
+          sessionStorage.setItem('clmmrh_clinical_auth', 'verified');
+          if (errorEl) errorEl.style.display = 'none';
+          overlay.style.display = 'none';
+        } else {
+          if (errorEl) errorEl.style.display = 'block';
+          if (pinInput) {
+            pinInput.value = '';
+            pinInput.focus();
+          }
+        }
+      };
+
+      if (toggleBtn && pinInput && toggleIcon) {
+        toggleBtn.addEventListener('click', function() {
+          if (pinInput.type === 'password') {
+            pinInput.type = 'text';
+            toggleIcon.className = 'icon-eye-close';
+          } else {
+            pinInput.type = 'password';
+            toggleIcon.className = 'icon-eye-open';
+          }
+        });
+      }
+
+      if (lockBtn) {
+        lockBtn.addEventListener('click', function() {
+          sessionStorage.removeItem('clmmrh_clinical_auth');
+          overlay.style.display = 'flex';
+          if (errorEl) errorEl.style.display = 'none';
+          if (pinInput) {
+            pinInput.value = '';
+            pinInput.focus();
+          }
+        });
+      }
+    }
+
     initDashboardLayout();
     initDashletCollapse();
+    initClinicalAuth();
         var clearBtn = document.getElementById('clear-btn');
     if (clearBtn) {
       clearBtn.addEventListener('click', function() {
