@@ -737,27 +737,31 @@
           </div>
     </div>
 
-    <!-- ROW 4: Admitting Diagnosis (Full width during current consultation) + Final Diagnosis (In its rightful space ONLY for Historical Encounter) -->
-    <div class="row-fluid" id="row-diagnoses">
+    <!-- ROW 4: Admitting Diagnosis -->
+    <div class="row-fluid" id="row-admitting-dx">
       <div class="span12" id="admitting-dx-col">
         <div class="dashlet">
           <div class="bootstrap-widget-header">
             <h3>Admitting Diagnosis</h3>
           </div>
           <div class="bootstrap-widget-content" id="dashlet-diagnosis">
-            <textarea id="admitting_dx" name="admitting_diagnosis" rows="5" class="input-block-level"
+            <textarea id="admitting_dx" name="admitting_diagnosis" rows="4" class="input-block-level"
               placeholder="Enter admitting diagnosis..."></textarea>
           </div>
         </div>
       </div>
-      <div class="span6" id="final-dx-col" style="display:none;">
+    </div>
+
+    <!-- ROW 5: Final Diagnosis (Positioned directly BELOW Admitting Diagnosis, displayed ONLY for Historical Encounters) -->
+    <div class="row-fluid" id="row-final-dx" style="display:none;">
+      <div class="span12" id="final-dx-col">
         <div class="dashlet" id="dashlet-final-diagnosis">
           <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
             <h3>Final Diagnosis</h3>
             <span id="final-dx-status-badge" style="display:none; font-size:11px; padding:2px 8px; border-radius:3px; background:#065f46; color:#a7f3d0; font-weight:600; text-transform:uppercase;">Signed / Finalized</span>
           </div>
           <div class="bootstrap-widget-content">
-            <textarea id="final_dx" name="final_diagnosis" rows="5" class="input-block-level"
+            <textarea id="final_dx" name="final_diagnosis" rows="4" class="input-block-level"
               placeholder="Final Diagnosis is encoded when concluding consultation via End Patient Care..." readonly disabled></textarea>
           </div>
         </div>
@@ -3875,8 +3879,10 @@
       var finalDx = (enc.clinical_record && enc.clinical_record.final_diagnosis) || enc.final_diagnosis || enc.diagnosis || 'Pending final diagnostic confirmation';
       var admCol = document.getElementById('admitting-dx-col');
       var finalCol = document.getElementById('final-dx-col');
-      if (admCol) admCol.className = 'span6';
-      if (finalCol) finalCol.style.display = 'block';
+      var finalRow = document.getElementById('row-final-dx');
+      if (admCol) admCol.className = 'span12';
+      if (finalCol) { finalCol.className = 'span12'; finalCol.style.display = 'block'; }
+      if (finalRow) finalRow.style.display = 'block';
 
       var finalEl = document.getElementById('final_dx');
       if (finalEl) {
@@ -4031,9 +4037,11 @@
       var bFinalDxWrap = document.getElementById('hist-banner-final-dx-wrap');
       if (bFinalDxWrap) bFinalDxWrap.style.display = 'none';
 
-      // Hide Final Diagnosis in rightful space for current consultation (only shown for Historical Encounter)
+      // Hide Final Diagnosis below Admitting Diagnosis for current consultation (only shown for Historical Encounter)
       var finalCol = document.getElementById('final-dx-col');
       if (finalCol) finalCol.style.display = 'none';
+      var finalRow = document.getElementById('row-final-dx');
+      if (finalRow) finalRow.style.display = 'none';
       var admCol = document.getElementById('admitting-dx-col');
       if (admCol) admCol.className = 'span12';
 
@@ -7495,6 +7503,8 @@
         if (fBadge) fBadge.style.display = 'none';
         var finalCol = document.getElementById('final-dx-col');
         if (finalCol) finalCol.style.display = 'none';
+        var finalRow = document.getElementById('row-final-dx');
+        if (finalRow) finalRow.style.display = 'none';
         var admCol = document.getElementById('admitting-dx-col');
         if (admCol) admCol.className = 'span12';
 
@@ -8295,6 +8305,8 @@
 
         var finalCol = document.getElementById('final-dx-col');
         if (finalCol) finalCol.style.display = 'none';
+        var finalRow = document.getElementById('row-final-dx');
+        if (finalRow) finalRow.style.display = 'none';
         var admCol = document.getElementById('admitting-dx-col');
         if (admCol) admCol.className = 'span12';
         var finalEl = document.getElementById('final_dx');
