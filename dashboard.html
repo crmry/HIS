@@ -1238,6 +1238,16 @@
       border-left: 4px solid #0066cc;
       font-weight: 700;
     }
+    .encounter-table tbody tr.encounter-row-selected td {
+      background-color: #fef9c3 !important;
+    }
+    .encounter-table tbody tr.encounter-row-selected td:first-child {
+      border-left: 4px solid #ca8a04 !important;
+      font-weight: 700;
+    }
+    .encounter-table tbody tr {
+      cursor: pointer;
+    }
     .encounter-type-badge {
       display: inline-block;
       font-size: 10px;
@@ -1448,6 +1458,25 @@
                 </table>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Historical Encounter Inspection Banner (appears when inspecting a historical encounter) -->
+        <div id="historical-encounter-banner" style="display:none; margin: 10px 0 16px; padding: 12px 18px; background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 22px; line-height: 1;">🔒</span>
+            <div>
+              <div style="font-weight: 700; font-size: 14px; letter-spacing: 0.3px;" id="hist-banner-title">Viewing Historical Encounter (Locked / Static Record)</div>
+              <div style="font-size: 12px; color: #cbd5e1; margin-top: 2px;" id="hist-banner-subtitle">Encounter details are propagated below in read-only mode per EHR audit standards.</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button type="button" class="btn btn-mini btn-inverse" id="btn-open-hist-modal" style="font-weight: 600; white-space: nowrap; border: 1px solid #475569;">
+              <i class="icon-list-alt icon-white"></i> View Wrap-Up Modal
+            </button>
+            <button type="button" class="btn btn-small btn-primary" id="btn-return-current-encounter" style="font-weight: 600; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+              <i class="icon-arrow-left icon-white"></i> Return to Current Consultation
+            </button>
           </div>
         </div>
 
@@ -5490,14 +5519,318 @@
       encRows.appendChild(tr);
     }
 
-    // Attach click listeners to historical diagnosis links
-    if (encRows) {
-      encRows.querySelectorAll('.historical-dx-link').forEach(function (link) {
-        link.addEventListener('click', function (e) {
-          e.preventDefault();
-          var idx = Number(this.dataset.encounterIndex);
-          openHistoricalWrapupModal(idx);
+    var activeInspectedEncounterIndex = null;
+
+    function renderEncounterVitalSigns(enc) {
+      var body = document.getElementById('vitals-rows');
+      if (!body) return;
+      var vsList = [];
+      if (Array.isArray(enc.vital_signs) && enc.vital_signs.length > 0) {
+        vsList = enc.vital_signs;
+      } else if (enc.vitals) {
+        vsList = [enc.vitals];
+      } else {
+        var notes = enc.progress_notes || '';
+        var bpM = notes.match(/BP\s*([\d\/]+)/i);
+        var hrM = notes.match(/HR\s*(\d+)/i);
+        var rrM = notes.match(/RR\s*(\d+)/i);
+        var tempM = notes.match(/Temp\s*([\d\.]+)/i);
+        var spo2M = notes.match(/SpO2\s*([\d]+)/i);
+        var wtM = notes.match(/Weight\s*([\d\.]+)/i);
+        var bmiM = notes.match(/BMI\s*([\d\.]+)/i);
+        if (bpM || hrM || rrM || tempM) {
+          vsList = [{
+            dateTime: (enc.date || '') + ' ' + (enc.time || ''),
+            bp: bpM ? bpM[1] : '—',
+            hr: hrM ? hrM[1] : '—',
+            rr: rrM ? rrM[1] : '—',
+            temp: tempM ? tempM[1] : '—',
+            wt: wtM ? wtM[1] : '—',
+            ht: '—',
+            bmi: bmiM ? bmiM[1] : '—',
+            spo2: spo2M ? spo2M[1] : '—'
+          }];
+        }
+      }
+      if (vsList.length === 0) {
+        vsList = [{
+          dateTime: (enc.date || '') + ' ' + (enc.time || ''),
+          bp: '—', hr: '—', rr: '—', temp: '—', wt: '—', ht: '—', bmi: '—', spo2: '—'
+        }];
+      }
+      body.innerHTML = vsList.map(function (row) {
+        var dt = row.dateTime || row.date_time || ((enc.date || '') + ' ' + (enc.time || ''));
+        return '<tr>' +
+          '<td>' + esc(dt) + '</td>' +
+          '<td>' + esc(row.bp || row.vs_bp || '—') + '</td>' +
+          '<td>' + esc(row.hr || row.vs_hr || '—') + '</td>' +
+          '<td>' + esc(row.rr || row.vs_rr || '—') + '</td>' +
+          '<td>' + esc(row.temp || row.vs_temp || '—') + '</td>' +
+          '<td>' + esc(row.wt || row.weight || row.vs_weight || '—') + '</td>' +
+          '<td>' + esc(row.ht || row.height || row.vs_height || '—') + '</td>' +
+          '<td>' + esc(row.bmi || '—') + '</td>' +
+          '<td>' + esc(row.spo2 || row.o2 || row.vs_spo2 || '—') + '</td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    function setDashboardReadOnly(isReadOnly) {
+      if (!form) return;
+      var inputs = form.querySelectorAll('input, textarea, select');
+      inputs.forEach(function (el) {
+        if (el.closest('#encounter-rows') || el.closest('#historical-encounter-banner') || el.id === 'btn-return-current-encounter' || el.id === 'patient-selector') {
+          return;
+        }
+        if (isReadOnly) {
+          el.disabled = true;
+          if (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'date'))) {
+            el.readOnly = true;
+            el.style.backgroundColor = '#f8fafc';
+            el.style.color = '#334155';
+          }
+        } else {
+          el.disabled = false;
+          if (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'date'))) {
+            el.readOnly = false;
+            el.style.backgroundColor = '';
+            el.style.color = '';
+          }
+        }
+      });
+
+      var actionBtns = [
+        document.getElementById('save-orders-btn'),
+        document.getElementById('save-disposition-btn'),
+        document.getElementById('save-patient-btn'),
+        document.getElementById('btn-finalize-end-care'),
+        document.getElementById('btn-chart-refresh'),
+        document.getElementById('open-care-modal-btn')
+      ];
+      actionBtns.forEach(function (btn) {
+        if (btn) btn.style.display = isReadOnly ? 'none' : '';
+      });
+
+      var orderAddBtns = ordersBody ? ordersBody.querySelectorAll('button[data-add], button[data-add-med], .btn-add-order') : [];
+      orderAddBtns.forEach(function (btn) {
+        btn.style.display = isReadOnly ? 'none' : '';
+      });
+    }
+
+    function inspectEncounterInDashboard(index) {
+      if (index == null || index < 0 || index >= loadedEncounters.length) return;
+      var enc = loadedEncounters[index];
+      var isCurrent = Boolean(enc.is_current || enc.isCurrent);
+
+      // If clicking current encounter: restore active editable view
+      if (isCurrent) {
+        restoreCurrentEncounterView();
+        return;
+      }
+
+      activeInspectedEncounterIndex = index;
+
+      // Update row selection styling
+      if (encRows) {
+        encRows.querySelectorAll('tr').forEach(function (r) {
+          r.classList.remove('encounter-row-selected');
         });
+        var targetRow = encRows.querySelector('tr[data-encounter-index="' + index + '"]');
+        if (targetRow) targetRow.classList.add('encounter-row-selected');
+      }
+
+      // Display banner
+      var banner = document.getElementById('historical-encounter-banner');
+      var bTitle = document.getElementById('hist-banner-title');
+      var bSub = document.getElementById('hist-banner-subtitle');
+      if (banner) {
+        banner.style.display = 'flex';
+        var dateFormatted = formatDate(enc.date) || enc.date || '—';
+        var regType = (enc.registry || enc.type || 'OP').toUpperCase();
+        var serviceName = enc.service || 'General Medicine';
+        var docName = enc.physician || 'Attending Physician';
+        if (bTitle) bTitle.textContent = '🔒 Viewing Historical Encounter: ' + dateFormatted + ' (' + regType + ' • ' + serviceName + ') — Read-Only Mode';
+        if (bSub) bSub.textContent = 'Attending Physician: ' + docName + ' • ' + (enc.status_tag || 'Finalized Encounter') + ' • Changes to historical records are prohibited by hospital audit standards.';
+      }
+
+      // 1. Vital Signs
+      renderEncounterVitalSigns(enc);
+
+      // 2. Chief Complaint & Medical History
+      var ccEl = document.getElementById('chief_complaint');
+      if (ccEl) {
+        var cc = (enc.clinical_record && enc.clinical_record.chief_complaint) || enc.chief_complaint || enc.patient_record || '';
+        if (!cc && enc.diagnosis) cc = 'Consultation for ' + enc.diagnosis;
+        ccEl.value = cc;
+      }
+
+      var hxEl = document.getElementById('hx_present');
+      if (hxEl) {
+        var hx = (enc.clinical_record && enc.clinical_record.history) || enc.hx_present || enc.progress_notes || '';
+        hxEl.value = hx;
+      }
+
+      // 3. Diagnoses
+      var admEl = document.getElementById('admitting_dx');
+      if (admEl) admEl.value = enc.admitting_diagnosis || enc.diagnosis || '';
+
+      var finalEl = document.getElementById('final_dx');
+      if (finalEl) finalEl.value = (enc.clinical_record && enc.clinical_record.final_diagnosis) || enc.final_diagnosis || enc.diagnosis || '';
+
+      // 4. Physician's Orders (Plans) & Summary
+      var savedOrders = {
+        plans: [],
+        diet: [],
+        iv: [],
+        medications: [],
+        special: [],
+        procedures: [],
+        clinicalRequests: { laboratory: [], radiology: [], respiratory: [], heart: [], eeg: [] },
+        prescriptions: { items: [] }
+      };
+
+      if (Array.isArray(enc.orders)) {
+        enc.orders.forEach(function (o) {
+          var t = typeof o === 'string' ? o : (o.text || '');
+          var dt = (o && o.dateTime) || (enc.date + ' ' + (enc.time || ''));
+          var cared = (o && o.cared) || [];
+          var sig = (o && o.timeSignature) || '';
+
+          if (t.match(/diet|NPO|DAT|soft diet|low salt/i)) {
+            savedOrders.diet.push({ text: t, dateTime: dt, cared: cared, timeSignature: sig });
+          } else if (t.match(/IV|PNSS|PLR|D5|infusion|cc\/hr|gtts/i)) {
+            savedOrders.iv.push({ text: t, dateTime: dt, cared: cared, timeSignature: sig });
+          } else if (t.match(/tablet|capsule|mg|suspension|nebulizer|PO|IVTT|PRN|Metformin|Empagliflozin|Losartan|Amlodipine|Celecoxib|Paracetamol|Co-amoxiclav|Ceftriaxone/i)) {
+            savedOrders.medications.push({
+              drug: t,
+              sig: 'As ordered',
+              dateTime: dt,
+              cared: cared,
+              timeSignature: sig,
+              status: 'Active'
+            });
+          } else {
+            savedOrders.plans.push({ text: t, dateTime: dt, cared: cared, timeSignature: sig });
+          }
+        });
+      } else if (enc.orders && typeof enc.orders === 'object') {
+        Object.keys(enc.orders).forEach(function (k) {
+          if (savedOrders[k]) savedOrders[k] = enc.orders[k];
+        });
+      }
+
+      if (Array.isArray(enc.prescriptions) && enc.prescriptions.length > 0) {
+        savedOrders.prescriptions = { items: enc.prescriptions };
+        if (savedOrders.medications.length === 0) {
+          enc.prescriptions.forEach(function (rx) {
+            savedOrders.medications.push({
+              drug: rx.drug,
+              sig: rx.sig || '',
+              qty: rx.qty || '',
+              status: 'Active'
+            });
+          });
+        }
+      }
+
+      if (enc.clinicalRequests) {
+        ['laboratory', 'radiology', 'respiratory', 'heart', 'eeg'].forEach(function (cat) {
+          if (Array.isArray(enc.clinicalRequests[cat])) {
+            savedOrders.clinicalRequests[cat] = enc.clinicalRequests[cat].map(function (item) {
+              if (typeof item === 'string') {
+                return { description: item, code: '', priority: 'Routine', remarks: '' };
+              }
+              return item;
+            });
+          }
+        });
+      }
+
+      buildOrders(savedOrders);
+      renderOrderSummary();
+
+      // 5. Disposition & Follow-Up
+      var dispVal = enc.disposition || 'Treated and Discharged';
+      var dispRadios = document.querySelectorAll('input[name="disposition"]');
+      dispRadios.forEach(function (r) {
+        r.checked = (r.value === dispVal || dispVal.indexOf(r.value) !== -1);
+      });
+
+      var fuNeeded = document.querySelectorAll('input[name="follow_up_needed"]');
+      if (enc.follow_up && (enc.follow_up.date || enc.follow_up.clinic || enc.follow_up.reason)) {
+        fuNeeded.forEach(function (r) { r.checked = (r.value === 'Yes'); });
+        var fuFields = document.getElementById('follow-up-fields');
+        if (fuFields) fuFields.className = 'follow-up-fields';
+        var fuDate = document.getElementById('follow_up_date');
+        if (fuDate) fuDate.value = enc.follow_up.date || '';
+        var fuClinic = document.getElementById('follow_up_clinic');
+        if (fuClinic) fuClinic.value = enc.follow_up.clinic || '';
+        var fuNotes = document.getElementById('follow_up_notes');
+        if (fuNotes) fuNotes.value = enc.follow_up.reason || '';
+      } else {
+        fuNeeded.forEach(function (r) { r.checked = (r.value === 'No'); });
+        var fuFieldsNo = document.getElementById('follow-up-fields');
+        if (fuFieldsNo) fuFieldsNo.className = 'follow-up-fields disabled';
+      }
+
+      // 6. Set Dashboard Read-Only
+      setDashboardReadOnly(true);
+
+      // Scroll smoothly down to the banner
+      if (banner && typeof banner.scrollIntoView === 'function') {
+        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function restoreCurrentEncounterView() {
+      activeInspectedEncounterIndex = null;
+      var curRec = getPatients().find(function (r) { return r.id === activePatientId; });
+      if (curRec) {
+        loadPatientRecord(curRec);
+      }
+      var banner = document.getElementById('historical-encounter-banner');
+      if (banner) banner.style.display = 'none';
+
+      if (encRows) {
+        encRows.querySelectorAll('tr').forEach(function (r) {
+          r.classList.remove('encounter-row-selected');
+        });
+      }
+      setDashboardReadOnly(false);
+    }
+
+    // Attach click listeners to historical diagnosis links and encounter rows
+    if (encRows) {
+      encRows.addEventListener('click', function (e) {
+        var row = e.target.closest('tr');
+        if (!row || !encRows.contains(row)) return;
+
+        var recBtn = e.target.closest('.btn-encounter-record');
+        if (recBtn) return;
+        var resBtn = e.target.closest('.btn-encounter-results');
+        if (resBtn) return;
+        var viewBtn = e.target.closest('.btn-encounter-view');
+        if (viewBtn) return;
+
+        var idx = parseInt(row.dataset.encounterIndex, 10);
+        if (!isNaN(idx)) {
+          inspectEncounterInDashboard(idx);
+        }
+      });
+    }
+
+    var retBtn = document.getElementById('btn-return-current-encounter');
+    if (retBtn) {
+      retBtn.addEventListener('click', function () {
+        restoreCurrentEncounterView();
+      });
+    }
+
+    var modalBtn = document.getElementById('btn-open-hist-modal');
+    if (modalBtn) {
+      modalBtn.addEventListener('click', function () {
+        if (activeInspectedEncounterIndex !== null) {
+          openHistoricalWrapupModal(activeInspectedEncounterIndex);
+        }
       });
     }
 
