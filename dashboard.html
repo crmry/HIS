@@ -2152,20 +2152,6 @@
       </div>
     </div>
 
-    <!-- ROW 5: Progress Notes (below diagnosis, above doctor's orders) -->
-    <div class="row-fluid">
-      <div class="span12">
-        <div class="dashlet">
-          <div class="bootstrap-widget-header">
-            <h3>Progress Notes (Subjective / Objective / Assessment)</h3>
-          </div>
-          <div class="bootstrap-widget-content" id="dashlet-progress">
-            <textarea id="progress_notes" name="progress_notes" rows="5" class="input-block-level"
-              placeholder=""></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- ROW 6: Doctor's Orders -->
     <div class="row-fluid">
@@ -3392,7 +3378,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 13,
+        seedVersion: 14,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T10:45:00+08:00',
         data: {
@@ -3446,6 +3432,14 @@
               diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk; Essential Hypertension',
               patient_record: 'Daily progress review',
               results: 'Clinically improving',
+              progress_notes: 'Hospital Day 2. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics',
+              orders: [
+                { text: 'Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 10:30 AM nurse' },
+                { text: 'Continue IV Ceftriaxone 2 g OD (Day 2 of 7).', dateTime: '2026-06-13T10:16:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:35 AM nurse\nA - 11:00 AM nurse' },
+                { text: 'Shift Azithromycin to oral 500 mg tablet once daily after meals.', dateTime: '2026-06-13T10:17:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:40 AM nurse\nA - 11:05 AM nurse' },
+                { text: 'Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.', dateTime: '2026-06-13T10:18:00+08:00', cared: ['R'], timeSignature: 'R - 10:45 AM physician' },
+                { text: 'May ambulate inside room as tolerated. Regular diet.', dateTime: '2026-06-13T10:20:00+08:00', cared: ['C'], timeSignature: 'C - 11:00 AM nurse' }
+              ],
               clinical_record: {
                 chief_complaint: 'Decreasing cough and improved breathing; afebrile x 18 hours',
                 history: 'Hospital Day 2. Patient was admitted to Medical Ward under Internal Medicine. Received IV Ceftriaxone 2 g OD (Day 2) and PO Azithromycin 500 mg OD. Temperature normalized (afebrile at 36.8°C for the past 18 hours). Dyspnea has significantly resolved, patient ambulating comfortably in room. Productive cough is looser and less frequent with clearing sputum.\n\nInterval History: Tolerating low-salt diet well, adequate oral fluid intake. No chest pain, palpitations, or drug adverse events noted. Vital signs stable with SpO2 98% on 2 L/min nasal cannula.\n\nPhysical Examination on Rounds: Chest auscultation shows decreased coarse crackles over the right base with improved bilateral breath sounds. Abdomen soft, non-tender.',
@@ -3791,7 +3785,7 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 13) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 14) records[index] = seedPatientRecord();
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
       else if (Number(records[blankIndex].seedVersion || 0) < 10) records[blankIndex] = blankPatientRecord();

@@ -466,7 +466,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 4,
+                seedVersion: 14,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T10:45:00+08:00",
                 data: {
@@ -501,8 +501,31 @@
                     final_diagnosis: "Community-acquired pneumonia, improved; essential hypertension.",
                     progress_notes: "Productive cough and dyspnea, improved after initial treatment.\nBP 138/86, HR 102, RR 24, Temp 38.2 C, SpO2 93%. Crackles at right lower lung field.\nCommunity-acquired pneumonia, moderate risk; hypertension.",
                     encounters: [
-                        { date: "2026-06-12", registry: "ER", service: "Emergency Medicine", patient_record: "Initial assessment and stabilization", results: "Admitted to Medical Ward" },
-                        { date: "2026-06-13", registry: "IP", service: "Internal Medicine", patient_record: "Daily progress review", results: "Clinically improving" }
+                        {
+                            date: "2026-06-12",
+                            time: "08:30 AM",
+                            registry: "ER",
+                            service: "Emergency Medicine",
+                            patient_record: "Initial assessment and stabilization",
+                            results: "Admitted to Medical Ward",
+                            progress_notes: "Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO₂ 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension"
+                        },
+                        {
+                            date: "2026-06-13",
+                            time: "10:15 AM",
+                            registry: "IP",
+                            service: "Internal Medicine",
+                            patient_record: "Daily progress review",
+                            results: "Clinically improving",
+                            progress_notes: "Hospital Day 2. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO₂ 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics",
+                            orders: [
+                                { text: "Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C"], timeSignature: "C - 10:30 AM nurse" },
+                                { text: "Continue IV Ceftriaxone 2 g OD (Day 2 of 7).", dateTime: "2026-06-13T10:16:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:35 AM nurse\nA - 11:00 AM nurse" },
+                                { text: "Shift Azithromycin to oral 500 mg tablet once daily after meals.", dateTime: "2026-06-13T10:17:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:40 AM nurse\nA - 11:05 AM nurse" },
+                                { text: "Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.", dateTime: "2026-06-13T10:18:00+08:00", cared: ["R"], timeSignature: "R - 10:45 AM physician" },
+                                { text: "May ambulate inside room as tolerated. Regular diet.", dateTime: "2026-06-13T10:20:00+08:00", cared: ["C"], timeSignature: "C - 11:00 AM nurse" }
+                            ]
+                        }
                     ],
                     orders: {
                         plans: [
@@ -543,7 +566,7 @@
         function blankPatientRecord() {
             return {
                 id: BLANK_PATIENT_ID,
-                seedVersion: 4,
+                seedVersion: 14,
                 createdAt: "2026-09-25T10:30:00+08:00",
                 updatedAt: "2026-09-25T10:30:00+08:00",
                 data: {
@@ -566,10 +589,10 @@
             const records = getPatients();
             const index = records.findIndex(record => record.id === SEED_PATIENT_ID);
             if (index < 0) records.push(seedPatientRecord());
-            else if (Number(records[index].seedVersion || 0) < 4) records[index] = seedPatientRecord();
+            else if (Number(records[index].seedVersion || 0) < 14) records[index] = seedPatientRecord();
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
-            else if (Number(records[blankIndex].seedVersion || 0) < 4) records[blankIndex] = blankPatientRecord();
+            else if (Number(records[blankIndex].seedVersion || 0) < 14) records[blankIndex] = blankPatientRecord();
             localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
         }
 
@@ -749,29 +772,35 @@
             return entries;
         }
 
+        function cleanProgressNotesText(text) {
+            if (!text) return "";
+            return String(text)
+                .replace(/^(S>|O>|A>|P>|S:|O:|A:|P:)\s*/gmi, "")
+                .replace(/^(Subjective|Objective|Assessment|Plan):\s*/gmi, "")
+                .trim();
+        }
+
         function buildProgressNotes(data) {
             if (String(data?.progress_notes || "").trim()) {
-                return String(data.progress_notes).replace(/^(S>|O>|A>)\s*/gm, "").trim();
+                return cleanProgressNotesText(data.progress_notes);
             }
 
-            const subjective = [];
-            const objective = [];
-            const assessment = [];
+            const lines = [];
 
             if (data?.chief_complaint) {
-                subjective.push(`Chief complaint: ${data.chief_complaint}`);
+                lines.push(`Chief complaint: ${cleanProgressNotesText(data.chief_complaint)}`);
             }
             if (data?.hx_present) {
-                subjective.push(`Present illness: ${data.hx_present}`);
+                lines.push(`Present illness: ${cleanProgressNotesText(data.hx_present)}`);
             }
             if (data?.hx_past) {
-                subjective.push(`Past medical history: ${data.hx_past}`);
+                lines.push(`Past medical history: ${cleanProgressNotesText(data.hx_past)}`);
             }
             if (Array.isArray(data?.pertinent_signs) && data.pertinent_signs.length) {
-                subjective.push(`Pertinent signs: ${data.pertinent_signs.join(", ")}`);
+                lines.push(`Pertinent signs: ${data.pertinent_signs.join(", ")}`);
             }
             if (data?.pertinent_signs_information) {
-                subjective.push(`Pertinent information: ${data.pertinent_signs_information}`);
+                lines.push(`Pertinent information: ${cleanProgressNotesText(data.pertinent_signs_information)}`);
             }
 
             const vitals = [];
@@ -783,7 +812,7 @@
             if (data?.vs_weight) vitals.push(`Weight ${data.vs_weight} kg`);
             if (data?.vs_height) vitals.push(`Height ${data.vs_height} cm`);
 
-            if (vitals.length) objective.push(`Vital signs: ${vitals.join(", ")}`);
+            if (vitals.length) lines.push(`Vital signs: ${vitals.join(", ")}`);
 
             const physicalExam = [
                 ["General survey", data?.pe_general], ["HEENT", data?.pe_heent],
@@ -791,7 +820,7 @@
                 ["Abdomen", data?.pe_abdomen], ["Extremities", data?.pe_extremities],
                 ["Neurologic", data?.pe_neurologic], ["Skin", data?.pe_skin], ["Other PE", data?.pe_other]
             ].filter(([, value]) => String(value || "").trim());
-            physicalExam.forEach(([label, value]) => objective.push(`${label}: ${value}`));
+            physicalExam.forEach(([label, value]) => lines.push(`${label}: ${cleanProgressNotesText(value)}`));
 
             const examResults = [
                 ["Laboratory", data?.exam_laboratory],
@@ -800,26 +829,43 @@
                 ["EEG", data?.exam_eeg],
                 ["Pulmonology", data?.exam_pulmonology]
             ].filter(([, value]) => String(value || "").trim());
-
-            examResults.forEach(([label, value]) => {
-                objective.push(`${label}: ${value}`);
-            });
+            examResults.forEach(([label, value]) => lines.push(`${label}: ${cleanProgressNotesText(value)}`));
 
             if (data?.admitting_diagnosis) {
-                assessment.push(`Admitting diagnosis: ${data.admitting_diagnosis}`);
+                lines.push(`Admitting diagnosis: ${cleanProgressNotesText(data.admitting_diagnosis)}`);
             }
             if (data?.final_diagnosis) {
-                assessment.push(`Final diagnosis: ${data.final_diagnosis}`);
+                lines.push(`Diagnosis: ${cleanProgressNotesText(data.final_diagnosis)}`);
             } else if (data?.initial_diagnosis) {
-                assessment.push(`Initial diagnosis: ${data.initial_diagnosis}`);
+                lines.push(`Diagnosis: ${cleanProgressNotesText(data.initial_diagnosis)}`);
+            } else if (data?.diagnosis) {
+                lines.push(`Diagnosis: ${cleanProgressNotesText(data.diagnosis)}`);
             }
 
-            const parts = [];
-            if (subjective.length) parts.push(subjective.join(". "));
-            if (objective.length) parts.push(objective.join(". "));
-            if (assessment.length) parts.push(assessment.join(". "));
+            return lines.join("\n");
+        }
 
-            return parts.join("\n");
+        function buildEncounterProgressNote(enc, primaryData) {
+            if (enc?.progress_notes) {
+                return cleanProgressNotesText(enc.progress_notes);
+            }
+            const rec = enc?.clinical_record || {};
+            const lines = [];
+            if (rec.chief_complaint) {
+                lines.push(cleanProgressNotesText(rec.chief_complaint));
+            }
+            if (rec.history) {
+                const histSummary = String(rec.history).split('\n')[0].trim();
+                if (histSummary && histSummary !== rec.chief_complaint) {
+                    lines.push(cleanProgressNotesText(histSummary));
+                }
+            }
+            if (enc?.diagnosis) {
+                lines.push(`Diagnosis: ${cleanProgressNotesText(enc.diagnosis)}`);
+            } else if (rec.final_diagnosis) {
+                lines.push(`Diagnosis: ${cleanProgressNotesText(rec.final_diagnosis)}`);
+            }
+            return lines.length ? lines.join("\n") : (enc?.patient_record || "");
         }
 
         function firstOrderDateTime(data, record) {
@@ -921,38 +967,185 @@
                 : "No saved patients found in this browser.";
         }
 
+        function extractProgressNoteLines(rawText) {
+            if (!rawText) return [];
+            return String(rawText)
+                .split("\n")
+                .map(line => cleanProgressNotesText(line))
+                .filter(Boolean);
+        }
+
+        function getChronologicalEncounterBlocks(data, record) {
+            const encounters = Array.isArray(data?.encounters) ? [...data.encounters] : [];
+            const primaryOrders = doctorOrderEntries(data);
+            const admitDt = admissionDate(data, record);
+
+            // If no encounters array exists in the record, return single primary block
+            if (!encounters.length) {
+                return [{
+                    dateTime: formatDateTime(firstOrderDateTime(data, record)),
+                    noteLines: extractProgressNoteLines(buildProgressNotes(data)),
+                    orders: primaryOrders
+                }];
+            }
+
+            // Sort encounters chronologically: oldest first (admission encounter at top)
+            encounters.sort((a, b) => {
+                const da = String(a?.date || "") + " " + String(a?.time || "");
+                const db = String(b?.date || "") + " " + String(b?.time || "");
+                return da.localeCompare(db);
+            });
+
+            const blocks = [];
+            let primaryAssigned = false;
+
+            encounters.forEach((enc, index) => {
+                // Determine orders for this encounter
+                let orders = [];
+                if (Array.isArray(enc?.orders) && enc.orders.length > 0) {
+                    orders = enc.orders.map(item => ({
+                        text: typeof item === "string" ? item : (item?.text || medicationOrderText(item) || ""),
+                        dateTime: item?.dateTime || "",
+                        cared: Array.isArray(item?.cared) ? item.cared : [],
+                        timeSignature: item?.timeSignature || ""
+                    })).filter(o => o.text);
+                } else if (enc?.orders && typeof enc.orders === "object" && Object.keys(enc.orders).length > 0) {
+                    orders = doctorOrderEntries({ orders: enc.orders });
+                }
+
+                // Check if this encounter represents the admission that holds data.orders
+                const isAdmission = !primaryAssigned && (
+                    (enc.date && admitDt && enc.date === admitDt) ||
+                    (!orders.length && (index === 0 || enc.status_tag === "Initial Visit (ER)" || enc.registry === "ER"))
+                );
+
+                if (!orders.length && isAdmission && primaryOrders.length > 0) {
+                    orders = primaryOrders;
+                    primaryAssigned = true;
+                }
+
+                // Determine progress notes for this encounter
+                let noteText = "";
+                if (enc?.progress_notes) {
+                    noteText = cleanProgressNotesText(enc.progress_notes);
+                } else if (isAdmission) {
+                    noteText = buildProgressNotes(data);
+                } else {
+                    noteText = buildEncounterProgressNote(enc, data);
+                }
+
+                const noteLines = extractProgressNoteLines(noteText);
+                const hasOrders = orders.length > 0;
+                const hasNotes = noteLines.length > 0;
+                const isCurrentStay = enc.status_tag !== "Previous Admission" && enc.status_tag !== "Follow-up (OPD)";
+
+                // Only include encounters that have orders, or current stay notes, or the admission encounter
+                if (hasOrders || (hasNotes && isCurrentStay) || isAdmission) {
+                    let dt = "";
+                    if (enc.date) {
+                        dt = formatDate(enc.date) + (enc.time ? " " + enc.time : "");
+                    } else if (orders[0]?.dateTime) {
+                        dt = formatDateTime(orders[0].dateTime);
+                    } else if (isAdmission) {
+                        dt = formatDateTime(firstOrderDateTime(data, record));
+                    }
+
+                    blocks.push({
+                        date: enc.date || "",
+                        time: enc.time || "",
+                        dateTime: dt,
+                        noteLines,
+                        orders
+                    });
+                }
+            });
+
+            // Fallback: If primaryOrders was not assigned anywhere, attach to first block or create a new block
+            if (!primaryAssigned && primaryOrders.length > 0) {
+                if (blocks.length > 0) {
+                    blocks[0].orders = primaryOrders;
+                } else {
+                    blocks.push({
+                        dateTime: formatDateTime(firstOrderDateTime(data, record)),
+                        noteLines: extractProgressNoteLines(buildProgressNotes(data)),
+                        orders: primaryOrders
+                    });
+                }
+            }
+
+            return blocks.length ? blocks : [{
+                dateTime: formatDateTime(firstOrderDateTime(data, record)),
+                noteLines: extractProgressNoteLines(buildProgressNotes(data)),
+                orders: primaryOrders
+            }];
+        }
+
         function populateClinicalRows(record) {
             const data = record.data || {};
-            const progressNotes = buildProgressNotes(data);
-            const orderEntries = doctorOrderEntries(data);
-            const firstDateTime = formatDateTime(firstOrderDateTime(data, record));
+            const blocks = getChronologicalEncounterBlocks(data, record);
 
-            const rowCount = Math.max(18, orderEntries.length, progressNotes ? 1 : 0);
+            // Calculate total rows needed across all encounter blocks
+            let totalRowsNeeded = 0;
+            blocks.forEach(block => {
+                const count = Math.max(1, block.orders.length, block.noteLines.length);
+                totalRowsNeeded += count;
+            });
+
+            const rowCount = Math.max(18, totalRowsNeeded);
             fillRows("main-rows", "row", rowCount);
 
             const rows = [...document.querySelectorAll("#main-rows tr")];
+            let currentRowIndex = 0;
 
-            // The sample output uses one Date/Time block and one Progress Notes block
-            // for the set of physician's orders. Only the first row is populated here.
-            if (rows[0]) {
-                const textareas = rows[0].querySelectorAll("textarea");
-                setTextareaValue(textareas[0], firstDateTime);
-                setTextareaValue(textareas[1], progressNotes);
-            }
+            blocks.forEach(block => {
+                const blockRowCount = Math.max(1, block.orders.length, block.noteLines.length);
 
-            // Each physician's order is shown exactly as it was entered in the dashboard.
-            orderEntries.forEach((entry, index) => {
-                const row = rows[index];
-                if (!row) return;
+                for (let i = 0; i < blockRowCount; i++) {
+                    const row = rows[currentRowIndex];
+                    if (!row) {
+                        currentRowIndex++;
+                        continue;
+                    }
 
-                const textareas = row.querySelectorAll("textarea");
-                setTextareaValue(textareas[2], entry.text);
-                setTextareaValue(textareas[3], entry.timeSignature || "");
-                const cared = new Set(Array.isArray(entry.cared) ? entry.cared : []);
-                const caredKeys = ["C", "A", "R", "E", "D"];
-                row.querySelectorAll('input[type="checkbox"]').forEach((checkbox, caredIndex) => {
-                    checkbox.checked = cared.has(caredKeys[caredIndex]);
-                });
+                    const textareas = row.querySelectorAll("textarea");
+                    const order = block.orders[i] || null;
+                    const noteLine = block.noteLines[i] || "";
+
+                    // Col 0: Date/Time
+                    // First row of encounter displays encounter datetime.
+                    // Subsequent rows display specific order datetime if different.
+                    if (i === 0) {
+                        setTextareaValue(textareas[0], block.dateTime);
+                    } else if (order?.dateTime) {
+                        setTextareaValue(textareas[0], formatDateTime(order.dateTime));
+                    }
+
+                    // Col 1: Progress Notes - placed row by row, clean, without S.A.O.
+                    if (noteLine) {
+                        setTextareaValue(textareas[1], noteLine);
+                    }
+
+                    // Col 2: Physician's Order
+                    if (order?.text) {
+                        setTextareaValue(textareas[2], order.text);
+                    }
+
+                    // Col 3-7: Checkboxes (C, A, R, E, D)
+                    if (order) {
+                        const cared = new Set(Array.isArray(order.cared) ? order.cared : []);
+                        const caredKeys = ["C", "A", "R", "E", "D"];
+                        row.querySelectorAll('input[type="checkbox"]').forEach((checkbox, caredIndex) => {
+                            checkbox.checked = cared.has(caredKeys[caredIndex]);
+                        });
+                    }
+
+                    // Col 8: Time / Signature
+                    if (order?.timeSignature) {
+                        setTextareaValue(textareas[3], order.timeSignature);
+                    }
+
+                    currentRowIndex++;
+                }
             });
 
             resizeAllTextareas();
