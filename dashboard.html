@@ -1493,14 +1493,14 @@
                       <thead>
                         <tr>
                           <th style="width:140px;">Date and Time</th>
-                          <th style="width:110px;">BP (mmHg)</th>
-                          <th>HR (bpm)</th>
-                          <th>RR (/min)</th>
-                          <th>Temp (°C)</th>
-                          <th>SpO₂ (%)</th>
-                          <th>Weight (kg)</th>
-                          <th>Height (cm)</th>
-                          <th>Pain / O₂ Remarks</th>
+                          <th title="Blood Pressure (mmHg)">BP</th>
+                          <th title="Heart Rate (bpm)">HR</th>
+                          <th title="Respiratory Rate (/min)">RR</th>
+                          <th title="Temperature (°C)">TEMP</th>
+                          <th title="Weight (kg)">WT</th>
+                          <th title="Height (cm)">HT</th>
+                          <th title="Body Mass Index (kg/m²)">BMI</th>
+                          <th title="Oxygen Saturation SpO2 (%)">O2</th>
                         </tr>
                       </thead>
                       <tbody id="vitals-rows"></tbody>
@@ -2640,13 +2640,13 @@
               <div class="span3"><label>BP (mmHg):</label><input type="text" id="fe-vs-bp" class="input-block-level" placeholder="120/80"></div>
               <div class="span3"><label>HR (bpm):</label><input type="number" id="fe-vs-hr" class="input-block-level" placeholder="78"></div>
               <div class="span3"><label>RR (/min):</label><input type="number" id="fe-vs-rr" class="input-block-level" placeholder="18"></div>
-              <div class="span3"><label>Temp (°C):</label><input type="text" id="fe-vs-temp" class="input-block-level" placeholder="36.8"></div>
+              <div class="span3"><label>TEMP (°C):</label><input type="text" id="fe-vs-temp" class="input-block-level" placeholder="36.8"></div>
             </div>
             <div class="row-fluid">
-              <div class="span3"><label>SpO₂ (%):</label><input type="number" id="fe-vs-spo2" class="input-block-level" placeholder="98"></div>
-              <div class="span3"><label>Weight (kg):</label><input type="text" id="fe-vs-weight" class="input-block-level" placeholder="61"></div>
-              <div class="span3"><label>Height (cm):</label><input type="text" id="fe-vs-height" class="input-block-level" placeholder="158"></div>
-              <div class="span3"><label>Pain Score / Site:</label><input type="text" id="fe-vs-pain" class="input-block-level" placeholder="0/10 or Epigastric 3/10"></div>
+              <div class="span3"><label>WT / Weight (kg):</label><input type="text" id="fe-vs-weight" class="input-block-level" placeholder="61" oninput="autoCalcModalBmi()"></div>
+              <div class="span3"><label>HT / Height (cm):</label><input type="text" id="fe-vs-height" class="input-block-level" placeholder="158" oninput="autoCalcModalBmi()"></div>
+              <div class="span3"><label>BMI (kg/m²):</label><input type="text" id="fe-vs-bmi" class="input-block-level" placeholder="Auto-calculated" readonly style="background:#f9f9f9;"></div>
+              <div class="span3"><label>O2 / SpO₂ (%):</label><input type="number" id="fe-vs-spo2" class="input-block-level" placeholder="98"></div>
             </div>
           </div>
 
@@ -3350,7 +3350,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 12,
+        seedVersion: 13,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T10:45:00+08:00',
         data: {
@@ -3387,7 +3387,7 @@
           other_forms_notes: 'No additional specialty form required at present.',
           vs_bp: '104/65', vs_hr: '115', vs_rr: '22', vs_temp: '37.5', vs_spo2: '92', vs_weight: '61', vs_height: '158', vs_date_time: '2026-09-25T12:30:00+08:00',
           vital_signs: [
-            { dateTime: '2026-09-25T12:30:00+08:00', bp: '104/65', hr: '115', rr: '22', temp: '37.5', spo2: '92', weight: '61', height: '158' }
+            { dateTime: '2026-09-25T12:30:00+08:00', bp: '104/65', hr: '115', rr: '22', temp: '37.5', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '92', o2: '92' }
           ],
           admitting_diagnosis: 'Community-acquired pneumonia, moderate risk; hypertension.',
           final_diagnosis: 'Community-acquired pneumonia, improved; essential hypertension.',
@@ -3749,7 +3749,7 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 12) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 13) records[index] = seedPatientRecord();
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
       else if (Number(records[blankIndex].seedVersion || 0) < 10) records[blankIndex] = blankPatientRecord();
@@ -3830,8 +3830,35 @@
     }
 
     var seedVitalSigns = [
-      { dateTime: '2026-09-25T12:30:00+08:00', bp: '104/65', hr: '115', rr: '22', temp: '37.5', spo2: '92', weight: '61', height: '158' }
+      { dateTime: '2026-09-25T12:30:00+08:00', bp: '104/65', hr: '115', rr: '22', temp: '37.5', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '92', o2: '92' }
     ];
+
+    function calculateBMI(weightKg, heightCm) {
+      var w = parseFloat(weightKg);
+      var h = parseFloat(heightCm);
+      if (!isNaN(w) && !isNaN(h) && w > 0 && h > 0) {
+        var hM = h / 100;
+        return (w / (hM * hM)).toFixed(1);
+      }
+      return '—';
+    }
+
+    function autoCalcModalBmi() {
+      var wEl = document.getElementById('fe-vs-weight');
+      var hEl = document.getElementById('fe-vs-height');
+      var bmiEl = document.getElementById('fe-vs-bmi');
+      if (wEl && hEl && bmiEl) {
+        var w = parseFloat(wEl.value);
+        var h = parseFloat(hEl.value);
+        if (!isNaN(w) && !isNaN(h) && w > 0 && h > 0) {
+          var hM = h / 100;
+          bmiEl.value = (w / (hM * hM)).toFixed(1);
+        } else {
+          bmiEl.value = '';
+        }
+      }
+    }
+    window.autoCalcModalBmi = autoCalcModalBmi;
 
     function renderVitalSigns(record) {
       var body = document.getElementById('vitals-rows');
@@ -3858,23 +3885,37 @@
           hr: data.vs_hr,
           rr: data.vs_rr,
           temp: data.vs_temp,
-          spo2: data.vs_spo2,
+          wt: data.vs_weight,
+          ht: data.vs_height,
           weight: data.vs_weight,
-          height: data.vs_height
+          height: data.vs_height,
+          bmi: calculateBMI(data.vs_weight, data.vs_height),
+          spo2: data.vs_spo2,
+          o2: data.vs_spo2
         }] : [];
       }
 
       body.innerHTML = rows.map(function (row) {
         var dateTime = row.dateTime || row.date_time || '';
+        var bp = row.bp || row.vs_bp || '—';
+        var hr = row.hr || row.vs_hr || '—';
+        var rr = row.rr || row.vs_rr || '—';
+        var temp = row.temp || row.vs_temp || '—';
+        var wt = row.wt || row.weight || row.vs_weight || '—';
+        var ht = row.ht || row.height || row.vs_height || '—';
+        var bmi = row.bmi || calculateBMI(wt, ht);
+        var o2 = row.o2 || row.spo2 || row.vs_spo2 || '—';
+
         return '<tr>' +
-          '<td>' + esc(dateTime ? formatDateTime(dateTime).replace(',', '') : '') + '</td>' +
-          '<td>' + esc(row.bp || row.vs_bp || '') + '</td>' +
-          '<td>' + esc(row.hr || row.vs_hr || '') + '</td>' +
-          '<td>' + esc(row.rr || row.vs_rr || '') + '</td>' +
-          '<td>' + esc(row.temp || row.vs_temp || '') + '</td>' +
-          '<td>' + esc(row.spo2 || row.vs_spo2 || '') + '</td>' +
-          '<td>' + esc(row.weight || row.vs_weight || '') + '</td>' +
-          '<td>' + esc(row.height || row.vs_height || '') + '</td>' +
+          '<td>' + esc(dateTime ? formatDateTime(dateTime).replace(',', '') : '—') + '</td>' +
+          '<td>' + esc(bp) + '</td>' +
+          '<td>' + esc(hr) + '</td>' +
+          '<td>' + esc(rr) + '</td>' +
+          '<td>' + esc(temp) + '</td>' +
+          '<td>' + esc(wt) + '</td>' +
+          '<td>' + esc(ht) + '</td>' +
+          '<td>' + esc(bmi) + '</td>' +
+          '<td>' + esc(o2) + '</td>' +
           '</tr>';
       }).join('');
     }
@@ -4381,7 +4422,7 @@
           var spo2 = (document.getElementById('fe-vs-spo2').value || '').trim();
           var weight = (document.getElementById('fe-vs-weight').value || '').trim();
           var height = (document.getElementById('fe-vs-height').value || '').trim();
-          var pain = (document.getElementById('fe-vs-pain').value || '').trim();
+          var bmi = (document.getElementById('fe-vs-bmi') ? document.getElementById('fe-vs-bmi').value : '') || calculateBMI(weight, height);
 
           var allPatients = getPatients();
           var currentRec = allPatients.find(function(p) { return p.id === pid; });
@@ -4394,10 +4435,13 @@
               hr: hr,
               rr: rr,
               temp: temp,
-              spo2: spo2,
+              wt: weight,
+              ht: height,
               weight: weight,
               height: height,
-              pain: pain
+              bmi: bmi,
+              spo2: spo2,
+              o2: spo2
             });
             localStorage.setItem(STORAGE_KEY, JSON.stringify(allPatients));
             renderVitalSigns(currentRec);
