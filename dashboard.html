@@ -1749,115 +1749,7 @@
           </div>
         </div>
 
-        <!-- Section 3: Accordion Outpatient Requisitions & Take-Home Orders -->
-        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:14px; margin-bottom:10px;">
-          <div style="font-weight:700; font-size:12px; color:#1b4d3e; text-transform:uppercase; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
-            <span>4. Take-Home Orders &amp; Diagnostic Requisitions (Accordion)</span>
-            <span style="font-size:11px; font-weight:normal; color:#64748b; text-transform:none;">Patient carries out at their convenience before next follow-up</span>
-          </div>
 
-          <div class="accordion" id="end-care-accordion" style="margin-top:10px; margin-bottom:0;">
-            <!-- Accordion 1: Prescriptions (Rx) -->
-            <div class="accordion-group" style="border:1px solid #cbd5e1; border-radius:4px; margin-bottom:6px;">
-              <div class="accordion-heading end-care-accordion-toggle" style="background:#f1f5f9; padding:8px 12px; cursor:pointer;" data-target="collapse-rx">
-                <strong style="color:#0284c7;"><i class="icon-chevron-right" id="arrow-collapse-rx"></i> 💊 Electronic Prescriptions (e-Rx)</strong>
-                <span class="pull-right badge badge-info" id="badge-end-care-rx">0 items</span>
-              </div>
-              <div id="collapse-rx" class="accordion-body" style="display:none; padding:10px 12px; background:#fff; border-top:1px solid #e2e8f0;">
-                <div style="display:flex; gap:6px; margin-bottom:8px;">
-                  <input type="text" id="end-care-rx-drug" placeholder="Medication (e.g. Azithromycin 500 mg tab)" style="flex:2; font-size:12px; margin-bottom:0; box-sizing:border-box;">
-                  <input type="text" id="end-care-rx-sig" placeholder="Sig: 1 tab PO OD x 3 days" style="flex:2; font-size:12px; margin-bottom:0; box-sizing:border-box;">
-                  <input type="text" id="end-care-rx-qty" placeholder="Qty: #3" style="width:70px; font-size:12px; margin-bottom:0; box-sizing:border-box;">
-                  <button type="button" class="btn btn-small btn-primary" id="btn-end-care-add-rx">+ Add</button>
-                </div>
-                <div id="end-care-rx-list" style="font-size:12px;">
-                  <div id="end-care-rx-empty" style="color:#94a3b8; font-style:italic;">No take-home medications added yet. Use form above to add.</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Accordion 2: Laboratory -->
-            <div class="accordion-group" style="border:1px solid #cbd5e1; border-radius:4px; margin-bottom:6px;">
-              <div class="accordion-heading end-care-accordion-toggle" style="background:#f1f5f9; padding:8px 12px; cursor:pointer;" data-target="collapse-lab">
-                <strong style="color:#059669;"><i class="icon-chevron-right" id="arrow-collapse-lab"></i> 🧪 Laboratory Requisition</strong>
-                <span class="pull-right badge badge-success" id="badge-end-care-lab">0 tests</span>
-              </div>
-              <div id="collapse-lab" class="accordion-body" style="display:none; padding:10px 12px; background:#fff; border-top:1px solid #e2e8f0;">
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:6px; font-size:12px;">
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="laboratory" value="Complete Blood Count (CBC)"> Complete Blood Count (CBC)</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="laboratory" value="Fasting Blood Sugar (FBS)"> Fasting Blood Sugar (FBS)</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="laboratory" value="HbA1c (Glycated Hemoglobin)"> HbA1c (Glycated Hemoglobin)</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="laboratory" value="Serum Creatinine &amp; eGFR"> Serum Creatinine &amp; eGFR</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="laboratory" value="Lipid Profile"> Lipid Profile (Total, HDL, LDL, Trig)</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="laboratory" value="Routine Urinalysis"> Routine Urinalysis</label>
-                </div>
-              </div>
-            </div>
-
-            <!-- Accordion 3: Radiology & Imaging -->
-            <div class="accordion-group" style="border:1px solid #cbd5e1; border-radius:4px; margin-bottom:6px;">
-              <div class="accordion-heading end-care-accordion-toggle" style="background:#f1f5f9; padding:8px 12px; cursor:pointer;" data-target="collapse-rad">
-                <strong style="color:#d97706;"><i class="icon-chevron-right" id="arrow-collapse-rad"></i> 🩻 Radiology &amp; Diagnostic Imaging</strong>
-                <span class="pull-right badge badge-warning" id="badge-end-care-rad">0 orders</span>
-              </div>
-              <div id="collapse-rad" class="accordion-body" style="display:none; padding:10px 12px; background:#fff; border-top:1px solid #e2e8f0;">
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:6px; font-size:12px;">
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="radiology" value="Digital Chest X-Ray (PA View)"> Digital Chest X-Ray (PA View)</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="radiology" value="Chest X-Ray (AP / Lateral)"> Chest X-Ray (AP / Lateral)</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="radiology" value="Ultrasound Whole Abdomen"> Ultrasound Whole Abdomen</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="radiology" value="CT Scan Chest"> CT Scan Chest</label>
-                </div>
-              </div>
-            </div>
-
-            <!-- Accordion 4: Heart Station -->
-            <div class="accordion-group" style="border:1px solid #cbd5e1; border-radius:4px; margin-bottom:6px;">
-              <div class="accordion-heading end-care-accordion-toggle" style="background:#f1f5f9; padding:8px 12px; cursor:pointer;" data-target="collapse-heart">
-                <strong style="color:#b91c1c;"><i class="icon-chevron-right" id="arrow-collapse-heart"></i> 🫀 Heart Station</strong>
-                <span class="pull-right badge badge-important" id="badge-end-care-heart">0 orders</span>
-              </div>
-              <div id="collapse-heart" class="accordion-body" style="display:none; padding:10px 12px; background:#fff; border-top:1px solid #e2e8f0;">
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:6px; font-size:12px;">
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="heart" value="12-Lead ECG (Resting)"> 12-Lead ECG (Resting)</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="heart" value="2D Echocardiogram with Doppler"> 2D Echocardiogram with Doppler</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="heart" value="24-Hour Holter Monitoring"> 24-Hour Holter Monitoring</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="heart" value="Treadmill Stress Test"> Treadmill Exercise Stress Test</label>
-                </div>
-              </div>
-            </div>
-
-            <!-- Accordion 5: Neuro Station / EEG -->
-            <div class="accordion-group" style="border:1px solid #cbd5e1; border-radius:4px; margin-bottom:6px;">
-              <div class="accordion-heading end-care-accordion-toggle" style="background:#f1f5f9; padding:8px 12px; cursor:pointer;" data-target="collapse-neuro">
-                <strong style="color:#7c3aed;"><i class="icon-chevron-right" id="arrow-collapse-neuro"></i> 🧠 Neuro Station / EEG</strong>
-                <span class="pull-right badge" style="background:#7c3aed; color:#fff;" id="badge-end-care-neuro">0 orders</span>
-              </div>
-              <div id="collapse-neuro" class="accordion-body" style="display:none; padding:10px 12px; background:#fff; border-top:1px solid #e2e8f0;">
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:6px; font-size:12px;">
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="eeg" value="Routine Electroencephalogram (EEG)"> Routine Electroencephalogram (EEG)</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="eeg" value="Sleep-Deprived EEG"> Sleep-Deprived EEG</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="eeg" value="Video EEG Monitoring"> Video EEG Monitoring</label>
-                </div>
-              </div>
-            </div>
-
-            <!-- Accordion 6: Pulmonary / Respiratory -->
-            <div class="accordion-group" style="border:1px solid #cbd5e1; border-radius:4px; margin-bottom:0;">
-              <div class="accordion-heading end-care-accordion-toggle" style="background:#f1f5f9; padding:8px 12px; cursor:pointer;" data-target="collapse-pulmo">
-                <strong style="color:#0891b2;"><i class="icon-chevron-right" id="arrow-collapse-pulmo"></i> 🫁 Pulmonary / Respiratory</strong>
-                <span class="pull-right badge badge-info" id="badge-end-care-pulmo">0 orders</span>
-              </div>
-              <div id="collapse-pulmo" class="accordion-body" style="display:none; padding:10px 12px; background:#fff; border-top:1px solid #e2e8f0;">
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:6px; font-size:12px;">
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="respiratory" value="Spirometry / Pulmonary Function Test"> Spirometry / Pulmonary Function Test (PFT)</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="respiratory" value="Peak Expiratory Flow (PEF) Monitoring"> Peak Expiratory Flow (PEF) Monitoring</label>
-                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="respiratory" value="Arterial Blood Gas (ABG)"> Arterial Blood Gas (ABG)</label>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
 
       </div>
 
@@ -8775,83 +8667,6 @@
        END PATIENT CARE ACCORDION CONSOLE & LOCKED HISTORICAL WRAP-UP VIEWER
        ═══════════════════════════════════════════════════════════════════════ */
 // ── 2. End Patient Care Accordion Console ──
-    var endCareRxList = [];
-
-    function renderEndCareRxItems() {
-      var listDiv = document.getElementById('end-care-rx-list');
-      var badge = document.getElementById('badge-end-care-rx');
-      if (!listDiv) return;
-      if (badge) badge.textContent = endCareRxList.length + ' item' + (endCareRxList.length === 1 ? '' : 's');
-
-      if (endCareRxList.length === 0) {
-        listDiv.innerHTML = '<div style="color:#94a3b8; font-style:italic;">No take-home medications added yet. Use form above to add.</div>';
-        return;
-      }
-
-      listDiv.innerHTML = '<table class="table table-bordered table-condensed" style="margin-bottom:0;">' +
-        '<thead><tr style="background:#f8fafc;"><th>Drug</th><th>Sig</th><th>Qty</th><th style="width:30px;"></th></tr></thead>' +
-        '<tbody>' +
-        endCareRxList.map(function (rx, idx) {
-          return '<tr>' +
-            '<td><strong>' + esc(rx.drug) + '</strong></td>' +
-            '<td>' + esc(rx.sig) + '</td>' +
-            '<td>' + esc(rx.qty || '—') + '</td>' +
-            '<td style="text-align:center;"><button type="button" class="btn btn-mini btn-danger" onclick="window._removeEndCareRx(' + idx + ')">✕</button></td>' +
-            '</tr>';
-        }).join('') +
-        '</tbody></table>';
-    }
-
-    window._removeEndCareRx = function (idx) {
-      endCareRxList.splice(idx, 1);
-      renderEndCareRxItems();
-    };
-
-    var btnAddEndCareRx = document.getElementById('btn-end-care-add-rx');
-    if (btnAddEndCareRx) {
-      btnAddEndCareRx.addEventListener('click', function () {
-        var drug = (document.getElementById('end-care-rx-drug').value || '').trim();
-        var sig = (document.getElementById('end-care-rx-sig').value || '').trim();
-        var qty = (document.getElementById('end-care-rx-qty').value || '').trim();
-        if (!drug) {
-          alert('Please specify a medication name.');
-          return;
-        }
-        endCareRxList.push({ drug: drug, sig: sig || 'As directed', qty: qty || '—' });
-        document.getElementById('end-care-rx-drug').value = '';
-        document.getElementById('end-care-rx-sig').value = '';
-        document.getElementById('end-care-rx-qty').value = '';
-        renderEndCareRxItems();
-      });
-    }
-
-    // Accordion Toggle Handling
-    document.querySelectorAll('.end-care-accordion-toggle').forEach(function (header) {
-      header.addEventListener('click', function () {
-        var targetId = this.dataset.target;
-        var body = document.getElementById(targetId);
-        var icon = this.querySelector('i');
-        if (!body) return;
-        if (body.style.display === 'none' || !body.style.display) {
-          body.style.display = 'block';
-          if (icon) icon.className = 'icon-chevron-down';
-        } else {
-          body.style.display = 'none';
-          if (icon) icon.className = 'icon-chevron-right';
-        }
-      });
-    });
-
-    // Checkbox counters
-    document.querySelectorAll('.end-care-req-chk').forEach(function (chk) {
-      chk.addEventListener('change', function () {
-        var type = this.dataset.type;
-        var count = document.querySelectorAll('.end-care-req-chk[data-type="' + type + '"]:checked').length;
-        var badge = document.getElementById('badge-end-care-' + type);
-        if (badge) badge.textContent = count + ' order' + (count === 1 ? '' : 's');
-      });
-    });
-
     function openEndCareModal() {
       if (activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex >= 0) {
         alert('Historical encounters are finalized, static records per hospital audit standards and cannot be concluded or discharged.');
@@ -8918,8 +8733,6 @@
         fuReasonInput.value = 'Quarterly chronic disease monitoring with repeat labs and evaluation.';
       }
 
-      renderEndCareRxItems();
-
       var modal = document.getElementById('end-care-modal');
       if (modal) {
         modal.classList.add('open');
@@ -8957,13 +8770,6 @@
       var fuClinic = isFu ? (document.getElementById('end-care-followup-clinic').value || 'Internal Medicine (OPD)') : '';
       var fuReason = isFu ? (document.getElementById('end-care-followup-reason').value || '').trim() : '';
 
-      // Collect checked requisitions
-      var reqs = { laboratory: [], radiology: [], respiratory: [], heart: [], eeg: [] };
-      document.querySelectorAll('.end-care-req-chk:checked').forEach(function (chk) {
-        var t = chk.dataset.type;
-        if (reqs[t]) reqs[t].push(chk.value);
-      });
-
       var records = getPatients();
       var pid = activePatientId || SEED_PATIENT_ID;
       var recIdx = records.findIndex(function (r) { return r.id === pid; });
@@ -8992,8 +8798,12 @@
       currEnc.final_diagnosis = finalDx;
       currEnc.disposition = disp;
       currEnc.follow_up = { date: fuDate, clinic: fuClinic, reason: fuReason };
-      currEnc.prescriptions = endCareRxList.slice();
-      currEnc.clinicalRequests = reqs;
+      if (!currEnc.prescriptions && typeof collectRxWriter === 'function') {
+        currEnc.prescriptions = (collectRxWriter().items || []).slice();
+      }
+      if (!currEnc.clinicalRequests && typeof clinicalRequests !== 'undefined') {
+        currEnc.clinicalRequests = JSON.parse(JSON.stringify(clinicalRequests));
+      }
       currEnc.status_tag = 'Completed (OPD)';
 
       // Save to localStorage
