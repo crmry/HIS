@@ -3738,7 +3738,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 31,
+        seedVersion: 33,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T16:30:00+08:00',
         data: {
@@ -4193,7 +4193,7 @@
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 31,
+        seedVersion: 33,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -4553,7 +4553,7 @@
     function blankPatientRecord() {
       return {
         id: BLANK_PATIENT_ID,
-        seedVersion: 31,
+        seedVersion: 33,
         createdAt: '2026-09-25T10:30:00+08:00',
         updatedAt: '2026-09-25T10:30:00+08:00',
         data: {
@@ -4576,11 +4576,11 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 31) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 32) records[index] = seedPatientRecord();
 
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) records.push(opPatientRecord());
-      else if (Number(records[opIndex].seedVersion || 0) < 31) records[opIndex] = opPatientRecord();
+      else if (Number(records[opIndex].seedVersion || 0) < 32) records[opIndex] = opPatientRecord();
 
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
@@ -5966,6 +5966,36 @@
         }
       });
 
+      // Hide or show End Patient Care triggers & discharge action buttons
+      document.querySelectorAll('.btn-conclude-care-trigger, .seg-end, #btn-finalize-end-care, #btn-conclude-care').forEach(function (btn) {
+        btn.style.display = isReadOnly ? 'none' : '';
+      });
+
+      // Strict lock down of Rx Writer (Prescription Writer) in historical inspection
+      var rxContainer = document.getElementById('rx-writer-main-container');
+      if (rxContainer) {
+        rxContainer.querySelectorAll('input, textarea, select').forEach(function (el) {
+          el.disabled = isReadOnly;
+          if (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && el.type === 'text')) {
+            el.readOnly = isReadOnly;
+            el.style.backgroundColor = isReadOnly ? '#f8fafc' : '';
+            el.style.color = isReadOnly ? '#334155' : '';
+          }
+        });
+        var rxActionBtns = [
+          document.getElementById('rx-btn-add-drug'),
+          document.getElementById('rx-btn-save-prescription'),
+          document.getElementById('rx-btn-clear-impression'),
+          document.getElementById('rx-btn-now')
+        ];
+        rxActionBtns.forEach(function (btn) {
+          if (btn) btn.style.display = isReadOnly ? 'none' : '';
+        });
+        rxContainer.querySelectorAll('[data-rx-remove]').forEach(function (btn) {
+          btn.style.display = isReadOnly ? 'none' : '';
+        });
+      }
+
       var actionBtns = [
         document.getElementById('save-orders-btn'),
         document.getElementById('save-disposition-btn'),
@@ -6143,6 +6173,11 @@
         if (fuFieldsNo) fuFieldsNo.className = 'follow-up-fields disabled';
       }
 
+      // 5b. Synchronize Prescription Writer for this encounter
+      if (typeof syncRxWriterEncounter === 'function') {
+        syncRxWriterEncounter(enc, currentPatientData());
+      }
+
       // 6. Set Dashboard Read-Only
       setDashboardReadOnly(true);
 
@@ -6158,6 +6193,9 @@
       if (curRec) {
         loadPatientRecord(curRec);
         renderClinicalMonitoring(curRec);
+        if (typeof syncRxWriterPatient === 'function') {
+          syncRxWriterPatient(curRec);
+        }
       }
       var banner = document.getElementById('historical-encounter-banner');
       if (banner) banner.style.display = 'none';
@@ -8190,7 +8228,62 @@
       }
     }
 
+    function syncRxWriterEncounter(enc, pData) {
+      if (!enc) return;
+      var d = pData || currentPatientData();
+      var pidInput = document.getElementById('rx-patient-pid');
+      var encSpan = document.getElementById('rx-patient-encounter');
+      var nameInput = document.getElementById('rx-patient-name');
+      var addrInput = document.getElementById('rx-patient-address');
+      var ageInput = document.getElementById('rx-patient-age');
+      var genInput = document.getElementById('rx-patient-gender');
+      var dtInput = document.getElementById('rx-prescription-date');
+      var impInput = document.getElementById('rx-clinical-impression');
+      var body = document.getElementById('rx-medicines-body');
+
+      if (pidInput) pidInput.value = d.hospital_number || d.hospital_no || d.hrn || '';
+      if (encSpan) encSpan.textContent = enc.case_no || d.case_no || '—';
+      if (nameInput) nameInput.value = patientName(d);
+      if (addrInput) addrInput.value = d.address || '';
+      if (ageInput) ageInput.value = (calculateAge(d.birthdate) ? calculateAge(d.birthdate) + ' years' : '');
+      if (genInput) genInput.value = d.sex || d.gender || '';
+
+      if (dtInput) {
+        var encDate = enc.date ? new Date(enc.date + (enc.time ? ' ' + enc.time : ' 08:00:00')) : new Date();
+        dtInput.value = formatRxDateTime(encDate);
+      }
+
+      var dx = (enc.clinical_record && enc.clinical_record.final_diagnosis) || enc.diagnosis || enc.final_diagnosis || d.final_diagnosis || '';
+      if (impInput) impInput.value = dx;
+
+      var rxItems = [];
+      if (Array.isArray(enc.prescriptions)) {
+        rxItems = enc.prescriptions;
+      } else if (enc.prescriptions && Array.isArray(enc.prescriptions.items)) {
+        rxItems = enc.prescriptions.items;
+      } else if (enc.orders && Array.isArray(enc.orders.prescriptions)) {
+        rxItems = enc.orders.prescriptions;
+      } else if (enc.orders && enc.orders.prescriptions && Array.isArray(enc.orders.prescriptions.items)) {
+        rxItems = enc.orders.prescriptions.items;
+      }
+
+      if (body) {
+        body.innerHTML = '';
+        if (rxItems.length > 0) {
+          rxItems.forEach(function (item) {
+            addRxDrugRow(body, item);
+          });
+        } else {
+          checkRxEmptyRow(body);
+        }
+      }
+    }
+
     function savePrescriptionAction() {
+      if (activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex >= 0) {
+        alert('Historical encounters are finalized, static records. Prescriptions cannot be modified.');
+        return;
+      }
       if (!activePatientId) {
         alert('Please load a patient before saving prescription.');
         return;
@@ -10244,6 +10337,10 @@
               snapshotCreatedAt
             );
 
+          if (activeInspectedEncounterIndex !== null && loadedEncounters[activeInspectedEncounterIndex]) {
+            query += '&encounter=' + encodeURIComponent(loadedEncounters[activeInspectedEncounterIndex].date);
+          }
+
 
           var targetUrl = 'doctors_order_patient.html' + query;
 
@@ -10637,6 +10734,10 @@
     });
 
     function openEndCareModal() {
+      if (activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex >= 0) {
+        alert('Historical encounters are finalized, static records per hospital audit standards and cannot be concluded or discharged.');
+        return;
+      }
       var pData = currentPatientData();
       var pName = patientName(pData) || 'UNKNOWN PATIENT';
       var hrn = pData.hrn || pData.hospital_number || '—';

@@ -557,7 +557,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 31,
+                seedVersion: 33,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T16:30:00+08:00",
                 data: {
@@ -717,7 +717,7 @@
         function opPatientRecord() {
             return {
                 id: OP_PATIENT_ID,
-                seedVersion: 31,
+                seedVersion: 33,
                 createdAt: "2026-03-14T08:45:00+08:00",
                 updatedAt: "2026-09-26T09:30:00+08:00",
                 data: {
@@ -1069,7 +1069,7 @@
         function blankPatientRecord() {
             return {
                 id: BLANK_PATIENT_ID,
-                seedVersion: 18,
+                seedVersion: 33,
                 createdAt: "2026-09-25T10:30:00+08:00",
                 updatedAt: "2026-09-25T10:30:00+08:00",
                 data: {
@@ -1116,11 +1116,11 @@
             const records = getPatients();
             const index = records.findIndex(record => record.id === SEED_PATIENT_ID);
             if (index < 0) records.push(seedPatientRecord());
-            else if (Number(records[index].seedVersion || 0) < 31) records[index] = seedPatientRecord();
+            else if (Number(records[index].seedVersion || 0) < 32) records[index] = seedPatientRecord();
 
             const opIndex = records.findIndex(record => record.id === OP_PATIENT_ID);
             if (opIndex < 0) records.push(opPatientRecord());
-            else if (Number(records[opIndex].seedVersion || 0) < 31) records[opIndex] = opPatientRecord();
+            else if (Number(records[opIndex].seedVersion || 0) < 32) records[opIndex] = opPatientRecord();
 
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
@@ -1278,20 +1278,69 @@
                 });
             });
 
+            // Process structured prescriptions (Rx Writer)
+            const rxObj = orders?.prescriptions || null;
+            if (rxObj) {
+                const rxItems = Array.isArray(rxObj) ? rxObj : (Array.isArray(rxObj.items) ? rxObj.items : []);
+                rxItems.forEach(rx => {
+                    const drugName = String(rx.drug || rx.name || "").trim();
+                    if (!drugName) return;
+                    let text = "Rx: " + drugName;
+                    if (rx.sig) {
+                        text += " — " + String(rx.sig).trim();
+                    } else {
+                        if (rx.dosage) text += " - " + String(rx.dosage).trim();
+                        if (rx.frequency) text += " - " + String(rx.frequency).trim();
+                        if (rx.timing) text += " (" + String(rx.timing).trim() + ")";
+                        if (rx.duration) text += " x " + String(rx.duration).trim() + " " + String(rx.period || "Days").trim();
+                    }
+                    if (rx.qty || rx.quantity) text += " [Qty: " + String(rx.qty || rx.quantity).trim() + "]";
+                    const alreadyExists = entries.some(e => e.text.toLowerCase().startsWith('rx:') && e.text.toLowerCase().includes(drugName.toLowerCase()));
+                    if (!alreadyExists) {
+                        entries.push({
+                            text: text,
+                            dateTime: rx.dateTime || "",
+                            cared: Array.isArray(rx.cared) ? rx.cared : ["C"],
+                            timeSignature: rx.timeSignature || ""
+                        });
+                    }
+                });
+            }
+
+            // Process clinical requests (laboratory, radiology, heart, respiratory, eeg)
             const clinicalRequests = orders?.clinicalRequests || {};
+            const deptLabels = {
+                laboratory: "Laboratory",
+                radiology: "Radiology",
+                heart: "Cardiology",
+                respiratory: "Pulmonary",
+                eeg: "Neurology"
+            };
             Object.entries(clinicalRequests).forEach(([department, requests]) => {
                 if (!Array.isArray(requests)) return;
+                const prefix = deptLabels[department] || (department.charAt(0).toUpperCase() + department.slice(1));
                 requests.forEach(request => {
-                    const description = String(request?.description || "").trim();
+                    let description = "";
+                    let priority = "Routine";
+                    let remarks = "";
+                    if (typeof request === "string") {
+                        description = request.trim();
+                    } else if (request && typeof request === "object") {
+                        description = String(request.name || request.description || request.text || "").trim();
+                        priority = String(request.urgency || request.priority || "Routine").trim();
+                        remarks = String(request.notes || request.remarks || "").trim();
+                    }
                     if (!description) return;
-                    const priority = String(request?.priority || "Routine").trim();
-                    const remarks = String(request?.remarks || "").trim();
-                    entries.push({
-                        text: `Request ${description}${priority === "STAT" ? " (STAT)" : ""}${remarks ? " — " + remarks : ""}`,
-                        dateTime: request?.dateTime || "",
-                        cared: Array.isArray(request?.cared) ? request.cared : [],
-                        timeSignature: request?.timeSignature || ""
-                    });
+                    const orderText = `${prefix} Request: ${description}${priority === "STAT" ? " (STAT)" : ""}${remarks ? " — " + remarks : ""}`;
+                    const alreadyExists = entries.some(e => e.text.toLowerCase().includes(description.toLowerCase()));
+                    if (!alreadyExists) {
+                        entries.push({
+                            text: orderText,
+                            dateTime: (typeof request === "object" && request?.dateTime) ? request.dateTime : "",
+                            cared: Array.isArray(request?.cared) ? request.cared : ["R"],
+                            timeSignature: (typeof request === "object" && request?.timeSignature) ? request.timeSignature : "R - requested"
+                        });
+                    }
                 });
             });
 
@@ -1866,6 +1915,74 @@
                     })).filter(o => o.text);
                 } else if (enc?.orders && typeof enc.orders === "object" && Object.keys(enc.orders).length > 0 && !Array.isArray(enc?.orders)) {
                     orders = doctorOrderEntries({ orders: enc.orders });
+                }
+
+                // Ingest encounter clinicalRequests (Laboratory, Radiology, ECG/Heart, etc.)
+                const encClinReqs = enc?.clinicalRequests || enc?.orders?.clinicalRequests || null;
+                if (encClinReqs && typeof encClinReqs === "object") {
+                    const encDeptLabels = {
+                        laboratory: "Laboratory",
+                        radiology: "Radiology",
+                        heart: "Cardiology",
+                        respiratory: "Pulmonary",
+                        eeg: "Neurology"
+                    };
+                    Object.entries(encClinReqs).forEach(([dept, reqList]) => {
+                        if (!Array.isArray(reqList)) return;
+                        const prefix = encDeptLabels[dept] || (dept.charAt(0).toUpperCase() + dept.slice(1));
+                        reqList.forEach(req => {
+                            let desc = "";
+                            let priority = "Routine";
+                            let notes = "";
+                            if (typeof req === "string") {
+                                desc = req.trim();
+                            } else if (req && typeof req === "object") {
+                                desc = String(req.name || req.description || req.text || "").trim();
+                                priority = String(req.urgency || req.priority || "Routine").trim();
+                                notes = String(req.notes || req.remarks || "").trim();
+                            }
+                            if (desc) {
+                                const alreadyExists = orders.some(o => o.text.toLowerCase().includes(desc.toLowerCase()));
+                                if (!alreadyExists) {
+                                    orders.push({
+                                        text: `${prefix} Request: ${desc}${priority === "STAT" ? " (STAT)" : ""}${notes ? " — " + notes : ""}`,
+                                        dateTime: (typeof req === "object" && req?.dateTime) ? req.dateTime : (enc.dateTime || ""),
+                                        cared: Array.isArray(req?.cared) ? req.cared : ["R"],
+                                        timeSignature: (typeof req === "object" && req?.timeSignature) ? req.timeSignature : "R - requested"
+                                    });
+                                }
+                            }
+                        });
+                    });
+                }
+
+                // Ingest encounter prescriptions (take-home medications from Rx Writer)
+                const encRx = enc?.prescriptions || enc?.orders?.prescriptions || null;
+                if (encRx) {
+                    const rxItems = Array.isArray(encRx) ? encRx : (Array.isArray(encRx.items) ? encRx.items : []);
+                    rxItems.forEach(rx => {
+                        const drugName = String(rx.drug || rx.name || "").trim();
+                        if (!drugName) return;
+                        let text = "Rx: " + drugName;
+                        if (rx.sig) {
+                            text += " — " + String(rx.sig).trim();
+                        } else {
+                            if (rx.dosage) text += " - " + String(rx.dosage).trim();
+                            if (rx.frequency) text += " - " + String(rx.frequency).trim();
+                            if (rx.timing) text += " (" + String(rx.timing).trim() + ")";
+                            if (rx.duration) text += " x " + String(rx.duration).trim() + " " + String(rx.period || "Days").trim();
+                        }
+                        if (rx.qty || rx.quantity) text += " [Qty: " + String(rx.qty || rx.quantity).trim() + "]";
+                        const alreadyExists = orders.some(o => o.text.toLowerCase().startsWith('rx:') && o.text.toLowerCase().includes(drugName.toLowerCase()));
+                        if (!alreadyExists) {
+                            orders.push({
+                                text: text,
+                                dateTime: rx.dateTime || enc.dateTime || "",
+                                cared: Array.isArray(rx.cared) ? rx.cared : ["C"],
+                                timeSignature: rx.timeSignature || "C - prescribed"
+                            });
+                        }
+                    });
                 }
 
                 // Check if this encounter represents the admission that holds data.orders.
