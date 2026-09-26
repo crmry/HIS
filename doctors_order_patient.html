@@ -360,8 +360,7 @@
     <div class="toolbar">
         <a href="dashboard.html" id="back-dashboard-btn" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #1f7d45; background: #1f7d45; color: #fff; text-decoration: none; border-radius: 3px; font-weight: 600;">← Doctor's Dashboard</a>
         <a href="patients.html" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #444; background: #fff; color: #111; text-decoration: none; border-radius: 3px;">Patient List</a>
-        <button type="button" id="btn-open-round-modal" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #133a2e; background: #1b4d3e; color: #fff; border-radius: 3px; font-weight: 600; cursor: pointer;" title="Log a new clinical round or progress note">+ Log Clinical Round</button>
-        <button type="button" id="btn-open-sim-modal" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #082638; background: #0e3d59; color: #fff; border-radius: 3px; font-weight: 600; cursor: pointer;" title="Simulate multi-round patient encounters (No database required)">⚡ Simulate Rounds</button>
+
         <select id="patient-selector" aria-label="Select saved patient">
             <option value="">Select saved patient...</option>
         </select>
@@ -545,7 +544,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 18,
+                seedVersion: 21,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T16:30:00+08:00",
                 data: {
@@ -582,32 +581,35 @@
                     encounters: [
                         {
                             date: "2026-06-13",
-                            time: "04:30 PM",
+                            time: "10:15 AM",
                             registry: "OP",
                             service: "Internal Medicine (OPD)",
                             physician: "Dr. Miguel Santos, MD",
                             status_tag: "Follow-up (OPD)",
                             is_current: true,
+                            diagnosis: "J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension",
                             patient_record: "Outpatient progress review and clinical monitoring",
                             results: "Clinically stable",
                             progress_notes: "Outpatient Follow-up. Resting comfortably, afebrile, breathing easily on room air. No chest discomfort or dyspnea.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current outpatient management.",
                             orders: []
                         },
                         {
-                            date: "2026-06-13",
-                            time: "10:15 AM",
+                            date: "2026-06-06",
+                            time: "09:30 AM",
                             registry: "OP",
                             service: "Internal Medicine (OPD)",
+                            physician: "Dr. Miguel Santos, MD",
                             status_tag: "Consultation (OPD)",
-                            is_current: true,
+                            is_current: false,
+                            diagnosis: "J18.9 - Community-Acquired Pneumonia, moderate risk; I10 - Essential Hypertension",
                             patient_record: "Outpatient consultation and prescription review",
                             results: "Clinically improving",
-                            progress_notes: "Outpatient Consultation. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO₂ 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted oral antibiotics",
+                            progress_notes: "Outpatient Consultation. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted oral antibiotics",
                             orders: [
-                                { text: "Maintain SpO2 >= 95% on room air.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C"], timeSignature: "C - 10:30 AM nurse" },
-                                { text: "Continue Azithromycin 500 mg tablet once daily after meals.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:40 AM nurse\nA - 11:05 AM nurse" },
-                                { text: "Repeat Complete Blood Count (CBC) and serum creatinine after 3 days.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["R"], timeSignature: "R - 10:45 AM physician" },
-                                { text: "May ambulate as tolerated. Regular diet.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C"], timeSignature: "C - 11:00 AM nurse" }
+                                { text: "Maintain SpO2 >= 95% on room air.", dateTime: "2026-06-06T09:30:00+08:00", cared: ["C"], timeSignature: "C - 09:45 AM nurse" },
+                                { text: "Continue Azithromycin 500 mg tablet once daily after meals.", dateTime: "2026-06-06T09:30:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:00 AM nurse\nA - 10:15 AM nurse" },
+                                { text: "Repeat Complete Blood Count (CBC) and serum creatinine after 3 days.", dateTime: "2026-06-06T09:30:00+08:00", cared: ["R"], timeSignature: "R - 10:05 AM physician" },
+                                { text: "May ambulate as tolerated. Regular diet.", dateTime: "2026-06-06T09:30:00+08:00", cared: ["C"], timeSignature: "C - 10:10 AM nurse" }
                             ]
                         },
                         {
@@ -921,7 +923,7 @@
             const records = getPatients();
             const index = records.findIndex(record => record.id === SEED_PATIENT_ID);
             if (index < 0) records.push(seedPatientRecord());
-            else if (Number(records[index].seedVersion || 0) < 19) records[index] = seedPatientRecord();
+            else if (Number(records[index].seedVersion || 0) < 21) records[index] = seedPatientRecord();
 
             const opIndex = records.findIndex(record => record.id === OP_PATIENT_ID);
             if (opIndex < 0) records.push(opPatientRecord());
