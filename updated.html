@@ -1353,6 +1353,133 @@
       color: #627d98;
       margin-left: 2px;
     }
+    .encounter-diagnosis-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-size: 12px;
+      margin-top: 4px;
+      line-height: 1.4;
+      background: #f8fafc;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+    }
+    .encounter-diagnosis-label {
+      font-weight: 700;
+      color: #334155;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      flex-shrink: 0;
+    }
+    .encounter-diagnosis-text {
+      font-weight: 600;
+      color: #0f4c81;
+    }
+    .encounter-dept-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 9px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .encounter-dept-tabs {
+      display: inline-flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .enc-dept-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+      text-shadow: none !important;
+      line-height: 1.3;
+    }
+    .enc-dept-tab:hover {
+      background: #f1f5f9;
+      color: #1e293b;
+      border-color: #94a3b8;
+    }
+    .enc-dept-tab.active {
+      background: #1b4d3e !important;
+      border-color: #1b4d3e !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 5px rgba(27, 77, 62, 0.25);
+    }
+    .enc-dept-tab .enc-badge-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #e2e8f0;
+      color: #334155;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 0 6px;
+      border-radius: 10px;
+      min-width: 16px;
+      line-height: 16px;
+    }
+    .enc-dept-tab.active .enc-badge-count {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+    .enc-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .dot-ip { background: #1565c0; }
+    .dot-op { background: #2e7d32; }
+    .dot-er { background: #c62828; }
+    .enc-group-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 10px 4px 4px 4px;
+      margin-top: 6px;
+    }
+    .enc-group-header:first-of-type {
+      padding-top: 2px;
+      margin-top: 0;
+    }
+    .enc-group-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .enc-group-badge {
+      font-size: 10px;
+      font-weight: 700;
+      background: #e2e8f0;
+      color: #334155;
+      padding: 1px 7px;
+      border-radius: 10px;
+    }
+    .enc-group-divider {
+      flex: 1;
+      height: 1px;
+      background: #e2e8f0;
+    }
     .encounter-card-middle {
       margin-left: 20px;
       flex-shrink: 0;
@@ -1551,7 +1678,10 @@
               <div class="bootstrap-widget-header">
                 <h3>Patient Encounter</h3>
               </div>
-              <div class="bootstrap-widget-content" id="dashlet-encounter" style="padding:10px 14px; background:#fbfcfd;">
+              <div class="bootstrap-widget-content" id="dashlet-encounter" style="padding:12px 14px; background:#fbfcfd;">
+                <div class="encounter-dept-toolbar" id="encounter-dept-toolbar">
+                  <div class="encounter-dept-tabs" id="encounter-dept-tabs" role="tablist"></div>
+                </div>
                 <div class="encounter-cards-container" id="encounter-rows"></div>
               </div>
             </div>
@@ -3730,7 +3860,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 8,
+        seedVersion: 9,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T10:45:00+08:00',
         data: {
@@ -3776,6 +3906,7 @@
               physician: 'Dr. Roberto Lim, MD',
               is_current: false,
               status_tag: 'Initial Visit (ER)',
+              diagnosis: 'J18.9 - Community-Acquired Pneumonia (CAP) - Moderate Risk; Essential Hypertension Stage 2',
               patient_record: 'Initial assessment and stabilization',
               results: 'Admitted to Medical Ward',
               clinical_record: {
@@ -3861,6 +3992,7 @@
               physician: 'Dr. Miguel Santos, MD',
               is_current: true,
               status_tag: 'Current Visit',
+              diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk; Essential Hypertension',
               patient_record: 'Daily progress review',
               results: 'Clinically improving',
               clinical_record: {
@@ -3920,6 +4052,107 @@
                   performed_by: 'K. Villar, RRT',
                   findings: 'Baseline SpO2 on Nasal Cannula (2 L/min): 98%. Patient subjected to 15-minute room air trial: SpO2 maintained at 96% with resting respiratory rate of 16-18/min. Patient reported no dyspnea or chest tightness.',
                   impression: 'Successful room air trial. Cleared to discontinue nasal cannula oxygen as tolerated.'
+                }
+              ]
+            },
+            {
+              date: '2026-04-10',
+              time: '10:30 AM',
+              registry: 'IP',
+              service: 'General Surgery',
+              physician: 'Dr. Andrea Reyes, MD',
+              is_current: false,
+              status_tag: 'Previous Admission',
+              diagnosis: 'K35.80 - Acute Appendicitis, uncomplicated; S/P Laparoscopic Appendectomy',
+              patient_record: 'Post-operative surgical ward care and wound healing review',
+              results: 'Discharged clinically stable; surgical port sites healed',
+              clinical_record: {
+                chief_complaint: 'Severe right lower quadrant (RLQ) abdominal pain with nausea x 2 days',
+                history: 'Patient was admitted through the ER due to a 2-day history of periumbilical pain migrating to the right lower quadrant, accompanied by low-grade fever and anorexia. Physical exam demonstrated marked tenderness at McBurney\'s point with rebound tenderness. Emergency ultrasound confirmed acute appendicitis (non-perforated). Patient underwent an uncomplicated laparoscopic appendectomy under general endotracheal anesthesia on 04/10/2026. Post-operative course was smooth; surgical port sites dry and intact, bowel sounds normoactive on Post-Op Day 1, afebrile, and pain well controlled on oral analgesics.',
+                final_diagnosis: 'Acute Appendicitis, Non-perforated; Status Post Laparoscopic Appendectomy (ICD-10: K35.80)'
+              },
+              examinations: [
+                {
+                  id: 'EXAM-20260410-01',
+                  category: 'Diagnostic Ultrasound',
+                  name: 'Targeted Abdominal Ultrasound (Appendix & Right Lower Quadrant)',
+                  performed_at: '2026-04-10 09:15 AM',
+                  status: 'Completed',
+                  performed_by: 'Dr. Roberto Lim, Radiologist',
+                  findings: 'Blind-ending, non-compressible aperistaltic tubular structure identified at the right iliac fossa. Maximal outer diameter measures 8.2 mm with target sign on transverse view. Mild surrounding hyperechoic mesenteric fat stranding. No pericecal abscess or free peritoneal fluid.',
+                  impression: 'Sonographic findings compatible with Acute Non-Perforated Appendicitis.'
+                },
+                {
+                  id: 'EXAM-20260411-02',
+                  category: 'Surgical Pathology / Histopathology',
+                  name: 'Biopsy / Histopathology: Appendix Tissue Specimen',
+                  performed_at: '2026-04-11 02:00 PM',
+                  status: 'Completed',
+                  performed_by: 'Dr. E. Gomez, Pathologist',
+                  findings: 'Gross: Vermiform appendix measuring 7.5 cm in length and 0.8 cm in diameter with hyperemic serosa and focal fibrinous exudates.\n\nMicroscopic: Cross sections reveal mucosal ulceration, dense transmural infiltration of neutrophils into the muscularis propria, and vascular congestion throughout the appendiceal wall. Serosal surface shows acute inflammatory exudate. No evidence of dysplasia or malignancy.',
+                  impression: 'Acute Suppurative Appendicitis with Early Periappendicitis.'
+                },
+                {
+                  id: 'EXAM-20260412-03',
+                  category: 'Laboratory - Hematology',
+                  name: 'Post-Operative Complete Blood Count (CBC)',
+                  performed_at: '2026-04-12 06:45 AM',
+                  status: 'Completed',
+                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+                  impression: 'Normal post-operative hematologic profile; leukocytosis resolved.',
+                  analytes: [
+                    { test: 'White Blood Cells (WBC)', value: '7.8', unit: 'x10^9/L', reference: '4.5 - 11.0', flag: 'Normal' },
+                    { test: 'Neutrophils / Segmenters', value: '60', unit: '%', reference: '50 - 70', flag: 'Normal' },
+                    { test: 'Lymphocytes', value: '32', unit: '%', reference: '20 - 40', flag: 'Normal' },
+                    { test: 'Hemoglobin', value: '128', unit: 'g/L', reference: '120 - 160', flag: 'Normal' },
+                    { test: 'Platelet Count', value: '272', unit: 'x10^9/L', reference: '150 - 450', flag: 'Normal' }
+                  ]
+                }
+              ]
+            },
+            {
+              date: '2026-05-20',
+              time: '02:15 PM',
+              registry: 'OP',
+              service: 'Outpatient Department (OPD) - Pulmonary & Adult Medicine',
+              physician: 'Dr. Ramon Valencia, MD',
+              is_current: false,
+              status_tag: 'Follow-up (OPD)',
+              diagnosis: 'J45.909 - Bronchial Asthma, in clinical remission; Essential Hypertension Stage 1',
+              patient_record: 'Routine adult pulmonary checkup and maintenance medication titration',
+              results: 'Spirometry normal; maintenance therapy continued',
+              clinical_record: {
+                chief_complaint: 'Routine follow-up consultation for asthma maintenance refill and blood pressure check',
+                history: 'Patient presented to the Adult Pulmonary Outpatient Clinic for routine evaluation. Denies acute shortness of breath, nocturnal cough, or wheezing over the preceding month. Compliant with maintenance Budesonide/Formoterol inhaler and Amlodipine 5 mg OD. BP 124/80 mmHg, HR 76 bpm, RR 16/min, SpO2 99% on ambient air. Chest auscultation revealed clear and symmetric breath sounds throughout all lung zones.',
+                final_diagnosis: 'Bronchial Asthma, Well-Controlled; Essential Hypertension Stage 1 (Controlled)'
+              },
+              examinations: [
+                {
+                  id: 'EXAM-20260520-01',
+                  category: 'Pulmonology / Pulmonary Function Test',
+                  name: 'Spirometry (Pre- and Post-Bronchodilator)',
+                  performed_at: '2026-05-20 02:40 PM',
+                  status: 'Completed',
+                  performed_by: 'K. Villar, RRT / Reading by Dr. Ramon Valencia, Pulmonologist',
+                  findings: 'FVC: 3.42 L (96% of predicted)\nFEV1: 2.78 L (94% of predicted)\nFEV1/FVC: 81.3% (Normal > 70%)\nPost-bronchodilator change in FEV1: +4% and 110 mL (negative for active acute reversibility).',
+                  impression: 'Normal baseline spirometry without active ventilatory defect.'
+                },
+                {
+                  id: 'EXAM-20260520-02',
+                  category: 'Laboratory - Clinical Microscopy',
+                  name: 'Routine Urinalysis (Automated & Microscopic)',
+                  performed_at: '2026-05-20 03:00 PM',
+                  status: 'Completed',
+                  performed_by: 'J. Ramos, RMT',
+                  impression: 'Routine urinalysis within normal physiological parameters.',
+                  analytes: [
+                    { test: 'Color / Clarity', value: 'Light Yellow / Clear', unit: '', reference: 'Straw/Yellow, Clear', flag: 'Normal' },
+                    { test: 'Specific Gravity', value: '1.018', unit: '', reference: '1.005 - 1.030', flag: 'Normal' },
+                    { test: 'pH', value: '6.0', unit: '', reference: '5.0 - 7.5', flag: 'Normal' },
+                    { test: 'Protein', value: 'Negative', unit: '', reference: 'Negative', flag: 'Normal' },
+                    { test: 'Glucose', value: 'Negative', unit: '', reference: 'Negative', flag: 'Normal' },
+                    { test: 'RBC / WBC (Microscopic)', value: '0-1 / 1-2', unit: '/hpf', reference: '0-2 / 0-5', flag: 'Normal' }
+                  ]
                 }
               ]
             }
@@ -3998,7 +4231,7 @@
     function blankPatientRecord() {
       return {
         id: BLANK_PATIENT_ID,
-        seedVersion: 8,
+        seedVersion: 9,
         createdAt: '2026-09-25T10:30:00+08:00',
         updatedAt: '2026-09-25T10:30:00+08:00',
         data: {
@@ -4021,10 +4254,10 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 8) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 9) records[index] = seedPatientRecord();
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
-      else if (Number(records[blankIndex].seedVersion || 0) < 8) records[blankIndex] = blankPatientRecord();
+      else if (Number(records[blankIndex].seedVersion || 0) < 9) records[blankIndex] = blankPatientRecord();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
     }
 
@@ -4759,7 +4992,7 @@
         }
       }
 
-      var finalDiagnosis = rec.final_diagnosis || enc.final_diagnosis || '';
+      var finalDiagnosis = rec.final_diagnosis || enc.final_diagnosis || enc.diagnosis || '';
       if (!finalDiagnosis) {
         if (isER) {
           finalDiagnosis = 'Community-Acquired Pneumonia (CAP) - Moderate Risk; Essential Hypertension Stage 2';
@@ -4937,6 +5170,13 @@
       var typeClass = typeUpper === 'ER' ? 'type-er' : (typeUpper === 'IP' ? 'type-ip' : 'type-op');
       var serviceDisplay = esc((data && data.service) || 'General Medicine');
       var doctorDisplay = esc((data && (data.physician || data.attending_physician || data.doctor)) || '');
+      var diagnosisDisplay = esc(
+        (data && data.diagnosis) ||
+        (data && data.clinical_record && data.clinical_record.final_diagnosis) ||
+        (data && data.final_diagnosis) ||
+        (data && data.results) ||
+        'Pending final diagnostic evaluation'
+      );
 
       var isCurrent = false;
       if (data && typeof data.is_current === 'boolean') {
@@ -4971,7 +5211,7 @@
         : '';
 
       var doctorHtml = doctorDisplay
-        ? '<span class="encounter-divider">•</span><span class="encounter-doctor"><i class="icon-user"></i> ' + doctorDisplay + '</span>'
+        ? '<span class="encounter-divider">•</span><span class="encounter-doctor"><i class="icon-user"></i> <strong>Physician:</strong> ' + doctorDisplay + '</span>'
         : '';
 
       var visitTagHtml = visitTagText
@@ -4989,6 +5229,10 @@
         '    <span class="encounter-type-badge ' + typeClass + '">' + esc(typeUpper) + '</span>' +
         '    <span class="encounter-service">' + serviceDisplay + '</span>' +
         doctorHtml +
+        '  </div>' +
+        '  <div class="encounter-diagnosis-row">' +
+        '    <span class="encounter-diagnosis-label">Diagnosis:</span>' +
+        '    <span class="encounter-diagnosis-text">' + diagnosisDisplay + '</span>' +
         '  </div>' +
         '</div>' +
         '<div class="encounter-card-middle">' +
@@ -5398,17 +5642,128 @@
       }
     });
 
-    function renderEncounters(encounters) {
-      loadedEncounters = Array.isArray(encounters) ? JSON.parse(JSON.stringify(encounters)) : [];
+    var activeEncounterDeptFilter = 'all';
+
+    function setEncounterDeptFilter(dept) {
+      activeEncounterDeptFilter = dept || 'all';
+      renderEncounters(loadedEncounters, true);
+    }
+
+    function renderEncounterDeptTabs() {
+      var tabsContainer = document.getElementById('encounter-dept-tabs');
+      if (!tabsContainer) return;
+      var totalAll = loadedEncounters.length;
+      var totalIP = 0, totalOP = 0, totalER = 0;
+      loadedEncounters.forEach(function (e) {
+        var t = ((e && (e.registry || e.type)) || '').toUpperCase();
+        if (t === 'IP') totalIP++;
+        else if (t === 'OP' || t === 'OPD') totalOP++;
+        else if (t === 'ER') totalER++;
+      });
+
+      tabsContainer.innerHTML =
+        '<button type="button" class="enc-dept-tab ' + (activeEncounterDeptFilter === 'all' ? 'active' : '') + '" data-dept="all">' +
+        '  <span>All Encounters</span> <span class="enc-badge-count">' + totalAll + '</span>' +
+        '</button>' +
+        '<button type="button" class="enc-dept-tab ' + (activeEncounterDeptFilter === 'IP' ? 'active' : '') + '" data-dept="IP">' +
+        '  <span class="enc-dot dot-ip"></span> <span>InPatient (IP)</span> <span class="enc-badge-count">' + totalIP + '</span>' +
+        '</button>' +
+        '<button type="button" class="enc-dept-tab ' + (activeEncounterDeptFilter === 'OP' ? 'active' : '') + '" data-dept="OP">' +
+        '  <span class="enc-dot dot-op"></span> <span>OutPatient (OP)</span> <span class="enc-badge-count">' + totalOP + '</span>' +
+        '</button>' +
+        '<button type="button" class="enc-dept-tab ' + (activeEncounterDeptFilter === 'ER' ? 'active' : '') + '" data-dept="ER">' +
+        '  <span class="enc-dot dot-er"></span> <span>Emergency Dept (ER)</span> <span class="enc-badge-count">' + totalER + '</span>' +
+        '</button>';
+    }
+
+    var deptTabsElem = document.getElementById('encounter-dept-tabs');
+    if (deptTabsElem) {
+      deptTabsElem.addEventListener('click', function (e) {
+        var tabBtn = e.target.closest('.enc-dept-tab');
+        if (tabBtn && tabBtn.dataset.dept) {
+          setEncounterDeptFilter(tabBtn.dataset.dept);
+        }
+      });
+    }
+
+    function appendEncounterGroupHeader(title, count, dotColor) {
+      if (!encRows) return;
+      var header = document.createElement('div');
+      header.className = 'enc-group-header';
+      header.innerHTML =
+        '<span class="enc-group-title">' +
+        (dotColor ? '<span class="enc-dot" style="background:' + dotColor + ';"></span>' : '') +
+        title +
+        '</span>' +
+        '<span class="enc-group-badge">' + count + '</span>' +
+        '<span class="enc-group-divider"></span>';
+      encRows.appendChild(header);
+    }
+
+    function renderEncounters(encounters, preserveFilter) {
+      if (!preserveFilter && encounters) {
+        loadedEncounters = Array.isArray(encounters) ? JSON.parse(JSON.stringify(encounters)) : [];
+      }
+      renderEncounterDeptTabs();
       if (!encRows) return;
       encRows.innerHTML = '';
-      if (loadedEncounters.length === 0) {
+      if (!loadedEncounters || loadedEncounters.length === 0) {
         encRows.innerHTML = '<div style="text-align:center; padding:18px 12px; color:#718096; background:#fff; border:1px dashed #cbd5e1; border-radius:6px; font-size:12px;">No patient encounters recorded yet.</div>';
         return;
       }
-      loadedEncounters.forEach(function (enc, idx) {
-        addEncounterRow(enc, idx, loadedEncounters);
+
+      var filtered = [];
+      loadedEncounters.forEach(function (enc, originalIdx) {
+        var t = ((enc && (enc.registry || enc.type)) || '').toUpperCase();
+        var match = false;
+        if (activeEncounterDeptFilter === 'all') {
+          match = true;
+        } else if (activeEncounterDeptFilter === 'IP') {
+          match = (t === 'IP');
+        } else if (activeEncounterDeptFilter === 'OP') {
+          match = (t === 'OP' || t === 'OPD');
+        } else if (activeEncounterDeptFilter === 'ER') {
+          match = (t === 'ER');
+        }
+        if (match) {
+          filtered.push({ enc: enc, originalIdx: originalIdx });
+        }
       });
+
+      if (filtered.length === 0) {
+        var deptName = activeEncounterDeptFilter === 'IP' ? 'InPatient (IP)' : (activeEncounterDeptFilter === 'OP' ? 'OutPatient (OP)' : 'Emergency Department (ER)');
+        encRows.innerHTML = '<div style="text-align:center; padding:18px 12px; color:#718096; background:#fff; border:1px dashed #cbd5e1; border-radius:6px; font-size:12px;">No ' + deptName + ' encounters found for this patient.</div>';
+        return;
+      }
+
+      if (activeEncounterDeptFilter === 'all') {
+        var ipList = filtered.filter(function (item) { return ((item.enc.registry || item.enc.type || '').toUpperCase() === 'IP'); });
+        var opList = filtered.filter(function (item) { var t = (item.enc.registry || item.enc.type || '').toUpperCase(); return t === 'OP' || t === 'OPD'; });
+        var erList = filtered.filter(function (item) { return ((item.enc.registry || item.enc.type || '').toUpperCase() === 'ER'); });
+
+        if (ipList.length > 0) {
+          appendEncounterGroupHeader('🏥 InPatient Admissions', ipList.length, '#1565c0');
+          ipList.forEach(function (item) {
+            addEncounterRow(item.enc, item.originalIdx, loadedEncounters);
+          });
+        }
+        if (opList.length > 0) {
+          appendEncounterGroupHeader('🩺 OutPatient Consultations', opList.length, '#2e7d32');
+          opList.forEach(function (item) {
+            addEncounterRow(item.enc, item.originalIdx, loadedEncounters);
+          });
+        }
+        if (erList.length > 0) {
+          appendEncounterGroupHeader('🚨 Emergency Department Visits', erList.length, '#c62828');
+          erList.forEach(function (item) {
+            addEncounterRow(item.enc, item.originalIdx, loadedEncounters);
+          });
+        }
+      } else {
+        filtered.forEach(function (item) {
+          addEncounterRow(item.enc, item.originalIdx, loadedEncounters);
+        });
+      }
     }
 
     function getEncounters() {
