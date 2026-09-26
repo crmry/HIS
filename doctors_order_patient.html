@@ -696,7 +696,7 @@
         function opPatientRecord() {
             return {
                 id: OP_PATIENT_ID,
-                seedVersion: 20,
+                seedVersion: 23,
                 createdAt: "2026-03-14T08:45:00+08:00",
                 updatedAt: "2026-09-26T09:30:00+08:00",
                 data: {
@@ -733,115 +733,205 @@
                     other_forms_notes: "Chronic disease outpatient care record.",
                     vs_bp: "124/78", vs_hr: "72", vs_rr: "16", vs_temp: "36.5", vs_spo2: "99", vs_weight: "68", vs_height: "168",
                     vital_signs: [
-                        { dateTime: "2026-09-26T09:30:00+08:00", bp: "124/78", hr: "72", rr: "16", temp: "36.5", wt: "68", ht: "168", weight: "68", height: "168", bmi: "24.1", spo2: "99", o2: "99" },
-                        { dateTime: "2026-06-20T10:00:00+08:00", bp: "134/84", hr: "76", rr: "16", temp: "36.6", wt: "70", ht: "168", weight: "70", height: "168", bmi: "24.8", spo2: "99", o2: "99" },
-                        { dateTime: "2026-03-14T08:45:00+08:00", bp: "128/80", hr: "74", rr: "16", temp: "36.6", wt: "69", ht: "168", weight: "69", height: "168", bmi: "24.4", spo2: "98", o2: "98" },
-                        { dateTime: "2025-12-05T11:15:00+08:00", bp: "122/76", hr: "70", rr: "16", temp: "36.5", wt: "69", ht: "168", weight: "69", height: "168", bmi: "24.4", spo2: "99", o2: "99" },
-                        { dateTime: "2025-09-18T14:30:00+08:00", bp: "126/80", hr: "78", rr: "18", temp: "36.7", wt: "70", ht: "168", weight: "70", height: "168", bmi: "24.8", spo2: "99", o2: "99" }
-                    ],
+            { dateTime: '2026-09-26T09:30:00+08:00', bp: '124/78', hr: '72', rr: '16', temp: '36.5', wt: '68', ht: '168', weight: '68', height: '168', bmi: '24.1', spo2: '99', o2: '99' }
+          ],
                     admitting_diagnosis: "E11.9 - Type 2 Diabetes Mellitus without complications; I10 - Essential (primary) Hypertension.",
                     final_diagnosis: "Type 2 Diabetes Mellitus, well-controlled on oral hypoglycemic agents; Essential Hypertension, controlled.",
                     progress_notes: "Outpatient Consultation (Adult Medicine OPD). Routine quarterly diabetes and hypertension follow-up.\nPatient feels well, asymptomatic. Good adherence with Metformin, Empagliflozin, and Losartan. No hypoglycemic symptoms or pedal swelling.\nVital signs: BP 124/78 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% ambient air. Weight 68 kg, BMI 24.1.\nPhysical Exam: Clear breath sounds, normal heart sounds, bilateral dorsalis pedis pulses palpable, monofilament foot screen normal.\nLaboratory Review: HbA1c 6.4%, FBS 108 mg/dL, Serum Creatinine 0.9 mg/dL, eGFR > 90 mL/min, Urine Albumin-Creatinine Ratio normal.\nDiagnosis: Type 2 Diabetes Mellitus, well-controlled; Essential Hypertension, controlled.\nPlan: Maintain current oral regimen. Diabetic low-salt diet. Follow-up after 3 months.",
                     encounters: [
-                        {
-                            date: "2026-09-26",
-                            time: "09:30 AM",
-                            registry: "OP",
-                            service: "Outpatient Department (OPD) - Internal Medicine",
-                            physician: "Dr. Miguel Santos, MD",
-                            is_current: true,
-                            status_tag: "Consultation (OPD)",
-                            diagnosis: "E11.9 - Type 2 Diabetes Mellitus, well-controlled; I10 - Essential Hypertension",
-                            patient_record: "Quarterly outpatient diabetes and hypertension refill review",
-                            results: "Clinically controlled; HbA1c 6.4%",
-                            progress_notes: "Outpatient Consultation (Adult Medicine OPD). Routine quarterly diabetes and hypertension follow-up.\nPatient feels well, asymptomatic. Good adherence with Metformin, Empagliflozin, and Losartan. No hypoglycemic symptoms or pedal swelling.\nVital signs: BP 124/78 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% ambient air. Weight 68 kg, BMI 24.1.\nPhysical Exam: Clear breath sounds, normal heart sounds, bilateral dorsalis pedis pulses palpable, monofilament foot screen normal.\nLaboratory Review: HbA1c 6.4%, FBS 108 mg/dL, Serum Creatinine 0.9 mg/dL, eGFR > 90 mL/min, Urine Albumin-Creatinine Ratio normal.\nDiagnosis: Type 2 Diabetes Mellitus, well-controlled; Essential Hypertension, controlled.\nPlan: Maintain current oral regimen. Diabetic low-salt diet. Follow-up after 3 months.",
-                            orders: [
-                                { text: "Continue Metformin 500 mg tablet twice daily with meals.", dateTime: "2026-09-26T09:30:00+08:00", cared: ["C"], timeSignature: "C - 9:45 AM nurse" },
-                                { text: "Continue Empagliflozin 10 mg tablet once daily in the morning.", dateTime: "2026-09-26T09:30:00+08:00", cared: ["C"], timeSignature: "C - 9:46 AM nurse" },
-                                { text: "Continue Losartan Potassium 50 mg tablet once daily in the morning.", dateTime: "2026-09-26T09:30:00+08:00", cared: ["C"], timeSignature: "C - 9:48 AM nurse" },
-                                { text: "Continue Amlodipine 5 mg tablet once daily in the morning.", dateTime: "2026-09-26T09:30:00+08:00", cared: ["C"], timeSignature: "C - 9:50 AM nurse" },
-                                { text: "Repeat Fasting Blood Sugar (FBS), HbA1c, and Lipid Profile after 3 months.", dateTime: "2026-09-26T09:30:00+08:00", cared: ["R"], timeSignature: "R - 9:55 AM physician" },
-                                { text: "Follow-up at Adult Medicine Outpatient Clinic after 3 months (December 2026).", dateTime: "2026-09-26T09:30:00+08:00", cared: ["C"], timeSignature: "C - 10:00 AM nurse" }
-                            ]
-                        },
-                        {
-                            date: "2026-06-20",
-                            time: "10:00 AM",
-                            registry: "OP",
-                            service: "Outpatient Department (OPD) - Internal Medicine",
-                            physician: "Dr. Miguel Santos, MD",
-                            is_current: false,
-                            status_tag: "Follow-up (OPD)",
-                            diagnosis: "E11.9 - Type 2 Diabetes Mellitus; I10 - Essential Hypertension",
-                            patient_record: "Semi-annual comprehensive outpatient review and lab orders",
-                            results: "SGLT2 inhibitor initiated; BP controlled",
-                            progress_notes: "Outpatient Follow-up. Semi-annual comprehensive review.\nBlood pressure mildly elevated at 134/84 mmHg. Fasting blood sugar 132 mg/dL, HbA1c 7.2%.\nWeight: 70 kg, BMI: 24.8. Physical examination unremarkable.\nDiagnosis: Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension.\nPlan: Add Empagliflozin 10 mg OD for cardioprotective glycemic control. Continue Metformin and Losartan. Dietary counseling.",
-                            orders: [
-                                { text: "Start Empagliflozin 10 mg tablet once daily in the morning.", dateTime: "2026-06-20T10:00:00+08:00", cared: ["C"], timeSignature: "C - 10:15 AM nurse" },
-                                { text: "Continue Metformin 500 mg tablet twice daily with meals.", dateTime: "2026-06-20T10:00:00+08:00", cared: ["C"], timeSignature: "C - 10:18 AM nurse" },
-                                { text: "Reinforce diabetic meal plan and 30 minutes daily walking.", dateTime: "2026-06-20T10:00:00+08:00", cared: ["C"], timeSignature: "C - 10:25 AM nurse" },
-                                { text: "Follow-up after 3 months with repeat HbA1c and renal panel.", dateTime: "2026-06-20T10:00:00+08:00", cared: ["C"], timeSignature: "C - 10:30 AM nurse" }
-                            ]
-                        },
-                        {
-                            date: "2026-03-14",
-                            time: "08:45 AM",
-                            registry: "OP",
-                            service: "Outpatient Department (OPD) - Internal Medicine",
-                            physician: "Dr. Ramon Valencia, MD",
-                            is_current: false,
-                            status_tag: "Initial Visit (OPD)",
-                            diagnosis: "E11.9 - Type 2 Diabetes Mellitus; I10 - Essential Hypertension",
-                            patient_record: "First outpatient consultation at CLMMRH OPD",
-                            results: "Transferred maintenance care to CLMMRH Outpatient Service",
-                            progress_notes: "Initial Outpatient Consultation (OPD). Patient transferred maintenance care to CLMMRH OPD.\nReviewed previous clinic records. Vital signs: BP 128/80 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C.\nDiagnosis: Type 2 Diabetes Mellitus; Essential Hypertension Stage 1.\nPlan: Continue Metformin 500 mg BID and Losartan 50 mg OD. Baseline labs ordered.",
-                            orders: [
-                                { text: "Register in CLMMRH Chronic Disease Management OPD Program.", dateTime: "2026-03-14T08:45:00+08:00", cared: ["C"], timeSignature: "C - 9:00 AM nurse" },
-                                { text: "CBC, FBS, HbA1c, BUN, Creatinine, Lipid Profile, Urinalysis.", dateTime: "2026-03-14T08:45:00+08:00", cared: ["R"], timeSignature: "R - 9:05 AM physician" },
-                                { text: "Continue Metformin 500 mg tablet BID and Losartan 50 mg tablet OD.", dateTime: "2026-03-14T08:45:00+08:00", cared: ["C"], timeSignature: "C - 9:10 AM nurse" },
-                                { text: "Follow-up with laboratory results after 1 week.", dateTime: "2026-03-14T08:45:00+08:00", cared: ["C"], timeSignature: "C - 9:15 AM nurse" }
-                            ]
-                        },
-                        {
-                            date: "2025-12-05",
-                            time: "11:15 AM",
-                            registry: "OP",
-                            service: "Outpatient Department (OPD) - Ophthalmology Clinic",
-                            physician: "Dr. Andrea Reyes, MD",
-                            is_current: false,
-                            status_tag: "Specialty Consultation (OPD)",
-                            diagnosis: "H35.00 - Background Diabetic Retinopathy, non-proliferative, early / mild",
-                            patient_record: "Annual outpatient diabetic eye screening and dilated fundoscopy",
-                            results: "Mild non-proliferative diabetic retinopathy (NPDR) bilaterally; no macular edema",
-                            progress_notes: "Outpatient Ophthalmology Specialty Consultation. Annual diabetic eye screening.\nSubjective: Denies visual acuity changes, blurriness, floaters, flashing lights, or eye pain. Visual acuity with correction 20/20 bilateral eyes.\nObjective: Best corrected visual acuity: OD 20/20, OS 20/20. Intraocular pressure (IOP): OD 14 mmHg, OS 15 mmHg (normal: 10-21 mmHg). Slit-lamp: Clear cornea, deep anterior chamber, clear crystalline lenses bilaterally.\nDilated Fundoscopy: Clear media. Bilateral optic discs well-defined with 0.3 cup-to-disc ratio. Occasional isolated microaneurysms noted in mid-periphery. No hard exudates, cotton wool spots, retinal neovascularization, or macular edema.\nAssessment: Mild Non-Proliferative Diabetic Retinopathy (NPDR) bilaterally; No Clinically Significant Macular Edema (CSME).\nPlan: Laser photocoagulation not indicated. Strict glycemic control (HbA1c < 7.0%) and blood pressure control (< 130/80 mmHg) recommended to halt microvascular progression. Annual follow-up dilated fundoscopy.",
-                            orders: [
-                                { text: "Maintain strict glycemic control (target HbA1c < 7.0%) and blood pressure control (< 130/80 mmHg).", dateTime: "2025-12-05T11:15:00+08:00", cared: ["C"], timeSignature: "C - 11:35 AM nurse" },
-                                { text: "Prescribe Artificial Tears (Carboxymethylcellulose 0.5%) ophthalmic solution, 1 drop each eye TID PRN.", dateTime: "2025-12-05T11:15:00+08:00", cared: ["C"], timeSignature: "C - 11:40 AM nurse" },
-                                { text: "Patient educated on urgent ocular red-flag symptoms warranting immediate evaluation.", dateTime: "2025-12-05T11:15:00+08:00", cared: ["C"], timeSignature: "C - 11:45 AM nurse" },
-                                { text: "Follow-up at Ophthalmology Outpatient Clinic after 1 year for repeat dilated fundoscopy screening.", dateTime: "2025-12-05T11:15:00+08:00", cared: ["C"], timeSignature: "C - 11:50 AM nurse" }
-                            ]
-                        },
-                        {
-                            date: "2025-09-18",
-                            time: "02:30 PM",
-                            registry: "OP",
-                            service: "Outpatient Department (OPD) - Pulmonary & Adult Medicine",
-                            physician: "Dr. Ramon Valencia, MD",
-                            is_current: false,
-                            status_tag: "Consultation (OPD)",
-                            diagnosis: "J06.9 - Acute Upper Respiratory Tract Infection (URTI); E11.9 - Type 2 Diabetes Mellitus",
-                            patient_record: "Outpatient consultation for acute productive cough and nasal congestion",
-                            results: "Acute viral URTI resolved; chest radiograph clear",
-                            progress_notes: "Outpatient Consultation (Pulmonary & Adult Medicine OPD). Acute respiratory symptoms.\nSubjective: 4-day history of non-pleuritic cough, nasal congestion, and mild sore throat. Afebrile. Denies chills, shortness of breath, or hemoptysis.\nObjective: BP 126/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.7 °C, SpO2 99% ambient air.\nPhysical Exam: Pharynx mildly hyperemic, no tonsillar exudates, no cervical lymphadenopathy. Chest auscultation: Breath sounds vesicular and clear bilaterally; no wheezes or crackles.\nDiagnostic Imaging: Digital Chest X-Ray PA: Clear lung fields, sharp costophrenic sulci, normal cardiac silhouette, no infiltrates or consolidations.\nAssessment: Acute Upper Respiratory Tract Infection (URTI), viral etiology; Type 2 Diabetes Mellitus, stable.\nPlan: Symptomatic treatment. Adequate oral hydration. Saline nasal spray and oral cetirizine. Avoid over-the-counter decongestants that elevate blood pressure. Follow-up if symptoms persist beyond 7 days.",
-                            orders: [
-                                { text: "Digital Chest X-Ray PA View completed: Clear lung fields bilaterally.", dateTime: "2025-09-18T14:30:00+08:00", cared: ["C"], timeSignature: "C - 2:45 PM nurse" },
-                                { text: "Cetirizine 10 mg tablet once daily at bedtime for 5 days for rhinorrhea.", dateTime: "2025-09-18T14:30:00+08:00", cared: ["C"], timeSignature: "C - 2:50 PM nurse" },
-                                { text: "Paracetamol 500 mg tablet every 6 hours PRN for throat soreness or headache.", dateTime: "2025-09-18T14:30:00+08:00", cared: ["C"], timeSignature: "C - 2:52 PM nurse" },
-                                { text: "Saline nasal spray 2 sprays each nostril TID.", dateTime: "2025-09-18T14:30:00+08:00", cared: ["C"], timeSignature: "C - 2:55 PM nurse" },
-                                { text: "Increase oral water intake (2 to 2.5 L/day). Continue maintenance Metformin and antihypertensives.", dateTime: "2025-09-18T14:30:00+08:00", cared: ["C"], timeSignature: "C - 3:00 PM nurse" }
-                            ]
-                        }
-                    ],
+            {
+              date: '2026-09-26',
+              time: '09:30 AM',
+              registry: 'OP',
+              service: 'Internal Medicine (OPD)',
+              physician: 'Dr. Miguel Santos, MD',
+              is_current: true,
+              status_tag: 'Consultation (OPD)',
+              diagnosis: 'E11.9 - Type 2 Diabetes Mellitus, well-controlled; I10 - Essential Hypertension',
+              patient_record: 'Quarterly outpatient diabetes and hypertension refill review',
+              results: 'Clinically controlled; HbA1c 6.4%',
+              progress_notes: 'Outpatient Consultation (Internal Medicine OPD). Routine quarterly diabetes and hypertension follow-up.\nPatient feels well, asymptomatic. Good adherence with Metformin, Empagliflozin, and Losartan. No hypoglycemic symptoms or pedal swelling.\nVital signs: BP 124/78 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% ambient air. Weight 68 kg, BMI 24.1.\nPhysical Exam: Clear breath sounds, normal heart sounds, bilateral dorsalis pedis pulses palpable, monofilament foot screen normal.\nLaboratory Review: HbA1c 6.4%, FBS 108 mg/dL, Serum Creatinine 0.9 mg/dL, eGFR > 90 mL/min, Urine Albumin-Creatinine Ratio normal.\nDiagnosis: Type 2 Diabetes Mellitus, well-controlled; Essential Hypertension, controlled.\nPlan: Maintain current oral regimen. Diabetic low-salt diet. Follow-up after 3 months.',
+              orders: [
+                { text: 'Continue Metformin 500 mg tablet twice daily with meals.', dateTime: '2026-09-26T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 9:45 AM nurse' },
+                { text: 'Continue Empagliflozin 10 mg tablet once daily in the morning.', dateTime: '2026-09-26T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 9:46 AM nurse' },
+                { text: 'Continue Losartan Potassium 50 mg tablet once daily in the morning.', dateTime: '2026-09-26T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 9:48 AM nurse' },
+                { text: 'Continue Amlodipine 5 mg tablet once daily in the morning.', dateTime: '2026-09-26T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 9:50 AM nurse' },
+                { text: 'Repeat Fasting Blood Sugar (FBS), HbA1c, and Lipid Profile after 3 months.', dateTime: '2026-09-26T09:30:00+08:00', cared: ['R'], timeSignature: 'R - 9:55 AM physician' },
+                { text: 'Follow-up at Adult Medicine Outpatient Clinic after 3 months (December 2026).', dateTime: '2026-09-26T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 10:00 AM nurse' }
+              ],
+              clinical_record: {
+                chief_complaint: 'Routine quarterly diabetes and hypertension follow-up; prescription renewal',
+                history: 'Patient is a 48-year-old male presenting for scheduled outpatient evaluation. Diagnosed with Type 2 Diabetes Mellitus and Essential Hypertension in 2020. Denies symptoms of polyuria, polydipsia, weight loss, visual changes, or chest pain. Compliant with oral hypoglycemic and antihypertensive medications. Exercises by walking 30 minutes daily; compliant with diabetic meal plan.\n\nInterval History: Self-monitoring blood glucose logs show fasting blood sugar levels ranging 100-118 mg/dL. No episodes of shakiness, sweating, or lightheadedness indicative of hypoglycemia.\n\nPhysical Examination: General: Alert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis and posterior tibial pulses palpable, vibration and 10g monofilament sensation intact bilaterally.',
+                final_diagnosis: 'Type 2 Diabetes Mellitus, well-controlled without acute complications; Essential (primary) Hypertension, controlled (ICD-10: E11.9, I10)'
+              },
+              examinations: [
+                {
+                  id: 'EXAM-20260926-01',
+                  category: 'Laboratory - Clinical Chemistry',
+                  name: 'Glycated Hemoglobin (HbA1c) & Fasting Blood Sugar',
+                  performed_at: '2026-09-26 08:00 AM',
+                  status: 'Completed',
+                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+                  impression: 'Good glycemic control on current oral regimen; HbA1c within target (< 7.0%).',
+                  analytes: [
+                    { test: 'Fasting Blood Sugar (FBS)', value: '108', unit: 'mg/dL', reference: '70 - 100', flag: 'High' },
+                    { test: 'HbA1c (Glycated Hemoglobin)', value: '6.4', unit: '%', reference: '4.0 - 5.6', flag: 'High' }
+                  ]
+                }
+              ]
+            },
+            {
+              date: '2026-06-20',
+              time: '10:00 AM',
+              registry: 'OP',
+              service: 'Internal Medicine (OPD)',
+              physician: 'Dr. Miguel Santos, MD',
+              is_current: false,
+              status_tag: 'Follow-up (OPD)',
+              diagnosis: 'E11.9 - Type 2 Diabetes Mellitus; I10 - Essential Hypertension',
+              patient_record: 'Semi-annual comprehensive outpatient review and lab orders',
+              results: 'SGLT2 inhibitor initiated; BP controlled',
+              disposition: 'Treated and Discharged (Outpatient)',
+              follow_up: { date: '2026-09-26', clinic: 'Internal Medicine (OPD)', reason: 'Quarterly review of glycemic control and HbA1c response after Empagliflozin addition.' },
+              prescriptions: [
+                { drug: 'Empagliflozin 10 mg tablet', sig: '1 tablet orally once daily in the morning', qty: '90 tablets' },
+                { drug: 'Metformin 500 mg tablet', sig: '1 tablet orally twice daily with meals', qty: '180 tablets' },
+                { drug: 'Losartan 50 mg tablet', sig: '1 tablet orally once daily', qty: '90 tablets' }
+              ],
+              clinicalRequests: {
+                laboratory: ['Fasting Blood Sugar (FBS)', 'Glycated Hemoglobin (HbA1c)', 'Serum Creatinine & eGFR'],
+                radiology: [],
+                respiratory: [],
+                heart: [],
+                eeg: []
+              },
+              progress_notes: 'Outpatient Follow-up (Internal Medicine OPD). Semi-annual comprehensive review.\nBlood pressure mildly elevated at 134/84 mmHg. Fasting blood sugar 132 mg/dL, HbA1c 7.2%.\nWeight: 70 kg, BMI: 24.8. Physical examination unremarkable.\nDiagnosis: Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension.\nPlan: Add Empagliflozin 10 mg OD for cardioprotective glycemic control. Continue Metformin and Losartan. Dietary counseling.',
+              orders: [
+                { text: 'Start Empagliflozin 10 mg tablet once daily in the morning.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:15 AM nurse' },
+                { text: 'Continue Metformin 500 mg tablet twice daily with meals.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:18 AM nurse' },
+                { text: 'Reinforce diabetic meal plan and 30 minutes daily walking.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:25 AM nurse' },
+                { text: 'Follow-up after 3 months with repeat HbA1c and renal panel.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:30 AM nurse' }
+              ]
+            },
+            {
+              date: '2026-03-14',
+              time: '08:45 AM',
+              registry: 'OP',
+              service: 'Internal Medicine (OPD)',
+              physician: 'Dr. Miguel Santos, MD',
+              is_current: false,
+              status_tag: 'Initial Visit (OPD)',
+              diagnosis: 'E11.9 - Type 2 Diabetes Mellitus; I10 - Essential Hypertension',
+              patient_record: 'First outpatient consultation at CLMMRH OPD',
+              results: 'Transferred maintenance care to CLMMRH Outpatient Service',
+              disposition: 'Treated and Discharged (Outpatient)',
+              follow_up: { date: '2026-06-20', clinic: 'Internal Medicine (OPD)', reason: 'Semi-annual comprehensive diabetes and hypertension follow-up.' },
+              prescriptions: [
+                { drug: 'Metformin 500 mg tablet', sig: '1 tablet orally twice daily with meals', qty: '90 tablets' },
+                { drug: 'Losartan 50 mg tablet', sig: '1 tablet orally once daily', qty: '90 tablets' }
+              ],
+              clinicalRequests: {
+                laboratory: ['Complete Blood Count (CBC)', 'Fasting Blood Sugar (FBS)', 'HbA1c', 'BUN', 'Creatinine', 'Lipid Profile', 'Routine Urinalysis'],
+                radiology: [],
+                respiratory: [],
+                heart: [],
+                eeg: []
+              },
+              progress_notes: 'Initial Outpatient Consultation (Internal Medicine OPD). Patient transferred maintenance care to CLMMRH OPD.\nReviewed previous clinic records. Vital signs: BP 128/80 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C.\nDiagnosis: Type 2 Diabetes Mellitus; Essential Hypertension Stage 1.\nPlan: Continue Metformin 500 mg BID and Losartan 50 mg OD. Baseline labs ordered.',
+              orders: [
+                { text: 'Register in CLMMRH Chronic Disease Management OPD Program.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['C'], timeSignature: 'C - 9:00 AM nurse' },
+                { text: 'CBC, FBS, HbA1c, BUN, Creatinine, Lipid Profile, Urinalysis.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['R'], timeSignature: 'R - 9:05 AM physician' },
+                { text: 'Continue Metformin 500 mg tablet BID and Losartan 50 mg tablet OD.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['C'], timeSignature: 'C - 9:10 AM nurse' },
+                { text: 'Follow-up with laboratory results after 1 week.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['C'], timeSignature: 'C - 9:15 AM nurse' }
+              ]
+            },
+            {
+              date: '2025-12-05',
+              time: '11:15 AM',
+              registry: 'OP',
+              service: 'Orthopedics (OPD)',
+              physician: 'Dr. Paolo Cruz, MD',
+              is_current: false,
+              status_tag: 'Follow-up (OPD)',
+              diagnosis: 'M17.11 - Unilateral Primary Osteoarthritis, Right Knee, resolving pain',
+              patient_record: 'Orthopedic outpatient follow-up for right knee osteoarthritis; mobility evaluation',
+              results: 'Knee range of motion preserved; pain improved from 6/10 to 2/10',
+              disposition: 'Treated and Discharged (Outpatient)',
+              follow_up: { date: '2026-06-05', clinic: 'Orthopedics (OPD)', reason: 'Semi-annual right knee osteoarthritis surveillance.' },
+              prescriptions: [
+                { drug: 'Celecoxib 200 mg capsule', sig: '1 capsule orally once daily as needed for pain flare-ups', qty: '30 capsules' }
+              ],
+              clinicalRequests: {
+                laboratory: [],
+                radiology: ['Digital Knee Radiograph (Right AP/Lateral)'],
+                respiratory: [],
+                heart: [],
+                eeg: []
+              },
+              clinical_record: {
+                chief_complaint: 'Follow-up right knee pain and mobility assessment',
+                history: 'Patient is a 47-year-old male with diagnosed mild primary osteoarthritis of the right knee returning for scheduled 3-month orthopedic follow-up. Demonstrates good symptom improvement on physical therapy and home quadriceps rehabilitation.',
+                final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, clinically stable (ICD-10: M17.11)'
+              },
+              progress_notes: 'Outpatient Follow-up (Orthopedics OPD). Right knee joint review.\nSubjective: Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises. No morning joint stiffness > 30 minutes, no joint locking or giving way.\nObjective: Gait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.\nAssessment: Unilateral Primary Osteoarthritis, Right Knee (M17.11), clinically improved with low disease activity.\nPlan: Shift Celecoxib to strictly PRN for pain flare-ups. Continue low-impact physical exercise (swimming, cycling, walking on flat ground). Avoid deep squats and kneeling. Return for annual orthopedic surveillance or if joint swelling occurs.',
+              orders: [
+                { text: 'Shift Celecoxib 200 mg capsule to strictly PRN for right knee pain flare-ups.', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:35 AM nurse' },
+                { text: 'Continue home quadriceps and hamstring isometric strengthening exercise program.', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:40 AM nurse' },
+                { text: 'Weight management counseling reinforced to minimize joint compressive stress.', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:45 AM nurse' },
+                { text: 'Follow-up at Orthopedics Outpatient Clinic after 6 months or PRN acute pain.', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:50 AM nurse' }
+              ]
+            },
+            {
+              date: '2025-09-18',
+              time: '02:30 PM',
+              registry: 'OP',
+              service: 'Orthopedics (OPD)',
+              physician: 'Dr. Paolo Cruz, MD',
+              is_current: false,
+              status_tag: 'Initial Visit (OPD)',
+              diagnosis: 'M17.11 - Unilateral Primary Osteoarthritis, Right Knee, mild',
+              patient_record: 'Initial orthopedic evaluation for progressive right knee joint pain',
+              results: 'Digital Knee X-ray AP/Lateral: mild medial joint space narrowing; no fracture',
+              disposition: 'Treated and Discharged (Outpatient)',
+              follow_up: { date: '2025-12-05', clinic: 'Orthopedics (OPD)', reason: 'Post-PT 12-week clinical review and range of motion assessment.' },
+              prescriptions: [
+                { drug: 'Celecoxib 200 mg capsule', sig: '1 capsule orally once daily after meals for 14 days', qty: '14 capsules' },
+                { drug: 'Paracetamol 500 mg tablet', sig: '1 tablet every 6 hours PRN for breakthrough pain', qty: '20 tablets' }
+              ],
+              clinicalRequests: {
+                laboratory: [],
+                radiology: ['Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)'],
+                respiratory: [],
+                heart: [],
+                eeg: []
+              },
+              clinical_record: {
+                chief_complaint: 'Right knee joint aching pain on walking and climbing stairs x 2 months',
+                history: 'Patient is a 47-year-old male presenting with a 2-month history of right knee pain without prior trauma. Denies knee locking, giving way, or redness. Digital knee radiograph confirms mild primary osteoarthritis.',
+                final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, Grade II (ICD-10: M17.11)'
+              },
+              progress_notes: 'Initial Outpatient Consultation (Orthopedics OPD). Right knee pain evaluation.\nSubjective: 2-month history of dull aching pain over the medial aspect of the right knee, aggravated by prolonged standing and climbing stairs. Pain score 6/10. No history of direct knee trauma, fall, or fever.\nObjective: Vital signs: BP 126/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.7 °C. Weight 70 kg, BMI 24.8. Right knee examination: Mild tenderness on palpation of medial joint line. No knee joint effusion or ballottable patella. Active flexion 120°, extension 0°. Lachman and pivot-shift tests negative. Neurovascular examination intact.\nDiagnostic Imaging: Digital Knee Radiograph (AP & Lateral Weight-Bearing Views): Mild medial compartment joint space narrowing, subchondral sclerosis, and minimal osteophyte formation at medial tibial spine. Alignment intact; no fracture or osteolytic lesion.\nAssessment: Unilateral Primary Osteoarthritis, Right Knee, Kellgren-Lawrence Grade II (M17.11).\nPlan: Celecoxib 200 mg cap PO once daily for 14 days. Paracetamol 500 mg tab PO TID PRN. Referral to Physical Therapy for quadriceps rehabilitation and joint kinematics. Follow-up after 12 weeks.',
+              orders: [
+                { text: 'Digital Knee Radiograph (AP and Lateral Weight-Bearing Views) completed: Mild medial joint space narrowing.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:45 PM nurse' },
+                { text: 'Celecoxib 200 mg capsule once daily after meals for 14 days.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:50 PM nurse' },
+                { text: 'Paracetamol 500 mg tablet every 6 hours PRN for breakthrough knee pain.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:52 PM nurse' },
+                { text: 'Refer to Physical Medicine and Rehabilitation for 6 sessions of knee physical therapy.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['R'], timeSignature: 'R - 2:55 PM physician' },
+                { text: 'Follow-up at Orthopedics Outpatient Clinic after 3 months.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 3:00 PM nurse' }
+              ],
+              examinations: [
+                {
+                  id: 'EXAM-20250918-01',
+                  category: 'Diagnostic Radiology',
+                  name: 'Digital Radiography: Right Knee (AP & Lateral Weight-Bearing Views)',
+                  performed_at: '2025-09-18 02:45 PM',
+                  status: 'Completed',
+                  performed_by: 'J. Ramos, RT(R) / Reading by Dr. Roberto Lim, Radiologist',
+                  findings: 'Mild narrowing of the medial femorotibial joint space with mild subchondral sclerosis. Minimal marginal osteophyte formation at the medial tibial spine. Patellofemoral joint space preserved. No joint effusion, periosteal reaction, or acute bone fracture.',
+                  impression: 'Mild Right Knee Osteoarthritis (Kellgren-Lawrence Grade II).'
+                }
+              ]
+            }
+          ],
                     orders: {
                         plans: [
                             { text: "Annual dilated eye examination / fundoscopy" },
@@ -927,7 +1017,7 @@
 
             const opIndex = records.findIndex(record => record.id === OP_PATIENT_ID);
             if (opIndex < 0) records.push(opPatientRecord());
-            else if (Number(records[opIndex].seedVersion || 0) < 20) records[opIndex] = opPatientRecord();
+            else if (Number(records[opIndex].seedVersion || 0) < 23) records[opIndex] = opPatientRecord();
 
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
