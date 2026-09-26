@@ -4,6 +4,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <title>Physician's Module — CLMMRH | SegHIS</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
@@ -8309,7 +8313,7 @@
       document.getElementById('request-total-cash').textContent = total.toFixed(2);
     }
 
-    document.getElementById('modal-clinical-tabs').addEventListener('click', function (e) {
+    (document.getElementById('modal-clinical-tabs') || { addEventListener: function() {} }).addEventListener('click', function (e) {
       var btn = e.target.closest('[data-modal-tab]');
       if (!btn) return;
       modalRequestTab = requestTabByKey(btn.dataset.modalTab).key;
@@ -8318,7 +8322,7 @@
       renderServiceOptions();
     });
 
-    document.getElementById('service-options').addEventListener('change', function (e) {
+    (document.getElementById('service-options') || { addEventListener: function() {} }).addEventListener('change', function (e) {
       if (!e.target.matches('[data-service-code]')) return;
       var code = e.target.dataset.serviceCode;
       var tab = requestTabByKey(modalRequestTab);
@@ -8336,14 +8340,14 @@
       renderRequestCart();
     });
 
-    document.getElementById('service-search-btn').addEventListener('click', renderServiceOptions);
+    (document.getElementById('service-search-btn') || { addEventListener: function() {} }).addEventListener('click', renderServiceOptions);
     serviceSearch.addEventListener('input', renderServiceOptions);
-    document.getElementById('refresh-request-services').addEventListener('click', function () { serviceSearch.value = ''; renderServiceOptions(); });
-    document.getElementById('close-request-modal').addEventListener('click', closeRequestModal);
+    (document.getElementById('refresh-request-services') || { addEventListener: function() {} }).addEventListener('click', function () { serviceSearch.value = ''; renderServiceOptions(); });
+    (document.getElementById('close-request-modal') || { addEventListener: function() {} }).addEventListener('click', closeRequestModal);
     requestModal.addEventListener('click', function (e) { if (e.target === requestModal) closeRequestModal(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && requestModal.classList.contains('open')) closeRequestModal(); });
 
-    document.getElementById('submit-clinical-request').addEventListener('click', function () {
+    (document.getElementById('submit-clinical-request') || { addEventListener: function() {} }).addEventListener('click', function () {
       if (!requestCart.length) { alert('Please select at least one request.'); return; }
       requestCart.forEach(function (row) {
         clinicalRequests[row.tab].push({
@@ -8386,9 +8390,7 @@
     });
 
     // A single save action owns the whole Doctor's Orders dashlet.
-    document
-      .getElementById('save-orders-btn')
-      .addEventListener(
+    (document.getElementById('save-orders-btn') || { addEventListener: function() {} }).addEventListener(
         'click',
         function () {
 
@@ -8678,14 +8680,14 @@
 
       return rawRows;
     }
-    document.getElementById('refresh-summary-btn').addEventListener('click', renderOrderSummary);
+    (document.getElementById('refresh-summary-btn') || { addEventListener: function() {} }).addEventListener('click', renderOrderSummary);
 
     // ── Disposition with Others ──
     var dispOtherWrapper = document.getElementById('disposition-other-wrapper');
-    document.getElementById('disposition-radios').addEventListener('change', function (e) {
+    (document.getElementById('disposition-radios') || { addEventListener: function() {} }).addEventListener('change', function (e) {
       dispOtherWrapper.className = e.target.value === 'Others' ? 'disposition-other-wrapper visible' : 'disposition-other-wrapper';
     });
-    document.getElementById('save-disposition-btn').addEventListener('click', function () {
+    (document.getElementById('save-disposition-btn') || { addEventListener: function() {} }).addEventListener('click', function () {
       var picked = form.querySelector('input[name="disposition"]:checked');
       if (!picked) { alert('Please select a disposition.'); return; }
       var finalValue = picked.value === 'Others' ? document.getElementById('disposition_other_text').value.trim() : picked.value;
@@ -8709,7 +8711,7 @@
       }).join('');
     }
 
-    document.getElementById('save-referral-btn').addEventListener('click', function () {
+    (document.getElementById('save-referral-btn') || { addEventListener: function() {} }).addEventListener('click', function () {
       var doctor = document.getElementById('referral-doctor').value;
       var department = document.getElementById('referral-department').value;
       var reason = document.getElementById('referral-reason').value.trim();
@@ -8747,7 +8749,7 @@
         followUpFields.className = (r.value === 'Yes' && r.checked) ? 'follow-up-fields' : 'follow-up-fields disabled';
       });
     });
-    document.getElementById('save-followup-btn').addEventListener('click', function () {
+    (document.getElementById('save-followup-btn') || { addEventListener: function() {} }).addEventListener('click', function () {
       var sel = form.querySelector('input[name="follow_up_needed"]:checked');
       if (!sel) { alert('Please choose if follow-up is needed.'); return; }
       if (sel.value === 'Yes' && (!form.follow_up_date.value || !form.follow_up_reason.value.trim())) {
@@ -9480,9 +9482,7 @@
       );
     }
 
-    document
-      .getElementById('print-btn')
-      .addEventListener(
+    (document.getElementById('print-btn') || { addEventListener: function() {} }).addEventListener(
         'click',
         function () {
 
