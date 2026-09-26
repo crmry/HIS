@@ -1237,48 +1237,195 @@
       .seg-modal { min-width: 760px; }
     }
 
-    /* ── Encounter Record & Results Buttons & Modals ── */
-    .btn-encounter-record {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-weight: 600;
-      padding: 3px 8px;
-      color: #1b4d3e !important;
-      background: #f0f9f4 !important;
-      border: 1px solid #b7dfc9 !important;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.15s ease-in-out;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    /* ── Patient Encounter Modern Visit Cards ── */
+    .encounter-cards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      padding: 2px 0;
     }
-    .btn-encounter-record:hover {
-      background: #e1f4ea !important;
-      border-color: #8ed0ab !important;
-      color: #0e3026 !important;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    .encounter-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border: 1px solid #dce5ec;
+      border-left: 4px solid #b0bec5;
+      border-radius: 6px;
+      padding: 10px 18px;
+      transition: all 0.18s ease-in-out;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .encounter-card:hover {
+      border-color: #b0c4de;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07);
       transform: translateY(-1px);
     }
+    .encounter-card.encounter-card-current {
+      background: #fbfdff;
+      border-color: #bad3eb;
+      border-left: 5px solid #0066cc;
+      box-shadow: 0 2px 6px rgba(0, 102, 204, 0.08);
+    }
+    .encounter-card-left,
+    .encounter-card-main {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .encounter-header-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .encounter-date {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #102a43;
+      letter-spacing: 0.2px;
+    }
+    .encounter-divider {
+      color: #b0bec5;
+      font-weight: 300;
+      font-size: 12px;
+    }
+    .encounter-time {
+      font-size: 12px;
+      color: #627d98;
+      font-weight: 500;
+    }
+    .encounter-visit-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      letter-spacing: 0.3px;
+    }
+    .encounter-visit-tag.current {
+      background: #e3f2fd;
+      color: #0b69a3;
+      border: 1px solid #bbdefb;
+    }
+    .encounter-visit-tag.initial {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #c8e6c9;
+    }
+    .encounter-visit-tag.followup {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+    .encounter-details-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      flex-wrap: wrap;
+    }
+    .encounter-type-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 3px;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+    .encounter-type-badge.type-er {
+      background: #c62828;
+    }
+    .encounter-type-badge.type-ip {
+      background: #1565c0;
+    }
+    .encounter-type-badge.type-op, .encounter-type-badge.type-opd {
+      background: #2e7d32;
+    }
+    .encounter-service {
+      font-weight: 600;
+      color: #334e68;
+    }
+    .encounter-doctor {
+      font-size: 11.5px;
+      color: #627d98;
+      margin-left: 2px;
+    }
+    .encounter-card-middle {
+      margin-left: 20px;
+      flex-shrink: 0;
+    }
+    .encounter-card-right {
+      margin-left: 10px;
+      flex-shrink: 0;
+    }
+    .encounter-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: 20px;
+      flex-shrink: 0;
+    }
+    .btn-encounter-record,
     .btn-encounter-results {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      justify-content: center;
+      gap: 6px;
       font-weight: 600;
-      padding: 3px 8px;
-      color: #0e3d59 !important;
-      background: #f0f7fb !important;
-      border: 1px solid #b5d8ee !important;
-      border-radius: 4px;
+      font-size: 12px;
+      line-height: 1.4;
+      padding: 6px 16px;
+      border-radius: 5px;
       cursor: pointer;
+      text-shadow: none !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
       transition: all 0.15s ease-in-out;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .btn-encounter-record {
+      color: #166534 !important;
+      background: #f0fdf4 !important;
+      border: 1px solid #bbf7d0 !important;
+    }
+    .btn-encounter-record:hover {
+      background: #dcfce7 !important;
+      border-color: #86efac !important;
+      color: #14532d !important;
+      box-shadow: 0 2px 5px rgba(22, 101, 52, 0.15);
+      transform: translateY(-1px);
+    }
+    .btn-encounter-results {
+      color: #0369a1 !important;
+      background: #f0f9ff !important;
+      border: 1px solid #bae6fd !important;
     }
     .btn-encounter-results:hover {
-      background: #dff0fa !important;
-      border-color: #8bc3e6 !important;
-      color: #072537 !important;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background: #e0f2fe !important;
+      border-color: #7dd3fc !important;
+      color: #075985 !important;
+      box-shadow: 0 2px 5px rgba(3, 105, 161, 0.15);
       transform: translateY(-1px);
+    }
+    .encounter-action-icon {
+      font-size: 14px;
+      line-height: 1;
+    }
+    @media (max-width: 768px) {
+      .encounter-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 14px;
+      }
+      .encounter-card-middle,
+      .encounter-card-right,
+      .encounter-card-actions {
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-end;
+      }
     }
     .encounter-exam-card {
       border: 1px solid #d9e2ec;
@@ -1404,19 +1551,8 @@
               <div class="bootstrap-widget-header">
                 <h3>Patient Encounter</h3>
               </div>
-              <div class="bootstrap-widget-content" id="dashlet-encounter">
-                <table class="table table-bordered table-condensed" id="encounter-table">
-                  <thead>
-                    <tr>
-                      <th style="width:130px;">Date</th>
-                      <th style="width:115px;">Type (IP/OP/ER)</th>
-                      <th>Service</th>
-                      <th>Patient's Record</th>
-                      <th>Results</th>
-                    </tr>
-                  </thead>
-                  <tbody id="encounter-rows"></tbody>
-                </table>
+              <div class="bootstrap-widget-content" id="dashlet-encounter" style="padding:10px 14px; background:#fbfcfd;">
+                <div class="encounter-cards-container" id="encounter-rows"></div>
               </div>
             </div>
           </div>
@@ -3594,7 +3730,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 7,
+        seedVersion: 8,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T10:45:00+08:00',
         data: {
@@ -3634,8 +3770,12 @@
           encounters: [
             {
               date: '2026-06-12',
+              time: '08:15 AM',
               registry: 'ER',
               service: 'Emergency Medicine',
+              physician: 'Dr. Roberto Lim, MD',
+              is_current: false,
+              status_tag: 'Initial Visit (ER)',
               patient_record: 'Initial assessment and stabilization',
               results: 'Admitted to Medical Ward',
               clinical_record: {
@@ -3715,8 +3855,12 @@
             },
             {
               date: '2026-06-13',
+              time: '08:00 AM',
               registry: 'IP',
               service: 'Internal Medicine',
+              physician: 'Dr. Miguel Santos, MD',
+              is_current: true,
+              status_tag: 'Current Visit',
               patient_record: 'Daily progress review',
               results: 'Clinically improving',
               clinical_record: {
@@ -3854,7 +3998,7 @@
     function blankPatientRecord() {
       return {
         id: BLANK_PATIENT_ID,
-        seedVersion: 7,
+        seedVersion: 8,
         createdAt: '2026-09-25T10:30:00+08:00',
         updatedAt: '2026-09-25T10:30:00+08:00',
         data: {
@@ -3877,10 +4021,10 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 7) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 8) records[index] = seedPatientRecord();
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
-      else if (Number(records[blankIndex].seedVersion || 0) < 7) records[blankIndex] = blankPatientRecord();
+      else if (Number(records[blankIndex].seedVersion || 0) < 8) records[blankIndex] = blankPatientRecord();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
     }
 
@@ -4774,32 +4918,93 @@
       return [];
     }
 
-    function addEncounterRow(data, index) {
+    function formatEncounterDate(v) {
+      if (!v) return '—';
+      var d = new Date(String(v).length === 10 ? v + 'T00:00:00' : v);
+      if (isNaN(d.getTime())) return v;
+      return new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).format(d);
+    }
+
+    function addEncounterRow(data, index, allEncounters) {
       if (typeof index !== 'number') {
         index = encRows ? encRows.children.length : 0;
       }
-      var tr = document.createElement('tr');
-      var recordText = (data && (data.patient_record || data.patientRecord)) || '';
-      var resultsText = (data && data.results) || '';
-      var dateFormatted = esc(formatDate(data && data.date || ''));
+      var card = document.createElement('div');
+      var dateDisplay = esc(formatEncounterDate(data && data.date || ''));
+      var timeDisplay = (data && data.time) || '';
+      var rawType = (data && (data.registry || data.type) || 'OP').trim();
+      var typeUpper = rawType.toUpperCase();
+      var typeClass = typeUpper === 'ER' ? 'type-er' : (typeUpper === 'IP' ? 'type-ip' : 'type-op');
+      var serviceDisplay = esc((data && data.service) || 'General Medicine');
+      var doctorDisplay = esc((data && (data.physician || data.attending_physician || data.doctor)) || '');
 
-      var recordHtml = '<button type="button" class="btn btn-mini btn-encounter-record" data-encounter-index="' + index + '" title="Click to view Clinical Record for ' + dateFormatted + '">' +
-        '<span style="font-size:13px; line-height:1;">📋</span> <strong style="color:#1b4d3e;">Record</strong>' +
-        (recordText ? ' <span style="font-weight:normal; color:#496557; font-size:11px; margin-left:3px;">(' + esc(recordText) + ')</span>' : '') +
-        '</button>';
+      var isCurrent = false;
+      if (data && typeof data.is_current === 'boolean') {
+        isCurrent = data.is_current;
+      } else if (data && typeof data.isCurrent === 'boolean') {
+        isCurrent = data.isCurrent;
+      } else if (allEncounters && allEncounters.length > 0) {
+        isCurrent = (index === allEncounters.length - 1);
+      }
 
-      var resultsHtml = '<button type="button" class="btn btn-mini btn-encounter-results" data-encounter-index="' + index + '" title="Click to view Examination Results for ' + dateFormatted + '">' +
-        '<span style="font-size:13px; line-height:1;">🔬</span> <strong style="color:#0e3d59;">Result</strong>' +
-        (resultsText ? ' <span style="font-weight:normal; color:#466579; font-size:11px; margin-left:3px;">(' + esc(resultsText) + ')</span>' : '') +
-        '</button>';
+      var visitTagText = '';
+      var visitTagClass = '';
+      if (data && data.status_tag) {
+        visitTagText = esc(data.status_tag);
+        visitTagClass = isCurrent ? 'current' : (visitTagText.toLowerCase().indexOf('initial') !== -1 ? 'initial' : 'followup');
+      } else if (isCurrent) {
+        visitTagText = 'Current Visit';
+        visitTagClass = 'current';
+      } else if (index === 0) {
+        visitTagText = typeUpper === 'ER' ? 'Initial Visit (ER)' : 'Initial Visit';
+        visitTagClass = 'initial';
+      } else {
+        visitTagText = 'Follow-up';
+        visitTagClass = 'followup';
+      }
 
-      tr.innerHTML =
-        '<td>' + dateFormatted + '</td>' +
-        '<td><span class="badge" style="background:#546e7a; color:#fff; font-size:11px;">' + esc(data && (data.registry || data.type) || '—') + '</span></td>' +
-        '<td>' + esc(data && data.service || '—') + '</td>' +
-        '<td>' + recordHtml + '</td>' +
-        '<td>' + resultsHtml + '</td>';
-      encRows.appendChild(tr);
+      card.className = 'encounter-card' + (isCurrent ? ' encounter-card-current' : '');
+      card.dataset.encounterIndex = String(index);
+
+      var timeHtml = timeDisplay
+        ? '<span class="encounter-divider">|</span><span class="encounter-time"><i class="icon-time"></i> ' + esc(timeDisplay) + '</span>'
+        : '';
+
+      var doctorHtml = doctorDisplay
+        ? '<span class="encounter-divider">•</span><span class="encounter-doctor"><i class="icon-user"></i> ' + doctorDisplay + '</span>'
+        : '';
+
+      var visitTagHtml = visitTagText
+        ? '<span class="encounter-visit-tag ' + visitTagClass + '">' + visitTagText + '</span>'
+        : '';
+
+      card.innerHTML =
+        '<div class="encounter-card-left">' +
+        '  <div class="encounter-header-row">' +
+        '    <span class="encounter-date">' + dateDisplay + '</span>' +
+        timeHtml +
+        visitTagHtml +
+        '  </div>' +
+        '  <div class="encounter-details-row">' +
+        '    <span class="encounter-type-badge ' + typeClass + '">' + esc(typeUpper) + '</span>' +
+        '    <span class="encounter-service">' + serviceDisplay + '</span>' +
+        doctorHtml +
+        '  </div>' +
+        '</div>' +
+        '<div class="encounter-card-middle">' +
+        '  <button type="button" class="btn btn-encounter-record" data-encounter-index="' + index + '" title="Click to view Clinical Record for ' + dateDisplay + '">' +
+        '    <span class="encounter-action-icon">📋</span>' +
+        '    <span>Record</span>' +
+        '  </button>' +
+        '</div>' +
+        '<div class="encounter-card-right">' +
+        '  <button type="button" class="btn btn-encounter-results" data-encounter-index="' + index + '" title="Click to view Examination Results for ' + dateDisplay + '">' +
+        '    <span class="encounter-action-icon">🔬</span>' +
+        '    <span>Result</span>' +
+        '  </button>' +
+        '</div>';
+
+      encRows.appendChild(card);
     }
 
     function openEncounterRecordModal(index) {
@@ -5195,9 +5400,14 @@
 
     function renderEncounters(encounters) {
       loadedEncounters = Array.isArray(encounters) ? JSON.parse(JSON.stringify(encounters)) : [];
+      if (!encRows) return;
       encRows.innerHTML = '';
+      if (loadedEncounters.length === 0) {
+        encRows.innerHTML = '<div style="text-align:center; padding:18px 12px; color:#718096; background:#fff; border:1px dashed #cbd5e1; border-radius:6px; font-size:12px;">No patient encounters recorded yet.</div>';
+        return;
+      }
       loadedEncounters.forEach(function (enc, idx) {
-        addEncounterRow(enc, idx);
+        addEncounterRow(enc, idx, loadedEncounters);
       });
     }
 
