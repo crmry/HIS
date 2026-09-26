@@ -273,6 +273,48 @@
             line-height: 1.35;
         }
 
+        /* Physician Authentication Stamp Row */
+        tr.enc-sig-row td {
+            padding: 6px 4px 4px;
+            vertical-align: middle;
+        }
+
+        td.enc-sig-spacer {
+            border-top: none !important;
+        }
+
+        .enc-sig-divider {
+            border: none;
+            border-top: 1.5px dashed #888;
+            margin: 2px 0;
+        }
+
+        td.enc-sig-stamp {
+            text-align: center;
+            background: #fafafa;
+            border-left: 1px solid #ccc !important;
+        }
+
+        .enc-sig-line-draw {
+            font-size: 11pt;
+            color: #555;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+            font-family: "Times New Roman", serif;
+        }
+
+        .enc-sig-name {
+            font-size: 10pt;
+            font-weight: 700;
+            font-family: "Times New Roman", serif;
+        }
+
+        .enc-sig-lic {
+            font-size: 8.5pt;
+            color: #444;
+            font-family: "Times New Roman", serif;
+        }
+
         .toolbar {
             position: sticky;
             top: 0;
@@ -494,7 +536,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 26,
+                seedVersion: 27,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T16:30:00+08:00",
                 data: {
@@ -646,7 +688,7 @@
         function opPatientRecord() {
             return {
                 id: OP_PATIENT_ID,
-                seedVersion: 26,
+                seedVersion: 27,
                 createdAt: "2026-03-14T08:45:00+08:00",
                 updatedAt: "2026-09-26T09:30:00+08:00",
                 data: {
@@ -695,6 +737,7 @@
               registry: 'OP',
               service: 'Internal Medicine (OPD)',
               physician: 'Dr. Miguel Santos, MD',
+              prc_license: '0087654',
               is_current: true,
               status_tag: 'Consultation (OPD)',
               diagnosis: 'E11.9 - Type 2 Diabetes Mellitus, well-controlled; I10 - Essential Hypertension',
@@ -748,6 +791,7 @@
               registry: 'OP',
               service: 'Internal Medicine (OPD)',
               physician: 'Dr. Miguel Santos, MD',
+              prc_license: '0087654',
               is_current: false,
               status_tag: 'Follow-up (OPD)',
               diagnosis: 'E11.9 - Type 2 Diabetes Mellitus; I10 - Essential Hypertension',
@@ -797,6 +841,7 @@
               registry: 'OP',
               service: 'Internal Medicine (OPD)',
               physician: 'Dr. Miguel Santos, MD',
+              prc_license: '0087654',
               is_current: false,
               status_tag: 'Initial Visit (OPD)',
               diagnosis: 'E11.9 - Type 2 Diabetes Mellitus; I10 - Essential Hypertension',
@@ -1044,7 +1089,7 @@
 
             const opIndex = records.findIndex(record => record.id === OP_PATIENT_ID);
             if (opIndex < 0) records.push(opPatientRecord());
-            else if (Number(records[opIndex].seedVersion || 0) < 26) records[opIndex] = opPatientRecord();
+            else if (Number(records[opIndex].seedVersion || 0) < 27) records[opIndex] = opPatientRecord();
 
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
@@ -1519,13 +1564,31 @@
         // Estimate row height in pixels for pagination.
         // A typical order row is ~38px (2 textarea rows + padding).
         // Multiline progress notes add more; we add 16px per extra newline.
+        function buildSignatureRowHtml(physician, license) {
+            // Physician authentication stamp row — rendered between encounter blocks.
+            // Left side (DATE + NOTES + ORDER, colspan=3): dashed separator line.
+            // Right side (C+A+R+E+D+SIGN, colspan=6): doctor name, PRC license, signature line.
+            var physName = physician ? escapeHtml(physician) : '&mdash;';
+            var licText  = license  ? escapeHtml(license)   : '&mdash;';
+            return '<tr class="enc-sig-row">' +
+                '<td colspan="3" class="enc-sig-spacer"><hr class="enc-sig-divider"></td>' +
+                '<td colspan="6" class="enc-sig-stamp">' +
+                '<div class="enc-sig-line-draw">________________________________</div>' +
+                '<div class="enc-sig-name">' + physName + '</div>' +
+                '<div class="enc-sig-lic">PRC Lic. No.: ' + licText + '</div>' +
+                '</td>' +
+                '</tr>';
+        }
+
         function estimateRowHeight(item) {
+            if (!item) return 40;
+            if (item.isSigRow) return 68; // fixed height for signature stamp row
             const BASE = 40; // px per row
             var lines = 1;
-            if (item && item.noteLine) {
+            if (item.noteLine) {
                 lines = Math.max(lines, String(item.noteLine).split("\n").length);
             }
-            if (item && item.orderText) {
+            if (item.orderText) {
                 lines = Math.max(lines, Math.ceil(String(item.orderText).length / 42));
             }
             return BASE + Math.max(0, lines - 1) * 16;
@@ -1652,12 +1715,19 @@
                         r++;
                         continue;
                     }
+                    if (pr.item.isSigRow) {
+                        // Physician authentication stamp between encounters
+                        inner += buildSignatureRowHtml(pr.item.physician, pr.item.prc_license);
+                        r++;
+                        continue;
+                    }
                     // Count rowspan for same dateTime
                     var normDt = normalizeDateTime(pr.item.dateTime);
                     var span2 = 1;
                     if (normDt) {
                         while ((r + span2) < pageRows.length &&
                                pageRows[r + span2].item &&
+                               !pageRows[r + span2].item.isSigRow &&
                                normalizeDateTime(pageRows[r + span2].item.dateTime) === normDt) {
                             span2++;
                         }
@@ -1816,7 +1886,9 @@
                         dateTime: dt,
                         isCurrent: Boolean(enc?.is_current || enc?.isCurrent),
                         noteLines,
-                        orders
+                        orders,
+                        physician: enc.physician || data.physician || "",
+                        prc_license: enc.prc_license || data.prc_license || ""
                     });
                 }
             });
@@ -1883,9 +1955,10 @@
             const data = record.data || {};
             const blocks = getChronologicalEncounterBlocks(data, record, targetEncounterDate);
 
-            // Flatten rows from all blocks
+            // Flatten rows from all blocks; insert physician authentication
+            // stamp row (isSigRow) after every encounter block.
             const flatRows = [];
-            blocks.forEach(block => {
+            blocks.forEach((block, blockIdx) => {
                 const blockRowCount = Math.max(1, block.orders.length, block.noteLines.length);
                 for (let i = 0; i < blockRowCount; i++) {
                     const order = block.orders[i] || null;
@@ -1907,6 +1980,14 @@
                         timeSignature: order?.timeSignature || ""
                     });
                 }
+
+                // Physician authentication stamp — appended after every block
+                flatRows.push({
+                    isSigRow: true,
+                    physician: block.physician || "",
+                    prc_license: block.prc_license || "",
+                    encDate: block.dateTime || block.date || ""
+                });
             });
 
             // Multi-page A4 rendering
