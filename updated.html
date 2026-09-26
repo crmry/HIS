@@ -942,6 +942,75 @@
     </div>
   </main>
 
+  <!-- ═══ FLOATING CLINICAL ORDER & REQUISITION TOOLKIT ═══ -->
+  <aside id="floating-req-toolkit" class="floating-req-toolkit" aria-label="Clinical Order and Requisition Toolkit">
+    <div class="floating-req-handle" id="floating-req-handle" title="Clinical Order & Requisition Toolkit (Click to expand / collapse)">
+      <span class="floating-req-handle-icon">⚡</span>
+      <span class="floating-req-handle-text">REQUISITIONS</span>
+      <span class="floating-req-handle-arrow" id="floating-req-toggle-arrow">◀</span>
+    </div>
+    <div class="floating-req-menu" id="floating-req-menu">
+      <div class="floating-req-header">
+        <div style="font-weight:700; font-size:12px; color:#1b4d3e; display:flex; align-items:center; gap:6px;">
+          <span>⚡ QUICK REQUISITION PAD</span>
+        </div>
+        <div style="font-size:10px; color:#64748b;">CPOE Diagnostic Orders &amp; Print Slips</div>
+      </div>
+      <div class="floating-req-items">
+        <button type="button" class="floating-req-item-btn" id="floating-btn-rx" data-station="rx" title="Open Rx Writer / Prescriptions">
+          <span class="floating-req-item-icon" style="background:#ecfdf5; color:#059669; border-color:#a7f3d0;">💊</span>
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">Rx Writer</div>
+            <div class="floating-req-item-sub">Outpatient Prescriptions &amp; Pad</div>
+          </div>
+          <span class="floating-req-item-action">Open ↗</span>
+        </button>
+
+        <button type="button" class="floating-req-item-btn" id="floating-btn-lab" data-station="laboratory" title="Laboratory Requisition">
+          <span class="floating-req-item-icon" style="background:#eff6ff; color:#2563eb; border-color:#bfdbfe;">🧪</span>
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">Laboratory Request</div>
+            <div class="floating-req-item-sub">CBC, Chemistry, Urinalysis, Panels</div>
+          </div>
+          <span class="floating-req-item-action">Order ↗</span>
+        </button>
+
+        <button type="button" class="floating-req-item-btn" id="floating-btn-ddirs" data-station="radiology" title="DDIRS / Imaging Requisition">
+          <span class="floating-req-item-icon" style="background:#fdf2f8; color:#db2777; border-color:#fbcfe8;">🩻</span>
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">DDIRS Request</div>
+            <div class="floating-req-item-sub">X-Ray, Ultrasound, CT Scan, MRI</div>
+          </div>
+          <span class="floating-req-item-action">Order ↗</span>
+        </button>
+
+        <button type="button" class="floating-req-item-btn" id="floating-btn-heart" data-station="heart" title="Heart Station Requisition">
+          <span class="floating-req-item-icon" style="background:#fef2f2; color:#dc2626; border-color:#fecaca;">🫀</span>
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">Heart Station Request</div>
+            <div class="floating-req-item-sub">12-Lead ECG, 2D Echo, Holter, ABPM</div>
+          </div>
+          <span class="floating-req-item-action">Order ↗</span>
+        </button>
+
+        <button type="button" class="floating-req-item-btn" id="floating-btn-pulmo" data-station="respiratory" title="Pulmonary Station Requisition">
+          <span class="floating-req-item-icon" style="background:#f0fdfa; color:#0d9488; border-color:#99f6e4;">🫁</span>
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">Pulmonary Station</div>
+            <div class="floating-req-item-sub">ABG, Spirometry, PFT, Nebs, 6MWT</div>
+          </div>
+          <span class="floating-req-item-action">Order ↗</span>
+        </button>
+      </div>
+      <div class="floating-req-footer">
+        <button type="button" class="btn btn-mini btn-block" id="floating-req-pin-btn" style="font-size:10px; color:#475569;">
+          📌 Pin Requisition Dock
+        </button>
+      </div>
+    </div>
+  </aside>
+
+
   <div class="seg-modal-backdrop" id="clinical-request-modal" role="dialog" aria-modal="true"
     aria-labelledby="clinical-request-title">
     <div class="seg-modal">
@@ -963,7 +1032,7 @@
           <div><b>TOTAL Cash:</b><span id="request-total-cash">0.00</span></div>
         </div>
         <div class="request-actions">
-          <button type="button" class="btn btn-small">Print requests</button>
+          <button type="button" class="btn btn-small btn-info" id="print-clinical-request-btn" style="font-weight:600;"><i class="icon-print icon-white"></i> Print Requisition Slip</button>
           <button type="button" class="btn btn-small" id="request-date-label"></button>
           <button type="button" class="btn btn-small">Date of Request</button>
           <button type="button" class="btn btn-small" id="refresh-request-services">Refresh</button>
@@ -1027,6 +1096,27 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ CLINICAL REQUISITION PRINT MODAL ═══ -->
+  <div class="seg-modal-backdrop" id="clinical-request-print-modal" role="dialog" aria-modal="true" aria-labelledby="req-print-modal-title" style="display:none;">
+    <div class="seg-modal" style="min-width: 680px; max-width: 820px; margin: 15px auto; box-shadow:0 20px 45px rgba(0,0,0,0.3); border-radius:6px; overflow:hidden;">
+      <div class="seg-modal-title" id="req-print-modal-title" style="background: linear-gradient(135deg, #1b4d3e, #0f4c81); color:#fff; display:flex; justify-content:space-between; align-items:center; padding:12px 18px;">
+        <span style="font-weight:700; font-size:14px; display:flex; align-items:center; gap:8px;">
+          <span>🖨️</span> Official Clinical Requisition Slip Preview
+        </span>
+        <button type="button" class="seg-modal-close" id="close-req-print-modal" style="color:#fff; border:none; background:transparent; font-size:18px; cursor:pointer;" title="Close">✕</button>
+      </div>
+      <div style="padding: 20px; background: #e2e8f0; max-height: 80vh; overflow-y: auto;">
+        <div id="req-print-paper" style="background:#fff; border:1px solid #cbd5e1; border-radius:4px; padding:24px 30px; box-shadow:0 4px 12px rgba(0,0,0,0.1); font-family:Arial, sans-serif; color:#0f172a;">
+          <!-- Dynamically generated hospital requisition slip -->
+        </div>
+      </div>
+      <div style="padding: 10px 18px; background: #f8fafc; border-top: 1px solid #dbe4e8; display: flex; justify-content: flex-end; gap: 8px;">
+        <button type="button" class="btn btn-primary" id="btn-do-print-req-slip"><i class="icon-print icon-white"></i> Print Requisition Slip</button>
+        <button type="button" class="btn" id="btn-close-req-print-modal">Close</button>
       </div>
     </div>
   </div>
@@ -4915,29 +5005,61 @@
 
     var REQUEST_TABS = [
       {
-        key: 'laboratory', label: 'Laboratory', search: 'Search Laboratory Test', services: [
-          ['LAB0001', 'Complete Blood Count (CBC)', 180], ['LAB0002', 'Urinalysis', 120], ['LAB0003', 'Fasting Blood Sugar', 145],
-          ['LAB0004', 'Creatinine', 155], ['LAB0005', 'Electrolytes (Na, K, Cl)', 390], ['LAB0006', 'Lipid Profile', 520], ['LAB0007', 'Blood Typing', 210]
+        key: 'laboratory', label: 'Laboratory Request', search: 'Search Laboratory Test / Panel', services: [
+          ['LAB0001', 'Complete Blood Count (CBC) with Platelets', 180],
+          ['LAB0002', 'Routine Urinalysis', 120],
+          ['LAB0003', 'Fasting Blood Sugar (FBS)', 145],
+          ['LAB0004', 'Serum Creatinine', 155],
+          ['LAB0005', 'Serum Electrolytes (Na, K, Cl)', 390],
+          ['LAB0006', 'Lipid Profile (Chol, Trig, HDL, LDL)', 520],
+          ['LAB0007', 'Blood Typing & Rh Typing', 210],
+          ['LAB0008', 'Glycated Hemoglobin (HbA1c)', 650],
+          ['LAB0009', 'Blood Urea Nitrogen (BUN)', 160],
+          ['LAB0010', 'Serum Uric Acid', 160],
+          ['LAB0011', 'SGPT / ALT', 220],
+          ['LAB0012', 'SGOT / AST', 220],
+          ['LAB0013', 'Prothrombin Time (PT / INR)', 350],
+          ['LAB0014', 'Activated Partial Thromboplastin Time (aPTT)', 380],
+          ['LAB0015', 'Fecalysis / Routine Stool Exam', 110],
+          ['LAB0016', 'Dengue Duo (NS1 Ag / IgG / IgM)', 850],
+          ['LAB0017', 'Troponin I (Quantitative)', 1200]
         ]
       },
       {
-        key: 'radiology', label: 'Radiology', search: 'Search Radiology Procedure', services: [
-          ['RAD0001', 'Chest X-Ray (PA)', 450], ['RAD0002', 'Abdominal Ultrasound', 950], ['RAD0003', 'CT Scan - Plain', 4200],
-          ['RAD0004', 'MRI - Plain', 7200], ['RAD0005', 'Skeletal Survey', 1100]
+        key: 'radiology', label: 'DDIRS Request (Radiology)', search: 'Search DDIRS / Radiology Examination', services: [
+          ['RAD0001', 'Chest X-Ray (PA / AP View)', 450],
+          ['RAD0002', 'Chest X-Ray (Lateral View)', 450],
+          ['RAD0003', 'Abdominal Ultrasound (Whole Abdomen)', 1200],
+          ['RAD0004', 'Ultrasound of Kidneys, Ureters, Bladder (KUB)', 850],
+          ['RAD0005', 'Cranial CT Scan (Plain)', 4200],
+          ['RAD0006', 'Cranial CT Scan (With Contrast)', 5600],
+          ['RAD0007', 'Chest CT Scan (Plain / Contrast)', 6500],
+          ['RAD0008', 'Magnetic Resonance Imaging (MRI) - Brain', 8500],
+          ['RAD0009', 'Abdominal X-Ray (Upright & Supine)', 550],
+          ['RAD0010', 'Skeletal Survey / Extremities X-Ray', 1100]
         ]
       },
       {
-        key: 'respiratory', label: 'Respiratory Therapy', search: 'Search Respiratory Therapy', services: [
-          ['RT0001', 'Nebulization', 250], ['RT0002', 'Arterial Blood Gas', 680], ['RT0003', 'Pulmonary Function Test', 950], ['RT0004', 'Oxygen Therapy - Hourly', 120]
+        key: 'heart', label: 'Heart Station Request', search: 'Search Heart Station Procedure', services: [
+          ['HC0001', '12-Lead Electrocardiogram (ECG)', 350],
+          ['HC0002', '2D Echocardiogram with Color Doppler', 2200],
+          ['HC0003', '24-Hour Holter ECG Monitoring', 2800],
+          ['HC0004', 'Treadmill Exercise Stress Test', 1900],
+          ['HC0005', '24-Hour Ambulatory Blood Pressure Monitoring (ABPM)', 1800]
         ]
       },
       {
-        key: 'heart', label: 'Heart Center', search: 'Search Heart Center Service', services: [
-          ['HC0001', '12-Lead ECG', 350], ['HC0002', '2D Echocardiogram', 1800], ['HC0003', '24-Hour Holter Monitoring', 2800], ['HC0004', 'Treadmill Stress Test', 1900]
+        key: 'respiratory', label: 'Pulmonary Station Request', search: 'Search Pulmonary Station Service', services: [
+          ['RT0001', 'Arterial Blood Gas (ABG) Analysis', 680],
+          ['RT0002', 'Spirometry / Pulmonary Function Test (PFT)', 950],
+          ['RT0003', 'Diagnostic / Therapeutic Nebulization', 250],
+          ['RT0004', 'Peak Expiratory Flow Rate (PEFR) Monitoring', 180],
+          ['RT0005', 'Pulse Oximetry Profile / 6-Minute Walk Test (6MWT)', 350],
+          ['RT0006', 'Oxygen Therapy - Continuous High Flow', 200]
         ]
       },
       {
-        key: 'eeg', label: 'EEG', search: 'Search EEG Procedure', services: [
+        key: 'eeg', label: 'EEG / Neuro', search: 'Search EEG Procedure', services: [
           ['EEG0001', 'Routine EEG', 1350], ['EEG0002', 'Sleep-Deprived EEG', 1850], ['EEG0003', 'Video EEG Monitoring', 4200]
         ]
       }
@@ -6847,6 +6969,280 @@
       return out;
     }
 
+
+    // ══════════════════════════════════════════════════════════════════════
+    // REQUISITION SLIP GENERATOR & PRINT LOGIC
+    // ══════════════════════════════════════════════════════════════════════
+    function openRequisitionPrintModal(stationKey) {
+      var pData = currentPatientData();
+      var pName = patientName(pData) || 'UNKNOWN PATIENT';
+      var hrn = pData.hrn || pData.hospital_number || '0000000000';
+      var age = pData.birthdate ? calculateAge(pData.birthdate) : (pData.age || '—');
+      var sex = (pData.gender || pData.sex || '—').charAt(0).toUpperCase();
+      var curEnc = (loadedEncounters && loadedEncounters[activeEncounterRecordIndex]) || {};
+      var caseNo = curEnc.encounter_nr || pData.encounter_nr || 'ENC-2026-CURRENT';
+      var ward = curEnc.ward || pData.ward || pData.current_dept || 'Internal Medicine (OPD)';
+      var bed = curEnc.room || pData.room || pData.bed || 'OPD-CONSULT';
+      var dx = (document.getElementById('admitting_dx_text') && document.getElementById('admitting_dx_text').value) || curEnc.admitting_diagnosis || pData.admitting_diagnosis || 'For Diagnostic Evaluation';
+      var physician = getCurrentPhysicianName() || 'ATTENDING PHYSICIAN, MD';
+
+      var tab = requestTabByKey(stationKey);
+      var deptName = 'CLINICAL SERVICES DIVISION';
+      var slipTitle = 'OFFICIAL CLINICAL REQUISITION & CHARGE SLIP';
+      if (stationKey === 'laboratory') {
+        deptName = 'DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE';
+        slipTitle = 'LABORATORY REQUISITION & CHARGE SLIP';
+      } else if (stationKey === 'radiology') {
+        deptName = 'DIGITAL DIAGNOSTIC IMAGING & RADIOLOGIC SERVICES (DDIRS)';
+        slipTitle = 'DDIRS / RADIOLOGY REQUISITION SLIP';
+      } else if (stationKey === 'heart') {
+        deptName = 'HEART CENTER - CARDIOVASCULAR DIAGNOSTIC STATION';
+        slipTitle = 'HEART STATION REQUISITION SLIP';
+      } else if (stationKey === 'respiratory') {
+        deptName = 'PULMONARY MEDICINE & RESPIRATORY THERAPY STATION';
+        slipTitle = 'PULMONARY STATION REQUISITION SLIP';
+      }
+
+      // Gather items: from cart if cart matches tab, or from clinicalRequests[stationKey]
+      var items = [];
+      if (requestCart && requestCart.length > 0) {
+        items = requestCart.filter(function (r) { return r.tab === stationKey; });
+      }
+      if (items.length === 0 && clinicalRequests && clinicalRequests[stationKey] && clinicalRequests[stationKey].length > 0) {
+        items = clinicalRequests[stationKey];
+      }
+      if (items.length === 0 && tab && tab.services && tab.services.length > 0) {
+        items = [{
+          code: tab.services[0][0],
+          description: tab.services[0][1],
+          price: tab.services[0][2],
+          priority: 'Routine',
+          remarks: 'Standard diagnostic workup'
+        }];
+      }
+
+      var nowStr = new Intl.DateTimeFormat('en-US', {
+        month: 'short', day: 'numeric', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      }).format(new Date());
+
+      var total = items.reduce(function (sum, item) { return sum + Number(item.price || 0); }, 0);
+
+      var itemsHtml = items.map(function (item, idx) {
+        var priorityStyle = item.priority === 'STAT' ? 'color:#dc2626; font-weight:700;' : '';
+        return '<tr>' +
+          '<td style="text-align:center; padding:6px; border:1px solid #cbd5e1;">' + (idx + 1) + '</td>' +
+          '<td style="padding:6px; border:1px solid #cbd5e1; font-weight:600; color:#0f4c81;">' + (item.code || '—') + '</td>' +
+          '<td style="padding:6px; border:1px solid #cbd5e1; font-weight:700;">' + (item.description || item.text || '—') + '</td>' +
+          '<td style="text-align:center; padding:6px; border:1px solid #cbd5e1;' + priorityStyle + '">' + (item.priority || 'Routine') + '</td>' +
+          '<td style="padding:6px; border:1px solid #cbd5e1; font-size:11px; color:#475569;">' + (item.remarks || 'None') + '</td>' +
+          '<td style="text-align:right; padding:6px; border:1px solid #cbd5e1; font-weight:600;">' + Number(item.price || 0).toFixed(2) + '</td>' +
+          '</tr>';
+      }).join('');
+
+      var paperHtml = '' +
+        '<div style="text-align:center; border-bottom:2px solid #1b4d3e; padding-bottom:8px; margin-bottom:12px;">' +
+          '<div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#475569;">Republic of the Philippines • Department of Health</div>' +
+          '<div style="font-size:15px; font-weight:800; color:#1b4d3e; letter-spacing:0.5px; margin:2px 0;">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</div>' +
+          '<div style="font-size:11px; color:#64748b;">Lacson Street, Bacolod City, Negros Occidental • Tel: (034) 435-1591</div>' +
+          '<div style="font-size:12px; font-weight:700; color:#0f4c81; margin-top:4px; text-transform:uppercase;">' + deptName + '</div>' +
+          '<div style="display:inline-block; margin-top:6px; padding:3px 12px; background:#1b4d3e; color:#fff; font-size:12px; font-weight:700; border-radius:3px; letter-spacing:0.5px;">' + slipTitle + '</div>' +
+        '</div>' +
+        '<table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:11px;">' +
+          '<tr>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0; width:15%; font-weight:700; background:#f8fafc;">Patient Name:</td>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0; width:35%; font-weight:700; color:#0f172a;">' + pName + '</td>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0; width:15%; font-weight:700; background:#f8fafc;">HRN / PID:</td>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0; width:35%; font-weight:700; color:#0f4c81;">' + hrn + '</td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0; font-weight:700; background:#f8fafc;">Age / Sex:</td>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0;">' + age + ' yrs / ' + sex + '</td>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0; font-weight:700; background:#f8fafc;">Case / Enc #:</td>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0;">' + caseNo + '</td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0; font-weight:700; background:#f8fafc;">Ward / Clinic:</td>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0;">' + ward + ' (' + bed + ')</td>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0; font-weight:700; background:#f8fafc;">Date of Request:</td>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0;">' + nowStr + '</td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0; font-weight:700; background:#f8fafc;">Clinical Dx:</td>' +
+            '<td colspan="3" style="padding:4px 8px; border:1px solid #e2e8f0; font-weight:600; color:#1e293b;">' + dx + '</td>' +
+          '</tr>' +
+        '</table>' +
+        '<div style="font-weight:700; font-size:12px; margin-bottom:4px; color:#1b4d3e;">REQUESTED PROCEDURES / EXAMINATIONS:</div>' +
+        '<table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:11px;">' +
+          '<thead style="background:#f1f5f9; font-weight:700;">' +
+            '<tr>' +
+              '<th style="width:30px; text-align:center; padding:6px; border:1px solid #cbd5e1;">#</th>' +
+              '<th style="width:75px; padding:6px; border:1px solid #cbd5e1;">Code</th>' +
+              '<th style="padding:6px; border:1px solid #cbd5e1;">Procedure / Examination Description</th>' +
+              '<th style="width:65px; text-align:center; padding:6px; border:1px solid #cbd5e1;">Priority</th>' +
+              '<th style="width:130px; padding:6px; border:1px solid #cbd5e1;">Remarks / Instructions</th>' +
+              '<th style="width:75px; text-align:right; padding:6px; border:1px solid #cbd5e1;">Charge (₱)</th>' +
+            '</tr>' +
+          '</thead>' +
+          '<tbody>' + itemsHtml + '</tbody>' +
+          '<tfoot>' +
+            '<tr>' +
+              '<td colspan="5" style="text-align:right; padding:6px 10px; font-weight:700; border:1px solid #cbd5e1; background:#f8fafc;">TOTAL CHARGE:</td>' +
+              '<td style="text-align:right; padding:6px; font-weight:800; color:#1b4d3e; border:1px solid #cbd5e1; background:#f8fafc;">₱ ' + total.toFixed(2) + '</td>' +
+            '</tr>' +
+          '</tfoot>' +
+        '</table>' +
+        '<div style="margin-top:20px; display:flex; justify-content:space-between; align-items:flex-end; font-size:11px;">' +
+          '<div style="font-size:10px; color:#64748b;">' +
+            '<div>Classification: Official Hospital Record / CPOE Generated Slip</div>' +
+            '<div>System: CLMMRH Health Information System (HIS) v2.5</div>' +
+            '<div>Printed: ' + nowStr + '</div>' +
+          '</div>' +
+          '<div style="text-align:center; width:220px;">' +
+            '<div style="font-weight:700; color:#0f172a; border-bottom:1px solid #334155; padding-bottom:3px; margin-bottom:2px;">' + physician + '</div>' +
+            '<div style="color:#64748b; font-size:10px;">Attending Physician / Lic. # / Signature</div>' +
+          '</div>' +
+        '</div>';
+
+      var paper = document.getElementById('req-print-paper');
+      if (paper) paper.innerHTML = paperHtml;
+
+      var modal = document.getElementById('clinical-request-print-modal');
+      if (modal) {
+        modal.classList.add('open');
+        modal.style.display = 'block';
+      }
+    }
+
+    function executeRequisitionPrint() {
+      var paper = document.getElementById('req-print-paper');
+      if (!paper) return;
+      var w = window.open('', '_blank', 'width=850,height=750');
+      if (!w) {
+        alert('Please allow pop-ups to print the requisition slip.');
+        return;
+      }
+      w.document.write('<!DOCTYPE html><html><head><title>Official Requisition Slip - CLMMRH</title>');
+      w.document.write('<style>');
+      w.document.write('body { font-family: Arial, sans-serif; margin: 15mm 20mm; color: #000; }');
+      w.document.write('table { width: 100%; border-collapse: collapse; }');
+      w.document.write('@media print { body { margin: 10mm 15mm; } }');
+      w.document.write('</style></head><body>');
+      w.document.write(paper.innerHTML);
+      w.document.write('</body></html>');
+      w.document.close();
+      setTimeout(function () {
+        w.focus();
+        w.print();
+      }, 400);
+    }
+
+    function closeRequisitionPrintModal() {
+      var modal = document.getElementById('clinical-request-print-modal');
+      if (modal) {
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+      }
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // FLOATING REQUISITION TOOLKIT CONTROLS
+    // ══════════════════════════════════════════════════════════════════════
+    function openRxWriterFromToolkit() {
+      if (activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex >= 0) {
+        alert('Historical encounters are signed records and cannot be altered. Orders must be placed on the current or next encounter.');
+        return;
+      }
+      var container = document.getElementById('rx-writer-main-container');
+      var modal = document.getElementById('rx-writer-modal');
+      var modalSlot = document.getElementById('rx-modal-slot');
+      var btn = document.getElementById('rx-open-modal-btn');
+      if (container && modal && modalSlot) {
+        modalSlot.appendChild(container);
+        modal.classList.add('open');
+        if (btn) btn.innerHTML = '🗕 Dock in Accordion';
+      } else {
+        // Fallback: scroll to Rx Writer
+        var rxDashlet = document.getElementById('rx-writer-accordion-mount') || document.querySelector('.orders-group-rxwriter');
+        if (rxDashlet) rxDashlet.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function initFloatingRequisitionToolkit() {
+      var toolkit = document.getElementById('floating-req-toolkit');
+      var handle = document.getElementById('floating-req-handle');
+      var pinBtn = document.getElementById('floating-req-pin-btn');
+
+      if (handle && toolkit) {
+        handle.addEventListener('click', function (e) {
+          e.stopPropagation();
+          toolkit.classList.toggle('expanded');
+        });
+      }
+
+      if (pinBtn && toolkit) {
+        pinBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          toolkit.classList.toggle('pinned');
+          var isPinned = toolkit.classList.contains('pinned');
+          pinBtn.textContent = isPinned ? '📍 Unpin Requisition Dock' : '📌 Pin Requisition Dock';
+          pinBtn.style.color = isPinned ? '#059669' : '#475569';
+        });
+      }
+
+      // Action buttons inside toolkit
+      var btnRx = document.getElementById('floating-btn-rx');
+      if (btnRx) {
+        btnRx.addEventListener('click', function () {
+          openRxWriterFromToolkit();
+        });
+      }
+
+      var btnLab = document.getElementById('floating-btn-lab');
+      if (btnLab) {
+        btnLab.addEventListener('click', function () {
+          openRequestModal('laboratory');
+        });
+      }
+
+      var btnDdirs = document.getElementById('floating-btn-ddirs');
+      if (btnDdirs) {
+        btnDdirs.addEventListener('click', function () {
+          openRequestModal('radiology');
+        });
+      }
+
+      var btnHeart = document.getElementById('floating-btn-heart');
+      if (btnHeart) {
+        btnHeart.addEventListener('click', function () {
+          openRequestModal('heart');
+        });
+      }
+
+      var btnPulmo = document.getElementById('floating-btn-pulmo');
+      if (btnPulmo) {
+        btnPulmo.addEventListener('click', function () {
+          openRequestModal('respiratory');
+        });
+      }
+
+      // Print slip buttons in clinical request modal
+      var printReqBtn = document.getElementById('print-clinical-request-btn');
+      if (printReqBtn) {
+        printReqBtn.addEventListener('click', function () {
+          openRequisitionPrintModal(modalRequestTab || 'laboratory');
+        });
+      }
+
+      // Print slip modal actions
+      var closeReqPrintBtn = document.getElementById('close-req-print-modal');
+      if (closeReqPrintBtn) closeReqPrintBtn.addEventListener('click', closeRequisitionPrintModal);
+      var btnCloseReqPrint = document.getElementById('btn-close-req-print-modal');
+      if (btnCloseReqPrint) btnCloseReqPrint.addEventListener('click', closeRequisitionPrintModal);
+      var doPrintReqBtn = document.getElementById('btn-do-print-req-slip');
+      if (doPrintReqBtn) doPrintReqBtn.addEventListener('click', executeRequisitionPrint);
+    }
+
     // ── Clinical Requests modal ──
     var requestModal = document.getElementById('clinical-request-modal');
     var serviceSearch = document.getElementById('service-search');
@@ -8658,6 +9054,11 @@
         openEndCareModal();
       });
     });
+
+    // Initialize floating clinical requisition toolkit
+    if (typeof initFloatingRequisitionToolkit === 'function') {
+      initFloatingRequisitionToolkit();
+    }
 
   </script>
 
