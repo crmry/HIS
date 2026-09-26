@@ -1299,6 +1299,122 @@
       .seg-modal-backdrop { padding: 8px; }
       .seg-modal { min-width: 760px; }
     }
+
+    /* ── Encounter Record & Results Buttons & Modals ── */
+    .btn-encounter-record {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+      padding: 3px 8px;
+      color: #1b4d3e !important;
+      background: #f0f9f4 !important;
+      border: 1px solid #b7dfc9 !important;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .btn-encounter-record:hover {
+      background: #e1f4ea !important;
+      border-color: #8ed0ab !important;
+      color: #0e3026 !important;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transform: translateY(-1px);
+    }
+    .btn-encounter-results {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+      padding: 3px 8px;
+      color: #0e3d59 !important;
+      background: #f0f7fb !important;
+      border: 1px solid #b5d8ee !important;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .btn-encounter-results:hover {
+      background: #dff0fa !important;
+      border-color: #8bc3e6 !important;
+      color: #072537 !important;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transform: translateY(-1px);
+    }
+    .encounter-exam-card {
+      border: 1px solid #d9e2ec;
+      border-radius: 6px;
+      background: #fff;
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .encounter-exam-header {
+      background: #f4f7f9;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .encounter-exam-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: #102a43;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .encounter-exam-body {
+      padding: 12px 16px;
+    }
+    .analyte-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 10px 0;
+      font-size: 12px;
+    }
+    .analyte-table th, .analyte-table td {
+      border: 1px solid #e2e8f0;
+      padding: 6px 10px;
+      text-align: left;
+    }
+    .analyte-table th {
+      background: #f8fafc;
+      color: #334e68;
+      font-weight: 600;
+    }
+    .analyte-table tbody tr:nth-child(even) {
+      background: #fcfdfe;
+    }
+    .flag-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .flag-badge.high {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ffcdd2;
+    }
+    .flag-badge.low {
+      background: #fff3e0;
+      color: #e65100;
+      border: 1px solid #ffe0b2;
+    }
+    .flag-badge.normal {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #c8e6c9;
+    }
   </style>
 </head>
 
@@ -1356,7 +1472,7 @@
                   <thead>
                     <tr>
                       <th style="width:130px;">Date</th>
-                      <th style="width:110px;">Registry (IP/OP/ER)</th>
+                      <th style="width:115px;">Type (IP/OP/ER)</th>
                       <th>Service</th>
                       <th>Patient's Record</th>
                       <th>Results</th>
@@ -2734,6 +2850,88 @@
     </div>
   </div>
 
+  <!-- ═══ PATIENT ENCOUNTER CLINICAL RECORD MODAL ═══ -->
+  <div class="seg-modal-backdrop" id="encounter-record-modal" role="dialog" aria-modal="true" aria-labelledby="encounter-record-heading">
+    <div class="seg-modal" style="min-width: 760px; max-width: 960px; margin: 25px auto;">
+      <div class="seg-modal-title" id="encounter-record-heading" style="display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, #1b4d3e, #0e2f24); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
+        <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
+          <span>📋</span> Clinical Encounter Record: <span id="enc-rec-title-info" style="color:#a8e6cf; font-weight:normal; margin-left:4px;"></span>
+        </span>
+        <button type="button" class="seg-modal-close" id="close-encounter-record-modal" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
+      </div>
+      <div class="seg-modal-body" style="padding:18px 22px; background:#fff; max-height:80vh; overflow-y:auto;">
+        <!-- Patient & Encounter Demographics Banner -->
+        <div id="enc-rec-banner" style="background:#f4f9f6; border:1px solid #d2e7dd; border-radius:5px; padding:12px 16px; margin-bottom:18px; display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; font-size:12px;">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- 1. Chief Complaint -->
+        <div style="margin-bottom:18px; background:#fff; border:1px solid #e1e8ed; border-left:4px solid #2e7d32; border-radius:4px; padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+          <div style="font-size:13px; font-weight:700; color:#1b4d3e; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+            <span style="font-size:15px;">🩺</span> Chief Complaint
+          </div>
+          <div id="enc-rec-chief-complaint" style="font-size:13px; color:#2c3e50; line-height:1.5; white-space:pre-wrap; background:#fbfdfc; padding:10px 14px; border-radius:4px; border:1px solid #edf4f0;">
+          </div>
+        </div>
+
+        <!-- 2. History -->
+        <div style="margin-bottom:18px; background:#fff; border:1px solid #e1e8ed; border-left:4px solid #006dcc; border-radius:4px; padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+          <div style="font-size:13px; font-weight:700; color:#005580; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+            <span style="font-size:15px;">📜</span> Clinical History
+          </div>
+          <div id="enc-rec-history" style="font-size:13px; color:#2c3e50; line-height:1.6; white-space:pre-wrap; background:#fcfdfe; padding:10px 14px; border-radius:4px; border:1px solid #edf2f7;">
+          </div>
+        </div>
+
+        <!-- 3. Final Diagnosis -->
+        <div style="margin-bottom:10px; background:#fff; border:1px solid #ffd0d0; border-left:4px solid #d9534f; border-radius:4px; padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+          <div style="font-size:13px; font-weight:700; color:#b92c28; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+            <span style="font-size:15px;">🎯</span> Final Diagnosis
+          </div>
+          <div id="enc-rec-final-diagnosis" style="font-size:13px; font-weight:600; color:#990000; line-height:1.5; background:#fff5f5; border:1px solid #fed7d7; border-radius:4px; padding:10px 14px; white-space:pre-wrap;">
+          </div>
+        </div>
+      </div>
+      <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 4px 4px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:11px; color:#718096;"><i class="icon-info-sign"></i> Scoped strictly to selected encounter date</span>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn" id="btn-print-encounter-record"><i class="icon-print"></i> Print Record</button>
+          <button type="button" class="btn btn-primary" id="btn-close-encounter-record-modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PATIENT ENCOUNTER EXAMINATION RESULTS MODAL ═══ -->
+  <div class="seg-modal-backdrop" id="encounter-results-modal" role="dialog" aria-modal="true" aria-labelledby="encounter-results-heading">
+    <div class="seg-modal" style="min-width: 820px; max-width: 1080px; margin: 25px auto;">
+      <div class="seg-modal-title" id="encounter-results-heading" style="display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, #0e3d59, #082638); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
+        <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
+          <span>🔬</span> Examination Results: <span id="enc-res-title-info" style="color:#90cdf4; font-weight:normal; margin-left:4px;"></span>
+        </span>
+        <button type="button" class="seg-modal-close" id="close-encounter-results-modal" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
+      </div>
+      <div class="seg-modal-body" style="padding:18px 22px; background:#fff; max-height:80vh; overflow-y:auto;">
+        <!-- Patient & Encounter Demographics Banner -->
+        <div id="enc-res-banner" style="background:#f0f7fb; border:1px solid #cbe4f4; border-radius:5px; padding:12px 16px; margin-bottom:18px; display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; font-size:12px;">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Examinations Content Container -->
+        <div id="enc-res-content">
+          <!-- Dynamically populated list of examinations and results -->
+        </div>
+      </div>
+      <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 4px 4px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:11px; color:#718096;"><i class="icon-info-sign"></i> Showing examinations performed on selected encounter date only</span>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn" id="btn-print-encounter-results"><i class="icon-print"></i> Print Results</button>
+          <button type="button" class="btn btn-primary" id="btn-close-encounter-results-modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ RX DRUG CATALOG DATALIST ═══ -->
   <datalist id="rx-drug-catalog">
     <option value="Amoxicillin 500 mg capsule"></option>
@@ -3494,7 +3692,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 6,
+        seedVersion: 7,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T10:45:00+08:00',
         data: {
@@ -3532,8 +3730,153 @@
           final_diagnosis: 'Community-acquired pneumonia, improved; essential hypertension.',
           progress_notes: 'Productive cough and dyspnea, improved after initial treatment.\nBP 138/86, HR 102, RR 24, Temp 38.2 C, SpO2 93%. Crackles at right lower lung field.\nCommunity-acquired pneumonia, moderate risk; hypertension.',
           encounters: [
-            { date: '2026-06-12', registry: 'ER', service: 'Emergency Medicine', patient_record: 'Initial assessment and stabilization', results: 'Admitted to Medical Ward' },
-            { date: '2026-06-13', registry: 'IP', service: 'Internal Medicine', patient_record: 'Daily progress review', results: 'Clinically improving' }
+            {
+              date: '2026-06-12',
+              registry: 'ER',
+              service: 'Emergency Medicine',
+              patient_record: 'Initial assessment and stabilization',
+              results: 'Admitted to Medical Ward',
+              clinical_record: {
+                chief_complaint: 'Difficulty of breathing and high-grade fever x 3 days',
+                history: 'Patient is a 40-year-old female who presented to the Emergency Room with a 3-day history of productive cough with yellowish sputum, progressive dyspnea, and undocumented high-grade fever with chills. No hemoptysis, chest trauma, or orthopnea. Denies recent travel or known COVID-19 contact.\n\nPast Medical History: Known hypertensive for 5 years maintained on Amlodipine 5 mg once daily with fair compliance. No prior asthma, diabetes, or pulmonary tuberculosis.\n\nPersonal / Social History: Non-smoker, occasional social alcoholic beverage drinker, works as an accountant.\n\nFamily History: Father (+) Hypertension and Type 2 Diabetes; Mother (+) Bronchial Asthma.',
+                final_diagnosis: 'Community-Acquired Pneumonia (CAP) - Moderate Risk; Essential Hypertension Stage 2'
+              },
+              examinations: [
+                {
+                  id: 'EXAM-20260612-01',
+                  category: 'Laboratory - Hematology',
+                  name: 'Complete Blood Count (CBC) with Platelet Count',
+                  performed_at: '2026-06-12 08:50 AM',
+                  status: 'Completed',
+                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+                  impression: 'Leukocytosis with marked neutrophilic shift indicative of acute bacterial infection.',
+                  analytes: [
+                    { test: 'White Blood Cells (WBC)', value: '14.2', unit: 'x10^9/L', reference: '4.5 - 11.0', flag: 'High' },
+                    { test: 'Neutrophils / Segmenters', value: '82', unit: '%', reference: '50 - 70', flag: 'High' },
+                    { test: 'Lymphocytes', value: '14', unit: '%', reference: '20 - 40', flag: 'Low' },
+                    { test: 'Hemoglobin', value: '132', unit: 'g/L', reference: '120 - 160', flag: 'Normal' },
+                    { test: 'Hematocrit', value: '0.40', unit: 'L/L', reference: '0.37 - 0.48', flag: 'Normal' },
+                    { test: 'Platelet Count', value: '265', unit: 'x10^9/L', reference: '150 - 450', flag: 'Normal' }
+                  ]
+                },
+                {
+                  id: 'EXAM-20260612-02',
+                  category: 'Laboratory - Clinical Chemistry',
+                  name: 'Serum Electrolytes (Sodium, Potassium, Chloride)',
+                  performed_at: '2026-06-12 08:55 AM',
+                  status: 'Completed',
+                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+                  impression: 'Serum electrolytes are within normal physiological limits.',
+                  analytes: [
+                    { test: 'Sodium (Na+)', value: '137', unit: 'mmol/L', reference: '135 - 145', flag: 'Normal' },
+                    { test: 'Potassium (K+)', value: '4.1', unit: 'mmol/L', reference: '3.5 - 5.0', flag: 'Normal' },
+                    { test: 'Chloride (Cl-)', value: '101', unit: 'mmol/L', reference: '96 - 106', flag: 'Normal' }
+                  ]
+                },
+                {
+                  id: 'EXAM-20260612-03',
+                  category: 'Laboratory - Arterial Blood Gas',
+                  name: 'Arterial Blood Gas (ABG) - Room Air',
+                  performed_at: '2026-06-12 09:10 AM',
+                  status: 'Completed',
+                  performed_by: 'K. Villar, RRT / Validated by Dr. E. Gomez, Pathologist',
+                  impression: 'Mild uncompensated respiratory alkalosis secondary to hyperventilation with mild hypoxemia on room air.',
+                  analytes: [
+                    { test: 'pH', value: '7.44', unit: '', reference: '7.35 - 7.45', flag: 'Normal' },
+                    { test: 'pCO2', value: '33', unit: 'mmHg', reference: '35 - 45', flag: 'Low' },
+                    { test: 'pO2', value: '68', unit: 'mmHg', reference: '80 - 100', flag: 'Low' },
+                    { test: 'HCO3', value: '22', unit: 'mmol/L', reference: '22 - 26', flag: 'Normal' },
+                    { test: 'SaO2', value: '93', unit: '%', reference: '95 - 100', flag: 'Low' }
+                  ]
+                },
+                {
+                  id: 'EXAM-20260612-04',
+                  category: 'Diagnostic Radiology',
+                  name: 'Chest X-Ray PA View (Digital Radiography)',
+                  performed_at: '2026-06-12 09:30 AM',
+                  status: 'Completed',
+                  performed_by: 'J. Ramos, RT(R) / Official Reading by Dr. Roberto Lim, Radiologist',
+                  findings: 'Patches of alveolar consolidation with bronchovascular markings noted in the right lower lung field (RLL). Costophrenic sulci and hemidiaphragms are intact. Cardiothoracic ratio is normal (<0.50). Trachea is midline. Bony thorax and soft tissues show no significant lesions.',
+                  impression: 'Acute pneumonia, right lower lobe.'
+                },
+                {
+                  id: 'EXAM-20260612-05',
+                  category: 'Heart Station / ECG',
+                  name: '12-Lead Electrocardiogram (ECG)',
+                  performed_at: '2026-06-12 09:45 AM',
+                  status: 'Completed',
+                  performed_by: 'C. David, ECG Tech / Official Reading by Dr. Andrea Reyes, Cardiologist',
+                  findings: 'Sinus tachycardia at 104 bpm. Normal PR interval (0.16s), normal QRS complex duration (0.08s). Normal axis. No acute ST segment elevation, depression, or T-wave inversion.',
+                  impression: 'Sinus tachycardia, otherwise normal 12-lead ECG tracing.'
+                }
+              ]
+            },
+            {
+              date: '2026-06-13',
+              registry: 'IP',
+              service: 'Internal Medicine',
+              patient_record: 'Daily progress review',
+              results: 'Clinically improving',
+              clinical_record: {
+                chief_complaint: 'Decreasing cough and improved breathing; afebrile x 18 hours',
+                history: 'Hospital Day 2. Patient was admitted to Medical Ward under Internal Medicine. Received IV Ceftriaxone 2 g OD (Day 2) and PO Azithromycin 500 mg OD. Temperature normalized (afebrile at 36.8°C for the past 18 hours). Dyspnea has significantly resolved, patient ambulating comfortably in room. Productive cough is looser and less frequent with clearing sputum.\n\nInterval History: Tolerating low-salt diet well, adequate oral fluid intake. No chest pain, palpitations, or drug adverse events noted. Vital signs stable with SpO2 98% on 2 L/min nasal cannula.\n\nPhysical Examination on Rounds: Chest auscultation shows decreased coarse crackles over the right base with improved bilateral breath sounds. Abdomen soft, non-tender.',
+                final_diagnosis: 'Community-Acquired Pneumonia, resolving on targeted IV antimicrobial therapy; Essential Hypertension, controlled'
+              },
+              examinations: [
+                {
+                  id: 'EXAM-20260613-01',
+                  category: 'Laboratory - Hematology',
+                  name: 'Follow-up Complete Blood Count (CBC)',
+                  performed_at: '2026-06-13 06:30 AM',
+                  status: 'Completed',
+                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+                  impression: 'Marked hematologic response to antimicrobial therapy: white blood cell count decreased into normal reference range; neutrophilia resolving.',
+                  analytes: [
+                    { test: 'White Blood Cells (WBC)', value: '9.8', unit: 'x10^9/L', reference: '4.5 - 11.0', flag: 'Normal' },
+                    { test: 'Neutrophils / Segmenters', value: '68', unit: '%', reference: '50 - 70', flag: 'Normal' },
+                    { test: 'Lymphocytes', value: '25', unit: '%', reference: '20 - 40', flag: 'Normal' },
+                    { test: 'Hemoglobin', value: '130', unit: 'g/L', reference: '120 - 160', flag: 'Normal' },
+                    { test: 'Platelet Count', value: '258', unit: 'x10^9/L', reference: '150 - 450', flag: 'Normal' }
+                  ]
+                },
+                {
+                  id: 'EXAM-20260613-02',
+                  category: 'Laboratory - Clinical Chemistry',
+                  name: 'Serum Creatinine & Blood Urea Nitrogen (BUN)',
+                  performed_at: '2026-06-13 06:35 AM',
+                  status: 'Completed',
+                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+                  impression: 'Normal baseline renal panel during intravenous antibiotic therapy.',
+                  analytes: [
+                    { test: 'Serum Creatinine', value: '0.85', unit: 'mg/dL', reference: '0.50 - 1.10', flag: 'Normal' },
+                    { test: 'Blood Urea Nitrogen (BUN)', value: '14.0', unit: 'mg/dL', reference: '7.0 - 20.0', flag: 'Normal' },
+                    { test: 'Estimated GFR (CKD-EPI)', value: '88', unit: 'mL/min/1.73m²', reference: '> 60', flag: 'Normal' }
+                  ]
+                },
+                {
+                  id: 'EXAM-20260613-03',
+                  category: 'Laboratory - Bedside Point of Care',
+                  name: 'Random Blood Glucose (RBG)',
+                  performed_at: '2026-06-13 07:00 AM',
+                  status: 'Completed',
+                  performed_by: 'E. Dela Cruz, RN',
+                  impression: 'Normoglycemic fasting bedside profile.',
+                  analytes: [
+                    { test: 'Capillary Blood Glucose', value: '108', unit: 'mg/dL', reference: '70 - 140', flag: 'Normal' }
+                  ]
+                },
+                {
+                  id: 'EXAM-20260613-04',
+                  category: 'Pulmonology / Respiratory Therapy',
+                  name: 'Pulse Oximetry & Room Air Weaning Challenge',
+                  performed_at: '2026-06-13 10:15 AM',
+                  status: 'Completed',
+                  performed_by: 'K. Villar, RRT',
+                  findings: 'Baseline SpO2 on Nasal Cannula (2 L/min): 98%. Patient subjected to 15-minute room air trial: SpO2 maintained at 96% with resting respiratory rate of 16-18/min. Patient reported no dyspnea or chest tightness.',
+                  impression: 'Successful room air trial. Cleared to discontinue nasal cannula oxygen as tolerated.'
+                }
+              ]
+            }
           ],
           orders: {
             plans: [
@@ -3609,7 +3952,7 @@
     function blankPatientRecord() {
       return {
         id: BLANK_PATIENT_ID,
-        seedVersion: 6,
+        seedVersion: 7,
         createdAt: '2026-09-25T10:30:00+08:00',
         updatedAt: '2026-09-25T10:30:00+08:00',
         data: {
@@ -3632,10 +3975,10 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 6) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 7) records[index] = seedPatientRecord();
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
-      else if (Number(records[blankIndex].seedVersion || 0) < 6) records[blankIndex] = blankPatientRecord();
+      else if (Number(records[blankIndex].seedVersion || 0) < 7) records[blankIndex] = blankPatientRecord();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
     }
 
@@ -4361,50 +4704,630 @@
       });
     }
 
-    // ── Encounter Rows ──
+    // ── Encounter Rows & Modals (Record & Results) ──
     var encRows = document.getElementById('encounter-rows');
     var loadedEncounters = [];
+    var activeEncounterRecordIndex = null;
+    var activeEncounterResultsIndex = null;
 
-    function addEncounterRow(data) {
+    function getEncounterClinicalRecord(enc, pData) {
+      if (!enc) enc = {};
+      if (!pData) pData = currentPatientData();
+      var rec = enc.clinical_record || {};
+      var dateStr = formatDate(enc.date) || enc.date || '';
+      var isER = (enc.registry || enc.type || '').toUpperCase() === 'ER' || (dateStr.indexOf('06/12') !== -1 || dateStr.indexOf('2026-06-12') !== -1);
+      var isIP = (enc.registry || enc.type || '').toUpperCase() === 'IP' || (dateStr.indexOf('06/13') !== -1 || dateStr.indexOf('2026-06-13') !== -1);
+
+      var chiefComplaint = rec.chief_complaint || enc.chief_complaint || '';
+      if (!chiefComplaint) {
+        if (isER) {
+          chiefComplaint = 'Difficulty of breathing and high-grade fever x 3 days';
+        } else if (isIP) {
+          chiefComplaint = 'Decreasing cough and improved breathing; afebrile x 18 hours';
+        } else {
+          chiefComplaint = enc.patient_record || pData.chief_complaint || 'Presented for medical evaluation and clinical management.';
+        }
+      }
+
+      var history = rec.history || enc.history || '';
+      if (!history) {
+        if (isER) {
+          history = 'Patient is a 40-year-old female who presented to the Emergency Room with a 3-day history of productive cough with yellowish sputum, progressive dyspnea, and undocumented high-grade fever with chills. No hemoptysis, chest trauma, or orthopnea. Denies recent travel or known COVID-19 contact.\n\nPast Medical History: Known hypertensive for 5 years maintained on Amlodipine 5 mg once daily with fair compliance. No prior asthma, diabetes, or pulmonary tuberculosis.\n\nPersonal / Social History: Non-smoker, occasional social alcoholic beverage drinker, works as an accountant.\n\nFamily History: Father (+) Hypertension and Type 2 Diabetes; Mother (+) Bronchial Asthma.';
+        } else if (isIP) {
+          history = 'Hospital Day 2. Patient was admitted to Medical Ward under Internal Medicine. Received IV Ceftriaxone 2 g OD (Day 2) and PO Azithromycin 500 mg OD. Temperature normalized (afebrile at 36.8°C for the past 18 hours). Dyspnea has significantly resolved, patient ambulating comfortably in room. Productive cough is looser and less frequent with clearing sputum.\n\nInterval History: Tolerating low-salt diet well, adequate oral fluid intake. No chest pain, palpitations, or drug adverse events noted. Vital signs stable with SpO2 98% on 2 L/min nasal cannula.\n\nPhysical Examination on Rounds: Chest auscultation shows decreased coarse crackles over the right base with improved bilateral breath sounds. Abdomen soft, non-tender.';
+        } else {
+          history = pData.hx_present ? (pData.hx_present + (pData.hx_past ? '\n\nPast Medical History: ' + pData.hx_past : '')) : ('Clinical history for encounter date ' + dateStr + ' recorded under ' + (enc.service || 'attending service') + '.');
+        }
+      }
+
+      var finalDiagnosis = rec.final_diagnosis || enc.final_diagnosis || '';
+      if (!finalDiagnosis) {
+        if (isER) {
+          finalDiagnosis = 'Community-Acquired Pneumonia (CAP) - Moderate Risk; Essential Hypertension Stage 2';
+        } else if (isIP) {
+          finalDiagnosis = 'Community-Acquired Pneumonia, resolving on targeted IV antimicrobial therapy; Essential Hypertension, controlled';
+        } else {
+          finalDiagnosis = enc.results || pData.final_diagnosis || 'Pending final diagnostic confirmation';
+        }
+      }
+
+      return {
+        chief_complaint: chiefComplaint,
+        history: history,
+        final_diagnosis: finalDiagnosis
+      };
+    }
+
+    function getEncounterExaminations(enc) {
+      if (!enc) return [];
+      if (Array.isArray(enc.examinations) && enc.examinations.length > 0) {
+        return enc.examinations;
+      }
+      var dateStr = formatDate(enc.date) || enc.date || '';
+      var isER = (enc.registry || enc.type || '').toUpperCase() === 'ER' || (dateStr.indexOf('06/12') !== -1 || dateStr.indexOf('2026-06-12') !== -1);
+      var isIP = (enc.registry || enc.type || '').toUpperCase() === 'IP' || (dateStr.indexOf('06/13') !== -1 || dateStr.indexOf('2026-06-13') !== -1);
+
+      if (isER) {
+        return [
+          {
+            id: 'EXAM-20260612-01',
+            category: 'Laboratory - Hematology',
+            name: 'Complete Blood Count (CBC) with Platelet Count',
+            performed_at: '2026-06-12 08:50 AM',
+            status: 'Completed',
+            performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+            impression: 'Leukocytosis with marked neutrophilic shift indicative of acute bacterial infection.',
+            analytes: [
+              { test: 'White Blood Cells (WBC)', value: '14.2', unit: 'x10^9/L', reference: '4.5 - 11.0', flag: 'High' },
+              { test: 'Neutrophils / Segmenters', value: '82', unit: '%', reference: '50 - 70', flag: 'High' },
+              { test: 'Lymphocytes', value: '14', unit: '%', reference: '20 - 40', flag: 'Low' },
+              { test: 'Hemoglobin', value: '132', unit: 'g/L', reference: '120 - 160', flag: 'Normal' },
+              { test: 'Hematocrit', value: '0.40', unit: 'L/L', reference: '0.37 - 0.48', flag: 'Normal' },
+              { test: 'Platelet Count', value: '265', unit: 'x10^9/L', reference: '150 - 450', flag: 'Normal' }
+            ]
+          },
+          {
+            id: 'EXAM-20260612-02',
+            category: 'Laboratory - Clinical Chemistry',
+            name: 'Serum Electrolytes (Sodium, Potassium, Chloride)',
+            performed_at: '2026-06-12 08:55 AM',
+            status: 'Completed',
+            performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+            impression: 'Serum electrolytes are within normal physiological limits.',
+            analytes: [
+              { test: 'Sodium (Na+)', value: '137', unit: 'mmol/L', reference: '135 - 145', flag: 'Normal' },
+              { test: 'Potassium (K+)', value: '4.1', unit: 'mmol/L', reference: '3.5 - 5.0', flag: 'Normal' },
+              { test: 'Chloride (Cl-)', value: '101', unit: 'mmol/L', reference: '96 - 106', flag: 'Normal' }
+            ]
+          },
+          {
+            id: 'EXAM-20260612-03',
+            category: 'Laboratory - Arterial Blood Gas',
+            name: 'Arterial Blood Gas (ABG) - Room Air',
+            performed_at: '2026-06-12 09:10 AM',
+            status: 'Completed',
+            performed_by: 'K. Villar, RRT / Validated by Dr. E. Gomez, Pathologist',
+            impression: 'Mild uncompensated respiratory alkalosis secondary to hyperventilation with mild hypoxemia on room air.',
+            analytes: [
+              { test: 'pH', value: '7.44', unit: '', reference: '7.35 - 7.45', flag: 'Normal' },
+              { test: 'pCO2', value: '33', unit: 'mmHg', reference: '35 - 45', flag: 'Low' },
+              { test: 'pO2', value: '68', unit: 'mmHg', reference: '80 - 100', flag: 'Low' },
+              { test: 'HCO3', value: '22', unit: 'mmol/L', reference: '22 - 26', flag: 'Normal' },
+              { test: 'SaO2', value: '93', unit: '%', reference: '95 - 100', flag: 'Low' }
+            ]
+          },
+          {
+            id: 'EXAM-20260612-04',
+            category: 'Diagnostic Radiology',
+            name: 'Chest X-Ray PA View (Digital Radiography)',
+            performed_at: '2026-06-12 09:30 AM',
+            status: 'Completed',
+            performed_by: 'J. Ramos, RT(R) / Official Reading by Dr. Roberto Lim, Radiologist',
+            findings: 'Patches of alveolar consolidation with bronchovascular markings noted in the right lower lung field (RLL). Costophrenic sulci and hemidiaphragms are intact. Cardiothoracic ratio is normal (<0.50). Trachea is midline. Bony thorax and soft tissues show no significant lesions.',
+            impression: 'Acute pneumonia, right lower lobe.'
+          },
+          {
+            id: 'EXAM-20260612-05',
+            category: 'Heart Station / ECG',
+            name: '12-Lead Electrocardiogram (ECG)',
+            performed_at: '2026-06-12 09:45 AM',
+            status: 'Completed',
+            performed_by: 'C. David, ECG Tech / Official Reading by Dr. Andrea Reyes, Cardiologist',
+            findings: 'Sinus tachycardia at 104 bpm. Normal PR interval (0.16s), normal QRS complex duration (0.08s). Normal axis. No acute ST segment elevation, depression, or T-wave inversion.',
+            impression: 'Sinus tachycardia, otherwise normal 12-lead ECG tracing.'
+          }
+        ];
+      }
+
+      if (isIP) {
+        return [
+          {
+            id: 'EXAM-20260613-01',
+            category: 'Laboratory - Hematology',
+            name: 'Follow-up Complete Blood Count (CBC)',
+            performed_at: '2026-06-13 06:30 AM',
+            status: 'Completed',
+            performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+            impression: 'Marked hematologic response to antimicrobial therapy: white blood cell count decreased into normal reference range; neutrophilia resolving.',
+            analytes: [
+              { test: 'White Blood Cells (WBC)', value: '9.8', unit: 'x10^9/L', reference: '4.5 - 11.0', flag: 'Normal' },
+              { test: 'Neutrophils / Segmenters', value: '68', unit: '%', reference: '50 - 70', flag: 'Normal' },
+              { test: 'Lymphocytes', value: '25', unit: '%', reference: '20 - 40', flag: 'Normal' },
+              { test: 'Hemoglobin', value: '130', unit: 'g/L', reference: '120 - 160', flag: 'Normal' },
+              { test: 'Platelet Count', value: '258', unit: 'x10^9/L', reference: '150 - 450', flag: 'Normal' }
+            ]
+          },
+          {
+            id: 'EXAM-20260613-02',
+            category: 'Laboratory - Clinical Chemistry',
+            name: 'Serum Creatinine & Blood Urea Nitrogen (BUN)',
+            performed_at: '2026-06-13 06:35 AM',
+            status: 'Completed',
+            performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+            impression: 'Normal baseline renal panel during intravenous antibiotic therapy.',
+            analytes: [
+              { test: 'Serum Creatinine', value: '0.85', unit: 'mg/dL', reference: '0.50 - 1.10', flag: 'Normal' },
+              { test: 'Blood Urea Nitrogen (BUN)', value: '14.0', unit: 'mg/dL', reference: '7.0 - 20.0', flag: 'Normal' },
+              { test: 'Estimated GFR (CKD-EPI)', value: '88', unit: 'mL/min/1.73m²', reference: '> 60', flag: 'Normal' }
+            ]
+          },
+          {
+            id: 'EXAM-20260613-03',
+            category: 'Laboratory - Bedside Point of Care',
+            name: 'Random Blood Glucose (RBG)',
+            performed_at: '2026-06-13 07:00 AM',
+            status: 'Completed',
+            performed_by: 'E. Dela Cruz, RN',
+            impression: 'Normoglycemic fasting bedside profile.',
+            analytes: [
+              { test: 'Capillary Blood Glucose', value: '108', unit: 'mg/dL', reference: '70 - 140', flag: 'Normal' }
+            ]
+          },
+          {
+            id: 'EXAM-20260613-04',
+            category: 'Pulmonology / Respiratory Therapy',
+            name: 'Pulse Oximetry & Room Air Weaning Challenge',
+            performed_at: '2026-06-13 10:15 AM',
+            status: 'Completed',
+            performed_by: 'K. Villar, RRT',
+            findings: 'Baseline SpO2 on Nasal Cannula (2 L/min): 98%. Patient subjected to 15-minute room air trial: SpO2 maintained at 96% with resting respiratory rate of 16-18/min. Patient reported no dyspnea or chest tightness.',
+            impression: 'Successful room air trial. Cleared to discontinue nasal cannula oxygen as tolerated.'
+          }
+        ];
+      }
+
+      return [];
+    }
+
+    function addEncounterRow(data, index) {
+      if (typeof index !== 'number') {
+        index = encRows ? encRows.children.length : 0;
+      }
       var tr = document.createElement('tr');
       var recordText = (data && (data.patient_record || data.patientRecord)) || '';
       var resultsText = (data && data.results) || '';
+      var dateFormatted = esc(formatDate(data && data.date || ''));
 
-      var recordHtml = recordText
-        ? '<button type="button" class="btn btn-mini encounter-btn" data-encounter-type="record" data-content="' + esc(recordText) + '">' + esc(recordText) + '</button>'
-        : '—';
+      var recordHtml = '<button type="button" class="btn btn-mini btn-encounter-record" data-encounter-index="' + index + '" title="Click to view Clinical Record for ' + dateFormatted + '">' +
+        '<span style="font-size:13px; line-height:1;">📋</span> <strong style="color:#1b4d3e;">Record</strong>' +
+        (recordText ? ' <span style="font-weight:normal; color:#496557; font-size:11px; margin-left:3px;">(' + esc(recordText) + ')</span>' : '') +
+        '</button>';
 
-      var resultsHtml = resultsText
-        ? '<button type="button" class="btn btn-mini encounter-btn" data-encounter-type="results" data-content="' + esc(resultsText) + '">' + esc(resultsText) + '</button>'
-        : '—';
+      var resultsHtml = '<button type="button" class="btn btn-mini btn-encounter-results" data-encounter-index="' + index + '" title="Click to view Examination Results for ' + dateFormatted + '">' +
+        '<span style="font-size:13px; line-height:1;">🔬</span> <strong style="color:#0e3d59;">Result</strong>' +
+        (resultsText ? ' <span style="font-weight:normal; color:#466579; font-size:11px; margin-left:3px;">(' + esc(resultsText) + ')</span>' : '') +
+        '</button>';
 
       tr.innerHTML =
-        '<td>' + esc(formatDate(data && data.date || '')) + '</td>' +
-        '<td>' + esc(data && data.registry || '') + '</td>' +
-        '<td>' + esc(data && data.service || '') + '</td>' +
+        '<td>' + dateFormatted + '</td>' +
+        '<td><span class="badge" style="background:#546e7a; color:#fff; font-size:11px;">' + esc(data && (data.registry || data.type) || '—') + '</span></td>' +
+        '<td>' + esc(data && data.service || '—') + '</td>' +
         '<td>' + recordHtml + '</td>' +
         '<td>' + resultsHtml + '</td>';
       encRows.appendChild(tr);
     }
 
+    function openEncounterRecordModal(index) {
+      if (index == null || index < 0 || index >= loadedEncounters.length) return;
+      activeEncounterRecordIndex = index;
+      var enc = loadedEncounters[index];
+      var pData = currentPatientData();
+      var pName = patientName(pData) || 'UNKNOWN PATIENT';
+      var hrn = pData.hrn || pData.hospital_number || '—';
+      var age = pData.birthdate ? calculateAge(pData.birthdate) : (pData.age || '—');
+      var sex = (pData.gender || pData.sex || '—').charAt(0).toUpperCase();
+      var ageSex = (age ? age + ' / ' : '') + (sex || '—');
+      var dateFormatted = formatDate(enc.date) || enc.date || '—';
+      var encType = enc.registry || enc.type || 'IP';
+      var encService = enc.service || 'General Medicine';
+
+      var clinicalRec = getEncounterClinicalRecord(enc, pData);
+
+      var titleElem = document.getElementById('enc-rec-title-info');
+      if (titleElem) titleElem.textContent = dateFormatted + ' (' + encType + ' • ' + encService + ')';
+
+      var bannerElem = document.getElementById('enc-rec-banner');
+      if (bannerElem) {
+        bannerElem.innerHTML =
+          '<div><strong style="color:#666;">Patient Name:</strong><br><span style="font-weight:700; color:#1b4d3e; font-size:13px;">' + esc(pName) + '</span></div>' +
+          '<div><strong style="color:#666;">Hospital Number (HRN):</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
+          '<div><strong style="color:#666;">Age / Sex:</strong><br>' + esc(ageSex) + '</div>' +
+          '<div><strong style="color:#666;">Encounter Date:</strong><br><span style="font-weight:700; color:#006dcc;">' + esc(dateFormatted) + '</span></div>' +
+          '<div><strong style="color:#666;">Type &amp; Service:</strong><br><span class="badge" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(encType) + '</span> ' + esc(encService) + '</div>';
+      }
+
+      var ccElem = document.getElementById('enc-rec-chief-complaint');
+      if (ccElem) ccElem.textContent = clinicalRec.chief_complaint || 'No acute complaint recorded.';
+
+      var hxElem = document.getElementById('enc-rec-history');
+      if (hxElem) hxElem.textContent = clinicalRec.history || 'No detailed history recorded.';
+
+      var dxElem = document.getElementById('enc-rec-final-diagnosis');
+      if (dxElem) dxElem.textContent = clinicalRec.final_diagnosis || 'Pending final diagnostic confirmation.';
+
+      var modal = document.getElementById('encounter-record-modal');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeEncounterRecordModal() {
+      var modal = document.getElementById('encounter-record-modal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function openEncounterResultsModal(index) {
+      if (index == null || index < 0 || index >= loadedEncounters.length) return;
+      activeEncounterResultsIndex = index;
+      var enc = loadedEncounters[index];
+      var pData = currentPatientData();
+      var pName = patientName(pData) || 'UNKNOWN PATIENT';
+      var hrn = pData.hrn || pData.hospital_number || '—';
+      var age = pData.birthdate ? calculateAge(pData.birthdate) : (pData.age || '—');
+      var sex = (pData.gender || pData.sex || '—').charAt(0).toUpperCase();
+      var ageSex = (age ? age + ' / ' : '') + (sex || '—');
+      var dateFormatted = formatDate(enc.date) || enc.date || '—';
+      var encType = enc.registry || enc.type || 'IP';
+      var encService = enc.service || 'General Medicine';
+
+      var examinations = getEncounterExaminations(enc);
+
+      var titleElem = document.getElementById('enc-res-title-info');
+      if (titleElem) titleElem.textContent = dateFormatted + ' (' + encType + ' • ' + encService + ')';
+
+      var bannerElem = document.getElementById('enc-res-banner');
+      if (bannerElem) {
+        bannerElem.innerHTML =
+          '<div><strong style="color:#666;">Patient Name:</strong><br><span style="font-weight:700; color:#0e3d59; font-size:13px;">' + esc(pName) + '</span></div>' +
+          '<div><strong style="color:#666;">Hospital Number (HRN):</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
+          '<div><strong style="color:#666;">Age / Sex:</strong><br>' + esc(ageSex) + '</div>' +
+          '<div><strong style="color:#666;">Encounter Date:</strong><br><span style="font-weight:700; color:#006dcc;">' + esc(dateFormatted) + '</span></div>' +
+          '<div><strong style="color:#666;">Type &amp; Service:</strong><br><span class="badge" style="background:#0e3d59; color:#fff; font-size:10px;">' + esc(encType) + '</span> ' + esc(encService) + '</div>';
+      }
+
+      var contentElem = document.getElementById('enc-res-content');
+      if (contentElem) {
+        if (!examinations || examinations.length === 0) {
+          contentElem.innerHTML =
+            '<div style="text-align:center; padding:35px 20px; background:#f9fbfc; border:1px dashed #bcd; border-radius:6px;">' +
+            '<div style="font-size:32px; margin-bottom:8px;">🔬</div>' +
+            '<h4 style="margin:0 0 6px 0; color:#486581;">No Diagnostic Examinations Recorded</h4>' +
+            '<p style="color:#627d98; margin:0 0 12px 0; font-size:12px;">There are no laboratory or imaging examinations performed for encounter date <strong>' + esc(dateFormatted) + '</strong>.</p>' +
+            (enc.results ? '<div style="display:inline-block; background:#e8f4fd; border:1px solid #b8daff; border-radius:4px; padding:6px 14px; font-size:12px; color:#004085;"><strong>Recorded Encounter Outcome:</strong> ' + esc(enc.results) + '</div>' : '') +
+            '</div>';
+        } else {
+          var html = '';
+          examinations.forEach(function (exam, examIdx) {
+            var cat = esc(exam.category || 'Diagnostic Examination');
+            var name = esc(exam.name || 'Examination #' + (examIdx + 1));
+            var time = esc(exam.performed_at || exam.dateTime || dateFormatted);
+            var status = esc(exam.status || 'Completed');
+            var staff = esc(exam.performed_by || exam.signee || 'Laboratory Staff');
+
+            html += '<div class="encounter-exam-card">';
+            html += '  <div class="encounter-exam-header">';
+            html += '    <div class="encounter-exam-title">';
+            html += '      <span class="badge" style="background:#102a43; color:#fff; font-size:10px;">' + cat + '</span>';
+            html += '      <span>' + name + '</span>';
+            html += '    </div>';
+            html += '    <div style="font-size:11px; color:#627d98; display:flex; align-items:center; gap:8px;">';
+            html += '      <span><i class="icon-time"></i> ' + time + '</span>';
+            html += '      <span class="badge badge-success" style="background:#2e7d32; color:#fff;">' + status + '</span>';
+            html += '    </div>';
+            html += '  </div>';
+
+            html += '  <div class="encounter-exam-body">';
+            if (Array.isArray(exam.analytes) && exam.analytes.length > 0) {
+              html += '    <table class="analyte-table">';
+              html += '      <thead><tr>';
+              html += '        <th>Test / Analyte</th>';
+              html += '        <th style="width:110px;">Result</th>';
+              html += '        <th style="width:90px;">Unit</th>';
+              html += '        <th style="width:130px;">Reference Range</th>';
+              html += '        <th style="width:95px; text-align:center;">Flag</th>';
+              html += '      </tr></thead>';
+              html += '      <tbody>';
+              exam.analytes.forEach(function (ana) {
+                var flag = (ana.flag || 'Normal').trim();
+                var flagClass = 'flag-badge ' + flag.toLowerCase();
+                var flagText = flag === 'High' ? 'HIGH ▲' : (flag === 'Low' ? 'LOW ▼' : 'NORMAL ✓');
+                html += '      <tr>';
+                html += '        <td><strong>' + esc(ana.test) + '</strong></td>';
+                html += '        <td><span style="font-size:13px; font-weight:700;' + (flag === 'High' ? 'color:#c62828;' : (flag === 'Low' ? 'color:#e65100;' : 'color:#102a43;')) + '">' + esc(ana.value) + '</span></td>';
+                html += '        <td style="color:#627d98;">' + esc(ana.unit || '—') + '</td>';
+                html += '        <td style="color:#486581;">' + esc(ana.reference || '—') + '</td>';
+                html += '        <td style="text-align:center;"><span class="' + flagClass + '">' + flagText + '</span></td>';
+                html += '      </tr>';
+              });
+              html += '      </tbody></table>';
+            }
+
+            if (exam.findings) {
+              html += '    <div style="margin-bottom:8px; font-size:12px; line-height:1.5;">';
+              html += '      <strong style="color:#334e68;">Findings:</strong>';
+              html += '      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:8px 12px; margin-top:4px; color:#102a43; white-space:pre-wrap;">' + esc(exam.findings) + '</div>';
+              html += '    </div>';
+            }
+
+            if (exam.impression) {
+              html += '    <div style="margin-top:8px; background:#effcf6; border:1px solid #b7ebd1; border-left:4px solid #27ab83; border-radius:4px; padding:8px 12px; font-size:12px;">';
+              html += '      <strong style="color:#0e583f;">Diagnostic Impression:</strong> ';
+              html += '      <span style="color:#0e583f; font-weight:600;">' + esc(exam.impression) + '</span>';
+              html += '    </div>';
+            }
+
+            if (staff) {
+              html += '    <div style="margin-top:8px; font-size:11px; color:#829ab1; text-align:right;">';
+              html += '      <i class="icon-user"></i> Reported / Validated by: <em>' + staff + '</em>';
+              html += '    </div>';
+            }
+
+            html += '  </div>';
+            html += '</div>';
+          });
+
+          if (enc.results) {
+            html += '<div style="margin-top:12px; background:#f0f4f8; border:1px solid #d9e2ec; border-radius:4px; padding:10px 14px; font-size:12px; display:flex; align-items:center; gap:8px;">';
+            html += '  <strong style="color:#334e68;">Encounter Disposition / Clinical Outcome:</strong>';
+            html += '  <span class="badge badge-info" style="background:#0b69a3; color:#fff; font-size:12px; padding:3px 8px;">' + esc(enc.results) + '</span>';
+            html += '</div>';
+          }
+
+          contentElem.innerHTML = html;
+        }
+      }
+
+      var modal = document.getElementById('encounter-results-modal');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeEncounterResultsModal() {
+      var modal = document.getElementById('encounter-results-modal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function printEncounterDocument(title, contentHtml) {
+      var w = window.open('', '_blank', 'width=840,height=750');
+      if (!w) {
+        alert('Please allow popups for this site to print this encounter record.');
+        return;
+      }
+      w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + esc(title) + '</title>');
+      w.document.write('<style>');
+      w.document.write('body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; font-size: 12px; color: #222; margin: 30px; line-height: 1.5; }');
+      w.document.write('.hospital-header { text-align: center; border-bottom: 2px solid #1b4d3e; padding-bottom: 10px; margin-bottom: 16px; }');
+      w.document.write('.hospital-header h2 { margin: 0 0 4px 0; color: #1b4d3e; font-size: 18px; letter-spacing: 0.5px; }');
+      w.document.write('.hospital-header p { margin: 0; color: #555; font-size: 11px; }');
+      w.document.write('.doc-title { font-size: 15px; font-weight: bold; text-align: center; margin: 12px 0 16px 0; text-transform: uppercase; color: #333; letter-spacing: 0.5px; }');
+      w.document.write('.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px; background: #fdfdfd; }');
+      w.document.write('.meta-table td { border: 1px solid #ddd; padding: 6px 10px; }');
+      w.document.write('.meta-label { font-weight: bold; color: #555; width: 18%; background: #f7f9f8; }');
+      w.document.write('.meta-val { width: 32%; }');
+      w.document.write('.section-box { border: 1px solid #ddd; border-left: 4px solid #1b4d3e; padding: 10px 14px; margin-bottom: 14px; border-radius: 3px; }');
+      w.document.write('.section-title { font-size: 13px; font-weight: bold; color: #1b4d3e; margin-bottom: 6px; }');
+      w.document.write('.data-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11px; }');
+      w.document.write('.data-table th, .data-table td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; }');
+      w.document.write('.data-table th { background: #eef3f0; font-weight: bold; color: #1b4d3e; }');
+      w.document.write('.sig-row { margin-top: 40px; display: flex; justify-content: space-between; }');
+      w.document.write('.sig-box { width: 40%; text-align: center; border-top: 1px solid #333; padding-top: 5px; font-size: 11px; }');
+      w.document.write('@media print { body { margin: 10mm; } }');
+      w.document.write('</style></head><body>');
+      w.document.write(contentHtml);
+      w.document.write('</body></html>');
+      w.document.close();
+      setTimeout(function () {
+        w.focus();
+        w.print();
+      }, 350);
+    }
+
+    function printCurrentEncounterRecord() {
+      if (activeEncounterRecordIndex == null || activeEncounterRecordIndex < 0 || activeEncounterRecordIndex >= loadedEncounters.length) return;
+      var enc = loadedEncounters[activeEncounterRecordIndex];
+      var pData = currentPatientData();
+      var pName = patientName(pData) || 'UNKNOWN PATIENT';
+      var hrn = pData.hrn || pData.hospital_number || '—';
+      var age = pData.birthdate ? calculateAge(pData.birthdate) : (pData.age || '—');
+      var sex = (pData.gender || pData.sex || '—').charAt(0).toUpperCase();
+      var ageSex = (age ? age + ' / ' : '') + (sex || '—');
+      var dateFormatted = formatDate(enc.date) || enc.date || '—';
+      var encType = enc.registry || enc.type || 'IP';
+      var encService = enc.service || 'General Medicine';
+      var clinicalRec = getEncounterClinicalRecord(enc, pData);
+
+      var html = '';
+      html += '<div class="hospital-header">';
+      html += '  <h2>METROPOLITAN GENERAL HOSPITAL &amp; MEDICAL CENTER</h2>';
+      html += '  <p>Department of Clinical Documentation &amp; Health Information Services</p>';
+      html += '</div>';
+      html += '<div class="doc-title">CLINICAL ENCOUNTER RECORD</div>';
+      html += '<table class="meta-table">';
+      html += '  <tr><td class="meta-label">Patient Name:</td><td class="meta-val"><strong>' + esc(pName) + '</strong></td><td class="meta-label">Hospital No (HRN):</td><td class="meta-val"><strong>' + esc(hrn) + '</strong></td></tr>';
+      html += '  <tr><td class="meta-label">Age / Sex:</td><td class="meta-val">' + esc(ageSex) + '</td><td class="meta-label">Encounter Date:</td><td class="meta-val"><strong>' + esc(dateFormatted) + '</strong></td></tr>';
+      html += '  <tr><td class="meta-label">Encounter Type:</td><td class="meta-val">' + esc(encType) + '</td><td class="meta-label">Attending Service:</td><td class="meta-val">' + esc(encService) + '</td></tr>';
+      html += '</table>';
+
+      html += '<div class="section-box">';
+      html += '  <div class="section-title">CHIEF COMPLAINT</div>';
+      html += '  <div style="white-space:pre-wrap;">' + esc(clinicalRec.chief_complaint) + '</div>';
+      html += '</div>';
+
+      html += '<div class="section-box" style="border-left-color:#006dcc;">';
+      html += '  <div class="section-title" style="color:#005580;">CLINICAL HISTORY</div>';
+      html += '  <div style="white-space:pre-wrap;">' + esc(clinicalRec.history) + '</div>';
+      html += '</div>';
+
+      html += '<div class="section-box" style="border-left-color:#d9534f; background:#fff9f9;">';
+      html += '  <div class="section-title" style="color:#b92c28;">FINAL DIAGNOSIS</div>';
+      html += '  <div style="font-weight:bold; color:#900; white-space:pre-wrap;">' + esc(clinicalRec.final_diagnosis) + '</div>';
+      html += '</div>';
+
+      html += '<div class="sig-row">';
+      html += '  <div class="sig-box">Attending Physician Signature &amp; License No.</div>';
+      html += '  <div class="sig-box">Health Records Officer / Verification</div>';
+      html += '</div>';
+
+      printEncounterDocument('Clinical Record - ' + pName + ' - ' + dateFormatted, html);
+    }
+
+    function printCurrentEncounterResults() {
+      if (activeEncounterResultsIndex == null || activeEncounterResultsIndex < 0 || activeEncounterResultsIndex >= loadedEncounters.length) return;
+      var enc = loadedEncounters[activeEncounterResultsIndex];
+      var pData = currentPatientData();
+      var pName = patientName(pData) || 'UNKNOWN PATIENT';
+      var hrn = pData.hrn || pData.hospital_number || '—';
+      var age = pData.birthdate ? calculateAge(pData.birthdate) : (pData.age || '—');
+      var sex = (pData.gender || pData.sex || '—').charAt(0).toUpperCase();
+      var ageSex = (age ? age + ' / ' : '') + (sex || '—');
+      var dateFormatted = formatDate(enc.date) || enc.date || '—';
+      var encType = enc.registry || enc.type || 'IP';
+      var encService = enc.service || 'General Medicine';
+      var examinations = getEncounterExaminations(enc);
+
+      var html = '';
+      html += '<div class="hospital-header">';
+      html += '  <h2>METROPOLITAN GENERAL HOSPITAL &amp; MEDICAL CENTER</h2>';
+      html += '  <p>Department of Pathology, Laboratory &amp; Diagnostic Imaging Services</p>';
+      html += '</div>';
+      html += '<div class="doc-title">OFFICIAL DIAGNOSTIC EXAMINATION RESULTS</div>';
+      html += '<table class="meta-table">';
+      html += '  <tr><td class="meta-label">Patient Name:</td><td class="meta-val"><strong>' + esc(pName) + '</strong></td><td class="meta-label">Hospital No (HRN):</td><td class="meta-val"><strong>' + esc(hrn) + '</strong></td></tr>';
+      html += '  <tr><td class="meta-label">Age / Sex:</td><td class="meta-val">' + esc(ageSex) + '</td><td class="meta-label">Encounter Date:</td><td class="meta-val"><strong>' + esc(dateFormatted) + '</strong></td></tr>';
+      html += '  <tr><td class="meta-label">Encounter Type:</td><td class="meta-val">' + esc(encType) + '</td><td class="meta-label">Attending Service:</td><td class="meta-val">' + esc(encService) + '</td></tr>';
+      html += '</table>';
+
+      if (!examinations || examinations.length === 0) {
+        html += '<p style="text-align:center; padding:20px; color:#666;">No diagnostic examinations recorded for this encounter.</p>';
+      } else {
+        examinations.forEach(function (exam) {
+          html += '<div style="border:1px solid #ccc; border-radius:4px; padding:10px 14px; margin-bottom:14px;">';
+          html += '  <div style="display:flex; justify-content:space-between; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:8px;">';
+          html += '    <span style="font-size:13px; font-weight:bold; color:#0e3d59;">[' + esc(exam.category) + '] ' + esc(exam.name) + '</span>';
+          html += '    <span style="font-size:11px; color:#555;">' + esc(exam.performed_at || dateFormatted) + ' (' + esc(exam.status || 'Completed') + ')</span>';
+          html += '  </div>';
+
+          if (Array.isArray(exam.analytes) && exam.analytes.length > 0) {
+            html += '  <table class="data-table">';
+            html += '    <thead><tr><th>Test / Analyte</th><th>Result</th><th>Unit</th><th>Reference Range</th><th>Flag</th></tr></thead>';
+            html += '    <tbody>';
+            exam.analytes.forEach(function (ana) {
+              var flag = (ana.flag || 'Normal').trim();
+              html += '    <tr>';
+              html += '      <td><strong>' + esc(ana.test) + '</strong></td>';
+              html += '      <td style="font-weight:bold;' + (flag === 'High' ? 'color:#c62828;' : (flag === 'Low' ? 'color:#e65100;' : '')) + '">' + esc(ana.value) + '</td>';
+              html += '      <td>' + esc(ana.unit || '—') + '</td>';
+              html += '      <td>' + esc(ana.reference || '—') + '</td>';
+              html += '      <td>' + esc(flag) + '</td>';
+              html += '    </tr>';
+            });
+            html += '    </tbody></table>';
+          }
+
+          if (exam.findings) {
+            html += '  <div style="margin:6px 0;"><strong>Findings:</strong> ' + esc(exam.findings) + '</div>';
+          }
+          if (exam.impression) {
+            html += '  <div style="margin:6px 0; background:#f0f8f4; padding:6px 10px; border-left:3px solid #27ab83;"><strong>Impression:</strong> ' + esc(exam.impression) + '</div>';
+          }
+          if (exam.performed_by) {
+            html += '  <div style="text-align:right; font-size:10px; color:#666; margin-top:6px;">Reported by: ' + esc(exam.performed_by) + '</div>';
+          }
+          html += '</div>';
+        });
+      }
+
+      html += '<div class="sig-row">';
+      html += '  <div class="sig-box">Registered Medical Technologist / Radiologic Tech</div>';
+      html += '  <div class="sig-box">Pathologist / Radiologist In-Charge</div>';
+      html += '</div>';
+
+      printEncounterDocument('Examination Results - ' + pName + ' - ' + dateFormatted, html);
+    }
+
     if (encRows) {
       encRows.addEventListener('click', function (e) {
-        var btn = e.target.closest('.encounter-btn');
-        if (!btn) return;
-        var type = btn.dataset.encounterType === 'record' ? "Patient's Record" : "Results";
-        var content = btn.dataset.content || btn.textContent.trim();
-        alert(type + ':\n\n' + content);
+        var recBtn = e.target.closest('.btn-encounter-record');
+        if (recBtn) {
+          var recIdx = parseInt(recBtn.dataset.encounterIndex, 10);
+          openEncounterRecordModal(recIdx);
+          return;
+        }
+        var resBtn = e.target.closest('.btn-encounter-results');
+        if (resBtn) {
+          var resIdx = parseInt(resBtn.dataset.encounterIndex, 10);
+          openEncounterResultsModal(resIdx);
+          return;
+        }
       });
     }
 
+    // Modal close listeners
+    var closeRecBtn = document.getElementById('close-encounter-record-modal');
+    if (closeRecBtn) closeRecBtn.addEventListener('click', closeEncounterRecordModal);
+    var btnCloseRec = document.getElementById('btn-close-encounter-record-modal');
+    if (btnCloseRec) btnCloseRec.addEventListener('click', closeEncounterRecordModal);
+
+    var closeResBtn = document.getElementById('close-encounter-results-modal');
+    if (closeResBtn) closeResBtn.addEventListener('click', closeEncounterResultsModal);
+    var btnCloseRes = document.getElementById('btn-close-encounter-results-modal');
+    if (btnCloseRes) btnCloseRes.addEventListener('click', closeEncounterResultsModal);
+
+    // Modal print listeners
+    var printRecBtn = document.getElementById('btn-print-encounter-record');
+    if (printRecBtn) printRecBtn.addEventListener('click', printCurrentEncounterRecord);
+    var printResBtn = document.getElementById('btn-print-encounter-results');
+    if (printResBtn) printResBtn.addEventListener('click', printCurrentEncounterResults);
+
+    // Click backdrop to dismiss modals
+    var recModalBackdrop = document.getElementById('encounter-record-modal');
+    if (recModalBackdrop) {
+      recModalBackdrop.addEventListener('click', function (e) {
+        if (e.target === recModalBackdrop) closeEncounterRecordModal();
+      });
+    }
+    var resModalBackdrop = document.getElementById('encounter-results-modal');
+    if (resModalBackdrop) {
+      resModalBackdrop.addEventListener('click', function (e) {
+        if (e.target === resModalBackdrop) closeEncounterResultsModal();
+      });
+    }
+
+    // Escape key closes modals
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        closeEncounterRecordModal();
+        closeEncounterResultsModal();
+      }
+    });
+
     function renderEncounters(encounters) {
-      loadedEncounters = Array.isArray(encounters) ? encounters.map(function (encounter) { return Object.assign({}, encounter); }) : [];
+      loadedEncounters = Array.isArray(encounters) ? JSON.parse(JSON.stringify(encounters)) : [];
       encRows.innerHTML = '';
-      loadedEncounters.forEach(addEncounterRow);
+      loadedEncounters.forEach(function (enc, idx) {
+        addEncounterRow(enc, idx);
+      });
     }
 
     function getEncounters() {
-      return loadedEncounters.map(function (encounter) { return Object.assign({}, encounter); });
+      return JSON.parse(JSON.stringify(loadedEncounters));
     }
 
     // ── Doctor's Orders ──
