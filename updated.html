@@ -1215,6 +1215,10 @@
       letter-spacing: 0.2px;
       text-shadow: none !important;
     }
+    .encounter-table thead th#th-encounter-date:hover {
+      background: #233446 !important;
+      cursor: pointer;
+    }
     .encounter-table tbody td {
       padding: 8px 12px;
       font-size: 12px;
@@ -1429,7 +1433,7 @@
                 <table class="table table-bordered table-striped table-hover encounter-table" id="encounter-table">
                   <thead>
                     <tr>
-                      <th style="width:105px;">Date</th>
+                      <th style="width:115px; cursor:pointer; user-select:none;" id="th-encounter-date" title="Sorted newest first (Reverse chronological). Click to sort oldest first.">Date <span id="encounter-date-sort-indicator" style="font-size:10px; margin-left:2px; opacity:0.85;">▼</span></th>
                       <th style="width:110px;">Registry Type</th>
                       <th style="width:180px;">Service</th>
                       <th style="width:180px;">Physician</th>
@@ -3346,7 +3350,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 11,
+        seedVersion: 12,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T10:45:00+08:00',
         data: {
@@ -3389,6 +3393,77 @@
           final_diagnosis: 'Community-acquired pneumonia, improved; essential hypertension.',
           progress_notes: 'Productive cough and dyspnea, improved after initial treatment.\nBP 104/65, HR 115, RR 22, Temp 37.5 C, SpO2 92%.\nCommunity-acquired pneumonia, moderate risk; hypertension.',
           encounters: [
+            {
+              date: '2026-06-13',
+              time: '08:00 AM',
+              registry: 'IP',
+              service: 'Internal Medicine',
+              physician: 'Dr. Miguel Santos, MD',
+              is_current: true,
+              status_tag: 'Current Visit',
+              diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk; Essential Hypertension',
+              patient_record: 'Daily progress review',
+              results: 'Clinically improving',
+              clinical_record: {
+                chief_complaint: 'Decreasing cough and improved breathing; afebrile x 18 hours',
+                history: 'Hospital Day 2. Patient was admitted to Medical Ward under Internal Medicine. Received IV Ceftriaxone 2 g OD (Day 2) and PO Azithromycin 500 mg OD. Temperature normalized (afebrile at 36.8°C for the past 18 hours). Dyspnea has significantly resolved, patient ambulating comfortably in room. Productive cough is looser and less frequent with clearing sputum.\n\nInterval History: Tolerating low-salt diet well, adequate oral fluid intake. No chest pain, palpitations, or drug adverse events noted. Vital signs stable with SpO2 98% on 2 L/min nasal cannula.\n\nPhysical Examination on Rounds: Chest auscultation shows decreased coarse crackles over the right base with improved bilateral breath sounds. Abdomen soft, non-tender.',
+                final_diagnosis: 'Community-Acquired Pneumonia, resolving on targeted IV antimicrobial therapy; Essential Hypertension, controlled'
+              },
+              examinations: [
+                {
+                  id: 'EXAM-20260613-01',
+                  category: 'Laboratory - Hematology',
+                  name: 'Follow-up Complete Blood Count (CBC)',
+                  performed_at: '2026-06-13 06:30 AM',
+                  status: 'Completed',
+                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+                  impression: 'Marked hematologic response to antimicrobial therapy: white blood cell count decreased into normal reference range; neutrophilia resolving.',
+                  analytes: [
+                    { test: 'White Blood Cells (WBC)', value: '9.8', unit: 'x10^9/L', reference: '4.5 - 11.0', flag: 'Normal' },
+                    { test: 'Neutrophils / Segmenters', value: '68', unit: '%', reference: '50 - 70', flag: 'Normal' },
+                    { test: 'Lymphocytes', value: '25', unit: '%', reference: '20 - 40', flag: 'Normal' },
+                    { test: 'Hemoglobin', value: '130', unit: 'g/L', reference: '120 - 160', flag: 'Normal' },
+                    { test: 'Platelet Count', value: '258', unit: 'x10^9/L', reference: '150 - 450', flag: 'Normal' }
+                  ]
+                },
+                {
+                  id: 'EXAM-20260613-02',
+                  category: 'Laboratory - Clinical Chemistry',
+                  name: 'Serum Creatinine & Blood Urea Nitrogen (BUN)',
+                  performed_at: '2026-06-13 06:35 AM',
+                  status: 'Completed',
+                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+                  impression: 'Normal baseline renal panel during intravenous antibiotic therapy.',
+                  analytes: [
+                    { test: 'Serum Creatinine', value: '0.85', unit: 'mg/dL', reference: '0.50 - 1.10', flag: 'Normal' },
+                    { test: 'Blood Urea Nitrogen (BUN)', value: '14.0', unit: 'mg/dL', reference: '7.0 - 20.0', flag: 'Normal' },
+                    { test: 'Estimated GFR (CKD-EPI)', value: '88', unit: 'mL/min/1.73m²', reference: '> 60', flag: 'Normal' }
+                  ]
+                },
+                {
+                  id: 'EXAM-20260613-03',
+                  category: 'Laboratory - Bedside Point of Care',
+                  name: 'Random Blood Glucose (RBG)',
+                  performed_at: '2026-06-13 07:00 AM',
+                  status: 'Completed',
+                  performed_by: 'E. Dela Cruz, RN',
+                  impression: 'Normoglycemic fasting bedside profile.',
+                  analytes: [
+                    { test: 'Capillary Blood Glucose', value: '108', unit: 'mg/dL', reference: '70 - 140', flag: 'Normal' }
+                  ]
+                },
+                {
+                  id: 'EXAM-20260613-04',
+                  category: 'Pulmonology / Respiratory Therapy',
+                  name: 'Pulse Oximetry & Room Air Weaning Challenge',
+                  performed_at: '2026-06-13 10:15 AM',
+                  status: 'Completed',
+                  performed_by: 'K. Villar, RRT',
+                  findings: 'Baseline SpO2 on Nasal Cannula (2 L/min): 98%. Patient subjected to 15-minute room air trial: SpO2 maintained at 96% with resting respiratory rate of 16-18/min. Patient reported no dyspnea or chest tightness.',
+                  impression: 'Successful room air trial. Cleared to discontinue nasal cannula oxygen as tolerated.'
+                }
+              ]
+            },
             {
               date: '2026-06-12',
               time: '08:15 AM',
@@ -3476,73 +3551,48 @@
               ]
             },
             {
-              date: '2026-06-13',
-              time: '08:00 AM',
-              registry: 'IP',
-              service: 'Internal Medicine',
-              physician: 'Dr. Miguel Santos, MD',
-              is_current: true,
-              status_tag: 'Current Visit',
-              diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk; Essential Hypertension',
-              patient_record: 'Daily progress review',
-              results: 'Clinically improving',
+              date: '2026-05-20',
+              time: '02:15 PM',
+              registry: 'OP',
+              service: 'Outpatient Department (OPD) - Pulmonary & Adult Medicine',
+              physician: 'Dr. Ramon Valencia, MD',
+              is_current: false,
+              status_tag: 'Follow-up (OPD)',
+              diagnosis: 'J45.909 - Bronchial Asthma, in clinical remission; Essential Hypertension Stage 1',
+              patient_record: 'Routine adult pulmonary checkup and maintenance medication titration',
+              results: 'Spirometry normal; maintenance therapy continued',
               clinical_record: {
-                chief_complaint: 'Decreasing cough and improved breathing; afebrile x 18 hours',
-                history: 'Hospital Day 2. Patient was admitted to Medical Ward under Internal Medicine. Received IV Ceftriaxone 2 g OD (Day 2) and PO Azithromycin 500 mg OD. Temperature normalized (afebrile at 36.8°C for the past 18 hours). Dyspnea has significantly resolved, patient ambulating comfortably in room. Productive cough is looser and less frequent with clearing sputum.\n\nInterval History: Tolerating low-salt diet well, adequate oral fluid intake. No chest pain, palpitations, or drug adverse events noted. Vital signs stable with SpO2 98% on 2 L/min nasal cannula.\n\nPhysical Examination on Rounds: Chest auscultation shows decreased coarse crackles over the right base with improved bilateral breath sounds. Abdomen soft, non-tender.',
-                final_diagnosis: 'Community-Acquired Pneumonia, resolving on targeted IV antimicrobial therapy; Essential Hypertension, controlled'
+                chief_complaint: 'Routine follow-up consultation for asthma maintenance refill and blood pressure check',
+                history: 'Patient presented to the Adult Pulmonary Outpatient Clinic for routine evaluation. Denies acute shortness of breath, nocturnal cough, or wheezing over the preceding month. Compliant with maintenance Budesonide/Formoterol inhaler and Amlodipine 5 mg OD. BP 124/80 mmHg, HR 76 bpm, RR 16/min, SpO2 99% on ambient air. Chest auscultation revealed clear and symmetric breath sounds throughout all lung zones.',
+                final_diagnosis: 'Bronchial Asthma, Well-Controlled; Essential Hypertension Stage 1 (Controlled)'
               },
               examinations: [
                 {
-                  id: 'EXAM-20260613-01',
-                  category: 'Laboratory - Hematology',
-                  name: 'Follow-up Complete Blood Count (CBC)',
-                  performed_at: '2026-06-13 06:30 AM',
+                  id: 'EXAM-20260520-01',
+                  category: 'Pulmonology / Pulmonary Function Test',
+                  name: 'Spirometry (Pre- and Post-Bronchodilator)',
+                  performed_at: '2026-05-20 02:40 PM',
                   status: 'Completed',
-                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
-                  impression: 'Marked hematologic response to antimicrobial therapy: white blood cell count decreased into normal reference range; neutrophilia resolving.',
-                  analytes: [
-                    { test: 'White Blood Cells (WBC)', value: '9.8', unit: 'x10^9/L', reference: '4.5 - 11.0', flag: 'Normal' },
-                    { test: 'Neutrophils / Segmenters', value: '68', unit: '%', reference: '50 - 70', flag: 'Normal' },
-                    { test: 'Lymphocytes', value: '25', unit: '%', reference: '20 - 40', flag: 'Normal' },
-                    { test: 'Hemoglobin', value: '130', unit: 'g/L', reference: '120 - 160', flag: 'Normal' },
-                    { test: 'Platelet Count', value: '258', unit: 'x10^9/L', reference: '150 - 450', flag: 'Normal' }
-                  ]
+                  performed_by: 'K. Villar, RRT / Reading by Dr. Ramon Valencia, Pulmonologist',
+                  findings: 'FVC: 3.42 L (96% of predicted)\nFEV1: 2.78 L (94% of predicted)\nFEV1/FVC: 81.3% (Normal > 70%)\nPost-bronchodilator change in FEV1: +4% and 110 mL (negative for active acute reversibility).',
+                  impression: 'Normal baseline spirometry without active ventilatory defect.'
                 },
                 {
-                  id: 'EXAM-20260613-02',
-                  category: 'Laboratory - Clinical Chemistry',
-                  name: 'Serum Creatinine & Blood Urea Nitrogen (BUN)',
-                  performed_at: '2026-06-13 06:35 AM',
+                  id: 'EXAM-20260520-02',
+                  category: 'Laboratory - Clinical Microscopy',
+                  name: 'Routine Urinalysis (Automated & Microscopic)',
+                  performed_at: '2026-05-20 03:00 PM',
                   status: 'Completed',
-                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
-                  impression: 'Normal baseline renal panel during intravenous antibiotic therapy.',
+                  performed_by: 'J. Ramos, RMT',
+                  impression: 'Routine urinalysis within normal physiological parameters.',
                   analytes: [
-                    { test: 'Serum Creatinine', value: '0.85', unit: 'mg/dL', reference: '0.50 - 1.10', flag: 'Normal' },
-                    { test: 'Blood Urea Nitrogen (BUN)', value: '14.0', unit: 'mg/dL', reference: '7.0 - 20.0', flag: 'Normal' },
-                    { test: 'Estimated GFR (CKD-EPI)', value: '88', unit: 'mL/min/1.73m²', reference: '> 60', flag: 'Normal' }
+                    { test: 'Color / Clarity', value: 'Light Yellow / Clear', unit: '', reference: 'Straw/Yellow, Clear', flag: 'Normal' },
+                    { test: 'Specific Gravity', value: '1.018', unit: '', reference: '1.005 - 1.030', flag: 'Normal' },
+                    { test: 'pH', value: '6.0', unit: '', reference: '5.0 - 7.5', flag: 'Normal' },
+                    { test: 'Protein', value: 'Negative', unit: '', reference: 'Negative', flag: 'Normal' },
+                    { test: 'Glucose', value: 'Negative', unit: '', reference: 'Negative', flag: 'Normal' },
+                    { test: 'RBC / WBC (Microscopic)', value: '0-1 / 1-2', unit: '/hpf', reference: '0-2 / 0-5', flag: 'Normal' }
                   ]
-                },
-                {
-                  id: 'EXAM-20260613-03',
-                  category: 'Laboratory - Bedside Point of Care',
-                  name: 'Random Blood Glucose (RBG)',
-                  performed_at: '2026-06-13 07:00 AM',
-                  status: 'Completed',
-                  performed_by: 'E. Dela Cruz, RN',
-                  impression: 'Normoglycemic fasting bedside profile.',
-                  analytes: [
-                    { test: 'Capillary Blood Glucose', value: '108', unit: 'mg/dL', reference: '70 - 140', flag: 'Normal' }
-                  ]
-                },
-                {
-                  id: 'EXAM-20260613-04',
-                  category: 'Pulmonology / Respiratory Therapy',
-                  name: 'Pulse Oximetry & Room Air Weaning Challenge',
-                  performed_at: '2026-06-13 10:15 AM',
-                  status: 'Completed',
-                  performed_by: 'K. Villar, RRT',
-                  findings: 'Baseline SpO2 on Nasal Cannula (2 L/min): 98%. Patient subjected to 15-minute room air trial: SpO2 maintained at 96% with resting respiratory rate of 16-18/min. Patient reported no dyspnea or chest tightness.',
-                  impression: 'Successful room air trial. Cleared to discontinue nasal cannula oxygen as tolerated.'
                 }
               ]
             },
@@ -3597,52 +3647,6 @@
                     { test: 'Lymphocytes', value: '32', unit: '%', reference: '20 - 40', flag: 'Normal' },
                     { test: 'Hemoglobin', value: '128', unit: 'g/L', reference: '120 - 160', flag: 'Normal' },
                     { test: 'Platelet Count', value: '272', unit: 'x10^9/L', reference: '150 - 450', flag: 'Normal' }
-                  ]
-                }
-              ]
-            },
-            {
-              date: '2026-05-20',
-              time: '02:15 PM',
-              registry: 'OP',
-              service: 'Outpatient Department (OPD) - Pulmonary & Adult Medicine',
-              physician: 'Dr. Ramon Valencia, MD',
-              is_current: false,
-              status_tag: 'Follow-up (OPD)',
-              diagnosis: 'J45.909 - Bronchial Asthma, in clinical remission; Essential Hypertension Stage 1',
-              patient_record: 'Routine adult pulmonary checkup and maintenance medication titration',
-              results: 'Spirometry normal; maintenance therapy continued',
-              clinical_record: {
-                chief_complaint: 'Routine follow-up consultation for asthma maintenance refill and blood pressure check',
-                history: 'Patient presented to the Adult Pulmonary Outpatient Clinic for routine evaluation. Denies acute shortness of breath, nocturnal cough, or wheezing over the preceding month. Compliant with maintenance Budesonide/Formoterol inhaler and Amlodipine 5 mg OD. BP 124/80 mmHg, HR 76 bpm, RR 16/min, SpO2 99% on ambient air. Chest auscultation revealed clear and symmetric breath sounds throughout all lung zones.',
-                final_diagnosis: 'Bronchial Asthma, Well-Controlled; Essential Hypertension Stage 1 (Controlled)'
-              },
-              examinations: [
-                {
-                  id: 'EXAM-20260520-01',
-                  category: 'Pulmonology / Pulmonary Function Test',
-                  name: 'Spirometry (Pre- and Post-Bronchodilator)',
-                  performed_at: '2026-05-20 02:40 PM',
-                  status: 'Completed',
-                  performed_by: 'K. Villar, RRT / Reading by Dr. Ramon Valencia, Pulmonologist',
-                  findings: 'FVC: 3.42 L (96% of predicted)\nFEV1: 2.78 L (94% of predicted)\nFEV1/FVC: 81.3% (Normal > 70%)\nPost-bronchodilator change in FEV1: +4% and 110 mL (negative for active acute reversibility).',
-                  impression: 'Normal baseline spirometry without active ventilatory defect.'
-                },
-                {
-                  id: 'EXAM-20260520-02',
-                  category: 'Laboratory - Clinical Microscopy',
-                  name: 'Routine Urinalysis (Automated & Microscopic)',
-                  performed_at: '2026-05-20 03:00 PM',
-                  status: 'Completed',
-                  performed_by: 'J. Ramos, RMT',
-                  impression: 'Routine urinalysis within normal physiological parameters.',
-                  analytes: [
-                    { test: 'Color / Clarity', value: 'Light Yellow / Clear', unit: '', reference: 'Straw/Yellow, Clear', flag: 'Normal' },
-                    { test: 'Specific Gravity', value: '1.018', unit: '', reference: '1.005 - 1.030', flag: 'Normal' },
-                    { test: 'pH', value: '6.0', unit: '', reference: '5.0 - 7.5', flag: 'Normal' },
-                    { test: 'Protein', value: 'Negative', unit: '', reference: 'Negative', flag: 'Normal' },
-                    { test: 'Glucose', value: 'Negative', unit: '', reference: 'Negative', flag: 'Normal' },
-                    { test: 'RBC / WBC (Microscopic)', value: '0-1 / 1-2', unit: '/hpf', reference: '0-2 / 0-5', flag: 'Normal' }
                   ]
                 }
               ]
@@ -3745,7 +3749,7 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 11) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 12) records[index] = seedPatientRecord();
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
       else if (Number(records[blankIndex].seedVersion || 0) < 10) records[blankIndex] = blankPatientRecord();
@@ -4682,7 +4686,7 @@
       } else if (data && typeof data.isCurrent === 'boolean') {
         isCurrent = data.isCurrent;
       } else if (allEncounters && allEncounters.length > 0) {
-        isCurrent = (index === allEncounters.length - 1);
+        isCurrent = (encounterSortOrder === 'desc' ? (index === 0) : (index === allEncounters.length - 1));
       }
 
       if (isCurrent) {
@@ -5132,10 +5136,68 @@
       });
     }
 
+    var thEncounterDate = document.getElementById('th-encounter-date');
+    if (thEncounterDate) {
+      thEncounterDate.addEventListener('click', function () {
+        encounterSortOrder = (encounterSortOrder === 'desc' ? 'asc' : 'desc');
+        renderEncounters(loadedEncounters, true);
+      });
+    }
+
+    var encounterSortOrder = 'desc';
+
+    function parseEncounterDateTime(enc) {
+      if (!enc) return 0;
+      var d = String(enc.date || '').trim();
+      var t = String(enc.time || '').trim();
+      if (!d) return 0;
+      var isoDate = d;
+      if (/^\d{2}\/\d{2}\/\d{4}$/.test(d)) {
+        var parts = d.split('/');
+        isoDate = parts[2] + '-' + parts[0] + '-' + parts[1];
+      }
+      var timeStr = '00:00:00';
+      if (t) {
+        var match = t.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+        if (match) {
+          var h = parseInt(match[1], 10);
+          var m = parseInt(match[2], 10);
+          var mer = (match[3] || '').toUpperCase();
+          if (mer === 'PM' && h < 12) h += 12;
+          if (mer === 'AM' && h === 12) h = 0;
+          timeStr = (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':00';
+        }
+      }
+      var dt = new Date(isoDate + 'T' + timeStr);
+      return isNaN(dt.getTime()) ? 0 : dt.getTime();
+    }
+
+    function sortLoadedEncounters() {
+      if (!Array.isArray(loadedEncounters)) return;
+      loadedEncounters.sort(function (a, b) {
+        var ta = parseEncounterDateTime(a);
+        var tb = parseEncounterDateTime(b);
+        return encounterSortOrder === 'asc' ? (ta - tb) : (tb - ta);
+      });
+    }
+
+    function updateEncounterSortIndicator() {
+      var ind = document.getElementById('encounter-date-sort-indicator');
+      if (ind) {
+        ind.textContent = encounterSortOrder === 'desc' ? '▼' : '▲';
+      }
+      var th = document.getElementById('th-encounter-date');
+      if (th) {
+        th.title = encounterSortOrder === 'desc' ? 'Sorted newest first (Reverse chronological). Click to sort oldest first.' : 'Sorted oldest first (Chronological). Click to sort newest first.';
+      }
+    }
+
     function renderEncounters(encounters, preserveFilter) {
       if (!preserveFilter && encounters) {
         loadedEncounters = Array.isArray(encounters) ? JSON.parse(JSON.stringify(encounters)) : [];
       }
+      sortLoadedEncounters();
+      updateEncounterSortIndicator();
       if (!encRows) return;
       encRows.innerHTML = '';
       if (!loadedEncounters || loadedEncounters.length === 0) {
