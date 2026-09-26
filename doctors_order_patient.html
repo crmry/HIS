@@ -696,7 +696,7 @@
         function opPatientRecord() {
             return {
                 id: OP_PATIENT_ID,
-                seedVersion: 23,
+                seedVersion: 24,
                 createdAt: "2026-03-14T08:45:00+08:00",
                 updatedAt: "2026-09-26T09:30:00+08:00",
                 data: {
@@ -1017,7 +1017,7 @@
 
             const opIndex = records.findIndex(record => record.id === OP_PATIENT_ID);
             if (opIndex < 0) records.push(opPatientRecord());
-            else if (Number(records[opIndex].seedVersion || 0) < 23) records[opIndex] = opPatientRecord();
+            else if (Number(records[opIndex].seedVersion || 0) < 24) records[opIndex] = opPatientRecord();
 
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
@@ -1469,14 +1469,15 @@
                 }];
             }
 
-            // Sort encounters reverse-chronologically: newest / most recent on top (DOH standard)
+            // Sort encounters chronologically: Initial Encounter up to current (oldest first)
             encounters.sort((a, b) => {
                 const ta = parseEncounterDateTime(a);
                 const tb = parseEncounterDateTime(b);
-                return tb - ta;
+                return ta - tb;
             });
 
             const isSingle = Boolean(targetEncounterDate && targetEncounterDate !== "all" && targetEncounterDate !== "current");
+            const isOP = Boolean(data?.case_type === "OP Patient" || data?.case_type === "Outpatient" || encounters.some(e => (e.is_current || e.isCurrent) && e.registry === "OP"));
             const blocks = [];
             let primaryAssigned = false;
 
@@ -1486,7 +1487,9 @@
                     return;
                 }
 
-                const isPrevious = !enc?.is_current && !enc?.isCurrent && (enc?.status_tag === "Previous Admission" || enc?.status_tag === "Follow-up (OPD)");
+                // For inpatients, previous admissions from earlier hospitalizations are not merged into the current admission view unless explicitly selected.
+                // For outpatients (OPD), all encounters (initial to follow-ups to current) form the continuous longitudinal record and must be included.
+                const isPrevious = !isOP && !enc?.is_current && !enc?.isCurrent && enc?.status_tag === "Previous Admission";
                 if (!isSingle && isPrevious) {
                     return;
                 }
@@ -1533,7 +1536,10 @@
                 // Support clinical notes with or without orders (DOH compliant)
                 if (hasOrders || hasNotes || isAdmission) {
                     let dt = "";
-                    if (enc.date) {
+                    const encTimeMs = parseEncounterDateTime(enc);
+                    if (encTimeMs) {
+                        dt = formatDateTime(encTimeMs);
+                    } else if (enc.date) {
                         dt = formatDate(enc.date) + (enc.time ? " " + enc.time : "");
                     } else if (orders[0]?.dateTime) {
                         dt = formatDateTime(orders[0].dateTime);
@@ -1545,22 +1551,31 @@
                         date: enc.date || "",
                         time: enc.time || "",
                         dateTime: dt,
+                        isCurrent: Boolean(enc?.is_current || enc?.isCurrent),
                         noteLines,
                         orders
                     });
                 }
             });
 
-            // Fallback: If primaryOrders was not assigned anywhere and viewing current stay
+            // Fallback: If primaryOrders was not assigned anywhere and viewing all encounters or current stay
             if (!primaryAssigned && primaryOrders.length > 0 && !isSingle) {
-                if (blocks.length > 0) {
-                    blocks[0].orders = primaryOrders;
-                } else {
-                    blocks.push({
-                        dateTime: formatDateTime(firstOrderDateTime(data, record)),
-                        noteLines: extractProgressNoteLines(buildProgressNotes(data)),
-                        orders: primaryOrders
-                    });
+                // If any block already has its own orders, do not overwrite them!
+                // Only assign primaryOrders if there is a block without orders, or attach to the latest encounter.
+                const targetBlock = blocks.find(b => b.isCurrent && (!b.orders || b.orders.length === 0))
+                    || blocks.find(b => (!b.orders || b.orders.length === 0));
+                if (targetBlock) {
+                    targetBlock.orders = primaryOrders;
+                } else if (!blocks.some(b => b.orders && b.orders.length > 0)) {
+                    if (blocks.length > 0) {
+                        blocks[blocks.length - 1].orders = primaryOrders;
+                    } else {
+                        blocks.push({
+                            dateTime: formatDateTime(firstOrderDateTime(data, record)),
+                            noteLines: extractProgressNoteLines(buildProgressNotes(data)),
+                            orders: primaryOrders
+                        });
+                    }
                 }
             }
 
@@ -1579,15 +1594,15 @@
                 return;
             }
 
-            // Sort encounters reverse-chronologically so recent encounters appear first in the dropdown
+            // Sort encounters chronologically so Initial Encounter appears first in the dropdown
             encounters.sort((a, b) => {
                 const ta = parseEncounterDateTime(a);
                 const tb = parseEncounterDateTime(b);
-                return tb - ta;
+                return ta - tb;
             });
 
-                        const isOP = (record?.data?.case_type === "OP Patient" || record?.data?.case_type === "Outpatient" || encounters.some(e => (e.is_current || e.isCurrent) && e.registry === "OP"));
-            const defaultLabel = isOP ? 'Current Outpatient (All Dates — Recent on Top)' : 'Current Admission (All Dates — Recent on Top)';
+            const isOP = (record?.data?.case_type === "OP Patient" || record?.data?.case_type === "Outpatient" || encounters.some(e => (e.is_current || e.isCurrent) && e.registry === "OP"));
+            const defaultLabel = isOP ? 'All Encounters (Chronological: Initial to Current)' : 'Current Stay (Chronological: Initial to Current)';
             encounterSelector.innerHTML = '<option value="current">' + defaultLabel + '</option>';
             encounters.forEach(enc => {
                 const option = document.createElement("option");
