@@ -1394,14 +1394,6 @@
       <!-- ═══ PATIENT INFO BAR ═══ -->
       <div class="patient-info-bar">
         <div class="pull-right" style="margin-top:2px;">
-          <select id="patient-selector" style="width:250px;">
-            <option value="">Select saved patient...</option>
-            <option value="patient_new_blank_1790299677880">NEW PATIENT, SAMPLE — 0000001678 (Example — New Patient,
-              Blank)</option>
-            <option value="patient_1790299677879">DELA CRUZ, MARIA SANTOS — 0000001677 (Seed — Previous Patient)
-            </option>
-          </select>
-          <button type="button" class="btn btn-success btn-small" id="load-btn">Load</button>
           <button type="button" class="btn btn-inverse btn-small" id="clear-btn" style="display:none;">Clear Form</button>
           <button type="button" class="btn btn-small" id="print-btn" style="display:none;">PHYSICIAN'S ORDERS / PROGRESS NOTES NURSES'
             COMPLIANCE SHEET</button>
@@ -3795,6 +3787,7 @@
     // ── Patient Selector ──
     var selector = document.getElementById('patient-selector');
     function populateSelector() {
+      if (!selector) return;
       var patients = getPatients().sort(function (a, b) { return String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')); });
       selector.innerHTML = '<option value="">Select saved patient...</option>';
       patients.forEach(function (r) {
@@ -7779,8 +7772,10 @@
         activePatientId =
           record.id;
 
-        selector.value =
-          record.id;
+        if (selector) {
+          selector.value =
+            record.id;
+        }
 
 
         renderOrderSummary();
@@ -7792,17 +7787,20 @@
       }
     }
 
-    document.getElementById('load-btn').addEventListener('click', function () {
-      var id = selector.value;
-      if (!id) { alert('Please select a patient first.'); return; }
-      if (activePatientId && activePatientId !== id) {
-        window.clearTimeout(physicianAutosaveTimer);
-        saveCurrentPatientRecord({ silent: true, refreshSelector: false });
-      }
-      var record = getPatients().find(function (r) { return r.id === id; });
-      if (!record) { alert('Patient not found.'); return; }
-      loadPatientRecord(record);
-    });
+    var loadBtn = document.getElementById('load-btn');
+    if (loadBtn) {
+      loadBtn.addEventListener('click', function () {
+        var id = selector ? selector.value : '';
+        if (!id) { alert('Please select a patient first.'); return; }
+        if (activePatientId && activePatientId !== id) {
+          window.clearTimeout(physicianAutosaveTimer);
+          saveCurrentPatientRecord({ silent: true, refreshSelector: false });
+        }
+        var record = getPatients().find(function (r) { return r.id === id; });
+        if (!record) { alert('Patient not found.'); return; }
+        loadPatientRecord(record);
+      });
+    }
     /* =========================================================
        GENERIC FORM SERIALIZATION
        Saves ALL named controls, including empty checkbox arrays.
@@ -8275,8 +8273,10 @@
 
         populateSelector();
 
-        selector.value =
-          activePatientId;
+        if (selector) {
+          selector.value =
+            activePatientId;
+        }
       }
 
 
@@ -8459,7 +8459,9 @@
       if (record) loadPatientRecord(record);
       else clearAllPatientFields();
     } else {
-      clearAllPatientFields();
+      var defaultRecord = getPatients().find(function (r) { return r.id === SEED_PATIENT_ID; }) || getPatients()[0];
+      if (defaultRecord) loadPatientRecord(defaultRecord);
+      else clearAllPatientFields();
     }
     initDashboardLayout();
     initDashletCollapse();
