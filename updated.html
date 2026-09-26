@@ -1448,7 +1448,7 @@
         <span class="meta-item"><span class="meta-label">Age/Sex:</span> <span id="banner-age-sex">—</span></span>
         <span class="meta-item"><span class="meta-label">Bdate:</span> <span id="banner-bdate">09/10/1986</span></span>
         <span class="meta-item"><span class="meta-label">Encounter No.:</span> <span id="banner-encounter-no">001101</span></span>
-        <span class="meta-item"><span class="meta-label">Ward/Area:</span> <span id="banner-ward">Surgery</span></span>
+        <span class="meta-item"><span class="meta-label">Ward/Area:</span> <span id="banner-ward">OPD - Room 102</span></span>
         <span id="banner-admit-date" style="display:none;">06/12/2026</span>
       </div>
 
@@ -3520,7 +3520,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 17,
+        seedVersion: 18,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T16:30:00+08:00',
         data: {
@@ -3531,11 +3531,11 @@
           birthdate: '1986-09-10',
           gender: 'Female',
           address: 'Brgy. Mansilingan, Bacolod City',
-          ward_room: 'Medical Ward - Room 204',
-          ward_area: 'Internal Medicine',
+          ward_room: 'OPD - Room 102',
+          ward_area: 'Internal Medicine (OPD)',
           case_no: '001101',
           encounter_no: '001101',
-          case_type: 'IP Patient',
+          case_type: 'OP Patient',
           chief_complaint: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.',
           hx_present: 'Three-day history of fever with yellowish sputum and increasing dyspnea. No chest trauma.',
           hx_surgical: 'No significant surgical history.',
@@ -3566,35 +3566,34 @@
             {
               date: '2026-06-13',
               time: '04:30 PM',
-              registry: 'IP',
-              service: 'Internal Medicine',
+              registry: 'OP',
+              service: 'Internal Medicine (OPD)',
               physician: 'Dr. Miguel Santos, MD',
               is_current: true,
-              status_tag: 'Ward Round (PM)',
+              status_tag: 'Follow-up (OPD)',
               diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; Essential Hypertension',
-              patient_record: 'Afternoon progress observation',
+              patient_record: 'Outpatient progress review and clinical monitoring',
               results: 'Clinically stable',
-              progress_notes: 'Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air. No chest discomfort or dyspnea.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.',
+              progress_notes: 'Outpatient Follow-up. Resting comfortably, afebrile, breathing easily on room air. No chest discomfort or dyspnea.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current outpatient management.',
               orders: []
             },
             {
               date: '2026-06-13',
               time: '10:15 AM',
-              registry: 'IP',
-              service: 'Internal Medicine',
+              registry: 'OP',
+              service: 'Internal Medicine (OPD)',
               physician: 'Dr. Miguel Santos, MD',
               is_current: true,
-              status_tag: 'Morning Rounds',
+              status_tag: 'Consultation (OPD)',
               diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk; Essential Hypertension',
-              patient_record: 'Daily progress review',
+              patient_record: 'Outpatient consultation and prescription review',
               results: 'Clinically improving',
-              progress_notes: 'Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics',
+              progress_notes: 'Outpatient Consultation. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted oral antibiotics',
               orders: [
-                { text: 'Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 10:30 AM nurse' },
-                { text: 'Continue IV Ceftriaxone 2 g OD (Day 2 of 7).', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:35 AM nurse\nA - 11:00 AM nurse' },
-                { text: 'Shift Azithromycin to oral 500 mg tablet once daily after meals.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:40 AM nurse\nA - 11:05 AM nurse' },
-                { text: 'Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['R'], timeSignature: 'R - 10:45 AM physician' },
-                { text: 'May ambulate inside room as tolerated. Regular diet.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:00 AM nurse' }
+                { text: 'Maintain SpO2 >= 95% on room air.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 10:30 AM nurse' },
+                { text: 'Continue Azithromycin 500 mg tablet once daily after meals.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:40 AM nurse\nA - 11:05 AM nurse' },
+                { text: 'Repeat Complete Blood Count (CBC) and serum creatinine after 3 days.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['R'], timeSignature: 'R - 10:45 AM physician' },
+                { text: 'May ambulate as tolerated. Regular diet.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:00 AM nurse' }
               ],
               clinical_record: {
                 chief_complaint: 'Decreasing cough and improved breathing; afebrile x 18 hours',
@@ -3955,7 +3954,7 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 17) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 18) records[index] = seedPatientRecord();
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
       else if (Number(records[blankIndex].seedVersion || 0) < 10) records[blankIndex] = blankPatientRecord();
@@ -5389,6 +5388,12 @@
         var h12 = hours % 12 || 12;
         timeInput.value = (h12 < 10 ? '0' + h12 : h12) + ':' + mins + ' ' + ampm;
       }
+      var regInput = document.getElementById('new-enc-registry');
+      if (regInput) regInput.value = 'OP';
+      var srvInput = document.getElementById('new-enc-service');
+      if (srvInput) srvInput.value = 'Internal Medicine (OPD)';
+      var tagInput = document.getElementById('new-enc-status-tag');
+      if (tagInput) tagInput.value = 'Follow-up (OPD)';
       var diagInput = document.getElementById('new-enc-diagnosis');
       if (diagInput) {
         var pData = currentPatientData();
@@ -5549,11 +5554,11 @@
         var simEnc = {
           date: yyyy + '-' + mm + '-' + dd,
           time: timeStr,
-          registry: 'IP',
-          service: 'Internal Medicine',
+          registry: 'OP',
+          service: 'Internal Medicine (OPD)',
           physician: 'Dr. Miguel Santos, MD',
           is_current: true,
-          status_tag: 'Ward Round (PM)',
+          status_tag: 'Follow-up (OPD)',
           diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving',
           patient_record: 'Evening clinical monitoring',
           results: 'Clinically stable',

@@ -366,7 +366,7 @@
             <option value="">Select saved patient...</option>
         </select>
         <select id="encounter-selector" aria-label="Filter encounter" style="display:none; font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 5px 8px; border: 1px solid #777; border-radius: 3px; max-width: 280px; background: #fff;">
-            <option value="current">Current Admission (All Dates)</option>
+            <option value="current">Current Outpatient (All Dates)</option>
         </select>
         <button type="button" id="load-btn">Load patient</button>
         <button type="button" id="print-btn">Print compliance sheet</button>
@@ -545,7 +545,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 17,
+                seedVersion: 18,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T16:30:00+08:00",
                 data: {
@@ -556,9 +556,9 @@
                     birthdate: "1986-05-14",
                     gender: "Female",
                     address: "Brgy. Mansilingan, Bacolod City",
-                    ward_room: "Medical Ward / Room 208-B",
-                    case_no: "IP-2026-0612-0177",
-                    case_type: "IP Patient",
+                    ward_room: "OPD - Room 102",
+                    case_no: "OP-2026-0613-0101",
+                    case_type: "OP Patient",
                     chief_complaint: "Fever, productive cough, and shortness of breath for three days.",
                     hx_present: "Three-day history of fever with yellowish sputum and increasing dyspnea. No chest trauma.",
                     hx_past: "Known hypertensive for five years; maintained on amlodipine. No previous tuberculosis treatment.",
@@ -583,32 +583,31 @@
                         {
                             date: "2026-06-13",
                             time: "04:30 PM",
-                            registry: "IP",
-                            service: "Internal Medicine",
+                            registry: "OP",
+                            service: "Internal Medicine (OPD)",
                             physician: "Dr. Miguel Santos, MD",
-                            status_tag: "Ward Round (PM)",
+                            status_tag: "Follow-up (OPD)",
                             is_current: true,
-                            patient_record: "Afternoon progress observation",
+                            patient_record: "Outpatient progress review and clinical monitoring",
                             results: "Clinically stable",
-                            progress_notes: "Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air. No chest discomfort or dyspnea.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.",
+                            progress_notes: "Outpatient Follow-up. Resting comfortably, afebrile, breathing easily on room air. No chest discomfort or dyspnea.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current outpatient management.",
                             orders: []
                         },
                         {
                             date: "2026-06-13",
                             time: "10:15 AM",
-                            registry: "IP",
-                            service: "Internal Medicine",
-                            status_tag: "Morning Rounds",
+                            registry: "OP",
+                            service: "Internal Medicine (OPD)",
+                            status_tag: "Consultation (OPD)",
                             is_current: true,
-                            patient_record: "Daily progress review",
+                            patient_record: "Outpatient consultation and prescription review",
                             results: "Clinically improving",
-                            progress_notes: "Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO₂ 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics",
+                            progress_notes: "Outpatient Consultation. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO₂ 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted oral antibiotics",
                             orders: [
-                                { text: "Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C"], timeSignature: "C - 10:30 AM nurse" },
-                                { text: "Continue IV Ceftriaxone 2 g OD (Day 2 of 7).", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:35 AM nurse\nA - 11:00 AM nurse" },
-                                { text: "Shift Azithromycin to oral 500 mg tablet once daily after meals.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:40 AM nurse\nA - 11:05 AM nurse" },
-                                { text: "Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["R"], timeSignature: "R - 10:45 AM physician" },
-                                { text: "May ambulate inside room as tolerated. Regular diet.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C"], timeSignature: "C - 11:00 AM nurse" }
+                                { text: "Maintain SpO2 >= 95% on room air.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C"], timeSignature: "C - 10:30 AM nurse" },
+                                { text: "Continue Azithromycin 500 mg tablet once daily after meals.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:40 AM nurse\nA - 11:05 AM nurse" },
+                                { text: "Repeat Complete Blood Count (CBC) and serum creatinine after 3 days.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["R"], timeSignature: "R - 10:45 AM physician" },
+                                { text: "May ambulate as tolerated. Regular diet.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C"], timeSignature: "C - 11:00 AM nurse" }
                             ]
                         },
                         {
@@ -693,7 +692,7 @@
         function blankPatientRecord() {
             return {
                 id: BLANK_PATIENT_ID,
-                seedVersion: 17,
+                seedVersion: 18,
                 createdAt: "2026-09-25T10:30:00+08:00",
                 updatedAt: "2026-09-25T10:30:00+08:00",
                 data: {
@@ -716,7 +715,7 @@
             const records = getPatients();
             const index = records.findIndex(record => record.id === SEED_PATIENT_ID);
             if (index < 0) records.push(seedPatientRecord());
-            else if (Number(records[index].seedVersion || 0) < 17) records[index] = seedPatientRecord();
+            else if (Number(records[index].seedVersion || 0) < 18) records[index] = seedPatientRecord();
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
             else if (Number(records[blankIndex].seedVersion || 0) < 17) records[blankIndex] = blankPatientRecord();
@@ -1051,16 +1050,16 @@
         }
 
         function admissionDate(data, record) {
-            const firstDt = firstOrderDateTime(data, record);
-            if (firstDt && String(firstDt).length >= 10) return String(firstDt).slice(0, 10);
             if (Array.isArray(data?.encounters)) {
-                const initEnc = data.encounters.find(r => r?.status_tag === "Initial Visit (ER)" || (r?.registry === "ER" && r?.date));
-                if (initEnc?.date) return initEnc.date;
                 const activeEnc = data.encounters.find(r => r?.is_current || r?.isCurrent);
                 if (activeEnc?.date) return activeEnc.date;
+                const initEnc = data.encounters.find(r => r?.status_tag === "Initial Visit (ER)" || (r?.registry === "ER" && r?.date));
+                if (initEnc?.date) return initEnc.date;
                 const encounter = data.encounters.find(row => row?.date);
                 if (encounter?.date) return encounter.date;
             }
+            const firstDt = firstOrderDateTime(data, record);
+            if (firstDt && String(firstDt).length >= 10) return String(firstDt).slice(0, 10);
 
             return record?.createdAt ? String(record.createdAt).slice(0, 10) : "";
         }
@@ -1184,7 +1183,7 @@
                     return;
                 }
 
-                const isPrevious = enc?.status_tag === "Previous Admission" || enc?.status_tag === "Follow-up (OPD)";
+                const isPrevious = !enc?.is_current && !enc?.isCurrent && (enc?.status_tag === "Previous Admission" || enc?.status_tag === "Follow-up (OPD)");
                 if (!isSingle && isPrevious) {
                     return;
                 }
@@ -1284,7 +1283,9 @@
                 return tb - ta;
             });
 
-            encounterSelector.innerHTML = '<option value="current">Current Admission (All Dates — Recent on Top)</option>';
+                        const isOP = (record?.data?.case_type === "OP Patient" || record?.data?.case_type === "Outpatient" || encounters.some(e => (e.is_current || e.isCurrent) && e.registry === "OP"));
+            const defaultLabel = isOP ? 'Current Outpatient (All Dates — Recent on Top)' : 'Current Admission (All Dates — Recent on Top)';
+            encounterSelector.innerHTML = '<option value="current">' + defaultLabel + '</option>';
             encounters.forEach(enc => {
                 const option = document.createElement("option");
                 option.value = enc.date || "";
@@ -1705,6 +1706,12 @@
                 var h12 = hours % 12 || 12;
                 timeInput.value = (h12 < 10 ? "0" + h12 : h12) + ":" + mins + " " + ampm;
             }
+            var regInput = document.getElementById("sheet-enc-registry");
+            if (regInput) regInput.value = "OP";
+            var srvInput = document.getElementById("sheet-enc-service");
+            if (srvInput) srvInput.value = "Internal Medicine (OPD)";
+            var tagInput = document.getElementById("sheet-enc-status-tag");
+            if (tagInput) tagInput.value = "Follow-up (OPD)";
             var diagInput = document.getElementById("sheet-enc-diagnosis");
             if (diagInput && currentLoadedRecord) {
                 var pData = currentLoadedRecord.data || {};
@@ -1849,11 +1856,11 @@
                 var simEnc = {
                     date: yyyy + "-" + mm + "-" + dd,
                     time: timeStr,
-                    registry: "IP",
-                    service: "Internal Medicine",
+                    registry: "OP",
+                    service: "Internal Medicine (OPD)",
                     physician: "Dr. Miguel Santos, MD",
                     is_current: true,
-                    status_tag: "Ward Round (PM)",
+                    status_tag: "Follow-up (OPD)",
                     diagnosis: "J18.9 - Community-Acquired Pneumonia, moderate risk, resolving",
                     patient_record: "Evening clinical monitoring",
                     results: "Clinically stable",
