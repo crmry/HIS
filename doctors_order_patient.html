@@ -557,7 +557,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 29,
+                seedVersion: 30,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T16:30:00+08:00",
                 data: {
@@ -709,7 +709,7 @@
         function opPatientRecord() {
             return {
                 id: OP_PATIENT_ID,
-                seedVersion: 29,
+                seedVersion: 30,
                 createdAt: "2026-03-14T08:45:00+08:00",
                 updatedAt: "2026-09-26T09:30:00+08:00",
                 data: {
@@ -1110,7 +1110,7 @@
 
             const opIndex = records.findIndex(record => record.id === OP_PATIENT_ID);
             if (opIndex < 0) records.push(opPatientRecord());
-            else if (Number(records[opIndex].seedVersion || 0) < 29) records[opIndex] = opPatientRecord();
+            else if (Number(records[opIndex].seedVersion || 0) < 30) records[opIndex] = opPatientRecord();
 
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
@@ -1608,37 +1608,22 @@
         }
 
         function estimateRowHeight(item) {
-            if (!item) return 40;
-            if (item.isSigRow) return 68; // fixed height for signature stamp row
-            const BASE = 40; // px per row
-            var lines = 1;
-            if (item.noteLine) {
-                lines = Math.max(lines, String(item.noteLine).split("\n").length);
-            }
-            if (item.orderText) {
-                lines = Math.max(lines, Math.ceil(String(item.orderText).length / 42));
-            }
-            return BASE + Math.max(0, lines - 1) * 16;
+            if (!item) return 35;
+            if (item.isSigRow) return 55; // signature stamp row is ~55px
+            return 35; // Each table row is fixed height 9.2mm (~35px) in hospital compliance form
         }
 
         // Split flatRows into pages based on available pixel height per page.
         // Page 1 has a larger header; continuation pages have a compact header.
         // Returns an array of arrays (each inner array = rows for that page).
         function splitRowsIntoPages(flatRows) {
-            // A4 at 96 dpi = 1122px tall.
-            // Padding 14mm top + 10mm bottom = ~91px total padding.
-            // Page 1 header (hospital name, subtitle, patient grid, legend): ~260px
-            // Page 1 footer: ~55px
-            // Page 1 table head: ~30px
-            // Page 1 usable: 1122 - 91 - 260 - 55 - 30 = ~686px
-            //
-            // Continuation pages header: ~70px, footer: ~55px, table head: ~30px
-            // Cont usable: 1122 - 91 - 70 - 55 - 30 = ~876px
-
-            var PAGE1_BUDGET = 686;
-            var CONT_BUDGET = 876;
-            var BLANK_ROW_HEIGHT = 40;
-            var MIN_BLANK_ROWS = 3; // always leave a few blank rows at end
+            // A4 page body budgets:
+            // Page 1: 1122px - 91px padding - ~310px header/grid/legend/footer = ~720px (~20 standard 9.2mm rows)
+            // Continuation: 1122px - 91px padding - ~170px cont-header/legend/footer = ~860px (~24 standard 9.2mm rows)
+            var PAGE1_BUDGET = 720;
+            var CONT_BUDGET = 860;
+            var ROW_HEIGHT = 35;
+            var MIN_BLANK_ROWS = 3;
 
             var pages = [];
             var i = 0;
@@ -1650,22 +1635,28 @@
                 var usedHeight = 0;
                 var pageRows = [];
 
-                // Greedy fill this page
+                // Fill this page with data rows until budget is reached
                 while (i < flatRows.length) {
                     var h = estimateRowHeight(flatRows[i]);
-                    if (usedHeight + h > budget && pageRows.length > 0) break;
+                    if (usedHeight + h > budget && pageRows.length > 0) {
+                        break;
+                    }
                     pageRows.push({ item: flatRows[i], rowIdx: globalRowIdx });
                     usedHeight += h;
                     i++;
                     globalRowIdx++;
                 }
 
-                // If no data rows remain, fill rest with blanks (at least MIN_BLANK_ROWS)
-                var remainingBudget = budget - usedHeight;
-                var blankCount = Math.max(MIN_BLANK_ROWS, Math.floor(remainingBudget / BLANK_ROW_HEIGHT));
-                for (var b = 0; b < blankCount; b++) {
-                    pageRows.push({ item: null, rowIdx: globalRowIdx });
-                    globalRowIdx++;
+                // If this is the LAST page (no data rows remain), fill remaining space with blank rows
+                // (at least MIN_BLANK_ROWS) so clinicians can handwrite orders if printed.
+                // Intermediate pages NEVER receive blank rows, ensuring maximum content density.
+                if (i >= flatRows.length) {
+                    var remainingBudget = budget - usedHeight;
+                    var blankCount = Math.max(MIN_BLANK_ROWS, Math.floor(remainingBudget / ROW_HEIGHT));
+                    for (var b = 0; b < blankCount; b++) {
+                        pageRows.push({ item: null, rowIdx: globalRowIdx });
+                        globalRowIdx++;
+                    }
                 }
 
                 pages.push(pageRows);
