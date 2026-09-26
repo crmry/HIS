@@ -544,7 +544,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 25,
+                seedVersion: 26,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T16:30:00+08:00",
                 data: {
@@ -696,7 +696,7 @@
         function opPatientRecord() {
             return {
                 id: OP_PATIENT_ID,
-                seedVersion: 25,
+                seedVersion: 26,
                 createdAt: "2026-03-14T08:45:00+08:00",
                 updatedAt: "2026-09-26T09:30:00+08:00",
                 data: {
@@ -1070,7 +1070,7 @@
 
             const opIndex = records.findIndex(record => record.id === OP_PATIENT_ID);
             if (opIndex < 0) records.push(opPatientRecord());
-            else if (Number(records[opIndex].seedVersion || 0) < 25) records[opIndex] = opPatientRecord();
+            else if (Number(records[opIndex].seedVersion || 0) < 26) records[opIndex] = opPatientRecord();
 
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
