@@ -9160,6 +9160,13 @@
 
         form.reset();
 
+        var histBanner = document.getElementById('historical-encounter-banner');
+        if (histBanner) histBanner.style.display = 'none';
+        activeInspectedEncounterIndex = null;
+        if (typeof setDashboardReadOnly === 'function') {
+          setDashboardReadOnly(false);
+        }
+
 
         dispOtherWrapper.className =
           'disposition-other-wrapper';
