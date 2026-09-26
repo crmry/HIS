@@ -3940,7 +3940,7 @@
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 19,
+        seedVersion: 20,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -3979,7 +3979,9 @@
           vital_signs: [
             { dateTime: '2026-09-26T09:30:00+08:00', bp: '124/78', hr: '72', rr: '16', temp: '36.5', wt: '68', ht: '168', weight: '68', height: '168', bmi: '24.1', spo2: '99', o2: '99' },
             { dateTime: '2026-06-20T10:00:00+08:00', bp: '134/84', hr: '76', rr: '16', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
-            { dateTime: '2026-03-14T08:45:00+08:00', bp: '128/80', hr: '74', rr: '16', temp: '36.6', wt: '69', ht: '168', weight: '69', height: '168', bmi: '24.4', spo2: '98', o2: '98' }
+            { dateTime: '2026-03-14T08:45:00+08:00', bp: '128/80', hr: '74', rr: '16', temp: '36.6', wt: '69', ht: '168', weight: '69', height: '168', bmi: '24.4', spo2: '98', o2: '98' },
+            { dateTime: '2025-12-05T11:15:00+08:00', bp: '122/76', hr: '70', rr: '16', temp: '36.5', wt: '69', ht: '168', weight: '69', height: '168', bmi: '24.4', spo2: '99', o2: '99' },
+            { dateTime: '2025-09-18T14:30:00+08:00', bp: '126/80', hr: '78', rr: '18', temp: '36.7', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
           ],
           admitting_diagnosis: 'E11.9 - Type 2 Diabetes Mellitus without complications; I10 - Essential (primary) Hypertension.',
           final_diagnosis: 'Type 2 Diabetes Mellitus, well-controlled on oral hypoglycemic agents; Essential Hypertension, controlled.',
@@ -4078,6 +4080,77 @@
                 { text: 'Continue Metformin 500 mg tablet BID and Losartan 50 mg tablet OD.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['C'], timeSignature: 'C - 9:10 AM nurse' },
                 { text: 'Follow-up with laboratory results after 1 week.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['C'], timeSignature: 'C - 9:15 AM nurse' }
               ]
+            },
+            {
+              date: '2025-12-05',
+              time: '11:15 AM',
+              registry: 'OP',
+              service: 'Outpatient Department (OPD) - Ophthalmology Clinic',
+              physician: 'Dr. Andrea Reyes, MD',
+              is_current: false,
+              status_tag: 'Specialty Consultation (OPD)',
+              diagnosis: 'H35.00 - Background Diabetic Retinopathy, non-proliferative, early / mild',
+              patient_record: 'Annual outpatient diabetic eye screening and dilated fundoscopy',
+              results: 'Mild non-proliferative diabetic retinopathy (NPDR) bilaterally; no macular edema',
+              clinical_record: {
+                chief_complaint: 'Annual diabetic eye screening evaluation',
+                history: 'Patient is a 47-year-old male with a 5-year history of Type 2 Diabetes Mellitus referred from Internal Medicine OPD for annual comprehensive diabetic retinopathy screening. Asymptomatic; denies blurry vision, photopsia, floaters, scotomas, or ocular pain. Compliant with oral hypoglycemic therapy.\n\nOphthalmologic Examination: Best corrected visual acuity: OD 20/20, OS 20/20. Intraocular pressure: OD 14 mmHg, OS 15 mmHg. Slit lamp exam: Cornea clear, anterior chamber quiet, crystalline lens clear bilaterally. Dilated fundus examination: Media clear, optic nerve head well-perfused (C/D ratio 0.3), macula normal foveal reflex without edema. Mild scattered microaneurysms noted in the mid-periphery bilaterally; no neovascularization or hemorrhages.',
+                final_diagnosis: 'Mild Non-Proliferative Diabetic Retinopathy (NPDR) bilaterally; No Clinically Significant Macular Edema (ICD-10: H35.00)'
+              },
+              progress_notes: 'Outpatient Ophthalmology Specialty Consultation. Annual diabetic eye screening.\nSubjective: Denies visual acuity changes, blurriness, floaters, flashing lights, or eye pain. Visual acuity with correction 20/20 bilateral eyes.\nObjective: Best corrected visual acuity: OD 20/20, OS 20/20. Intraocular pressure (IOP): OD 14 mmHg, OS 15 mmHg (normal: 10-21 mmHg). Slit-lamp: Clear cornea, deep anterior chamber, clear crystalline lenses bilaterally.\nDilated Fundoscopy: Clear media. Bilateral optic discs well-defined with 0.3 cup-to-disc ratio. Occasional isolated microaneurysms noted in mid-periphery. No hard exudates, cotton wool spots, retinal neovascularization, or macular edema.\nAssessment: Mild Non-Proliferative Diabetic Retinopathy (NPDR) bilaterally; No Clinically Significant Macular Edema (CSME).\nPlan: Laser photocoagulation not indicated. Strict glycemic control (HbA1c < 7.0%) and blood pressure control (< 130/80 mmHg) recommended to halt microvascular progression. Annual follow-up dilated fundoscopy.',
+              orders: [
+                { text: 'Maintain strict glycemic control (target HbA1c < 7.0%) and blood pressure control (< 130/80 mmHg).', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:35 AM nurse' },
+                { text: 'Prescribe Artificial Tears (Carboxymethylcellulose 0.5%) ophthalmic solution, 1 drop each eye TID PRN.', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:40 AM nurse' },
+                { text: 'Patient educated on urgent ocular red-flag symptoms warranting immediate evaluation.', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:45 AM nurse' },
+                { text: 'Follow-up at Ophthalmology Outpatient Clinic after 1 year for repeat dilated fundoscopy screening.', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:50 AM nurse' }
+              ],
+              examinations: [
+                {
+                  id: 'EXAM-20251205-01',
+                  category: 'Ophthalmology / Diagnostic Eye Exam',
+                  name: 'Dilated Fundus Examination & Slit-Lamp Biomicroscopy',
+                  performed_at: '2025-12-05 11:30 AM',
+                  status: 'Completed',
+                  performed_by: 'Dr. Andrea Reyes, Ophthalmologist',
+                  impression: 'Mild Non-Proliferative Diabetic Retinopathy (NPDR) bilaterally; No Clinically Significant Macular Edema (CSME).'
+                }
+              ]
+            },
+            {
+              date: '2025-09-18',
+              time: '02:30 PM',
+              registry: 'OP',
+              service: 'Outpatient Department (OPD) - Pulmonary & Adult Medicine',
+              physician: 'Dr. Ramon Valencia, MD',
+              is_current: false,
+              status_tag: 'Consultation (OPD)',
+              diagnosis: 'J06.9 - Acute Upper Respiratory Tract Infection (URTI); E11.9 - Type 2 Diabetes Mellitus',
+              patient_record: 'Outpatient consultation for acute productive cough and nasal congestion',
+              results: 'Acute viral URTI resolved; chest radiograph clear',
+              clinical_record: {
+                chief_complaint: 'Cough, nasal congestion, and throat irritation x 4 days',
+                history: 'Patient is a 47-year-old male with controlled diabetes presenting with a 4-day history of non-productive cough, mild sore throat, and clear rhinorrhea. Afebrile at home. Denies shortness of breath, wheezing, hemoptysis, or chest pain. No sick contacts with COVID-19.\n\nPhysical Examination: Vitals: BP 126/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.7 °C, SpO2 99% ambient air. Pharynx: Mild erythema, no tonsillar enlargement or exudates. Lungs: Clear breath sounds bilaterally, no adventitious sounds.',
+                final_diagnosis: 'Acute Upper Respiratory Tract Infection (URTI), viral; Type 2 Diabetes Mellitus, stable (ICD-10: J06.9, E11.9)'
+              },
+              progress_notes: 'Outpatient Consultation (Pulmonary & Adult Medicine OPD). Acute respiratory symptoms.\nSubjective: 4-day history of non-pleuritic cough, nasal congestion, and mild sore throat. Afebrile. Denies chills, shortness of breath, or hemoptysis.\nObjective: BP 126/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.7 °C, SpO2 99% ambient air.\nPhysical Exam: Pharynx mildly hyperemic, no tonsillar exudates, no cervical lymphadenopathy. Chest auscultation: Breath sounds vesicular and clear bilaterally; no wheezes or crackles.\nDiagnostic Imaging: Digital Chest X-Ray PA: Clear lung fields, sharp costophrenic sulci, normal cardiac silhouette, no infiltrates or consolidations.\nAssessment: Acute Upper Respiratory Tract Infection (URTI), viral etiology; Type 2 Diabetes Mellitus, stable.\nPlan: Symptomatic treatment. Adequate oral hydration. Saline nasal spray and oral cetirizine. Avoid over-the-counter decongestants that elevate blood pressure. Follow-up if symptoms persist beyond 7 days.',
+              orders: [
+                { text: 'Digital Chest X-Ray PA View completed: Clear lung fields bilaterally.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:45 PM nurse' },
+                { text: 'Cetirizine 10 mg tablet once daily at bedtime for 5 days for rhinorrhea.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:50 PM nurse' },
+                { text: 'Paracetamol 500 mg tablet every 6 hours PRN for throat soreness or headache.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:52 PM nurse' },
+                { text: 'Saline nasal spray 2 sprays each nostril TID.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:55 PM nurse' },
+                { text: 'Increase oral water intake (2 to 2.5 L/day). Continue maintenance Metformin and antihypertensives.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 3:00 PM nurse' }
+              ],
+              examinations: [
+                {
+                  id: 'EXAM-20250918-01',
+                  category: 'Diagnostic Radiology',
+                  name: 'Digital Chest X-Ray PA View',
+                  performed_at: '2025-09-18 02:50 PM',
+                  status: 'Completed',
+                  performed_by: 'J. Ramos, RT(R) / Reading by Dr. Roberto Lim, Radiologist',
+                  impression: 'Normal digital chest radiograph. No acute pulmonary parenchymal infiltrates.'
+                }
+              ]
             }
           ],
           orders: {
@@ -4173,7 +4246,7 @@
 
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) records.push(opPatientRecord());
-      else if (Number(records[opIndex].seedVersion || 0) < 19) records[opIndex] = opPatientRecord();
+      else if (Number(records[opIndex].seedVersion || 0) < 20) records[opIndex] = opPatientRecord();
 
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
