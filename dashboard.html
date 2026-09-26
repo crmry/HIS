@@ -792,79 +792,7 @@
       </div>
     </div>
 
-    <!-- ROW 7: Order Summary -->
-    <div class="row-fluid">
-      <div class="span12">
-
-        <div class="dashlet">
-
-          <div class="bootstrap-widget-header">
-            <h3>Doctor's Orders</h3>
-          </div>
-
-          <div class="bootstrap-widget-content" style="padding:0;">
-
-            <div class="order-summary-toolbar">
-
-              <button type="button" class="order-summary-nav" disabled>
-                ◀◀
-              </button>
-
-              <button type="button" class="order-summary-nav" disabled>
-                ◀
-              </button>
-
-              <strong id="order-summary-count">
-                Showing 0-0 of 0 items
-              </strong>
-
-              <button type="button" class="order-summary-nav" disabled>
-                ▶
-              </button>
-
-              <button type="button" class="order-summary-nav" disabled>
-                ▶▶
-              </button>
-
-              <button type="button" class="order-summary-nav order-summary-refresh" id="refresh-summary-btn"
-                title="Refresh">
-                ↻
-              </button>
-
-            </div>
-
-
-            <div style="overflow-x:auto;">
-
-              <table class="table table-bordered table-condensed
-                   summary-tbl physician-order-summary">
-
-                <thead>
-                  <tr>
-                    <th style="width:240px;">
-                      Date/Time
-                    </th>
-
-                    <th>
-                      Order/Action
-                    </th>
-
-                    <th style="width:250px;">
-                      Doctor's Name
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody id="order-summary-rows">
-                </tbody>
-
-              </table>
-
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+</div>
 
     <!-- ROW 8: Disposition -->
     <div class="row-fluid">
@@ -7152,8 +7080,6 @@
       var body = document.getElementById('order-summary-rows');
       var count = document.getElementById('order-summary-count');
 
-      if (!body) return [];
-
       var saved = collectOrders();
       var rawRows = [];
 
@@ -7236,13 +7162,13 @@
       }
 
       if (!rawRows.length) {
-        body.innerHTML =
-          '<tr><td colspan="3" class="summary-empty">No records found...</td></tr>';
-
+        if (body) {
+          body.innerHTML =
+            '<tr><td colspan="3" class="summary-empty">No records found...</td></tr>';
+        }
         if (count) {
           count.textContent = 'Showing 0-0 of 0 items';
         }
-
         return [];
       }
 
@@ -7254,6 +7180,10 @@
         if (isNaN(tb)) tb = 0;
         return ta - tb;
       });
+
+      if (!body) {
+        return rawRows;
+      }
 
       // Group contiguous items sharing the same formatted Date/Time
       var timeGroups = [];
