@@ -1424,7 +1424,7 @@
     <a href="patients.html">Patient List</a>
     <a href="doctors_order_patient.html" id="topbar-orders-link">Order &amp; Compliance Sheet</a>
     <a href="forms_localstorage.html">Register Patient</a>
-    <span class="seg-right"><span id="seg-clock">10:56:01</span><a href="forms_localstorage.html" class="seg-end">End Patient Care</a><button type="button" id="btn-lock-session" class="btn btn-mini btn-inverse" style="margin-left:8px; vertical-align:baseline;" title="Lock session"><i class="icon-lock icon-white"></i> Lock</button></span>
+    <span class="seg-right"><span id="seg-clock">10:56:01</span><button type="button" class="btn btn-mini btn-danger seg-end btn-conclude-care-trigger" style="margin-left:8px; vertical-align:baseline; font-weight:700; border:none; cursor:pointer;" title="Conclude consultation, encode Final Diagnosis, Disposition, Follow-up and Requisitions"><i class="icon-flag icon-white"></i> End Patient Care</button><button type="button" id="btn-lock-session" class="btn btn-mini btn-inverse" style="margin-left:8px; vertical-align:baseline;" title="Lock session"><i class="icon-lock icon-white"></i> Lock</button></span>
   </nav>
 
   <main class="seg-page">
@@ -2399,10 +2399,10 @@
       </div>
     </div>
 
-    <!-- Footer Actions -->
+    <!-- Footer Encounter Actions -->
     <div class="row-fluid" id="dashboard-actions" style="margin-bottom:30px;">
       <div class="span12" style="text-align:right;">
-        <button type="button" class="btn btn-success btn-large" id="save-patient-btn">Save Patient Record</button>
+        <button type="button" class="btn btn-danger btn-large btn-conclude-care-trigger" style="font-weight:700; box-shadow:0 2px 8px rgba(185,28,28,0.3); padding:10px 24px; font-size:14px;"><i class="icon-flag icon-white"></i> End Patient Care &amp; Conclude Consultation</button>
       </div>
     </div>
 
@@ -2996,6 +2996,227 @@
   </div>
 
   <!-- ═══ RX DRUG CATALOG DATALIST ═══ -->
+  
+  <!-- ═══ END PATIENT CARE / CONCLUDE ENCOUNTER ACCORDION CONSOLE ═══ -->
+  <div class="seg-modal-backdrop" id="end-care-modal" role="dialog" aria-modal="true" aria-labelledby="end-care-title" style="display:none;">
+    <div class="seg-modal" style="min-width:750px; max-width:920px; margin:20px auto; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 20px 45px rgba(0,0,0,0.3); border-radius:6px; overflow:hidden;">
+      <div class="seg-modal-title" id="end-care-title" style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg, #1b4d3e, #12352b); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
+        <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
+          <span>🏁</span> End Patient Care &amp; Conclude Consultation
+        </span>
+        <button type="button" class="seg-modal-close" id="close-end-care-modal" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
+      </div>
+
+      <div class="seg-modal-body" style="padding:16px 20px; background:#f8fafc; overflow-y:auto; flex:1;">
+        <!-- Patient & Encounter Banner -->
+        <div id="end-care-banner" style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:10px 14px; margin-bottom:14px; display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; font-size:12px;">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Section 1: Final Diagnosis & ICD-10 -->
+        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:14px; margin-bottom:12px;">
+          <label style="font-weight:700; font-size:12px; color:#1b4d3e; text-transform:uppercase; margin-bottom:4px; display:block;">
+            1. Final Diagnosis &amp; ICD-10 Coding *
+          </label>
+          <div style="font-size:11px; color:#64748b; margin-bottom:6px;">
+            The clinical final diagnosis formulated upon concluding this encounter (Authoritative source for DOH and PhilHealth CF4 ICD-10).
+          </div>
+          <input type="text" id="end-care-final-dx" class="input-block-level" list="end-care-icd-list" placeholder="e.g. J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension" style="font-size:13px; font-weight:600; color:#0f4c81; margin-bottom:6px; box-sizing:border-box;">
+          <datalist id="end-care-icd-list">
+            <option value="J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension">
+            <option value="E11.9 - Type 2 Diabetes Mellitus without complications; I10 - Essential Hypertension, controlled">
+            <option value="E11.319 - Type 2 Diabetes Mellitus with mild NPDR; I10 - Essential Hypertension">
+            <option value="J00 - Acute Nasopharyngitis (Common Cold)">
+            <option value="J44.9 - Chronic Obstructive Pulmonary Disease, unspecified">
+            <option value="I10 - Essential (primary) Hypertension, controlled">
+          </datalist>
+        </div>
+
+        <!-- Section 2: Clinical Disposition & Follow-Up Schedule -->
+        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:14px; margin-bottom:12px;">
+          <div class="row-fluid">
+            <div class="span6">
+              <label style="font-weight:700; font-size:12px; color:#1b4d3e; text-transform:uppercase; margin-bottom:4px; display:block;">
+                2. Clinical Disposition *
+              </label>
+              <select id="end-care-disposition" class="input-block-level" style="font-size:12px; box-sizing:border-box;">
+                <option value="Treated and Discharged (Outpatient)" selected>Treated and Discharged (Outpatient / Routine)</option>
+                <option value="Admitted to Inpatient Medical Ward">Admitted to Inpatient Medical Ward</option>
+                <option value="Transferred to Emergency Department">Transferred to Emergency Department</option>
+                <option value="Referred to Specialty Outpatient Clinic">Referred to Specialty Outpatient Clinic</option>
+                <option value="For Clinical Observation / Short-Stay">For Clinical Observation / Short-Stay</option>
+                <option value="Discharge Against Medical Advice (DAMA)">Discharge Against Medical Advice (DAMA)</option>
+              </select>
+            </div>
+            <div class="span6">
+              <label style="font-weight:700; font-size:12px; color:#1b4d3e; text-transform:uppercase; margin-bottom:4px; display:block;">
+                3. Follow-Up Schedule
+              </label>
+              <div style="display:flex; gap:8px;">
+                <input type="date" id="end-care-followup-date" class="input-block-level" style="font-size:12px; margin-bottom:0; box-sizing:border-box;">
+                <select id="end-care-followup-clinic" class="input-block-level" style="font-size:12px; margin-bottom:0; box-sizing:border-box;">
+                  <option value="Internal Medicine (OPD)" selected>Internal Medicine (OPD)</option>
+                  <option value="Pulmonary &amp; Adult Medicine (OPD)">Pulmonary &amp; Adult Medicine (OPD)</option>
+                  <option value="Ophthalmology Clinic (OPD)">Ophthalmology Clinic (OPD)</option>
+                  <option value="Cardiology Clinic (OPD)">Cardiology Clinic (OPD)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:8px;">
+            <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Return Instructions &amp; Warning Signs:</label>
+            <input type="text" id="end-care-return-instructions" class="input-block-level" placeholder="e.g. Return in 1 week with repeat CBC and creatinine. Proceed to ER immediately if dyspnea or high fever recurs." style="font-size:12px; margin-bottom:0; box-sizing:border-box;">
+          </div>
+        </div>
+
+        <!-- Section 3: Accordion Outpatient Requisitions & Take-Home Orders -->
+        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:14px; margin-bottom:10px;">
+          <div style="font-weight:700; font-size:12px; color:#1b4d3e; text-transform:uppercase; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
+            <span>4. Take-Home Orders &amp; Diagnostic Requisitions (Accordion)</span>
+            <span style="font-size:11px; font-weight:normal; color:#64748b; text-transform:none;">Patient carries out at their convenience before next follow-up</span>
+          </div>
+
+          <div class="accordion" id="end-care-accordion" style="margin-top:10px; margin-bottom:0;">
+            <!-- Accordion 1: Prescriptions (Rx) -->
+            <div class="accordion-group" style="border:1px solid #cbd5e1; border-radius:4px; margin-bottom:6px;">
+              <div class="accordion-heading end-care-accordion-toggle" style="background:#f1f5f9; padding:8px 12px; cursor:pointer;" data-target="collapse-rx">
+                <strong style="color:#0284c7;"><i class="icon-chevron-right" id="arrow-collapse-rx"></i> 💊 Electronic Prescriptions (e-Rx)</strong>
+                <span class="pull-right badge badge-info" id="badge-end-care-rx">0 items</span>
+              </div>
+              <div id="collapse-rx" class="accordion-body" style="display:none; padding:10px 12px; background:#fff; border-top:1px solid #e2e8f0;">
+                <div style="display:flex; gap:6px; margin-bottom:8px;">
+                  <input type="text" id="end-care-rx-drug" placeholder="Medication (e.g. Azithromycin 500 mg tab)" style="flex:2; font-size:12px; margin-bottom:0; box-sizing:border-box;">
+                  <input type="text" id="end-care-rx-sig" placeholder="Sig: 1 tab PO OD x 3 days" style="flex:2; font-size:12px; margin-bottom:0; box-sizing:border-box;">
+                  <input type="text" id="end-care-rx-qty" placeholder="Qty: #3" style="width:70px; font-size:12px; margin-bottom:0; box-sizing:border-box;">
+                  <button type="button" class="btn btn-small btn-primary" id="btn-end-care-add-rx">+ Add</button>
+                </div>
+                <div id="end-care-rx-list" style="font-size:12px;">
+                  <div id="end-care-rx-empty" style="color:#94a3b8; font-style:italic;">No take-home medications added yet. Use form above to add.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion 2: Laboratory -->
+            <div class="accordion-group" style="border:1px solid #cbd5e1; border-radius:4px; margin-bottom:6px;">
+              <div class="accordion-heading end-care-accordion-toggle" style="background:#f1f5f9; padding:8px 12px; cursor:pointer;" data-target="collapse-lab">
+                <strong style="color:#059669;"><i class="icon-chevron-right" id="arrow-collapse-lab"></i> 🧪 Laboratory Requisition</strong>
+                <span class="pull-right badge badge-success" id="badge-end-care-lab">0 tests</span>
+              </div>
+              <div id="collapse-lab" class="accordion-body" style="display:none; padding:10px 12px; background:#fff; border-top:1px solid #e2e8f0;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:6px; font-size:12px;">
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="laboratory" value="Complete Blood Count (CBC)"> Complete Blood Count (CBC)</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="laboratory" value="Fasting Blood Sugar (FBS)"> Fasting Blood Sugar (FBS)</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="laboratory" value="HbA1c (Glycated Hemoglobin)"> HbA1c (Glycated Hemoglobin)</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="laboratory" value="Serum Creatinine &amp; eGFR"> Serum Creatinine &amp; eGFR</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="laboratory" value="Lipid Profile"> Lipid Profile (Total, HDL, LDL, Trig)</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="laboratory" value="Routine Urinalysis"> Routine Urinalysis</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion 3: Radiology & Imaging -->
+            <div class="accordion-group" style="border:1px solid #cbd5e1; border-radius:4px; margin-bottom:6px;">
+              <div class="accordion-heading end-care-accordion-toggle" style="background:#f1f5f9; padding:8px 12px; cursor:pointer;" data-target="collapse-rad">
+                <strong style="color:#d97706;"><i class="icon-chevron-right" id="arrow-collapse-rad"></i> 🩻 Radiology &amp; Diagnostic Imaging</strong>
+                <span class="pull-right badge badge-warning" id="badge-end-care-rad">0 orders</span>
+              </div>
+              <div id="collapse-rad" class="accordion-body" style="display:none; padding:10px 12px; background:#fff; border-top:1px solid #e2e8f0;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:6px; font-size:12px;">
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="radiology" value="Digital Chest X-Ray (PA View)"> Digital Chest X-Ray (PA View)</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="radiology" value="Chest X-Ray (AP / Lateral)"> Chest X-Ray (AP / Lateral)</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="radiology" value="Ultrasound Whole Abdomen"> Ultrasound Whole Abdomen</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="radiology" value="CT Scan Chest"> CT Scan Chest</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion 4: Heart Station -->
+            <div class="accordion-group" style="border:1px solid #cbd5e1; border-radius:4px; margin-bottom:6px;">
+              <div class="accordion-heading end-care-accordion-toggle" style="background:#f1f5f9; padding:8px 12px; cursor:pointer;" data-target="collapse-heart">
+                <strong style="color:#b91c1c;"><i class="icon-chevron-right" id="arrow-collapse-heart"></i> 🫀 Heart Station</strong>
+                <span class="pull-right badge badge-important" id="badge-end-care-heart">0 orders</span>
+              </div>
+              <div id="collapse-heart" class="accordion-body" style="display:none; padding:10px 12px; background:#fff; border-top:1px solid #e2e8f0;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:6px; font-size:12px;">
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="heart" value="12-Lead ECG (Resting)"> 12-Lead ECG (Resting)</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="heart" value="2D Echocardiogram with Doppler"> 2D Echocardiogram with Doppler</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="heart" value="24-Hour Holter Monitoring"> 24-Hour Holter Monitoring</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="heart" value="Treadmill Stress Test"> Treadmill Exercise Stress Test</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion 5: Neuro Station / EEG -->
+            <div class="accordion-group" style="border:1px solid #cbd5e1; border-radius:4px; margin-bottom:6px;">
+              <div class="accordion-heading end-care-accordion-toggle" style="background:#f1f5f9; padding:8px 12px; cursor:pointer;" data-target="collapse-neuro">
+                <strong style="color:#7c3aed;"><i class="icon-chevron-right" id="arrow-collapse-neuro"></i> 🧠 Neuro Station / EEG</strong>
+                <span class="pull-right badge" style="background:#7c3aed; color:#fff;" id="badge-end-care-neuro">0 orders</span>
+              </div>
+              <div id="collapse-neuro" class="accordion-body" style="display:none; padding:10px 12px; background:#fff; border-top:1px solid #e2e8f0;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:6px; font-size:12px;">
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="eeg" value="Routine Electroencephalogram (EEG)"> Routine Electroencephalogram (EEG)</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="eeg" value="Sleep-Deprived EEG"> Sleep-Deprived EEG</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="eeg" value="Video EEG Monitoring"> Video EEG Monitoring</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion 6: Pulmonary / Respiratory -->
+            <div class="accordion-group" style="border:1px solid #cbd5e1; border-radius:4px; margin-bottom:0;">
+              <div class="accordion-heading end-care-accordion-toggle" style="background:#f1f5f9; padding:8px 12px; cursor:pointer;" data-target="collapse-pulmo">
+                <strong style="color:#0891b2;"><i class="icon-chevron-right" id="arrow-collapse-pulmo"></i> 🫁 Pulmonary / Respiratory</strong>
+                <span class="pull-right badge badge-info" id="badge-end-care-pulmo">0 orders</span>
+              </div>
+              <div id="collapse-pulmo" class="accordion-body" style="display:none; padding:10px 12px; background:#fff; border-top:1px solid #e2e8f0;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:6px; font-size:12px;">
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="respiratory" value="Spirometry / Pulmonary Function Test"> Spirometry / Pulmonary Function Test (PFT)</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="respiratory" value="Peak Expiratory Flow (PEF) Monitoring"> Peak Expiratory Flow (PEF) Monitoring</label>
+                  <label class="checkbox"><input type="checkbox" class="end-care-req-chk" data-type="respiratory" value="Arterial Blood Gas (ABG)"> Arterial Blood Gas (ABG)</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div style="padding:12px 20px; background:#fff; border-top:1px solid #e2e8f0; border-radius:0 0 4px 4px; display:flex; justify-content:space-between; align-items:center;">
+        <span id="end-care-validation-msg" style="color:#ef4444; font-size:12px; font-weight:600;"></span>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn" id="btn-cancel-end-care">Cancel</button>
+          <button type="button" class="btn btn-danger btn-large" id="btn-finalize-end-care" style="font-weight:700;"><i class="icon-check icon-white"></i> Finalize &amp; Conclude Encounter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ LOCKED HISTORICAL ENCOUNTER WRAP-UP VIEWER ═══ -->
+  <div class="seg-modal-backdrop" id="historical-wrapup-modal" role="dialog" aria-modal="true" aria-labelledby="hist-wrapup-title" style="display:none;">
+    <div class="seg-modal" style="min-width:720px; max-width:880px; margin:25px auto; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 20px 45px rgba(0,0,0,0.3); border-radius:6px; overflow:hidden;">
+      <div class="seg-modal-title" id="hist-wrapup-title" style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg, #1e293b, #0f172a); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
+        <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
+          <span>🔒</span> Historical Encounter Wrap-Up (Locked &amp; Static Record)
+        </span>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="badge badge-inverse" style="background:#334155; font-size:10px; padding:3px 6px;"><i class="icon-lock icon-white"></i> Non-Editable</span>
+          <button type="button" class="seg-modal-close" id="close-hist-wrapup-modal" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
+        </div>
+      </div>
+
+      <div class="seg-modal-body" id="hist-wrapup-body" style="padding:18px 22px; background:#f8fafc; overflow-y:auto; flex:1;">
+        <!-- Dynamically injected locked wrap-up details -->
+      </div>
+
+      <div style="padding:10px 18px; background:#fff; border-top:1px solid #e2e8f0; border-radius:0 0 4px 4px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:11px; color:#64748b;"><i class="icon-lock"></i> Certified Archived EMR Encounter Entry &bull; Read-Only</span>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn btn-small btn-primary" id="btn-close-hist-wrapup">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <datalist id="rx-drug-catalog">
     <option value="Amoxicillin 500 mg capsule"></option>
     <option value="Amoxicillin + Potassium Clavulanate (Co-amoxiclav) 625 mg tablet"></option>
@@ -5249,12 +5470,23 @@
       var encDate = (data && data.date) || '';
       var complianceUrl = 'doctors_order_patient.html?patient=' + encodeURIComponent(pId) + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
 
+      var diagnosisCellHtml = '';
+      if (isCurrent) {
+        diagnosisCellHtml = '<span style="color:#64748b; font-style:italic; font-weight:normal; font-size:12px;">— (Consultation In-Progress)</span>';
+      } else {
+        diagnosisCellHtml =
+          '<a href="javascript:void(0);" class="historical-dx-link" data-encounter-index="' + index + '" style="color:#0f4c81; font-weight:600; text-decoration:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px;" title="Click to view locked historical wrap-up details (Final Dx, Disposition, Follow-up, Rx, Requests)">' +
+          '  <i class="icon-lock" style="font-size:11px; opacity:0.7; color:#475569;"></i>' +
+          '  <span style="text-decoration:underline;">' + diagnosisDisplay + '</span>' +
+          '</a>';
+      }
+
       tr.innerHTML =
         '<td><strong>' + dateDisplay + '</strong>' + timeDisplay + currentBadge + '</td>' +
         '<td><span class="encounter-type-badge ' + typeClass + '">' + esc(typeUpper) + '</span></td>' +
         '<td>' + serviceDisplay + '</td>' +
         '<td><i class="icon-user" style="opacity:0.6; margin-right:3px;"></i>' + doctorDisplay + '</td>' +
-        '<td style="color:#0f4c81; font-weight:600;">' + diagnosisDisplay + '</td>' +
+        '<td>' + diagnosisCellHtml + '</td>' +
         '<td style="text-align:center;">' +
         '  <div class="encounter-actions-cell">' +
         '    <button type="button" class="btn btn-mini btn-enc-action btn-encounter-record" data-encounter-index="' + index + '" title="View Clinical Record (Chief Complaint, History, Final Diagnosis)">' +
@@ -5270,6 +5502,17 @@
         '</td>';
 
       encRows.appendChild(tr);
+    }
+
+    // Attach click listeners to historical diagnosis links
+    if (encRows) {
+      encRows.querySelectorAll('.historical-dx-link').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          var idx = Number(this.dataset.encounterIndex);
+          openHistoricalWrapupModal(idx);
+        });
+      });
     }
 
     function openEncounterRecordModal(index) {
@@ -9658,6 +9901,376 @@
       'change',
       schedulePhysicianAutosave
     );
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       END PATIENT CARE ACCORDION CONSOLE & LOCKED HISTORICAL WRAP-UP VIEWER
+       ═══════════════════════════════════════════════════════════════════════ */
+
+    // ── 1. Locked Historical Wrap-Up Viewer ──
+    function openHistoricalWrapupModal(index) {
+      if (index == null || index < 0 || index >= loadedEncounters.length) return;
+      var enc = loadedEncounters[index];
+      var pData = currentPatientData();
+      var pName = patientName(pData) || 'UNKNOWN PATIENT';
+      var hrn = pData.hrn || pData.hospital_number || '—';
+      var age = pData.birthdate ? calculateAge(pData.birthdate) : (pData.age || '—');
+      var sex = (pData.gender || pData.sex || '—').charAt(0).toUpperCase();
+      var ageSex = (age ? age + ' / ' : '') + (sex || '—');
+      var dateFormatted = formatDate(enc.date) || enc.date || '—';
+      var encType = (enc.registry || enc.type || 'OP').toUpperCase();
+      var encService = enc.service || 'General Medicine';
+      var encDoc = enc.physician || 'Dr. Miguel Santos, MD';
+
+      var finalDx = enc.diagnosis || enc.final_diagnosis || (enc.clinical_record && enc.clinical_record.final_diagnosis) || 'Pending final diagnostic confirmation';
+      var disposition = enc.disposition || 'Treated and Discharged (Outpatient)';
+      var followUp = enc.follow_up || {};
+      var followUpDate = followUp.date || enc.follow_up_date || 'As scheduled / PRN';
+      var followUpClinic = followUp.clinic || enc.service || 'Outpatient Clinic';
+      var followUpReason = followUp.reason || enc.follow_up_reason || 'Routine clinical monitoring and response evaluation.';
+
+      // Extract prescriptions
+      var rxList = Array.isArray(enc.prescriptions) && enc.prescriptions.length > 0 ? enc.prescriptions : [];
+      if (rxList.length === 0 && Array.isArray(enc.orders)) {
+        enc.orders.forEach(function (o) {
+          var t = o.text || '';
+          if (t.match(/tablet|capsule|mg|oral|IV|OD|BID|TID|QID|take|drops|Co-amoxiclav|Azithromycin|Metformin|Empagliflozin|Telmisartan/i)) {
+            rxList.push({ drug: t, sig: 'As ordered in CPOE plan', duration: 'Standard', qty: '—' });
+          }
+        });
+      }
+
+      // Extract diagnostic requests
+      var reqs = enc.clinicalRequests || {};
+      var reqItems = [];
+      ['laboratory', 'radiology', 'respiratory', 'heart', 'eeg'].forEach(function (cat) {
+        if (Array.isArray(reqs[cat])) {
+          reqs[cat].forEach(function (item) {
+            reqItems.push({ cat: cat.toUpperCase(), name: typeof item === 'string' ? item : (item.name || item.text || JSON.stringify(item)) });
+          });
+        }
+      });
+      if (reqItems.length === 0 && Array.isArray(enc.orders)) {
+        enc.orders.forEach(function (o) {
+          var t = o.text || '';
+          if (t.match(/CBC|creatinine|ECG|X-ray|ultrasound|blood|lipid|FBS|HbA1c|Spirometry|fundoscopy/i)) {
+            reqItems.push({ cat: 'DIAGNOSTIC ORDER', name: t });
+          }
+        });
+      }
+
+      var body = document.getElementById('hist-wrapup-body');
+      if (!body) return;
+
+      var rxTableHtml = '<div style="color:#64748b; font-style:italic; font-size:12px;">No take-home medications recorded for this encounter.</div>';
+      if (rxList.length > 0) {
+        rxTableHtml = '<table class="table table-bordered table-condensed" style="background:#fff; font-size:12px; margin-bottom:0;">' +
+          '<thead><tr style="background:#f1f5f9;"><th>Medication / Drug Description</th><th style="width:200px;">Dosage &amp; Frequency (Sig)</th><th style="width:80px; text-align:center;">Quantity</th></tr></thead>' +
+          '<tbody>' +
+          rxList.map(function (rx) {
+            return '<tr><td><strong>' + esc(rx.drug || rx.text || '') + '</strong></td><td>' + esc(rx.sig || 'As prescribed') + '</td><td style="text-align:center;">' + esc(rx.qty || '—') + '</td></tr>';
+          }).join('') +
+          '</tbody></table>';
+      }
+
+      var reqsHtml = '<div style="color:#64748b; font-style:italic; font-size:12px;">No ancillary diagnostic requests ordered for this encounter.</div>';
+      if (reqItems.length > 0) {
+        reqsHtml = '<div style="display:flex; flex-wrap:wrap; gap:6px;">' +
+          reqItems.map(function (item) {
+            return '<span class="badge badge-info" style="font-size:11px; padding:4px 8px; font-weight:normal;">' +
+              '<strong>[' + esc(item.cat) + ']</strong> ' + esc(item.name) + '</span>';
+          }).join('') +
+          '</div>';
+      }
+
+      body.innerHTML =
+        '<div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:12px 16px; margin-bottom:14px; display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; font-size:12px;">' +
+        '  <div><span style="color:#64748b; font-size:11px; display:block;">PATIENT</span><strong>' + esc(pName) + '</strong></div>' +
+        '  <div><span style="color:#64748b; font-size:11px; display:block;">HRN</span><strong style="font-family:monospace;">' + esc(hrn) + '</strong></div>' +
+        '  <div><span style="color:#64748b; font-size:11px; display:block;">AGE / SEX</span>' + esc(ageSex) + '</div>' +
+        '  <div><span style="color:#64748b; font-size:11px; display:block;">ENCOUNTER DATE</span><strong style="color:#0284c7;">' + esc(dateFormatted) + ' ' + esc(enc.time || '') + '</strong></div>' +
+        '  <div><span style="color:#64748b; font-size:11px; display:block;">REGISTRY / SERVICE</span><span class="badge" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(encType) + '</span> ' + esc(encService) + '</div>' +
+        '</div>' +
+
+        '<div style="background:#fff; border-left:4px solid #16a34a; border-top:1px solid #e2e8f0; border-right:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0; border-radius:4px; padding:14px; margin-bottom:12px;">' +
+        '  <div style="font-size:11px; font-weight:700; color:#166534; text-transform:uppercase; margin-bottom:4px; display:flex; justify-content:space-between;">' +
+        '    <span><i class="icon-lock"></i> Final Diagnosis &amp; ICD-10 Coding (Locked)</span>' +
+        '    <span class="badge badge-success" style="font-size:9px;">CERTIFIED EMR RECORD</span>' +
+        '  </div>' +
+        '  <div style="font-size:14px; font-weight:700; color:#0f4c81; line-height:1.4;">' + esc(finalDx) + '</div>' +
+        '</div>' +
+
+        '<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">' +
+        '  <div style="background:#fff; border:1px solid #e2e8f0; border-radius:4px; padding:12px;">' +
+        '    <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; margin-bottom:4px;"><i class="icon-share"></i> Clinical Disposition</div>' +
+        '    <div style="font-weight:600; color:#1e293b; font-size:13px;">' + esc(disposition) + '</div>' +
+        '  </div>' +
+        '  <div style="background:#fff; border:1px solid #e2e8f0; border-radius:4px; padding:12px;">' +
+        '    <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; margin-bottom:4px;"><i class="icon-calendar"></i> Follow-Up Schedule</div>' +
+        '    <div style="font-weight:600; color:#0284c7; font-size:13px;">' + esc(followUpDate) + ' &bull; ' + esc(followUpClinic) + '</div>' +
+        '    <div style="font-size:11px; color:#64748b; margin-top:2px;">' + esc(followUpReason) + '</div>' +
+        '  </div>' +
+        '</div>' +
+
+        '<div style="background:#fff; border:1px solid #e2e8f0; border-radius:4px; padding:12px; margin-bottom:12px;">' +
+        '  <div style="font-size:11px; font-weight:700; color:#0284c7; text-transform:uppercase; margin-bottom:8px;"><i class="icon-plus-sign"></i> Take-Home Prescriptions (Rx) Issued</div>' +
+        rxTableHtml +
+        '</div>' +
+
+        '<div style="background:#fff; border:1px solid #e2e8f0; border-radius:4px; padding:12px; margin-bottom:12px;">' +
+        '  <div style="font-size:11px; font-weight:700; color:#059669; text-transform:uppercase; margin-bottom:8px;"><i class="icon-tasks"></i> Diagnostic &amp; Ancillary Requisitions Issued</div>' +
+        reqsHtml +
+        '</div>' +
+
+        '<div style="background:#f1f5f9; border:1px dashed #cbd5e1; border-radius:4px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#475569;">' +
+        '  <div><strong>Attending Physician:</strong> ' + esc(encDoc) + ' &bull; CLMMRH Medical Staff</div>' +
+        '  <div style="color:#64748b;"><i class="icon-lock"></i> Sealed &amp; Locked on ' + esc(dateFormatted) + ' ' + esc(enc.time || '') + '</div>' +
+        '</div>';
+
+      var modal = document.getElementById('historical-wrapup-modal');
+      if (modal) {
+        modal.classList.add('open');
+        modal.style.display = 'block';
+      }
+    }
+
+    function closeHistoricalWrapupModal() {
+      var modal = document.getElementById('historical-wrapup-modal');
+      if (modal) {
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+      }
+    }
+
+    var btnCloseHistWrapup = document.getElementById('close-hist-wrapup-modal');
+    if (btnCloseHistWrapup) btnCloseHistWrapup.addEventListener('click', closeHistoricalWrapupModal);
+    var btnCloseHistWrapup2 = document.getElementById('btn-close-hist-wrapup');
+    if (btnCloseHistWrapup2) btnCloseHistWrapup2.addEventListener('click', closeHistoricalWrapupModal);
+    var modalHistBackdrop = document.getElementById('historical-wrapup-modal');
+    if (modalHistBackdrop) {
+      modalHistBackdrop.addEventListener('click', function (e) {
+        if (e.target === modalHistBackdrop) closeHistoricalWrapupModal();
+      });
+    }
+
+    // ── 2. End Patient Care Accordion Console ──
+    var endCareRxList = [];
+
+    function renderEndCareRxItems() {
+      var listDiv = document.getElementById('end-care-rx-list');
+      var badge = document.getElementById('badge-end-care-rx');
+      if (!listDiv) return;
+      if (badge) badge.textContent = endCareRxList.length + ' item' + (endCareRxList.length === 1 ? '' : 's');
+
+      if (endCareRxList.length === 0) {
+        listDiv.innerHTML = '<div style="color:#94a3b8; font-style:italic;">No take-home medications added yet. Use form above to add.</div>';
+        return;
+      }
+
+      listDiv.innerHTML = '<table class="table table-bordered table-condensed" style="margin-bottom:0;">' +
+        '<thead><tr style="background:#f8fafc;"><th>Drug</th><th>Sig</th><th>Qty</th><th style="width:30px;"></th></tr></thead>' +
+        '<tbody>' +
+        endCareRxList.map(function (rx, idx) {
+          return '<tr>' +
+            '<td><strong>' + esc(rx.drug) + '</strong></td>' +
+            '<td>' + esc(rx.sig) + '</td>' +
+            '<td>' + esc(rx.qty || '—') + '</td>' +
+            '<td style="text-align:center;"><button type="button" class="btn btn-mini btn-danger" onclick="window._removeEndCareRx(' + idx + ')">✕</button></td>' +
+            '</tr>';
+        }).join('') +
+        '</tbody></table>';
+    }
+
+    window._removeEndCareRx = function (idx) {
+      endCareRxList.splice(idx, 1);
+      renderEndCareRxItems();
+    };
+
+    var btnAddEndCareRx = document.getElementById('btn-end-care-add-rx');
+    if (btnAddEndCareRx) {
+      btnAddEndCareRx.addEventListener('click', function () {
+        var drug = (document.getElementById('end-care-rx-drug').value || '').trim();
+        var sig = (document.getElementById('end-care-rx-sig').value || '').trim();
+        var qty = (document.getElementById('end-care-rx-qty').value || '').trim();
+        if (!drug) {
+          alert('Please specify a medication name.');
+          return;
+        }
+        endCareRxList.push({ drug: drug, sig: sig || 'As directed', qty: qty || '—' });
+        document.getElementById('end-care-rx-drug').value = '';
+        document.getElementById('end-care-rx-sig').value = '';
+        document.getElementById('end-care-rx-qty').value = '';
+        renderEndCareRxItems();
+      });
+    }
+
+    // Accordion Toggle Handling
+    document.querySelectorAll('.end-care-accordion-toggle').forEach(function (header) {
+      header.addEventListener('click', function () {
+        var targetId = this.dataset.target;
+        var body = document.getElementById(targetId);
+        var icon = this.querySelector('i');
+        if (!body) return;
+        if (body.style.display === 'none' || !body.style.display) {
+          body.style.display = 'block';
+          if (icon) icon.className = 'icon-chevron-down';
+        } else {
+          body.style.display = 'none';
+          if (icon) icon.className = 'icon-chevron-right';
+        }
+      });
+    });
+
+    // Checkbox counters
+    document.querySelectorAll('.end-care-req-chk').forEach(function (chk) {
+      chk.addEventListener('change', function () {
+        var type = this.dataset.type;
+        var count = document.querySelectorAll('.end-care-req-chk[data-type="' + type + '"]:checked').length;
+        var badge = document.getElementById('badge-end-care-' + type);
+        if (badge) badge.textContent = count + ' order' + (count === 1 ? '' : 's');
+      });
+    });
+
+    function openEndCareModal() {
+      var pData = currentPatientData();
+      var pName = patientName(pData) || 'UNKNOWN PATIENT';
+      var hrn = pData.hrn || pData.hospital_number || '—';
+      var age = pData.birthdate ? calculateAge(pData.birthdate) : (pData.age || '—');
+      var sex = (pData.gender || pData.sex || '—').charAt(0).toUpperCase();
+      var ageSex = (age ? age + ' / ' : '') + (sex || '—');
+
+      var now = new Date();
+      var yyyy = now.getFullYear();
+      var mm = String(now.getMonth() + 1).padStart(2, '0');
+      var dd = String(now.getDate()).padStart(2, '0');
+      var dateStr = yyyy + '-' + mm + '-' + dd;
+
+      var banner = document.getElementById('end-care-banner');
+      if (banner) {
+        banner.innerHTML =
+          '<div><span style="color:#64748b; font-size:11px; display:block;">PATIENT NAME</span><strong style="color:#1b4d3e;">' + esc(pName) + '</strong></div>' +
+          '<div><span style="color:#64748b; font-size:11px; display:block;">HOSPITAL NO. (HRN)</span><strong style="font-family:monospace;">' + esc(hrn) + '</strong></div>' +
+          '<div><span style="color:#64748b; font-size:11px; display:block;">AGE / SEX</span>' + esc(ageSex) + '</div>' +
+          '<div><span style="color:#64748b; font-size:11px; display:block;">CONCLUDING DATE</span><strong style="color:#0284c7;">' + esc(dateStr) + '</strong></div>' +
+          '<div><span style="color:#64748b; font-size:11px; display:block;">SERVICE</span><strong>Internal Medicine (OPD)</strong></div>';
+      }
+
+      // Default follow-up date: 7 days from now
+      var fDate = new Date();
+      fDate.setDate(fDate.getDate() + 7);
+      var fYyyy = fDate.getFullYear();
+      var fMm = String(fDate.getMonth() + 1).padStart(2, '0');
+      var fDd = String(fDate.getDate()).padStart(2, '0');
+      var fuInput = document.getElementById('end-care-followup-date');
+      if (fuInput && !fuInput.value) fuInput.value = fYyyy + '-' + fMm + '-' + fDd;
+
+      // Suggest final diagnosis from current notes or default
+      var finalDxInput = document.getElementById('end-care-final-dx');
+      if (finalDxInput && !finalDxInput.value) {
+        finalDxInput.value = pData.final_diagnosis || pData.admitting_diagnosis || 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension';
+      }
+
+      renderEndCareRxItems();
+
+      var modal = document.getElementById('end-care-modal');
+      if (modal) {
+        modal.classList.add('open');
+        modal.style.display = 'block';
+      }
+    }
+
+    function closeEndCareModal() {
+      var modal = document.getElementById('end-care-modal');
+      if (modal) {
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+      }
+    }
+
+    function finalizeEndCare() {
+      var finalDx = (document.getElementById('end-care-final-dx').value || '').trim();
+      var msg = document.getElementById('end-care-validation-msg');
+      if (msg) msg.textContent = '';
+      if (!finalDx) {
+        if (msg) msg.textContent = 'Please enter a Final Diagnosis with ICD-10 code before concluding care.';
+        return;
+      }
+
+      var disp = document.getElementById('end-care-disposition').value;
+      var fuDate = document.getElementById('end-care-followup-date').value;
+      var fuClinic = document.getElementById('end-care-followup-clinic').value;
+      var fuReason = document.getElementById('end-care-return-instructions').value;
+
+      // Collect checked requisitions
+      var reqs = { laboratory: [], radiology: [], respiratory: [], heart: [], eeg: [] };
+      document.querySelectorAll('.end-care-req-chk:checked').forEach(function (chk) {
+        var t = chk.dataset.type;
+        if (reqs[t]) reqs[t].push(chk.value);
+      });
+
+      var records = getPatients();
+      var pid = activePatientId || SEED_PATIENT_ID;
+      var recIdx = records.findIndex(function (r) { return r.id === pid; });
+      if (recIdx < 0) {
+        alert('Could not find active patient record.');
+        return;
+      }
+
+      var encs = records[recIdx].data.encounters;
+      if (!Array.isArray(encs) || encs.length === 0) {
+        var now = new Date();
+        encs = [{
+          date: now.toISOString().slice(0, 10),
+          time: '10:15 AM',
+          registry: 'OP',
+          service: 'Internal Medicine (OPD)',
+          physician: 'Dr. Miguel Santos, MD'
+        }];
+        records[recIdx].data.encounters = encs;
+      }
+
+      // Conclude the current encounter
+      var currEnc = encs.find(function (e) { return e.is_current; }) || encs[0];
+      currEnc.is_current = false;
+      currEnc.diagnosis = finalDx;
+      currEnc.final_diagnosis = finalDx;
+      currEnc.disposition = disp;
+      currEnc.follow_up = { date: fuDate, clinic: fuClinic, reason: fuReason };
+      currEnc.prescriptions = endCareRxList.slice();
+      currEnc.clinicalRequests = reqs;
+      currEnc.status_tag = 'Completed (OPD)';
+
+      // Save to localStorage
+      savePatients(records);
+      closeEndCareModal();
+
+      // Reload encounters and re-render dashboard
+      loadedEncounters = encs;
+      renderEncounters(loadedEncounters);
+      alert('Consultation concluded successfully! Encounter is now marked Completed, and Final Diagnosis has been stamped into the record.');
+    }
+
+    var btnCloseEndCare = document.getElementById('close-end-care-modal');
+    if (btnCloseEndCare) btnCloseEndCare.addEventListener('click', closeEndCareModal);
+    var btnCancelEndCare = document.getElementById('btn-cancel-end-care');
+    if (btnCancelEndCare) btnCancelEndCare.addEventListener('click', closeEndCareModal);
+    var btnFinalizeEndCare = document.getElementById('btn-finalize-end-care');
+    if (btnFinalizeEndCare) btnFinalizeEndCare.addEventListener('click', finalizeEndCare);
+
+    var endCareModalBackdrop = document.getElementById('end-care-modal');
+    if (endCareModalBackdrop) {
+      endCareModalBackdrop.addEventListener('click', function (e) {
+        if (e.target === endCareModalBackdrop) closeEndCareModal();
+      });
+    }
+
+    // Attach openEndCareModal to all conclude triggers
+    document.querySelectorAll('.btn-conclude-care-trigger').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        openEndCareModal();
+      });
+    });
+
   </script>
 
 
