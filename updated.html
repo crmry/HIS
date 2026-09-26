@@ -1108,12 +1108,8 @@
       color: #ffcccc;
     }
 
-    /* ── Referral & Care Plan ── */
-    .care-plan-grid { display: flex; flex-wrap: wrap; align-items: flex-start; }
-    .care-plan-grid > [class*="span"] { float: none; }
-    .care-plan-grid .care-disposition { order: 1; }
-    .care-plan-grid .care-followup { order: 2; }
-    .care-plan-grid .care-referral { order: 3; width: 100%; margin-left: 0; margin-top: 12px; }
+    /* ── Care Plan: Disposition, Follow-up, Referral ── */
+    .disposition-radios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 6px 16px; }
 
     .disposition-other-wrapper { margin-top: 8px; padding: 8px 10px; background: #fbfdfc; border: 1px solid var(--med-border); border-radius: 2px; display: none; }
     .disposition-other-wrapper.visible { display: block; }
@@ -2252,23 +2248,21 @@
       </div>
     </div>
 
-    <!-- ROW 8: Disposition + Follow-up, with Referral / Co-Manage below -->
-    <div class="row-fluid care-plan-grid">
-      <div class="span6 care-disposition">
+    <!-- ROW 8: Disposition -->
+    <div class="row-fluid">
+      <div class="span12 care-disposition">
         <div class="dashlet">
           <div class="bootstrap-widget-header">
             <h3>Disposition</h3>
           </div>
           <div class="bootstrap-widget-content" id="dashlet-disposition">
-            <div id="disposition-radios">
-              <label class="radio"><input type="radio" name="disposition" value="Treated and Discharged"> Treated and
-                Discharged</label>
+            <div id="disposition-radios" class="disposition-radios-grid">
+              <label class="radio"><input type="radio" name="disposition" value="Treated and Discharged"> Treated and Discharged</label>
               <label class="radio"><input type="radio" name="disposition" value="Admitted"> Admitted</label>
               <label class="radio"><input type="radio" name="disposition" value="Discharge Against Medical Advice (DAMA) / Refused Admission"> Discharge Against Medical Advice (DAMA) / Refused Admission</label>
               <label class="radio"><input type="radio" name="disposition" value="Unattended / Did Not Answer Call"> Unattended / Did Not Answer Call</label>
               <label class="radio"><input type="radio" name="disposition" value="Transferred to Emergency Room (ER)"> Transferred to Emergency Room (ER)</label>
-              <label class="radio"><input type="radio" name="disposition" value="Transferred / Referred to Another Facility">
-                Transferred / Referred to Another Facility</label>
+              <label class="radio"><input type="radio" name="disposition" value="Transferred / Referred to Another Facility"> Transferred / Referred to Another Facility</label>
               <label class="radio"><input type="radio" name="disposition" value="Rescheduled"> Rescheduled</label>
               <label class="radio"><input type="radio" name="disposition" value="Transferred to Minor OR"> Transferred to Minor OR</label>
               <label class="radio"><input type="radio" name="disposition" value="Others"> Others (specify below)</label>
@@ -2279,12 +2273,47 @@
                 placeholder="Enter disposition details...">
             </div>
             <div style="margin-top:10px; text-align:right;">
-              <button type="button" class="btn btn-success btn-small" id="save-disposition-btn">Save
-                Disposition</button>
+              <button type="button" class="btn btn-success btn-small" id="save-disposition-btn">Save Disposition</button>
             </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- ROW 9: Follow-up (Dedicated dashlet below Disposition) -->
+    <div class="row-fluid">
+      <div class="span12 care-followup">
+        <div class="dashlet">
+          <div class="bootstrap-widget-header">
+            <h3>Follow-up</h3>
+          </div>
+          <div class="bootstrap-widget-content" id="dashlet-followup">
+            <p style="font-weight:600; margin-bottom:6px;">Follow-up needed?</p>
+            <label class="radio inline"><input type="radio" name="follow_up_needed" value="Yes"> Yes</label>
+            <label class="radio inline"><input type="radio" name="follow_up_needed" value="No"> No</label>
+            <div class="follow-up-fields" id="follow-up-fields" style="margin-top:12px;">
+              <div class="row-fluid">
+                <div class="span4">
+                  <label>Follow-up date</label>
+                  <input type="date" id="follow_up_date" name="follow_up_date" class="input-block-level" style="box-sizing:border-box;">
+                </div>
+                <div class="span8">
+                  <label>Reason for follow-up</label>
+                  <textarea id="follow_up_reason" name="follow_up_reason" rows="3" class="input-block-level"
+                    placeholder="Enter reason for follow-up..." style="box-sizing:border-box;"></textarea>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:10px; text-align:right;">
+              <button type="button" class="btn btn-success btn-small" id="save-followup-btn">Save Follow-up</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 10: Referral / Co-Manage -->
+    <div class="row-fluid">
       <div class="span12 care-referral">
         <div class="dashlet">
           <div class="bootstrap-widget-header">
@@ -2316,7 +2345,7 @@
                 <option>Dr. Liza Garcia</option>
                 <option>Dr. Paolo Cruz</option>
               </select>
-                            <label for="referral-department">Department</label>
+              <label for="referral-department">Department</label>
               <select id="referral-department">
                 <option value="">-Select a Department-</option>
                 <option value="EMERGENCY MEDICINE">EMERGENCY MEDICINE</option>
@@ -2342,28 +2371,6 @@
             <div style="margin-top:8px; text-align:right;">
               <span id="referral-save-status" role="status" aria-live="polite"></span>
               <button type="button" class="btn btn-success btn-small" id="save-referral-btn">Save Referral</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="span6 care-followup">
-        <div class="dashlet">
-          <div class="bootstrap-widget-header">
-            <h3>Follow-up</h3>
-          </div>
-          <div class="bootstrap-widget-content">
-            <p style="font-weight:600; margin-bottom:6px;">Follow-up needed?</p>
-            <label class="radio inline"><input type="radio" name="follow_up_needed" value="Yes"> Yes</label>
-            <label class="radio inline"><input type="radio" name="follow_up_needed" value="No"> No</label>
-            <div class="follow-up-fields" id="follow-up-fields" style="margin-top:12px;">
-              <label>Follow-up date</label>
-              <input type="date" id="follow_up_date" name="follow_up_date" class="input-medium">
-              <label style="margin-top:8px;">Reason for follow-up</label>
-              <textarea id="follow_up_reason" name="follow_up_reason" rows="3" class="input-block-level"
-                placeholder="Enter reason for follow-up..."></textarea>
-            </div>
-            <div style="margin-top:10px; text-align:right;">
-              <button type="button" class="btn btn-success btn-small" id="save-followup-btn">Save Follow-up</button>
             </div>
           </div>
         </div>
