@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHYSICIAN'S ORDERS / PROGRESS NOTES NURSES' COMPLIANCE SHEET</title>
+    <style>
+        :root {
+            --ink: #111;
+            --line: #000;
+            --page: #fff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #d8d8d8;
+            color: var(--ink);
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 16px auto;
+            padding: 14mm 12mm 10mm;
+            background: var(--page);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
+        }
+
+        .hospital-name {
+            text-align: center;
+            font-size: 12.5pt;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            margin: 0;
+        }
+
+        .hospital-address {
+            text-align: center;
+            font-size: 10pt;
+            margin: 1px 0 14px;
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 13.5pt;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            margin: 0;
+            line-height: 1.25;
+        }
+
+        .form-subtitle {
+            text-align: center;
+            font-size: 10pt;
+            margin: 6px 0 14px;
+        }
+
+        .patient-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px 28px;
+            margin-bottom: 10px;
+            font-size: 10.5pt;
+        }
+
+        .field {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .field.span-2 {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            white-space: nowrap;
+        }
+
+        .field input,
+        .field select {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            border-bottom: 1px solid var(--line);
+            background: transparent;
+            font: inherit;
+            font-size: 11pt;
+            padding: 0 2px 1px;
+            outline: none;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        table input:focus,
+        table textarea:focus {
+            background: #fffbe8;
+        }
+
+        .split-row {
+            display: flex;
+            gap: 22px;
+            min-width: 0;
+        }
+
+        .split-row .field {
+            flex: 0 1 auto;
+        }
+
+        .field.age {
+            width: 90px;
+        }
+
+        .field.sex {
+            width: 72px;
+        }
+
+        .field.admit {
+            flex: 1;
+        }
+
+        .field select {
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .legend {
+            font-size: 9.5pt;
+            letter-spacing: 0.2px;
+            margin: 8px 0 4px;
+            text-align: left;
+        }
+
+        table.orders {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 9.5pt;
+        }
+
+        table.orders th,
+        table.orders td {
+            border: 1px solid var(--line);
+            vertical-align: top;
+            padding: 0;
+        }
+
+        table.orders thead th {
+            font-weight: 700;
+            text-align: center;
+            padding: 3px 2px;
+            line-height: 1.2;
+            background: #fff;
+        }
+
+        table.orders col.date { width: 12%; }
+        table.orders col.notes { width: 24%; }
+        table.orders col.order { width: 36%; }
+        table.orders col.mark { width: 3.2%; }
+        table.orders col.sign { width: 12%; }
+
+        table.orders tbody td {
+            height: 9.2mm;
+        }
+
+        table.orders tbody td input,
+        table.orders tbody td textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none;
+            outline: none;
+            font: inherit;
+            font-size: 10pt;
+            padding: 2px 4px;
+            background: transparent;
+        }
+
+        table.orders tbody td.mark {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        table.orders tbody td.mark input[type="checkbox"] {
+            width: 13px;
+            height: 13px;
+            margin: 0;
+            accent-color: #111;
+            cursor: pointer;
+        }
+
+        .continuation {
+            margin-top: 18px;
+        }
+
+        .continuation table.orders tbody td {
+            height: 14mm;
+        }
+
+        .footer {
+            margin-top: 10px;
+            font-size: 9.5pt;
+            line-height: 1.35;
+        }
+
+        .toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background: #ececec;
+            border-bottom: 1px solid #c8c8c8;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .toolbar button,
+        .toolbar a,
+        .toolbar select {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            padding: 7px 14px;
+            border: 1px solid #444;
+            background: #fff;
+            color: #111;
+            text-decoration: none;
+        }
+
+        .toolbar button,
+        .toolbar a {
+            cursor: pointer;
+        }
+
+        .toolbar button:hover,
+        .toolbar a:hover {
+            background: #f3f3f3;
+        }
+
+        .toolbar select {
+            min-width: 280px;
+        }
+
+        .load-status {
+            font-size: 12px;
+            color: #555;
+        }
+
+        table.orders tbody td textarea {
+            overflow: hidden;
+        }
+
+@media print {
+            html, body {
+                background: #fff;
+            }
+
+            .toolbar {
+                display: none;
+            }
+
+            .page {
+                margin: 0;
+                box-shadow: none;
+                width: auto;
+                min-height: auto;
+                padding: 10mm 10mm 8mm;
+            }
+        }
+
+        @page {
+            size: A4;
+            margin: 8mm;
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <a href="dashboard.html" id="back-dashboard-btn" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #1f7d45; background: #1f7d45; color: #fff; text-decoration: none; border-radius: 3px; font-weight: 600;">← Doctor's Dashboard</a>
+        <a href="patients.html" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #444; background: #fff; color: #111; text-decoration: none; border-radius: 3px;">Patient List</a>
+        <select id="patient-selector" aria-label="Select saved patient">
+            <option value="">Select saved patient...</option>
+        </select>
+        <button type="button" id="load-btn">Load patient</button>
+        <button type="button" id="print-btn">Print compliance sheet</button>
+        <button type="button" id="clear-btn">Clear entries</button>
+        <span id="load-status" class="load-status"></span>
+    </div>
+
+    <form class="page" id="doctors-order-form" autocomplete="off">
+        <p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>
+        <p class="hospital-address">Lacson - Burgos Streets, Bacolod City</p>
+
+        <h1 class="form-title">
+            PHYSICIAN'S ORDERS / PROGRESS NOTES<br>
+            NURSES' COMPLIANCE SHEET
+        </h1>
+        <p class="form-subtitle">(Authenticate all Orders)</p>
+
+        <div class="patient-grid">
+            <div class="field">
+                <label for="patient-name">Name of Patient</label>
+                <input id="patient-name" name="patientName" type="text">
+            </div>
+            <div class="field">
+                <label for="hospital-no">Hospital No.</label>
+                <input id="hospital-no" name="hospitalNo" type="text">
+            </div>
+            <div class="field">
+                <label for="address">Address</label>
+                <input id="address" name="address" type="text">
+            </div>
+            <div class="field">
+                <label for="ward-room">Ward / Room</label>
+                <input id="ward-room" name="wardRoom" type="text">
+            </div>
+            <div class="field span-2 split-row">
+                <div class="field age">
+                    <label for="age">Age</label>
+                    <input id="age" name="age" type="text">
+                </div>
+                <div class="field sex">
+                    <label for="sex">Sex</label>
+                    <select id="sex" name="sex">
+                        <option value=""></option>
+                        <option value="M">M</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                <div class="field admit">
+                    <label for="admission-date">Admission Date</label>
+                    <input id="admission-date" name="admissionDate" type="text">
+                </div>
+            </div>
+        </div>
+
+        <p class="legend">C – CARRIED &nbsp;&nbsp; A – ADMINISTERED &nbsp;&nbsp; R – REQUEST MADE &nbsp;&nbsp; E – ENDORSED &nbsp;&nbsp; D – DISCONTINUED</p>
+
+        <table class="orders" aria-label="Physician's orders and progress notes">
+            <colgroup>
+                <col class="date">
+                <col class="notes">
+                <col class="order">
+                <col class="mark">
+                <col class="mark">
+                <col class="mark">
+                <col class="mark">
+                <col class="mark">
+                <col class="sign">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>DATE<br>TIME</th>
+                    <th>PROGRESS NOTES</th>
+                    <th>PHYSICIAN'S ORDER</th>
+                    <th>C</th>
+                    <th>A</th>
+                    <th>R</th>
+                    <th>E</th>
+                    <th>D</th>
+                    <th>TIME<br>SIGNATURE</th>
+                </tr>
+            </thead>
+            <tbody id="main-rows"></tbody>
+        </table>
+
+        <!-- <div class="continuation">
+            <p class="legend">C – CARRIED &nbsp;&nbsp; A – ADMINISTERED &nbsp;&nbsp; R – REQUEST MADE &nbsp;&nbsp; E – ENDORSED &nbsp;&nbsp; D – DISCONTINUED</p>
+            <table class="orders" aria-label="Continuation orders">
+                <colgroup>
+                    <col class="date">
+                    <col class="notes">
+                    <col class="order">
+                    <col class="mark">
+                    <col class="mark">
+                    <col class="mark">
+                    <col class="mark">
+                    <col class="mark">
+                    <col class="sign">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>DATE<br>TIME</th>
+                        <th>PROGRESS NOTES</th>
+                        <th>PHYSICIAN'S ORDER</th>
+                        <th>C</th>
+                        <th>A</th>
+                        <th>R</th>
+                        <th>E</th>
+                        <th>D</th>
+                        <th>TIME<br>SIGNATURE</th>
+                    </tr>
+                </thead>
+                <tbody id="cont-rows"></tbody>
+            </table>
+        </div> -->
+
+        <div class="footer">
+            Physician's Orders Form<br>
+            CLMMRH-MRS.F.032<br>
+            Issued: 2/5/14<br>
+            Issue No. 001
+        </div>
+    </form>
+
+    <script>
+        const STORAGE_KEY = "clmmrh_patients_v1";
+        const COMPLIANCE_SNAPSHOT_KEY = "clmmrh_compliance_sheet_snapshot";
+        const SEED_PATIENT_ID = "patient_1790299677879";
+        const BLANK_PATIENT_ID = "patient_new_blank_1790299677880";
+        const selector = document.getElementById("patient-selector");
+        const loadStatus = document.getElementById("load-status");
+
+        function safeParse(value, fallback) {
+            try {
+                const parsed = JSON.parse(value);
+                return parsed ?? fallback;
+            } catch (_) {
+                return fallback;
+            }
+        }
+
+        function getPatients() {
+            const records = safeParse(localStorage.getItem(STORAGE_KEY), []);
+            return Array.isArray(records) ? records : [];
+        }
+
+        function getComplianceSnapshotRecord(patientId, snapshotCreatedAt) {
+            if (!patientId) return null;
+
+            const keys = [
+                COMPLIANCE_SNAPSHOT_KEY + ":" + patientId,
+                COMPLIANCE_SNAPSHOT_KEY
+            ];
+
+            for (const key of keys) {
+                const snapshot = safeParse(localStorage.getItem(key), null);
+                if (!snapshot || String(snapshot.patientId || "") !== String(patientId)) continue;
+                if (snapshotCreatedAt && snapshot.generatedAt !== snapshotCreatedAt) continue;
+
+                const storedRecord = snapshot.record && typeof snapshot.record === "object"
+                    ? snapshot.record
+                    : null;
+
+                return {
+                    id: patientId,
+                    createdAt: storedRecord?.createdAt || snapshot.generatedAt || "",
+                    updatedAt: storedRecord?.updatedAt || snapshot.generatedAt || "",
+                    data: storedRecord?.data || snapshot.data || {}
+                };
+            }
+
+            return null;
+        }
+
+        function seedPatientRecord() {
+            return {
+                id: SEED_PATIENT_ID,
+                seedVersion: 4,
+                createdAt: "2026-06-12T08:15:00+08:00",
+                updatedAt: "2026-06-13T10:45:00+08:00",
+                data: {
+                    hrn: "0000001677",
+                    last_name: "DELA CRUZ",
+                    first_name: "MARIA",
+                    middle_name: "SANTOS",
+                    birthdate: "1986-05-14",
+                    gender: "Female",
+                    address: "Brgy. Mansilingan, Bacolod City",
+                    ward_room: "Medical Ward / Room 208-B",
+                    case_no: "IP-2026-0612-0177",
+                    case_type: "IP Patient",
+                    chief_complaint: "Fever, productive cough, and shortness of breath for three days.",
+                    hx_present: "Three-day history of fever with yellowish sputum and increasing dyspnea. No chest trauma.",
+                    hx_past: "Known hypertensive for five years; maintained on amlodipine. No previous tuberculosis treatment.",
+                    pertinent_signs: ["Fever", "Cough", "Difficulty breathing"],
+                    pertinent_signs_information: "Febrile with tachypnea and oxygen saturation of 93% on room air. Productive cough with yellowish sputum.",
+                    pe_general: "Awake, coherent, mildly dyspneic",
+                    pe_heent: "Pink conjunctivae; anicteric sclerae",
+                    pe_chest_lungs: "Crackles over the right lower lung field",
+                    pe_cardiovascular: "Tachycardic, regular rhythm, no murmur",
+                    pe_abdomen: "Soft, non-tender, normoactive bowel sounds",
+                    pe_extremities: "No edema; pulses full and equal",
+                    pe_neurologic: "GCS 15; no focal neurologic deficit",
+                    pe_skin: "Warm; no rash or cyanosis",
+                    pe_other: "",
+                    other_forms: ["Trauma Sheet"],
+                    other_forms_notes: "No additional specialty form required at present.",
+                    vs_bp: "138/86", vs_hr: "102", vs_rr: "24", vs_temp: "38.2", vs_spo2: "93", vs_weight: "61", vs_height: "158",
+                    admitting_diagnosis: "Community-acquired pneumonia, moderate risk; hypertension.",
+                    final_diagnosis: "Community-acquired pneumonia, improved; essential hypertension.",
+                    progress_notes: "Productive cough and dyspnea, improved after initial treatment.\nBP 138/86, HR 102, RR 24, Temp 38.2 C, SpO2 93%. Crackles at right lower lung field.\nCommunity-acquired pneumonia, moderate risk; hypertension.",
+                    encounters: [
+                        { date: "2026-06-12", registry: "ER", service: "Emergency Medicine", patient_record: "Initial assessment and stabilization", results: "Admitted to Medical Ward" },
+                        { date: "2026-06-13", registry: "IP", service: "Internal Medicine", patient_record: "Daily progress review", results: "Clinically improving" }
+                    ],
+                    orders: {
+                        plans: [
+                            { text: "Admit to Medical Ward under Internal Medicine service.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:30 PM nurse" },
+                            { text: "Monitor vital signs every four hours and record intake and output.", dateTime: "2026-06-12T08:32:00+08:00", cared: ["C"], timeSignature: "C - 12:32 PM nurse" }
+                        ],
+                        diet: [{ text: "Low-salt diet as tolerated.", dateTime: "2026-06-12T08:34:00+08:00", cared: ["C"], timeSignature: "C - 12:35 PM nurse" }],
+                        iv: [{ text: "PNSS 1 L at 80 mL/hour.", dateTime: "2026-06-12T08:35:00+08:00", cared: ["A"], timeSignature: "A - 12:45 PM nurse" }],
+                        medications: [
+                            { medication: "Ceftriaxone", preparation: "1 g vial", dose: "2 g", route: "IV", frequency: "Once daily", timing: "8:00 AM", remarks: "Administer after skin testing.", text: "Ceftriaxone 2 g IV once daily.", dateTime: "2026-06-12T08:37:00+08:00", cared: ["C", "A", "E"], timeSignature: "C - 12:40 PM nurse\nA - 1:00 PM nurse\nE - 1:20 PM nurse" },
+                            { medication: "Azithromycin", preparation: "500 mg tablet", dose: "500 mg", route: "Oral", frequency: "Once daily", timing: "9:00 AM", remarks: "", text: "Azithromycin 500 mg tablet once daily.", dateTime: "2026-06-12T08:38:00+08:00", cared: ["C", "A"], timeSignature: "C - 12:42 PM nurse\nA - 1:05 PM nurse" },
+                            { medication: "Paracetamol", preparation: "500 mg tablet", dose: "500 mg", route: "Oral", frequency: "Every 6 hours PRN", timing: "For fever", remarks: "Hold if afebrile.", text: "Paracetamol 500 mg tablet every six hours as needed for fever.", dateTime: "2026-06-12T08:39:00+08:00", cared: ["C", "A"], timeSignature: "C - 12:45 PM nurse\nA - 1:10 PM nurse" }
+                        ],
+                        special: [{ text: "Oxygen at 2 L/minute via nasal cannula; maintain SpO2 at 95% or higher.", dateTime: "2026-06-12T08:40:00+08:00", cared: ["C"], timeSignature: "C - 12:50 PM nurse" }],
+                        procedures: [],
+                        clinicalRequests: {
+                            laboratory: [
+                                { code: "LAB0001", description: "Complete Blood Count (CBC)", priority: "STAT", remarks: "Baseline before antibiotics", quantity: 1, price: 180, dateTime: "2026-06-12T08:42:00+08:00", cared: ["R"], timeSignature: "R - 1:31 AM physician" },
+                                { code: "LAB0005", description: "Electrolytes (Na, K, Cl)", priority: "Routine", remarks: "", quantity: 1, price: 390, dateTime: "2026-06-12T08:43:00+08:00", cared: ["R"], timeSignature: "R - 1:33 AM physician" }
+                            ],
+                            radiology: [{ code: "RAD0001", description: "Chest X-Ray (PA)", priority: "STAT", remarks: "Rule out pneumonia", quantity: 1, price: 450, dateTime: "2026-06-12T08:44:00+08:00", cared: ["R"], timeSignature: "R - 1:35 AM physician" }],
+                            respiratory: [], heart: [], eeg: []
+                        }
+                    },
+                    disposition: "Admitted",
+                    follow_up_needed: "Yes",
+                    follow_up_date: "2026-06-20",
+                    follow_up_reason: "Repeat chest examination and review laboratory results.",
+                    exam_laboratory: "CBC: WBC 14.2 x10^9/L with neutrophilia; electrolytes within acceptable limits.",
+                    exam_diagnostics: "Chest X-ray: right lower lobe infiltrates consistent with pneumonia.",
+                    exam_heart_station: "ECG: sinus tachycardia.",
+                    exam_eeg: "",
+                    exam_pulmonology: "Oxygen saturation improved to 97% on nasal cannula."
+                }
+            };
+        }
+
+        function blankPatientRecord() {
+            return {
+                id: BLANK_PATIENT_ID,
+                seedVersion: 4,
+                createdAt: "2026-09-25T10:30:00+08:00",
+                updatedAt: "2026-09-25T10:30:00+08:00",
+                data: {
+                    hrn: "0000001678",
+                    last_name: "NEW PATIENT",
+                    first_name: "SAMPLE",
+                    middle_name: "",
+                    birthdate: "2000-01-15",
+                    gender: "Male",
+                    case_no: "NEW-2026-0001",
+                    case_type: "New Patient",
+                    encounters: [],
+                    orders: { plans: [], diet: [], iv: [], medications: [], special: [], procedures: [], clinicalRequests: { laboratory: [], radiology: [], respiratory: [], heart: [], eeg: [] } },
+                    referrals: []
+                }
+            };
+        }
+
+        function ensureSeedPatient() {
+            const records = getPatients();
+            const index = records.findIndex(record => record.id === SEED_PATIENT_ID);
+            if (index < 0) records.push(seedPatientRecord());
+            else if (Number(records[index].seedVersion || 0) < 4) records[index] = seedPatientRecord();
+            const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
+            if (blankIndex < 0) records.push(blankPatientRecord());
+            else if (Number(records[blankIndex].seedVersion || 0) < 4) records[blankIndex] = blankPatientRecord();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+        }
+
+        function patientName(data) {
+            const last = String(data?.last_name || "").trim();
+            const first = String(data?.first_name || "").trim();
+            const middle = String(data?.middle_name || "").trim();
+            const given = [first, middle].filter(Boolean).join(" ");
+            return [last, given].filter(Boolean).join(", ");
+        }
+
+        function calculateAge(birthdate) {
+            if (!birthdate) return "";
+            const dob = new Date(birthdate + "T00:00:00");
+            if (Number.isNaN(dob.getTime())) return "";
+
+            const now = new Date();
+            let age = now.getFullYear() - dob.getFullYear();
+            const month = now.getMonth() - dob.getMonth();
+
+            if (month < 0 || (month === 0 && now.getDate() < dob.getDate())) {
+                age--;
+            }
+
+            return age >= 0 ? String(age) : "";
+        }
+
+        function formatDate(value) {
+            if (!value) return "";
+            const d = new Date(String(value).length === 10 ? value + "T00:00:00" : value);
+            if (Number.isNaN(d.getTime())) return value;
+
+            return new Intl.DateTimeFormat("en-PH", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit"
+            }).format(d);
+        }
+
+        function formatDateTime(value) {
+            if (!value) return "";
+            const d = new Date(value);
+            if (Number.isNaN(d.getTime())) return value;
+
+            return new Intl.DateTimeFormat("en-PH", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "numeric",
+                minute: "2-digit"
+            }).format(d);
+        }
+
+        function joinNatural(items) {
+            const clean = (items || [])
+                .map(item => String(item || "").trim())
+                .filter(Boolean);
+
+            if (!clean.length) return "";
+            if (clean.length === 1) return clean[0];
+            if (clean.length === 2) return clean[0] + " and " + clean[1];
+            return clean.slice(0, -1).join(", ") + ", and " + clean[clean.length - 1];
+        }
+
+        function orderTexts(orders, key) {
+            const values = Array.isArray(orders?.[key]) ? orders[key] : [];
+            return values.map(item => item?.text || "").filter(Boolean);
+        }
+
+        function medicationOrderText(item) {
+            if (!item) return "";
+            const parts = [item.medication, item.preparation, item.dose, item.route, item.frequency, item.timing]
+                .map(value => String(value || "").trim()).filter(Boolean);
+            let text = parts.join(" - ");
+            if (!text && item.text) text = String(item.text).trim();
+            if (item.remarks) text += (text ? " - " : "") + "Remarks: " + String(item.remarks).trim();
+            return text;
+        }
+
+        // Build the printable physician order rows.
+        // The final output intentionally shows the actual entered order text only,
+        // matching the sample form. Category names such as Plans/Diet/IV are not printed.
+        function doctorOrderEntries(data) {
+            const orders = data?.orders || {};
+            const keys = [
+                "plans",
+                "diet",
+                "iv",
+                "labs",
+                "diagnostics",
+                "medications",
+                "special",
+                "procedures"
+            ];
+
+            const entries = [];
+
+            keys.forEach(key => {
+                const values = Array.isArray(orders?.[key]) ? orders[key] : [];
+                values.forEach(item => {
+                    const text = key === "medications" ? medicationOrderText(item) : String(item?.text || "").trim();
+                    if (text) {
+                        entries.push({
+                            text,
+                            dateTime: item?.dateTime || "",
+                            cared: Array.isArray(item?.cared) ? item.cared : [],
+                            timeSignature: item?.timeSignature || ""
+                        });
+                    }
+                });
+            });
+
+            const clinicalRequests = orders?.clinicalRequests || {};
+            Object.entries(clinicalRequests).forEach(([department, requests]) => {
+                if (!Array.isArray(requests)) return;
+                requests.forEach(request => {
+                    const description = String(request?.description || "").trim();
+                    if (!description) return;
+                    const priority = String(request?.priority || "Routine").trim();
+                    const remarks = String(request?.remarks || "").trim();
+                    entries.push({
+                        text: `Request ${description}${priority === "STAT" ? " (STAT)" : ""}${remarks ? " — " + remarks : ""}`,
+                        dateTime: request?.dateTime || "",
+                        cared: Array.isArray(request?.cared) ? request.cared : [],
+                        timeSignature: request?.timeSignature || ""
+                    });
+                });
+            });
+
+            // If an older saved record only has the generated summary,
+            // use it as a fallback instead of leaving Physician's Order blank.
+            if (!entries.length && Array.isArray(data?.doctorOrderSummary)) {
+                data.doctorOrderSummary.forEach(item => {
+                    const text = String(item?.text || "").trim();
+                    if (text) {
+                        entries.push({
+                            text,
+                            dateTime: item?.dateTime || ""
+                        });
+                    }
+                });
+            }
+
+            // Add output-related instructions from Disposition / Follow-up.
+            const disposition = String(data?.disposition || "").trim();
+
+            if (disposition === "Treated and Discharged") {
+                entries.push({ text: "Discharge patient", dateTime: "" });
+            } else if (disposition === "Referred to Other Health Facility") {
+                entries.push({ text: "Refer to other health facility", dateTime: "" });
+            } else if (disposition === "Admitted") {
+                // Do not invent a ward or physician; the actual admission order should
+                // come from the physician's Plans entry when supplied.
+            } else if (disposition) {
+                entries.push({ text: disposition, dateTime: "" });
+            }
+
+            if (String(data?.follow_up_needed || "").toLowerCase() === "yes") {
+                const date = String(data?.follow_up_date || "").trim();
+                const reason = String(data?.follow_up_reason || "").trim();
+
+                if (date) {
+                    entries.push({
+                        text: "Follow up on " + formatDate(date),
+                        dateTime: ""
+                    });
+                }
+
+                if (reason) {
+                    entries.push({
+                        text: "Follow-up reason: " + reason,
+                        dateTime: ""
+                    });
+                }
+            }
+
+            return entries;
+        }
+
+        function buildProgressNotes(data) {
+            if (String(data?.progress_notes || "").trim()) {
+                return String(data.progress_notes).replace(/^(S>|O>|A>)\s*/gm, "").trim();
+            }
+
+            const subjective = [];
+            const objective = [];
+            const assessment = [];
+
+            if (data?.chief_complaint) {
+                subjective.push(`Chief complaint: ${data.chief_complaint}`);
+            }
+            if (data?.hx_present) {
+                subjective.push(`Present illness: ${data.hx_present}`);
+            }
+            if (data?.hx_past) {
+                subjective.push(`Past medical history: ${data.hx_past}`);
+            }
+            if (Array.isArray(data?.pertinent_signs) && data.pertinent_signs.length) {
+                subjective.push(`Pertinent signs: ${data.pertinent_signs.join(", ")}`);
+            }
+            if (data?.pertinent_signs_information) {
+                subjective.push(`Pertinent information: ${data.pertinent_signs_information}`);
+            }
+
+            const vitals = [];
+            if (data?.vs_bp) vitals.push(`BP ${data.vs_bp} mmHg`);
+            if (data?.vs_hr) vitals.push(`HR ${data.vs_hr} bpm`);
+            if (data?.vs_rr) vitals.push(`RR ${data.vs_rr}/min`);
+            if (data?.vs_temp) vitals.push(`Temp ${data.vs_temp} °C`);
+            if (data?.vs_spo2) vitals.push(`SpO₂ ${data.vs_spo2}%`);
+            if (data?.vs_weight) vitals.push(`Weight ${data.vs_weight} kg`);
+            if (data?.vs_height) vitals.push(`Height ${data.vs_height} cm`);
+
+            if (vitals.length) objective.push(`Vital signs: ${vitals.join(", ")}`);
+
+            const physicalExam = [
+                ["General survey", data?.pe_general], ["HEENT", data?.pe_heent],
+                ["Chest/Lungs", data?.pe_chest_lungs], ["Cardiovascular", data?.pe_cardiovascular],
+                ["Abdomen", data?.pe_abdomen], ["Extremities", data?.pe_extremities],
+                ["Neurologic", data?.pe_neurologic], ["Skin", data?.pe_skin], ["Other PE", data?.pe_other]
+            ].filter(([, value]) => String(value || "").trim());
+            physicalExam.forEach(([label, value]) => objective.push(`${label}: ${value}`));
+
+            const examResults = [
+                ["Laboratory", data?.exam_laboratory],
+                ["Diagnostics", data?.exam_diagnostics],
+                ["Heart Station", data?.exam_heart_station],
+                ["EEG", data?.exam_eeg],
+                ["Pulmonology", data?.exam_pulmonology]
+            ].filter(([, value]) => String(value || "").trim());
+
+            examResults.forEach(([label, value]) => {
+                objective.push(`${label}: ${value}`);
+            });
+
+            if (data?.admitting_diagnosis) {
+                assessment.push(`Admitting diagnosis: ${data.admitting_diagnosis}`);
+            }
+            if (data?.final_diagnosis) {
+                assessment.push(`Final diagnosis: ${data.final_diagnosis}`);
+            } else if (data?.initial_diagnosis) {
+                assessment.push(`Initial diagnosis: ${data.initial_diagnosis}`);
+            }
+
+            const parts = [];
+            if (subjective.length) parts.push(subjective.join(". "));
+            if (objective.length) parts.push(objective.join(". "));
+            if (assessment.length) parts.push(assessment.join(". "));
+
+            return parts.join("\n");
+        }
+
+        function firstOrderDateTime(data, record) {
+            const entries = doctorOrderEntries(data);
+            const firstWithTime = entries.find(item => item?.dateTime);
+
+            if (firstWithTime?.dateTime) return firstWithTime.dateTime;
+
+            if (Array.isArray(data?.doctorOrderSummary)) {
+                const summary = data.doctorOrderSummary.find(item => item?.dateTime);
+                if (summary?.dateTime) return summary.dateTime;
+            }
+
+            return record?.updatedAt || record?.createdAt || "";
+        }
+
+        function admissionDate(data, record) {
+            if (Array.isArray(data?.encounters)) {
+                const encounter = data.encounters.find(row => row?.date);
+                if (encounter?.date) return encounter.date;
+            }
+
+            return record?.createdAt || "";
+        }
+
+        function rowHtml(prefix, index) {
+            const id = prefix + "-" + index;
+            return (
+                "<tr>" +
+                '<td><textarea name="' + id + '-datetime" rows="2"></textarea></td>' +
+                '<td><textarea name="' + id + '-notes" rows="2"></textarea></td>' +
+                '<td><textarea name="' + id + '-order" rows="2"></textarea></td>' +
+                '<td class="mark"><input type="checkbox" name="' + id + '-c" aria-label="Carried"></td>' +
+                '<td class="mark"><input type="checkbox" name="' + id + '-a" aria-label="Administered"></td>' +
+                '<td class="mark"><input type="checkbox" name="' + id + '-r" aria-label="Request made"></td>' +
+                '<td class="mark"><input type="checkbox" name="' + id + '-e" aria-label="Endorsed"></td>' +
+                '<td class="mark"><input type="checkbox" name="' + id + '-d" aria-label="Discontinued"></td>' +
+                '<td><textarea name="' + id + '-sign" rows="2"></textarea></td>' +
+                "</tr>"
+            );
+        }
+
+        function fillRows(targetId, prefix, count) {
+            const body = document.getElementById(targetId);
+            if (!body) return;
+
+            let html = "";
+
+            for (let i = 1; i <= count; i++) {
+                html += rowHtml(prefix, i);
+            }
+
+            body.innerHTML = html;
+        }
+
+        function setTextareaValue(element, value) {
+            if (!element) return;
+            element.value = value || "";
+            element.style.height = "auto";
+
+            if (element.value) {
+                element.style.height = Math.max(element.scrollHeight, 36) + "px";
+            }
+        }
+
+        function resizeAllTextareas() {
+            document.querySelectorAll("table.orders textarea").forEach(textarea => {
+                textarea.style.height = "auto";
+                if (textarea.value) {
+                    textarea.style.height = Math.max(textarea.scrollHeight, 36) + "px";
+                }
+            });
+        }
+
+        function clearForm() {
+            document.getElementById("doctors-order-form").reset();
+            fillRows("main-rows", "row", 18);
+            loadStatus.textContent = "";
+        }
+
+        function populatePatientSelector() {
+            const patients = getPatients().sort(
+                (a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || ""))
+            );
+
+            selector.innerHTML = '<option value="">Select saved patient...</option>';
+
+            patients.forEach(record => {
+                const option = document.createElement("option");
+                option.value = String(record.id || "");
+                const data = record.data || {};
+                option.textContent =
+                    `${patientName(data) || "Unnamed patient"}${data.hrn ? " — " + data.hrn : ""}${record.id === SEED_PATIENT_ID ? " (Seed — Previous Patient)" : record.id === BLANK_PATIENT_ID ? " (Example — New Patient, Blank)" : ""}`;
+                selector.appendChild(option);
+            });
+
+            loadStatus.textContent = patients.length
+                ? `${patients.length} saved patient${patients.length === 1 ? "" : "s"} found`
+                : "No saved patients found in this browser.";
+        }
+
+        function populateClinicalRows(record) {
+            const data = record.data || {};
+            const progressNotes = buildProgressNotes(data);
+            const orderEntries = doctorOrderEntries(data);
+            const firstDateTime = formatDateTime(firstOrderDateTime(data, record));
+
+            const rowCount = Math.max(18, orderEntries.length, progressNotes ? 1 : 0);
+            fillRows("main-rows", "row", rowCount);
+
+            const rows = [...document.querySelectorAll("#main-rows tr")];
+
+            // The sample output uses one Date/Time block and one Progress Notes block
+            // for the set of physician's orders. Only the first row is populated here.
+            if (rows[0]) {
+                const textareas = rows[0].querySelectorAll("textarea");
+                setTextareaValue(textareas[0], firstDateTime);
+                setTextareaValue(textareas[1], progressNotes);
+            }
+
+            // Each physician's order is shown exactly as it was entered in the dashboard.
+            orderEntries.forEach((entry, index) => {
+                const row = rows[index];
+                if (!row) return;
+
+                const textareas = row.querySelectorAll("textarea");
+                setTextareaValue(textareas[2], entry.text);
+                setTextareaValue(textareas[3], entry.timeSignature || "");
+                const cared = new Set(Array.isArray(entry.cared) ? entry.cared : []);
+                const caredKeys = ["C", "A", "R", "E", "D"];
+                row.querySelectorAll('input[type="checkbox"]').forEach((checkbox, caredIndex) => {
+                    checkbox.checked = cared.has(caredKeys[caredIndex]);
+                });
+            });
+
+            resizeAllTextareas();
+        }
+
+        function loadPatientRecord(record) {
+            if (!record) return;
+
+            const data = record.data || {};
+
+            clearForm();
+
+            document.getElementById("patient-name").value = patientName(data);
+            document.getElementById("hospital-no").value = data.hrn || "";
+            document.getElementById("address").value = data.address || "";
+
+            // No dedicated Ward / Room field currently exists in the registration wizard.
+            // Leave it blank unless a compatible value exists in an older/newer record.
+            document.getElementById("ward-room").value =
+                data.ward_room || data.wardRoom || "";
+
+            document.getElementById("age").value = calculateAge(data.birthdate);
+
+            const sex = String(data.gender || "").toLowerCase();
+            document.getElementById("sex").value =
+                sex === "male" ? "M" :
+                sex === "female" ? "F" : "";
+
+            document.getElementById("admission-date").value =
+                formatDate(admissionDate(data, record));
+
+            populateClinicalRows(record);
+
+            selector.value = record.id;
+            loadStatus.textContent =
+                `Loaded: ${patientName(data) || data.hrn || "patient"}`;
+
+            const url = new URL(window.location.href);
+            url.searchParams.set("patient", record.id);
+            history.replaceState(null, "", url);
+
+            const dashBtn = document.getElementById("back-dashboard-btn");
+            if (dashBtn) {
+                dashBtn.href = `dashboard.html?patient=${encodeURIComponent(record.id)}`;
+            }
+        }
+
+        function loadSelectedPatient() {
+            const id = selector.value;
+            if (!id) {
+                alert("Please select a patient first.");
+                return;
+            }
+
+            const record = getPatients().find(item => item.id === id);
+            if (!record) {
+                alert("Patient record was not found in localStorage.");
+                return;
+            }
+
+            loadPatientRecord(record);
+        }
+
+        function loadFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const patientId = params.get("patient");
+            const hrn = params.get("hrn");
+            const snapshotCreatedAt = params.get("snapshot");
+
+            const patients = getPatients();
+            let record = getComplianceSnapshotRecord(patientId, snapshotCreatedAt);
+
+            if (!record && patientId) {
+                record = patients.find(item =>
+                    String(item?.id || "") === String(patientId) ||
+                    String(item?.data?.hrn || "") === String(patientId) ||
+                    ("hrn_" + String(item?.data?.hrn || "")) === String(patientId)
+                ) || null;
+            }
+
+            if (!record && hrn) {
+                record = patients.find(item =>
+                    String(item?.data?.hrn || "") === String(hrn) ||
+                    String(item?.id || "") === String(hrn) ||
+                    String(item?.id || "") === ("hrn_" + String(hrn))
+                ) || null;
+            }
+
+            if (record) {
+                loadPatientRecord(record);
+            } else if (patientId || hrn) {
+                loadStatus.textContent = "Patient not found in this browser storage.";
+            }
+        }
+
+        try {
+            ensureSeedPatient();
+            fillRows("main-rows", "row", 18);
+            populatePatientSelector();
+            loadFromUrl();
+        } catch (error) {
+            console.error("Physician order sheet startup error:", error);
+            loadStatus.textContent = "Error loading saved data: " + error.message;
+        }
+
+        document.getElementById("load-btn").addEventListener("click", loadSelectedPatient);
+
+        selector.addEventListener("change", function () {
+            if (selector.value) loadSelectedPatient();
+        });
+
+        document.getElementById("print-btn").addEventListener("click", function () {
+            resizeAllTextareas();
+            window.print();
+        });
+
+        document.getElementById("clear-btn").addEventListener("click", function () {
+            clearForm();
+            selector.value = "";
+
+            const url = new URL(window.location.href);
+            url.searchParams.delete("patient");
+            url.searchParams.delete("hrn");
+            history.replaceState(null, "", url);
+
+            const dashBtn = document.getElementById("back-dashboard-btn");
+            if (dashBtn) {
+                dashBtn.href = "dashboard.html";
+            }
+        });
+
+        document.addEventListener("input", function (event) {
+            if (event.target.matches("table.orders textarea")) {
+                event.target.style.height = "auto";
+                event.target.style.height = Math.max(event.target.scrollHeight, 36) + "px";
+            }
+        });
+
+        window.addEventListener("storage", populatePatientSelector);
+    </script>
+</body>
+</html>

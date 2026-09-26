@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physician's Orders / Progress Notes — CLMMRH</title>
+    <style>
+        :root {
+            --ink: #111;
+            --line: #000;
+            --page: #fff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #d8d8d8;
+            color: var(--ink);
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 16px auto;
+            padding: 14mm 12mm 10mm;
+            background: var(--page);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
+        }
+
+        .hospital-name {
+            text-align: center;
+            font-size: 12.5pt;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            margin: 0;
+        }
+
+        .hospital-address {
+            text-align: center;
+            font-size: 10pt;
+            margin: 1px 0 14px;
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 13.5pt;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            margin: 0;
+            line-height: 1.25;
+        }
+
+        .form-subtitle {
+            text-align: center;
+            font-size: 10pt;
+            margin: 6px 0 14px;
+        }
+
+        .patient-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px 28px;
+            margin-bottom: 10px;
+            font-size: 10.5pt;
+        }
+
+        .field {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .field.span-2 {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            white-space: nowrap;
+        }
+
+        .field input,
+        .field select {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            border-bottom: 1px solid var(--line);
+            background: transparent;
+            font: inherit;
+            font-size: 11pt;
+            padding: 0 2px 1px;
+            outline: none;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        table input:focus,
+        table textarea:focus {
+            background: #fffbe8;
+        }
+
+        .split-row {
+            display: flex;
+            gap: 22px;
+            min-width: 0;
+        }
+
+        .split-row .field {
+            flex: 0 1 auto;
+        }
+
+        .field.age {
+            width: 90px;
+        }
+
+        .field.sex {
+            width: 72px;
+        }
+
+        .field.admit {
+            flex: 1;
+        }
+
+        .field select {
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .legend {
+            font-size: 9.5pt;
+            letter-spacing: 0.2px;
+            margin: 8px 0 4px;
+            text-align: left;
+        }
+
+        table.orders {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 9.5pt;
+        }
+
+        table.orders th,
+        table.orders td {
+            border: 1px solid var(--line);
+            vertical-align: top;
+            padding: 0;
+        }
+
+        table.orders thead th {
+            font-weight: 700;
+            text-align: center;
+            padding: 3px 2px;
+            line-height: 1.2;
+            background: #fff;
+        }
+
+        table.orders col.date { width: 12%; }
+        table.orders col.notes { width: 24%; }
+        table.orders col.order { width: 36%; }
+        table.orders col.mark { width: 3.2%; }
+        table.orders col.sign { width: 12%; }
+
+        table.orders tbody td {
+            height: 9.2mm;
+        }
+
+        table.orders tbody td input,
+        table.orders tbody td textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none;
+            outline: none;
+            font: inherit;
+            font-size: 10pt;
+            padding: 2px 4px;
+            background: transparent;
+        }
+
+        table.orders tbody td.mark {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        table.orders tbody td.mark input[type="checkbox"] {
+            width: 13px;
+            height: 13px;
+            margin: 0;
+            accent-color: #111;
+            cursor: pointer;
+        }
+
+        .continuation {
+            margin-top: 18px;
+        }
+
+        .continuation table.orders tbody td {
+            height: 14mm;
+        }
+
+        .footer {
+            margin-top: 10px;
+            font-size: 9.5pt;
+            line-height: 1.35;
+        }
+
+        .toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background: #ececec;
+            border-bottom: 1px solid #c8c8c8;
+        }
+
+        .toolbar button {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            padding: 7px 14px;
+            border: 1px solid #444;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .toolbar button:hover {
+            background: #f3f3f3;
+        }
+
+        @media print {
+            html, body {
+                background: #fff;
+            }
+
+            .toolbar {
+                display: none;
+            }
+
+            .page {
+                margin: 0;
+                box-shadow: none;
+                width: auto;
+                min-height: auto;
+                padding: 10mm 10mm 8mm;
+            }
+        }
+
+        @page {
+            size: A4;
+            margin: 8mm;
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <a href="dashboard.html" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #1f7d45; background: #1f7d45; color: #fff; text-decoration: none; border-radius: 2px; font-weight: 600;">← Doctor's Dashboard</a>
+        <a href="patients.html" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #444; background: #fff; color: #111; text-decoration: none; border-radius: 2px;">Patient List</a>
+        <a href="doctors_order_patient.html" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #444; background: #fff; color: #111; text-decoration: none; border-radius: 2px;">Interactive Order Sheet</a>
+        <button type="button" id="print-btn">Print form</button>
+        <button type="button" id="clear-btn">Clear entries</button>
+    </div>
+
+    <form class="page" id="doctors-order-form" autocomplete="off">
+        <p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>
+        <p class="hospital-address">Lacson - Burgos Streets, Bacolod City</p>
+
+        <h1 class="form-title">
+            PHYSICIAN'S ORDERS / PROGRESS NOTES<br>
+            NURSES' COMPLIANCE SHEET
+        </h1>
+        <p class="form-subtitle">(Authenticate all Orders)</p>
+
+        <div class="patient-grid">
+            <div class="field">
+                <label for="patient-name">Name of Patient</label>
+                <input id="patient-name" name="patientName" type="text">
+            </div>
+            <div class="field">
+                <label for="hospital-no">Hospital No.</label>
+                <input id="hospital-no" name="hospitalNo" type="text">
+            </div>
+            <div class="field">
+                <label for="address">Address</label>
+                <input id="address" name="address" type="text">
+            </div>
+            <div class="field">
+                <label for="ward-room">Ward / Room</label>
+                <input id="ward-room" name="wardRoom" type="text">
+            </div>
+            <div class="field span-2 split-row">
+                <div class="field age">
+                    <label for="age">Age</label>
+                    <input id="age" name="age" type="text">
+                </div>
+                <div class="field sex">
+                    <label for="sex">Sex</label>
+                    <select id="sex" name="sex">
+                        <option value=""></option>
+                        <option value="M">M</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                <div class="field admit">
+                    <label for="admission-date">Admission Date</label>
+                    <input id="admission-date" name="admissionDate" type="text">
+                </div>
+            </div>
+        </div>
+
+        <p class="legend">C – CARRIED &nbsp;&nbsp; A – ADMINISTERED &nbsp;&nbsp; R – REQUEST MADE &nbsp;&nbsp; E – ENDORSED &nbsp;&nbsp; D – DISCONTINUED</p>
+
+        <table class="orders" aria-label="Physician's orders and progress notes">
+            <colgroup>
+                <col class="date">
+                <col class="notes">
+                <col class="order">
+                <col class="mark">
+                <col class="mark">
+                <col class="mark">
+                <col class="mark">
+                <col class="mark">
+                <col class="sign">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>DATE<br>TIME</th>
+                    <th>PROGRESS NOTES</th>
+                    <th>PHYSICIAN'S ORDER</th>
+                    <th>C</th>
+                    <th>A</th>
+                    <th>R</th>
+                    <th>E</th>
+                    <th>D</th>
+                    <th>TIME<br>SIGNATURE</th>
+                </tr>
+            </thead>
+            <tbody id="main-rows"></tbody>
+        </table>
+
+        <!-- <div class="continuation">
+            <p class="legend">C – CARRIED &nbsp;&nbsp; A – ADMINISTERED &nbsp;&nbsp; R – REQUEST MADE &nbsp;&nbsp; E – ENDORSED &nbsp;&nbsp; D – DISCONTINUED</p>
+            <table class="orders" aria-label="Continuation orders">
+                <colgroup>
+                    <col class="date">
+                    <col class="notes">
+                    <col class="order">
+                    <col class="mark">
+                    <col class="mark">
+                    <col class="mark">
+                    <col class="mark">
+                    <col class="mark">
+                    <col class="sign">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>DATE<br>TIME</th>
+                        <th>PROGRESS NOTES</th>
+                        <th>PHYSICIAN'S ORDER</th>
+                        <th>C</th>
+                        <th>A</th>
+                        <th>R</th>
+                        <th>E</th>
+                        <th>D</th>
+                        <th>TIME<br>SIGNATURE</th>
+                    </tr>
+                </thead>
+                <tbody id="cont-rows"></tbody>
+            </table>
+        </div> -->
+
+        <div class="footer">
+            Physician's Orders Form<br>
+            CLMMRH-MRS.F.032<br>
+            Issued: 2/5/14<br>
+            Issue No. 001
+        </div>
+    </form>
+
+    <script>
+        function rowHtml(prefix, index) {
+            const id = prefix + "-" + index;
+            return (
+                "<tr>" +
+                '<td><textarea name="' + id + '-datetime" rows="2"></textarea></td>' +
+                '<td><textarea name="' + id + '-notes" rows="2"></textarea></td>' +
+                '<td><textarea name="' + id + '-order" rows="2"></textarea></td>' +
+                '<td class="mark"><input type="checkbox" name="' + id + '-c" aria-label="Carried"></td>' +
+                '<td class="mark"><input type="checkbox" name="' + id + '-a" aria-label="Administered"></td>' +
+                '<td class="mark"><input type="checkbox" name="' + id + '-r" aria-label="Request made"></td>' +
+                '<td class="mark"><input type="checkbox" name="' + id + '-e" aria-label="Endorsed"></td>' +
+                '<td class="mark"><input type="checkbox" name="' + id + '-d" aria-label="Discontinued"></td>' +
+                '<td><textarea name="' + id + '-sign" rows="2"></textarea></td>' +
+                "</tr>"
+            );
+        }
+
+        function fillRows(targetId, prefix, count) {
+            const body = document.getElementById(targetId);
+            let html = "";
+            for (let i = 1; i <= count; i++) {
+                html += rowHtml(prefix, i);
+            }
+            body.innerHTML = html;
+        }
+
+        fillRows("main-rows", "row", 18);
+        fillRows("cont-rows", "cont", 2);
+
+        document.getElementById("print-btn").addEventListener("click", function () {
+            window.print();
+        });
+
+        document.getElementById("clear-btn").addEventListener("click", function () {
+            document.getElementById("doctors-order-form").reset();
+        });
+    </script>
+</body>
+</html>

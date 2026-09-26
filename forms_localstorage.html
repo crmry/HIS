@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patient registration wizard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style type="text/tailwindcss">
+    @layer components {
+      .lbl   { @apply mb-1 block text-sm font-medium text-gray-700; }
+      .field { @apply block w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/30; }
+      .radio { @apply h-4 w-4 border-gray-300 text-green-600 focus:ring-green-600; }
+      .btn   { @apply rounded px-4 py-2 text-sm font-semibold focus:outline-none focus:ring-2; }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-4 md:p-8">
+
+<div class="mx-auto mb-4 flex max-w-7xl items-center justify-end gap-2">
+  <a href="dashboard.html"
+     class="rounded border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+    ← Doctor's Dashboard
+  </a>
+  <a href="patients.html"
+     class="rounded border border-green-600 bg-white px-4 py-2 text-sm font-semibold text-green-700 hover:bg-green-50">
+    Patient List
+  </a>
+</div>
+
+<div class="mx-auto max-w-7xl overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+  <div class="h-1 bg-green-600"></div>
+
+  <!-- Stepper -->
+  <ol id="stepper" class="flex items-center gap-3 border-b border-gray-200 px-4 py-4 md:px-6"></ol>
+
+  <form id="wizard" novalidate>
+
+    <!-- FORM 1: Patient information -->
+    <section data-step data-title="Patient information" class="space-y-8 p-6">
+
+      <fieldset>
+        <legend class="mb-4 text-base font-semibold text-gray-900">Patient Information</legend>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div>
+            <label for="hrn" class="lbl">Patient Hospital No.</label>
+            <input id="hrn" name="hrn" type="text" inputmode="numeric" maxlength="11" pattern="\d{11}"
+                   title="11 digits" placeholder="00000000000" required class="field font-mono">
+          </div>
+          <div>
+            <label for="case_no" class="lbl">Encounter no.</label>
+            <input id="case_no" name="case_no" type="text" placeholder="20260000000" required class="field font-mono">
+          </div>
+          <div>
+            <label for="case_type" class="lbl">Registry case type</label>
+            <input type="text" value="OP" required class="field">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend class="mb-4 text-base font-semibold text-gray-900">Demographics</legend>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-6">
+          <div class="md:col-span-2">
+            <label for="last_name" class="lbl">Last name</label>
+            <input id="last_name" name="last_name" type="text" required class="field">
+          </div>
+          <div class="md:col-span-2">
+            <label for="first_name" class="lbl">First name</label>
+            <input id="first_name" name="first_name" type="text" required class="field">
+          </div>
+          <div class="md:col-span-2">
+            <label for="middle_name" class="lbl">Middle name</label>
+            <input id="middle_name" name="middle_name" type="text" class="field">
+          </div>
+          <div class="md:col-span-2">
+            <label for="birthdate" class="lbl">Birthdate</label>
+            <input id="birthdate" name="birthdate" type="date" required class="field">
+          </div>
+          <div class="md:col-span-2">
+            <label for="age" class="lbl">Age</label>
+            <input id="age" type="text" readonly placeholder="Auto-filled"
+                   class="field !border-gray-200 !bg-gray-50 !text-gray-600">
+          </div>
+          <div class="md:col-span-2">
+            <label for="gender" class="lbl">Gender</label>
+            <select id="gender" name="gender" required class="field">
+              <option value="" disabled selected>Select gender</option>
+              <option value="Female">Female</option>
+              <option value="Male">Male</option>
+            </select>
+          </div>
+          <div class="md:col-span-6">
+            <label for="address" class="lbl">Address</label>
+            <input id="address" name="address" type="text" placeholder="Barangay, city/municipality, province"
+                   required class="field">
+          </div>
+        </div>
+      </fieldset>
+    </section>
+
+    <!-- FORM 2: Patient encounter -->
+    <section data-step data-title="Patient encounter" class="hidden space-y-4 p-6">
+      <h2 class="text-base font-semibold text-gray-900">Patient encounter</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[760px] border-collapse text-sm">
+          <thead>
+            <tr class="bg-black text-white">
+              <th colspan="6" class="px-3 py-1.5 text-left font-medium">Patient encounter</th>
+            </tr>
+            <tr class="text-left">
+              <th class="w-40 border border-black px-3 py-2 font-normal">Date</th>
+              <th class="w-40 border border-black px-3 py-2 font-normal">Registry type<br><span class="text-gray-600">(IP/OP/ER)</span></th>
+              <th class="border border-black px-3 py-2 font-normal">Service</th>
+              <th class="border border-black px-3 py-2 font-normal text-red-600">Patient's record</th>
+              <th class="border border-black px-3 py-2 font-normal">Results</th>
+              <th class="w-24 border border-black px-3 py-2"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="encounters"></tbody>
+        </table>
+      </div>
+      <p id="enc-empty" class="hidden rounded border border-dashed border-gray-300 px-4 py-6 text-center text-sm text-gray-500">
+        No encounters yet. Add one, or save if the patient has none.
+      </p>
+      <button type="button" id="add-enc"
+              class="btn border border-green-600 bg-white text-green-700 hover:bg-green-50 focus:ring-green-600/30">
+        Add encounter
+      </button>
+    </section>
+
+    <!-- FORM 3: Clinical record -->
+    <section data-step data-title="Clinical record" class="hidden space-y-8 p-6">
+
+      <!-- Vital signs + Chief complaint -->
+      <div class="grid grid-cols-1 border border-black md:grid-cols-2">
+        <div class="border-black md:border-r">
+          <div class="bg-black px-3 py-1.5 text-sm font-medium text-white">Vital signs</div>
+          <div class="grid grid-cols-2 gap-3 p-3 sm:grid-cols-3">
+            <div>
+              <label for="vs_bp" class="lbl">BP (mmHg)</label>
+              <input id="vs_bp" name="vs_bp" type="text" placeholder="120/80" pattern="\d{2,3}/\d{2,3}" title="e.g. 120/80" class="field">
+            </div>
+            <div>
+              <label for="vs_hr" class="lbl">HR (bpm)</label>
+              <input id="vs_hr" name="vs_hr" type="number" min="20" max="300" class="field">
+            </div>
+            <div>
+              <label for="vs_rr" class="lbl">RR (/min)</label>
+              <input id="vs_rr" name="vs_rr" type="number" min="5" max="80" class="field">
+            </div>
+            <div>
+              <label for="vs_temp" class="lbl">Temp (°C)</label>
+              <input id="vs_temp" name="vs_temp" type="number" step="0.1" min="30" max="45" class="field">
+            </div>
+            <div>
+              <label for="vs_spo2" class="lbl">SpO₂ (%)</label>
+              <input id="vs_spo2" name="vs_spo2" type="number" min="50" max="100" class="field">
+            </div>
+            <div>
+              <label for="vs_weight" class="lbl">Weight (kg)</label>
+              <input id="vs_weight" name="vs_weight" type="number" step="0.1" min="0.3" max="500" class="field">
+            </div>
+            <div>
+              <label for="vs_height" class="lbl">Height (cm)</label>
+              <input id="vs_height" name="vs_height" type="number" step="0.1" min="20" max="260" class="field">
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-black md:border-t-0">
+          <div class="bg-black px-3 py-1.5 text-sm font-medium text-white">Chief complaint</div>
+          <div class="p-3">
+            <label for="visit_cc" class="sr-only">Chief complaint</label>
+            <textarea id="visit_cc" name="visit_chief_complaint" rows="5" class="field"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Medical history -->
+      <div>
+        <div class="bg-black px-3 py-1.5 text-sm font-medium text-white">Medical history</div>
+        <div role="tablist" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6">
+          <button type="button" role="tab" data-tab="present" class="bg-[#9dd3ee] px-3 py-2 text-left text-sm text-gray-900">Present illness</button>
+          <button type="button" role="tab" data-tab="past"    class="bg-[#8ccbea] px-3 py-2 text-left text-sm text-gray-900">Past medical</button>
+          <button type="button" role="tab" data-tab="family"  class="bg-[#41a9dd] px-3 py-2 text-left text-sm text-gray-900">Family</button>
+          <button type="button" role="tab" data-tab="social"  class="bg-[#0f4a6a] px-3 py-2 text-left text-sm text-white">Personal/Social</button>
+          <button type="button" role="tab" data-tab="gyn"     class="bg-[#0a2d42] px-3 py-2 text-left text-sm text-white">Gynecologic</button>
+          <button type="button" role="tab" data-tab="neo"     class="bg-[#c6e5f6] px-3 py-2 text-left text-sm text-gray-900">Neonatal</button>
+        </div>
+
+        <div class="border border-black p-4">
+          <div data-panel="present">
+            <label for="hx_present" class="lbl">Present illness</label>
+            <textarea id="hx_present" name="hx_present" rows="6" class="field"></textarea>
+          </div>
+          <div data-panel="past" class="hidden">
+            <label for="hx_past" class="lbl">Past medical history</label>
+            <textarea id="hx_past" name="hx_past" rows="6" class="field"></textarea>
+          </div>
+          <div data-panel="family" class="hidden">
+            <label for="hx_family" class="lbl">Family history</label>
+            <textarea id="hx_family" name="hx_family" rows="6" class="field"></textarea>
+          </div>
+          <div data-panel="social" class="hidden">
+            <label for="hx_social" class="lbl">Personal/social history</label>
+            <textarea id="hx_social" name="hx_social" rows="6" class="field"></textarea>
+          </div>
+
+          <!-- Gynecologic -->
+          <div data-panel="gyn" class="hidden space-y-4">
+            <p>Table OB HX See suggested interface</p>
+          </div>
+
+          <!-- Neonatal -->
+          <div data-panel="neo" class="hidden space-y-4">
+            <p>See suggested Interface</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORM 4: Pertinent findings -->
+    <section data-step data-title="Pertinent findings" class="hidden space-y-8 p-6">
+
+      <div>
+        <div class="bg-black px-3 py-1.5 text-sm font-medium text-white">Pertinent signs and information</div>
+        <div class="space-y-5 border border-black p-4">
+          <p>Pertinent signs and information</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="bg-black px-3 py-1.5 text-sm font-medium text-white">Physical examination</div>
+        <div class="space-y-5 border border-black p-4">
+          <p>Pertinent signs and information</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORM 5: Diagnosis -->
+    <section data-step data-title="Diagnosis" class="hidden p-6">
+      <div class="grid grid-cols-1 border border-black md:grid-cols-2">
+        <div class="md:border-r md:border-black">
+          <div class="bg-black px-3 py-1.5 text-sm font-medium text-white">Admitting diagnosis</div>
+          <div class="p-3">
+            <label for="admitting_dx" class="sr-only">Admitting diagnosis</label>
+            <textarea id="admitting_dx" name="admitting_diagnosis" rows="8" class="field"></textarea>
+          </div>
+        </div>
+        <div class="border-t border-black md:border-t-0">
+          <div class="bg-black px-3 py-1.5 text-sm font-medium text-white">Final diagnosis</div>
+          <div class="p-3">
+            <label for="final_dx" class="sr-only">Final diagnosis</label>
+            <textarea id="final_dx" name="final_diagnosis" rows="8" class="field"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORM 6: Physician's orders -->
+    <section data-step data-title="Physician's orders" class="hidden p-6">
+      <div class="border border-black">
+        <div class="hidden bg-black px-3 py-1.5 text-sm font-medium text-white md:grid md:grid-cols-[9rem_1fr_11rem] md:gap-2">
+          <span>Physician's order (plans)</span><span>Interface</span><span>Handled by</span>
+        </div>
+        <div class="bg-black px-3 py-1.5 text-sm font-medium text-white md:hidden">Physician's order (plans)</div>
+        <div id="orders" class="divide-y divide-black"></div>
+      </div>
+    </section>
+
+    <!-- FORM 7: Disposition / Examination Result -->
+    <section data-step data-title="Disposition / Results" class="hidden space-y-8 p-6">
+
+      <!-- Disposition and Follow up -->
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div class="rounded border border-gray-300 bg-white p-4">
+          <h3 class="mb-4 text-lg font-semibold text-gray-900">Disposition</h3>
+          <div class="grid grid-cols-1 gap-x-8 gap-y-3 md:grid-cols-2 xl:grid-cols-3">
+            <label class="inline-flex items-center gap-2 text-sm text-gray-800"><input type="radio" name="disposition" value="Treated and Discharged" class="radio"> Treated and Discharged</label>
+            <label class="inline-flex items-center gap-2 text-sm text-gray-800"><input type="radio" name="disposition" value="Admitted" class="radio"> Admitted</label>
+            <label class="inline-flex items-center gap-2 text-sm text-gray-800"><input type="radio" name="disposition" value="Refused Admission/DAMA" class="radio"> Refused Admission/DAMA</label>
+            <label class="inline-flex items-center gap-2 text-sm text-gray-800"><input type="radio" name="disposition" value="Not Around When Called" class="radio"> Not Around When Called</label>
+            <label class="inline-flex items-center gap-2 text-sm text-gray-800"><input type="radio" name="disposition" value="Sent Directly to E.R." class="radio"> Sent Directly to E.R.</label>
+            <label class="inline-flex items-center gap-2 text-sm text-gray-800"><input type="radio" name="disposition" value="Referred to Other Health Facility" class="radio"> Referred to Other Health Facility</label>
+            <label class="inline-flex items-center gap-2 text-sm text-gray-800"><input type="radio" name="disposition" value="Rescheduled" class="radio"> Rescheduled</label>
+            <label class="inline-flex items-center gap-2 text-sm text-gray-800"><input type="radio" name="disposition" value="STAT Minor OR" class="radio"> STAT Minor OR</label>
+          </div>
+          <div class="mt-5 flex justify-end">
+            <button type="button" id="save-disposition" class="btn border border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-green-600/30">Save</button>
+          </div>
+        </div>
+
+        <div class="rounded border border-gray-300 bg-white p-4">
+          <h3 class="mb-3 text-lg font-semibold text-gray-900">For follow up?</h3>
+          <div class="mb-5 flex gap-6">
+            <label class="inline-flex items-center gap-2 text-sm text-gray-800"><input type="radio" name="follow_up_needed" value="Yes" class="radio"> Yes</label>
+            <label class="inline-flex items-center gap-2 text-sm text-gray-800"><input type="radio" name="follow_up_needed" value="No" class="radio"> No</label>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label for="follow_up_date" class="lbl">Follow up Date:</label>
+              <input id="follow_up_date" name="follow_up_date" type="date" class="field">
+            </div>
+            <div>
+              <label for="follow_up_reason" class="lbl">Reason for follow up:</label>
+              <textarea id="follow_up_reason" name="follow_up_reason" rows="5" class="field" placeholder="Enter reason for follow up..."></textarea>
+            </div>
+          </div>
+
+          <div class="mt-4 flex justify-end">
+            <button type="button" id="save-followup" class="btn border border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-green-600/30">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Examination Result -->
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[760px] border-collapse text-sm">
+          <thead>
+            <tr class="bg-black text-white">
+              <th colspan="2" class="border border-black px-3 py-2 text-left font-medium">Examination Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="w-56 border border-black px-3 py-2 font-medium">Laboratory</td>
+              <td class="border border-black p-1">
+                <textarea name="exam_laboratory" rows="2" class="field" placeholder="Enter laboratory result"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td class="border border-black px-3 py-2 font-medium">Diagnostics</td>
+              <td class="border border-black p-1">
+                <textarea name="exam_diagnostics" rows="2" class="field" placeholder="Enter diagnostics result"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td class="border border-black px-3 py-2 font-medium">Heart Station</td>
+              <td class="border border-black p-1">
+                <textarea name="exam_heart_station" rows="2" class="field" placeholder="Enter heart station result"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td class="border border-black px-3 py-2 font-medium">EEG</td>
+              <td class="border border-black p-1">
+                <textarea name="exam_eeg" rows="2" class="field" placeholder="Enter EEG result"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td class="border border-black px-3 py-2 font-medium">Pulmonology</td>
+              <td class="border border-black p-1">
+                <textarea name="exam_pulmonology" rows="2" class="field" placeholder="Enter pulmonology result"></textarea>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FORM 8: Progress Notes -->
+    <section data-step data-title="Progress Notes" class="hidden p-6">
+      <div class="border border-black">
+        <div class="bg-black px-3 py-1.5 text-base font-medium text-white">
+          Progress Notes (Subjective/Objective/Assessment)
+        </div>
+        <div>
+          <label for="progress_notes" class="sr-only">Progress Notes (Subjective/Objective/Assessment)</label>
+          <textarea id="progress_notes" name="progress_notes" rows="6"
+                    placeholder="Free Text"
+                    class="block w-full resize-y border-0 bg-white px-3 py-2 text-base text-gray-900 placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-600"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORM 9: Summary of Physician's Orders -->
+    <section data-step data-title="Order Summary" class="hidden p-6">
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[760px] border-collapse text-sm">
+          <thead>
+            <tr class="bg-black text-white">
+              <th colspan="2" class="border border-black px-3 py-1.5 text-left text-base font-medium">
+                Summary of Physician’s Orders
+              </th>
+            </tr>
+            <tr class="bg-white text-gray-900">
+              <th class="w-52 border border-black px-3 py-1.5 text-left text-base font-normal">Date and time</th>
+              <th class="border border-black px-3 py-1.5 text-left text-base font-normal">Physician’s Order</th>
+            </tr>
+          </thead>
+          <tbody id="doctor-order-summary"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Success -->
+    <section id="done" class="hidden p-10 text-center">
+      <p class="text-lg font-semibold text-gray-900">Patient saved</p>
+      <p class="mt-1 text-sm text-gray-600">The registration was saved in this browser.</p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <button type="button" id="again" class="btn bg-green-600 text-white hover:bg-green-700 focus:ring-green-600/50">Register another</button>
+        <a href="patients.html" class="btn border border-green-600 bg-white text-green-700 hover:bg-green-50 focus:ring-green-600/30">View patient list</a>
+        <a id="done-dashboard-link" href="dashboard.html" class="btn bg-emerald-700 text-white hover:bg-emerald-800 focus:ring-emerald-600/50">Open Doctor's Dashboard</a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <div id="footer" class="flex items-center justify-between border-t border-gray-200 bg-gray-50 px-6 py-4">
+      <button type="button" id="back" class="btn border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 focus:ring-green-600/30">Back</button>
+      <button type="button" id="next" class="btn bg-green-600 text-white hover:bg-green-700 focus:ring-green-600/50">Next</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('wizard');
+  const steps = [...form.querySelectorAll('[data-step]')];
+  const stepper = document.getElementById('stepper');
+  const back = document.getElementById('back');
+  const next = document.getElementById('next');
+  let current = 0;
+
+  // Stepper
+  steps.forEach((s, i) => {
+    const li = document.createElement('li');
+    li.className = 'flex items-center gap-2' + (i < steps.length - 1 ? ' flex-1' : '');
+    li.innerHTML =
+      `<span class="dot flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold"></span>
+       <span class="name text-sm font-medium"></span>
+       ${i < steps.length - 1 ? '<span class="bar h-px flex-1"></span>' : ''}`;
+    li.querySelector('.name').textContent = s.dataset.title;
+    li.classList.add('cursor-pointer');
+    li.setAttribute('role', 'button');
+    li.setAttribute('tabindex', '0');
+    li.setAttribute('aria-label', 'Go to ' + s.dataset.title);
+    li.addEventListener('click', () => goTo(i));
+    li.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goTo(i); }
+    });
+    stepper.appendChild(li);
+  });
+
+  // Jump to any step without validation
+  function goTo(i) {
+    current = i;
+    if (i === 2) {
+      const cc = document.getElementById('visit_cc');
+      if (!cc.value) cc.value = form.elements.chief_complaint.value;
+      syncGyn();
+    }
+    if (i === 4) {
+      const dx = document.getElementById('admitting_dx');
+      if (!dx.value) dx.value = form.elements.initial_diagnosis.value;
+    }
+    if (steps[i]?.dataset.title === 'Order Summary') {
+      renderDoctorOrderSummary();
+    }
+    render();
+  }
+
+  function render() {
+    steps.forEach((s, i) => s.classList.toggle('hidden', i !== current));
+    [...stepper.children].forEach((li, i) => {
+      const dot = li.querySelector('.dot'), name = li.querySelector('.name'), bar = li.querySelector('.bar');
+      const done = i < current, active = i === current;
+      dot.className = 'dot flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold ' +
+        (done ? 'border-green-600 bg-green-600 text-white'
+              : active ? 'border-green-600 bg-white text-green-700'
+                       : 'border-gray-300 bg-white text-gray-400');
+      dot.textContent = done ? '✓' : i + 1;
+      name.className = 'name text-sm font-medium ' + (active ? 'text-gray-900' : 'hidden md:inline ' + (done ? 'text-gray-700' : 'text-gray-400'));
+      if (bar) bar.className = 'bar h-px flex-1 ' + (done ? 'bg-green-600' : 'bg-gray-200');
+      li.setAttribute('aria-current', active ? 'step' : 'false');
+    });
+    back.classList.toggle('invisible', current === 0);
+    next.textContent = current === steps.length - 1 ? 'Save patient' : 'Next';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function validCurrent() {
+    for (const f of steps[current].querySelectorAll('input, select, textarea')) {
+      if (!f.checkValidity()) {
+        const p = f.closest('[data-panel]');
+        if (p) showTab(p.dataset.panel);
+        f.reportValidity();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function advance() {
+    if (!validCurrent()) return;
+    if (current < steps.length - 1) {
+      goTo(current + 1);
+      return;
+    }
+    // Steps may have been skipped via the stepper: check every step before saving
+    for (let i = 0; i < steps.length - 1; i++) {
+      const bad = [...steps[i].querySelectorAll('input, select, textarea')].find(f => !f.checkValidity());
+      if (bad) {
+        goTo(i);
+        const p = bad.closest('[data-panel]');
+        if (p) showTab(p.dataset.panel);
+        bad.reportValidity();
+        return;
+      }
+    }
+    // Final step: save the complete patient record in localStorage
+    const saved = savePatientToLocalStorage();
+    if (!saved) return;
+
+    steps.forEach(s => s.classList.add('hidden'));
+    stepper.classList.add('hidden');
+    document.getElementById('footer').classList.add('hidden');
+    document.getElementById('done').classList.remove('hidden');
+  }
+
+  next.addEventListener('click', advance);
+  back.addEventListener('click', () => { if (current > 0) { current--; render(); } });
+  form.addEventListener('submit', e => { e.preventDefault(); advance(); });
+
+  // Encounter rows
+  const encBody = document.getElementById('encounters');
+  const encEmpty = document.getElementById('enc-empty');
+  const cell = 'border border-black p-1';
+  const inp = 'block w-full rounded border border-transparent bg-white px-2 py-1.5 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/30';
+  const today = () => new Date().toISOString().split('T')[0];
+
+  function syncEmpty() { encEmpty.classList.toggle('hidden', encBody.children.length > 0); }
+
+  function addRow() {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="${cell}"><input type="date" data-k="date" required aria-label="Date" max="${today()}" class="${inp}"></td>
+      <td class="${cell}">
+        <select data-k="registry" required aria-label="Registry type" class="${inp}">
+          <option value="" disabled selected>Select</option>
+          <option value="IP">IP</option><option value="OP">OP</option><option value="ER">ER</option>
+        </select>
+      </td>
+      <td class="${cell}"><input type="text" data-k="service" required aria-label="Service" class="${inp}"></td>
+      <td class="${cell} text-center">
+        <a href="#" aria-label="Open patient's record" class="inline-block rounded bg-red-50 px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-100">Record</a>
+      </td>
+      <td class="${cell}"><input type="text" data-k="results" aria-label="Results" class="${inp}"></td>
+      <td class="${cell} text-center">
+        <button type="button" class="rm rounded px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500/30">Remove</button>
+      </td>`;
+    encBody.appendChild(tr);
+    syncEmpty();
+    tr.querySelector('input').focus();
+  }
+
+  function getEncounters() {
+    return [...encBody.children].map(tr => {
+      const o = {};
+      tr.querySelectorAll('[data-k]').forEach(el => o[el.dataset.k] = el.value);
+      return o;
+    });
+  }
+
+  document.getElementById('add-enc').addEventListener('click', addRow);
+  encBody.addEventListener('click', e => {
+    if (e.target.classList.contains('rm')) { e.target.closest('tr').remove(); syncEmpty(); }
+  });
+
+  // Medical history tabs
+  const tabs = [...document.querySelectorAll('[data-tab]')];
+  const panels = [...document.querySelectorAll('[data-panel]')];
+  let activeTab = 'present';
+
+  function showTab(id) {
+    activeTab = id;
+    tabs.forEach(t => {
+      const on = t.dataset.tab === id;
+      t.setAttribute('aria-selected', on);
+      ['font-semibold', 'ring-2', 'ring-inset', 'ring-black'].forEach(c => t.classList.toggle(c, on));
+    });
+    panels.forEach(p => p.classList.toggle('hidden', p.dataset.panel !== id));
+  }
+  tabs.forEach(t => t.addEventListener('click', () => { if (!t.disabled) showTab(t.dataset.tab); }));
+
+  // Gynecologic tab only applies to non-male patients
+  const gynTab = document.querySelector('[data-tab="gyn"]');
+  const gynNote = document.getElementById('gyn-note');
+  const isMale = () => form.elements.gender.value === 'Male';
+  function syncGyn() {
+    const male = isMale();
+    gynTab.disabled = male;
+    ['opacity-40', 'cursor-not-allowed'].forEach(c => gynTab.classList.toggle(c, male));
+    if (gynNote) gynNote.classList.toggle('hidden', !male);
+    if (male && activeTab === 'gyn') showTab('present');
+  }
+  form.elements.gender.addEventListener('change', syncGyn);
+
+  // OB history rows
+  const obBody = document.getElementById('ob-rows');
+  const obEmpty = document.getElementById('ob-empty');
+  function syncOb() { if (obEmpty && obBody) obEmpty.classList.toggle('hidden', obBody.children.length > 0); }
+
+  function addObRow() {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="${cell}"><input type="number" data-k="year" min="1950" max="${new Date().getFullYear()}" required aria-label="Year" class="${inp}"></td>
+      <td class="${cell}">
+        <select data-k="delivery" required aria-label="Delivery type" class="${inp}">
+          <option value="" disabled selected>Select</option>
+          <option value="NSD">NSD</option><option value="CS">CS</option><option value="Assisted">Assisted</option>
+        </select>
+      </td>
+      <td class="${cell}">
+        <select data-k="outcome" required aria-label="Outcome" class="${inp}">
+          <option value="" disabled selected>Select</option>
+          <option value="Live birth">Live birth</option><option value="Stillbirth">Stillbirth</option>
+          <option value="Miscarriage">Miscarriage</option><option value="Abortion">Abortion</option>
+        </select>
+      </td>
+      <td class="${cell}"><input type="text" data-k="complications" aria-label="Complications" class="${inp}"></td>
+      <td class="${cell} text-center">
+        <button type="button" class="rm rounded px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500/30">Remove</button>
+      </td>`;
+    obBody.appendChild(tr);
+    syncOb();
+    tr.querySelector('input').focus();
+  }
+  document.getElementById('add-ob')?.addEventListener('click', addObRow);
+  obBody?.addEventListener('click', e => {
+    if (e.target.classList.contains('rm')) { e.target.closest('tr').remove(); syncOb(); }
+  });
+
+  // Pertinent findings checklists (modelled on PhilHealth CF4; verify against your existing UI)
+  const SIGNS = [
+    'Altered mental sensorium', 'Abdominal cramp/pain', 'Anorexia', 'Bleeding gums', 'Body weakness',
+    'Blurring of vision', 'Chest pain/discomfort', 'Constipation', 'Cough', 'Diarrhea', 'Dizziness',
+    'Dysphagia', 'Dyspnea', 'Dysuria', 'Epistaxis', 'Fever', 'Frequency of urination', 'Headache',
+    'Hematemesis', 'Hematuria', 'Hematochezia', 'Irritability/Restlessness', 'Jaundice',
+    'Lower extremity edema', 'Myalgia', 'Orthopnea', ['Pain', 'sx_pain_site'], 'Palpitations',
+    'Seizures', 'Skin rashes', 'Stool, bloody/black tarry/mucoid', 'Sweating', 'Urgency', 'Vomiting',
+    'Weight loss', ['Others', 'sx_others']
+  ];
+
+  const PE = {
+    'HEENT': ['Abnormal pupillary reaction', 'Cervical lymphadenopathy', 'Dry mucous membrane', 'Icteric sclerae',
+              'Pale conjunctivae', 'Sunken eyeballs', 'Sunken fontanelle'],
+    'Chest/Lungs': ['Alar flaring', 'Asymmetrical chest expansion', 'Decreased breath sounds', 'Wheezes',
+                    'Lump/mass', 'Rales/crackles/rhonchi', 'Intercostal rib/subcostal retraction', 'Stridor'],
+    'Cardiovascular': ['Irregular rhythm', 'Displaced apex beat', 'Heaves/thrills', 'Murmur', 'Pericardial bulge'],
+    'Abdomen': ['Abdominal rigidity', 'Abdominal tenderness', 'Hyperactive bowel sounds', 'Palpable mass',
+                'Tympanitic/dull abdomen', 'Uterine contraction'],
+    'Skin/Extremities': ['Clubbing', 'Cold clammy skin', 'Cyanosis/mottled skin', 'Edema/swelling',
+                         'Decreased mobility', 'Pale nailbeds', 'Poor skin turgor', 'Rashes/petechiae', 'Weak pulses'],
+    'Neurologic': ['Abnormal gait', 'Abnormal position sense', 'Abnormal/decreased sensation', 'Abnormal reflex(es)',
+                   'Poor/altered memory', 'Poor muscle tone/strength', 'Poor coordination']
+  };
+
+  function buildChecks(el, name, items) {
+    items.forEach(it => {
+      const [label, key] = Array.isArray(it) ? it : [it, null];
+      const wrap = document.createElement('div');
+      wrap.className = 'flex items-center gap-2 text-sm';
+      const lab = document.createElement('label');
+      lab.className = 'inline-flex items-center gap-2';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.name = name + '[]'; cb.value = label;
+      cb.className = 'h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-600';
+      lab.append(cb, document.createTextNode(label));
+      wrap.append(lab);
+      if (key) {
+        const t = document.createElement('input');
+        t.type = 'text'; t.name = key; t.disabled = true; t.dataset.note = '';
+        t.placeholder = label === 'Pain' ? 'Site' : 'Specify';
+        t.setAttribute('aria-label', label + ' details');
+        t.className = 'field min-w-0 flex-1 !py-1';
+        cb.addEventListener('change', () => {
+          t.disabled = !cb.checked; t.required = cb.checked;
+          if (!cb.checked) t.value = '';
+        });
+        wrap.append(t);
+      }
+      el.append(wrap);
+    });
+  }
+
+  if (document.getElementById('sx-list')) buildChecks(document.getElementById('sx-list'), 'sx', SIGNS);
+  if (document.getElementById('pe-groups')) Object.entries(PE).forEach(([group, items]) => {
+    const slug = group.toLowerCase().replace(/[^a-z]+/g, '_');
+    const box = document.createElement('div');
+    box.className = 'rounded border border-gray-300 p-3';
+    const h = document.createElement('p');
+    h.className = 'mb-2 text-sm font-semibold text-gray-900';
+    h.textContent = group;
+    const list = document.createElement('div');
+    list.className = 'flex flex-col gap-1.5';
+    box.append(h, list);
+    document.getElementById('pe-groups').append(box);
+    buildChecks(list, 'pe_' + slug, [...items, ['Others', 'pe_' + slug + '_others']]);
+  });
+
+  // Doctor's orders: each category can hold many entries, each with an "other details" field
+  const ORDERS = [
+    { key: 'plans',       title: 'Plans',         one: 'plan',          by: 'Nurse to carry out' },
+    { key: 'diet',        title: 'Diet',          one: 'diet order',    by: 'Nurse to carry out' },
+    { key: 'iv',          title: 'IV',            one: 'IV order',      by: 'Nurse to carry out' },
+    { key: 'labs',        title: 'Labs',          ui: true,             by: 'Physician to automatic tag' },
+    { key: 'diagnostics', title: 'Diagnostics',   ui: true,             by: 'Physician to automatic tag' },
+    { key: 'medications', title: 'Medications',   one: 'medication',    by: 'Nurse to tag &amp; carry out', note: 'See medication template (last page)' },
+    { key: 'special',     title: 'Special orders',one: 'special order', by: 'Nurse to carry out' },
+    { key: 'procedures',  title: 'Procedures',    one: 'procedure',     by: 'Nurse to carry out' }
+  ];
+  const ordersEl = document.getElementById('orders');
+  const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+
+  function renumberOrders(list) {
+    [...list.children].forEach((e, i) => e.querySelector('.n').textContent = cap(list.dataset.one) + ' ' + (i + 1));
+  }
+  function addOrderEntry(list) {
+    const d = document.createElement('div');
+    d.className = 'space-y-2 rounded border border-gray-300 p-2';
+    d.dataset.createdAt = '';
+    d.innerHTML = `
+      <div class="flex items-center justify-between">
+        <span class="n text-xs font-semibold text-gray-600"></span>
+        <button type="button" class="rm-ord rounded px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500/30">Remove</button>
+      </div>
+      <textarea data-k="text" rows="2" aria-label="${list.dataset.one}" class="field"></textarea>`;
+
+    const textarea = d.querySelector('[data-k="text"]');
+    textarea.addEventListener('input', () => {
+      if (textarea.value.trim() && !d.dataset.createdAt) {
+        d.dataset.createdAt = new Date().toISOString();
+      }
+      if (!textarea.value.trim()) d.dataset.createdAt = '';
+      renderDoctorOrderSummary();
+    });
+
+    list.appendChild(d);
+    renumberOrders(list);
+    return d;
+  }
+  function buildOrders() {
+    ordersEl.innerHTML = '';
+    ORDERS.forEach(o => {
+      const row = document.createElement('div');
+      row.className = 'grid grid-cols-1 gap-2 p-3 md:grid-cols-[9rem_1fr_11rem]';
+      const mid = o.ui
+        ? '<p class="rounded border border-dashed border-gray-300 px-3 py-2 text-sm text-gray-500">Existing UI</p>'
+        : `<div data-order-list="${o.key}" data-one="${o.one}" class="space-y-2"></div>
+           <button type="button" data-add="${o.key}" class="btn mt-2 border border-green-600 bg-white text-green-700 hover:bg-green-50 focus:ring-green-600/30">Add ${o.one}</button>
+           ${o.note ? `<p class="mt-1 text-xs text-gray-500">${o.note}</p>` : ''}`;
+      row.innerHTML = `<span class="text-sm font-medium text-gray-900">${o.title}</span><div>${mid}</div><p class="text-sm text-gray-600">${o.by}</p>`;
+      ordersEl.appendChild(row);
+      if (!o.ui) addOrderEntry(row.querySelector('[data-order-list]'));
+    });
+  }
+  ordersEl.addEventListener('click', e => {
+    const add = e.target.closest('[data-add]');
+    if (add) {
+      const list = ordersEl.querySelector(`[data-order-list="${add.dataset.add}"]`);
+      addOrderEntry(list).querySelector('textarea').focus();
+      return;
+    }
+    const rm = e.target.closest('.rm-ord');
+    if (rm) {
+      const entry = rm.closest('.space-y-2'), list = entry.parentElement;
+      entry.remove();
+      renumberOrders(list);
+      renderDoctorOrderSummary();
+    }
+  });
+  function collectOrders() {
+    const out = {};
+    ORDERS.filter(o => !o.ui).forEach(o => {
+      out[o.key] = [...ordersEl.querySelectorAll(`[data-order-list="${o.key}"] > div`)]
+        .map(d => ({
+          text: d.querySelector('[data-k="text"]')?.value.trim() || '',
+          dateTime: d.dataset.createdAt || ''
+        }))
+        .filter(x => x.text);
+    });
+    return out;
+  }
+
+  function formatOrderDateTime(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    return new Intl.DateTimeFormat('en-PH', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: 'numeric',
+      minute: '2-digit'
+    }).format(d);
+  }
+
+  function joinNatural(items) {
+    const clean = items.map(x => x.trim()).filter(Boolean);
+    if (clean.length === 0) return '';
+    if (clean.length === 1) return clean[0];
+    if (clean.length === 2) return clean[0] + ' and ' + clean[1];
+    return clean.slice(0, -1).join(', ') + ', and ' + clean[clean.length - 1];
+  }
+
+  function getDoctorOrderSummaryRows() {
+    const grouped = {};
+    let firstDateTime = '';
+
+    ORDERS.filter(o => !o.ui).forEach(o => {
+      const list = ordersEl.querySelector(`[data-order-list="${o.key}"]`);
+      if (!list) return;
+
+      [...list.children].forEach((entry, idx) => {
+        const text = entry.querySelector('[data-k="text"]')?.value.trim() || '';
+        if (!text) return;
+
+        if (!entry.dataset.createdAt) entry.dataset.createdAt = new Date().toISOString();
+
+        rows.push({
+          dateTime: entry.dataset.createdAt,
+          text: text
+        });
+      });
+    });
+
+    return rows;
+  }
+
+  function renderDoctorOrderSummary() {
+    const body = document.getElementById('doctor-order-summary');
+    if (!body) return;
+
+    const rows = getDoctorOrderSummaryRows();
+    body.innerHTML = '';
+
+    if (!rows.length) {
+      body.innerHTML = `
+        <tr>
+          <td class="h-10 border border-black px-3 py-2 text-gray-500"></td>
+          <td class="h-10 border border-black px-3 py-2 text-gray-500">No physician's orders entered yet.</td>
+        </tr>`;
+      return;
+    }
+
+    // Sort chronologically
+    rows.sort((a, b) => {
+      const ta = new Date(a.dateTime).getTime() || 0;
+      const tb = new Date(b.dateTime).getTime() || 0;
+      return ta - tb;
+    });
+
+    // Group by formatted Date/Time
+    const timeGroups = [];
+    rows.forEach(row => {
+      const formattedDate = formatOrderDateTime(row.dateTime);
+      row.formattedDate = formattedDate;
+      const lastGroup = timeGroups[timeGroups.length - 1];
+      if (lastGroup && lastGroup.formattedDate === formattedDate) {
+        lastGroup.rows.push(row);
+      } else {
+        timeGroups.push({
+          formattedDate,
+          rows: [row]
+        });
+      }
+    });
+
+    timeGroups.forEach(group => {
+      group.rows.forEach((row, rIdx) => {
+        const tr = document.createElement('tr');
+        if (rIdx === 0) {
+          const dt = document.createElement('td');
+          dt.className = 'w-52 border border-black px-3 py-2.5 align-middle text-xs font-medium text-emerald-800';
+          if (group.rows.length > 1) dt.rowSpan = group.rows.length;
+          dt.textContent = group.formattedDate;
+          tr.appendChild(dt);
+        }
+        const entry = document.createElement('td');
+        entry.className = 'border border-black px-3 py-2.5 align-top text-xs leading-5';
+        entry.textContent = row.text;
+        tr.appendChild(entry);
+        body.appendChild(tr);
+      });
+    });
+  }
+
+  buildOrders();
+  renderDoctorOrderSummary();
+
+  // Final payload
+  function rowsOf(tbody) {
+    return [...tbody.children].map(tr => {
+      const o = {};
+      tr.querySelectorAll('[data-k]').forEach(el => o[el.dataset.k] = el.value);
+      return o;
+    });
+  }
+  function buildPayload() {
+    const fd = new FormData(form);
+    const data = {};
+    for (const k of new Set(fd.keys())) {
+      const v = fd.getAll(k);
+      // names ending in [] are checkbox groups -> arrays
+      if (k.endsWith('[]')) data[k.slice(0, -2)] = v; else data[k] = v[0];
+    }
+    const male = isMale();
+    if (male) Object.keys(data).filter(k => k.startsWith('gyn_')).forEach(k => delete data[k]);
+    return {
+      ...data,
+      orders: collectOrders(),
+      doctorOrderSummary: getDoctorOrderSummaryRows(),
+      encounters: rowsOf(encBody),
+      obHistory: (male || !obBody) ? [] : rowsOf(obBody)
+    };
+  }
+
+  // Age from birthdate
+  const birthdate = document.getElementById('birthdate');
+  const age = document.getElementById('age');
+  function updateAge() {
+    if (!birthdate.value) { age.value = ''; return; }
+    const dob = new Date(birthdate.value), t = new Date();
+    let y = t.getFullYear() - dob.getFullYear();
+    const m = t.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && t.getDate() < dob.getDate())) y--;
+    age.value = y >= 0 ? y + ' years' : '';
+  }
+  birthdate.max = today();
+  birthdate.addEventListener('input', updateAge);
+
+  // Follow up UI behavior
+  const followUpRadios = [...document.querySelectorAll('input[name="follow_up_needed"]')];
+  const followUpDate = document.getElementById('follow_up_date');
+  const followUpReason = document.getElementById('follow_up_reason');
+  function syncFollowUp() {
+    const selected = form.querySelector('input[name="follow_up_needed"]:checked')?.value || '';
+    const enabled = selected === 'Yes';
+    [followUpDate, followUpReason].forEach(el => {
+      if (!el) return;
+      el.disabled = !enabled;
+      el.required = enabled;
+      if (!enabled) el.value = '';
+      el.classList.toggle('!bg-gray-100', !enabled);
+      el.classList.toggle('!text-gray-500', !enabled);
+      el.classList.toggle('cursor-not-allowed', !enabled);
+    });
+  }
+  followUpRadios.forEach(r => r.addEventListener('change', syncFollowUp));
+
+  document.getElementById('save-disposition')?.addEventListener('click', () => {
+    const picked = form.querySelector('input[name="disposition"]:checked')?.value;
+    if (!picked) { alert('Please select a disposition first.'); return; }
+    alert('Disposition saved locally: ' + picked);
+  });
+
+  document.getElementById('save-followup')?.addEventListener('click', () => {
+    const selected = form.querySelector('input[name="follow_up_needed"]:checked')?.value;
+    if (!selected) { alert('Please choose whether follow up is needed.'); return; }
+    if (selected === 'Yes' && (!followUpDate.value || !followUpReason.value.trim())) {
+      alert('Please complete the follow up date and reason.');
+      return;
+    }
+    alert('Follow up saved locally.');
+  });
+
+  // -----------------------------------------------------------------
+  // Local browser storage
+  // -----------------------------------------------------------------
+  const PATIENTS_STORAGE_KEY = 'clmmrh_patients_v1';
+  const DRAFT_STORAGE_KEY = 'clmmrh_patient_draft_v1';
+
+  function safeParse(value, fallback) {
+    try {
+      const parsed = JSON.parse(value);
+      return parsed ?? fallback;
+    } catch (_) {
+      return fallback;
+    }
+  }
+
+  function getStoredPatients() {
+    const records = safeParse(localStorage.getItem(PATIENTS_STORAGE_KEY), []);
+    return Array.isArray(records) ? records : [];
+  }
+
+  function getRecordId(payload) {
+    if (payload.hrn) return 'hrn_' + String(payload.hrn).trim();
+    if (window.crypto?.randomUUID) return crypto.randomUUID();
+    return 'patient_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+  }
+
+  function savePatientToLocalStorage() {
+    try {
+      renderDoctorOrderSummary();
+
+      const payload = buildPayload();
+      const records = getStoredPatients();
+      const now = new Date().toISOString();
+      const hrn = String(payload.hrn || '').trim();
+
+      let index = -1;
+      if (hrn) {
+        index = records.findIndex(record => String(record?.data?.hrn || '').trim() === hrn);
+      }
+
+      const previous = index >= 0 ? records[index] : null;
+      const record = {
+        id: previous?.id || getRecordId(payload),
+        createdAt: previous?.createdAt || now,
+        updatedAt: now,
+        data: payload
+      };
+
+      if (index >= 0) records[index] = record;
+      else records.unshift(record);
+
+      localStorage.setItem(PATIENTS_STORAGE_KEY, JSON.stringify(records));
+      localStorage.removeItem(DRAFT_STORAGE_KEY);
+      const doneDash = document.getElementById('done-dashboard-link');
+      if (doneDash) {
+        doneDash.href = `dashboard.html?patient=${encodeURIComponent(record.id)}`;
+      }
+      console.log('Patient saved to localStorage:', record);
+      return true;
+    } catch (error) {
+      console.error(error);
+      alert('Unable to save the patient in browser storage.');
+      return false;
+    }
+  }
+
+  function saveDraftToLocalStorage() {
+    try {
+      const draft = {
+        currentStep: current,
+        updatedAt: new Date().toISOString(),
+        data: buildPayload()
+      };
+      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
+    } catch (error) {
+      console.warn('Draft could not be saved:', error);
+    }
+  }
+
+  function setFieldValue(el, value) {
+    if (!el) return;
+
+    if (el.type === 'radio') {
+      el.checked = String(el.value) === String(value);
+      return;
+    }
+
+    if (el.type === 'checkbox') {
+      const list = Array.isArray(value) ? value.map(String) : [String(value ?? '')];
+      el.checked = list.includes(String(el.value));
+      return;
+    }
+
+    el.value = value ?? '';
+  }
+
+  function restoreNamedFields(data) {
+    [...form.elements].forEach(el => {
+      if (!el.name || el.dataset.k) return;
+
+      const key = el.name.endsWith('[]') ? el.name.slice(0, -2) : el.name;
+      if (!(key in data)) return;
+
+      setFieldValue(el, data[key]);
+    });
+  }
+
+  function restoreEncounters(rows) {
+    encBody.innerHTML = '';
+    (Array.isArray(rows) ? rows : []).forEach(row => {
+      addRow();
+      const tr = encBody.lastElementChild;
+      tr.querySelectorAll('[data-k]').forEach(el => {
+        if (row && el.dataset.k in row) el.value = row[el.dataset.k] ?? '';
+      });
+    });
+    syncEmpty();
+  }
+
+  function restoreObHistory(rows) {
+    if (!obBody) return;
+    obBody.innerHTML = '';
+
+    (Array.isArray(rows) ? rows : []).forEach(row => {
+      addObRow();
+      const tr = obBody.lastElementChild;
+      tr.querySelectorAll('[data-k]').forEach(el => {
+        if (row && el.dataset.k in row) el.value = row[el.dataset.k] ?? '';
+      });
+    });
+    syncOb();
+  }
+
+  function restoreOrders(orders) {
+    buildOrders();
+
+    ORDERS.filter(o => !o.ui).forEach(o => {
+      const list = ordersEl.querySelector(`[data-order-list="${o.key}"]`);
+      if (!list) return;
+
+      list.innerHTML = '';
+      const savedEntries = Array.isArray(orders?.[o.key]) ? orders[o.key] : [];
+
+      if (!savedEntries.length) {
+        addOrderEntry(list);
+        return;
+      }
+
+      savedEntries.forEach(saved => {
+        const entry = addOrderEntry(list);
+        const textarea = entry.querySelector('[data-k="text"]');
+        textarea.value = saved?.text || '';
+        entry.dataset.createdAt = saved?.dateTime || '';
+      });
+    });
+
+    renderDoctorOrderSummary();
+  }
+
+  function restoreDraftFromLocalStorage() {
+    const draft = safeParse(localStorage.getItem(DRAFT_STORAGE_KEY), null);
+    if (!draft?.data) return;
+
+    const data = draft.data;
+
+    // Restore ordinary form controls first.
+    restoreNamedFields(data);
+
+    // Restore the dynamically-created portions.
+    restoreEncounters(data.encounters);
+    restoreObHistory(data.obHistory);
+    restoreOrders(data.orders);
+
+    updateAge();
+    syncGyn();
+    showTab('present');
+    syncFollowUp();
+    renderDoctorOrderSummary();
+
+    const targetStep = Number.isInteger(draft.currentStep)
+      ? Math.max(0, Math.min(draft.currentStep, steps.length - 1))
+      : 0;
+
+    current = targetStep;
+  }
+
+  // Auto-save the current form as a draft while the user is typing.
+  let draftTimer;
+  function scheduleDraftSave() {
+    clearTimeout(draftTimer);
+    draftTimer = setTimeout(saveDraftToLocalStorage, 150);
+  }
+
+  form.addEventListener('input', scheduleDraftSave);
+  form.addEventListener('change', scheduleDraftSave);
+  ordersEl.addEventListener('click', () => setTimeout(saveDraftToLocalStorage, 0));
+  encBody.addEventListener('click', () => setTimeout(saveDraftToLocalStorage, 0));
+  document.getElementById('add-enc')?.addEventListener('click', () => setTimeout(saveDraftToLocalStorage, 0));
+  document.getElementById('add-ob')?.addEventListener('click', () => setTimeout(saveDraftToLocalStorage, 0));
+
+  // Reset for a new patient
+  document.getElementById('again').addEventListener('click', () => {
+    localStorage.removeItem(DRAFT_STORAGE_KEY);
+    form.reset(); current = 0;
+    encBody.innerHTML = ''; syncEmpty(); updateAge();
+    if (obBody) obBody.innerHTML = ''; syncOb(); syncGyn(); showTab('present'); buildOrders();
+    syncFollowUp();
+    document.querySelectorAll('[data-note]').forEach(n => { n.disabled = true; n.required = false; });
+    document.getElementById('done').classList.add('hidden');
+    stepper.classList.remove('hidden');
+    document.getElementById('footer').classList.remove('hidden');
+    render();
+  });
+
+  syncEmpty();
+  syncOb();
+  showTab('present');
+  syncFollowUp();
+  restoreDraftFromLocalStorage();
+  render();
+</script>
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patient List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: #f3f4f6; }
+    .modal-open { overflow: hidden; }
+  </style>
+</head>
+<body class="min-h-screen text-gray-900">
+
+  <main class="mx-auto max-w-7xl p-4 md:p-8">
+    <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold">Patient List</h1>
+        <p class="text-sm text-gray-500">Patients saved in this browser using localStorage.</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <a href="dashboard.html"
+           class="inline-flex items-center justify-center rounded border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+          ← Doctor's Dashboard
+        </a>
+        <a href="forms_localstorage.html"
+           class="inline-flex items-center justify-center rounded bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700">
+          + Register Patient
+        </a>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+      <div class="flex flex-col gap-3 border-b border-gray-200 p-4 md:flex-row md:items-center md:justify-between">
+        <div class="relative w-full md:max-w-md">
+          <input id="search" type="search"
+                 placeholder="Search HRN, patient name, case number..."
+                 class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20">
+        </div>
+        <p id="count" class="text-sm text-gray-500"></p>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[900px] border-collapse text-sm">
+          <thead class="bg-gray-50">
+            <tr class="text-left">
+              <th class="border-b px-4 py-3 font-semibold">HRN</th>
+              <th class="border-b px-4 py-3 font-semibold">Patient Name</th>
+              <th class="border-b px-4 py-3 font-semibold">Case No.</th>
+              <th class="border-b px-4 py-3 font-semibold">Case Type</th>
+              <th class="border-b px-4 py-3 font-semibold">Gender</th>
+              <th class="border-b px-4 py-3 font-semibold">Last Saved</th>
+              <th class="border-b px-4 py-3 text-right font-semibold">Action</th>
+            </tr>
+          </thead>
+          <tbody id="patient-rows"></tbody>
+        </table>
+      </div>
+
+      <div id="empty" class="hidden px-6 py-16 text-center">
+        <p class="font-medium text-gray-700">No patients found.</p>
+        <p class="mt-1 text-sm text-gray-500">Register a patient first, then the record will appear here.</p>
+      </div>
+    </div>
+  </main>
+
+  <div id="modal" class="fixed inset-0 z-50 hidden bg-black/50 p-3 md:p-8" aria-hidden="true">
+    <div class="mx-auto flex max-h-full max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow-xl">
+      <div class="flex items-center justify-between border-b px-5 py-4">
+        <div>
+          <h2 id="modal-title" class="text-xl font-bold">Patient Record</h2>
+          <p id="modal-subtitle" class="text-sm text-gray-500"></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a id="modal-dashboard-link" href="dashboard.html"
+             class="rounded border border-emerald-600 bg-white px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-50">
+            Open in Dashboard
+          </a>
+          <a id="modal-orders-link" href="doctors_order_patient.html"
+             class="rounded bg-green-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-700">
+            Order Sheet
+          </a>
+          <button id="close-modal" type="button"
+                  class="rounded px-3 py-2 text-xl leading-none text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+                  aria-label="Close">×</button>
+        </div>
+      </div>
+
+      <div id="patient-view" class="overflow-y-auto p-5"></div>
+    </div>
+  </div>
+
+<script>
+  const STORAGE_KEY = 'clmmrh_patients_v1';
+  const rowsEl = document.getElementById('patient-rows');
+  const emptyEl = document.getElementById('empty');
+  const searchEl = document.getElementById('search');
+  const countEl = document.getElementById('count');
+  const modal = document.getElementById('modal');
+  const patientView = document.getElementById('patient-view');
+  const modalTitle = document.getElementById('modal-title');
+  const modalSubtitle = document.getElementById('modal-subtitle');
+
+  function safeParse(value, fallback) {
+    try {
+      const parsed = JSON.parse(value);
+      return parsed ?? fallback;
+    } catch (_) {
+      return fallback;
+    }
+  }
+
+  function getPatients() {
+    const records = safeParse(localStorage.getItem(STORAGE_KEY), []);
+    return Array.isArray(records) ? records : [];
+  }
+
+  function esc(value) {
+    return String(value ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
+  function patientName(data) {
+    const last = String(data.last_name || '').trim();
+    const first = String(data.first_name || '').trim();
+    const middle = String(data.middle_name || '').trim();
+    const given = [first, middle].filter(Boolean).join(' ');
+    return [last, given].filter(Boolean).join(', ');
+  }
+
+  function formatDateTime(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return new Intl.DateTimeFormat('en-PH', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: 'numeric',
+      minute: '2-digit'
+    }).format(d);
+  }
+
+  function formatValue(value) {
+    if (Array.isArray(value)) return value.length ? value.join(', ') : '—';
+    if (value === null || value === undefined || value === '') return '—';
+    return String(value);
+  }
+
+  function labelize(key) {
+    return key
+      .replaceAll('_', ' ')
+      .replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function detailRows(entries) {
+    return entries.map(([label, value]) => `
+      <div class="grid grid-cols-1 gap-1 border-b border-gray-100 py-2 sm:grid-cols-[12rem_1fr]">
+        <dt class="text-sm font-medium text-gray-500">${esc(label)}</dt>
+        <dd class="whitespace-pre-wrap text-sm text-gray-900">${esc(formatValue(value))}</dd>
+      </div>
+    `).join('');
+  }
+
+  function section(title, body) {
+    return `
+      <section class="overflow-hidden rounded border border-gray-200">
+        <h3 class="bg-black px-4 py-2 text-sm font-semibold text-white">${esc(title)}</h3>
+        <div class="p-4">${body}</div>
+      </section>
+    `;
+  }
+
+  function renderOrders(orders) {
+    if (!orders || typeof orders !== 'object') return '<p class="text-sm text-gray-500">No physician’s orders.</p>';
+
+    const groups = Object.entries(orders)
+      .map(([key, items]) => {
+        const values = Array.isArray(items) ? items.filter(x => x?.text) : [];
+        if (!values.length) return '';
+
+        return `
+          <div class="border-b border-gray-100 py-2 last:border-b-0">
+            <p class="text-sm font-semibold">${esc(labelize(key))}</p>
+            <ul class="mt-1 list-disc space-y-1 pl-5 text-sm">
+              ${values.map(item => `<li>${esc(item.text)}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      })
+      .filter(Boolean)
+      .join('');
+
+    return groups || '<p class="text-sm text-gray-500">No physician’s orders.</p>';
+  }
+
+  function renderEncounters(encounters) {
+    if (!Array.isArray(encounters) || !encounters.length) {
+      return '<p class="text-sm text-gray-500">No encounter entries.</p>';
+    }
+
+    return `
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[650px] border-collapse text-sm">
+          <thead>
+            <tr class="bg-gray-50">
+              <th class="border px-3 py-2 text-left">Date</th>
+              <th class="border px-3 py-2 text-left">Registry</th>
+              <th class="border px-3 py-2 text-left">Service</th>
+              <th class="border px-3 py-2 text-left">Results</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${encounters.map(row => `
+              <tr>
+                <td class="border px-3 py-2">${esc(row.date || '')}</td>
+                <td class="border px-3 py-2">${esc(row.registry || '')}</td>
+                <td class="border px-3 py-2">${esc(row.service || '')}</td>
+                <td class="border px-3 py-2">${esc(row.results || '')}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderObHistory(rows) {
+    if (!Array.isArray(rows) || !rows.length) {
+      return '<p class="text-sm text-gray-500">No OB history entries.</p>';
+    }
+
+    return `
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[650px] border-collapse text-sm">
+          <thead>
+            <tr class="bg-gray-50">
+              <th class="border px-3 py-2 text-left">Year</th>
+              <th class="border px-3 py-2 text-left">Delivery</th>
+              <th class="border px-3 py-2 text-left">Outcome</th>
+              <th class="border px-3 py-2 text-left">Complications</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(row => `
+              <tr>
+                <td class="border px-3 py-2">${esc(row.year || '')}</td>
+                <td class="border px-3 py-2">${esc(row.delivery || '')}</td>
+                <td class="border px-3 py-2">${esc(row.outcome || '')}</td>
+                <td class="border px-3 py-2">${esc(row.complications || '')}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderPatient(record) {
+    const d = record.data || {};
+    const genericSkip = new Set([
+      'orders', 'doctorOrderSummary', 'encounters', 'obHistory',
+      'last_name', 'first_name', 'middle_name', 'hrn', 'case_no',
+      'case_type', 'birthdate', 'gender', 'address'
+    ]);
+
+    const otherEntries = Object.entries(d)
+      .filter(([key, value]) => !genericSkip.has(key))
+      .filter(([_, value]) => {
+        if (Array.isArray(value)) return value.length;
+        return value !== '' && value !== null && value !== undefined;
+      })
+      .map(([key, value]) => [labelize(key), value]);
+
+    const summary = Array.isArray(d.doctorOrderSummary) && d.doctorOrderSummary[0]
+      ? d.doctorOrderSummary[0]
+      : null;
+
+    patientView.innerHTML = `
+      <div class="space-y-5">
+        ${section('Patient Information', detailRows([
+          ['HRN', d.hrn],
+          ['Case No.', d.case_no],
+          ['Case Type', d.case_type],
+          ['Name', patientName(d)],
+          ['Birthdate', d.birthdate],
+          ['Gender', d.gender],
+          ['Address', d.address]
+        ]))}
+
+        ${section('Patient Encounter', renderEncounters(d.encounters))}
+
+        ${Array.isArray(d.obHistory) && d.obHistory.length
+          ? section('OB History', renderObHistory(d.obHistory))
+          : ''}
+
+        ${section('Clinical / Other Information',
+          otherEntries.length ? detailRows(otherEntries) : '<p class="text-sm text-gray-500">No additional information.</p>'
+        )}
+
+        ${section('Physician’s Orders', renderOrders(d.orders))}
+
+        ${section('Summary of Physician’s Orders',
+          summary
+            ? detailRows([
+                ['Date and time', formatDateTime(summary.dateTime)],
+                ['Physician’s Order', summary.text]
+              ])
+            : '<p class="text-sm text-gray-500">No summary available.</p>'
+        )}
+      </div>
+    `;
+
+    modalTitle.textContent = patientName(d) || 'Patient Record';
+    modalSubtitle.textContent = d.hrn ? 'HRN: ' + d.hrn : '';
+  }
+
+  function openPatient(id) {
+    const record = getPatients().find(x => x.id === id);
+    if (!record) return;
+
+    renderPatient(record);
+    const dashLink = document.getElementById('modal-dashboard-link');
+    const ordersLink = document.getElementById('modal-orders-link');
+    if (dashLink) dashLink.href = `dashboard.html?patient=${encodeURIComponent(record.id)}`;
+    if (ordersLink) ordersLink.href = `doctors_order_patient.html?patient=${encodeURIComponent(record.id)}`;
+
+    modal.classList.remove('hidden');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+  }
+
+  function closeModal() {
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+  }
+
+  function renderList() {
+    const all = getPatients().sort((a, b) =>
+      String(b.updatedAt || '').localeCompare(String(a.updatedAt || ''))
+    );
+
+    const q = searchEl.value.trim().toLowerCase();
+    const filtered = !q ? all : all.filter(record => {
+      const d = record.data || {};
+      const haystack = [
+        d.hrn,
+        d.case_no,
+        d.case_type,
+        d.last_name,
+        d.first_name,
+        d.middle_name,
+        d.gender,
+        d.address
+      ].filter(Boolean).join(' ').toLowerCase();
+
+      return haystack.includes(q);
+    });
+
+    rowsEl.innerHTML = filtered.map(record => {
+      const d = record.data || {};
+      return `
+        <tr class="hover:bg-gray-50">
+          <td class="border-b px-4 py-3 font-mono">${esc(d.hrn || '')}</td>
+          <td class="border-b px-4 py-3 font-medium">${esc(patientName(d))}</td>
+          <td class="border-b px-4 py-3">${esc(d.case_no || '')}</td>
+          <td class="border-b px-4 py-3">${esc(d.case_type || '')}</td>
+          <td class="border-b px-4 py-3">${esc(d.gender || '')}</td>
+          <td class="border-b px-4 py-3">${esc(formatDateTime(record.updatedAt))}</td>
+          <td class="border-b px-4 py-3 text-right">
+            <div class="flex justify-end gap-2">
+              <button type="button"
+                      data-view="${esc(record.id)}"
+                      class="rounded border border-gray-300 bg-white px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                View
+              </button>
+              <a href="dashboard.html?patient=${encodeURIComponent(record.id)}"
+                 class="rounded border border-emerald-600 bg-white px-3 py-1.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">
+                Doctor's Dashboard
+              </a>
+              <a href="doctors_order_patient.html?patient=${encodeURIComponent(record.id)}"
+                 class="rounded bg-green-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-green-700">
+                Physician Order Sheet
+              </a>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    emptyEl.classList.toggle('hidden', filtered.length > 0);
+    countEl.textContent = `${filtered.length} patient${filtered.length === 1 ? '' : 's'}`;
+  }
+
+  searchEl.addEventListener('input', renderList);
+
+  rowsEl.addEventListener('click', event => {
+    const button = event.target.closest('[data-view]');
+    if (button) openPatient(button.dataset.view);
+  });
+
+  document.getElementById('close-modal').addEventListener('click', closeModal);
+  modal.addEventListener('click', event => {
+    if (event.target === modal) closeModal();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+  });
+
+  window.addEventListener('storage', renderList);
+  renderList();
+</script>
+</body>
+</html>
