@@ -493,9 +493,9 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 16,
+                seedVersion: 17,
                 createdAt: "2026-06-12T08:15:00+08:00",
-                updatedAt: "2026-06-13T10:45:00+08:00",
+                updatedAt: "2026-06-13T16:30:00+08:00",
                 data: {
                     hrn: "0000001677",
                     last_name: "DELA CRUZ",
@@ -530,14 +530,27 @@
                     encounters: [
                         {
                             date: "2026-06-13",
+                            time: "04:30 PM",
+                            registry: "IP",
+                            service: "Internal Medicine",
+                            physician: "Dr. Miguel Santos, MD",
+                            status_tag: "Ward Round (PM)",
+                            is_current: true,
+                            patient_record: "Afternoon progress observation",
+                            results: "Clinically stable",
+                            progress_notes: "Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air. No chest discomfort or dyspnea.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.",
+                            orders: []
+                        },
+                        {
+                            date: "2026-06-13",
                             time: "10:15 AM",
                             registry: "IP",
                             service: "Internal Medicine",
-                            status_tag: "Current Visit",
+                            status_tag: "Morning Rounds",
                             is_current: true,
                             patient_record: "Daily progress review",
                             results: "Clinically improving",
-                            progress_notes: "Hospital Day 2. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO₂ 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics",
+                            progress_notes: "Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO₂ 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics",
                             orders: [
                                 { text: "Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C"], timeSignature: "C - 10:30 AM nurse" },
                                 { text: "Continue IV Ceftriaxone 2 g OD (Day 2 of 7).", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:35 AM nurse\nA - 11:00 AM nurse" },
@@ -628,7 +641,7 @@
         function blankPatientRecord() {
             return {
                 id: BLANK_PATIENT_ID,
-                seedVersion: 16,
+                seedVersion: 17,
                 createdAt: "2026-09-25T10:30:00+08:00",
                 updatedAt: "2026-09-25T10:30:00+08:00",
                 data: {
@@ -651,10 +664,10 @@
             const records = getPatients();
             const index = records.findIndex(record => record.id === SEED_PATIENT_ID);
             if (index < 0) records.push(seedPatientRecord());
-            else if (Number(records[index].seedVersion || 0) < 16) records[index] = seedPatientRecord();
+            else if (Number(records[index].seedVersion || 0) < 17) records[index] = seedPatientRecord();
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
-            else if (Number(records[blankIndex].seedVersion || 0) < 16) records[blankIndex] = blankPatientRecord();
+            else if (Number(records[blankIndex].seedVersion || 0) < 17) records[blankIndex] = blankPatientRecord();
             localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
         }
 
@@ -706,6 +719,32 @@
                 hour: "numeric",
                 minute: "2-digit"
             }).format(d).replace(",", "");
+        }
+
+        function parseEncounterDateTime(enc) {
+            if (!enc) return 0;
+            const d = String(enc.date || "").trim();
+            const t = String(enc.time || "").trim();
+            if (!d) return 0;
+            let isoDate = d;
+            if (/^\d{2}\/\d{2}\/\d{4}$/.test(d)) {
+                const parts = d.split("/");
+                isoDate = parts[2] + "-" + parts[0] + "-" + parts[1];
+            }
+            let timeStr = "00:00:00";
+            if (t) {
+                const match = t.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+                if (match) {
+                    let h = parseInt(match[1], 10);
+                    const m = parseInt(match[2], 10);
+                    const mer = (match[3] || "").toUpperCase();
+                    if (mer === "PM" && h < 12) h += 12;
+                    if (mer === "AM" && h === 12) h = 0;
+                    timeStr = (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":00";
+                }
+            }
+            const dt = new Date(isoDate + "T" + timeStr);
+            return Number.isNaN(dt.getTime()) ? 0 : dt.getTime();
         }
 
         function normalizeDateTime(str) {
@@ -1076,11 +1115,11 @@
                 }];
             }
 
-            // Sort encounters chronologically: oldest first (admission encounter at top)
+            // Sort encounters reverse-chronologically: newest / most recent on top (DOH standard)
             encounters.sort((a, b) => {
-                const da = String(a?.date || "") + " " + String(a?.time || "");
-                const db = String(b?.date || "") + " " + String(b?.time || "");
-                return da.localeCompare(db);
+                const ta = parseEncounterDateTime(a);
+                const tb = parseEncounterDateTime(b);
+                return tb - ta;
             });
 
             const isSingle = Boolean(targetEncounterDate && targetEncounterDate !== "all" && targetEncounterDate !== "current");
@@ -1107,12 +1146,13 @@
                         cared: Array.isArray(item?.cared) ? item.cared : [],
                         timeSignature: item?.timeSignature || ""
                     })).filter(o => o.text);
-                } else if (enc?.orders && typeof enc.orders === "object" && Object.keys(enc.orders).length > 0) {
+                } else if (enc?.orders && typeof enc.orders === "object" && Object.keys(enc.orders).length > 0 && !Array.isArray(enc?.orders)) {
                     orders = doctorOrderEntries({ orders: enc.orders });
                 }
 
-                // Check if this encounter represents the admission that holds data.orders
-                const isAdmission = !primaryAssigned && (
+                // Check if this encounter represents the admission that holds data.orders.
+                // If enc.orders was explicitly provided as an empty array, it represents a clinical note without orders.
+                const isAdmission = !primaryAssigned && !Array.isArray(enc?.orders) && (
                     (encDate && admitDt && encDate === admitDt) ||
                     (!isPrevious && (enc.status_tag === "Initial Visit (ER)" || enc.registry === "ER"))
                 );
@@ -1122,7 +1162,7 @@
                     primaryAssigned = true;
                 }
 
-                // Determine progress notes for this encounter
+                // Determine progress notes for this encounter (DOH SOA: Subjective, Objective, Assessment)
                 let noteText = "";
                 if (enc?.progress_notes) {
                     noteText = cleanProgressNotesText(enc.progress_notes);
@@ -1136,6 +1176,7 @@
                 const hasOrders = orders.length > 0;
                 const hasNotes = noteLines.length > 0;
 
+                // Support clinical notes with or without orders (DOH compliant)
                 if (hasOrders || hasNotes || isAdmission) {
                     let dt = "";
                     if (enc.date) {
@@ -1178,13 +1219,20 @@
 
         function populateEncounterSelector(record, selectedEncounter) {
             if (!encounterSelector) return;
-            const encounters = Array.isArray(record?.data?.encounters) ? record.data.encounters : [];
+            const encounters = Array.isArray(record?.data?.encounters) ? [...record.data.encounters] : [];
             if (encounters.length <= 1) {
                 encounterSelector.style.display = "none";
                 return;
             }
 
-            encounterSelector.innerHTML = '<option value="current">Current Admission (All Dates)</option>';
+            // Sort encounters reverse-chronologically so recent encounters appear first in the dropdown
+            encounters.sort((a, b) => {
+                const ta = parseEncounterDateTime(a);
+                const tb = parseEncounterDateTime(b);
+                return tb - ta;
+            });
+
+            encounterSelector.innerHTML = '<option value="current">Current Admission (All Dates — Recent on Top)</option>';
             encounters.forEach(enc => {
                 const option = document.createElement("option");
                 option.value = enc.date || "";

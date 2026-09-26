@@ -3378,9 +3378,9 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 16,
+        seedVersion: 17,
         createdAt: '2026-06-12T08:15:00+08:00',
-        updatedAt: '2026-06-13T10:45:00+08:00',
+        updatedAt: '2026-06-13T16:30:00+08:00',
         data: {
           hrn: '0000001677',
           last_name: 'DELA CRUZ',
@@ -3423,16 +3423,30 @@
           encounters: [
             {
               date: '2026-06-13',
+              time: '04:30 PM',
+              registry: 'IP',
+              service: 'Internal Medicine',
+              physician: 'Dr. Miguel Santos, MD',
+              is_current: true,
+              status_tag: 'Ward Round (PM)',
+              diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; Essential Hypertension',
+              patient_record: 'Afternoon progress observation',
+              results: 'Clinically stable',
+              progress_notes: 'Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air. No chest discomfort or dyspnea.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.',
+              orders: []
+            },
+            {
+              date: '2026-06-13',
               time: '10:15 AM',
               registry: 'IP',
               service: 'Internal Medicine',
               physician: 'Dr. Miguel Santos, MD',
               is_current: true,
-              status_tag: 'Current Visit',
+              status_tag: 'Morning Rounds',
               diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk; Essential Hypertension',
               patient_record: 'Daily progress review',
               results: 'Clinically improving',
-              progress_notes: 'Hospital Day 2. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics',
+              progress_notes: 'Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics',
               orders: [
                 { text: 'Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 10:30 AM nurse' },
                 { text: 'Continue IV Ceftriaxone 2 g OD (Day 2 of 7).', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:35 AM nurse\nA - 11:00 AM nurse' },
@@ -3799,7 +3813,7 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 16) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 17) records[index] = seedPatientRecord();
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
       else if (Number(records[blankIndex].seedVersion || 0) < 10) records[blankIndex] = blankPatientRecord();
