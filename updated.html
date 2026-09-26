@@ -1461,6 +1461,8 @@
             <div class="dashlet">
               <div class="bootstrap-widget-header">
                 <div class="pull-right" style="margin-top:-3px; display:inline-flex; gap:6px; align-items:center;">
+                  <button type="button" class="btn btn-mini btn-info" id="btn-open-simulate-modal" title="Simulate multi-round patient encounters (No database required)"><i class="icon-random icon-white"></i> Simulate Rounds</button>
+                  <button type="button" class="btn btn-mini btn-success" id="btn-open-encounter-modal" title="Record a new clinical round or progress note"><i class="icon-plus icon-white"></i> Log Clinical Round</button>
                   <div class="btn-group" id="encounter-dept-filter-group">
                     <button type="button" class="btn btn-mini active" data-dept="all" title="Show all encounters">All</button>
                     <button type="button" class="btn btn-mini" data-dept="IP" title="Show InPatient encounters only">IP</button>
@@ -2844,6 +2846,146 @@
           <button type="button" class="btn" id="btn-print-encounter-results"><i class="icon-print"></i> Print Results</button>
           <button type="button" class="btn btn-primary" id="btn-close-encounter-results-modal">Close</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ LOG CLINICAL ROUND / ENCOUNTER MODAL ═══ -->
+  <div class="seg-modal-backdrop" id="encounter-entry-modal" role="dialog" aria-modal="true" aria-labelledby="encounter-entry-heading">
+    <div class="seg-modal" style="min-width: 720px; max-width: 860px; margin: 25px auto;">
+      <div class="seg-modal-title" id="encounter-entry-heading" style="display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, #1b4d3e, #0e2f24); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
+        <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
+          <span>🩺</span> Log Clinical Round / Progress Note (DOH SOA Format)
+        </span>
+        <button type="button" class="seg-modal-close" id="close-encounter-entry-modal" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
+      </div>
+      <div class="seg-modal-body" style="padding:18px 22px; background:#fff; max-height:80vh; overflow-y:auto;">
+        <p style="font-size:12px; color:#555; margin-bottom:14px;">
+          Document a new clinical round, bedside assessment, or encounter. Under DOH standards, <strong>Subjective, Objective, and Assessment</strong> belong in Progress Notes. If no new orders are required for this round, select <em>Observation Only (No Orders)</em>.
+        </p>
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; margin-bottom:12px;">
+          <div>
+            <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Encounter Date</label>
+            <input type="date" id="new-enc-date" style="width:100%; box-sizing:border-box; height:30px; font-size:12px;">
+          </div>
+          <div>
+            <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Round Time</label>
+            <input type="text" id="new-enc-time" placeholder="e.g. 10:15 AM or 04:30 PM" style="width:100%; box-sizing:border-box; height:30px; font-size:12px;">
+          </div>
+          <div>
+            <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Registry Type</label>
+            <select id="new-enc-registry" style="width:100%; box-sizing:border-box; height:30px; font-size:12px;">
+              <option value="IP">InPatient (IP)</option>
+              <option value="OP">OutPatient (OP)</option>
+              <option value="ER">Emergency (ER)</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; margin-bottom:12px;">
+          <div>
+            <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Clinical Service</label>
+            <input type="text" id="new-enc-service" value="Internal Medicine" style="width:100%; box-sizing:border-box; height:30px; font-size:12px;">
+          </div>
+          <div>
+            <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Attending Physician</label>
+            <input type="text" id="new-enc-physician" value="Dr. Miguel Santos, MD" style="width:100%; box-sizing:border-box; height:30px; font-size:12px;">
+          </div>
+          <div>
+            <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Round Type / Tag</label>
+            <select id="new-enc-status-tag" style="width:100%; box-sizing:border-box; height:30px; font-size:12px;">
+              <option value="Ward Round (PM)">Ward Round (PM)</option>
+              <option value="Morning Rounds">Morning Rounds</option>
+              <option value="Bedside Review">Bedside Review</option>
+              <option value="Initial Visit (ER)">Initial Visit (ER)</option>
+              <option value="Follow-up (OPD)">Follow-up (OPD)</option>
+              <option value="Discharge Planning">Discharge Planning</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Working Diagnosis / Clinical Impression</label>
+          <input type="text" id="new-enc-diagnosis" style="width:100%; box-sizing:border-box; height:30px; font-size:12px;" placeholder="e.g. J18.9 - Community-Acquired Pneumonia, moderate risk, resolving">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:flex; justify-content:space-between;">
+            <span>Progress Notes (SOA Narrative: Subjective, Objective, Assessment)</span>
+            <span style="font-weight:normal; color:#777; font-size:11px;">1 thought or heading per line</span>
+          </label>
+          <textarea id="new-enc-notes" rows="4" style="width:100%; box-sizing:border-box; font-size:12px; font-family:inherit; line-height:1.4; padding:8px;" placeholder="Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air.&#10;Vital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% room air.&#10;Chest: Clear breath sounds bilaterally, minimal crackles at right base.&#10;Diagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management."></textarea>
+        </div>
+        <div style="background:#f7faf8; border:1px solid #dbeae0; border-radius:4px; padding:12px 14px; margin-bottom:10px;">
+          <label style="font-weight:700; font-size:12px; color:#1b4d3e; margin-bottom:8px; display:block;">Physician's Orders (Plan - P)</label>
+          <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
+            <label style="font-weight:normal; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <input type="radio" name="new-enc-orders-mode" value="none" checked>
+              <strong>Observation Only (No Orders / Zero Orders)</strong> &mdash; Leaves Doctor's Orders column blank
+            </label>
+            <label style="font-weight:normal; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <input type="radio" name="new-enc-orders-mode" value="copy">
+              <strong>Attach Current Dashboard Orders</strong> &mdash; Copies active orders from dashboard (plans, diet, iv, meds)
+            </label>
+            <label style="font-weight:normal; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <input type="radio" name="new-enc-orders-mode" value="custom">
+              <strong>Enter Custom Orders for this Round</strong> &mdash; (1 order per line below)
+            </label>
+          </div>
+          <div id="new-enc-custom-orders-wrap" style="display:none; margin-top:8px;">
+            <textarea id="new-enc-custom-orders" rows="3" style="width:100%; box-sizing:border-box; font-size:12px; font-family:inherit;" placeholder="Wean off nasal cannula oxygen; maintain SpO2 >= 95%&#10;Continue IV Ceftriaxone 2 g OD&#10;Shift Azithromycin to oral 500 mg tablet OD"></textarea>
+          </div>
+        </div>
+      </div>
+      <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 4px 4px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:11px; color:#718096;"><i class="icon-info-sign"></i> Persisted in local storage &amp; propagates directly to Compliance Sheet</span>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn" id="btn-cancel-encounter-entry">Cancel</button>
+          <button type="button" class="btn btn-success" id="btn-save-encounter-entry"><i class="icon-ok icon-white"></i> Record Clinical Round</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SIMULATE MULTI-ROUND COURSE MODAL ═══ -->
+  <div class="seg-modal-backdrop" id="encounter-simulation-modal" role="dialog" aria-modal="true" aria-labelledby="encounter-sim-heading">
+    <div class="seg-modal" style="min-width: 680px; max-width: 800px; margin: 25px auto;">
+      <div class="seg-modal-title" id="encounter-sim-heading" style="display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, #0e3d59, #082638); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
+        <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
+          <span>⚡</span> Client-Side Clinical Round &amp; Stay Simulator
+        </span>
+        <button type="button" class="seg-modal-close" id="close-encounter-sim-modal" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
+      </div>
+      <div class="seg-modal-body" style="padding:18px 22px; background:#fff; max-height:80vh; overflow-y:auto;">
+        <p style="font-size:12px; color:#555; margin-bottom:16px;">
+          Since this application runs without a backend database, you can use these presets to simulate and propagate realistic clinical data across multiple inpatient rounds. All changes persist in your browser's <code>localStorage</code>.
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="border:1px solid #d2e7dd; background:#f4f9f6; border-radius:5px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="color:#1b4d3e; font-size:13px; display:block;">Option 1: Add Evening Observation Round (Zero Orders Demo)</strong>
+              <span style="font-size:12px; color:#555;">Appends a PM observation round at current local time with afebrile vitals and <code>orders: []</code>, demonstrating DOH SOA with a blank Doctor's Order column.</span>
+            </div>
+            <button type="button" class="btn btn-success" id="btn-sim-add-pm-round" style="white-space:nowrap; margin-left:12px;">Simulate PM Round</button>
+          </div>
+
+          <div style="border:1px solid #cbe4f4; background:#f0f7fb; border-radius:5px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="color:#0b69a3; font-size:13px; display:block;">Option 2: Simulate Full 3-Day Inpatient Course (Pneumonia Resolution)</strong>
+              <span style="font-size:12px; color:#555;">Populates Day 1 ER Admission (orders), Day 2 Morning Rounds (antibiotic shift), Day 2 Afternoon Review (observation without orders), and Day 3 Discharge Planning (oral shift).</span>
+            </div>
+            <button type="button" class="btn btn-info" id="btn-sim-full-course" style="white-space:nowrap; margin-left:12px;">Simulate 3-Day Stay</button>
+          </div>
+
+          <div style="border:1px solid #eed2d2; background:#fdf5f5; border-radius:5px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="color:#a94442; font-size:13px; display:block;">Option 3: Reset Active Patient to Clean Seed State</strong>
+              <span style="font-size:12px; color:#555;">Restores Maria Santos's record to the standard seed state (version 17).</span>
+            </div>
+            <button type="button" class="btn btn-danger" id="btn-sim-reset-seed" style="white-space:nowrap; margin-left:12px;">Reset to Clean Seed</button>
+          </div>
+        </div>
+      </div>
+      <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 4px 4px; display:flex; justify-content:flex-end;">
+        <button type="button" class="btn" id="btn-close-sim-modal">Close</button>
       </div>
     </div>
   </div>
@@ -5224,8 +5366,329 @@
       if (e.key === 'Escape' || e.keyCode === 27) {
         closeEncounterRecordModal();
         closeEncounterResultsModal();
+        closeEncounterEntryModal();
+        closeEncounterSimulationModal();
       }
     });
+
+    // ── Log Clinical Round & Simulation Modal Handlers ──
+    function openEncounterEntryModal() {
+      var modal = document.getElementById('encounter-entry-modal');
+      if (!modal) return;
+      var now = new Date();
+      var yyyy = now.getFullYear();
+      var mm = String(now.getMonth() + 1).padStart(2, '0');
+      var dd = String(now.getDate()).padStart(2, '0');
+      var dateInput = document.getElementById('new-enc-date');
+      if (dateInput) dateInput.value = yyyy + '-' + mm + '-' + dd;
+      var timeInput = document.getElementById('new-enc-time');
+      if (timeInput) {
+        var hours = now.getHours();
+        var mins = String(now.getMinutes()).padStart(2, '0');
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        var h12 = hours % 12 || 12;
+        timeInput.value = (h12 < 10 ? '0' + h12 : h12) + ':' + mins + ' ' + ampm;
+      }
+      var diagInput = document.getElementById('new-enc-diagnosis');
+      if (diagInput) {
+        var pData = currentPatientData();
+        diagInput.value = (pData && (pData.final_diagnosis || pData.admitting_diagnosis)) || 'Community-Acquired Pneumonia, moderate risk, resolving';
+      }
+      modal.classList.add('open');
+    }
+
+    function closeEncounterEntryModal() {
+      var modal = document.getElementById('encounter-entry-modal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function openEncounterSimulationModal() {
+      var modal = document.getElementById('encounter-simulation-modal');
+      if (!modal) return;
+      modal.classList.add('open');
+    }
+
+    function closeEncounterSimulationModal() {
+      var modal = document.getElementById('encounter-simulation-modal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    var btnOpenEncModal = document.getElementById('btn-open-encounter-modal');
+    if (btnOpenEncModal) btnOpenEncModal.addEventListener('click', openEncounterEntryModal);
+    var btnCloseEncModal = document.getElementById('close-encounter-entry-modal');
+    if (btnCloseEncModal) btnCloseEncModal.addEventListener('click', closeEncounterEntryModal);
+    var btnCancelEncEntry = document.getElementById('btn-cancel-encounter-entry');
+    if (btnCancelEncEntry) btnCancelEncEntry.addEventListener('click', closeEncounterEntryModal);
+
+    var btnOpenSimModal = document.getElementById('btn-open-simulate-modal');
+    if (btnOpenSimModal) btnOpenSimModal.addEventListener('click', openEncounterSimulationModal);
+    var btnCloseSimModal = document.getElementById('close-encounter-sim-modal');
+    if (btnCloseSimModal) btnCloseSimModal.addEventListener('click', closeEncounterSimulationModal);
+    var btnCancelSimModal = document.getElementById('btn-close-sim-modal');
+    if (btnCancelSimModal) btnCancelSimModal.addEventListener('click', closeEncounterSimulationModal);
+
+    var encEntryModalBackdrop = document.getElementById('encounter-entry-modal');
+    if (encEntryModalBackdrop) {
+      encEntryModalBackdrop.addEventListener('click', function (e) {
+        if (e.target === encEntryModalBackdrop) closeEncounterEntryModal();
+      });
+    }
+    var encSimModalBackdrop = document.getElementById('encounter-simulation-modal');
+    if (encSimModalBackdrop) {
+      encSimModalBackdrop.addEventListener('click', function (e) {
+        if (e.target === encSimModalBackdrop) closeEncounterSimulationModal();
+      });
+    }
+
+    // Orders mode toggle in modal
+    var ordersModeRadios = document.querySelectorAll('input[name="new-enc-orders-mode"]');
+    ordersModeRadios.forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        var customWrap = document.getElementById('new-enc-custom-orders-wrap');
+        if (customWrap) {
+          customWrap.style.display = (this.value === 'custom') ? 'block' : 'none';
+        }
+      });
+    });
+
+    // Save New Clinical Round
+    var btnSaveEncEntry = document.getElementById('btn-save-encounter-entry');
+    if (btnSaveEncEntry) {
+      btnSaveEncEntry.addEventListener('click', function () {
+        var encDate = (document.getElementById('new-enc-date').value || '').trim();
+        var encTime = (document.getElementById('new-enc-time').value || '').trim();
+        if (!encDate) {
+          alert('Please specify an encounter date.');
+          return;
+        }
+        var registry = (document.getElementById('new-enc-registry').value || 'IP').trim();
+        var service = (document.getElementById('new-enc-service').value || 'Internal Medicine').trim();
+        var physician = (document.getElementById('new-enc-physician').value || 'Dr. Miguel Santos, MD').trim();
+        var statusTag = (document.getElementById('new-enc-status-tag').value || 'Ward Round (PM)').trim();
+        var diagnosis = (document.getElementById('new-enc-diagnosis').value || '').trim();
+        var notes = (document.getElementById('new-enc-notes').value || '').trim();
+
+        var selectedMode = 'none';
+        var checkedRadio = document.querySelector('input[name="new-enc-orders-mode"]:checked');
+        if (checkedRadio) selectedMode = checkedRadio.value;
+
+        var orders = [];
+        var isoDt = encDate + (encTime ? 'T' + encTime : 'T08:00:00+08:00');
+
+        if (selectedMode === 'copy') {
+          var currentDoctorOrders = renderOrderSummary();
+          if (Array.isArray(currentDoctorOrders)) {
+            orders = currentDoctorOrders.map(function (item) {
+              return {
+                text: item.text || '',
+                dateTime: item.dateTime || isoDt,
+                cared: ['C'],
+                timeSignature: 'C - nurse'
+              };
+            });
+          }
+        } else if (selectedMode === 'custom') {
+          var customText = (document.getElementById('new-enc-custom-orders').value || '').trim();
+          if (customText) {
+            orders = customText.split('\n').map(function (l) { return l.trim(); }).filter(Boolean).map(function (txt) {
+              return {
+                text: txt,
+                dateTime: isoDt,
+                cared: ['C'],
+                timeSignature: 'C - nurse'
+              };
+            });
+          }
+        }
+
+        var newEncounter = {
+          date: encDate,
+          time: encTime || '08:00 AM',
+          registry: registry,
+          service: service,
+          physician: physician,
+          is_current: true,
+          status_tag: statusTag,
+          diagnosis: diagnosis,
+          patient_record: 'Clinical round observation',
+          results: 'Clinically documented',
+          progress_notes: notes,
+          orders: orders
+        };
+
+        var pid = activePatientId || SEED_PATIENT_ID;
+        var records = getPatients();
+        var idx = records.findIndex(function (r) { return r.id === pid; });
+        if (idx >= 0) {
+          if (!Array.isArray(records[idx].data.encounters)) records[idx].data.encounters = [];
+          records[idx].data.encounters.unshift(newEncounter);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+          loadedEncounters = records[idx].data.encounters;
+          renderEncounters(loadedEncounters);
+        }
+
+        closeEncounterEntryModal();
+        alert('Clinical round recorded successfully! Click the eye icon next to the encounter to view on the Physician\'s Orders & Compliance Sheet.');
+      });
+    }
+
+    // Simulation Option 1: Add PM observation round with zero orders
+    var btnSimAddPm = document.getElementById('btn-sim-add-pm-round');
+    if (btnSimAddPm) {
+      btnSimAddPm.addEventListener('click', function () {
+        var now = new Date();
+        var yyyy = now.getFullYear();
+        var mm = String(now.getMonth() + 1).padStart(2, '0');
+        var dd = String(now.getDate()).padStart(2, '0');
+        var hours = now.getHours();
+        var mins = String(now.getMinutes()).padStart(2, '0');
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        var h12 = hours % 12 || 12;
+        var timeStr = (h12 < 10 ? '0' + h12 : h12) + ':' + mins + ' ' + ampm;
+
+        var simEnc = {
+          date: yyyy + '-' + mm + '-' + dd,
+          time: timeStr,
+          registry: 'IP',
+          service: 'Internal Medicine',
+          physician: 'Dr. Miguel Santos, MD',
+          is_current: true,
+          status_tag: 'Ward Round (PM)',
+          diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving',
+          patient_record: 'Evening clinical monitoring',
+          results: 'Clinically stable',
+          progress_notes: 'Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air. No chest discomfort or dyspnea.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.',
+          orders: []
+        };
+
+        var pid = activePatientId || SEED_PATIENT_ID;
+        var records = getPatients();
+        var idx = records.findIndex(function (r) { return r.id === pid; });
+        if (idx >= 0) {
+          if (!Array.isArray(records[idx].data.encounters)) records[idx].data.encounters = [];
+          records[idx].data.encounters.unshift(simEnc);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+          loadedEncounters = records[idx].data.encounters;
+          renderEncounters(loadedEncounters);
+        }
+        closeEncounterSimulationModal();
+        alert('Simulated PM observation round recorded! Open the Compliance Sheet to see DOH SOA notes with a blank Doctor\'s Orders column.');
+      });
+    }
+
+    // Simulation Option 2: 3-Day Course
+    var btnSimCourse = document.getElementById('btn-sim-full-course');
+    if (btnSimCourse) {
+      btnSimCourse.addEventListener('click', function () {
+        var simCourse = [
+          {
+            date: '2026-06-14',
+            time: '09:00 AM',
+            registry: 'IP',
+            service: 'Internal Medicine',
+            physician: 'Dr. Miguel Santos, MD',
+            is_current: true,
+            status_tag: 'Discharge Planning',
+            diagnosis: 'J18.9 - Community-Acquired Pneumonia, resolved; Essential Hypertension, controlled',
+            patient_record: 'Discharge planning and outpatient transition',
+            results: 'Discharged clinically stable',
+            progress_notes: 'Hospital Day 3. Patient clinically well, completely afebrile x 48 hours. Lungs clear.\nVital signs: BP 118/74 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% on room air.\nDiagnosis: Community-Acquired Pneumonia, resolved. Shift to home oral antibiotics.',
+            orders: [
+              { text: 'Discharge patient today. Follow-up at Adult Pulmonary Clinic after 1 week.', dateTime: '2026-06-14T09:00:00+08:00', cared: ['C'], timeSignature: 'C - 9:30 AM nurse' },
+              { text: 'Shift to oral Co-amoxiclav 625 mg tablet TID to complete 7-day course.', dateTime: '2026-06-14T09:00:00+08:00', cared: ['C'], timeSignature: 'C - 9:35 AM nurse' }
+            ]
+          },
+          {
+            date: '2026-06-13',
+            time: '04:30 PM',
+            registry: 'IP',
+            service: 'Internal Medicine',
+            physician: 'Dr. Miguel Santos, MD',
+            is_current: false,
+            status_tag: 'Ward Round (PM)',
+            diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving',
+            patient_record: 'Afternoon progress observation',
+            results: 'Clinically stable',
+            progress_notes: 'Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.',
+            orders: []
+          },
+          {
+            date: '2026-06-13',
+            time: '10:15 AM',
+            registry: 'IP',
+            service: 'Internal Medicine',
+            physician: 'Dr. Miguel Santos, MD',
+            is_current: false,
+            status_tag: 'Morning Rounds',
+            diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving',
+            patient_record: 'Daily progress review',
+            results: 'Clinically improving',
+            progress_notes: 'Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics',
+            orders: [
+              { text: 'Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 10:30 AM nurse' },
+              { text: 'Continue IV Ceftriaxone 2 g OD (Day 2 of 7).', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:35 AM nurse\nA - 11:00 AM nurse' },
+              { text: 'Shift Azithromycin to oral 500 mg tablet once daily after meals.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:40 AM nurse\nA - 11:05 AM nurse' },
+              { text: 'Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['R'], timeSignature: 'R - 10:45 AM physician' },
+              { text: 'May ambulate inside room as tolerated. Regular diet.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:00 AM nurse' }
+            ]
+          },
+          {
+            date: '2026-06-12',
+            time: '08:30 AM',
+            registry: 'ER',
+            service: 'Emergency Medicine',
+            physician: 'Dr. Roberto Lim, MD',
+            is_current: false,
+            status_tag: 'Initial Visit (ER)',
+            diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk; Essential Hypertension',
+            patient_record: 'Initial assessment and stabilization',
+            results: 'Admitted to Medical Ward',
+            progress_notes: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension',
+            orders: [
+              { text: 'Admit to Medical Ward under Internal Medicine service.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
+              { text: 'Monitor vital signs every four hours and record intake and output.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:32 PM nurse' },
+              { text: 'Low-salt diet as tolerated.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:35 PM nurse' },
+              { text: 'PNSS 1 L at 80 mL/hour.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['A'], timeSignature: 'A - 12:45 PM nurse' },
+              { text: 'Ceftriaxone 2 g IV once daily.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A', 'E'], timeSignature: 'C - 12:40 PM nurse\nA - 1:00 PM nurse\nE - 1:20 PM nurse' },
+              { text: 'Azithromycin 500 mg tablet once daily.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:42 PM nurse\nA - 1:05 PM nurse' },
+              { text: 'Paracetamol 500 mg tablet every six hours as needed for fever.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:45 PM nurse\nA - 1:10 PM nurse' },
+              { text: 'Oxygen at 2 L/minute via nasal cannula; maintain SpO2 at 95% or higher.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:50 PM nurse' }
+            ]
+          }
+        ];
+
+        var pid = activePatientId || SEED_PATIENT_ID;
+        var records = getPatients();
+        var idx = records.findIndex(function (r) { return r.id === pid; });
+        if (idx >= 0) {
+          records[idx].data.encounters = simCourse;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+          loadedEncounters = records[idx].data.encounters;
+          renderEncounters(loadedEncounters);
+        }
+        closeEncounterSimulationModal();
+        alert('Simulated 3-day inpatient course loaded! Open the Compliance Sheet to see all 4 rounds in reverse chronological order.');
+      });
+    }
+
+    // Simulation Option 3: Reset
+    var btnSimReset = document.getElementById('btn-sim-reset-seed');
+    if (btnSimReset) {
+      btnSimReset.addEventListener('click', function () {
+        var pid = activePatientId || SEED_PATIENT_ID;
+        var records = getPatients();
+        var idx = records.findIndex(function (r) { return r.id === pid; });
+        if (idx >= 0) {
+          records[idx] = seedPatientRecord();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+          loadedEncounters = records[idx].data.encounters;
+          renderEncounters(loadedEncounters);
+          loadPatientData(records[idx].data);
+        }
+        closeEncounterSimulationModal();
+        alert('Patient record restored to clean standard seed state.');
+      });
+    }
 
     var activeEncounterDeptFilter = 'all';
 

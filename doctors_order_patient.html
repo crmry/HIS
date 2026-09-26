@@ -282,6 +282,56 @@
             overflow: hidden;
         }
 
+        .seg-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            padding: 30px 15px;
+            background: rgba(23, 33, 28, .55);
+            overflow: auto;
+            box-sizing: border-box;
+        }
+        .seg-modal-backdrop.open {
+            display: block;
+        }
+        .seg-modal {
+            min-width: 600px;
+            max-width: 820px;
+            margin: 20px auto;
+            border: 1px solid #1b4d3e;
+            border-radius: 6px;
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .28);
+            font-family: Arial, Helvetica, sans-serif;
+            color: #333;
+            overflow: hidden;
+        }
+        .seg-modal-title {
+            padding: 12px 18px;
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .seg-modal-close {
+            border: 0;
+            background: transparent;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .seg-modal-body {
+            padding: 18px 22px;
+            background: #fff;
+            max-height: 75vh;
+            overflow-y: auto;
+        }
+
+
 @media print {
             html, body {
                 background: #fff;
@@ -310,6 +360,8 @@
     <div class="toolbar">
         <a href="dashboard.html" id="back-dashboard-btn" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #1f7d45; background: #1f7d45; color: #fff; text-decoration: none; border-radius: 3px; font-weight: 600;">← Doctor's Dashboard</a>
         <a href="patients.html" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #444; background: #fff; color: #111; text-decoration: none; border-radius: 3px;">Patient List</a>
+        <button type="button" id="btn-open-round-modal" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #133a2e; background: #1b4d3e; color: #fff; border-radius: 3px; font-weight: 600; cursor: pointer;" title="Log a new clinical round or progress note">+ Log Clinical Round</button>
+        <button type="button" id="btn-open-sim-modal" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; padding: 7px 12px; border: 1px solid #082638; background: #0e3d59; color: #fff; border-radius: 3px; font-weight: 600; cursor: pointer;" title="Simulate multi-round patient encounters (No database required)">⚡ Simulate Rounds</button>
         <select id="patient-selector" aria-label="Select saved patient">
             <option value="">Select saved patient...</option>
         </select>
@@ -1498,5 +1550,442 @@
 
         window.addEventListener("storage", populatePatientSelector);
     </script>
+    <!-- ═══ LOG CLINICAL ROUND / PROGRESS NOTE MODAL ═══ -->
+    <div class="seg-modal-backdrop" id="sheet-round-modal" role="dialog" aria-modal="true" aria-labelledby="sheet-round-heading">
+        <div class="seg-modal" style="min-width: 680px; max-width: 820px;">
+            <div class="seg-modal-title" id="sheet-round-heading" style="background: linear-gradient(135deg, #1b4d3e, #0e2f24); color:#fff;">
+                <span style="display:flex; align-items:center; gap:8px;">
+                    <span>🩺</span> Log Clinical Round / Progress Note (DOH SOA Format)
+                </span>
+                <button type="button" class="seg-modal-close" id="close-sheet-round-modal" title="Close">✕</button>
+            </div>
+            <div class="seg-modal-body">
+                <p style="font-size:12px; color:#555; margin-bottom:14px; margin-top:0;">
+                    Document a new clinical round directly on this compliance sheet. Under DOH standards, <strong>Subjective, Objective, and Assessment (SOA)</strong> are placed in Progress Notes. If no new orders are entered for this round, select <em>Observation Only (No Orders)</em>.
+                </p>
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; margin-bottom:12px;">
+                    <div>
+                        <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Encounter Date</label>
+                        <input type="date" id="sheet-enc-date" style="width:100%; box-sizing:border-box; height:32px; font-size:12px; padding:4px 8px; border:1px solid #ccc; border-radius:3px;">
+                    </div>
+                    <div>
+                        <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Round Time</label>
+                        <input type="text" id="sheet-enc-time" placeholder="e.g. 10:15 AM or 04:30 PM" style="width:100%; box-sizing:border-box; height:32px; font-size:12px; padding:4px 8px; border:1px solid #ccc; border-radius:3px;">
+                    </div>
+                    <div>
+                        <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Registry Type</label>
+                        <select id="sheet-enc-registry" style="width:100%; box-sizing:border-box; height:32px; font-size:12px; padding:4px 8px; border:1px solid #ccc; border-radius:3px; background:#fff;">
+                            <option value="IP">InPatient (IP)</option>
+                            <option value="OP">OutPatient (OP)</option>
+                            <option value="ER">Emergency (ER)</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; margin-bottom:12px;">
+                    <div>
+                        <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Clinical Service</label>
+                        <input type="text" id="sheet-enc-service" value="Internal Medicine" style="width:100%; box-sizing:border-box; height:32px; font-size:12px; padding:4px 8px; border:1px solid #ccc; border-radius:3px;">
+                    </div>
+                    <div>
+                        <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Attending Physician</label>
+                        <input type="text" id="sheet-enc-physician" value="Dr. Miguel Santos, MD" style="width:100%; box-sizing:border-box; height:32px; font-size:12px; padding:4px 8px; border:1px solid #ccc; border-radius:3px;">
+                    </div>
+                    <div>
+                        <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Round Type / Tag</label>
+                        <select id="sheet-enc-status-tag" style="width:100%; box-sizing:border-box; height:32px; font-size:12px; padding:4px 8px; border:1px solid #ccc; border-radius:3px; background:#fff;">
+                            <option value="Ward Round (PM)">Ward Round (PM)</option>
+                            <option value="Morning Rounds">Morning Rounds</option>
+                            <option value="Bedside Review">Bedside Review</option>
+                            <option value="Initial Visit (ER)">Initial Visit (ER)</option>
+                            <option value="Follow-up (OPD)">Follow-up (OPD)</option>
+                            <option value="Discharge Planning">Discharge Planning</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Working Diagnosis / Clinical Impression</label>
+                    <input type="text" id="sheet-enc-diagnosis" style="width:100%; box-sizing:border-box; height:32px; font-size:12px; padding:4px 8px; border:1px solid #ccc; border-radius:3px;" placeholder="e.g. J18.9 - Community-Acquired Pneumonia, moderate risk, resolving">
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:flex; justify-content:space-between;">
+                        <span>Progress Notes (SOA Narrative: Subjective, Objective, Assessment)</span>
+                        <span style="font-weight:normal; color:#777; font-size:11px;">1 line per clinical thought</span>
+                    </label>
+                    <textarea id="sheet-enc-notes" rows="4" style="width:100%; box-sizing:border-box; font-size:12px; font-family:Arial, Helvetica, sans-serif; line-height:1.4; padding:8px; border:1px solid #ccc; border-radius:3px;" placeholder="Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air.&#10;Vital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% room air.&#10;Chest: Clear breath sounds bilaterally, minimal crackles at right base.&#10;Diagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management."></textarea>
+                </div>
+                <div style="background:#f7faf8; border:1px solid #dbeae0; border-radius:4px; padding:12px 14px; margin-bottom:10px;">
+                    <label style="font-weight:700; font-size:12px; color:#1b4d3e; margin-bottom:8px; display:block;">Physician's Orders (Plan - P)</label>
+                    <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
+                        <label style="font-weight:normal; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                            <input type="radio" name="sheet-enc-orders-mode" value="none" checked>
+                            <strong>Observation Only (No Orders / Zero Orders)</strong> &mdash; Leaves Doctor's Orders column blank
+                        </label>
+                        <label style="font-weight:normal; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                            <input type="radio" name="sheet-enc-orders-mode" value="custom">
+                            <strong>Enter Custom Orders for this Round</strong> &mdash; (1 order per line below)
+                        </label>
+                    </div>
+                    <div id="sheet-enc-custom-orders-wrap" style="display:none; margin-top:8px;">
+                        <textarea id="sheet-enc-custom-orders" rows="3" style="width:100%; box-sizing:border-box; font-size:12px; font-family:Arial, Helvetica, sans-serif; padding:6px; border:1px solid #ccc; border-radius:3px;" placeholder="Wean off nasal cannula oxygen; maintain SpO2 >= 95%&#10;Continue IV Ceftriaxone 2 g OD&#10;Shift Azithromycin to oral 500 mg tablet OD"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 6px 6px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; color:#718096;">Persisted in localStorage &amp; updates sheet immediately</span>
+                <div style="display:flex; gap:8px;">
+                    <button type="button" id="btn-cancel-sheet-round" style="padding:6px 12px; border:1px solid #ccc; background:#fff; border-radius:3px; cursor:pointer;">Cancel</button>
+                    <button type="button" id="btn-save-sheet-round" style="padding:6px 14px; border:1px solid #1b4d3e; background:#1b4d3e; color:#fff; font-weight:600; border-radius:3px; cursor:pointer;">Record Clinical Round</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SIMULATE MULTI-ROUND COURSE MODAL ═══ -->
+    <div class="seg-modal-backdrop" id="sheet-simulation-modal" role="dialog" aria-modal="true" aria-labelledby="sheet-sim-heading">
+        <div class="seg-modal" style="min-width: 650px; max-width: 780px;">
+            <div class="seg-modal-title" id="sheet-sim-heading" style="background: linear-gradient(135deg, #0e3d59, #082638); color:#fff;">
+                <span style="display:flex; align-items:center; gap:8px;">
+                    <span>⚡</span> Client-Side Clinical Round &amp; Stay Simulator
+                </span>
+                <button type="button" class="seg-modal-close" id="close-sheet-sim-modal" title="Close">✕</button>
+            </div>
+            <div class="seg-modal-body">
+                <p style="font-size:12px; color:#555; margin-bottom:16px; margin-top:0;">
+                    Since this application operates purely in the client browser without a database, use these presets to simulate realistic clinical rounds and verify DOH SOA alignment and date/time grouping.
+                </p>
+
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div style="border:1px solid #d2e7dd; background:#f4f9f6; border-radius:5px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong style="color:#1b4d3e; font-size:13px; display:block;">Option 1: Add Evening Observation Round (Zero Orders Demo)</strong>
+                            <span style="font-size:12px; color:#555;">Appends a PM observation round at current local time with afebrile vitals and <code>orders: []</code>, demonstrating DOH SOA with a blank Doctor's Order column.</span>
+                        </div>
+                        <button type="button" id="btn-sheet-sim-pm-round" style="white-space:nowrap; margin-left:12px; padding:7px 12px; background:#1b4d3e; color:#fff; border:1px solid #133a2e; border-radius:3px; font-weight:600; cursor:pointer;">Simulate PM Round</button>
+                    </div>
+
+                    <div style="border:1px solid #cbe4f4; background:#f0f7fb; border-radius:5px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong style="color:#0b69a3; font-size:13px; display:block;">Option 2: Simulate Full 3-Day Inpatient Course (Pneumonia Resolution)</strong>
+                            <span style="font-size:12px; color:#555;">Populates Day 1 ER Admission (orders), Day 2 Morning Rounds (antibiotic shift), Day 2 Afternoon Review (observation without orders), and Day 3 Discharge Planning (oral shift).</span>
+                        </div>
+                        <button type="button" id="btn-sheet-sim-course" style="white-space:nowrap; margin-left:12px; padding:7px 12px; background:#0e3d59; color:#fff; border:1px solid #082638; border-radius:3px; font-weight:600; cursor:pointer;">Simulate 3-Day Stay</button>
+                    </div>
+
+                    <div style="border:1px solid #eed2d2; background:#fdf5f5; border-radius:5px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong style="color:#a94442; font-size:13px; display:block;">Option 3: Reset Active Patient to Clean Seed State</strong>
+                            <span style="font-size:12px; color:#555;">Restores Maria Santos's record to the standard seed state (version 17).</span>
+                        </div>
+                        <button type="button" id="btn-sheet-sim-reset" style="white-space:nowrap; margin-left:12px; padding:7px 12px; background:#c53030; color:#fff; border:1px solid #9b2c2c; border-radius:3px; font-weight:600; cursor:pointer;">Reset to Clean Seed</button>
+                    </div>
+                </div>
+            </div>
+            <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 6px 6px; display:flex; justify-content:flex-end;">
+                <button type="button" id="btn-close-sheet-sim" style="padding:6px 14px; border:1px solid #ccc; background:#fff; border-radius:3px; cursor:pointer;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── Clinical Round Entry & Simulation Modals ──
+        function openSheetRoundModal() {
+            var modal = document.getElementById("sheet-round-modal");
+            if (!modal) return;
+            var now = new Date();
+            var yyyy = now.getFullYear();
+            var mm = String(now.getMonth() + 1).padStart(2, "0");
+            var dd = String(now.getDate()).padStart(2, "0");
+            var dateInput = document.getElementById("sheet-enc-date");
+            if (dateInput) dateInput.value = yyyy + "-" + mm + "-" + dd;
+            var timeInput = document.getElementById("sheet-enc-time");
+            if (timeInput) {
+                var hours = now.getHours();
+                var mins = String(now.getMinutes()).padStart(2, "0");
+                var ampm = hours >= 12 ? "PM" : "AM";
+                var h12 = hours % 12 || 12;
+                timeInput.value = (h12 < 10 ? "0" + h12 : h12) + ":" + mins + " " + ampm;
+            }
+            var diagInput = document.getElementById("sheet-enc-diagnosis");
+            if (diagInput && currentLoadedRecord) {
+                var pData = currentLoadedRecord.data || {};
+                diagInput.value = pData.final_diagnosis || pData.admitting_diagnosis || "Community-Acquired Pneumonia, moderate risk, resolving";
+            }
+            modal.classList.add("open");
+        }
+
+        function closeSheetRoundModal() {
+            var modal = document.getElementById("sheet-round-modal");
+            if (modal) modal.classList.remove("open");
+        }
+
+        function openSheetSimModal() {
+            var modal = document.getElementById("sheet-simulation-modal");
+            if (modal) modal.classList.add("open");
+        }
+
+        function closeSheetSimModal() {
+            var modal = document.getElementById("sheet-simulation-modal");
+            if (modal) modal.classList.remove("open");
+        }
+
+        var btnOpenRnd = document.getElementById("btn-open-round-modal");
+        if (btnOpenRnd) btnOpenRnd.addEventListener("click", openSheetRoundModal);
+        var btnCloseRnd = document.getElementById("close-sheet-round-modal");
+        if (btnCloseRnd) btnCloseRnd.addEventListener("click", closeSheetRoundModal);
+        var btnCancelRnd = document.getElementById("btn-cancel-sheet-round");
+        if (btnCancelRnd) btnCancelRnd.addEventListener("click", closeSheetRoundModal);
+
+        var btnOpenSim = document.getElementById("btn-open-sim-modal");
+        if (btnOpenSim) btnOpenSim.addEventListener("click", openSheetSimModal);
+        var btnCloseSim = document.getElementById("close-sheet-sim-modal");
+        if (btnCloseSim) btnCloseSim.addEventListener("click", closeSheetSimModal);
+        var btnCancelSim = document.getElementById("btn-close-sheet-sim");
+        if (btnCancelSim) btnCancelSim.addEventListener("click", closeSheetSimModal);
+
+        var sheetRoundModalBackdrop = document.getElementById("sheet-round-modal");
+        if (sheetRoundModalBackdrop) {
+            sheetRoundModalBackdrop.addEventListener("click", function (e) {
+                if (e.target === sheetRoundModalBackdrop) closeSheetRoundModal();
+            });
+        }
+        var sheetSimModalBackdrop = document.getElementById("sheet-simulation-modal");
+        if (sheetSimModalBackdrop) {
+            sheetSimModalBackdrop.addEventListener("click", function (e) {
+                if (e.target === sheetSimModalBackdrop) closeSheetSimModal();
+            });
+        }
+
+        var sheetOrdersRadios = document.querySelectorAll('input[name="sheet-enc-orders-mode"]');
+        sheetOrdersRadios.forEach(function (radio) {
+            radio.addEventListener("change", function () {
+                var customWrap = document.getElementById("sheet-enc-custom-orders-wrap");
+                if (customWrap) {
+                    customWrap.style.display = (this.value === "custom") ? "block" : "none";
+                }
+            });
+        });
+
+        // Save round
+        var btnSaveSheetRound = document.getElementById("btn-save-sheet-round");
+        if (btnSaveSheetRound) {
+            btnSaveSheetRound.addEventListener("click", function () {
+                var encDate = (document.getElementById("sheet-enc-date").value || "").trim();
+                var encTime = (document.getElementById("sheet-enc-time").value || "").trim();
+                if (!encDate) {
+                    alert("Please specify an encounter date.");
+                    return;
+                }
+                var registry = (document.getElementById("sheet-enc-registry").value || "IP").trim();
+                var service = (document.getElementById("sheet-enc-service").value || "Internal Medicine").trim();
+                var physician = (document.getElementById("sheet-enc-physician").value || "Dr. Miguel Santos, MD").trim();
+                var statusTag = (document.getElementById("sheet-enc-status-tag").value || "Ward Round (PM)").trim();
+                var diagnosis = (document.getElementById("sheet-enc-diagnosis").value || "").trim();
+                var notes = (document.getElementById("sheet-enc-notes").value || "").trim();
+
+                var selectedMode = "none";
+                var checkedRadio = document.querySelector('input[name="sheet-enc-orders-mode"]:checked');
+                if (checkedRadio) selectedMode = checkedRadio.value;
+
+                var orders = [];
+                var isoDt = encDate + (encTime ? "T" + encTime : "T08:00:00+08:00");
+                if (selectedMode === "custom") {
+                    var customText = (document.getElementById("sheet-enc-custom-orders").value || "").trim();
+                    if (customText) {
+                        orders = customText.split("\n").map(function (l) { return l.trim(); }).filter(Boolean).map(function (txt) {
+                            return {
+                                text: txt,
+                                dateTime: isoDt,
+                                cared: ["C"],
+                                timeSignature: "C - nurse"
+                            };
+                        });
+                    }
+                }
+
+                var newEncounter = {
+                    date: encDate,
+                    time: encTime || "08:00 AM",
+                    registry: registry,
+                    service: service,
+                    physician: physician,
+                    is_current: true,
+                    status_tag: statusTag,
+                    diagnosis: diagnosis,
+                    patient_record: "Clinical round observation",
+                    results: "Clinically documented",
+                    progress_notes: notes,
+                    orders: orders
+                };
+
+                var pid = (currentLoadedRecord && currentLoadedRecord.id) || SEED_PATIENT_ID;
+                var records = getPatients();
+                var idx = records.findIndex(function (r) { return r.id === pid; });
+                if (idx >= 0) {
+                    if (!Array.isArray(records[idx].data.encounters)) records[idx].data.encounters = [];
+                    records[idx].data.encounters.unshift(newEncounter);
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+                    currentLoadedRecord = records[idx];
+                    loadPatientRecord(records[idx], "current");
+                }
+
+                closeSheetRoundModal();
+            });
+        }
+
+        // Option 1: PM round zero orders
+        var btnSheetSimPm = document.getElementById("btn-sheet-sim-pm-round");
+        if (btnSheetSimPm) {
+            btnSheetSimPm.addEventListener("click", function () {
+                var now = new Date();
+                var yyyy = now.getFullYear();
+                var mm = String(now.getMonth() + 1).padStart(2, "0");
+                var dd = String(now.getDate()).padStart(2, "0");
+                var hours = now.getHours();
+                var mins = String(now.getMinutes()).padStart(2, "0");
+                var ampm = hours >= 12 ? "PM" : "AM";
+                var h12 = hours % 12 || 12;
+                var timeStr = (h12 < 10 ? "0" + h12 : h12) + ":" + mins + " " + ampm;
+
+                var simEnc = {
+                    date: yyyy + "-" + mm + "-" + dd,
+                    time: timeStr,
+                    registry: "IP",
+                    service: "Internal Medicine",
+                    physician: "Dr. Miguel Santos, MD",
+                    is_current: true,
+                    status_tag: "Ward Round (PM)",
+                    diagnosis: "J18.9 - Community-Acquired Pneumonia, moderate risk, resolving",
+                    patient_record: "Evening clinical monitoring",
+                    results: "Clinically stable",
+                    progress_notes: "Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air. No chest discomfort or dyspnea.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.",
+                    orders: []
+                };
+
+                var pid = (currentLoadedRecord && currentLoadedRecord.id) || SEED_PATIENT_ID;
+                var records = getPatients();
+                var idx = records.findIndex(function (r) { return r.id === pid; });
+                if (idx >= 0) {
+                    if (!Array.isArray(records[idx].data.encounters)) records[idx].data.encounters = [];
+                    records[idx].data.encounters.unshift(simEnc);
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+                    currentLoadedRecord = records[idx];
+                    loadPatientRecord(records[idx], "current");
+                }
+                closeSheetSimModal();
+            });
+        }
+
+        // Option 2: 3-day course
+        var btnSheetSimCourse = document.getElementById("btn-sheet-sim-course");
+        if (btnSheetSimCourse) {
+            btnSheetSimCourse.addEventListener("click", function () {
+                var simCourse = [
+                    {
+                        date: "2026-06-14",
+                        time: "09:00 AM",
+                        registry: "IP",
+                        service: "Internal Medicine",
+                        physician: "Dr. Miguel Santos, MD",
+                        is_current: true,
+                        status_tag: "Discharge Planning",
+                        diagnosis: "J18.9 - Community-Acquired Pneumonia, resolved; Essential Hypertension, controlled",
+                        patient_record: "Discharge planning and outpatient transition",
+                        results: "Discharged clinically stable",
+                        progress_notes: "Hospital Day 3. Patient clinically well, completely afebrile x 48 hours. Lungs clear.\nVital signs: BP 118/74 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% on room air.\nDiagnosis: Community-Acquired Pneumonia, resolved. Shift to home oral antibiotics.",
+                        orders: [
+                            { text: "Discharge patient today. Follow-up at Adult Pulmonary Clinic after 1 week.", dateTime: "2026-06-14T09:00:00+08:00", cared: ["C"], timeSignature: "C - 9:30 AM nurse" },
+                            { text: "Shift to oral Co-amoxiclav 625 mg tablet TID to complete 7-day course.", dateTime: "2026-06-14T09:00:00+08:00", cared: ["C"], timeSignature: "C - 9:35 AM nurse" }
+                        ]
+                    },
+                    {
+                        date: "2026-06-13",
+                        time: "04:30 PM",
+                        registry: "IP",
+                        service: "Internal Medicine",
+                        physician: "Dr. Miguel Santos, MD",
+                        is_current: false,
+                        status_tag: "Ward Round (PM)",
+                        diagnosis: "J18.9 - Community-Acquired Pneumonia, moderate risk, resolving",
+                        patient_record: "Afternoon progress observation",
+                        results: "Clinically stable",
+                        progress_notes: "Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.",
+                        orders: []
+                    },
+                    {
+                        date: "2026-06-13",
+                        time: "10:15 AM",
+                        registry: "IP",
+                        service: "Internal Medicine",
+                        physician: "Dr. Miguel Santos, MD",
+                        is_current: false,
+                        status_tag: "Morning Rounds",
+                        diagnosis: "J18.9 - Community-Acquired Pneumonia, moderate risk, resolving",
+                        patient_record: "Daily progress review",
+                        results: "Clinically improving",
+                        progress_notes: "Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics",
+                        orders: [
+                            { text: "Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C"], timeSignature: "C - 10:30 AM nurse" },
+                            { text: "Continue IV Ceftriaxone 2 g OD (Day 2 of 7).", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:35 AM nurse\nA - 11:00 AM nurse" },
+                            { text: "Shift Azithromycin to oral 500 mg tablet once daily after meals.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:40 AM nurse\nA - 11:05 AM nurse" },
+                            { text: "Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["R"], timeSignature: "R - 10:45 AM physician" },
+                            { text: "May ambulate inside room as tolerated. Regular diet.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C"], timeSignature: "C - 11:00 AM nurse" }
+                        ]
+                    },
+                    {
+                        date: "2026-06-12",
+                        time: "08:30 AM",
+                        registry: "ER",
+                        service: "Emergency Medicine",
+                        physician: "Dr. Roberto Lim, MD",
+                        is_current: false,
+                        status_tag: "Initial Visit (ER)",
+                        diagnosis: "J18.9 - Community-Acquired Pneumonia, moderate risk; Essential Hypertension",
+                        patient_record: "Initial assessment and stabilization",
+                        results: "Admitted to Medical Ward",
+                        progress_notes: "Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension",
+                        orders: [
+                            { text: "Admit to Medical Ward under Internal Medicine service.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:30 PM nurse" },
+                            { text: "Monitor vital signs every four hours and record intake and output.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:32 PM nurse" },
+                            { text: "Low-salt diet as tolerated.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:35 PM nurse" },
+                            { text: "PNSS 1 L at 80 mL/hour.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["A"], timeSignature: "A - 12:45 PM nurse" },
+                            { text: "Ceftriaxone 2 g IV once daily.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C", "A", "E"], timeSignature: "C - 12:40 PM nurse\nA - 1:00 PM nurse\nE - 1:20 PM nurse" },
+                            { text: "Azithromycin 500 mg tablet once daily.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C", "A"], timeSignature: "C - 12:42 PM nurse\nA - 1:05 PM nurse" },
+                            { text: "Paracetamol 500 mg tablet every six hours as needed for fever.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C", "A"], timeSignature: "C - 12:45 PM nurse\nA - 1:10 PM nurse" },
+                            { text: "Oxygen at 2 L/minute via nasal cannula; maintain SpO2 at 95% or higher.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:50 PM nurse" }
+                        ]
+                    }
+                ];
+
+                var pid = (currentLoadedRecord && currentLoadedRecord.id) || SEED_PATIENT_ID;
+                var records = getPatients();
+                var idx = records.findIndex(function (r) { return r.id === pid; });
+                if (idx >= 0) {
+                    records[idx].data.encounters = simCourse;
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+                    currentLoadedRecord = records[idx];
+                    loadPatientRecord(records[idx], "current");
+                }
+                closeSheetSimModal();
+            });
+        }
+
+        // Option 3: Reset
+        var btnSheetSimReset = document.getElementById("btn-sheet-sim-reset");
+        if (btnSheetSimReset) {
+            btnSheetSimReset.addEventListener("click", function () {
+                var pid = (currentLoadedRecord && currentLoadedRecord.id) || SEED_PATIENT_ID;
+                var records = getPatients();
+                var idx = records.findIndex(function (r) { return r.id === pid; });
+                if (idx >= 0) {
+                    records[idx] = seedPatientRecord();
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+                    currentLoadedRecord = records[idx];
+                    loadPatientRecord(records[idx], "current");
+                }
+                closeSheetSimModal();
+            });
+        }
+    </script>
+
 </body>
 </html>
