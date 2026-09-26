@@ -3738,7 +3738,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 21,
+        seedVersion: 25,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T16:30:00+08:00',
         data: {
@@ -3806,6 +3806,20 @@
               diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk; I10 - Essential Hypertension',
               patient_record: 'Outpatient consultation and prescription review',
               results: 'Clinically improving',
+              vital_signs: [
+                { dateTime: '2026-06-06 09:30 AM', bp: '120/80', hr: '78', rr: '18', temp: '36.8', wt: '52', ht: '154', weight: '52', height: '154', bmi: '21.9', spo2: '98', o2: '98' }
+              ],
+              medications: [
+                { id: 'med-ms-1', name: 'Co-amoxiclav 625 mg tablet', route: 'Oral Twice Daily (BID) to complete 7 days', indication: 'Community-Acquired Pneumonia', started: '2026-06-06T09:30:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-ms-2', name: 'Azithromycin 500 mg tablet', route: 'Oral Once Daily (OD) Day 4 of 5', indication: 'Community-Acquired Pneumonia', started: '2026-06-06T09:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-ms-3', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-06-06T09:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-ms-4', name: 'Paracetamol 500 mg tablet', route: 'Oral Q4H PRN for fever >= 38.0 C or headache', indication: 'Antipyretic / Analgesic', started: '2026-06-06T09:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Dr. Miguel Santos, MD' }
+              ],
+              clinical_record: {
+                chief_complaint: 'Outpatient consultation and prescription review; follow-up of productive cough and low-grade fever.',
+                history: 'Outpatient Consultation. Productive cough decreasing, dyspnea significantly resolved. Chest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.',
+                final_diagnosis: 'Community-Acquired Pneumonia, moderate risk, resolving on targeted oral antibiotics; Essential Hypertension (ICD-10: J18.9, I10)'
+              },
               progress_notes: 'Outpatient Consultation. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted oral antibiotics',
               orders: [
                 { text: 'Maintain SpO2 >= 95% on room air.', dateTime: '2026-06-06T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 09:45 AM nurse' },
@@ -3884,6 +3898,22 @@
               diagnosis: 'J18.9 - Community-Acquired Pneumonia (CAP) - Moderate Risk; Essential Hypertension Stage 2',
               patient_record: 'Initial assessment and stabilization',
               results: 'Admitted to Medical Ward',
+              vital_signs: [
+                { dateTime: '2026-06-12 08:30 AM', bp: '140/90', hr: '104', rr: '24', temp: '38.6', wt: '52', ht: '154', weight: '52', height: '154', bmi: '21.9', spo2: '93', o2: '93' }
+              ],
+              medications: [
+                { id: 'med-er-1', name: 'Ceftriaxone 2 g vial', route: 'Intravenous Push (IVP) OD after skin test', indication: 'Community-Acquired Pneumonia', started: '2026-06-12T08:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Roberto Lim, MD' },
+                { id: 'med-er-2', name: 'Azithromycin 500 mg tablet', route: 'Oral Once Daily (OD) with food', indication: 'Community-Acquired Pneumonia', started: '2026-06-12T08:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Roberto Lim, MD' },
+                { id: 'med-er-3', name: 'Paracetamol 500 mg tablet', route: 'Oral Every 6 hours PRN for fever >= 37.8 C', indication: 'Antipyretic', started: '2026-06-12T08:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Dr. Roberto Lim, MD' },
+                { id: 'med-er-4', name: 'Norepinephrine Drip (4 mg in 100 mL D5W)', route: 'Continuous IV Infusion 15 mL/hr via central line', indication: 'Maintain MAP >= 65 mmHg', started: '2026-06-12T08:30:00+08:00', doses24h: 'Continuous', status: 'Active', nurse: 'Dr. Roberto Lim, MD' }
+              ],
+              orders: [
+                { text: 'Admit to Medical Ward under Internal Medicine service.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
+                { text: 'Ceftriaxone 2 g IV once daily after negative skin test.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:40 PM nurse' },
+                { text: 'Azithromycin 500 mg tablet once daily with food.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:42 PM nurse' },
+                { text: 'Paracetamol 500 mg tablet PO q6h PRN for fever >= 37.8 C.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:45 PM nurse' },
+                { text: 'Oxygen at 2 L/min via nasal cannula; maintain SpO2 >= 95%.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:50 PM nurse' }
+              ],
               clinical_record: {
                 chief_complaint: 'Difficulty of breathing and high-grade fever x 3 days',
                 history: 'Patient is a 40-year-old female who presented to the Emergency Room with a 3-day history of productive cough with yellowish sputum, progressive dyspnea, and undocumented high-grade fever with chills. No hemoptysis, chest trauma, or orthopnea. Denies recent travel or known COVID-19 contact.\n\nPast Medical History: Known hypertensive for 5 years maintained on Amlodipine 5 mg once daily with fair compliance. No prior asthma, diabetes, or pulmonary tuberculosis.\n\nPersonal / Social History: Non-smoker, occasional social alcoholic beverage drinker, works as an accountant.\n\nFamily History: Father (+) Hypertension and Type 2 Diabetes; Mother (+) Bronchial Asthma.',
@@ -3970,6 +4000,13 @@
               diagnosis: 'J45.909 - Bronchial Asthma, in clinical remission; Essential Hypertension Stage 1',
               patient_record: 'Routine adult pulmonary checkup and maintenance medication titration',
               results: 'Spirometry normal; maintenance therapy continued',
+              vital_signs: [
+                { dateTime: '2026-05-20 02:15 PM', bp: '124/80', hr: '76', rr: '16', temp: '36.5', wt: '52', ht: '154', weight: '52', height: '154', bmi: '21.9', spo2: '99', o2: '99' }
+              ],
+              medications: [
+                { id: 'med-asthma-1', name: 'Budesonide / Formoterol 160/4.5 mcg inhaler', route: '1 puff Twice Daily (BID)', indication: 'Bronchial Asthma Maintenance', started: '2026-05-20T14:15:00+08:00', doses24h: '2 puffs', status: 'Active', nurse: 'Dr. Ramon Valencia, MD' },
+                { id: 'med-asthma-2', name: 'Amlodipine 5 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-05-20T14:15:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Ramon Valencia, MD' }
+              ],
               clinical_record: {
                 chief_complaint: 'Routine follow-up consultation for asthma maintenance refill and blood pressure check',
                 history: 'Patient presented to the Adult Pulmonary Outpatient Clinic for routine evaluation. Denies acute shortness of breath, nocturnal cough, or wheezing over the preceding month. Compliant with maintenance Budesonide/Formoterol inhaler and Amlodipine 5 mg OD. BP 124/80 mmHg, HR 76 bpm, RR 16/min, SpO2 99% on ambient air. Chest auscultation revealed clear and symmetric breath sounds throughout all lung zones.',
@@ -4022,6 +4059,13 @@
               diagnosis: 'K35.80 - Acute Appendicitis, uncomplicated; S/P Laparoscopic Appendectomy',
               patient_record: 'Post-operative surgical ward care and wound healing review',
               results: 'Discharged clinically stable; surgical port sites healed',
+              vital_signs: [
+                { dateTime: '2026-04-10 10:30 AM', bp: '118/76', hr: '74', rr: '16', temp: '36.6', wt: '52', ht: '154', weight: '52', height: '154', bmi: '21.9', spo2: '99', o2: '99' }
+              ],
+              medications: [
+                { id: 'med-surg-1', name: 'Cefuroxime 750 mg vial', route: 'IVTT Every 8 hours (Q8H)', indication: 'Post-Operative Antibiotic Prophylaxis', started: '2026-04-10T10:30:00+08:00', doses24h: '3 doses', status: 'Active', nurse: 'Dr. Andrea Reyes, MD' },
+                { id: 'med-surg-2', name: 'Ketorolac 30 mg ampule', route: 'IVTT Every 8 hours PRN for wound pain', indication: 'Post-Operative Analgesia', started: '2026-04-10T10:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Dr. Andrea Reyes, MD' }
+              ],
               clinical_record: {
                 chief_complaint: 'Severe right lower quadrant (RLQ) abdominal pain with nausea x 2 days',
                 history: 'Patient was admitted through the ER due to a 2-day history of periumbilical pain migrating to the right lower quadrant, accompanied by low-grade fever and anorexia. Physical exam demonstrated marked tenderness at McBurney\'s point with rebound tenderness. Emergency ultrasound confirmed acute appendicitis (non-perforated). Patient underwent an uncomplicated laparoscopic appendectomy under general endotracheal anesthesia on 04/10/2026. Post-operative course was smooth; surgical port sites dry and intact, bowel sounds normoactive on Post-Op Day 1, afebrile, and pain well controlled on oral analgesics.',
@@ -4151,7 +4195,7 @@
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 23,
+        seedVersion: 25,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -4205,6 +4249,18 @@
               diagnosis: 'E11.9 - Type 2 Diabetes Mellitus, well-controlled; I10 - Essential Hypertension',
               patient_record: 'Quarterly outpatient diabetes and hypertension refill review',
               results: 'Clinically controlled; HbA1c 6.4%',
+              vital_signs: [
+                { dateTime: '2026-09-26 09:30 AM', bp: '124/78', hr: '72', rr: '16', temp: '36.5', wt: '68', ht: '168', weight: '68', height: '168', bmi: '24.1', spo2: '99', o2: '99' }
+              ],
+              cbgs: [
+                { dateTime: '2026-09-26 08:00 AM', timing: 'Fasting Blood Sugar (FBS)', reading: 108, action: 'Target Met (80-130)', notes: 'Routine quarterly monitoring; good control', nurse: 'M. Tan, RMT / Dr. Miguel Santos, MD' }
+              ],
+              medications: [
+                { id: 'med-op-0926-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-op-0926-2', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-op-0926-3', name: 'Losartan Potassium 50 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-op-0926-4', name: 'Amlodipine 5 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-09-26T09:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' }
+              ],
               progress_notes: 'Outpatient Consultation (Internal Medicine OPD). Routine quarterly diabetes and hypertension follow-up.\nPatient feels well, asymptomatic. Good adherence with Metformin, Empagliflozin, and Losartan. No hypoglycemic symptoms or pedal swelling.\nVital signs: BP 124/78 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% ambient air. Weight 68 kg, BMI 24.1.\nPhysical Exam: Clear breath sounds, normal heart sounds, bilateral dorsalis pedis pulses palpable, monofilament foot screen normal.\nLaboratory Review: HbA1c 6.4%, FBS 108 mg/dL, Serum Creatinine 0.9 mg/dL, eGFR > 90 mL/min, Urine Albumin-Creatinine Ratio normal.\nDiagnosis: Type 2 Diabetes Mellitus, well-controlled; Essential Hypertension, controlled.\nPlan: Maintain current oral regimen. Diabetic low-salt diet. Follow-up after 3 months.',
               orders: [
                 { text: 'Continue Metformin 500 mg tablet twice daily with meals.', dateTime: '2026-09-26T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 9:45 AM nurse' },
@@ -4248,6 +4304,22 @@
               results: 'SGLT2 inhibitor initiated; BP controlled',
               disposition: 'Treated and Discharged (Outpatient)',
               follow_up: { date: '2026-09-26', clinic: 'Internal Medicine (OPD)', reason: 'Quarterly review of glycemic control and HbA1c response after Empagliflozin addition.' },
+              vital_signs: [
+                { dateTime: '2026-06-20 10:00 AM', bp: '134/84', hr: '76', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '98', o2: '98' }
+              ],
+              cbgs: [
+                { dateTime: '2026-06-20 08:30 AM', timing: 'Fasting Blood Sugar (FBS)', reading: 132, action: 'HbA1c 7.2% - Add Empagliflozin 10 mg OD', notes: 'Suboptimal glycemic control on Metformin monotherapy', nurse: 'Dr. Miguel Santos, MD' }
+              ],
+              medications: [
+                { id: 'med-op-0620-1', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-op-0620-2', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-op-0620-3', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' }
+              ],
+              clinical_record: {
+                chief_complaint: 'Semi-annual comprehensive outpatient review and lab orders',
+                history: 'Patient is a 48-year-old male presenting for scheduled semi-annual review. Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea. Compliant with Metformin 500 mg BID and Losartan 50 mg OD. Home BP ranges 130-138/80-86 mmHg.\n\nPhysical Examination: General: Alert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis pulses palpable.',
+                final_diagnosis: 'Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension (ICD-10: E11.9, I10)'
+              },
               prescriptions: [
                 { drug: 'Empagliflozin 10 mg tablet', sig: '1 tablet orally once daily in the morning', qty: '90 tablets' },
                 { drug: 'Metformin 500 mg tablet', sig: '1 tablet orally twice daily with meals', qty: '180 tablets' },
@@ -4281,6 +4353,18 @@
               results: 'Transferred maintenance care to CLMMRH Outpatient Service',
               disposition: 'Treated and Discharged (Outpatient)',
               follow_up: { date: '2026-06-20', clinic: 'Internal Medicine (OPD)', reason: 'Semi-annual comprehensive diabetes and hypertension follow-up.' },
+              vital_signs: [
+                { dateTime: '2026-03-14 08:45 AM', bp: '128/80', hr: '74', rr: '16', temp: '36.6', wt: '71', ht: '168', weight: '71', height: '168', bmi: '25.2', spo2: '99', o2: '99' }
+              ],
+              medications: [
+                { id: 'med-op-0314-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-op-0314-2', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' }
+              ],
+              clinical_record: {
+                chief_complaint: 'Initial outpatient registration and care transfer to CLMMRH Chronic Disease Management Program.',
+                history: 'Known diabetic and hypertensive for 6 years, transferring routine management to CLMMRH Outpatient Service. Denies acute complaints. Compliant with oral maintenance therapy.',
+                final_diagnosis: 'Type 2 Diabetes Mellitus; Essential Hypertension Stage 1 (ICD-10: E11.9, I10)'
+              },
               prescriptions: [
                 { drug: 'Metformin 500 mg tablet', sig: '1 tablet orally twice daily with meals', qty: '90 tablets' },
                 { drug: 'Losartan 50 mg tablet', sig: '1 tablet orally once daily', qty: '90 tablets' }
@@ -4313,6 +4397,12 @@
               results: 'Knee range of motion preserved; pain improved from 6/10 to 2/10',
               disposition: 'Treated and Discharged (Outpatient)',
               follow_up: { date: '2026-06-05', clinic: 'Orthopedics (OPD)', reason: 'Semi-annual right knee osteoarthritis surveillance.' },
+              vital_signs: [
+                { dateTime: '2025-12-05 11:15 AM', bp: '122/78', hr: '74', rr: '16', temp: '36.5', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
+              ],
+              medications: [
+                { id: 'med-ortho-1205-1', name: 'Celecoxib 200 mg capsule', route: 'Oral PRN for knee pain flare-ups', indication: 'Right Knee Osteoarthritis', started: '2025-09-18T14:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Dr. Paolo Cruz, MD' }
+              ],
               prescriptions: [
                 { drug: 'Celecoxib 200 mg capsule', sig: '1 capsule orally once daily as needed for pain flare-ups', qty: '30 capsules' }
               ],
@@ -4349,6 +4439,13 @@
               results: 'Digital Knee X-ray AP/Lateral: mild medial joint space narrowing; no fracture',
               disposition: 'Treated and Discharged (Outpatient)',
               follow_up: { date: '2025-12-05', clinic: 'Orthopedics (OPD)', reason: 'Post-PT 12-week clinical review and range of motion assessment.' },
+              vital_signs: [
+                { dateTime: '2025-09-18 02:30 PM', bp: '126/80', hr: '78', rr: '18', temp: '36.7', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
+              ],
+              medications: [
+                { id: 'med-ortho-0918-1', name: 'Celecoxib 200 mg capsule', route: 'Oral Once Daily after meals for 14 days', indication: 'Right Knee Osteoarthritis', started: '2025-09-18T14:30:00+08:00', doses24h: '1 dose', status: 'Completed', nurse: 'Dr. Paolo Cruz, MD' },
+                { id: 'med-ortho-0918-2', name: 'Paracetamol 500 mg tablet', route: 'Oral Every 6 hours PRN for breakthrough pain', indication: 'Breakthrough knee pain', started: '2025-09-18T14:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Dr. Paolo Cruz, MD' }
+              ],
               prescriptions: [
                 { drug: 'Celecoxib 200 mg capsule', sig: '1 capsule orally once daily after meals for 14 days', qty: '14 capsules' },
                 { drug: 'Paracetamol 500 mg tablet', sig: '1 tablet every 6 hours PRN for breakthrough pain', qty: '20 tablets' }
@@ -4476,11 +4573,11 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 21) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 25) records[index] = seedPatientRecord();
 
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) records.push(opPatientRecord());
-      else if (Number(records[opIndex].seedVersion || 0) < 23) records[opIndex] = opPatientRecord();
+      else if (Number(records[opIndex].seedVersion || 0) < 25) records[opIndex] = opPatientRecord();
 
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
@@ -4694,6 +4791,20 @@
       return safeParse(localStorage.getItem(CHART_MONITORING_KEY), {});
     }
 
+    var opChartMonitoring = {
+      ivFluids: [],
+      transfusions: [],
+      cbgs: [
+        { dateTime: '2026-09-26T08:00:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 108, action: 'Target Met (80-130 mg/dL)', notes: 'Routine quarterly diabetes monitoring; good control', nurse: 'M. Tan, RMT / Dr. Miguel Santos, MD' }
+      ],
+      medications: [
+        { id: 'op-med-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:30:00+08:00', nextDose: '2026-09-26T19:00:00+08:00', doses24h: '2 doses', status: 'Active / Ongoing', nurse: 'Dr. Miguel Santos, MD' },
+        { id: 'op-med-2', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', lastDose: '2026-09-26T07:30:00+08:00', nextDose: '2026-09-27T07:30:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Dr. Miguel Santos, MD' },
+        { id: 'op-med-3', name: 'Losartan Potassium 50 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:30:00+08:00', nextDose: '2026-09-27T07:30:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Dr. Miguel Santos, MD' },
+        { id: 'op-med-4', name: 'Amlodipine 5 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-09-26T09:30:00+08:00', lastDose: '', nextDose: '2026-09-27T07:30:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Dr. Miguel Santos, MD' }
+      ],
+      intakeOutput: []
+    };
     function getPatientChartMonitoring(patientId) {
       var store = getChartMonitoringStore();
       if (store && store[patientId]) {
@@ -4702,11 +4813,35 @@
       if (patientId === SEED_PATIENT_ID || (!patientId && !store['blank'])) {
         return JSON.parse(JSON.stringify(seedChartMonitoring));
       }
+      if (patientId === OP_PATIENT_ID) {
+        return JSON.parse(JSON.stringify(opChartMonitoring));
+      }
+      var pRec = (typeof getPatients === 'function' ? getPatients() : []).find(function(r) { return r.id === patientId; });
+      var meds = [];
+      if (pRec && pRec.data) {
+        var ord = pRec.data.orders || {};
+        if (Array.isArray(ord.medications)) {
+          meds = ord.medications.map(function(m, idx) {
+            var name = typeof m === 'string' ? m : (m.drug || m.text || '');
+            var sig = typeof m === 'object' ? (m.sig || m.dosage || 'As directed') : 'As directed';
+            return {
+              id: 'med-auto-' + idx,
+              name: name,
+              route: sig,
+              indication: pRec.data.admitting_diagnosis || 'Prescribed therapy',
+              started: pRec.data.vs_date_time || '',
+              doses24h: 'Active',
+              status: /prn/i.test(name + ' ' + sig) ? 'Active / PRN' : 'Active',
+              nurse: 'Attending Physician'
+            };
+          });
+        }
+      }
       return {
         ivFluids: [],
         transfusions: [],
         cbgs: [],
-        medications: [],
+        medications: meds,
         intakeOutput: []
       };
     }
@@ -5008,8 +5143,12 @@
         document.querySelectorAll('#meds-filter-group button').forEach(function(b) { b.classList.remove('active'); });
         medsBtn.classList.add('active');
         activeMedsFilter = medsBtn.dataset.filter || 'all';
-        var currentRec = getPatients().find(function(p) { return p.id === activePatientId; });
-        renderClinicalMonitoring(currentRec);
+        if (activeInspectedEncounterIndex != null && loadedEncounters[activeInspectedEncounterIndex]) {
+          renderEncounterMedications(loadedEncounters[activeInspectedEncounterIndex]);
+        } else {
+          var currentRec = getPatients().find(function(p) { return p.id === activePatientId; });
+          renderClinicalMonitoring(currentRec);
+        }
       }
       if (e.target && (e.target.id === 'btn-chart-refresh' || e.target.closest('#btn-chart-refresh'))) {
         var currentRec = getPatients().find(function(p) { return p.id === activePatientId; });
@@ -5530,24 +5669,27 @@
       } else if (enc.vitals) {
         vsList = [enc.vitals];
       } else {
-        var notes = enc.progress_notes || '';
-        var bpM = notes.match(/BP\s*([\d\/]+)/i);
-        var hrM = notes.match(/HR\s*(\d+)/i);
-        var rrM = notes.match(/RR\s*(\d+)/i);
-        var tempM = notes.match(/Temp\s*([\d\.]+)/i);
-        var spo2M = notes.match(/SpO2\s*([\d]+)/i);
-        var wtM = notes.match(/Weight\s*([\d\.]+)/i);
-        var bmiM = notes.match(/BMI\s*([\d\.]+)/i);
-        if (bpM || hrM || rrM || tempM) {
+        var notes = (enc.progress_notes || '') + ' ' + (enc.clinical_record && enc.clinical_record.history ? enc.clinical_record.history : '') + ' ' + (enc.patient_record || '');
+        var bpM = notes.match(/(?:blood\s*pressure|BP)[^\d]*(\d{2,3}\/\d{2,3})/i) || notes.match(/(\d{2,3}\/\d{2,3})\s*mmHg/i);
+        var hrM = notes.match(/(?:heart\s*rate|pulse|HR)[^\d]*(\d{2,3})/i) || notes.match(/(\d{2,3})\s*bpm/i);
+        var rrM = notes.match(/(?:respiratory\s*rate|RR)[^\d]*(\d{1,2})/i) || notes.match(/(\d{1,2})\s*\/(?:min|minute)/i);
+        var tempM = notes.match(/(?:temp|temperature|afebrile\s*at)[^\d]*([\d\.]+)/i) || notes.match(/([\d\.]+)\s*°?C/i);
+        var spo2M = notes.match(/(?:SpO2|saturation|O2)[^\d]*([\d]{2,3})/i) || notes.match(/(\d{2,3})%\s*(?:on|room|ambient)/i);
+        var wtM = notes.match(/Weight[^\d]*([\d\.]+)/i) || notes.match(/([\d\.]+)\s*kg/i);
+        var bmiM = notes.match(/BMI[^\d]*([\d\.]+)/i);
+        if (bpM || hrM || rrM || tempM || wtM || bmiM || spo2M) {
+          var wtVal = wtM ? wtM[1] : (enc.weight || (currentPatientData() && (currentPatientData().weight || currentPatientData().vs_weight)) || '—');
+          var htVal = (enc.height || (currentPatientData() && (currentPatientData().height || currentPatientData().vs_height)) || '168');
+          var bmiVal = bmiM ? bmiM[1] : (wtVal !== '—' && htVal ? (parseFloat(wtVal) / Math.pow(parseFloat(htVal)/100, 2)).toFixed(1) : '—');
           vsList = [{
             dateTime: (enc.date || '') + ' ' + (enc.time || ''),
             bp: bpM ? bpM[1] : '—',
             hr: hrM ? hrM[1] : '—',
             rr: rrM ? rrM[1] : '—',
             temp: tempM ? tempM[1] : '—',
-            wt: wtM ? wtM[1] : '—',
-            ht: '—',
-            bmi: bmiM ? bmiM[1] : '—',
+            wt: wtVal,
+            ht: htVal,
+            bmi: bmiVal,
             spo2: spo2M ? spo2M[1] : '—'
           }];
         }
@@ -5572,6 +5714,229 @@
           '<td>' + esc(row.spo2 || row.o2 || row.vs_spo2 || '—') + '</td>' +
           '</tr>';
       }).join('');
+    }
+
+    function renderEncounterMedications(enc) {
+      var medRows = document.getElementById('med-summary-rows');
+      if (!medRows) return;
+
+      var allMeds = [];
+      if (Array.isArray(enc.medications) && enc.medications.length > 0) {
+        allMeds = enc.medications;
+      } else if (Array.isArray(enc.prescriptions) && enc.prescriptions.length > 0) {
+        allMeds = enc.prescriptions.map(function (p, idx) {
+          return {
+            id: 'enc-rx-' + idx,
+            name: p.drug,
+            route: p.sig || 'Oral as directed',
+            indication: enc.diagnosis || 'Maintenance therapy',
+            started: enc.date ? enc.date + 'T' + (enc.time ? enc.time : '08:00:00') : '',
+            doses24h: 'Active',
+            status: 'Active',
+            nurse: enc.physician || 'Attending Physician'
+          };
+        });
+      } else if (Array.isArray(enc.orders) && enc.orders.length > 0) {
+        enc.orders.forEach(function (o, idx) {
+          var t = typeof o === 'string' ? o : (o.text || '');
+          if (t.match(/tablet|capsule|mg|suspension|nebulizer|PO|IVTT|PRN|Metformin|Empagliflozin|Losartan|Amlodipine|Celecoxib|Paracetamol|Co-amoxiclav|Ceftriaxone|Azithromycin/i)) {
+            allMeds.push({
+              id: 'enc-ord-' + idx,
+              name: t,
+              route: 'Per CPOE Plan',
+              indication: enc.diagnosis || 'Prescribed therapy',
+              started: (o && o.dateTime) || (enc.date ? enc.date + 'T08:00:00' : ''),
+              doses24h: 'Active',
+              status: /PRN/i.test(t) ? 'Active / PRN' : 'Active',
+              nurse: enc.physician || 'Attending Physician'
+            });
+          }
+        });
+      }
+
+      var filteredMeds = allMeds.filter(function(item) {
+        if (activeMedsFilter === 'active') return /active/i.test(item.status || '') && !/prn/i.test(item.status || '');
+        if (activeMedsFilter === 'prn') return /prn/i.test(item.status || '');
+        return true;
+      });
+
+      var activeCount = allMeds.filter(function(m) { return /active/i.test(m.status || ''); }).length;
+      var activeSchedCount = allMeds.filter(function(m) { return /active/i.test(m.status || '') && !/prn/i.test(m.status || ''); }).length;
+      var prnCount = allMeds.filter(function(m) { return /prn/i.test(m.status || ''); }).length;
+
+      var countMedAll = document.getElementById('count-meds-all');
+      if (countMedAll) countMedAll.textContent = allMeds.length;
+      var countMedAct = document.getElementById('count-meds-active');
+      if (countMedAct) countMedAct.textContent = activeSchedCount;
+      var countMedPrn = document.getElementById('count-meds-prn');
+      if (countMedPrn) countMedPrn.textContent = prnCount;
+
+      var tabBadgeMeds = document.getElementById('tab-badge-meds');
+      if (tabBadgeMeds) tabBadgeMeds.textContent = activeCount + ' Active';
+
+      var stripMedsBadge = document.getElementById('strip-meds-badge');
+      if (stripMedsBadge) stripMedsBadge.textContent = activeCount + ' Active';
+      var stripMedsVal = document.getElementById('strip-meds-val');
+      var stripMedsSub = document.getElementById('strip-meds-sub');
+      if (allMeds.length > 0) {
+        var firstActive = allMeds.find(function(m) { return /active/i.test(m.status || ''); }) || allMeds[0];
+        if (stripMedsVal) stripMedsVal.textContent = firstActive.name.length > 22 ? firstActive.name.substring(0, 22) + '...' : firstActive.name;
+        if (stripMedsSub) stripMedsSub.textContent = firstActive.route || 'As scheduled';
+      } else {
+        if (stripMedsVal) stripMedsVal.textContent = 'No Medications';
+        if (stripMedsSub) stripMedsSub.textContent = 'None currently ordered';
+      }
+
+      if (filteredMeds.length === 0) {
+        medRows.innerHTML = '<tr><td colspan="8" class="muted text-center" style="padding:15px;">No active medications ordered for this encounter.</td></tr>';
+      } else {
+        medRows.innerHTML = filteredMeds.map(function(item) {
+          var isPrn = /prn/i.test(item.status || '');
+          var statusBadge = isPrn
+            ? '<span class="badge badge-warning"><i class="icon-time"></i> PRN</span>'
+            : '<span class="badge badge-success"><i class="icon-ok"></i> Active</span>';
+          return '<tr>' +
+            '<td><strong>' + esc(item.name || '—') + '</strong></td>' +
+            '<td>' + esc(item.route || '—') + '</td>' +
+            '<td>' + esc(item.indication || '—') + '</td>' +
+            '<td>' + esc(item.started ? formatDateTime(item.started) : '—') + '</td>' +
+            '<td>' + esc(item.lastDose ? formatDateTime(item.lastDose) : '—') + '</td>' +
+            '<td>' + esc(item.doses24h || '—') + '</td>' +
+            '<td>' + statusBadge + '</td>' +
+            '<td>' + esc(item.nurse || '—') + '</td>' +
+            '</tr>';
+        }).join('');
+      }
+    }
+
+    function renderEncounterCBGs(enc) {
+      var cbgRows = document.getElementById('cbg-rows');
+      if (!cbgRows) return;
+
+      var allCbg = [];
+      if (Array.isArray(enc.cbgs) && enc.cbgs.length > 0) {
+        allCbg = enc.cbgs;
+      } else {
+        var notes = (enc.progress_notes || '') + ' ' + (enc.patient_record || '');
+        var fbsM = notes.match(/(?:fasting\s*blood\s*sugar|FBS|blood\s*sugar)[^\d]*(\d{2,3})/i);
+        if (fbsM) {
+          allCbg = [{
+            dateTime: (enc.date || '') + ' ' + (enc.time || '08:00 AM'),
+            timing: 'Fasting Blood Sugar (FBS)',
+            reading: fbsM[1],
+            action: Number(fbsM[1]) > 130 ? 'Glycemic Review / Adjustment' : 'Target Met (80-130 mg/dL)',
+            notes: 'Encounter laboratory review',
+            nurse: enc.physician || 'Attending Physician'
+          }];
+        }
+      }
+
+      var tabBadgeCbg = document.getElementById('tab-badge-cbg');
+      if (tabBadgeCbg) tabBadgeCbg.textContent = allCbg.length + ' logs';
+
+      var stripCbgBadge = document.getElementById('strip-cbg-badge');
+      var stripCbgVal = document.getElementById('strip-cbg-val');
+      var stripCbgSub = document.getElementById('strip-cbg-sub');
+      if (allCbg.length > 0) {
+        var lastCbg = allCbg[allCbg.length - 1];
+        if (stripCbgVal) stripCbgVal.textContent = lastCbg.reading + ' mg/dL';
+        if (stripCbgSub) stripCbgSub.textContent = (lastCbg.timing || '') + (lastCbg.action ? ' · ' + lastCbg.action : '');
+        if (stripCbgBadge) {
+          var rVal = Number(lastCbg.reading);
+          if (rVal < 70) { stripCbgBadge.className = 'badge badge-important chart-stat-badge'; stripCbgBadge.textContent = 'Hypo (<70)'; }
+          else if (rVal <= 140) { stripCbgBadge.className = 'badge badge-success chart-stat-badge'; stripCbgBadge.textContent = 'Normal'; }
+          else if (rVal <= 199) { stripCbgBadge.className = 'badge badge-warning chart-stat-badge'; stripCbgBadge.textContent = 'Mild High'; }
+          else { stripCbgBadge.className = 'badge badge-important chart-stat-badge'; stripCbgBadge.textContent = 'High (>200)'; }
+        }
+      } else {
+        if (stripCbgVal) stripCbgVal.textContent = '—';
+        if (stripCbgSub) stripCbgSub.textContent = 'No CBG logs';
+        if (stripCbgBadge) { stripCbgBadge.className = 'badge chart-stat-badge'; stripCbgBadge.textContent = 'None'; }
+      }
+
+      if (allCbg.length === 0) {
+        cbgRows.innerHTML = '<tr><td colspan="6" class="muted text-center" style="padding:15px;">No CBG readings logged for this encounter.</td></tr>';
+      } else {
+        cbgRows.innerHTML = allCbg.map(function(item) {
+          var readingVal = Number(item.reading || 0);
+          var badgeClass = readingVal < 70 ? 'cbg-badge-low' : (readingVal <= 140 ? 'cbg-badge-normal' : (readingVal <= 199 ? 'cbg-badge-elevated' : 'cbg-badge-high'));
+          return '<tr>' +
+            '<td>' + esc(item.dateTime ? formatDateTime(item.dateTime) : '—') + '</td>' +
+            '<td><strong>' + esc(item.timing || '—') + '</strong></td>' +
+            '<td><span class="' + badgeClass + '">' + esc(item.reading) + ' mg/dL</span></td>' +
+            '<td><strong>' + esc(item.action || 'None required') + '</strong></td>' +
+            '<td><small class="muted">' + esc(item.notes || '—') + '</small></td>' +
+            '<td>' + esc(item.nurse || '—') + '</td>' +
+            '</tr>';
+        }).join('');
+      }
+    }
+
+    function renderEncounterOtherFlowsheets(enc) {
+      // IV Fluids
+      var ivfRows = document.getElementById('ivf-rows');
+      if (ivfRows) {
+        var allIvf = Array.isArray(enc.ivFluids) ? enc.ivFluids : [];
+        var ongoingCount = allIvf.filter(function(i) { return i.status === 'Ongoing'; }).length;
+        var tabBadgeIvf = document.getElementById('tab-badge-ivf');
+        if (tabBadgeIvf) tabBadgeIvf.textContent = ongoingCount + ' Ongoing';
+        var stripIvfBadge = document.getElementById('strip-ivf-badge');
+        if (stripIvfBadge) stripIvfBadge.textContent = ongoingCount + ' Ongoing';
+        var stripIvfVal = document.getElementById('strip-ivf-val');
+        var stripIvfSub = document.getElementById('strip-ivf-sub');
+        if (allIvf.length > 0) {
+          var firstOngoing = allIvf.find(function(i) { return i.status === 'Ongoing'; }) || allIvf[0];
+          if (stripIvfVal) stripIvfVal.textContent = firstOngoing.solution;
+          if (stripIvfSub) stripIvfSub.textContent = firstOngoing.rate;
+        } else {
+          if (stripIvfVal) stripIvfVal.textContent = 'None ongoing';
+          if (stripIvfSub) stripIvfSub.textContent = 'No active drips';
+        }
+        if (allIvf.length === 0) {
+          ivfRows.innerHTML = '<tr><td colspan="8" class="muted text-center" style="padding:15px;">No IV fluids recorded for this encounter.</td></tr>';
+        }
+      }
+
+      // Transfusions
+      var transRows = document.getElementById('transfusion-rows');
+      if (transRows) {
+        var allTrans = Array.isArray(enc.transfusions) ? enc.transfusions : [];
+        var tabBadgeTrans = document.getElementById('tab-badge-transfusion');
+        if (tabBadgeTrans) tabBadgeTrans.textContent = allTrans.length + (allTrans.length === 1 ? ' Unit' : ' Units');
+        var stripTransBadge = document.getElementById('strip-transfusion-badge');
+        if (stripTransBadge) stripTransBadge.textContent = allTrans.length + (allTrans.length === 1 ? ' Unit' : ' Units');
+        var stripTransVal = document.getElementById('strip-transfusion-val');
+        var stripTransSub = document.getElementById('strip-transfusion-sub');
+        if (allTrans.length === 0) {
+          if (stripTransVal) stripTransVal.textContent = 'None Recorded';
+          if (stripTransSub) stripTransSub.textContent = 'No transfusions given';
+          transRows.innerHTML = '<tr><td colspan="9" class="muted text-center" style="padding:15px;">No blood transfusion records for this encounter.</td></tr>';
+        }
+      }
+
+      // Intake & Output
+      var ioRows = document.getElementById('io-rows');
+      if (ioRows) {
+        var allIo = Array.isArray(enc.intakeOutput) ? enc.intakeOutput : [];
+        var totalIn = 0, totalOut = 0;
+        allIo.forEach(function(io) {
+          totalIn += (Number(io.inOral || 0) + Number(io.inIvf || 0) + Number(io.inBloodMeds || 0));
+          totalOut += (Number(io.outUrine || 0) + Number(io.outDrain || 0) + Number(io.outStool || 0));
+        });
+        var netBalance = totalIn - totalOut;
+        var netSign = netBalance >= 0 ? '+' : '';
+        var tabBadgeIo = document.getElementById('tab-badge-io');
+        if (tabBadgeIo) tabBadgeIo.textContent = netSign + netBalance + ' mL';
+        var stripIoBadge = document.getElementById('strip-io-badge');
+        if (stripIoBadge) stripIoBadge.textContent = netSign + netBalance + ' mL';
+        var stripIoVal = document.getElementById('strip-io-val');
+        if (stripIoVal) stripIoVal.textContent = 'In: ' + totalIn.toLocaleString() + ' · Out: ' + totalOut.toLocaleString();
+        var stripIoSub = document.getElementById('strip-io-sub');
+        if (stripIoSub) stripIoSub.textContent = '24h Net: ' + netSign + netBalance + ' mL (' + (netBalance >= 0 ? 'Positive' : 'Negative') + ')';
+        if (allIo.length === 0) {
+          ioRows.innerHTML = '<tr><td colspan="10" class="muted text-center" style="padding:15px;">No Intake & Output records found for this encounter.</td></tr>';
+        }
+      }
     }
 
     function setDashboardReadOnly(isReadOnly) {
@@ -5652,8 +6017,11 @@
         if (bSub) bSub.textContent = 'Attending Physician: ' + docName + ' • ' + (enc.status_tag || 'Finalized Encounter') + ' • Changes to historical records are prohibited by hospital audit standards.';
       }
 
-      // 1. Vital Signs
+      // 1. Clinical Flowsheet Tabs Propagation
       renderEncounterVitalSigns(enc);
+      renderEncounterMedications(enc);
+      renderEncounterCBGs(enc);
+      renderEncounterOtherFlowsheets(enc);
 
       // 2. Chief Complaint & Medical History
       var ccEl = document.getElementById('chief_complaint');
@@ -5786,6 +6154,7 @@
       var curRec = getPatients().find(function (r) { return r.id === activePatientId; });
       if (curRec) {
         loadPatientRecord(curRec);
+        renderClinicalMonitoring(curRec);
       }
       var banner = document.getElementById('historical-encounter-banner');
       if (banner) banner.style.display = 'none';

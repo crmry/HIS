@@ -544,7 +544,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 21,
+                seedVersion: 25,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T16:30:00+08:00",
                 data: {
@@ -696,7 +696,7 @@
         function opPatientRecord() {
             return {
                 id: OP_PATIENT_ID,
-                seedVersion: 24,
+                seedVersion: 25,
                 createdAt: "2026-03-14T08:45:00+08:00",
                 updatedAt: "2026-09-26T09:30:00+08:00",
                 data: {
@@ -750,6 +750,18 @@
               diagnosis: 'E11.9 - Type 2 Diabetes Mellitus, well-controlled; I10 - Essential Hypertension',
               patient_record: 'Quarterly outpatient diabetes and hypertension refill review',
               results: 'Clinically controlled; HbA1c 6.4%',
+              vital_signs: [
+                { dateTime: '2026-09-26 09:30 AM', bp: '124/78', hr: '72', rr: '16', temp: '36.5', wt: '68', ht: '168', weight: '68', height: '168', bmi: '24.1', spo2: '99', o2: '99' }
+              ],
+              cbgs: [
+                { dateTime: '2026-09-26 08:00 AM', timing: 'Fasting Blood Sugar (FBS)', reading: 108, action: 'Target Met (80-130)', notes: 'Routine quarterly monitoring; good control', nurse: 'M. Tan, RMT / Dr. Miguel Santos, MD' }
+              ],
+              medications: [
+                { id: 'med-op-0926-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-op-0926-2', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-op-0926-3', name: 'Losartan Potassium 50 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-op-0926-4', name: 'Amlodipine 5 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-09-26T09:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' }
+              ],
               progress_notes: 'Outpatient Consultation (Internal Medicine OPD). Routine quarterly diabetes and hypertension follow-up.\nPatient feels well, asymptomatic. Good adherence with Metformin, Empagliflozin, and Losartan. No hypoglycemic symptoms or pedal swelling.\nVital signs: BP 124/78 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% ambient air. Weight 68 kg, BMI 24.1.\nPhysical Exam: Clear breath sounds, normal heart sounds, bilateral dorsalis pedis pulses palpable, monofilament foot screen normal.\nLaboratory Review: HbA1c 6.4%, FBS 108 mg/dL, Serum Creatinine 0.9 mg/dL, eGFR > 90 mL/min, Urine Albumin-Creatinine Ratio normal.\nDiagnosis: Type 2 Diabetes Mellitus, well-controlled; Essential Hypertension, controlled.\nPlan: Maintain current oral regimen. Diabetic low-salt diet. Follow-up after 3 months.',
               orders: [
                 { text: 'Continue Metformin 500 mg tablet twice daily with meals.', dateTime: '2026-09-26T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 9:45 AM nurse' },
@@ -793,6 +805,22 @@
               results: 'SGLT2 inhibitor initiated; BP controlled',
               disposition: 'Treated and Discharged (Outpatient)',
               follow_up: { date: '2026-09-26', clinic: 'Internal Medicine (OPD)', reason: 'Quarterly review of glycemic control and HbA1c response after Empagliflozin addition.' },
+              vital_signs: [
+                { dateTime: '2026-06-20 10:00 AM', bp: '134/84', hr: '76', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '98', o2: '98' }
+              ],
+              cbgs: [
+                { dateTime: '2026-06-20 08:30 AM', timing: 'Fasting Blood Sugar (FBS)', reading: 132, action: 'HbA1c 7.2% - Add Empagliflozin 10 mg OD', notes: 'Suboptimal glycemic control on Metformin monotherapy', nurse: 'Dr. Miguel Santos, MD' }
+              ],
+              medications: [
+                { id: 'med-op-0620-1', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-op-0620-2', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-op-0620-3', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' }
+              ],
+              clinical_record: {
+                chief_complaint: 'Semi-annual comprehensive outpatient review and lab orders',
+                history: 'Patient is a 48-year-old male presenting for scheduled semi-annual review. Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea. Compliant with Metformin 500 mg BID and Losartan 50 mg OD. Home BP ranges 130-138/80-86 mmHg.\n\nPhysical Examination: General: Alert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis pulses palpable.',
+                final_diagnosis: 'Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension (ICD-10: E11.9, I10)'
+              },
               prescriptions: [
                 { drug: 'Empagliflozin 10 mg tablet', sig: '1 tablet orally once daily in the morning', qty: '90 tablets' },
                 { drug: 'Metformin 500 mg tablet', sig: '1 tablet orally twice daily with meals', qty: '180 tablets' },
@@ -826,6 +854,18 @@
               results: 'Transferred maintenance care to CLMMRH Outpatient Service',
               disposition: 'Treated and Discharged (Outpatient)',
               follow_up: { date: '2026-06-20', clinic: 'Internal Medicine (OPD)', reason: 'Semi-annual comprehensive diabetes and hypertension follow-up.' },
+              vital_signs: [
+                { dateTime: '2026-03-14 08:45 AM', bp: '128/80', hr: '74', rr: '16', temp: '36.6', wt: '71', ht: '168', weight: '71', height: '168', bmi: '25.2', spo2: '99', o2: '99' }
+              ],
+              medications: [
+                { id: 'med-op-0314-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
+                { id: 'med-op-0314-2', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' }
+              ],
+              clinical_record: {
+                chief_complaint: 'Initial outpatient registration and care transfer to CLMMRH Chronic Disease Management Program.',
+                history: 'Known diabetic and hypertensive for 6 years, transferring routine management to CLMMRH Outpatient Service. Denies acute complaints. Compliant with oral maintenance therapy.',
+                final_diagnosis: 'Type 2 Diabetes Mellitus; Essential Hypertension Stage 1 (ICD-10: E11.9, I10)'
+              },
               prescriptions: [
                 { drug: 'Metformin 500 mg tablet', sig: '1 tablet orally twice daily with meals', qty: '90 tablets' },
                 { drug: 'Losartan 50 mg tablet', sig: '1 tablet orally once daily', qty: '90 tablets' }
@@ -858,6 +898,12 @@
               results: 'Knee range of motion preserved; pain improved from 6/10 to 2/10',
               disposition: 'Treated and Discharged (Outpatient)',
               follow_up: { date: '2026-06-05', clinic: 'Orthopedics (OPD)', reason: 'Semi-annual right knee osteoarthritis surveillance.' },
+              vital_signs: [
+                { dateTime: '2025-12-05 11:15 AM', bp: '122/78', hr: '74', rr: '16', temp: '36.5', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
+              ],
+              medications: [
+                { id: 'med-ortho-1205-1', name: 'Celecoxib 200 mg capsule', route: 'Oral PRN for knee pain flare-ups', indication: 'Right Knee Osteoarthritis', started: '2025-09-18T14:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Dr. Paolo Cruz, MD' }
+              ],
               prescriptions: [
                 { drug: 'Celecoxib 200 mg capsule', sig: '1 capsule orally once daily as needed for pain flare-ups', qty: '30 capsules' }
               ],
@@ -894,6 +940,13 @@
               results: 'Digital Knee X-ray AP/Lateral: mild medial joint space narrowing; no fracture',
               disposition: 'Treated and Discharged (Outpatient)',
               follow_up: { date: '2025-12-05', clinic: 'Orthopedics (OPD)', reason: 'Post-PT 12-week clinical review and range of motion assessment.' },
+              vital_signs: [
+                { dateTime: '2025-09-18 02:30 PM', bp: '126/80', hr: '78', rr: '18', temp: '36.7', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
+              ],
+              medications: [
+                { id: 'med-ortho-0918-1', name: 'Celecoxib 200 mg capsule', route: 'Oral Once Daily after meals for 14 days', indication: 'Right Knee Osteoarthritis', started: '2025-09-18T14:30:00+08:00', doses24h: '1 dose', status: 'Completed', nurse: 'Dr. Paolo Cruz, MD' },
+                { id: 'med-ortho-0918-2', name: 'Paracetamol 500 mg tablet', route: 'Oral Every 6 hours PRN for breakthrough pain', indication: 'Breakthrough knee pain', started: '2025-09-18T14:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Dr. Paolo Cruz, MD' }
+              ],
               prescriptions: [
                 { drug: 'Celecoxib 200 mg capsule', sig: '1 capsule orally once daily after meals for 14 days', qty: '14 capsules' },
                 { drug: 'Paracetamol 500 mg tablet', sig: '1 tablet every 6 hours PRN for breakthrough pain', qty: '20 tablets' }
@@ -1017,7 +1070,7 @@
 
             const opIndex = records.findIndex(record => record.id === OP_PATIENT_ID);
             if (opIndex < 0) records.push(opPatientRecord());
-            else if (Number(records[opIndex].seedVersion || 0) < 24) records[opIndex] = opPatientRecord();
+            else if (Number(records[opIndex].seedVersion || 0) < 25) records[opIndex] = opPatientRecord();
 
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
