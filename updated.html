@@ -3378,7 +3378,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 15,
+        seedVersion: 16,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T10:45:00+08:00',
         data: {
@@ -3423,7 +3423,7 @@
           encounters: [
             {
               date: '2026-06-13',
-              time: '08:00 AM',
+              time: '10:15 AM',
               registry: 'IP',
               service: 'Internal Medicine',
               physician: 'Dr. Miguel Santos, MD',
@@ -3435,10 +3435,10 @@
               progress_notes: 'Hospital Day 2. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics',
               orders: [
                 { text: 'Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 10:30 AM nurse' },
-                { text: 'Continue IV Ceftriaxone 2 g OD (Day 2 of 7).', dateTime: '2026-06-13T10:16:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:35 AM nurse\nA - 11:00 AM nurse' },
-                { text: 'Shift Azithromycin to oral 500 mg tablet once daily after meals.', dateTime: '2026-06-13T10:17:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:40 AM nurse\nA - 11:05 AM nurse' },
-                { text: 'Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.', dateTime: '2026-06-13T10:18:00+08:00', cared: ['R'], timeSignature: 'R - 10:45 AM physician' },
-                { text: 'May ambulate inside room as tolerated. Regular diet.', dateTime: '2026-06-13T10:20:00+08:00', cared: ['C'], timeSignature: 'C - 11:00 AM nurse' }
+                { text: 'Continue IV Ceftriaxone 2 g OD (Day 2 of 7).', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:35 AM nurse\nA - 11:00 AM nurse' },
+                { text: 'Shift Azithromycin to oral 500 mg tablet once daily after meals.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:40 AM nurse\nA - 11:05 AM nurse' },
+                { text: 'Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['R'], timeSignature: 'R - 10:45 AM physician' },
+                { text: 'May ambulate inside room as tolerated. Regular diet.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:00 AM nurse' }
               ],
               clinical_record: {
                 chief_complaint: 'Decreasing cough and improved breathing; afebrile x 18 hours',
@@ -3502,7 +3502,7 @@
             },
             {
               date: '2026-06-12',
-              time: '08:15 AM',
+              time: '08:30 AM',
               registry: 'ER',
               service: 'Emergency Medicine',
               physician: 'Dr. Roberto Lim, MD',
@@ -3604,9 +3604,9 @@
               },
               progress_notes: 'Outpatient pulmonary routine follow-up. No dyspnea, no wheezing, good inhaler adherence.\nVital signs: BP 124/80 mmHg, HR 76 bpm, RR 16/min, Temp 36.5 °C, SpO2 99%\nChest: Clear and symmetric breath sounds throughout all lung zones.\nDiagnosis: Bronchial Asthma, Well-Controlled; Essential Hypertension Stage 1 (Controlled)',
               orders: [
-                { text: 'Continue Budesonide/Formoterol 160/4.5 mcg inhaler, 1 puff BID.', dateTime: '2026-05-20T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:45 PM nurse' },
-                { text: 'Continue Amlodipine 5 mg tablet once daily in the morning.', dateTime: '2026-05-20T14:32:00+08:00', cared: ['C'], timeSignature: 'C - 2:50 PM nurse' },
-                { text: 'Follow-up at Adult Pulmonary Outpatient Clinic after 3 months.', dateTime: '2026-05-20T14:35:00+08:00', cared: ['C'], timeSignature: 'C - 3:00 PM nurse' }
+                { text: 'Continue Budesonide/Formoterol 160/4.5 mcg inhaler, 1 puff BID.', dateTime: '2026-05-20T14:15:00+08:00', cared: ['C'], timeSignature: 'C - 2:45 PM nurse' },
+                { text: 'Continue Amlodipine 5 mg tablet once daily in the morning.', dateTime: '2026-05-20T14:15:00+08:00', cared: ['C'], timeSignature: 'C - 2:50 PM nurse' },
+                { text: 'Follow-up at Adult Pulmonary Outpatient Clinic after 3 months.', dateTime: '2026-05-20T14:15:00+08:00', cared: ['C'], timeSignature: 'C - 3:00 PM nurse' }
               ],
               examinations: [
                 {
@@ -3657,10 +3657,10 @@
               progress_notes: 'Post-Operative Day 1. S/P Laparoscopic Appendectomy. Tolerating clear liquids, afebrile.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99%\nAbdomen: Soft, mild peri-incisional tenderness, surgical port sites clean, dry, and intact.\nDiagnosis: Acute Appendicitis, Non-perforated; Status Post Laparoscopic Appendectomy (K35.80)',
               orders: [
                 { text: 'NPO temporarily until fully awake, then may start clear liquids as tolerated.', dateTime: '2026-04-10T10:30:00+08:00', cared: ['C'], timeSignature: 'C - 10:45 AM nurse' },
-                { text: 'PNSS 1 L at 100 mL/hour.', dateTime: '2026-04-10T10:32:00+08:00', cared: ['A'], timeSignature: 'A - 11:00 AM nurse' },
-                { text: 'Cefuroxime 750 mg IV every 8 hours (Post-Op Day 1).', dateTime: '2026-04-10T10:35:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 11:15 AM nurse\nA - 12:00 PM nurse' },
-                { text: 'Ketorolac 30 mg IV every 8 hours PRN for moderate to severe wound pain.', dateTime: '2026-04-10T10:36:00+08:00', cared: ['C'], timeSignature: 'C - 11:20 AM nurse' },
-                { text: 'Monitor surgical dressing for bleeding or discharge; keep clean and dry.', dateTime: '2026-04-10T10:40:00+08:00', cared: ['C'], timeSignature: 'C - 11:30 AM nurse' }
+                { text: 'PNSS 1 L at 100 mL/hour.', dateTime: '2026-04-10T10:30:00+08:00', cared: ['A'], timeSignature: 'A - 11:00 AM nurse' },
+                { text: 'Cefuroxime 750 mg IV every 8 hours (Post-Op Day 1).', dateTime: '2026-04-10T10:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 11:15 AM nurse\nA - 12:00 PM nurse' },
+                { text: 'Ketorolac 30 mg IV every 8 hours PRN for moderate to severe wound pain.', dateTime: '2026-04-10T10:30:00+08:00', cared: ['C'], timeSignature: 'C - 11:20 AM nurse' },
+                { text: 'Monitor surgical dressing for bleeding or discharge; keep clean and dry.', dateTime: '2026-04-10T10:30:00+08:00', cared: ['C'], timeSignature: 'C - 11:30 AM nurse' }
               ],
               examinations: [
                 {
@@ -3705,16 +3705,16 @@
           orders: {
             plans: [
               { text: 'Admit to Medical Ward under Internal Medicine service.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
-              { text: 'Monitor vital signs every four hours and record intake and output.', dateTime: '2026-06-12T08:32:00+08:00', cared: ['C'], timeSignature: 'C - 12:32 PM nurse' }
+              { text: 'Monitor vital signs every four hours and record intake and output.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:32 PM nurse' }
             ],
-            diet: [{ text: 'Low-salt diet as tolerated.', dateTime: '2026-06-12T08:34:00+08:00', cared: ['C'], timeSignature: 'C - 12:35 PM nurse' }],
-            iv: [{ text: 'PNSS 1 L at 80 mL/hour.', dateTime: '2026-06-12T08:35:00+08:00', cared: ['A'], timeSignature: 'A - 12:45 PM nurse' }],
+            diet: [{ text: 'Low-salt diet as tolerated.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:35 PM nurse' }],
+            iv: [{ text: 'PNSS 1 L at 80 mL/hour.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['A'], timeSignature: 'A - 12:45 PM nurse' }],
             medications: [
-              { orderType: 'scheduled', genericName: 'Ceftriaxone', dose: '2', doseUnit: 'g', route: 'Intravenous Push (IVP)', frequency: 'Once daily (OD)', duration: '7 days', precautions: 'Administer after negative skin test.', dateTime: '2026-06-12T08:37:00+08:00', cared: ['C', 'A', 'E'], timeSignature: 'C - 12:40 PM nurse\nA - 1:00 PM nurse\nE - 1:20 PM nurse' },
-              { orderType: 'scheduled', genericName: 'Azithromycin', dose: '500', doseUnit: 'mg', route: 'Oral (PO)', frequency: 'Once daily (OD)', duration: '5 days', precautions: 'Take with food.', dateTime: '2026-06-12T08:38:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:42 PM nurse\nA - 1:05 PM nurse' },
-              { orderType: 'scheduled', genericName: 'Paracetamol', dose: '500', doseUnit: 'mg', route: 'Oral (PO)', frequency: 'Every 6 hours (Q6H)', duration: '3 days', precautions: 'PRN for fever (T >= 37.8 C). Hold if afebrile.', dateTime: '2026-06-12T08:39:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:45 PM nurse\nA - 1:10 PM nurse' },
-              { orderType: 'continuous', solution: '0.9% Sodium Chloride (PNSS) 100 mL', additiveDrug: 'Norepinephrine 4 mg', finalConcentration: '40 mcg/mL (4 mg in 100 mL)', prescribedDose: '0.05 - 0.2', doseExpression: 'mcg/kg/min', infusionRate: '15', precautions: 'Titrate to maintain MAP >= 65 mmHg. Central line only.', dateTime: '2026-06-12T08:41:00+08:00', cared: ['C'], timeSignature: 'C - 12:48 PM nurse' },
-              { orderType: 'oxygen', deliveryMethod: 'Nasal Cannula', oxygenParameters: '2 L/min', oxygenTarget: 'Maintain SpO2 ≥ 95%', oxygenDuration: 'Continuous', precautions: 'Continuous pulse oximetry monitoring. Check skin integrity around nares.', dateTime: '2026-06-12T08:40:00+08:00', cared: ['C'], timeSignature: 'C - 12:50 PM nurse' }
+              { orderType: 'scheduled', genericName: 'Ceftriaxone', dose: '2', doseUnit: 'g', route: 'Intravenous Push (IVP)', frequency: 'Once daily (OD)', duration: '7 days', precautions: 'Administer after negative skin test.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A', 'E'], timeSignature: 'C - 12:40 PM nurse\nA - 1:00 PM nurse\nE - 1:20 PM nurse' },
+              { orderType: 'scheduled', genericName: 'Azithromycin', dose: '500', doseUnit: 'mg', route: 'Oral (PO)', frequency: 'Once daily (OD)', duration: '5 days', precautions: 'Take with food.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:42 PM nurse\nA - 1:05 PM nurse' },
+              { orderType: 'scheduled', genericName: 'Paracetamol', dose: '500', doseUnit: 'mg', route: 'Oral (PO)', frequency: 'Every 6 hours (Q6H)', duration: '3 days', precautions: 'PRN for fever (T >= 37.8 C). Hold if afebrile.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:45 PM nurse\nA - 1:10 PM nurse' },
+              { orderType: 'continuous', solution: '0.9% Sodium Chloride (PNSS) 100 mL', additiveDrug: 'Norepinephrine 4 mg', finalConcentration: '40 mcg/mL (4 mg in 100 mL)', prescribedDose: '0.05 - 0.2', doseExpression: 'mcg/kg/min', infusionRate: '15', precautions: 'Titrate to maintain MAP >= 65 mmHg. Central line only.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:48 PM nurse' },
+              { orderType: 'oxygen', deliveryMethod: 'Nasal Cannula', oxygenParameters: '2 L/min', oxygenTarget: 'Maintain SpO2 ≥ 95%', oxygenDuration: 'Continuous', precautions: 'Continuous pulse oximetry monitoring. Check skin integrity around nares.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:50 PM nurse' }
             ],
             prescriptions: {
               licenseNo: 'S2-09876543-A',
@@ -3748,14 +3748,14 @@
                 }
               ]
             },
-            special: [{ text: 'Oxygen at 2 L/minute via nasal cannula; maintain SpO2 at 95% or higher.', dateTime: '2026-06-12T08:40:00+08:00', cared: ['C'], timeSignature: 'C - 12:50 PM nurse' }],
+            special: [{ text: 'Oxygen at 2 L/minute via nasal cannula; maintain SpO2 at 95% or higher.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:50 PM nurse' }],
             procedures: [],
             clinicalRequests: {
               laboratory: [
-                { code: 'LAB0001', description: 'Complete Blood Count (CBC)', priority: 'STAT', remarks: 'Baseline before antibiotics', quantity: 1, price: 180, dateTime: '2026-06-12T08:42:00+08:00', cared: ['R'], timeSignature: 'R - 1:31 AM physician' },
-                { code: 'LAB0005', description: 'Electrolytes (Na, K, Cl)', priority: 'Routine', remarks: '', quantity: 1, price: 390, dateTime: '2026-06-12T08:43:00+08:00', cared: ['R'], timeSignature: 'R - 1:33 AM physician' }
+                { code: 'LAB0001', description: 'Complete Blood Count (CBC)', priority: 'STAT', remarks: 'Baseline before antibiotics', quantity: 1, price: 180, dateTime: '2026-06-12T08:30:00+08:00', cared: ['R'], timeSignature: 'R - 1:31 AM physician' },
+                { code: 'LAB0005', description: 'Electrolytes (Na, K, Cl)', priority: 'Routine', remarks: '', quantity: 1, price: 390, dateTime: '2026-06-12T08:30:00+08:00', cared: ['R'], timeSignature: 'R - 1:33 AM physician' }
               ],
-              radiology: [{ code: 'RAD0001', description: 'Chest X-Ray (PA)', priority: 'STAT', remarks: 'Rule out pneumonia', quantity: 1, price: 450, dateTime: '2026-06-12T08:44:00+08:00', cared: ['R'], timeSignature: 'R - 1:35 AM physician' }],
+              radiology: [{ code: 'RAD0001', description: 'Chest X-Ray (PA)', priority: 'STAT', remarks: 'Rule out pneumonia', quantity: 1, price: 450, dateTime: '2026-06-12T08:30:00+08:00', cared: ['R'], timeSignature: 'R - 1:35 AM physician' }],
               respiratory: [], heart: [], eeg: []
             }
           },
@@ -3799,7 +3799,7 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 15) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 16) records[index] = seedPatientRecord();
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
       else if (Number(records[blankIndex].seedVersion || 0) < 10) records[blankIndex] = blankPatientRecord();

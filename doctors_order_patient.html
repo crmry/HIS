@@ -183,6 +183,28 @@
             background: transparent;
         }
 
+        table.orders tbody td.cell-datetime {
+            vertical-align: middle;
+            text-align: center;
+            background: #fff;
+        }
+
+        table.orders tbody td.cell-datetime textarea {
+            text-align: center;
+            font-weight: 600;
+            color: #111;
+            line-height: 1.35;
+        }
+
+        table.orders tbody td[rowspan] {
+            vertical-align: middle;
+        }
+
+        table.orders tbody td[rowspan] textarea {
+            height: 100% !important;
+            box-sizing: border-box;
+        }
+
         table.orders tbody td.mark {
             text-align: center;
             vertical-align: middle;
@@ -471,7 +493,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 15,
+                seedVersion: 16,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T10:45:00+08:00",
                 data: {
@@ -518,10 +540,10 @@
                             progress_notes: "Hospital Day 2. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO₂ 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics",
                             orders: [
                                 { text: "Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C"], timeSignature: "C - 10:30 AM nurse" },
-                                { text: "Continue IV Ceftriaxone 2 g OD (Day 2 of 7).", dateTime: "2026-06-13T10:16:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:35 AM nurse\nA - 11:00 AM nurse" },
-                                { text: "Shift Azithromycin to oral 500 mg tablet once daily after meals.", dateTime: "2026-06-13T10:17:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:40 AM nurse\nA - 11:05 AM nurse" },
-                                { text: "Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.", dateTime: "2026-06-13T10:18:00+08:00", cared: ["R"], timeSignature: "R - 10:45 AM physician" },
-                                { text: "May ambulate inside room as tolerated. Regular diet.", dateTime: "2026-06-13T10:20:00+08:00", cared: ["C"], timeSignature: "C - 11:00 AM nurse" }
+                                { text: "Continue IV Ceftriaxone 2 g OD (Day 2 of 7).", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:35 AM nurse\nA - 11:00 AM nurse" },
+                                { text: "Shift Azithromycin to oral 500 mg tablet once daily after meals.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C", "A"], timeSignature: "C - 10:40 AM nurse\nA - 11:05 AM nurse" },
+                                { text: "Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["R"], timeSignature: "R - 10:45 AM physician" },
+                                { text: "May ambulate inside room as tolerated. Regular diet.", dateTime: "2026-06-13T10:15:00+08:00", cared: ["C"], timeSignature: "C - 11:00 AM nurse" }
                             ]
                         },
                         {
@@ -544,9 +566,9 @@
                             results: "Spirometry normal; maintenance therapy continued",
                             progress_notes: "Outpatient pulmonary routine follow-up. No dyspnea, no wheezing, good inhaler adherence.\nVital signs: BP 124/80 mmHg, HR 76 bpm, RR 16/min, Temp 36.5 °C, SpO2 99%\nChest: Clear and symmetric breath sounds throughout all lung zones.\nDiagnosis: Bronchial Asthma, Well-Controlled; Essential Hypertension Stage 1 (Controlled)",
                             orders: [
-                                { text: "Continue Budesonide/Formoterol 160/4.5 mcg inhaler, 1 puff BID.", dateTime: "2026-05-20T14:30:00+08:00", cared: ["C"], timeSignature: "C - 2:45 PM nurse" },
-                                { text: "Continue Amlodipine 5 mg tablet once daily in the morning.", dateTime: "2026-05-20T14:32:00+08:00", cared: ["C"], timeSignature: "C - 2:50 PM nurse" },
-                                { text: "Follow-up at Adult Pulmonary Outpatient Clinic after 3 months.", dateTime: "2026-05-20T14:35:00+08:00", cared: ["C"], timeSignature: "C - 3:00 PM nurse" }
+                                { text: "Continue Budesonide/Formoterol 160/4.5 mcg inhaler, 1 puff BID.", dateTime: "2026-05-20T14:15:00+08:00", cared: ["C"], timeSignature: "C - 2:45 PM nurse" },
+                                { text: "Continue Amlodipine 5 mg tablet once daily in the morning.", dateTime: "2026-05-20T14:15:00+08:00", cared: ["C"], timeSignature: "C - 2:50 PM nurse" },
+                                { text: "Follow-up at Adult Pulmonary Outpatient Clinic after 3 months.", dateTime: "2026-05-20T14:15:00+08:00", cared: ["C"], timeSignature: "C - 3:00 PM nurse" }
                             ]
                         },
                         {
@@ -560,33 +582,33 @@
                             progress_notes: "Post-Operative Day 1. S/P Laparoscopic Appendectomy. Tolerating clear liquids, afebrile.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99%\nAbdomen: Soft, mild peri-incisional tenderness, surgical port sites clean, dry, and intact.\nDiagnosis: Acute Appendicitis, Non-perforated; Status Post Laparoscopic Appendectomy (K35.80)",
                             orders: [
                                 { text: "NPO temporarily until fully awake, then may start clear liquids as tolerated.", dateTime: "2026-04-10T10:30:00+08:00", cared: ["C"], timeSignature: "C - 10:45 AM nurse" },
-                                { text: "PNSS 1 L at 100 mL/hour.", dateTime: "2026-04-10T10:32:00+08:00", cared: ["A"], timeSignature: "A - 11:00 AM nurse" },
-                                { text: "Cefuroxime 750 mg IV every 8 hours (Post-Op Day 1).", dateTime: "2026-04-10T10:35:00+08:00", cared: ["C", "A"], timeSignature: "C - 11:15 AM nurse\nA - 12:00 PM nurse" },
-                                { text: "Ketorolac 30 mg IV every 8 hours PRN for moderate to severe wound pain.", dateTime: "2026-04-10T10:36:00+08:00", cared: ["C"], timeSignature: "C - 11:20 AM nurse" },
-                                { text: "Monitor surgical dressing for bleeding or discharge; keep clean and dry.", dateTime: "2026-04-10T10:40:00+08:00", cared: ["C"], timeSignature: "C - 11:30 AM nurse" }
+                                { text: "PNSS 1 L at 100 mL/hour.", dateTime: "2026-04-10T10:30:00+08:00", cared: ["A"], timeSignature: "A - 11:00 AM nurse" },
+                                { text: "Cefuroxime 750 mg IV every 8 hours (Post-Op Day 1).", dateTime: "2026-04-10T10:30:00+08:00", cared: ["C", "A"], timeSignature: "C - 11:15 AM nurse\nA - 12:00 PM nurse" },
+                                { text: "Ketorolac 30 mg IV every 8 hours PRN for moderate to severe wound pain.", dateTime: "2026-04-10T10:30:00+08:00", cared: ["C"], timeSignature: "C - 11:20 AM nurse" },
+                                { text: "Monitor surgical dressing for bleeding or discharge; keep clean and dry.", dateTime: "2026-04-10T10:30:00+08:00", cared: ["C"], timeSignature: "C - 11:30 AM nurse" }
                             ]
                         }
                     ],
                     orders: {
                         plans: [
                             { text: "Admit to Medical Ward under Internal Medicine service.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:30 PM nurse" },
-                            { text: "Monitor vital signs every four hours and record intake and output.", dateTime: "2026-06-12T08:32:00+08:00", cared: ["C"], timeSignature: "C - 12:32 PM nurse" }
+                            { text: "Monitor vital signs every four hours and record intake and output.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:32 PM nurse" }
                         ],
-                        diet: [{ text: "Low-salt diet as tolerated.", dateTime: "2026-06-12T08:34:00+08:00", cared: ["C"], timeSignature: "C - 12:35 PM nurse" }],
-                        iv: [{ text: "PNSS 1 L at 80 mL/hour.", dateTime: "2026-06-12T08:35:00+08:00", cared: ["A"], timeSignature: "A - 12:45 PM nurse" }],
+                        diet: [{ text: "Low-salt diet as tolerated.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:35 PM nurse" }],
+                        iv: [{ text: "PNSS 1 L at 80 mL/hour.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["A"], timeSignature: "A - 12:45 PM nurse" }],
                         medications: [
-                            { medication: "Ceftriaxone", preparation: "1 g vial", dose: "2 g", route: "IV", frequency: "Once daily", timing: "8:00 AM", remarks: "Administer after skin testing.", text: "Ceftriaxone 2 g IV once daily.", dateTime: "2026-06-12T08:37:00+08:00", cared: ["C", "A", "E"], timeSignature: "C - 12:40 PM nurse\nA - 1:00 PM nurse\nE - 1:20 PM nurse" },
-                            { medication: "Azithromycin", preparation: "500 mg tablet", dose: "500 mg", route: "Oral", frequency: "Once daily", timing: "9:00 AM", remarks: "", text: "Azithromycin 500 mg tablet once daily.", dateTime: "2026-06-12T08:38:00+08:00", cared: ["C", "A"], timeSignature: "C - 12:42 PM nurse\nA - 1:05 PM nurse" },
-                            { medication: "Paracetamol", preparation: "500 mg tablet", dose: "500 mg", route: "Oral", frequency: "Every 6 hours PRN", timing: "For fever", remarks: "Hold if afebrile.", text: "Paracetamol 500 mg tablet every six hours as needed for fever.", dateTime: "2026-06-12T08:39:00+08:00", cared: ["C", "A"], timeSignature: "C - 12:45 PM nurse\nA - 1:10 PM nurse" }
+                            { medication: "Ceftriaxone", preparation: "1 g vial", dose: "2 g", route: "IV", frequency: "Once daily", timing: "8:00 AM", remarks: "Administer after skin testing.", text: "Ceftriaxone 2 g IV once daily.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C", "A", "E"], timeSignature: "C - 12:40 PM nurse\nA - 1:00 PM nurse\nE - 1:20 PM nurse" },
+                            { medication: "Azithromycin", preparation: "500 mg tablet", dose: "500 mg", route: "Oral", frequency: "Once daily", timing: "9:00 AM", remarks: "", text: "Azithromycin 500 mg tablet once daily.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C", "A"], timeSignature: "C - 12:42 PM nurse\nA - 1:05 PM nurse" },
+                            { medication: "Paracetamol", preparation: "500 mg tablet", dose: "500 mg", route: "Oral", frequency: "Every 6 hours PRN", timing: "For fever", remarks: "Hold if afebrile.", text: "Paracetamol 500 mg tablet every six hours as needed for fever.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C", "A"], timeSignature: "C - 12:45 PM nurse\nA - 1:10 PM nurse" }
                         ],
-                        special: [{ text: "Oxygen at 2 L/minute via nasal cannula; maintain SpO2 at 95% or higher.", dateTime: "2026-06-12T08:40:00+08:00", cared: ["C"], timeSignature: "C - 12:50 PM nurse" }],
+                        special: [{ text: "Oxygen at 2 L/minute via nasal cannula; maintain SpO2 at 95% or higher.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:50 PM nurse" }],
                         procedures: [],
                         clinicalRequests: {
                             laboratory: [
-                                { code: "LAB0001", description: "Complete Blood Count (CBC)", priority: "STAT", remarks: "Baseline before antibiotics", quantity: 1, price: 180, dateTime: "2026-06-12T08:42:00+08:00", cared: ["R"], timeSignature: "R - 1:31 AM physician" },
-                                { code: "LAB0005", description: "Electrolytes (Na, K, Cl)", priority: "Routine", remarks: "", quantity: 1, price: 390, dateTime: "2026-06-12T08:43:00+08:00", cared: ["R"], timeSignature: "R - 1:33 AM physician" }
+                                { code: "LAB0001", description: "Complete Blood Count (CBC)", priority: "STAT", remarks: "Baseline before antibiotics", quantity: 1, price: 180, dateTime: "2026-06-12T08:30:00+08:00", cared: ["R"], timeSignature: "R - 1:31 AM physician" },
+                                { code: "LAB0005", description: "Electrolytes (Na, K, Cl)", priority: "Routine", remarks: "", quantity: 1, price: 390, dateTime: "2026-06-12T08:30:00+08:00", cared: ["R"], timeSignature: "R - 1:33 AM physician" }
                             ],
-                            radiology: [{ code: "RAD0001", description: "Chest X-Ray (PA)", priority: "STAT", remarks: "Rule out pneumonia", quantity: 1, price: 450, dateTime: "2026-06-12T08:44:00+08:00", cared: ["R"], timeSignature: "R - 1:35 AM physician" }],
+                            radiology: [{ code: "RAD0001", description: "Chest X-Ray (PA)", priority: "STAT", remarks: "Rule out pneumonia", quantity: 1, price: 450, dateTime: "2026-06-12T08:30:00+08:00", cared: ["R"], timeSignature: "R - 1:35 AM physician" }],
                             respiratory: [], heart: [], eeg: []
                         }
                     },
@@ -606,7 +628,7 @@
         function blankPatientRecord() {
             return {
                 id: BLANK_PATIENT_ID,
-                seedVersion: 15,
+                seedVersion: 16,
                 createdAt: "2026-09-25T10:30:00+08:00",
                 updatedAt: "2026-09-25T10:30:00+08:00",
                 data: {
@@ -629,10 +651,10 @@
             const records = getPatients();
             const index = records.findIndex(record => record.id === SEED_PATIENT_ID);
             if (index < 0) records.push(seedPatientRecord());
-            else if (Number(records[index].seedVersion || 0) < 15) records[index] = seedPatientRecord();
+            else if (Number(records[index].seedVersion || 0) < 16) records[index] = seedPatientRecord();
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
-            else if (Number(records[blankIndex].seedVersion || 0) < 15) records[blankIndex] = blankPatientRecord();
+            else if (Number(records[blankIndex].seedVersion || 0) < 16) records[blankIndex] = blankPatientRecord();
             localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
         }
 
@@ -683,7 +705,22 @@
                 day: "2-digit",
                 hour: "numeric",
                 minute: "2-digit"
-            }).format(d);
+            }).format(d).replace(",", "");
+        }
+
+        function normalizeDateTime(str) {
+            if (!str) return "";
+            return String(str).replace(/,/g, " ").replace(/\s+/g, " ").trim().toUpperCase();
+        }
+
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
         }
 
         function joinNatural(items) {
@@ -979,6 +1016,10 @@
 
         function resizeAllTextareas() {
             document.querySelectorAll("table.orders textarea").forEach(textarea => {
+                if (textarea.closest("td[rowspan]")) {
+                    textarea.style.height = "100%";
+                    return;
+                }
                 textarea.style.height = "auto";
                 if (textarea.value) {
                     textarea.style.height = Math.max(textarea.scrollHeight, 36) + "px";
@@ -1160,70 +1201,87 @@
             const data = record.data || {};
             const blocks = getChronologicalEncounterBlocks(data, record, targetEncounterDate);
 
-            // Calculate total rows needed across all encounter blocks
-            let totalRowsNeeded = 0;
-            blocks.forEach(block => {
-                const count = Math.max(1, block.orders.length, block.noteLines.length);
-                totalRowsNeeded += count;
-            });
-
-            const rowCount = Math.max(18, totalRowsNeeded);
-            fillRows("main-rows", "row", rowCount);
-
-            const rows = [...document.querySelectorAll("#main-rows tr")];
-            let currentRowIndex = 0;
-
+            // Flatten rows from all blocks
+            const flatRows = [];
             blocks.forEach(block => {
                 const blockRowCount = Math.max(1, block.orders.length, block.noteLines.length);
-
                 for (let i = 0; i < blockRowCount; i++) {
-                    const row = rows[currentRowIndex];
-                    if (!row) {
-                        currentRowIndex++;
-                        continue;
-                    }
-
-                    const textareas = row.querySelectorAll("textarea");
                     const order = block.orders[i] || null;
                     const noteLine = block.noteLines[i] || "";
 
-                    // Col 0: Date/Time
-                    // First row of encounter displays encounter datetime.
-                    // Subsequent rows display specific order datetime if different.
-                    if (i === 0) {
-                        setTextareaValue(textareas[0], block.dateTime);
-                    } else if (order?.dateTime) {
-                        setTextareaValue(textareas[0], formatDateTime(order.dateTime));
+                    let dt = block.dateTime || "";
+                    if (order?.dateTime) {
+                        const formattedOrderDt = formatDateTime(order.dateTime);
+                        if (formattedOrderDt) {
+                            dt = formattedOrderDt;
+                        }
                     }
 
-                    // Col 1: Progress Notes - placed row by row, clean, without S.A.O.
-                    if (noteLine) {
-                        setTextareaValue(textareas[1], noteLine);
-                    }
-
-                    // Col 2: Physician's Order
-                    if (order?.text) {
-                        setTextareaValue(textareas[2], order.text);
-                    }
-
-                    // Col 3-7: Checkboxes (C, A, R, E, D)
-                    if (order) {
-                        const cared = new Set(Array.isArray(order.cared) ? order.cared : []);
-                        const caredKeys = ["C", "A", "R", "E", "D"];
-                        row.querySelectorAll('input[type="checkbox"]').forEach((checkbox, caredIndex) => {
-                            checkbox.checked = cared.has(caredKeys[caredIndex]);
-                        });
-                    }
-
-                    // Col 8: Time / Signature
-                    if (order?.timeSignature) {
-                        setTextareaValue(textareas[3], order.timeSignature);
-                    }
-
-                    currentRowIndex++;
+                    flatRows.push({
+                        dateTime: dt,
+                        noteLine: noteLine,
+                        orderText: order?.text || "",
+                        cared: Array.isArray(order?.cared) ? order.cared : [],
+                        timeSignature: order?.timeSignature || ""
+                    });
                 }
             });
 
+            const rowCount = Math.max(18, flatRows.length);
+            const body = document.getElementById("main-rows");
+            if (!body) return;
+
+            let html = "";
+            let i = 0;
+
+            // Group consecutive rows that share the same non-empty dateTime
+            while (i < flatRows.length) {
+                const dt = flatRows[i].dateTime || "";
+                const normDt = normalizeDateTime(dt);
+                let span = 1;
+                if (normDt) {
+                    while ((i + span) < flatRows.length && normalizeDateTime(flatRows[i + span].dateTime) === normDt) {
+                        span++;
+                    }
+                }
+
+                for (let j = 0; j < span; j++) {
+                    const rowIdx = i + j + 1;
+                    const item = flatRows[i + j];
+                    const cared = new Set(item.cared || []);
+                    const caredKeys = ["C", "A", "R", "E", "D"];
+
+                    let rowContent = "";
+
+                    // If j === 0, render the Date/Time cell with rowspan
+                    if (j === 0) {
+                        const rowspanAttr = span > 1 ? ` rowspan="${span}"` : "";
+                        rowContent += `<td${rowspanAttr} class="cell-datetime"><textarea name="row-${rowIdx}-datetime" rows="2">${escapeHtml(dt)}</textarea></td>`;
+                    }
+                    // If j > 0, the Date/Time cell is omitted because the first row spans across this row!
+
+                    rowContent += `<td><textarea name="row-${rowIdx}-notes" rows="2">${escapeHtml(item.noteLine)}</textarea></td>`;
+                    rowContent += `<td><textarea name="row-${rowIdx}-order" rows="2">${escapeHtml(item.orderText)}</textarea></td>`;
+
+                    caredKeys.forEach(k => {
+                        const checked = cared.has(k) ? " checked" : "";
+                        rowContent += `<td class="mark"><input type="checkbox" name="row-${rowIdx}-${k.toLowerCase()}" aria-label="${k}"${checked}></td>`;
+                    });
+
+                    rowContent += `<td><textarea name="row-${rowIdx}-sign" rows="2">${escapeHtml(item.timeSignature)}</textarea></td>`;
+
+                    html += `<tr>${rowContent}</tr>`;
+                }
+
+                i += span;
+            }
+
+            // Fill remaining blank rows up to rowCount
+            for (let k = flatRows.length + 1; k <= rowCount; k++) {
+                html += rowHtml("row", k);
+            }
+
+            body.innerHTML = html;
             resizeAllTextareas();
         }
 
@@ -1381,6 +1439,10 @@
 
         document.addEventListener("input", function (event) {
             if (event.target.matches("table.orders textarea")) {
+                if (event.target.closest("td[rowspan]")) {
+                    event.target.style.height = "100%";
+                    return;
+                }
                 event.target.style.height = "auto";
                 event.target.style.height = Math.max(event.target.scrollHeight, 36) + "px";
             }
