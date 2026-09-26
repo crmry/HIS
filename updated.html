@@ -93,10 +93,7 @@
             <div>
               <div style="font-weight: 700; font-size: 14px; letter-spacing: 0.3px;" id="hist-banner-title">Viewing Historical Encounter (Locked / Static Record)</div>
               <div style="font-size: 12px; color: #cbd5e1; margin-top: 2px;" id="hist-banner-subtitle">Encounter details are propagated below in read-only mode per EHR audit standards.</div>
-              <div id="hist-banner-final-dx-wrap" style="display:none; margin-top:6px; padding:6px 12px; background:rgba(255,255,255,0.08); border-left:3px solid #10b981; border-radius:4px; font-size:13px;">
-                <strong style="color:#6ee7b7;">🎯 Signed Final Diagnosis:</strong> <span id="hist-banner-final-dx" style="font-weight:600; color:#f1f5f9;"></span>
-              </div>
-            </div>
+</div>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <button type="button" class="btn btn-mini btn-inverse" id="btn-open-hist-modal" style="font-weight: 600; white-space: nowrap; border: 1px solid #475569;">
@@ -742,9 +739,9 @@
           </div>
     </div>
 
-    <!-- ROW 4: Admitting Diagnosis + Final Diagnosis -->
-    <div class="row-fluid">
-      <div class="span6">
+    <!-- ROW 4: Admitting Diagnosis (Full width during current consultation) + Final Diagnosis (In its rightful space ONLY for Historical Encounter) -->
+    <div class="row-fluid" id="row-diagnoses">
+      <div class="span12" id="admitting-dx-col">
         <div class="dashlet">
           <div class="bootstrap-widget-header">
             <h3>Admitting Diagnosis</h3>
@@ -755,15 +752,15 @@
           </div>
         </div>
       </div>
-      <div class="span6">
-        <div class="dashlet">
+      <div class="span6" id="final-dx-col" style="display:none;">
+        <div class="dashlet" id="dashlet-final-diagnosis">
           <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
             <h3>Final Diagnosis</h3>
             <span id="final-dx-status-badge" style="display:none; font-size:11px; padding:2px 8px; border-radius:3px; background:#065f46; color:#a7f3d0; font-weight:600; text-transform:uppercase;">Signed / Finalized</span>
           </div>
           <div class="bootstrap-widget-content">
             <textarea id="final_dx" name="final_diagnosis" rows="5" class="input-block-level"
-              placeholder="Final Diagnosis is encoded when concluding consultation via End Patient Care..."></textarea>
+              placeholder="Final Diagnosis is encoded when concluding consultation via End Patient Care..." readonly disabled></textarea>
           </div>
         </div>
       </div>
@@ -903,8 +900,9 @@
     <div class="row-fluid">
       <div class="span12 care-followup">
         <div class="dashlet">
-          <div class="bootstrap-widget-header">
+          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
             <h3>Follow-up</h3>
+            <span id="followup-locked-badge" style="display:none; font-size:11px; padding:2px 8px; border-radius:3px; background:#065f46; color:#a7f3d0; font-weight:600; text-transform:uppercase;">Locked (Historical)</span>
           </div>
           <div class="bootstrap-widget-content" id="dashlet-followup">
             <p style="font-weight:600; margin-bottom:6px;">Follow-up needed?</p>
@@ -3798,16 +3796,45 @@
         });
       }
 
+      // Radio buttons (Follow-up & Disposition)
+      document.querySelectorAll('input[type="radio"]').forEach(function (r) {
+        if (r.name === 'follow_up_needed' || r.name === 'disposition') {
+          r.disabled = isReadOnly;
+        }
+      });
+
+      // Strict lock down of Follow-up dashlet
+      var saveFollowupBtn = document.getElementById('save-followup-btn');
+      if (saveFollowupBtn) {
+        saveFollowupBtn.style.display = isReadOnly ? 'none' : '';
+        saveFollowupBtn.disabled = isReadOnly;
+      }
+      var fuLockedBadge = document.getElementById('followup-locked-badge');
+      if (fuLockedBadge) {
+        fuLockedBadge.style.display = isReadOnly ? 'inline-block' : 'none';
+      }
+
+      // Bedside flowsheet log entry buttons
+      document.querySelectorAll('#dashlet-vitals button.btn-primary, #dashlet-vitals [data-toggle="modal"]').forEach(function (btn) {
+        btn.style.display = isReadOnly ? 'none' : '';
+      });
+
       var actionBtns = [
         document.getElementById('save-orders-btn'),
         document.getElementById('save-disposition-btn'),
         document.getElementById('save-patient-btn'),
+        document.getElementById('save-followup-btn'),
+        document.getElementById('save-referral-btn'),
+        document.getElementById('clear-btn'),
         document.getElementById('btn-finalize-end-care'),
         document.getElementById('btn-chart-refresh'),
         document.getElementById('open-care-modal-btn')
       ];
       actionBtns.forEach(function (btn) {
-        if (btn) btn.style.display = isReadOnly ? 'none' : '';
+        if (btn) {
+          btn.style.display = isReadOnly ? 'none' : '';
+          btn.disabled = isReadOnly;
+        }
       });
     }
 
@@ -3867,12 +3894,16 @@
         hxEl.value = hx;
       }
 
-      // 3. Diagnoses
+      // 3. Diagnoses - Return Final Diagnosis in its rightful space ONLY for historical encounters
       var admEl = document.getElementById('admitting_dx');
       if (admEl) admEl.value = enc.admitting_diagnosis || enc.diagnosis || '';
 
-      // Return Final Diagnosis prominently back to dashboard for historical encounters
       var finalDx = (enc.clinical_record && enc.clinical_record.final_diagnosis) || enc.final_diagnosis || enc.diagnosis || 'Pending final diagnostic confirmation';
+      var admCol = document.getElementById('admitting-dx-col');
+      var finalCol = document.getElementById('final-dx-col');
+      if (admCol) admCol.className = 'span6';
+      if (finalCol) finalCol.style.display = 'block';
+
       var finalEl = document.getElementById('final_dx');
       if (finalEl) {
         finalEl.value = finalDx;
@@ -3887,10 +3918,6 @@
         fBadge.style.display = 'inline-block';
         fBadge.textContent = 'Signed / Finalized (' + (formatDate(enc.date) || enc.date) + ')';
       }
-      var bFinalDx = document.getElementById('hist-banner-final-dx');
-      if (bFinalDx) bFinalDx.textContent = finalDx;
-      var bFinalDxWrap = document.getElementById('hist-banner-final-dx-wrap');
-      if (bFinalDxWrap) bFinalDxWrap.style.display = 'block';
 
       // 3b. Render referrals specific to this historical encounter
       var encReferrals = Array.isArray(enc.referrals) ? enc.referrals : [];
@@ -3993,7 +4020,7 @@
         if (fuDate) fuDate.value = enc.follow_up.date || '';
         var fuClinic = document.getElementById('follow_up_clinic');
         if (fuClinic) fuClinic.value = enc.follow_up.clinic || '';
-        var fuNotes = document.getElementById('follow_up_notes');
+        var fuNotes = document.getElementById('follow_up_reason') || document.getElementById('follow_up_notes');
         if (fuNotes) fuNotes.value = enc.follow_up.reason || '';
       } else {
         fuNeeded.forEach(function (r) { r.checked = (r.value === 'No'); });
@@ -4030,7 +4057,12 @@
       var bFinalDxWrap = document.getElementById('hist-banner-final-dx-wrap');
       if (bFinalDxWrap) bFinalDxWrap.style.display = 'none';
 
-      // Reset Final Diagnosis for current in-progress consultation
+      // Hide Final Diagnosis in rightful space for current consultation (only shown for Historical Encounter)
+      var finalCol = document.getElementById('final-dx-col');
+      if (finalCol) finalCol.style.display = 'none';
+      var admCol = document.getElementById('admitting-dx-col');
+      if (admCol) admCol.className = 'span12';
+
       var finalEl = document.getElementById('final_dx');
       if (finalEl) {
         finalEl.value = '';
@@ -7398,13 +7430,19 @@
     var followUpFields = document.getElementById('follow-up-fields');
     document.querySelectorAll('input[name="follow_up_needed"]').forEach(function (r) {
       r.addEventListener('change', function () {
+        if (activeInspectedEncounterIndex !== null) return;
         followUpFields.className = (r.value === 'Yes' && r.checked) ? 'follow-up-fields' : 'follow-up-fields disabled';
       });
     });
     (document.getElementById('save-followup-btn') || { addEventListener: function() {} }).addEventListener('click', function () {
+      if (activeInspectedEncounterIndex !== null) {
+        alert('Historical encounters are read-only and cannot be modified.');
+        return;
+      }
       var sel = form.querySelector('input[name="follow_up_needed"]:checked');
       if (!sel) { alert('Please choose if follow-up is needed.'); return; }
-      if (sel.value === 'Yes' && (!form.follow_up_date.value || !form.follow_up_reason.value.trim())) {
+      var reasonVal = form.follow_up_reason ? form.follow_up_reason.value.trim() : (form.follow_up_notes ? form.follow_up_notes.value.trim() : '');
+      if (sel.value === 'Yes' && (!form.follow_up_date.value || !reasonVal)) {
         alert('Please complete the follow-up date and reason.'); return;
       }
       var savedRecord = saveCurrentPatientRecord({ silent: true, refreshSelector: false });
@@ -7488,8 +7526,14 @@
         if (bFinalDxWrap) bFinalDxWrap.style.display = 'none';
         var fBadge = document.getElementById('final-dx-status-badge');
         if (fBadge) fBadge.style.display = 'none';
+        var finalCol = document.getElementById('final-dx-col');
+        if (finalCol) finalCol.style.display = 'none';
+        var admCol = document.getElementById('admitting-dx-col');
+        if (admCol) admCol.className = 'span12';
+
         var finalEl = document.getElementById('final_dx');
         if (finalEl) {
+          finalEl.value = '';
           finalEl.style.backgroundColor = '';
           finalEl.style.color = '';
           finalEl.style.fontWeight = '';
@@ -8020,6 +8064,10 @@
         options || {};
 
 
+      if (activeInspectedEncounterIndex !== null) {
+        return null;
+      }
+
       var currentId =
         activePatientId;
 
@@ -8277,6 +8325,15 @@
 
         var followUp = document.getElementById('follow-up-fields');
         if (followUp) followUp.className = 'follow-up-fields disabled';
+
+        var finalCol = document.getElementById('final-dx-col');
+        if (finalCol) finalCol.style.display = 'none';
+        var admCol = document.getElementById('admitting-dx-col');
+        if (admCol) admCol.className = 'span12';
+        var finalEl = document.getElementById('final_dx');
+        if (finalEl) finalEl.value = '';
+        var fBadge = document.getElementById('final-dx-status-badge');
+        if (fBadge) fBadge.style.display = 'none';
 
         syncPainSiteUI(false, '');
 
