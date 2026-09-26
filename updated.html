@@ -774,8 +774,8 @@
 
 </div>
 
-    <!-- ROW 8: Disposition -->
-    <div class="row-fluid">
+    <!-- ROW 8: Disposition (Hidden during active consultation; displayed only for historical encounter inspection) -->
+    <div class="row-fluid" id="row-disposition" style="display:none;">
       <div class="span12 care-disposition">
         <div class="dashlet">
           <div class="bootstrap-widget-header">
@@ -806,8 +806,8 @@
       </div>
     </div>
 
-    <!-- ROW 9: Follow-up (Dedicated dashlet below Disposition) -->
-    <div class="row-fluid">
+    <!-- ROW 9: Follow-up (Hidden during active consultation; displayed only for historical encounter inspection) -->
+    <div class="row-fluid" id="row-followup" style="display:none;">
       <div class="span12 care-followup">
         <div class="dashlet">
           <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
@@ -1545,59 +1545,117 @@
           <!-- Dynamically populated -->
         </div>
 
-        <!-- Section 1: Final Diagnosis & ICD-10 -->
+        <!-- Section 1: Final Diagnosis & ICD-10 Coding -->
         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:14px; margin-bottom:12px;">
           <label style="font-weight:700; font-size:12px; color:#1b4d3e; text-transform:uppercase; margin-bottom:4px; display:block;">
             1. Final Diagnosis &amp; ICD-10 Coding *
           </label>
           <div style="font-size:11px; color:#64748b; margin-bottom:6px;">
-            The clinical final diagnosis formulated upon concluding this encounter (Authoritative source for DOH and PhilHealth CF4 ICD-10).
+            Select the standard ICD-10 code, then refine or type the complete Final Diagnosis in the dedicated box below:
           </div>
-          <input type="text" id="end-care-final-dx" class="input-block-level" list="end-care-icd-list" placeholder="e.g. J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension" style="font-size:13px; font-weight:600; color:#0f4c81; margin-bottom:6px; box-sizing:border-box;">
-          <datalist id="end-care-icd-list">
-            <option value="J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension">
-            <option value="E11.9 - Type 2 Diabetes Mellitus without complications; I10 - Essential Hypertension, controlled">
-            <option value="E11.319 - Type 2 Diabetes Mellitus with mild NPDR; I10 - Essential Hypertension">
-            <option value="J00 - Acute Nasopharyngitis (Common Cold)">
-            <option value="J44.9 - Chronic Obstructive Pulmonary Disease, unspecified">
-            <option value="I10 - Essential (primary) Hypertension, controlled">
-          </datalist>
+          <div style="margin-bottom:8px;">
+            <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Select Standard ICD-10 Code:</label>
+            <select id="end-care-icd10-select" class="input-block-level" style="font-size:12px; font-weight:600; color:#0f4c81; box-sizing:border-box;">
+              <option value="">-- Select standard ICD-10 code (or leave blank to manually encode) --</option>
+              <optgroup label="Endocrine / Metabolic">
+                <option value="E11.9 - Type 2 Diabetes Mellitus without complications">E11.9 - Type 2 Diabetes Mellitus without complications</option>
+                <option value="E11.3 - Type 2 Diabetes Mellitus with ophthalmic complications">E11.3 - Type 2 Diabetes Mellitus with ophthalmic complications</option>
+                <option value="E11.2 - Type 2 Diabetes Mellitus with renal complications">E11.2 - Type 2 Diabetes Mellitus with renal complications</option>
+                <option value="E78.5 - Hyperlipidemia, unspecified">E78.5 - Hyperlipidemia, unspecified</option>
+                <option value="E03.9 - Hypothyroidism, unspecified">E03.9 - Hypothyroidism, unspecified</option>
+              </optgroup>
+              <optgroup label="Circulatory / Cardiovascular">
+                <option value="I10 - Essential (Primary) Hypertension">I10 - Essential (Primary) Hypertension</option>
+                <option value="I25.1 - Atherosclerotic Heart Disease of native coronary artery">I25.1 - Atherosclerotic Heart Disease</option>
+                <option value="I50.9 - Heart Failure, unspecified">I50.9 - Heart Failure, unspecified</option>
+              </optgroup>
+              <optgroup label="Respiratory">
+                <option value="J18.9 - Community-Acquired Pneumonia, moderate risk, resolving">J18.9 - Community-Acquired Pneumonia, moderate risk, resolving</option>
+                <option value="J00 - Acute Nasopharyngitis (Common Cold)">J00 - Acute Nasopharyngitis (Common Cold)</option>
+                <option value="J06.9 - Acute Upper Respiratory Infection, unspecified">J06.9 - Acute Upper Respiratory Infection</option>
+                <option value="J44.9 - Chronic Obstructive Pulmonary Disease, unspecified">J44.9 - Chronic Obstructive Pulmonary Disease (COPD)</option>
+                <option value="J45.9 - Bronchial Asthma, unspecified">J45.9 - Bronchial Asthma</option>
+              </optgroup>
+              <optgroup label="Gastrointestinal &amp; Genitourinary">
+                <option value="K29.7 - Gastritis, unspecified">K29.7 - Gastritis, unspecified</option>
+                <option value="K21.9 - Gastro-esophageal Reflux Disease (GERD)">K21.9 - Gastro-esophageal Reflux Disease (GERD)</option>
+                <option value="A09 - Infectious Gastroenteritis and Colitis">A09 - Infectious Gastroenteritis and Colitis</option>
+                <option value="N39.0 - Urinary Tract Infection, site not specified">N39.0 - Urinary Tract Infection (UTI)</option>
+                <option value="N18.9 - Chronic Kidney Disease, unspecified">N18.9 - Chronic Kidney Disease (CKD)</option>
+              </optgroup>
+              <optgroup label="Musculoskeletal &amp; General Symptoms">
+                <option value="M54.5 - Low Back Pain">M54.5 - Low Back Pain</option>
+                <option value="M19.9 - Osteoarthritis, unspecified">M19.9 - Osteoarthritis</option>
+                <option value="R50.9 - Fever, unspecified">R50.9 - Fever, unspecified</option>
+                <option value="R05 - Cough">R05 - Cough</option>
+                <option value="R51 - Headache">R51 - Headache</option>
+              </optgroup>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Final Diagnosis (Manually typed / editable by Doctor):</label>
+            <textarea id="end-care-final-dx" rows="3" class="input-block-level" placeholder="Type or refine complete final clinical diagnosis..." style="font-size:13px; font-weight:600; color:#0f4c81; box-sizing:border-box;"></textarea>
+          </div>
         </div>
 
         <!-- Section 2: Clinical Disposition & Follow-Up Schedule -->
         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:14px; margin-bottom:12px;">
-          <div class="row-fluid">
-            <div class="span6">
-              <label style="font-weight:700; font-size:12px; color:#1b4d3e; text-transform:uppercase; margin-bottom:4px; display:block;">
-                2. Clinical Disposition *
-              </label>
-              <select id="end-care-disposition" class="input-block-level" style="font-size:12px; box-sizing:border-box;">
-                <option value="Treated and Discharged (Outpatient)" selected>Treated and Discharged (Outpatient / Routine)</option>
-                <option value="Admitted to Inpatient Medical Ward">Admitted to Inpatient Medical Ward</option>
-                <option value="Transferred to Emergency Department">Transferred to Emergency Department</option>
-                <option value="Referred to Specialty Outpatient Clinic">Referred to Specialty Outpatient Clinic</option>
-                <option value="For Clinical Observation / Short-Stay">For Clinical Observation / Short-Stay</option>
-                <option value="Discharge Against Medical Advice (DAMA)">Discharge Against Medical Advice (DAMA)</option>
-              </select>
-            </div>
-            <div class="span6">
-              <label style="font-weight:700; font-size:12px; color:#1b4d3e; text-transform:uppercase; margin-bottom:4px; display:block;">
-                3. Follow-Up Schedule
-              </label>
-              <div style="display:flex; gap:8px;">
+          <!-- 2A. Disposition Radio Grid (9 Hospital Standards) -->
+          <label style="font-weight:700; font-size:12px; color:#1b4d3e; text-transform:uppercase; margin-bottom:4px; display:block;">
+            2. Clinical Disposition *
+          </label>
+          <div style="font-size:11px; color:#64748b; margin-bottom:8px;">
+            Select encounter disposition per DOH hospital reporting standards:
+          </div>
+          <div class="disposition-radios-grid" id="end-care-disposition-radios" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:6px; font-size:12px;">
+            <label class="radio"><input type="radio" name="end_care_disposition" value="Treated and Discharged" checked> Treated and Discharged</label>
+            <label class="radio"><input type="radio" name="end_care_disposition" value="Admitted"> Admitted</label>
+            <label class="radio"><input type="radio" name="end_care_disposition" value="Discharge Against Medical Advice (DAMA) / Refused Admission"> Discharge Against Medical Advice (DAMA) / Refused Admission</label>
+            <label class="radio"><input type="radio" name="end_care_disposition" value="Unattended / Did Not Answer Call"> Unattended / Did Not Answer Call</label>
+            <label class="radio"><input type="radio" name="end_care_disposition" value="Transferred to Emergency Room (ER)"> Transferred to Emergency Room (ER)</label>
+            <label class="radio"><input type="radio" name="end_care_disposition" value="Transferred / Referred to Another Facility"> Transferred / Referred to Another Facility</label>
+            <label class="radio"><input type="radio" name="end_care_disposition" value="Rescheduled"> Rescheduled</label>
+            <label class="radio"><input type="radio" name="end_care_disposition" value="Transferred to Minor OR"> Transferred to Minor OR</label>
+            <label class="radio"><input type="radio" name="end_care_disposition" value="Others"> Others (specify below)</label>
+          </div>
+          <div id="end-care-disp-other-wrapper" style="display:none; margin-top:8px; padding:8px 10px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px;">
+            <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Specify other disposition details:</label>
+            <input type="text" id="end-care-disp-other" class="input-block-level" placeholder="Enter custom disposition notes..." style="font-size:12px; margin-bottom:0; box-sizing:border-box;">
+          </div>
+
+          <hr style="margin:14px 0; border:0; border-top:1px solid #e2e8f0;">
+
+          <!-- 2B. Follow-Up Schedule -->
+          <label style="font-weight:700; font-size:12px; color:#1b4d3e; text-transform:uppercase; margin-bottom:6px; display:block;">
+            3. Follow-Up Schedule
+          </label>
+          <div style="margin-bottom:8px;">
+            <p style="font-weight:600; font-size:12px; margin-bottom:4px;">Follow-up needed?</p>
+            <label class="radio inline" style="margin-right:12px;"><input type="radio" name="end_care_fu_needed" value="Yes" checked> Yes</label>
+            <label class="radio inline"><input type="radio" name="end_care_fu_needed" value="No"> No</label>
+          </div>
+          <div id="end-care-fu-fields">
+            <div class="row-fluid">
+              <div class="span4">
+                <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Follow-up date:</label>
                 <input type="date" id="end-care-followup-date" class="input-block-level" style="font-size:12px; margin-bottom:0; box-sizing:border-box;">
+              </div>
+              <div class="span8">
+                <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Clinic / Service:</label>
                 <select id="end-care-followup-clinic" class="input-block-level" style="font-size:12px; margin-bottom:0; box-sizing:border-box;">
                   <option value="Internal Medicine (OPD)" selected>Internal Medicine (OPD)</option>
                   <option value="Pulmonary &amp; Adult Medicine (OPD)">Pulmonary &amp; Adult Medicine (OPD)</option>
                   <option value="Ophthalmology Clinic (OPD)">Ophthalmology Clinic (OPD)</option>
                   <option value="Cardiology Clinic (OPD)">Cardiology Clinic (OPD)</option>
+                  <option value="General Surgery (OPD)">General Surgery (OPD)</option>
+                  <option value="Pediatrics (OPD)">Pediatrics (OPD)</option>
                 </select>
               </div>
             </div>
-          </div>
-          <div style="margin-top:8px;">
-            <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Return Instructions &amp; Warning Signs:</label>
-            <input type="text" id="end-care-return-instructions" class="input-block-level" placeholder="e.g. Return in 1 week with repeat CBC and creatinine. Proceed to ER immediately if dyspnea or high fever recurs." style="font-size:12px; margin-bottom:0; box-sizing:border-box;">
+            <div style="margin-top:8px;">
+              <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Reason for follow-up &amp; Return Instructions:</label>
+              <textarea id="end-care-followup-reason" rows="2" class="input-block-level" placeholder="Enter reason for follow-up and clinical return instructions..." style="font-size:12px; margin-bottom:0; box-sizing:border-box;"></textarea>
+            </div>
           </div>
         </div>
 
@@ -3875,7 +3933,12 @@
       buildOrders(savedOrders);
       renderOrderSummary();
 
-      // 5. Disposition & Follow-Up
+      // 5. Disposition & Follow-Up (Display signed historical disposition and follow-up)
+      var rowDisp = document.getElementById('row-disposition');
+      if (rowDisp) rowDisp.style.display = 'block';
+      var rowFu = document.getElementById('row-followup');
+      if (rowFu) rowFu.style.display = 'block';
+
       var dispVal = enc.disposition || 'Treated and Discharged';
       var dispRadios = document.querySelectorAll('input[name="disposition"]');
       dispRadios.forEach(function (r) {
@@ -3929,6 +3992,11 @@
       if (finalRow) finalRow.style.display = 'none';
       var admCol = document.getElementById('admitting-dx-col');
       if (admCol) admCol.className = 'span12';
+
+      var rowDisp = document.getElementById('row-disposition');
+      if (rowDisp) rowDisp.style.display = 'none';
+      var rowFu = document.getElementById('row-followup');
+      if (rowFu) rowFu.style.display = 'none';
 
       var finalEl = document.getElementById('final_dx');
       if (finalEl) {
@@ -7387,6 +7455,16 @@
         var admCol = document.getElementById('admitting-dx-col');
         if (admCol) admCol.className = 'span12';
 
+        var rowDisp = document.getElementById('row-disposition');
+        if (rowDisp) rowDisp.style.display = 'none';
+        var rowFu = document.getElementById('row-followup');
+        if (rowFu) rowFu.style.display = 'none';
+
+        var rowDisp = document.getElementById('row-disposition');
+        if (rowDisp) rowDisp.style.display = 'none';
+        var rowFu = document.getElementById('row-followup');
+        if (rowFu) rowFu.style.display = 'none';
+
         var finalEl = document.getElementById('final_dx');
         if (finalEl) {
           finalEl.value = '';
@@ -8418,7 +8496,30 @@
       // Suggest final diagnosis from current notes or default
       var finalDxInput = document.getElementById('end-care-final-dx');
       if (finalDxInput && !finalDxInput.value) {
-        finalDxInput.value = pData.final_diagnosis || pData.admitting_diagnosis || 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension';
+        finalDxInput.value = (pData.final_diagnosis || pData.admitting_diagnosis || 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension').trim();
+      }
+      var icdSelect = document.getElementById('end-care-icd10-select');
+      if (icdSelect && finalDxInput) {
+        icdSelect.value = '';
+        for (var i = 0; i < icdSelect.options.length; i++) {
+          var optVal = icdSelect.options[i].value;
+          if (optVal && finalDxInput.value.indexOf(optVal.split(' - ')[0]) !== -1) {
+            icdSelect.selectedIndex = i;
+            break;
+          }
+        }
+      }
+
+      // Default follow-up date (7 days from now)
+      var fuDateInput = document.getElementById('end-care-followup-date');
+      if (fuDateInput && !fuDateInput.value) {
+        var d = new Date();
+        d.setDate(d.getDate() + 7);
+        fuDateInput.value = d.toISOString().slice(0, 10);
+      }
+      var fuReasonInput = document.getElementById('end-care-followup-reason');
+      if (fuReasonInput && !fuReasonInput.value) {
+        fuReasonInput.value = 'Quarterly chronic disease monitoring with repeat labs and evaluation.';
       }
 
       renderEndCareRxItems();
@@ -8447,10 +8548,18 @@
         return;
       }
 
-      var disp = document.getElementById('end-care-disposition').value;
-      var fuDate = document.getElementById('end-care-followup-date').value;
-      var fuClinic = document.getElementById('end-care-followup-clinic').value;
-      var fuReason = document.getElementById('end-care-return-instructions').value;
+      var dispRadio = document.querySelector('input[name="end_care_disposition"]:checked');
+      var disp = dispRadio ? dispRadio.value : 'Treated and Discharged';
+      if (disp === 'Others') {
+        var otherText = (document.getElementById('end-care-disp-other').value || '').trim();
+        if (otherText) disp = 'Others: ' + otherText;
+      }
+
+      var fuNeeded = document.querySelector('input[name="end_care_fu_needed"]:checked');
+      var isFu = fuNeeded && fuNeeded.value === 'Yes';
+      var fuDate = isFu ? (document.getElementById('end-care-followup-date').value || '') : '';
+      var fuClinic = isFu ? (document.getElementById('end-care-followup-clinic').value || 'Internal Medicine (OPD)') : '';
+      var fuReason = isFu ? (document.getElementById('end-care-followup-reason').value || '').trim() : '';
 
       // Collect checked requisitions
       var reqs = { laboratory: [], radiology: [], respiratory: [], heart: [], eeg: [] };
@@ -8500,6 +8609,33 @@
       renderEncounters(loadedEncounters);
       alert('Consultation concluded successfully! Encounter is now marked Completed, and Final Diagnosis has been stamped into the record.');
     }
+
+    // ICD-10 code selection populates final diagnosis textarea
+    var endCareIcdSelect = document.getElementById('end-care-icd10-select');
+    if (endCareIcdSelect) {
+      endCareIcdSelect.addEventListener('change', function () {
+        if (this.value) {
+          var fdxEl = document.getElementById('end-care-final-dx');
+          if (fdxEl) fdxEl.value = this.value;
+        }
+      });
+    }
+
+    // Toggle custom disposition input in End Patient Care modal
+    document.querySelectorAll('input[name="end_care_disposition"]').forEach(function (r) {
+      r.addEventListener('change', function () {
+        var wrap = document.getElementById('end-care-disp-other-wrapper');
+        if (wrap) wrap.style.display = (this.value === 'Others') ? 'block' : 'none';
+      });
+    });
+
+    // Toggle follow-up fields in End Patient Care modal
+    document.querySelectorAll('input[name="end_care_fu_needed"]').forEach(function (r) {
+      r.addEventListener('change', function () {
+        var fields = document.getElementById('end-care-fu-fields');
+        if (fields) fields.style.display = (this.value === 'Yes') ? 'block' : 'none';
+      });
+    });
 
     var btnCloseEndCare = document.getElementById('close-end-care-modal');
     if (btnCloseEndCare) btnCloseEndCare.addEventListener('click', closeEndCareModal);
