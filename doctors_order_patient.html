@@ -304,6 +304,17 @@
             text-align: center;
         }
 
+        .enc-sig-cursive {
+            font-family: 'Brush Script MT', 'Segoe Script', 'Caveat', 'Dancing Script', cursive;
+            font-size: 15pt;
+            font-weight: 600;
+            color: #0f2b5c;
+            line-height: 1;
+            margin-bottom: -6px;
+            letter-spacing: 0.5px;
+            transform: rotate(-2deg);
+        }
+
         .enc-sig-line-draw {
             font-size: 10.5pt;
             color: #555;
@@ -546,7 +557,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 28,
+                seedVersion: 29,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T16:30:00+08:00",
                 data: {
@@ -698,7 +709,7 @@
         function opPatientRecord() {
             return {
                 id: OP_PATIENT_ID,
-                seedVersion: 28,
+                seedVersion: 29,
                 createdAt: "2026-03-14T08:45:00+08:00",
                 updatedAt: "2026-09-26T09:30:00+08:00",
                 data: {
@@ -1099,7 +1110,7 @@
 
             const opIndex = records.findIndex(record => record.id === OP_PATIENT_ID);
             if (opIndex < 0) records.push(opPatientRecord());
-            else if (Number(records[opIndex].seedVersion || 0) < 28) records[opIndex] = opPatientRecord();
+            else if (Number(records[opIndex].seedVersion || 0) < 29) records[opIndex] = opPatientRecord();
 
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
@@ -1577,14 +1588,16 @@
         function buildSignatureRowHtml(physician, license) {
             // Physician authentication stamp row — rendered between encounter blocks.
             // Cols 1-2 (DATE/TIME + PROGRESS NOTES, colspan=2): dashed separator line.
-            // Col 3 (PHYSICIAN'S ORDER, colspan=1): physician signature block (right-aligned).
+            // Col 3 (PHYSICIAN'S ORDER, colspan=1): physician digital signature, name, and PRC license stamp.
             // Cols 4-9 (C+A+R+E+D + TIME/SIGNATURE, colspan=6): dashed separator line (nurses module).
             var physName = physician ? escapeHtml(physician) : '&mdash;';
             var licText  = license  ? escapeHtml(license)   : '&mdash;';
+            var sigLabel = physician ? physician.replace(/^Dr\.\s*/i, '').replace(/,\s*MD$/i, '').trim() : 'M. Santos';
             return '<tr class="enc-sig-row">' +
                 '<td colspan="2" class="enc-sig-spacer"><hr class="enc-sig-divider"></td>' +
                 '<td class="enc-sig-stamp">' +
                 '<div class="enc-sig-block">' +
+                '<div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
                 '<div class="enc-sig-line-draw">________________________________</div>' +
                 '<div class="enc-sig-name">' + physName + '</div>' +
                 '<div class="enc-sig-lic">PRC Lic. No.: ' + licText + '</div>' +
@@ -1596,7 +1609,7 @@
 
         function estimateRowHeight(item) {
             if (!item) return 40;
-            if (item.isSigRow) return 64; // fixed height for signature stamp row
+            if (item.isSigRow) return 68; // fixed height for signature stamp row
             const BASE = 40; // px per row
             var lines = 1;
             if (item.noteLine) {
