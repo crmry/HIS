@@ -557,7 +557,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 34,
+                seedVersion: 35,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T16:30:00+08:00",
                 data: {
@@ -589,7 +589,7 @@
                     other_forms_notes: "No additional specialty form required at present.",
                     physician: "Dr. Miguel Santos, MD", prc_license: "0087654", vs_bp: "138/86", vs_hr: "102", vs_rr: "24", vs_temp: "38.2", vs_spo2: "93", vs_weight: "61", vs_height: "158",
                     admitting_diagnosis: "Community-acquired pneumonia, moderate risk; hypertension.",
-                    final_diagnosis: "Community-acquired pneumonia, improved; essential hypertension.",
+                    final_diagnosis: "", // Blank for current active consultation; finalized on historical encounters
                     progress_notes: "Productive cough and dyspnea, improved after initial treatment.\nBP 138/86, HR 102, RR 24, Temp 38.2 C, SpO2 93%. Crackles at right lower lung field.\nCommunity-acquired pneumonia, moderate risk; hypertension.",
                     encounters: [
                         {
@@ -717,7 +717,7 @@
         function opPatientRecord() {
             return {
                 id: OP_PATIENT_ID,
-                seedVersion: 34,
+                seedVersion: 35,
                 createdAt: "2026-03-14T08:45:00+08:00",
                 updatedAt: "2026-09-26T09:30:00+08:00",
                 data: {
@@ -1069,7 +1069,7 @@
         function blankPatientRecord() {
             return {
                 id: BLANK_PATIENT_ID,
-                seedVersion: 34,
+                seedVersion: 35,
                 createdAt: "2026-09-25T10:30:00+08:00",
                 updatedAt: "2026-09-25T10:30:00+08:00",
                 data: {
@@ -1116,15 +1116,15 @@
             const records = getPatients();
             const index = records.findIndex(record => record.id === SEED_PATIENT_ID);
             if (index < 0) records.push(seedPatientRecord());
-            else if (Number(records[index].seedVersion || 0) < 32) records[index] = seedPatientRecord();
+            else if (Number(records[index].seedVersion || 0) < 35) records[index] = seedPatientRecord();
 
             const opIndex = records.findIndex(record => record.id === OP_PATIENT_ID);
             if (opIndex < 0) records.push(opPatientRecord());
-            else if (Number(records[opIndex].seedVersion || 0) < 32) records[opIndex] = opPatientRecord();
+            else if (Number(records[opIndex].seedVersion || 0) < 35) records[opIndex] = opPatientRecord();
 
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
-            else if (Number(records[blankIndex].seedVersion || 0) < 17) records[blankIndex] = blankPatientRecord();
+            else if (Number(records[blankIndex].seedVersion || 0) < 35) records[blankIndex] = blankPatientRecord();
             localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
         }
 
