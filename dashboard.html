@@ -1050,13 +1050,40 @@
       gap: 8px;
     }
     .rx-field-row label {
-      width: 105px;
+      width: 140px;
       margin: 0;
       font-weight: 700;
       color: #4a545a;
       font-size: 11px;
       text-align: right;
       flex-shrink: 0;
+      line-height: 1.2;
+    }
+    .rx-cal-day {
+      padding: 4px 0;
+      border-radius: 3px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .rx-cal-day:hover {
+      background: #e8f5e9;
+      color: #1f7d45;
+      font-weight: bold;
+    }
+    .rx-cal-day.other-month {
+      color: #ccc;
+      cursor: default;
+    }
+    .rx-cal-day.other-month:hover {
+      background: transparent;
+      color: #ccc;
+      font-weight: normal;
+    }
+    .rx-cal-day.selected {
+      background: #1f7d45 !important;
+      color: #ffffff !important;
+      font-weight: bold;
     }
     .rx-field-row input[type="text"],
     .rx-field-row textarea {
@@ -5170,6 +5197,82 @@
         .replace(/'/g, '&#039;');
     }
 
+    function parseRxDateTime(str) {
+      if (!str) return new Date();
+      var d = new Date(str);
+      if (!isNaN(d.getTime())) return d;
+      var fixed = str.replace(/([0-9]+:[0-9]+)(am|pm)/i, '$1 $2');
+      d = new Date(fixed);
+      return isNaN(d.getTime()) ? new Date() : d;
+    }
+
+    var rxCalState = {
+      viewYear: new Date().getFullYear(),
+      viewMonth: new Date().getMonth(),
+      selectedDate: new Date()
+    };
+
+    function renderRxCalendar() {
+      var titleEl = document.getElementById('rx-cal-month-year');
+      var daysEl = document.getElementById('rx-cal-days');
+      var timeEl = document.getElementById('rx-cal-time');
+      if (!titleEl || !daysEl) return;
+
+      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      titleEl.textContent = months[rxCalState.viewMonth] + ' ' + rxCalState.viewYear;
+
+      if (timeEl) {
+        var h = rxCalState.selectedDate.getHours();
+        var m = rxCalState.selectedDate.getMinutes();
+        timeEl.value = (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m);
+      }
+
+      var firstDay = new Date(rxCalState.viewYear, rxCalState.viewMonth, 1).getDay();
+      var daysInMonth = new Date(rxCalState.viewYear, rxCalState.viewMonth + 1, 0).getDate();
+      var prevMonthDays = new Date(rxCalState.viewYear, rxCalState.viewMonth, 0).getDate();
+
+      var html = '';
+      for (var i = firstDay - 1; i >= 0; i--) {
+        html += '<div class="rx-cal-day other-month">' + (prevMonthDays - i) + '</div>';
+      }
+
+      var selY = rxCalState.selectedDate.getFullYear();
+      var selM = rxCalState.selectedDate.getMonth();
+      var selD = rxCalState.selectedDate.getDate();
+
+      for (var d = 1; d <= daysInMonth; d++) {
+        var isSel = (rxCalState.viewYear === selY && rxCalState.viewMonth === selM && d === selD);
+        html += '<div class="rx-cal-day' + (isSel ? ' selected' : '') + '" data-cal-day="' + d + '">' + d + '</div>';
+      }
+
+      var totalCells = firstDay + daysInMonth;
+      var remaining = (7 - (totalCells % 7)) % 7;
+      for (var n = 1; n <= remaining; n++) {
+        html += '<div class="rx-cal-day other-month">' + n + '</div>';
+      }
+
+      daysEl.innerHTML = html;
+    }
+
+    function toggleRxCalendar(force) {
+      var popup = document.getElementById('rx-calendar-popup');
+      if (!popup) return;
+      var isOpen = popup.style.display === 'block';
+      var shouldOpen = force !== undefined ? force : !isOpen;
+
+      if (shouldOpen) {
+        var dtInput = document.getElementById('rx-prescription-date');
+        var parsed = parseRxDateTime(dtInput ? dtInput.value : '');
+        rxCalState.selectedDate = parsed;
+        rxCalState.viewYear = parsed.getFullYear();
+        rxCalState.viewMonth = parsed.getMonth();
+        renderRxCalendar();
+        popup.style.display = 'block';
+      } else {
+        popup.style.display = 'none';
+      }
+    }
+
     var RX_TEMPLATES = {
       cap: {
         name: 'Community-Acquired Pneumonia (CAP)',
@@ -5393,7 +5496,7 @@
       var dtInput = document.getElementById('rx-prescription-date');
       var impInput = document.getElementById('rx-clinical-impression');
 
-      if (pidInput) pidInput.value = d.hrn || record.id || '';
+      if (pidInput) pidInput.value = d.hospital_number || d.hospital_no || d.hrn || record.id || '';
       if (encSpan) encSpan.textContent = d.case_no || '20265000031';
       if (nameInput) nameInput.value = patientName(d);
       if (addrInput) addrInput.value = d.address || '';
@@ -5475,7 +5578,7 @@
       var paper = document.getElementById('rx-print-paper');
       if (!paper) return;
       var pData = currentPatientData();
-      var pid = (document.getElementById('rx-patient-pid') && document.getElementById('rx-patient-pid').value) || pData.hrn || '—';
+      var pid = (document.getElementById('rx-patient-pid') && document.getElementById('rx-patient-pid').value) || pData.hospital_number || pData.hospital_no || pData.hrn || '—';
       var pName = (document.getElementById('rx-patient-name') && document.getElementById('rx-patient-name').value) || patientName(pData) || '—';
       var pAddress = (document.getElementById('rx-patient-address') && document.getElementById('rx-patient-address').value) || pData.address || '—';
       var pAge = (document.getElementById('rx-patient-age') && document.getElementById('rx-patient-age').value) || (calculateAge(pData.birthdate) ? calculateAge(pData.birthdate) + ' years' : '—');
@@ -5532,7 +5635,7 @@
         '</div>' +
         '<div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:8px; border-bottom:1px solid #ddd; padding-bottom:5px;">' +
         '<div><strong>Age / Sex:</strong> ' + escapeHtml(pAge) + ' / ' + escapeHtml(pGender) + '</div>' +
-        '<div><strong>PID / HRN:</strong> ' + escapeHtml(pid) + '</div>' +
+        '<div><strong>Patient Hospital Number:</strong> ' + escapeHtml(pid) + '</div>' +
         '</div>' +
         '<div style="font-size:11px; margin-bottom:8px; border-bottom:1px solid #ddd; padding-bottom:5px;">' +
         '<strong>Address:</strong> ' + escapeHtml(pAddress) +
@@ -5557,7 +5660,7 @@
     function buildRxWriterUI(savedRx) {
       savedRx = savedRx || {};
       var pData = currentPatientData();
-      var pidVal = pData.hrn || activePatientId || '';
+      var pidVal = pData.hospital_number || pData.hospital_no || pData.hrn || activePatientId || '';
       var encVal = pData.case_no || '20265000031';
       var nameVal = patientName(pData) || '';
       var addrVal = pData.address || '';
@@ -5589,7 +5692,7 @@
         '<div class="rx-patient-card">' +
         '<div class="rx-patient-col">' +
         '<div class="rx-field-row">' +
-        '<label>PID:</label>' +
+        '<label>Patient Hospital Number:</label>' +
         '<input type="text" id="rx-patient-pid" readonly value="' + escapeHtml(pidVal) + '">' +
         '</div>' +
         '<div class="rx-field-row">' +
@@ -5613,10 +5716,26 @@
         '</div>' +
 
         '<div class="rx-patient-col" style="display:flex; flex-direction:column;">' +
-        '<div class="rx-field-row">' +
+        '<div class="rx-field-row" style="position:relative;">' +
         '<label>Prescription Date:</label>' +
-        '<input type="text" id="rx-prescription-date" value="' + escapeHtml(dtVal) + '">' +
-        '<button type="button" class="btn btn-mini" id="rx-btn-now" title="Set to current date/time" style="padding:2px 7px;">🗓️</button>' +
+        '<input type="text" id="rx-prescription-date" value="' + escapeHtml(dtVal) + '" style="cursor:pointer;" title="Click calendar to select date">' +
+        '<button type="button" class="btn btn-mini" id="rx-btn-now" title="Select Date & Time" style="padding:2px 7px; cursor:pointer;" aria-label="Open Calendar">🗓️</button>' +
+        '<div id="rx-calendar-popup" style="display:none; position:absolute; right:0; top:28px; z-index:9999; background:#ffffff; border:1px solid #cad5dc; border-radius:4px; box-shadow:0 6px 20px rgba(0,0,0,0.22); width:240px; padding:10px; font-family:Arial, sans-serif;">' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">' +
+        '<button type="button" class="btn btn-mini" id="rx-cal-prev" style="padding:1px 6px; font-weight:bold;">◀</button>' +
+        '<span id="rx-cal-month-year" style="font-weight:700; font-size:12px; color:#2c3e50;"></span>' +
+        '<button type="button" class="btn btn-mini" id="rx-cal-next" style="padding:1px 6px; font-weight:bold;">▶</button>' +
+        '</div>' +
+        '<div style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; font-size:10px; font-weight:700; color:#7f8c8d; margin-bottom:4px;">' +
+        '<div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>' +
+        '</div>' +
+        '<div id="rx-cal-days" style="display:grid; grid-template-columns:repeat(7, 1fr); gap:2px; font-size:11px; text-align:center;"></div>' +
+        '<div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px; padding-top:8px; border-top:1px solid #eef2f5; font-size:11px;">' +
+        '<span style="font-weight:600; color:#555;">Time:</span>' +
+        '<input type="time" id="rx-cal-time" style="width:85px; height:22px; font-size:11px; padding:1px 4px; margin:0; border:1px solid #cad5dc; border-radius:2px;">' +
+        '<button type="button" class="btn btn-mini btn-info" id="rx-cal-now" style="font-size:10px; padding:2px 7px; font-weight:bold;">Now</button>' +
+        '</div>' +
+        '</div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:3px;">' +
         '<label style="width:auto; font-weight:700; color:#4a545a; font-size:11px; margin:0;">Clinical impression:</label>' +
@@ -5679,11 +5798,76 @@
         return;
       }
 
-      // Now date
-      if (e.target && e.target.id === 'rx-btn-now') {
-        var dt = document.getElementById('rx-prescription-date');
-        if (dt) dt.value = formatRxDateTime(new Date());
+      // Calendar button & date input click: toggle calendar popup
+      var calBtn = e.target && (e.target.id === 'rx-btn-now' || e.target.closest('#rx-btn-now'));
+      var dtInputClick = e.target && e.target.id === 'rx-prescription-date';
+      if (calBtn || dtInputClick) {
+        toggleRxCalendar();
         return;
+      }
+
+      // Calendar navigation: previous month
+      if (e.target && (e.target.id === 'rx-cal-prev' || e.target.closest('#rx-cal-prev'))) {
+        rxCalState.viewMonth--;
+        if (rxCalState.viewMonth < 0) {
+          rxCalState.viewMonth = 11;
+          rxCalState.viewYear--;
+        }
+        renderRxCalendar();
+        return;
+      }
+
+      // Calendar navigation: next month
+      if (e.target && (e.target.id === 'rx-cal-next' || e.target.closest('#rx-cal-next'))) {
+        rxCalState.viewMonth++;
+        if (rxCalState.viewMonth > 11) {
+          rxCalState.viewMonth = 0;
+          rxCalState.viewYear++;
+        }
+        renderRxCalendar();
+        return;
+      }
+
+      // Calendar: select day
+      var dayCell = e.target && e.target.closest('[data-cal-day]');
+      if (dayCell) {
+        var dayNum = parseInt(dayCell.dataset.calDay, 10);
+        var timeEl = document.getElementById('rx-cal-time');
+        var hours = rxCalState.selectedDate.getHours();
+        var minutes = rxCalState.selectedDate.getMinutes();
+        if (timeEl && timeEl.value) {
+          var tParts = timeEl.value.split(':');
+          if (tParts.length === 2) {
+            hours = parseInt(tParts[0], 10);
+            minutes = parseInt(tParts[1], 10);
+          }
+        }
+        rxCalState.selectedDate = new Date(rxCalState.viewYear, rxCalState.viewMonth, dayNum, hours, minutes, 0);
+        var dtField = document.getElementById('rx-prescription-date');
+        if (dtField) dtField.value = formatRxDateTime(rxCalState.selectedDate);
+        renderRxCalendar();
+        toggleRxCalendar(false);
+        return;
+      }
+
+      // Calendar: Now button
+      if (e.target && (e.target.id === 'rx-cal-now' || e.target.closest('#rx-cal-now'))) {
+        rxCalState.selectedDate = new Date();
+        rxCalState.viewYear = rxCalState.selectedDate.getFullYear();
+        rxCalState.viewMonth = rxCalState.selectedDate.getMonth();
+        var dtField = document.getElementById('rx-prescription-date');
+        if (dtField) dtField.value = formatRxDateTime(rxCalState.selectedDate);
+        renderRxCalendar();
+        toggleRxCalendar(false);
+        return;
+      }
+
+      // Close calendar if clicking outside
+      var calPopup = document.getElementById('rx-calendar-popup');
+      if (calPopup && calPopup.style.display === 'block') {
+        if (!e.target.closest('#rx-calendar-popup') && !e.target.closest('#rx-btn-now') && e.target.id !== 'rx-prescription-date') {
+          calPopup.style.display = 'none';
+        }
       }
 
       // Add drug button
@@ -5783,6 +5967,17 @@
       if (e.target && (e.target.id === 'rx-btn-save-prescription' || e.target.closest('#rx-btn-save-prescription'))) {
         savePrescriptionAction();
         return;
+      }
+    });
+
+    document.addEventListener('change', function (e) {
+      if (e.target && e.target.id === 'rx-cal-time') {
+        var parts = e.target.value.split(':');
+        if (parts.length === 2) {
+          rxCalState.selectedDate.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10));
+          var dtField = document.getElementById('rx-prescription-date');
+          if (dtField) dtField.value = formatRxDateTime(rxCalState.selectedDate);
+        }
       }
     });
 
