@@ -1246,48 +1246,50 @@
           </div>
         </div>
 
-        <!-- ROW 1: Vital Signs + Chief Complaint -->
+        <!-- Vital Signs -->
         <div class="row-fluid">
-          <div class="span6">
+          <div class="span12">
             <div class="dashlet">
               <div class="bootstrap-widget-header">
                 <h3>Vital Signs</h3>
               </div>
               <div class="bootstrap-widget-content" id="dashlet-vitals">
-                <table class="table table-condensed vitals-grid" style="margin-bottom:0;">
-                  <table class="table table-bordered table-condensed" id="encounter-table">
-                    <thead>
-                      <tr>
-                        <th style="width:130px;">Date and Time</th>
-                        <th style="width:110px;">BP (mmHg)</th>
-                        <th>HR (bpm)</th>
-                        <th>RR (/min)</th>
-                        <th>Temp (°C)</th>
-                        <th>SpO₂ (%)</th>
-                        <th>Weight (kg) </th>
-                        <th>Height (cm)</th>
-                      </tr>
-                    </thead>
-                    <tbody id="vitals-rows"></tbody>
-                  </table>
+                <table class="table table-bordered table-condensed vitals-grid" id="vitals-table" style="margin-bottom:0;">
+                  <thead>
+                    <tr>
+                      <th style="width:140px;">Date and Time</th>
+                      <th style="width:110px;">BP (mmHg)</th>
+                      <th>HR (bpm)</th>
+                      <th>RR (/min)</th>
+                      <th>Temp (°C)</th>
+                      <th>SpO₂ (%)</th>
+                      <th>Weight (kg) </th>
+                      <th>Height (cm)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="vitals-rows"></tbody>
                 </table>
               </div>
             </div>
           </div>
-          <div class="span6">
+        </div>
+
+        <!-- Chief Complaint (placed below Vital Signs) -->
+        <div class="row-fluid">
+          <div class="span12">
             <div class="dashlet">
               <div class="bootstrap-widget-header">
                 <h3>Chief Complaint</h3>
               </div>
               <div class="bootstrap-widget-content" id="dashlet-complaint">
-                <textarea id="chief_complaint" name="chief_complaint" rows="6" class="input-block-level"
+                <textarea id="chief_complaint" name="chief_complaint" rows="4" class="input-block-level"
                   placeholder="Describe the patient's chief complaint..."></textarea>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- ROW 2: Medical History -->
+        <!-- Medical History (stretched to occupy the whole block) -->
         <div class="row-fluid">
           <div class="span12">
             <div class="dashlet">
@@ -2711,6 +2713,17 @@
       var seen = {};
       var finalOrder = [];
       (Array.isArray(order) ? order : []).forEach(function (id) {
+        if (id === 'vital-signs--chief-complaint') {
+          if (byId['vital-signs'] && !seen['vital-signs']) {
+            finalOrder.push(byId['vital-signs']);
+            seen['vital-signs'] = true;
+          }
+          if (byId['chief-complaint'] && !seen['chief-complaint']) {
+            finalOrder.push(byId['chief-complaint']);
+            seen['chief-complaint'] = true;
+          }
+          return;
+        }
         if (id === 'pertinent-signs-and-information' && !byId[id] && byId['review-of-systems']) {
           id = 'review-of-systems';
         }
