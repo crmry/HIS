@@ -451,69 +451,6 @@
     @media (max-width: 600px) { .ros-alphabetical-grid { grid-template-columns: 1fr; } }
 
     /* ── Bedside Flowsheet & Clinical Chart Monitoring ── */
-    .chart-summary-strip {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 8px;
-      margin-bottom: 12px;
-      padding: 9px;
-      background: #f7faf8;
-      border: 1px solid #d4e3db;
-      border-radius: 4px;
-    }
-    .chart-stat-card {
-      background: #ffffff;
-      border: 1px solid #dbe6e0;
-      border-radius: 3px;
-      padding: 7px 9px;
-      cursor: pointer;
-      transition: all .15s ease;
-      min-width: 0;
-    }
-    .chart-stat-card:hover {
-      border-color: var(--med-green);
-      box-shadow: 0 2px 6px rgba(31, 125, 69, 0.18);
-      transform: translateY(-1px);
-    }
-    .chart-stat-card.active-card {
-      border-color: var(--med-green);
-      border-top: 3px solid var(--med-green);
-      background: #fbfdfc;
-    }
-    .chart-stat-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: #55685f;
-      text-transform: uppercase;
-      letter-spacing: .3px;
-      margin-bottom: 3px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .chart-stat-val {
-      font-size: 12px;
-      font-weight: 700;
-      color: #1a2a22;
-      line-height: 1.25;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .chart-stat-sub {
-      font-size: 10.5px;
-      color: #6b7d73;
-      margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .chart-stat-badge {
-      font-size: 9px;
-      font-weight: 700;
-      padding: 1px 4px;
-      border-radius: 2px;
-    }
     .flowsheet-toolbar {
       display: flex;
       justify-content: space-between;
@@ -1501,41 +1438,6 @@
                 <h3>Vital Signs & Clinical Chart Monitoring</h3>
               </div>
               <div class="bootstrap-widget-content" id="dashlet-vitals">
-                
-                <!-- Clinical Decision Support & Quick Status Strip -->
-                <div class="chart-summary-strip" id="chart-quick-strip">
-                  <div class="chart-stat-card active-card" data-tab-target="#chart-tab-vitals" title="Click to view Vital Signs monitoring">
-                    <div class="chart-stat-label"><span><i class="icon-heart"></i> Latest VS</span> <span class="badge badge-success chart-stat-badge" id="strip-vs-status">Recorded</span></div>
-                    <div class="chart-stat-val" id="strip-vs-val">104/65 · 115 bpm</div>
-                    <div class="chart-stat-sub" id="strip-vs-sub">Temp 37.5°C · SpO₂ 92%</div>
-                  </div>
-                  <div class="chart-stat-card" data-tab-target="#chart-tab-ivf" title="Click to view IV Fluids & Drips (Ongoing & Previous)">
-                    <div class="chart-stat-label"><span><i class="icon-tint"></i> IVF & Drips</span> <span class="badge badge-info chart-stat-badge" id="strip-ivf-badge">2 Ongoing</span></div>
-                    <div class="chart-stat-val" id="strip-ivf-val">PLR 1L @ 120 mL/hr</div>
-                    <div class="chart-stat-sub" id="strip-ivf-sub">+ Norepi Drip running</div>
-                  </div>
-                  <div class="chart-stat-card" data-tab-target="#chart-tab-transfusion" title="Click to view Blood Transfusion Records">
-                    <div class="chart-stat-label"><span><i class="icon-plus-sign"></i> Transfusions</span> <span class="badge badge-inverse chart-stat-badge" id="strip-transfusion-badge">1 Unit PRBC</span></div>
-                    <div class="chart-stat-val" id="strip-transfusion-val">PRBC O Rh+ 250mL</div>
-                    <div class="chart-stat-sub" id="strip-transfusion-sub">Uneventful · No reaction</div>
-                  </div>
-                  <div class="chart-stat-card" data-tab-target="#chart-tab-cbg" title="Click to view CBG monitoring & insulin sliding scale">
-                    <div class="chart-stat-label"><span><i class="icon-time"></i> Latest CBG</span> <span class="badge badge-warning chart-stat-badge" id="strip-cbg-badge">Target Monitored</span></div>
-                    <div class="chart-stat-val" id="strip-cbg-val">168 mg/dL</div>
-                    <div class="chart-stat-sub" id="strip-cbg-sub">Pre-meal · 4u RI given</div>
-                  </div>
-                  <div class="chart-stat-card" data-tab-target="#chart-tab-meds" title="Click to view Summary of Active Medications">
-                    <div class="chart-stat-label"><span><i class="icon-medkit"></i> Active Meds</span> <span class="badge badge-success chart-stat-badge" id="strip-meds-badge">5 Active</span></div>
-                    <div class="chart-stat-val" id="strip-meds-val">Ceftriaxone 2g IV</div>
-                    <div class="chart-stat-sub" id="strip-meds-sub">Next dose: Today 08:00 AM</div>
-                  </div>
-                  <div class="chart-stat-card" data-tab-target="#chart-tab-io" title="Click to view 24h Fluid Balance (Intake & Output)">
-                    <div class="chart-stat-label"><span><i class="icon-exchange"></i> Fluid Balance</span> <span class="badge badge-info chart-stat-badge" id="strip-io-badge">+550 mL</span></div>
-                    <div class="chart-stat-val" id="strip-io-val">In: 2,950 · Out: 2,400</div>
-                    <div class="chart-stat-sub" id="strip-io-sub">24-hr Net: +550 mL (Pos)</div>
-                  </div>
-                </div>
-
                 <!-- Nav Tabs for Flowsheet & Physical Chart Records -->
                 <ul class="nav nav-tabs" id="clinical-chart-tabs" style="margin-bottom:12px;">
                   <li class="active"><a href="#chart-tab-vitals" data-toggle="tab"><i class="icon-heart"></i> VS Monitoring</a></li>
@@ -4437,33 +4339,6 @@
         }
       }
     }
-
-    // ── Quick-Strip Stat Card Clicks ──
-    document.addEventListener('click', function(e) {
-      var card = e.target.closest('.chart-stat-card');
-      if (card && card.dataset.tabTarget) {
-        var targetTab = card.dataset.tabTarget;
-        var tabLink = document.querySelector('#clinical-chart-tabs a[href="' + targetTab + '"]');
-        if (tabLink && window.jQuery) {
-          jQuery(tabLink).tab('show');
-        } else if (tabLink) {
-          tabLink.click();
-        }
-        document.querySelectorAll('.chart-stat-card').forEach(function(c) { c.classList.remove('active-card'); });
-        card.classList.add('active-card');
-      }
-    });
-
-    // ── Sync Quick Card Highlight on Tab Change ──
-    document.addEventListener('shown', function(e) {
-      if (e.target && e.target.getAttribute('href') && e.target.closest('#clinical-chart-tabs')) {
-        var target = e.target.getAttribute('href');
-        document.querySelectorAll('.chart-stat-card').forEach(function(c) {
-          if (c.dataset.tabTarget === target) c.classList.add('active-card');
-          else c.classList.remove('active-card');
-        });
-      }
-    });
 
     // ── Filter Button Listeners ──
     document.addEventListener('click', function(e) {
