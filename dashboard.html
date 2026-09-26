@@ -5453,7 +5453,8 @@
       var timeDisplay = (data && data.time) ? '<div style="font-size:11px; color:#555; margin-top:2px; font-weight:normal;">' + esc(data.time) + '</div>' : '';
 
       var pId = activePatientId || (currentPatientData() && (currentPatientData().id || currentPatientData().hrn)) || SEED_PATIENT_ID;
-      var complianceUrl = 'doctors_order_patient.html?patient=' + encodeURIComponent(pId);
+      var encDate = (data && data.date) || '';
+      var complianceUrl = 'doctors_order_patient.html?patient=' + encodeURIComponent(pId) + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
 
       var diagnosisCellHtml = '';
       if (isCurrent) {

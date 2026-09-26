@@ -1476,23 +1476,32 @@
                 return ta - tb;
             });
 
-            const activeEnc = encounters.find(e => e.is_current || e.isCurrent);
-            const isTargetCurrent = targetEncounterDate === "current" || targetEncounterDate === "all" || (activeEnc && activeEnc.date === targetEncounterDate);
-            const isSingle = Boolean(targetEncounterDate && !isTargetCurrent);
+            // Find target encounter point-in-time limit
+            let targetEnc = null;
+            if (targetEncounterDate && targetEncounterDate !== "all" && targetEncounterDate !== "current") {
+                targetEnc = encounters.find(e => String(e?.date || "").trim() === String(targetEncounterDate).trim()) || null;
+            }
+            const targetTime = targetEnc ? parseEncounterDateTime(targetEnc) : Infinity;
+            const isSingle = targetTime !== Infinity;
+
             const isOP = Boolean(data?.case_type === "OP Patient" || data?.case_type === "Outpatient" || encounters.some(e => (e.is_current || e.isCurrent) && e.registry === "OP"));
             const blocks = [];
             let primaryAssigned = false;
 
             encounters.forEach((enc) => {
                 const encDate = String(enc?.date || "").trim();
-                if (isSingle && encDate !== targetEncounterDate) {
+                const encTime = parseEncounterDateTime(enc);
+
+                // Cumulative timeline: Only show encounters that occurred on or before the inspected encounter date/time.
+                // Future encounters (relative to the inspected encounter) must not appear.
+                if (targetTime !== Infinity && encTime > targetTime) {
                     return;
                 }
 
                 // For inpatients, previous admissions from earlier hospitalizations are not merged into the current admission view unless explicitly selected.
                 // For outpatients (OPD), all encounters (initial to follow-ups to current) form the continuous longitudinal record and must be included.
                 const isPrevious = !isOP && !enc?.is_current && !enc?.isCurrent && enc?.status_tag === "Previous Admission";
-                if (!isSingle && isPrevious) {
+                if (targetTime === Infinity && isPrevious) {
                     return;
                 }
 
