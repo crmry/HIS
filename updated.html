@@ -1072,6 +1072,19 @@
     .rx-field-row textarea {
       resize: vertical;
     }
+    #rx-clinical-impression {
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 11px;
+      padding: 5px 8px;
+      background: #fdfdfd;
+      border: 1px solid #cad5dc;
+      border-radius: 2px;
+      color: #222;
+      resize: vertical;
+      flex: 1;
+      min-height: 85px;
+    }
     .rx-encounter-num {
       color: var(--med-green);
       font-weight: 800;
@@ -5362,7 +5375,7 @@
         specialInstructions: instrEl ? instrEl.value.trim() : '',
         saveTemplate: tplChk ? tplChk.checked : false,
         templateName: tplName ? tplName.value.trim() : '',
-        savePharmacyOrder: pharmChk ? pharmChk.checked : true,
+        savePharmacyOrder: pharmChk ? pharmChk.checked : false,
         noRefill: refillChk ? refillChk.checked : false,
         items: rows
       };
@@ -5385,14 +5398,15 @@
       if (nameInput) nameInput.value = patientName(d);
       if (addrInput) addrInput.value = d.address || '';
       if (ageInput) ageInput.value = (calculateAge(d.birthdate) ? calculateAge(d.birthdate) + ' years' : '');
-      if (genInput) genInput.value = d.gender || '';
+      if (genInput) genInput.value = d.sex || d.gender || '';
 
       if (dtInput && !dtInput.value) {
         dtInput.value = formatRxDateTime(new Date());
       }
 
+      var defaultDiagnosis = d.final_diagnosis || d.admitting_diagnosis || d.chief_complaint || '';
       if (impInput && !impInput.value) {
-        impInput.value = d.final_diagnosis || d.admitting_diagnosis || d.chief_complaint || '';
+        impInput.value = defaultDiagnosis;
       }
 
       if (d.orders && d.orders.prescriptions) {
@@ -5407,7 +5421,9 @@
 
         if (licInput && p.licenseNo !== undefined) licInput.value = p.licenseNo;
         if (dtInput && p.prescriptionDate) dtInput.value = formatRxDateTime(p.prescriptionDate);
-        if (impInput && p.clinicalImpression !== undefined) impInput.value = p.clinicalImpression;
+        if (impInput) {
+          impInput.value = (p.clinicalImpression !== undefined && p.clinicalImpression !== '') ? p.clinicalImpression : defaultDiagnosis;
+        }
         if (instrInput && p.specialInstructions !== undefined) instrInput.value = p.specialInstructions;
         if (tplChk && p.saveTemplate !== undefined) tplChk.checked = !!p.saveTemplate;
         if (tplName && p.templateName !== undefined) tplName.value = p.templateName;
@@ -5463,7 +5479,7 @@
       var pName = (document.getElementById('rx-patient-name') && document.getElementById('rx-patient-name').value) || patientName(pData) || '—';
       var pAddress = (document.getElementById('rx-patient-address') && document.getElementById('rx-patient-address').value) || pData.address || '—';
       var pAge = (document.getElementById('rx-patient-age') && document.getElementById('rx-patient-age').value) || (calculateAge(pData.birthdate) ? calculateAge(pData.birthdate) + ' years' : '—');
-      var pGender = (document.getElementById('rx-patient-gender') && document.getElementById('rx-patient-gender').value) || pData.gender || '—';
+      var pGender = (document.getElementById('rx-patient-gender') && document.getElementById('rx-patient-gender').value) || pData.sex || pData.gender || '—';
       var rxDate = (document.getElementById('rx-prescription-date') && document.getElementById('rx-prescription-date').value) || formatRxDateTime(new Date());
       var impression = (document.getElementById('rx-clinical-impression') && document.getElementById('rx-clinical-impression').value) || pData.final_diagnosis || pData.admitting_diagnosis || '—';
       var licenseNo = (document.getElementById('rx-dd-license') && document.getElementById('rx-dd-license').value) || 'S2-09876543-A';
@@ -5546,14 +5562,14 @@
       var nameVal = patientName(pData) || '';
       var addrVal = pData.address || '';
       var ageVal = calculateAge(pData.birthdate) ? calculateAge(pData.birthdate) + ' years' : '';
-      var genVal = pData.gender || '';
-      var impressionVal = savedRx.clinicalImpression !== undefined ? savedRx.clinicalImpression : (pData.final_diagnosis || pData.admitting_diagnosis || pData.chief_complaint || '');
+      var genVal = pData.sex || pData.gender || '';
+      var defaultImpression = pData.final_diagnosis || pData.admitting_diagnosis || pData.chief_complaint || '';
+      var impressionVal = (savedRx.clinicalImpression !== undefined && savedRx.clinicalImpression !== '') ? savedRx.clinicalImpression : defaultImpression;
       var licenseVal = savedRx.licenseNo !== undefined ? savedRx.licenseNo : 'S2-09876543-A';
       var dtVal = savedRx.prescriptionDate ? formatRxDateTime(savedRx.prescriptionDate) : formatRxDateTime(new Date());
       var specialInstrVal = savedRx.specialInstructions || '';
       var saveTplVal = !!savedRx.saveTemplate;
       var tplNameVal = savedRx.templateName || '';
-      var savePharmVal = savedRx.savePharmacyOrder !== false;
       var noRefillVal = !!savedRx.noRefill;
 
       var container = document.createElement('div');
@@ -5591,27 +5607,25 @@
         '<label style="padding-top:4px;">Address:</label>' +
         '<textarea id="rx-patient-address" rows="2" readonly style="resize:vertical;">' + escapeHtml(addrVal) + '</textarea>' +
         '</div>' +
-        '<div class="rx-field-row">' +
+        '<div class="rx-field-row" style="display:flex; align-items:center;">' +
         '<label>Age:</label>' +
-        '<input type="text" id="rx-patient-age" readonly style="max-width:140px;" value="' + escapeHtml(ageVal) + '">' +
-        '</div>' +
-        '<div class="rx-field-row">' +
-        '<label>Gender:</label>' +
-        '<input type="text" id="rx-patient-gender" readonly style="max-width:140px;" value="' + escapeHtml(genVal) + '">' +
+        '<input type="text" id="rx-patient-age" readonly style="width:75px; flex:0 0 75px;" value="' + escapeHtml(ageVal) + '">' +
+        '<label style="width:auto; min-width:40px; text-align:right; margin:0 8px 0 16px;">Sex:</label>' +
+        '<input type="text" id="rx-patient-gender" readonly style="width:85px; flex:0 0 85px;" value="' + escapeHtml(genVal) + '">' +
         '</div>' +
         '</div>' +
 
-        '<div class="rx-patient-col">' +
+        '<div class="rx-patient-col" style="display:flex; flex-direction:column;">' +
         '<div class="rx-field-row">' +
         '<label>Prescription Date:</label>' +
         '<input type="text" id="rx-prescription-date" value="' + escapeHtml(dtVal) + '">' +
         '<button type="button" class="btn btn-mini" id="rx-btn-now" title="Set to current date/time" style="padding:2px 7px;">🗓️</button>' +
         '</div>' +
-        '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:3px;">' +
         '<label style="width:auto; font-weight:700; color:#4a545a; font-size:11px; margin:0;">Clinical impression:</label>' +
         '<button type="button" class="btn btn-mini btn-danger" id="rx-btn-clear-impression" style="padding:1px 6px; font-size:10px; line-height:14px;">⛔ Clear</button>' +
         '</div>' +
-        '<textarea id="rx-clinical-impression" rows="4" style="margin-top:2px;" placeholder="Clinical impression / diagnosis...">' + escapeHtml(impressionVal) + '</textarea>' +
+        '<textarea id="rx-clinical-impression" rows="4" style="margin-top:2px; flex:1; min-height:85px; width:100%; box-sizing:border-box; font-size:11px; padding:5px 8px; border:1px solid #cad5dc; border-radius:2px; background:#fdfdfd; color:#222; resize:vertical;" placeholder="Clinical impression / diagnosis...">' + escapeHtml(impressionVal) + '</textarea>' +
         '</div>' +
         '</div>' +
 
@@ -5628,7 +5642,6 @@
         '<li><a href="#" data-rx-tpl="dm">Type 2 Diabetes Mellitus</a></li>' +
         '</ul>' +
         '</div>' +
-        '<button type="button" class="btn btn-mini btn-inverse" id="rx-btn-print-pad" style="font-weight:600;"><span style="font-size:11px;">🖨️</span> Print Rx Pad</button>' +
         '</div>' +
 
         '<div class="rx-sub-header" style="margin-top:6px; margin-bottom:0;">' +
@@ -5663,18 +5676,13 @@
         '<input type="text" id="rx-template-name" style="width:160px; margin:0; padding:2px 5px; height:22px;" placeholder="Template name" value="' + escapeHtml(tplNameVal) + '">' +
         '</span>' +
         '<label style="display:inline-flex; align-items:center; gap:5px; margin:0; cursor:pointer;">' +
-        '<input type="checkbox" id="rx-save-pharmacy"' + (savePharmVal ? ' checked' : '') + '> Save as order in pharmacy' +
-        '</label>' +
-        '<label style="display:inline-flex; align-items:center; gap:5px; margin:0; cursor:pointer;">' +
         '<input type="checkbox" id="rx-no-refill"' + (noRefillVal ? ' checked' : '') + '> No Refill?' +
         '</label>' +
         '</div>' +
 
-        '<div class="rx-footer-box" style="display:flex; align-items:center; justify-content:space-between;">' +
-        '<div style="display:flex; align-items:center; gap:10px;">' +
-        '<button type="button" class="btn btn-success" id="rx-btn-save-prescription" style="font-weight:700;">🏷️ Save prescription</button>' +
-        '<span id="rx-save-notification" style="color:var(--med-green); font-weight:700; display:none;">✓ Prescription saved successfully!</span>' +
-        '</div>' +
+        '<div class="rx-footer-box" style="display:flex; align-items:center; justify-content:flex-start; gap:12px;">' +
+        '<button type="button" class="btn btn-primary" id="rx-btn-print-pad" style="font-weight:700; padding:6px 16px;"><span style="font-size:13px; margin-right:4px;">🖨️</span> Print Rx Pad</button>' +
+        '<span style="font-size:11px; color:#607274; font-style:italic;">(Prescription items are placed and saved into Doctor\'s Orders)</span>' +
         '</div>';
 
       var tbody = container.querySelector('#rx-medicines-body');
