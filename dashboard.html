@@ -3738,7 +3738,7 @@
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 26,
+        seedVersion: 31,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T16:30:00+08:00',
         data: {
@@ -4195,7 +4195,7 @@
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 26,
+        seedVersion: 31,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -4244,6 +4244,7 @@
               registry: 'OP',
               service: 'Internal Medicine (OPD)',
               physician: 'Dr. Miguel Santos, MD',
+              prc_license: '0087654',
               is_current: true,
               status_tag: 'Consultation (OPD)',
               diagnosis: 'E11.9 - Type 2 Diabetes Mellitus, well-controlled; I10 - Essential Hypertension',
@@ -4297,6 +4298,7 @@
               registry: 'OP',
               service: 'Internal Medicine (OPD)',
               physician: 'Dr. Miguel Santos, MD',
+              prc_license: '0087654',
               is_current: false,
               status_tag: 'Follow-up (OPD)',
               diagnosis: 'E11.9 - Type 2 Diabetes Mellitus; I10 - Essential Hypertension',
@@ -4346,6 +4348,7 @@
               registry: 'OP',
               service: 'Internal Medicine (OPD)',
               physician: 'Dr. Miguel Santos, MD',
+              prc_license: '0087654',
               is_current: false,
               status_tag: 'Initial Visit (OPD)',
               diagnosis: 'E11.9 - Type 2 Diabetes Mellitus; I10 - Essential Hypertension',
@@ -4390,6 +4393,7 @@
               registry: 'OP',
               service: 'Orthopedics (OPD)',
               physician: 'Dr. Paolo Cruz, MD',
+              prc_license: '0091245',
               is_current: false,
               status_tag: 'Follow-up (OPD)',
               diagnosis: 'M17.11 - Unilateral Primary Osteoarthritis, Right Knee, resolving pain',
@@ -4432,6 +4436,7 @@
               registry: 'OP',
               service: 'Orthopedics (OPD)',
               physician: 'Dr. Paolo Cruz, MD',
+              prc_license: '0091245',
               is_current: false,
               status_tag: 'Initial Visit (OPD)',
               diagnosis: 'M17.11 - Unilateral Primary Osteoarthritis, Right Knee, mild',
@@ -4550,7 +4555,7 @@
     function blankPatientRecord() {
       return {
         id: BLANK_PATIENT_ID,
-        seedVersion: 11,
+        seedVersion: 31,
         createdAt: '2026-09-25T10:30:00+08:00',
         updatedAt: '2026-09-25T10:30:00+08:00',
         data: {
@@ -4573,11 +4578,11 @@
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 26) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 31) records[index] = seedPatientRecord();
 
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) records.push(opPatientRecord());
-      else if (Number(records[opIndex].seedVersion || 0) < 26) records[opIndex] = opPatientRecord();
+      else if (Number(records[opIndex].seedVersion || 0) < 31) records[opIndex] = opPatientRecord();
 
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());

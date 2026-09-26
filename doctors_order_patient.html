@@ -557,7 +557,7 @@
         function seedPatientRecord() {
             return {
                 id: SEED_PATIENT_ID,
-                seedVersion: 30,
+                seedVersion: 31,
                 createdAt: "2026-06-12T08:15:00+08:00",
                 updatedAt: "2026-06-13T16:30:00+08:00",
                 data: {
@@ -587,7 +587,7 @@
                     pe_other: "",
                     other_forms: ["Trauma Sheet"],
                     other_forms_notes: "No additional specialty form required at present.",
-                    vs_bp: "138/86", vs_hr: "102", vs_rr: "24", vs_temp: "38.2", vs_spo2: "93", vs_weight: "61", vs_height: "158",
+                    physician: "Dr. Miguel Santos, MD", prc_license: "0087654", vs_bp: "138/86", vs_hr: "102", vs_rr: "24", vs_temp: "38.2", vs_spo2: "93", vs_weight: "61", vs_height: "158",
                     admitting_diagnosis: "Community-acquired pneumonia, moderate risk; hypertension.",
                     final_diagnosis: "Community-acquired pneumonia, improved; essential hypertension.",
                     progress_notes: "Productive cough and dyspnea, improved after initial treatment.\nBP 138/86, HR 102, RR 24, Temp 38.2 C, SpO2 93%. Crackles at right lower lung field.\nCommunity-acquired pneumonia, moderate risk; hypertension.",
@@ -598,6 +598,7 @@
                             registry: "OP",
                             service: "Internal Medicine (OPD)",
                             physician: "Dr. Miguel Santos, MD",
+                            prc_license: "0087654",
                             status_tag: "Follow-up (OPD)",
                             is_current: true,
                             diagnosis: "J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension",
@@ -612,6 +613,7 @@
                             registry: "OP",
                             service: "Internal Medicine (OPD)",
                             physician: "Dr. Miguel Santos, MD",
+                            prc_license: "0087654",
                             status_tag: "Consultation (OPD)",
                             is_current: false,
                             diagnosis: "J18.9 - Community-Acquired Pneumonia, moderate risk; I10 - Essential Hypertension",
@@ -630,6 +632,8 @@
                             time: "08:30 AM",
                             registry: "ER",
                             service: "Emergency Medicine",
+                            physician: "Dr. Roberto Lim, MD",
+                            prc_license: "0078912",
                             status_tag: "Initial Visit (ER)",
                             patient_record: "Initial assessment and stabilization",
                             results: "Admitted to Medical Ward",
@@ -640,6 +644,8 @@
                             time: "02:15 PM",
                             registry: "OP",
                             service: "Outpatient Department (OPD) - Pulmonary & Adult Medicine",
+                            physician: "Dr. Andrea Reyes, MD",
+                            prc_license: "0083419",
                             status_tag: "Follow-up (OPD)",
                             patient_record: "Routine adult pulmonary checkup and maintenance medication titration",
                             results: "Spirometry normal; maintenance therapy continued",
@@ -655,6 +661,8 @@
                             time: "10:30 AM",
                             registry: "IP",
                             service: "General Surgery",
+                            physician: "Dr. Roberto Lim, MD",
+                            prc_license: "0078912",
                             status_tag: "Previous Admission",
                             patient_record: "Post-operative surgical ward care and wound healing review",
                             results: "Discharged clinically stable; surgical port sites healed",
@@ -709,7 +717,7 @@
         function opPatientRecord() {
             return {
                 id: OP_PATIENT_ID,
-                seedVersion: 30,
+                seedVersion: 31,
                 createdAt: "2026-03-14T08:45:00+08:00",
                 updatedAt: "2026-09-26T09:30:00+08:00",
                 data: {
@@ -907,6 +915,7 @@
               registry: 'OP',
               service: 'Orthopedics (OPD)',
               physician: 'Dr. Paolo Cruz, MD',
+              prc_license: '0091245',
               is_current: false,
               status_tag: 'Follow-up (OPD)',
               diagnosis: 'M17.11 - Unilateral Primary Osteoarthritis, Right Knee, resolving pain',
@@ -949,6 +958,7 @@
               registry: 'OP',
               service: 'Orthopedics (OPD)',
               physician: 'Dr. Paolo Cruz, MD',
+              prc_license: '0091245',
               is_current: false,
               status_tag: 'Initial Visit (OPD)',
               diagnosis: 'M17.11 - Unilateral Primary Osteoarthritis, Right Knee, mild',
@@ -1106,11 +1116,11 @@
             const records = getPatients();
             const index = records.findIndex(record => record.id === SEED_PATIENT_ID);
             if (index < 0) records.push(seedPatientRecord());
-            else if (Number(records[index].seedVersion || 0) < 21) records[index] = seedPatientRecord();
+            else if (Number(records[index].seedVersion || 0) < 31) records[index] = seedPatientRecord();
 
             const opIndex = records.findIndex(record => record.id === OP_PATIENT_ID);
             if (opIndex < 0) records.push(opPatientRecord());
-            else if (Number(records[opIndex].seedVersion || 0) < 30) records[opIndex] = opPatientRecord();
+            else if (Number(records[opIndex].seedVersion || 0) < 31) records[opIndex] = opPatientRecord();
 
             const blankIndex = records.findIndex(record => record.id === BLANK_PATIENT_ID);
             if (blankIndex < 0) records.push(blankPatientRecord());
