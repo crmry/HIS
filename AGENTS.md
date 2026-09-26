@@ -1,5 +1,13 @@
 # Repository Instructions for HIS (CLMMRH Physician Dashboard)
 
+## Pre-Patch Issue Tracking via GitHub Issues
+- **Mandatory Issue-First Invariant**: Before applying any bug fixes, feature implementations, or refactoring patches to the HIS application, an issue MUST first be created and logged in GitHub Issues (`crmry/HIS/issues`).
+- **Workflow**:
+  1. **Identify & Specify**: Define the issue, affected clinical modules, reproduction details, or clinical workflow requirements.
+  2. **Create GitHub Issue**: File the issue via the GitHub API/CLI before modifying application code, ensuring full traceability prior to patching.
+  3. **Traceability in Commits**: When applying the patch, reference the issue number in the commit message (e.g., `Fixes #<issue-id>` or `Ref #<issue-id>`).
+  4. **Verification & Closure**: Verify the patch against EHR/EMR standards, update or close the issue with verification evidence, and cross-reference the commit hash.
+
 ## Continuous GitHub Synchronization
 - **Mandatory Push Invariant**: After completing any file additions, edits, or removals requested by the user, you MUST immediately commit and push the changes to GitHub (`origin/main`).
 - **Workflow**:
