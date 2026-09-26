@@ -32,7 +32,7 @@ A web-based clinical dashboard and hospital information system prototype designe
 - Dedicated prescription writer module placed directly under Drugs and Medicines.
 - **Dangerous Drug License (DD/DDP / S2)** number management.
 - **Patient Particulars Card**: PID, Encounter Number, Patient Name, Address, Age, Gender, Prescription Date, and Clinical Impression (with Clear tool).
-- **Prescribed Medicines Table**: Drug name (with Philippine drug catalog datalist), Availability, Quantity, Dosage, Frequency, Timing, Period, Duration, and Row Deletion.
+- **Prescribed Medicines Table**: Drug name (with Philippine drug catalog datalist), Quantity, Dosage, Frequency, Timing, Period, Duration, and Row Deletion.
 - **Quick Clinical Templates**: Pre-configured drug regimens for CAP, Hypertension, URTI/Cold, Gastritis/GERD, Analgesic/Pain, and Type 2 Diabetes.
 - **Special Instructions**: Dietary advice, precautions, and administration instructions.
 - **Pop-out Window & Docking**: Switch seamlessly between inline editing and a full-featured floating modal window.
