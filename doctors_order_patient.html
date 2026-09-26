@@ -1476,7 +1476,9 @@
                 return ta - tb;
             });
 
-            const isSingle = Boolean(targetEncounterDate && targetEncounterDate !== "all" && targetEncounterDate !== "current");
+            const activeEnc = encounters.find(e => e.is_current || e.isCurrent);
+            const isTargetCurrent = targetEncounterDate === "current" || targetEncounterDate === "all" || (activeEnc && activeEnc.date === targetEncounterDate);
+            const isSingle = Boolean(targetEncounterDate && !isTargetCurrent);
             const isOP = Boolean(data?.case_type === "OP Patient" || data?.case_type === "Outpatient" || encounters.some(e => (e.is_current || e.isCurrent) && e.registry === "OP"));
             const blocks = [];
             let primaryAssigned = false;
