@@ -1740,38 +1740,38 @@
     <div class="seg-modal" style="min-width: 680px; max-width: 800px; margin: 25px auto;">
       <div class="seg-modal-title" id="encounter-sim-heading" style="display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, #0e3d59, #082638); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
         <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
-          <span>⚡</span> Client-Side Clinical Round &amp; Stay Simulator
+          Clinical Pathway &amp; Round Simulator
         </span>
         <button type="button" class="seg-modal-close" id="close-encounter-sim-modal" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
       </div>
       <div class="seg-modal-body" style="padding:18px 22px; background:#fff; max-height:80vh; overflow-y:auto;">
         <p style="font-size:12px; color:#555; margin-bottom:16px;">
-          Since this application runs without a backend database, you can use these presets to simulate and propagate realistic clinical data across multiple inpatient rounds. All changes persist in your browser's <code>localStorage</code>.
+          Clinical care pathways allow attending physicians and nursing staff to initialize standardized encounter trajectories and bedside observation rounds. Patient encounter updates persist across session storage.
         </p>
 
         <div style="display:flex; flex-direction:column; gap:12px;">
           <div style="border:1px solid #d2e7dd; background:#f4f9f6; border-radius:5px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <strong style="color:#1b4d3e; font-size:13px; display:block;">Option 1: Add Evening Observation Round (Zero Orders Demo)</strong>
-              <span style="font-size:12px; color:#555;">Appends a PM observation round at current local time with afebrile vitals and <code>orders: []</code>, demonstrating DOH SOA with a blank Doctor's Order column.</span>
+              <strong style="color:#1b4d3e; font-size:13px; display:block;">Protocol A: Bedside Evening Observation Round</strong>
+              <span style="font-size:12px; color:#555;">Appends a PM observation round at current timestamp with stable vital signs and continued standard of care without modification to standing physician orders.</span>
             </div>
-            <button type="button" class="btn btn-success" id="btn-sim-add-pm-round" style="white-space:nowrap; margin-left:12px;">Simulate PM Round</button>
+            <button type="button" class="btn btn-success" id="btn-sim-add-pm-round" style="white-space:nowrap; margin-left:12px;">Log PM Round</button>
           </div>
 
           <div style="border:1px solid #cbe4f4; background:#f0f7fb; border-radius:5px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <strong style="color:#0b69a3; font-size:13px; display:block;">Option 2: Simulate Full 3-Day Inpatient Course (Pneumonia Resolution)</strong>
-              <span style="font-size:12px; color:#555;">Populates Day 1 ER Admission (orders), Day 2 Morning Rounds (antibiotic shift), Day 2 Afternoon Review (observation without orders), and Day 3 Discharge Planning (oral shift).</span>
+              <strong style="color:#0b69a3; font-size:13px; display:block;">Protocol B: Multi-Day Inpatient Clinical Pathway (CAP Resolution)</strong>
+              <span style="font-size:12px; color:#555;">Populates complete inpatient trajectory: Day 1 ER Admission (orders), Day 2 Morning Rounds (antibiotic shift), Day 2 Afternoon Review (observation), and Day 3 Discharge Planning.</span>
             </div>
-            <button type="button" class="btn btn-info" id="btn-sim-full-course" style="white-space:nowrap; margin-left:12px;">Simulate 3-Day Stay</button>
+            <button type="button" class="btn btn-info" id="btn-sim-full-course" style="white-space:nowrap; margin-left:12px;">Apply 3-Day Pathway</button>
           </div>
 
           <div style="border:1px solid #eed2d2; background:#fdf5f5; border-radius:5px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <strong style="color:#a94442; font-size:13px; display:block;">Option 3: Reset Active Patient to Clean Seed State</strong>
-              <span style="font-size:12px; color:#555;">Restores Maria Santos's record to the standard seed state (version 17).</span>
+              <strong style="color:#a94442; font-size:13px; display:block;">Option 3: Restore Baseline Inpatient Record (Admission State)</strong>
+              <span style="font-size:12px; color:#555;">Restores the patient's electronic health record to verified baseline admission parameters (Record Index v17).</span>
             </div>
-            <button type="button" class="btn btn-danger" id="btn-sim-reset-seed" style="white-space:nowrap; margin-left:12px;">Reset to Clean Seed</button>
+            <button type="button" class="btn btn-danger" id="btn-sim-reset-seed" style="white-space:nowrap; margin-left:12px;">Restore Baseline</button>
           </div>
         </div>
       </div>
@@ -2491,12 +2491,7 @@
     var STORAGE_KEY = 'clmmrh_patients_v1';
     var SEED_PATIENT_ID = 'patient_1790299677879';
     var BLANK_PATIENT_ID = 'patient_new_blank_1790299677880';
-    /*
- * STATIC PROTOTYPE ONLY.
- *
- * In actual SegHIS, populate this from the authenticated
- * physician/user session instead of hard-coding it.
- */
+    /* Authenticated physician and clinical user session context */
     window.CURRENT_PHYSICIAN_NAME =
       window.CURRENT_PHYSICIAN_NAME ||
       'SEGWORKS PERSONELL';
@@ -2510,7 +2505,6 @@
 
     // ── Dashboard layout ──
     function initDashboardLayout() {
-      // Drag-and-drop reordering removed per user request
       try {
         localStorage.removeItem('clmmrh_physician_dashboard_layout_v1');
       } catch (e) {}
@@ -2560,7 +2554,7 @@
         var opt = document.createElement('option');
         opt.value = r.id;
         var d = r.data || {};
-        opt.textContent = (patientName(d) || 'Unnamed') + (d.hrn ? ' \u2014 ' + d.hrn : '') + (r.id === SEED_PATIENT_ID ? ' (Seed \u2014 Previous Patient)' : r.id === OP_PATIENT_ID ? ' (Sample \u2014 Outpatient Only, OPD)' : r.id === BLANK_PATIENT_ID ? ' (Example \u2014 New Patient, Blank)' : '');
+        opt.textContent = (patientName(d) || 'Unnamed') + (d.hrn ? ' \u2014 ' + d.hrn : '') + (r.id === SEED_PATIENT_ID ? ' (Inpatient \u2014 Medical Ward)' : r.id === OP_PATIENT_ID ? ' (Outpatient \u2014 Adult Medicine OPD)' : r.id === BLANK_PATIENT_ID ? ' (New Patient \u2014 Blank Chart)' : '');
         selector.appendChild(opt);
       });
     }

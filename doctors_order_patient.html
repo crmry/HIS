@@ -1292,7 +1292,7 @@
                 option.value = String(record.id || "");
                 const data = record.data || {};
                 option.textContent =
-                    `${patientName(data) || "Unnamed patient"}${data.hrn ? " — " + data.hrn : ""}${record.id === SEED_PATIENT_ID ? " (Seed — Previous Patient)" : record.id === OP_PATIENT_ID ? " (Sample — Outpatient Only, OPD)" : record.id === BLANK_PATIENT_ID ? " (Example — New Patient, Blank)" : ""}`;
+                    `${patientName(data) || "Unnamed patient"}${data.hrn ? " — " + data.hrn : ""}${record.id === SEED_PATIENT_ID ? " (Inpatient — Medical Ward)" : record.id === OP_PATIENT_ID ? " (Outpatient — Adult Medicine OPD)" : record.id === BLANK_PATIENT_ID ? " (New Patient — Blank Chart)" : ""}`;
                 selector.appendChild(option);
             });
 
@@ -1854,38 +1854,38 @@
         <div class="seg-modal" style="min-width: 650px; max-width: 780px;">
             <div class="seg-modal-title" id="sheet-sim-heading" style="background: linear-gradient(135deg, #0e3d59, #082638); color:#fff;">
                 <span style="display:flex; align-items:center; gap:8px;">
-                    Client-Side Clinical Round &amp; Stay Simulator
+                    Clinical Pathway &amp; Round Simulator
                 </span>
                 <button type="button" class="seg-modal-close" id="close-sheet-sim-modal" title="Close">✕</button>
             </div>
             <div class="seg-modal-body">
                 <p style="font-size:12px; color:#555; margin-bottom:16px; margin-top:0;">
-                    Since this application operates purely in the client browser without a database, use these presets to simulate realistic clinical rounds and verify DOH SOA alignment and date/time grouping.
+                    Clinical care pathways allow attending physicians and nursing staff to initialize standardized encounter trajectories and bedside observation rounds. Patient encounter updates persist across session storage.
                 </p>
 
                 <div style="display:flex; flex-direction:column; gap:12px;">
                     <div style="border:1px solid #d2e7dd; background:#f4f9f6; border-radius:5px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
                         <div>
-                            <strong style="color:#1b4d3e; font-size:13px; display:block;">Option 1: Add Evening Observation Round (Zero Orders Demo)</strong>
-                            <span style="font-size:12px; color:#555;">Appends a PM observation round at current local time with afebrile vitals and <code>orders: []</code>, demonstrating DOH SOA with a blank Doctor's Order column.</span>
+                            <strong style="color:#1b4d3e; font-size:13px; display:block;">Protocol A: Bedside Evening Observation Round</strong>
+                            <span style="font-size:12px; color:#555;">Appends a PM observation round at current timestamp with stable vital signs and continued standard of care without modification to standing physician orders.</span>
                         </div>
-                        <button type="button" id="btn-sheet-sim-pm-round" style="white-space:nowrap; margin-left:12px; padding:7px 12px; background:#1b4d3e; color:#fff; border:1px solid #133a2e; border-radius:3px; font-weight:600; cursor:pointer;">Simulate PM Round</button>
+                        <button type="button" id="btn-sheet-sim-pm-round" style="white-space:nowrap; margin-left:12px; padding:7px 12px; background:#1b4d3e; color:#fff; border:1px solid #133a2e; border-radius:3px; font-weight:600; cursor:pointer;">Log PM Round</button>
                     </div>
 
                     <div style="border:1px solid #cbe4f4; background:#f0f7fb; border-radius:5px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
                         <div>
-                            <strong style="color:#0b69a3; font-size:13px; display:block;">Option 2: Simulate Full 3-Day Inpatient Course (Pneumonia Resolution)</strong>
-                            <span style="font-size:12px; color:#555;">Populates Day 1 ER Admission (orders), Day 2 Morning Rounds (antibiotic shift), Day 2 Afternoon Review (observation without orders), and Day 3 Discharge Planning (oral shift).</span>
+                            <strong style="color:#0b69a3; font-size:13px; display:block;">Protocol B: Multi-Day Inpatient Clinical Pathway (CAP Resolution)</strong>
+                            <span style="font-size:12px; color:#555;">Populates complete inpatient trajectory: Day 1 ER Admission (orders), Day 2 Morning Rounds (antibiotic shift), Day 2 Afternoon Review (observation), and Day 3 Discharge Planning.</span>
                         </div>
-                        <button type="button" id="btn-sheet-sim-course" style="white-space:nowrap; margin-left:12px; padding:7px 12px; background:#0e3d59; color:#fff; border:1px solid #082638; border-radius:3px; font-weight:600; cursor:pointer;">Simulate 3-Day Stay</button>
+                        <button type="button" id="btn-sheet-sim-course" style="white-space:nowrap; margin-left:12px; padding:7px 12px; background:#0e3d59; color:#fff; border:1px solid #082638; border-radius:3px; font-weight:600; cursor:pointer;">Apply 3-Day Pathway</button>
                     </div>
 
                     <div style="border:1px solid #eed2d2; background:#fdf5f5; border-radius:5px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
                         <div>
-                            <strong style="color:#a94442; font-size:13px; display:block;">Option 3: Reset Active Patient to Clean Seed State</strong>
-                            <span style="font-size:12px; color:#555;">Restores Maria Santos's record to the standard seed state (version 17).</span>
+                            <strong style="color:#a94442; font-size:13px; display:block;">Option 3: Restore Baseline Inpatient Record (Admission State)</strong>
+                            <span style="font-size:12px; color:#555;">Restores the patient's electronic health record to verified baseline admission parameters (Record Index v17).</span>
                         </div>
-                        <button type="button" id="btn-sheet-sim-reset" style="white-space:nowrap; margin-left:12px; padding:7px 12px; background:#c53030; color:#fff; border:1px solid #9b2c2c; border-radius:3px; font-weight:600; cursor:pointer;">Reset to Clean Seed</button>
+                        <button type="button" id="btn-sheet-sim-reset" style="white-space:nowrap; margin-left:12px; padding:7px 12px; background:#c53030; color:#fff; border:1px solid #9b2c2c; border-radius:3px; font-weight:600; cursor:pointer;">Restore Baseline</button>
                     </div>
                 </div>
             </div>

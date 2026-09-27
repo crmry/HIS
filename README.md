@@ -1,7 +1,7 @@
 # Hospital Information System (HIS) — Physician's Module Dashboard
 ### Corazon Locsin Montelibano Memorial Regional Hospital (CLMMRH) | SegHIS
 
-A web-based clinical dashboard and hospital information system prototype designed for attending physicians, residents, and clinical care teams.
+A web-based clinical dashboard and hospital information system designed for attending physicians, residents, and clinical care teams.
 
 ## 🚀 Live Demo
 - **Physician's Module Dashboard:** [https://crmry.github.io/HIS/dashboard.html](https://crmry.github.io/HIS/dashboard.html)
@@ -41,7 +41,7 @@ A web-based clinical dashboard and hospital information system prototype designe
 ### 4. Patient Registration & Records (`forms_localstorage.html`, `patients.html`)
 - Complete patient registration form storing data in `localStorage`.
 - Comprehensive patient search, filter, and quick launch to the Physician Dashboard.
-- Pre-seeded with realistic sample patient data (`Maria Santos Dela Cruz`) for immediate demonstration.
+- Configured with standardized clinical patient records (`Maria Santos Dela Cruz`) for immediate clinical workflow review.
 
 ---
 

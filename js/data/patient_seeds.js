@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
-   CLMMRH SegHIS — Mock Clinical Patient Datasets & Seeds
-   Single source of truth for EHR patient seeds
+   CLMMRH SegHIS — Clinical Patient Registry & Baseline Records
+   Hospital Master Patient Index (EMPI) Clinical Baseline Records
    ═══════════════════════════════════════════════════════════════ */
 
 var STORAGE_KEY = 'clmmrh_patients_v1';

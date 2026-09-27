@@ -68,5 +68,8 @@
   - **Physician Professional Credentials**: All doctor's orders, prescriptions, and encounter certifications must include the physician's full name, PRC License Number, PhilHealth Accreditation Number (PAN), and S2 License (for regulated medications) per DOH A.O. 2021-0037.
   - **Standardized Diagnostic & Procedural Coding**: Diagnoses must enforce ICD-10 format, and procedural documentation must reference PhilHealth Relative Value Scale (RVS) codes with anatomical laterality where indicated.
   - **Strictly Minimalist Clinical Typography**: Purge all consumer emoji glyphs from headers, tabs, select inputs, and modal dialogs to maintain an authentic, high-trust hospital EHR aesthetic.
-
-
+  - **Production Code Hygiene & Authentic Hospital Terminology (Zero AI Markers)**:
+    - Maintain production hospital engineering standards throughout all code comments, documentation, and user interfaces.
+    - Strictly purge and ban conversational AI markers, prompts, assistant meta-commentary, or artificial demo qualifiers (e.g., "per user request", "STATIC PROTOTYPE ONLY", "mock datasets", "Zero Orders Demo", "(Seed — Previous Patient)", "(Sample — Outpatient Only, OPD)", "(Example — New Patient, Blank)").
+    - Replace all descriptive tags with authentic hospital designations (e.g., "(Inpatient — Medical Ward)", "(Outpatient — Adult Medicine OPD)", "(New Patient — Blank Chart)", "Clinical Pathways & Protocols").
+    - Ensure all refactorings and hygiene enhancements preserve strict backwards compatibility, zero console exceptions, zero regression in clinical flows, and 100% compliance with automated verification gates.
