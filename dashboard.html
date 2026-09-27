@@ -350,7 +350,7 @@
                   <thead>
                     <tr>
                       <th style="width:115px; cursor:pointer; user-select:none;" id="th-encounter-date" title="Sorted newest first (Reverse chronological). Click to sort oldest first.">Date <span id="encounter-date-sort-indicator" style="font-size:10px; margin-left:2px; opacity:0.85;">▼</span></th>
-                      <th style="width:110px;">Registry Type</th>
+                      <th style="width:110px; text-align:center;">Registry Type</th>
                       <th style="width:180px;">Service</th>
                       <th style="width:180px;">Physician</th>
                       <th>Diagnosis</th>
@@ -3693,7 +3693,7 @@
 
       tr.innerHTML =
         '<td><strong>' + dateDisplay + '</strong>' + timeDisplay + currentBadge + '</td>' +
-        '<td><span class="encounter-type-badge ' + typeClass + '">' + esc(typeUpper) + '</span></td>' +
+        '<td style="text-align:center;"><span class="encounter-type-badge ' + typeClass + '">' + esc(typeUpper) + '</span></td>' +
         '<td>' + serviceDisplay + '</td>' +
         '<td><i class="icon-user" style="opacity:0.6; margin-right:3px;"></i>' + doctorDisplay + '</td>' +
         '<td>' + diagnosisCellHtml + '</td>' +
