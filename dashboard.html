@@ -2505,7 +2505,7 @@
     var restoringPatientRecord = false;
 
     function safeParse(v, fb) { try { var p = JSON.parse(v); return p != null ? p : fb; } catch (e) { return fb; } }
-    function getPatients() { var r = safeParse(localStorage.getItem(STORAGE_KEY), []); return Array.isArray(r) ? r : []; }
+    function getPatients() { return typeof window.getPatients === 'function' && window.getPatients !== getPatients ? window.getPatients() : (Array.isArray(safeParse(localStorage.getItem(STORAGE_KEY), [])) ? safeParse(localStorage.getItem(STORAGE_KEY), []) : []); }
     function esc(v) { return String(v != null ? v : '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 
     // ── Dashboard layout ──
@@ -3549,7 +3549,8 @@
       var currentBadge = isCurrent ? ' <span class="badge badge-info" style="font-size:9px; background:#0066cc; vertical-align:middle; margin-left:3px;">Current</span>' : '';
       var timeDisplay = (data && data.time) ? '<div style="font-size:11px; color:#555; margin-top:2px; font-weight:normal;">' + esc(data.time) + '</div>' : '';
 
-      var pId = activePatientId || (currentPatientData() && (currentPatientData().id || currentPatientData().hrn)) || SEED_PATIENT_ID;
+      var pData = currentPatientData();
+      var pId = activePatientId || (pData && (pData.id || pData.hrn)) || SEED_PATIENT_ID;
       var encDate = (data && data.date) || '';
       var complianceUrl = 'doctors_order_patient.html?patient=' + encodeURIComponent(pId) + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
 
@@ -3607,8 +3608,9 @@
         var wtM = notes.match(/Weight[^\d]*([\d\.]+)/i) || notes.match(/([\d\.]+)\s*kg/i);
         var bmiM = notes.match(/BMI[^\d]*([\d\.]+)/i);
         if (bpM || hrM || rrM || tempM || wtM || bmiM || spo2M) {
-          var wtVal = wtM ? wtM[1] : (enc.weight || (currentPatientData() && (currentPatientData().weight || currentPatientData().vs_weight)) || '—');
-          var htVal = (enc.height || (currentPatientData() && (currentPatientData().height || currentPatientData().vs_height)) || '168');
+          var pDataVs = currentPatientData();
+          var wtVal = wtM ? wtM[1] : (enc.weight || (pDataVs && (pDataVs.weight || pDataVs.vs_weight)) || '—');
+          var htVal = (enc.height || (pDataVs && (pDataVs.height || pDataVs.vs_height)) || '168');
           var bmiVal = bmiM ? bmiM[1] : (wtVal !== '—' && htVal ? (parseFloat(wtVal) / Math.pow(parseFloat(htVal)/100, 2)).toFixed(1) : '—');
           vsList = [{
             dateTime: (enc.date || '') + ' ' + (enc.time || ''),
@@ -5320,6 +5322,17 @@
       renderClinicalRequestList();
     }
 
+    var _orderSummaryRaf = null;
+    function scheduleOrderSummaryUpdate() {
+      if (_orderSummaryRaf) return;
+      var raf = window.requestAnimationFrame || function (fn) { return setTimeout(fn, 16); };
+      _orderSummaryRaf = raf(function () {
+        _orderSummaryRaf = null;
+        updateCategoryBadges();
+        renderOrderSummary();
+      });
+    }
+
     function addOrderEntry(listEl, data) {
       var d = document.createElement('div');
       d.className = 'order-entry';
@@ -5350,8 +5363,7 @@
       textarea.addEventListener('input', function () {
         if (textarea.value.trim() && !d.dataset.createdAt) d.dataset.createdAt = new Date().toISOString();
         if (!textarea.value.trim()) d.dataset.createdAt = '';
-        updateCategoryBadges();
-        renderOrderSummary();
+        scheduleOrderSummaryUpdate();
       });
       listEl.appendChild(d);
       return d;
@@ -5658,13 +5670,11 @@
       row.querySelectorAll('input, select').forEach(function (el) {
         el.addEventListener('input', function () {
           if (medicationOrderText(readMedicationRow(row)) && !row.dataset.createdAt) row.dataset.createdAt = new Date().toISOString();
-          updateMedicationBadges();
-          renderOrderSummary();
+          scheduleOrderSummaryUpdate();
         });
         el.addEventListener('change', function () {
           if (medicationOrderText(readMedicationRow(row)) && !row.dataset.createdAt) row.dataset.createdAt = new Date().toISOString();
-          updateMedicationBadges();
-          renderOrderSummary();
+          scheduleOrderSummaryUpdate();
         });
       });
     }
@@ -7447,9 +7457,17 @@
     var requestModal = document.getElementById('clinical-request-modal');
     var serviceSearch = document.getElementById('service-search');
 
+    var _cachedCurrentPatientRecord = null;
+    function invalidateCurrentPatientCache() {
+      _cachedCurrentPatientRecord = null;
+    }
     function currentPatientData() {
+      if (_cachedCurrentPatientRecord && _cachedCurrentPatientRecord.id === activePatientId) {
+        return _cachedCurrentPatientRecord.data || {};
+      }
       var id = activePatientId;
       var record = getPatients().find(function (item) { return item.id === id; });
+      if (record) _cachedCurrentPatientRecord = record;
       return record ? record.data || {} : {};
     }
 
@@ -7612,9 +7630,27 @@
       renderRequestCart();
     });
 
-    (document.getElementById('service-search-btn') || { addEventListener: function() {} }).addEventListener('click', renderServiceOptions);
-    serviceSearch.addEventListener('input', renderServiceOptions);
-    (document.getElementById('refresh-request-services') || { addEventListener: function() {} }).addEventListener('click', function () { serviceSearch.value = ''; renderServiceOptions(); });
+    var _serviceSearchTimer = null;
+    function debouncedRenderServiceOptions() {
+      window.clearTimeout(_serviceSearchTimer);
+      _serviceSearchTimer = window.setTimeout(renderServiceOptions, 120);
+    }
+    (document.getElementById('service-search-btn') || { addEventListener: function() {} }).addEventListener('click', function () {
+      window.clearTimeout(_serviceSearchTimer);
+      renderServiceOptions();
+    });
+    serviceSearch.addEventListener('input', debouncedRenderServiceOptions);
+    serviceSearch.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        window.clearTimeout(_serviceSearchTimer);
+        renderServiceOptions();
+      }
+    });
+    (document.getElementById('refresh-request-services') || { addEventListener: function() {} }).addEventListener('click', function () {
+      window.clearTimeout(_serviceSearchTimer);
+      serviceSearch.value = '';
+      renderServiceOptions();
+    });
     (document.getElementById('close-request-modal') || { addEventListener: function() {} }).addEventListener('click', closeRequestModal);
     requestModal.addEventListener('click', function (e) { if (e.target === requestModal) closeRequestModal(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && requestModal.classList.contains('open')) closeRequestModal(); });
@@ -8099,6 +8135,7 @@
       if (!record) return;
 
       activePatientId = record.id;
+      if (typeof invalidateCurrentPatientCache === 'function') invalidateCurrentPatientCache();
 
       restoringPatientRecord = true;
 
@@ -8764,10 +8801,8 @@
         record;
 
 
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(records)
-      );
+      savePatients(records);
+      invalidateCurrentPatientCache();
 
 
       if (options.refreshSelector) {

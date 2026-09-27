@@ -2505,7 +2505,7 @@
     var restoringPatientRecord = false;
 
     function safeParse(v, fb) { try { var p = JSON.parse(v); return p != null ? p : fb; } catch (e) { return fb; } }
-    function getPatients() { var r = safeParse(localStorage.getItem(STORAGE_KEY), []); return Array.isArray(r) ? r : []; }
+    function getPatients() { return typeof window.getPatients === 'function' && window.getPatients !== getPatients ? window.getPatients() : (Array.isArray(safeParse(localStorage.getItem(STORAGE_KEY), [])) ? safeParse(localStorage.getItem(STORAGE_KEY), []) : []); }
     function esc(v) { return String(v != null ? v : '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 
     // ── Dashboard layout ──

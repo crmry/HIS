@@ -17,13 +17,28 @@ function safeParse(v, fb) {
   }
 }
 
+var _cachedPatients = null;
+
+function invalidatePatientsCache() {
+  _cachedPatients = null;
+}
+
 function getPatients() {
+  if (_cachedPatients && Array.isArray(_cachedPatients)) return _cachedPatients;
   var r = safeParse(localStorage.getItem(STORAGE_KEY), []);
-  return Array.isArray(r) ? r : [];
+  _cachedPatients = Array.isArray(r) ? r : [];
+  return _cachedPatients;
 }
 
 function savePatients(records) {
+  _cachedPatients = Array.isArray(records) ? records : null;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+}
+
+if (typeof window !== 'undefined' && window.addEventListener) {
+  window.addEventListener('storage', function (e) {
+    if (e.key === STORAGE_KEY) invalidatePatientsCache();
+  });
 }
 
     function seedPatientRecord() {

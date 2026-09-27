@@ -28,7 +28,10 @@
   - Shared modules (e.g., `js/data/patient_seeds.js`) and consuming HTML files must never declare colliding top-level `const` or `let` variables in the global window scope.
   - Consuming pages must use safe fallback patterns (`var STORAGE_KEY = window.STORAGE_KEY || ...;`) or scoped namespaces (`window.SegHIS`).
   - When extracting or compartmentalizing scripts out of an HTML file, verify that all called helper functions (e.g., `buildEmptyPage`, table builders, renderers, event listeners) remain defined and accessible in the page's runtime scope.
-  - Always guard DOM element queries before mutating properties or innerHTML (`if (!el) return;`) to eliminate unhandled null reference crashes.
+- **UI Responsiveness & Main-Thread Performance Invariants**:
+  - **In-Memory Storage Caching**: Never perform synchronous `JSON.parse(localStorage.getItem(...))` repeatedly across loops, table renderers, or query lookups. Use an in-memory memoized cache invalidated on write and `window.addEventListener('storage')`.
+  - **Live Calculation Coalescing**: Order summary updates, badge counters, and live aggregations triggered by rapid typing events (`input`, `change`) must be coalesced using `window.requestAnimationFrame` to avoid layout thrashing and main-thread blocking.
+  - **Input Debouncing**: Search inputs (e.g., CPOE service lookup, ICD-10 search) that filter or re-render large DOM lists must be debounced with a timer (100–150ms) to ensure instant key entry without frame drops.
 
 ## Interactive Component & DOM Lifecycle Invariants
 - **DOM-Before-Script Sequencing**:
@@ -37,12 +40,22 @@
 - **Idempotent Event Listener Guarding**:
   - Component initialization functions (e.g., `initFloatingRequisitionToolkit()`) must be idempotent.
   - Always guard with an initialization marker (e.g., `if (container.dataset.initialized === 'true') return; container.dataset.initialized = 'true';`) to prevent double-binding when scripts run across both inline and `DOMContentLoaded` lifecycles.
+- **Inline Event Handler Scoping & Window Binding**:
+  - Every function referenced directly in inline HTML attributes (e.g., `onclick="closeRxWriterModal(event)"`) MUST be declared and explicitly assigned to the `window` scope (`window.closeRxWriterModal = closeRxWriterModal;`).
+  - Automated smoke tests must click all close buttons and cancel triggers in addition to open triggers to verify tear-down and scope completeness.
+- **Intentional Interaction vs. Hover Traps**:
+  - Floating panels, toolkits, and drawers must be strictly click-activated rather than hover-activated (`:hover`).
+  - Implement outside-click auto-collapse (`document.addEventListener('click', ...)`) with a pinned-state override so users can effortlessly dismiss panels without trapped UI states.
 - **Modal Layering & Stacking Context Invariants**:
   - Floating tools and docked panels must respect modal backdrops (e.g., max `z-index: 1050`, below standard modal dialogs at `z-index: 1060+`).
   - Floating components must cleanly suppress or hide when `.modal-lock` is active on `<body>` (`body.modal-lock #floating-widget { display: none !important; }`).
 
 ## EHR and EMR Architectural & Design Standards
 - **Core Target**: All modules, clinical documentation tools, and order entry interfaces must be designed to fit directly into a hospital **Electronic Health Record (EHR)** and **Electronic Medical Record (EMR)** system (aligned with DOH Philippines, PhilHealth eClaims/CF4, and CLMMRH clinical workflows).
+- **Minimalist Clinical UI & Icon Constraints**:
+  - Clinical documentation tools and requisition toolbars must maintain an ultra-clean, minimalist hospital UI.
+  - Do NOT use consumer-grade emoji icons (e.g., ⚡, 💊, 🧪, 🩻, 🫀, 🫁, 📌, 📍) in headers, handles, or action lists.
+  - Use subtle clinical color accents (e.g., 3px left border stripes), standard system glyphs (◀, ▶, ✕), and refined hospital typography.
 - **Clinical Terminology & CPOE Standards**:
   - Adhere to Computerized Physician Order Entry (CPOE) and Electronic Medication Administration Record (eMAR) conventions.
   - Use recognized clinical headings and data attributes (e.g., standard clinical flowsheets for vitals/intake/output, CPOE order types for diet/IVF/medications/labs/diagnostics/procedures).
@@ -50,3 +63,4 @@
 - **Interoperability & Hospital Audit Trails**:
   - Model all entries with audit-ready metadata: provider identity/signatures, date/time with timezones, encounter numbers, registry types (InPatient, OutPatient, Emergency), and status flags (CARED/Active/Discontinued).
   - Ensure clinical outputs can be translated or mapped directly to official DOH hospital records, Doctor's Order Sheets, and PhilHealth Claim Form 4 (CF4).
+

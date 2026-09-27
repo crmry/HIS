@@ -74,15 +74,18 @@ async def scan_single_target(browser_ws, file_url):
 
         await send("Page.navigate", {"url": file_url})
 
+        loaded = False
         t0 = time.time()
-        while time.time() - t0 < 1.5:
+        while time.time() - t0 < 3.0:
             try:
                 raw = await asyncio.wait_for(p_ws.recv(), timeout=0.2)
                 msg = json.loads(raw)
                 method = msg.get("method", "")
                 params = msg.get("params", {})
 
-                if method == "Runtime.exceptionThrown":
+                if method == "Page.loadEventFired":
+                    loaded = True
+                elif method == "Runtime.exceptionThrown":
                     details = params.get("exceptionDetails", {})
                     text = details.get("text", "")
                     ex = details.get("exception", {}).get("description", "")
@@ -104,7 +107,8 @@ async def scan_single_target(browser_ws, file_url):
                     if t in ("error", "assert"):
                         errors.append(f"Console {t}: {args}")
             except asyncio.TimeoutError:
-                pass
+                if loaded and time.time() - t0 > 1.0:
+                    break
 
         # Interactive component smoke tests for dashboard/updated pages
         if any(p in file_url for p in ("dashboard.html", "updated.html")):
