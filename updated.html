@@ -278,7 +278,8 @@
         <span class="meta-item"><span class="meta-label">Age/Sex:</span> <span id="banner-age-sex">—</span></span>
         <span class="meta-item"><span class="meta-label">Bdate:</span> <span id="banner-bdate">09/10/1986</span></span>
         <span class="meta-item"><span class="meta-label">Encounter No.:</span> <span id="banner-encounter-no">001101</span></span>
-        <span class="meta-item"><span class="meta-label">Ward/Area:</span> <span id="banner-ward">OPD - Room 102</span></span>
+        <span class="meta-item"><span class="meta-label">Address:</span> <span id="banner-address">Brgy. Mansilingan, Bacolod City</span></span>
+        <span id="banner-ward" style="display:none;"></span>
         <span id="banner-admit-date" style="display:none;">06/12/2026</span>
       </div>
 
@@ -2574,7 +2575,10 @@
       if (encNoEl) {
         encNoEl.textContent = d.case_no || d.encounter_no || '001101';
       }
-      document.getElementById('banner-ward').textContent = d.ward_area || d.ward_room || d.wardRoom || 'Surgery';
+      var addrEl = document.getElementById('banner-address');
+      if (addrEl) addrEl.textContent = d.address || '—';
+      var wardEl = document.getElementById('banner-ward');
+      if (wardEl) wardEl.textContent = d.address || d.ward_area || d.ward_room || d.wardRoom || '—';
       var admitDate = '';
       if (Array.isArray(d.encounters)) { var enc = d.encounters.find(function (e) { return e && e.date; }); if (enc) admitDate = enc.date; }
       var admitEl = document.getElementById('banner-admit-date');
@@ -8905,6 +8909,8 @@
         if (hrnEl) hrnEl.textContent = '—';
         var ageEl = document.getElementById('banner-age-sex');
         if (ageEl) ageEl.textContent = '—';
+        var addrEl = document.getElementById('banner-address');
+        if (addrEl) addrEl.textContent = '—';
         var wardEl = document.getElementById('banner-ward');
         if (wardEl) wardEl.textContent = '—';
         var admitEl = document.getElementById('banner-admit-date');
