@@ -1536,11 +1536,7 @@
           </div>
 
           <div class="row-fluid" style="margin-top:10px;">
-            <div class="span6">
-              <label>Staff / Nurse Signature:</label>
-              <input type="text" id="fe-staff-signature" class="input-block-level" placeholder="e.g. E. Dela Cruz, RN">
-            </div>
-            <div class="span6">
+            <div class="span12">
               <label>Clinical Decision Notes / Remarks:</label>
               <input type="text" id="fe-general-remarks" class="input-block-level" placeholder="e.g. Given as ordered. Patient monitored.">
             </div>
@@ -2490,7 +2486,7 @@
     /* Authenticated physician and clinical user session context */
     window.CURRENT_PHYSICIAN_NAME =
       window.CURRENT_PHYSICIAN_NAME ||
-      'SEGWORKS PERSONELL';
+      'Miguel Santos, MD';
     var form = document.getElementById('dashboard-form');
     var activePatientId = '';
     var restoringPatientRecord = false;
@@ -3106,9 +3102,6 @@
       var dtEl = document.getElementById('fe-datetime');
       if (dtEl) dtEl.value = localIso;
 
-      var staffEl = document.getElementById('fe-staff-signature');
-      if (staffEl) staffEl.value = window.CURRENT_PHYSICIAN_NAME || 'Staff Nurse, RN';
-
       syncFlowsheetModalSections();
       modal.classList.add('open');
     }
@@ -3158,7 +3151,8 @@
       saveFeBtn.addEventListener('click', function() {
         var type = document.getElementById('fe-record-type').value;
         var dt = document.getElementById('fe-datetime').value || new Date().toISOString();
-        var staff = (document.getElementById('fe-staff-signature').value || '').trim() || 'Nurse, RN';
+        var staffEl = document.getElementById('fe-staff-signature');
+        var staff = (staffEl && staffEl.value ? staffEl.value.trim() : '') || (window.CURRENT_PHYSICIAN_NAME || 'Staff Nurse, RN');
         var remarks = (document.getElementById('fe-general-remarks').value || '').trim();
 
         var pid = activePatientId || SEED_PATIENT_ID;
