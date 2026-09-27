@@ -91,7 +91,7 @@
       right: 0 !important;
       top: 50% !important;
       transform: translateY(-50%) !important;
-      z-index: 99999 !important;
+      z-index: 1050 !important;
       display: flex !important;
       flex-direction: row-reverse !important;
       align-items: center !important;
@@ -100,6 +100,9 @@
       margin: 0 !important;
       padding: 0 !important;
       line-height: normal !important;
+    }
+    body.modal-lock #floating-req-toolkit {
+      display: none !important;
     }
     #floating-req-handle {
       background: linear-gradient(180deg, #1b4d3e, #0d2820) !important;
@@ -139,7 +142,6 @@
     .floating-req-handle-arrow {
       font-size: 11px !important;
       color: #6ee7b7 !important;
-      transition: transform 0.25s ease !important;
       line-height: 1 !important;
     }
     #floating-req-menu {
@@ -165,11 +167,6 @@
       max-width: 290px !important;
       opacity: 1 !important;
       pointer-events: auto !important;
-    }
-    #floating-req-toolkit.expanded #floating-req-toggle-arrow,
-    #floating-req-toolkit:hover #floating-req-toggle-arrow,
-    #floating-req-toolkit.pinned #floating-req-toggle-arrow {
-      transform: rotate(180deg) !important;
     }
     .floating-req-header {
       background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
@@ -2425,15 +2422,10 @@
 
       shell.innerHTML = html;
     }
-    /* Fallback if SEGHIS server jQuery not available */
-    if (typeof jQuery === 'undefined') {
-      document.write('<script src="https://code.jquery.com/jquery-1.11.3.min.js"><\/script>');
-      document.write('<script src="https://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"><\/script>');
-    }
   </script>
     <!-- ═══ FLOATING CLINICAL ORDER & REQUISITION TOOLKIT ═══ -->
   <aside id="floating-req-toolkit" class="floating-req-toolkit" aria-label="Clinical Order and Requisition Toolkit">
-    <button type="button" class="floating-req-handle" id="floating-req-handle" title="Clinical Order &amp; Requisition Toolkit (Click to expand / collapse)" aria-expanded="false">
+    <button type="button" class="floating-req-handle" id="floating-req-handle" onclick="toggleFloatingRequisitionToolkit(event)" title="Clinical Order &amp; Requisition Toolkit (Click to expand / collapse)" aria-expanded="false">
       <span class="floating-req-handle-icon">⚡</span>
       <span class="floating-req-handle-text">REQUISITIONS</span>
       <span class="floating-req-handle-arrow" id="floating-req-toggle-arrow">◀</span>
@@ -2446,7 +2438,7 @@
         <div style="font-size:10px; color:#64748b;">CPOE Diagnostic Orders &amp; Print Slips</div>
       </div>
       <div class="floating-req-items">
-        <button type="button" class="floating-req-item-btn" id="floating-btn-rx" data-station="rx" title="Open Rx Writer / Prescriptions">
+        <button type="button" class="floating-req-item-btn" id="floating-btn-rx" onclick="openRxWriterFromToolkit(event)" data-station="rx" title="Open Rx Writer / Prescriptions">
           <span class="floating-req-item-icon" style="background:#ecfdf5; color:#059669; border-color:#a7f3d0;">💊</span>
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">Rx Writer</div>
@@ -2455,7 +2447,7 @@
           <span class="floating-req-item-action">Open ↗</span>
         </button>
 
-        <button type="button" class="floating-req-item-btn" id="floating-btn-lab" data-station="laboratory" title="Laboratory Requisition">
+        <button type="button" class="floating-req-item-btn" id="floating-btn-lab" onclick="openRequestModal('laboratory', event)" data-station="laboratory" title="Laboratory Requisition">
           <span class="floating-req-item-icon" style="background:#eff6ff; color:#2563eb; border-color:#bfdbfe;">🧪</span>
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">Laboratory Request</div>
@@ -2464,7 +2456,7 @@
           <span class="floating-req-item-action">Order ↗</span>
         </button>
 
-        <button type="button" class="floating-req-item-btn" id="floating-btn-ddirs" data-station="radiology" title="DDIRS / Imaging Requisition">
+        <button type="button" class="floating-req-item-btn" id="floating-btn-ddirs" onclick="openRequestModal('radiology', event)" data-station="radiology" title="DDIRS / Imaging Requisition">
           <span class="floating-req-item-icon" style="background:#fdf2f8; color:#db2777; border-color:#fbcfe8;">🩻</span>
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">DDIRS Request</div>
@@ -2473,7 +2465,7 @@
           <span class="floating-req-item-action">Order ↗</span>
         </button>
 
-        <button type="button" class="floating-req-item-btn" id="floating-btn-heart" data-station="heart" title="Heart Station Requisition">
+        <button type="button" class="floating-req-item-btn" id="floating-btn-heart" onclick="openRequestModal('heart', event)" data-station="heart" title="Heart Station Requisition">
           <span class="floating-req-item-icon" style="background:#fef2f2; color:#dc2626; border-color:#fecaca;">🫀</span>
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">Heart Station Request</div>
@@ -2482,7 +2474,7 @@
           <span class="floating-req-item-action">Order ↗</span>
         </button>
 
-        <button type="button" class="floating-req-item-btn" id="floating-btn-pulmo" data-station="respiratory" title="Pulmonary Station Requisition">
+        <button type="button" class="floating-req-item-btn" id="floating-btn-pulmo" onclick="openRequestModal('respiratory', event)" data-station="respiratory" title="Pulmonary Station Requisition">
           <span class="floating-req-item-icon" style="background:#f0fdfa; color:#0d9488; border-color:#99f6e4;">🫁</span>
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">Pulmonary Station</div>
@@ -2492,7 +2484,7 @@
         </button>
       </div>
       <div class="floating-req-footer">
-        <button type="button" class="btn btn-mini btn-block" id="floating-req-pin-btn" style="font-size:10px; color:#475569;">
+        <button type="button" class="btn btn-mini btn-block" id="floating-req-pin-btn" onclick="togglePinFloatingRequisitionToolkit(event)" style="font-size:10px; color:#475569;">
           📌 Pin Requisition Dock
         </button>
       </div>
@@ -7295,22 +7287,64 @@
         // ══════════════════════════════════════════════════════════════════════
     // FLOATING REQUISITION TOOLKIT CONTROLS
     // ══════════════════════════════════════════════════════════════════════
-    function openRxWriterFromToolkit() {
-      if (activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex >= 0) {
+    function toggleFloatingRequisitionToolkit(e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      var toolkit = document.getElementById('floating-req-toolkit');
+      if (!toolkit) return;
+      toolkit.classList.toggle('expanded');
+      var isOpen = toolkit.classList.contains('expanded') || toolkit.classList.contains('pinned');
+      var arrow = document.getElementById('floating-req-toggle-arrow');
+      if (arrow) arrow.textContent = isOpen ? '\u25B6' : '\u25C0';
+      var handle = document.getElementById('floating-req-handle');
+      if (handle) handle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    function togglePinFloatingRequisitionToolkit(e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      var toolkit = document.getElementById('floating-req-toolkit');
+      if (!toolkit) return;
+      toolkit.classList.toggle('pinned');
+      var isPinned = toolkit.classList.contains('pinned');
+      var pinBtn = document.getElementById('floating-req-pin-btn');
+      if (pinBtn) {
+        pinBtn.textContent = isPinned ? '📍 Unpin Requisition Dock' : '📌 Pin Requisition Dock';
+        pinBtn.style.color = isPinned ? '#059669' : '#475569';
+      }
+      var isOpen = toolkit.classList.contains('expanded') || isPinned;
+      var arrow = document.getElementById('floating-req-toggle-arrow');
+      if (arrow) arrow.textContent = isOpen ? '\u25B6' : '\u25C0';
+      var handle = document.getElementById('floating-req-handle');
+      if (handle) handle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    function openRxWriterFromToolkit(e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      if (activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex > 0) {
         alert('Historical encounters are signed records and cannot be altered. Orders must be placed on the current or next encounter.');
         return;
+      }
+      var toolkit = document.getElementById('floating-req-toolkit');
+      if (toolkit && !toolkit.classList.contains('pinned')) {
+        toolkit.classList.remove('expanded');
+        var arrow = document.getElementById('floating-req-toggle-arrow');
+        if (arrow) arrow.textContent = '\u25C0';
+        var handle = document.getElementById('floating-req-handle');
+        if (handle) handle.setAttribute('aria-expanded', 'false');
       }
       var modal = document.getElementById('rx-writer-modal');
       var modalSlot = document.getElementById('rx-modal-slot');
       var container = document.getElementById('rx-writer-main-container');
       if (!container) {
-        var pData = currentPatientData(); var savedRx = (pData && pData.prescriptions) || {}; container = buildRxWriterUI(savedRx);
+        var pData = currentPatientData();
+        var savedRx = (pData && pData.prescriptions) || {};
+        container = buildRxWriterUI(savedRx);
       }
       if (modal && modalSlot && container) {
         if (!modalSlot.contains(container)) {
           modalSlot.appendChild(container);
         }
         modal.classList.add('open');
+        modal.style.display = 'block';
         document.body.classList.add('modal-lock');
         var btn = document.getElementById('rx-open-modal-btn');
         if (btn) btn.style.display = 'none';
@@ -7326,8 +7360,6 @@
       var pinBtn = document.getElementById('floating-req-pin-btn');
       var arrow = document.getElementById('floating-req-toggle-arrow');
 
-      if (!toolkit) return;
-
       function updateArrow() {
         if (!arrow) return;
         var isOpen = toolkit.classList.contains('expanded') || toolkit.classList.contains('pinned');
@@ -7335,73 +7367,45 @@
         if (handle) handle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       }
 
-      if (handle) {
-        handle.addEventListener('click', function (e) {
-          e.stopPropagation();
-          toolkit.classList.toggle('expanded');
-          updateArrow();
-        });
+      if (handle && !handle.hasAttribute('onclick')) {
+        handle.addEventListener('click', toggleFloatingRequisitionToolkit);
       }
 
-      if (pinBtn) {
-        pinBtn.addEventListener('click', function (e) {
-          e.stopPropagation();
-          toolkit.classList.toggle('pinned');
-          var isPinned = toolkit.classList.contains('pinned');
-          pinBtn.textContent = isPinned ? '📍 Unpin Requisition Dock' : '📌 Pin Requisition Dock';
-          pinBtn.style.color = isPinned ? '#059669' : '#475569';
-          updateArrow();
-        });
+      if (pinBtn && !pinBtn.hasAttribute('onclick')) {
+        pinBtn.addEventListener('click', togglePinFloatingRequisitionToolkit);
       }
 
       // Action buttons inside toolkit
       var btnRx = document.getElementById('floating-btn-rx');
-      if (btnRx) {
-        btnRx.addEventListener('click', function (e) {
-          e.stopPropagation();
-          toolkit.classList.remove('expanded');
-          updateArrow();
-          openRxWriterFromToolkit();
-        });
+      if (btnRx && !btnRx.hasAttribute('onclick')) {
+        btnRx.addEventListener('click', openRxWriterFromToolkit);
       }
 
       var btnLab = document.getElementById('floating-btn-lab');
-      if (btnLab) {
+      if (btnLab && !btnLab.hasAttribute('onclick')) {
         btnLab.addEventListener('click', function (e) {
-          e.stopPropagation();
-          toolkit.classList.remove('expanded');
-          updateArrow();
-          openRequestModal('laboratory');
+          openRequestModal('laboratory', e);
         });
       }
 
       var btnDdirs = document.getElementById('floating-btn-ddirs');
-      if (btnDdirs) {
+      if (btnDdirs && !btnDdirs.hasAttribute('onclick')) {
         btnDdirs.addEventListener('click', function (e) {
-          e.stopPropagation();
-          toolkit.classList.remove('expanded');
-          updateArrow();
-          openRequestModal('radiology');
+          openRequestModal('radiology', e);
         });
       }
 
       var btnHeart = document.getElementById('floating-btn-heart');
-      if (btnHeart) {
+      if (btnHeart && !btnHeart.hasAttribute('onclick')) {
         btnHeart.addEventListener('click', function (e) {
-          e.stopPropagation();
-          toolkit.classList.remove('expanded');
-          updateArrow();
-          openRequestModal('heart');
+          openRequestModal('heart', e);
         });
       }
 
       var btnPulmo = document.getElementById('floating-btn-pulmo');
-      if (btnPulmo) {
+      if (btnPulmo && !btnPulmo.hasAttribute('onclick')) {
         btnPulmo.addEventListener('click', function (e) {
-          e.stopPropagation();
-          toolkit.classList.remove('expanded');
-          updateArrow();
-          openRequestModal('respiratory');
+          openRequestModal('respiratory', e);
         });
       }
 
@@ -7442,31 +7446,57 @@
       return record ? record.data || {} : {};
     }
 
-    function openRequestModal(tabKey) {
-      if (activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex >= 0) {
+    function openRequestModal(tabKey, e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      if (activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex > 0) {
         alert('Historical encounters are signed and finalized records. Clinical requests cannot be added to historical encounters. New requests must be ordered on the current or next encounter.');
         return;
       }
+      var toolkit = document.getElementById('floating-req-toolkit');
+      if (toolkit && !toolkit.classList.contains('pinned')) {
+        toolkit.classList.remove('expanded');
+        var arrow = document.getElementById('floating-req-toggle-arrow');
+        if (arrow) arrow.textContent = '\u25C0';
+        var handle = document.getElementById('floating-req-handle');
+        if (handle) handle.setAttribute('aria-expanded', 'false');
+      }
       modalRequestTab = requestTabByKey(tabKey).key;
       requestCart = [];
-      serviceSearch.value = '';
+      if (serviceSearch) serviceSearch.value = '';
       var patient = currentPatientData();
-      document.getElementById('request-pid').textContent = patient.hrn || '0000000000';
-      document.getElementById('request-patient-name').textContent = patientName(patient) || 'NO PATIENT SELECTED';
-      document.getElementById('request-patient-type').textContent = (patient.case_type || patient.patient_type || 'PATIENT').toUpperCase();
-      document.getElementById('request-date-label').textContent = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date());
+      var pidEl = document.getElementById('request-pid');
+      if (pidEl) pidEl.textContent = patient.hrn || patient.hospital_number || '0000000000';
+      var pNameEl = document.getElementById('request-patient-name');
+      if (pNameEl) pNameEl.textContent = patientName(patient) || 'NO PATIENT SELECTED';
+      var pTypeEl = document.getElementById('request-patient-type');
+      if (pTypeEl) pTypeEl.textContent = (patient.case_type || patient.patient_type || 'PATIENT').toUpperCase();
+      var dateLbl = document.getElementById('request-date-label');
+      if (dateLbl) dateLbl.textContent = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date());
       renderClinicalTabs();
       renderServiceOptions();
       renderRequestCart();
-      requestModal.className = 'seg-modal-backdrop open';
+      if (requestModal) {
+        requestModal.className = 'seg-modal-backdrop open';
+        requestModal.style.display = 'block';
+      }
       document.body.classList.add('modal-lock');
-      document.getElementById('close-request-modal').focus();
+      var closeBtn = document.getElementById('close-request-modal');
+      if (closeBtn) closeBtn.focus();
     }
 
     function closeRequestModal() {
-      requestModal.className = 'seg-modal-backdrop';
+      if (requestModal) {
+        requestModal.className = 'seg-modal-backdrop';
+        requestModal.style.display = 'none';
+      }
       document.body.classList.remove('modal-lock');
     }
+
+    window.openRxWriterFromToolkit = openRxWriterFromToolkit;
+    window.openRequestModal = openRequestModal;
+    window.closeRequestModal = closeRequestModal;
+    window.toggleFloatingRequisitionToolkit = toggleFloatingRequisitionToolkit;
+    window.togglePinFloatingRequisitionToolkit = togglePinFloatingRequisitionToolkit;
 
     function renderServiceOptions() {
       var tab = requestTabByKey(modalRequestTab);

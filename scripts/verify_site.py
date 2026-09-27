@@ -117,26 +117,46 @@ async def scan_single_target(browser_ws, file_url):
                 handle.click();
                 if (!toolkit.classList.contains('expanded')) return 'Handle click did not expand toolkit';
                 
-                // Test lab button
-                const labBtn = document.getElementById('floating-btn-lab');
-                if (labBtn) {
-                    labBtn.click();
-                    const modal = document.getElementById('diagnostic-request-modal');
-                    if (!modal || modal.style.display !== 'block') return 'Lab button failed to open diagnostic modal';
-                    if (typeof window.closeDiagnosticRequestModal === 'function') window.closeDiagnosticRequestModal();
+                // Test all 5 clinical station buttons
+                const tests = [
+                    {btnId: 'floating-btn-rx', modalId: 'rx-writer-modal', closeFn: () => {
+                        const m = document.getElementById('rx-writer-modal');
+                        if (m) { m.classList.remove('open'); m.style.display = 'none'; }
+                        document.body.classList.remove('modal-lock');
+                    }},
+                    {btnId: 'floating-btn-lab', modalId: 'clinical-request-modal', closeFn: () => {
+                        if (typeof window.closeRequestModal === 'function') window.closeRequestModal();
+                    }},
+                    {btnId: 'floating-btn-ddirs', modalId: 'clinical-request-modal', closeFn: () => {
+                        if (typeof window.closeRequestModal === 'function') window.closeRequestModal();
+                    }},
+                    {btnId: 'floating-btn-heart', modalId: 'clinical-request-modal', closeFn: () => {
+                        if (typeof window.closeRequestModal === 'function') window.closeRequestModal();
+                    }},
+                    {btnId: 'floating-btn-pulmo', modalId: 'clinical-request-modal', closeFn: () => {
+                        if (typeof window.closeRequestModal === 'function') window.closeRequestModal();
+                    }}
+                ];
+
+                for (let t of tests) {
+                    const btn = document.getElementById(t.btnId);
+                    if (!btn) return 'Button ' + t.btnId + ' not found';
+                    btn.click();
+                    const m = document.getElementById(t.modalId);
+                    if (!m) return 'Modal ' + t.modalId + ' not found';
+                    const isVisible = (m.classList.contains('open') || window.getComputedStyle(m).display === 'block') && window.getComputedStyle(m).display !== 'none';
+                    if (!isVisible) return 'Station ' + t.btnId + ' failed to show modal ' + t.modalId;
+                    t.closeFn();
                 }
-                
-                // Test rx button
-                const rxBtn = document.getElementById('floating-btn-rx');
-                if (rxBtn) {
-                    rxBtn.click();
-                    const rxModal = document.getElementById('rx-writer-modal');
-                    if (!rxModal || rxModal.style.display !== 'block') return 'Rx button failed to open rx-writer-modal';
-                    if (typeof window.closeRxWriterModal === 'function') window.closeRxWriterModal();
+
+                // Test pin toggle
+                const pinBtn = document.getElementById('floating-req-pin-btn');
+                if (pinBtn) {
+                    pinBtn.click();
+                    if (!toolkit.classList.contains('pinned')) return 'Pin button failed to pin toolkit';
+                    pinBtn.click();
                 }
-                
-                // Re-toggle handle to collapse
-                handle.click();
+
                 return 'OK';
             })()
             """
