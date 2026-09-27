@@ -11,12 +11,23 @@
 ## Continuous GitHub Synchronization
 - **Mandatory Push Invariant**: After completing any file additions, edits, or removals requested by the user, you MUST immediately commit and push the changes to GitHub (`origin/main`).
 - **Workflow**:
-  1. Verify the changes locally.
-  2. Stage modified files (`git add <files>`).
-  3. Create a concise, descriptive commit message explaining the change.
-  4. Push to remote (`git push origin main`).
-  5. Provide the commit hash and GitHub link in your response to the user.
+  1. Verify the changes locally and execute the automated headless verification gate (`python scripts/verify_site.py`).
+  2. Ensure zero console errors, zero syntax errors, and zero broken asset requests across all pages.
+  3. Stage modified files (`git add <files>`).
+  4. Create a concise, descriptive commit message explaining the change (referencing the active GitHub Issue).
+  5. Push to remote (`git push origin main`).
+  6. Provide the commit hash, GitHub link, and verification summary in your response to the user.
 - **Rationale**: The user reviews and verifies all dashboard changes directly through the GitHub repository interface.
+
+## Automated Quality Gates & Script Integrity Standards
+- **Pre-Commit Headless CDP Verification**:
+  - Run `python scripts/verify_site.py` across all workspace pages (`dashboard.html`, `doctors_order_patient.html`, `forms_localstorage.html`, `index.html`, `patients.html`, `simulation.html`) with both default and patient query routes.
+  - The build is strictly rejected if any page produces a JavaScript runtime exception (`SyntaxError`, `TypeError`, `ReferenceError`), console error, or HTTP 404 network failure.
+- **Global Namespace & Refactoring Safety**:
+  - Shared modules (e.g., `js/data/patient_seeds.js`) and consuming HTML files must never declare colliding top-level `const` or `let` variables in the global window scope.
+  - Consuming pages must use safe fallback patterns (`var STORAGE_KEY = window.STORAGE_KEY || ...;`) or scoped namespaces (`window.SegHIS`).
+  - When extracting or compartmentalizing scripts out of an HTML file, verify that all called helper functions (e.g., `buildEmptyPage`, table builders, renderers, event listeners) remain defined and accessible in the page's runtime scope.
+  - Always guard DOM element queries before mutating properties or innerHTML (`if (!el) return;`) to eliminate unhandled null reference crashes.
 
 ## EHR and EMR Architectural & Design Standards
 - **Core Target**: All modules, clinical documentation tools, and order entry interfaces must be designed to fit directly into a hospital **Electronic Health Record (EHR)** and **Electronic Medical Record (EMR)** system (aligned with DOH Philippines, PhilHealth eClaims/CF4, and CLMMRH clinical workflows).

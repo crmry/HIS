@@ -1,0 +1,180 @@
+#!/usr/bin/env python3
+"""
+CLMMRH HIS — Automated Headless Quality Gate
+Scans all workspace HTML pages and query routes using headless Chromium DevTools Protocol (CDP).
+Enforces:
+- 0 JavaScript runtime exceptions (SyntaxError, ReferenceError, TypeError)
+- 0 Console errors
+- 0 Network 404s
+"""
+
+import asyncio
+import glob
+import json
+import os
+import subprocess
+import sys
+import time
+import urllib.request
+import websockets
+
+WORKSPACE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+# Locate Chromium installed via Playwright / ms-playwright
+POSSIBLE_CHROME_PATHS = [
+    os.path.expandvars(r"%LOCALAPPDATA%\ms-playwright\chromium-1200\chrome-win64\chrome.exe"),
+    r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+    r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+    os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe")
+]
+
+CHROME_PATH = None
+for p in POSSIBLE_CHROME_PATHS:
+    if os.path.exists(p):
+        CHROME_PATH = p
+        break
+
+if not CHROME_PATH:
+    # Search in ms-playwright recursively
+    ms_play = os.path.expandvars(r"%LOCALAPPDATA%\ms-playwright")
+    if os.path.exists(ms_play):
+        for root, _, files in os.walk(ms_play):
+            if "chrome.exe" in files:
+                CHROME_PATH = os.path.join(root, "chrome.exe")
+                break
+
+if not CHROME_PATH:
+    print("[ERROR] Could not locate a valid Chromium or Chrome executable.")
+    sys.exit(1)
+
+async def scan_single_target(browser_ws, file_url):
+    async with websockets.connect(browser_ws) as b_ws:
+        msg_id = 1
+        create_msg = {"id": msg_id, "method": "Target.createTarget", "params": {"url": "about:blank"}}
+        await b_ws.send(json.dumps(create_msg))
+        resp = json.loads(await b_ws.recv())
+        target_id = resp["result"]["targetId"]
+
+    target_ws = f"ws://127.0.0.1:9222/devtools/page/{target_id}"
+    errors = []
+
+    async with websockets.connect(target_ws) as p_ws:
+        p_id = 1
+        async def send(method, params=None):
+            nonlocal p_id
+            m = {"id": p_id, "method": method, "params": params or {}}
+            p_id += 1
+            await p_ws.send(json.dumps(m))
+            return m["id"]
+
+        await send("Page.enable")
+        await send("Runtime.enable")
+        await send("Log.enable")
+        await send("Network.enable")
+
+        await send("Page.navigate", {"url": file_url})
+
+        t0 = time.time()
+        while time.time() - t0 < 1.5:
+            try:
+                raw = await asyncio.wait_for(p_ws.recv(), timeout=0.2)
+                msg = json.loads(raw)
+                method = msg.get("method", "")
+                params = msg.get("params", {})
+
+                if method == "Runtime.exceptionThrown":
+                    details = params.get("exceptionDetails", {})
+                    text = details.get("text", "")
+                    ex = details.get("exception", {}).get("description", "")
+                    line = details.get("lineNumber", 0)
+                    col = details.get("columnNumber", 0)
+                    errors.append(f"Runtime Exception: {text} {ex} (line {line}:{col})")
+                elif method == "Log.entryAdded":
+                    entry = params.get("entry", {})
+                    if entry.get("level") == "error":
+                        errors.append(f"Log Error: {entry.get('text')}")
+                elif method == "Network.responseReceived":
+                    res = params.get("response", {})
+                    status = res.get("status", 200)
+                    if status >= 400:
+                        errors.append(f"HTTP {status}: {res.get('url')}")
+                elif method == "Runtime.consoleAPICalled":
+                    t = params.get("type")
+                    args = " ".join([str(a.get("value", a.get("description", ""))) for a in params.get("args", [])])
+                    if t in ("error", "assert"):
+                        errors.append(f"Console {t}: {args}")
+            except asyncio.TimeoutError:
+                pass
+
+    # Close target
+    async with websockets.connect(browser_ws) as b_ws:
+        close_msg = {"id": 1, "method": "Target.closeTarget", "params": {"targetId": target_id}}
+        await b_ws.send(json.dumps(close_msg))
+        await b_ws.recv()
+
+    return errors
+
+async def run_scan():
+    print(f"Launching Chromium from: {CHROME_PATH}")
+    proc = subprocess.Popen([
+        CHROME_PATH,
+        "--headless=new",
+        "--remote-debugging-port=9222",
+        "--no-sandbox",
+        "--disable-gpu"
+    ])
+    await asyncio.sleep(1.0)
+
+    try:
+        with urllib.request.urlopen("http://127.0.0.1:9222/json/version") as r:
+            version_data = json.loads(r.read().decode())
+            browser_ws = version_data["webSocketDebuggerUrl"]
+
+        html_files = sorted(glob.glob(os.path.join(WORKSPACE_DIR, "*.html")))
+        test_urls = []
+        for hf in html_files:
+            fname = os.path.basename(hf)
+            file_url = f"file:///{hf.replace(os.sep, '/')}"
+            test_urls.append((fname, file_url))
+            if fname in ("dashboard.html", "doctors_order_patient.html", "updated.html"):
+                test_urls.append((f"{fname}?patient=patient_op_juan", f"{file_url}?patient=patient_op_juan"))
+                test_urls.append((f"{fname}?patient=patient_1790299677879", f"{file_url}?patient=patient_1790299677879"))
+
+        results = {}
+        print("Running Site-Wide Automated Quality Gate...")
+        for name, url in test_urls:
+            errs = await scan_single_target(browser_ws, url)
+            results[name] = errs
+            if errs:
+                print(f"  [FAIL] {name}: {len(errs)} error(s)")
+                for e in errs:
+                    print(f"     -> {e}")
+            else:
+                print(f"  [PASS] {name}")
+
+        print("\n" + "=" * 65)
+        print("QUALITY GATE SUMMARY:")
+        all_passed = True
+        for name, errs in results.items():
+            if errs:
+                all_passed = False
+                print(f"  [FAIL] {name:42}: {len(errs)} error(s)")
+            else:
+                print(f"  [PASS] {name:42}: OK")
+        print("=" * 65)
+
+        if all_passed:
+            print(">>> ALL PAGES PASSED WITH ZERO CONSOLE ERRORS & CLEAN ASSETS. <<<")
+            return 0
+        else:
+            print(">>> QUALITY GATE FAILED: RESOLVE THE ABOVE ERRORS BEFORE COMMITTING. <<<")
+            return 1
+    finally:
+        proc.terminate()
+
+def main():
+    code = asyncio.run(run_scan())
+    sys.exit(code)
+
+if __name__ == "__main__":
+    main()
