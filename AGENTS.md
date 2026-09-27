@@ -65,7 +65,7 @@
   - Ensure clinical outputs can be translated or mapped directly to official DOH hospital records, Doctor's Order Sheets, and PhilHealth Claim Form 4 (CF4).
 - **PhilHealth CF4 & DOH Clinical Data Invariants**:
   - **Patient Identification**: Every patient demographic banner, encounter header, and CF4 clinical view must support the PhilHealth Identification Number (PIN / PHIC No., `XX-XXXXXXXXX-X`) alongside the Hospital Record Number (HRN) and Case / Encounter Number.
-  - **Physician Professional Credentials**: All doctor's orders, prescriptions, and encounter certifications must include the physician's full name, PRC License Number, PhilHealth Accreditation Number (PAN), and S2 License (for regulated medications) per DOH A.O. 2021-0037.
+  - **Physician Professional Credentials**: All doctor's orders, prescriptions, and encounter certifications must include the physician's full name without redundant titles (use either post-nominal 'MD' e.g., 'Paolo Cruz, MD', or 'Dr. Paolo Cruz', never duplicate 'Dr. Paolo Cruz, MD'), PRC License Number, and S2 License (for regulated medications) per DOH A.O. 2021-0037. PHIC PAN is not required on bedside order sheets or signature blocks.
   - **Standardized Diagnostic & Procedural Coding**: Diagnoses must enforce ICD-10 format, and procedural documentation must reference PhilHealth Relative Value Scale (RVS) codes with anatomical laterality where indicated.
   - **Strictly Minimalist Clinical Typography**: Purge all consumer emoji glyphs from headers, tabs, select inputs, and modal dialogs to maintain an authentic, high-trust hospital EHR aesthetic.
   - **Production Code Hygiene & Authentic Hospital Terminology (Zero AI Markers)**:

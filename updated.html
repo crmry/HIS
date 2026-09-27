@@ -1679,7 +1679,7 @@
           </div>
           <div>
             <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Attending Physician</label>
-            <input type="text" id="new-enc-physician" value="Dr. Miguel Santos, MD" style="width:100%; box-sizing:border-box; height:30px; font-size:12px;">
+            <input type="text" id="new-enc-physician" value="Miguel Santos, MD" style="width:100%; box-sizing:border-box; height:30px; font-size:12px;">
           </div>
           <div>
             <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Round Type / Tag</label>
@@ -2722,13 +2722,13 @@
       ivFluids: [],
       transfusions: [],
       cbgs: [
-        { dateTime: '2026-09-26T08:00:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 108, action: 'Target Met (80-130 mg/dL)', notes: 'Routine quarterly diabetes monitoring; good control', nurse: 'M. Tan, RMT / Dr. Miguel Santos, MD' }
+        { dateTime: '2026-09-26T08:00:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 108, action: 'Target Met (80-130 mg/dL)', notes: 'Routine quarterly diabetes monitoring; good control', nurse: 'M. Tan, RMT / Miguel Santos, MD' }
       ],
       medications: [
-        { id: 'op-med-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:30:00+08:00', nextDose: '2026-09-26T19:00:00+08:00', doses24h: '2 doses', status: 'Active / Ongoing', nurse: 'Dr. Miguel Santos, MD' },
-        { id: 'op-med-2', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', lastDose: '2026-09-26T07:30:00+08:00', nextDose: '2026-09-27T07:30:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Dr. Miguel Santos, MD' },
-        { id: 'op-med-3', name: 'Losartan Potassium 50 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:30:00+08:00', nextDose: '2026-09-27T07:30:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Dr. Miguel Santos, MD' },
-        { id: 'op-med-4', name: 'Amlodipine 5 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-09-26T09:30:00+08:00', lastDose: '', nextDose: '2026-09-27T07:30:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Dr. Miguel Santos, MD' }
+        { id: 'op-med-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:30:00+08:00', nextDose: '2026-09-26T19:00:00+08:00', doses24h: '2 doses', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
+        { id: 'op-med-2', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', lastDose: '2026-09-26T07:30:00+08:00', nextDose: '2026-09-27T07:30:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
+        { id: 'op-med-3', name: 'Losartan Potassium 50 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:30:00+08:00', nextDose: '2026-09-27T07:30:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
+        { id: 'op-med-4', name: 'Amlodipine 5 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-09-26T09:30:00+08:00', lastDose: '', nextDose: '2026-09-27T07:30:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' }
       ],
       intakeOutput: []
     };
@@ -4742,7 +4742,7 @@
         }
         var registry = (document.getElementById('new-enc-registry').value || 'IP').trim();
         var service = (document.getElementById('new-enc-service').value || 'Internal Medicine').trim();
-        var physician = (document.getElementById('new-enc-physician').value || 'Dr. Miguel Santos, MD').trim();
+        var physician = (document.getElementById('new-enc-physician').value || 'Miguel Santos, MD').trim();
         var statusTag = (document.getElementById('new-enc-status-tag').value || 'Ward Round (PM)').trim();
         var diagnosis = (document.getElementById('new-enc-diagnosis').value || '').trim();
         var notes = (document.getElementById('new-enc-notes').value || '').trim();
@@ -4830,7 +4830,7 @@
           time: timeStr,
           registry: 'OP',
           service: 'Internal Medicine (OPD)',
-          physician: 'Dr. Miguel Santos, MD',
+          physician: 'Miguel Santos, MD',
           is_current: true,
           status_tag: 'Follow-up (OPD)',
           diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving',
@@ -4865,7 +4865,7 @@
             time: '09:00 AM',
             registry: 'IP',
             service: 'Internal Medicine',
-            physician: 'Dr. Miguel Santos, MD',
+            physician: 'Miguel Santos, MD',
             is_current: true,
             status_tag: 'Discharge Planning',
             diagnosis: 'J18.9 - Community-Acquired Pneumonia, resolved; Essential Hypertension, controlled',
@@ -4882,7 +4882,7 @@
             time: '04:30 PM',
             registry: 'IP',
             service: 'Internal Medicine',
-            physician: 'Dr. Miguel Santos, MD',
+            physician: 'Miguel Santos, MD',
             is_current: false,
             status_tag: 'Ward Round (PM)',
             diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving',
@@ -4896,7 +4896,7 @@
             time: '10:15 AM',
             registry: 'IP',
             service: 'Internal Medicine',
-            physician: 'Dr. Miguel Santos, MD',
+            physician: 'Miguel Santos, MD',
             is_current: false,
             status_tag: 'Morning Rounds',
             diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving',
@@ -4916,7 +4916,7 @@
             time: '08:30 AM',
             registry: 'ER',
             service: 'Emergency Medicine',
-            physician: 'Dr. Roberto Lim, MD',
+            physician: 'Roberto Lim, MD',
             is_current: false,
             status_tag: 'Initial Visit (ER)',
             diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk; Essential Hypertension',
@@ -6370,7 +6370,7 @@
       var impression = (document.getElementById('rx-clinical-impression') && document.getElementById('rx-clinical-impression').value) || pData.final_diagnosis || pData.admitting_diagnosis || '—';
       var licenseNo = (document.getElementById('rx-dd-license') && document.getElementById('rx-dd-license').value) || 'S2-09876543-A';
       var specialInstr = (document.getElementById('rx-special-instructions') && document.getElementById('rx-special-instructions').value) || '';
-      var doctor = getCurrentPhysicianName() || 'Dr. Andrea Reyes, MD, FPCP';
+      var doctor = getCurrentPhysicianName() || 'Andrea Reyes, MD, FPCP';
 
       var rxRows = Array.from(document.querySelectorAll('#rx-medicines-body tr:not(.rx-empty-row)')).map(function (tr) {
         return {
@@ -7747,7 +7747,11 @@
       }
 
 
-      return String(name).trim() || '—';
+      var str = String(name).trim() || '—';
+      if (/^Dr\.?\s+/i.test(str) && /,\s*M\.?D\.?/i.test(str)) {
+        str = str.replace(/^Dr\.?\s+/i, '');
+      }
+      return str;
     }
 
 
@@ -9151,7 +9155,7 @@
           time: '10:15 AM',
           registry: 'OP',
           service: 'Internal Medicine (OPD)',
-          physician: 'Dr. Miguel Santos, MD'
+          physician: 'Miguel Santos, MD'
         }];
         records[recIdx].data.encounters = encs;
       }

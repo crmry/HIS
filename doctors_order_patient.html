@@ -1103,9 +1103,14 @@
             // Cols 1-2 (DATE/TIME + PROGRESS NOTES, colspan=2): dashed separator line.
             // Col 3 (PHYSICIAN'S ORDER, colspan=1): physician digital signature, name, and PRC license stamp.
             // Cols 4-9 (C+A+R+E+D + TIME/SIGNATURE, colspan=6): dashed separator line (nurses module).
-            var physName = physician ? escapeHtml(physician) : '&mdash;';
+            var rawName = physician ? String(physician).trim() : '';
+            // If name has both 'Dr.' and ', MD', drop 'Dr.' so it formats cleanly as 'Name, MD'
+            if (/^Dr\.?\s+/i.test(rawName) && /,\s*M\.?D\.?/i.test(rawName)) {
+                rawName = rawName.replace(/^Dr\.?\s+/i, '');
+            }
+            var physName = rawName ? escapeHtml(rawName) : '&mdash;';
             var licText  = license  ? escapeHtml(license)   : '&mdash;';
-            var sigLabel = physician ? physician.replace(/^Dr\.\s*/i, '').replace(/,\s*MD$/i, '').trim() : 'M. Santos';
+            var sigLabel = rawName ? rawName.replace(/^Dr\.\s*/i, '').replace(/,\s*MD$/i, '').trim() : 'M. Santos';
             return '<tr class="enc-sig-row">' +
                 '<td colspan="2" class="enc-sig-spacer"><hr class="enc-sig-divider"></td>' +
                 '<td class="enc-sig-stamp">' +
@@ -1113,7 +1118,7 @@
                 '<div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
                 '<div class="enc-sig-line-draw">________________________________</div>' +
                 '<div class="enc-sig-name">' + physName + '</div>' +
-                '<div class="enc-sig-lic">PRC Lic. No.: ' + licText + ' &nbsp;|&nbsp; PHIC PAN: 12-0048192-1</div>' +
+                '<div class="enc-sig-lic">PRC Lic. No.: ' + licText + '</div>' +
                 '</div>' +
                 '</td>' +
                 '<td colspan="6" class="enc-sig-spacer"><hr class="enc-sig-divider"></td>' +

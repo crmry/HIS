@@ -51,7 +51,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           hrn: '0000001677',
           philhealth_no: '06-025198234-1',
           phic_member_category: 'Direct Contributor - Employed (Private)',
-          attending_physician: { name: 'Dr. Miguel Santos, MD', prc_no: '0094821', pan_no: '12-0048192-1', s2_no: 'S2-094821-2026' },
+          attending_physician: { name: 'Miguel Santos, MD', prc_no: '0094821', s2_no: 'S2-094821-2026' },
           last_name: 'DELA CRUZ',
           first_name: 'MARIA',
           middle_name: 'SANTOS',
@@ -95,7 +95,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               time: '10:15 AM',
               registry: 'OP',
               service: 'Internal Medicine (OPD)',
-              physician: 'Dr. Miguel Santos, MD',
+              physician: 'Miguel Santos, MD',
               is_current: true,
               status_tag: 'Follow-up (OPD)',
               diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension',
@@ -109,7 +109,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               time: '09:30 AM',
               registry: 'OP',
               service: 'Internal Medicine (OPD)',
-              physician: 'Dr. Miguel Santos, MD',
+              physician: 'Miguel Santos, MD',
               is_current: false,
               status_tag: 'Consultation (OPD)',
               diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk; I10 - Essential Hypertension',
@@ -119,10 +119,10 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { dateTime: '2026-06-06 09:30 AM', bp: '120/80', hr: '78', rr: '18', temp: '36.8', wt: '52', ht: '154', weight: '52', height: '154', bmi: '21.9', spo2: '98', o2: '98' }
               ],
               medications: [
-                { id: 'med-ms-1', name: 'Co-amoxiclav 625 mg tablet', route: 'Oral Twice Daily (BID) to complete 7 days', indication: 'Community-Acquired Pneumonia', started: '2026-06-06T09:30:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
-                { id: 'med-ms-2', name: 'Azithromycin 500 mg tablet', route: 'Oral Once Daily (OD) Day 4 of 5', indication: 'Community-Acquired Pneumonia', started: '2026-06-06T09:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
-                { id: 'med-ms-3', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-06-06T09:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
-                { id: 'med-ms-4', name: 'Paracetamol 500 mg tablet', route: 'Oral Q4H PRN for fever >= 38.0 C or headache', indication: 'Antipyretic / Analgesic', started: '2026-06-06T09:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Dr. Miguel Santos, MD' }
+                { id: 'med-ms-1', name: 'Co-amoxiclav 625 mg tablet', route: 'Oral Twice Daily (BID) to complete 7 days', indication: 'Community-Acquired Pneumonia', started: '2026-06-06T09:30:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-ms-2', name: 'Azithromycin 500 mg tablet', route: 'Oral Once Daily (OD) Day 4 of 5', indication: 'Community-Acquired Pneumonia', started: '2026-06-06T09:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-ms-3', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-06-06T09:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-ms-4', name: 'Paracetamol 500 mg tablet', route: 'Oral Q4H PRN for fever >= 38.0 C or headache', indication: 'Antipyretic / Analgesic', started: '2026-06-06T09:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Miguel Santos, MD' }
               ],
               clinical_record: {
                 chief_complaint: 'Outpatient consultation and prescription review; follow-up of productive cough and low-grade fever.',
@@ -201,7 +201,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               time: '08:30 AM',
               registry: 'ER',
               service: 'Emergency Medicine',
-              physician: 'Dr. Roberto Lim, MD',
+              physician: 'Roberto Lim, MD',
               is_current: false,
               status_tag: 'Initial Visit (ER)',
               diagnosis: 'J18.9 - Community-Acquired Pneumonia (CAP) - Moderate Risk; Essential Hypertension Stage 2',
@@ -211,10 +211,10 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { dateTime: '2026-06-12 08:30 AM', bp: '140/90', hr: '104', rr: '24', temp: '38.6', wt: '52', ht: '154', weight: '52', height: '154', bmi: '21.9', spo2: '93', o2: '93' }
               ],
               medications: [
-                { id: 'med-er-1', name: 'Ceftriaxone 2 g vial', route: 'Intravenous Push (IVP) OD after skin test', indication: 'Community-Acquired Pneumonia', started: '2026-06-12T08:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Roberto Lim, MD' },
-                { id: 'med-er-2', name: 'Azithromycin 500 mg tablet', route: 'Oral Once Daily (OD) with food', indication: 'Community-Acquired Pneumonia', started: '2026-06-12T08:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Roberto Lim, MD' },
-                { id: 'med-er-3', name: 'Paracetamol 500 mg tablet', route: 'Oral Every 6 hours PRN for fever >= 37.8 C', indication: 'Antipyretic', started: '2026-06-12T08:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Dr. Roberto Lim, MD' },
-                { id: 'med-er-4', name: 'Norepinephrine Drip (4 mg in 100 mL D5W)', route: 'Continuous IV Infusion 15 mL/hr via central line', indication: 'Maintain MAP >= 65 mmHg', started: '2026-06-12T08:30:00+08:00', doses24h: 'Continuous', status: 'Active', nurse: 'Dr. Roberto Lim, MD' }
+                { id: 'med-er-1', name: 'Ceftriaxone 2 g vial', route: 'Intravenous Push (IVP) OD after skin test', indication: 'Community-Acquired Pneumonia', started: '2026-06-12T08:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Roberto Lim, MD' },
+                { id: 'med-er-2', name: 'Azithromycin 500 mg tablet', route: 'Oral Once Daily (OD) with food', indication: 'Community-Acquired Pneumonia', started: '2026-06-12T08:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Roberto Lim, MD' },
+                { id: 'med-er-3', name: 'Paracetamol 500 mg tablet', route: 'Oral Every 6 hours PRN for fever >= 37.8 C', indication: 'Antipyretic', started: '2026-06-12T08:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Roberto Lim, MD' },
+                { id: 'med-er-4', name: 'Norepinephrine Drip (4 mg in 100 mL D5W)', route: 'Continuous IV Infusion 15 mL/hr via central line', indication: 'Maintain MAP >= 65 mmHg', started: '2026-06-12T08:30:00+08:00', doses24h: 'Continuous', status: 'Active', nurse: 'Roberto Lim, MD' }
               ],
               orders: [
                 { text: 'Admit to Medical Ward under Internal Medicine service.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
@@ -303,7 +303,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               time: '02:15 PM',
               registry: 'OP',
               service: 'Outpatient Department (OPD) - Pulmonary & Adult Medicine',
-              physician: 'Dr. Ramon Valencia, MD',
+              physician: 'Ramon Valencia, MD',
               is_current: false,
               status_tag: 'Follow-up (OPD)',
               diagnosis: 'J45.909 - Bronchial Asthma, in clinical remission; Essential Hypertension Stage 1',
@@ -313,8 +313,8 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { dateTime: '2026-05-20 02:15 PM', bp: '124/80', hr: '76', rr: '16', temp: '36.5', wt: '52', ht: '154', weight: '52', height: '154', bmi: '21.9', spo2: '99', o2: '99' }
               ],
               medications: [
-                { id: 'med-asthma-1', name: 'Budesonide / Formoterol 160/4.5 mcg inhaler', route: '1 puff Twice Daily (BID)', indication: 'Bronchial Asthma Maintenance', started: '2026-05-20T14:15:00+08:00', doses24h: '2 puffs', status: 'Active', nurse: 'Dr. Ramon Valencia, MD' },
-                { id: 'med-asthma-2', name: 'Amlodipine 5 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-05-20T14:15:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Ramon Valencia, MD' }
+                { id: 'med-asthma-1', name: 'Budesonide / Formoterol 160/4.5 mcg inhaler', route: '1 puff Twice Daily (BID)', indication: 'Bronchial Asthma Maintenance', started: '2026-05-20T14:15:00+08:00', doses24h: '2 puffs', status: 'Active', nurse: 'Ramon Valencia, MD' },
+                { id: 'med-asthma-2', name: 'Amlodipine 5 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-05-20T14:15:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Ramon Valencia, MD' }
               ],
               clinical_record: {
                 chief_complaint: 'Routine follow-up consultation for asthma maintenance refill and blood pressure check',
@@ -362,7 +362,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               time: '10:30 AM',
               registry: 'IP',
               service: 'General Surgery',
-              physician: 'Dr. Andrea Reyes, MD',
+              physician: 'Andrea Reyes, MD',
               is_current: false,
               status_tag: 'Previous Admission',
               diagnosis: 'K35.80 - Acute Appendicitis, uncomplicated; S/P Laparoscopic Appendectomy',
@@ -372,8 +372,8 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { dateTime: '2026-04-10 10:30 AM', bp: '118/76', hr: '74', rr: '16', temp: '36.6', wt: '52', ht: '154', weight: '52', height: '154', bmi: '21.9', spo2: '99', o2: '99' }
               ],
               medications: [
-                { id: 'med-surg-1', name: 'Cefuroxime 750 mg vial', route: 'IVTT Every 8 hours (Q8H)', indication: 'Post-Operative Antibiotic Prophylaxis', started: '2026-04-10T10:30:00+08:00', doses24h: '3 doses', status: 'Active', nurse: 'Dr. Andrea Reyes, MD' },
-                { id: 'med-surg-2', name: 'Ketorolac 30 mg ampule', route: 'IVTT Every 8 hours PRN for wound pain', indication: 'Post-Operative Analgesia', started: '2026-04-10T10:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Dr. Andrea Reyes, MD' }
+                { id: 'med-surg-1', name: 'Cefuroxime 750 mg vial', route: 'IVTT Every 8 hours (Q8H)', indication: 'Post-Operative Antibiotic Prophylaxis', started: '2026-04-10T10:30:00+08:00', doses24h: '3 doses', status: 'Active', nurse: 'Andrea Reyes, MD' },
+                { id: 'med-surg-2', name: 'Ketorolac 30 mg ampule', route: 'IVTT Every 8 hours PRN for wound pain', indication: 'Post-Operative Analgesia', started: '2026-04-10T10:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Andrea Reyes, MD' }
               ],
               clinical_record: {
                 chief_complaint: 'Severe right lower quadrant (RLQ) abdominal pain with nausea x 2 days',
@@ -509,7 +509,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           hrn: '0000001890',
           philhealth_no: '06-018274910-3',
           phic_member_category: 'Direct Contributor - Employed (Private)',
-          attending_physician: { name: 'Dr. Miguel Santos, MD', prc_no: '0094821', pan_no: '12-0048192-1', s2_no: 'S2-094821-2026' },
+          attending_physician: { name: 'Miguel Santos, MD', prc_no: '0094821', s2_no: 'S2-094821-2026' },
           last_name: 'DEL ROSARIO',
           first_name: 'JUAN',
           middle_name: 'BAUTISTA',
@@ -553,7 +553,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               time: '09:30 AM',
               registry: 'OP',
               service: 'Internal Medicine (OPD)',
-              physician: 'Dr. Miguel Santos, MD',
+              physician: 'Miguel Santos, MD',
               prc_license: '0087654',
               is_current: true,
               status_tag: 'Consultation (OPD)',
@@ -564,13 +564,13 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { dateTime: '2026-09-26 09:30 AM', bp: '124/78', hr: '72', rr: '16', temp: '36.5', wt: '68', ht: '168', weight: '68', height: '168', bmi: '24.1', spo2: '99', o2: '99' }
               ],
               cbgs: [
-                { dateTime: '2026-09-26 08:00 AM', timing: 'Fasting Blood Sugar (FBS)', reading: 108, action: 'Target Met (80-130)', notes: 'Routine quarterly monitoring; good control', nurse: 'M. Tan, RMT / Dr. Miguel Santos, MD' }
+                { dateTime: '2026-09-26 08:00 AM', timing: 'Fasting Blood Sugar (FBS)', reading: 108, action: 'Target Met (80-130)', notes: 'Routine quarterly monitoring; good control', nurse: 'M. Tan, RMT / Miguel Santos, MD' }
               ],
               medications: [
-                { id: 'med-op-0926-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
-                { id: 'med-op-0926-2', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
-                { id: 'med-op-0926-3', name: 'Losartan Potassium 50 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
-                { id: 'med-op-0926-4', name: 'Amlodipine 5 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-09-26T09:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' }
+                { id: 'med-op-0926-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-op-0926-2', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-op-0926-3', name: 'Losartan Potassium 50 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-op-0926-4', name: 'Amlodipine 5 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-09-26T09:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' }
               ],
               progress_notes: 'Outpatient Consultation (Internal Medicine OPD). Routine quarterly diabetes and hypertension follow-up.\nPatient feels well, asymptomatic. Good adherence with Metformin, Empagliflozin, and Losartan. No hypoglycemic symptoms or pedal swelling.\nVital signs: BP 124/78 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% ambient air. Weight 68 kg, BMI 24.1.\nPhysical Exam: Clear breath sounds, normal heart sounds, bilateral dorsalis pedis pulses palpable, monofilament foot screen normal.\nLaboratory Review: HbA1c 6.4%, FBS 108 mg/dL, Serum Creatinine 0.9 mg/dL, eGFR > 90 mL/min, Urine Albumin-Creatinine Ratio normal.\nDiagnosis: Type 2 Diabetes Mellitus, well-controlled; Essential Hypertension, controlled.\nPlan: Maintain current oral regimen. Diabetic low-salt diet. Follow-up after 3 months.',
               orders: [
@@ -607,7 +607,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               time: '10:00 AM',
               registry: 'OP',
               service: 'Internal Medicine (OPD)',
-              physician: 'Dr. Miguel Santos, MD',
+              physician: 'Miguel Santos, MD',
               prc_license: '0087654',
               is_current: false,
               status_tag: 'Follow-up (OPD)',
@@ -620,12 +620,12 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { dateTime: '2026-06-20 10:00 AM', bp: '134/84', hr: '76', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '98', o2: '98' }
               ],
               cbgs: [
-                { dateTime: '2026-06-20 08:30 AM', timing: 'Fasting Blood Sugar (FBS)', reading: 132, action: 'HbA1c 7.2% - Add Empagliflozin 10 mg OD', notes: 'Suboptimal glycemic control on Metformin monotherapy', nurse: 'Dr. Miguel Santos, MD' }
+                { dateTime: '2026-06-20 08:30 AM', timing: 'Fasting Blood Sugar (FBS)', reading: 132, action: 'HbA1c 7.2% - Add Empagliflozin 10 mg OD', notes: 'Suboptimal glycemic control on Metformin monotherapy', nurse: 'Miguel Santos, MD' }
               ],
               medications: [
-                { id: 'med-op-0620-1', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
-                { id: 'med-op-0620-2', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
-                { id: 'med-op-0620-3', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' }
+                { id: 'med-op-0620-1', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-op-0620-2', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-op-0620-3', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' }
               ],
               clinical_record: {
                 chief_complaint: 'Semi-annual comprehensive outpatient review and lab orders',
@@ -657,7 +657,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               time: '08:45 AM',
               registry: 'OP',
               service: 'Internal Medicine (OPD)',
-              physician: 'Dr. Miguel Santos, MD',
+              physician: 'Miguel Santos, MD',
               prc_license: '0087654',
               is_current: false,
               status_tag: 'Initial Visit (OPD)',
@@ -670,8 +670,8 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { dateTime: '2026-03-14 08:45 AM', bp: '128/80', hr: '74', rr: '16', temp: '36.6', wt: '71', ht: '168', weight: '71', height: '168', bmi: '25.2', spo2: '99', o2: '99' }
               ],
               medications: [
-                { id: 'med-op-0314-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Dr. Miguel Santos, MD' },
-                { id: 'med-op-0314-2', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Dr. Miguel Santos, MD' }
+                { id: 'med-op-0314-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-op-0314-2', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' }
               ],
               clinical_record: {
                 chief_complaint: 'Initial outpatient registration and care transfer to CLMMRH Chronic Disease Management Program.',
@@ -702,7 +702,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               time: '11:15 AM',
               registry: 'OP',
               service: 'Orthopedics (OPD)',
-              physician: 'Dr. Paolo Cruz, MD',
+              physician: 'Paolo Cruz, MD',
               prc_license: '0091245',
               is_current: false,
               status_tag: 'Follow-up (OPD)',
@@ -715,7 +715,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { dateTime: '2025-12-05 11:15 AM', bp: '122/78', hr: '74', rr: '16', temp: '36.5', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
               ],
               medications: [
-                { id: 'med-ortho-1205-1', name: 'Celecoxib 200 mg capsule', route: 'Oral PRN for knee pain flare-ups', indication: 'Right Knee Osteoarthritis', started: '2025-09-18T14:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Dr. Paolo Cruz, MD' }
+                { id: 'med-ortho-1205-1', name: 'Celecoxib 200 mg capsule', route: 'Oral PRN for knee pain flare-ups', indication: 'Right Knee Osteoarthritis', started: '2025-09-18T14:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Paolo Cruz, MD' }
               ],
               prescriptions: [
                 { drug: 'Celecoxib 200 mg capsule', sig: '1 capsule orally once daily as needed for pain flare-ups', qty: '30 capsules' }
@@ -745,7 +745,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               time: '02:30 PM',
               registry: 'OP',
               service: 'Orthopedics (OPD)',
-              physician: 'Dr. Paolo Cruz, MD',
+              physician: 'Paolo Cruz, MD',
               prc_license: '0091245',
               is_current: false,
               status_tag: 'Initial Visit (OPD)',
@@ -758,8 +758,8 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { dateTime: '2025-09-18 02:30 PM', bp: '126/80', hr: '78', rr: '18', temp: '36.7', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
               ],
               medications: [
-                { id: 'med-ortho-0918-1', name: 'Celecoxib 200 mg capsule', route: 'Oral Once Daily after meals for 14 days', indication: 'Right Knee Osteoarthritis', started: '2025-09-18T14:30:00+08:00', doses24h: '1 dose', status: 'Completed', nurse: 'Dr. Paolo Cruz, MD' },
-                { id: 'med-ortho-0918-2', name: 'Paracetamol 500 mg tablet', route: 'Oral Every 6 hours PRN for breakthrough pain', indication: 'Breakthrough knee pain', started: '2025-09-18T14:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Dr. Paolo Cruz, MD' }
+                { id: 'med-ortho-0918-1', name: 'Celecoxib 200 mg capsule', route: 'Oral Once Daily after meals for 14 days', indication: 'Right Knee Osteoarthritis', started: '2025-09-18T14:30:00+08:00', doses24h: '1 dose', status: 'Completed', nurse: 'Paolo Cruz, MD' },
+                { id: 'med-ortho-0918-2', name: 'Paracetamol 500 mg tablet', route: 'Oral Every 6 hours PRN for breakthrough pain', indication: 'Breakthrough knee pain', started: '2025-09-18T14:30:00+08:00', doses24h: 'PRN', status: 'Active / PRN', nurse: 'Paolo Cruz, MD' }
               ],
               prescriptions: [
                 { drug: 'Celecoxib 200 mg capsule', sig: '1 capsule orally once daily after meals for 14 days', qty: '14 capsules' },
@@ -872,7 +872,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           hrn: '0000001678',
           philhealth_no: '',
           phic_member_category: '',
-          attending_physician: { name: '', prc_no: '', pan_no: '', s2_no: '' },
+          attending_physician: { name: '', prc_no: '', s2_no: '' },
           last_name: 'NEW PATIENT',
           first_name: 'SAMPLE',
           middle_name: '',
