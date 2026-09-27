@@ -8206,9 +8206,9 @@
       document.getElementById('service-options').innerHTML = rows.length ? rows.map(function (service) {
         var checked = requestCart.some(function (row) { return row.tab === tab.key && row.code === service[0]; });
         return '<tr><td style="width:85px; text-align:center;"><input type="checkbox" data-service-code="' + service[0] + '"' + (checked ? ' checked' : '') + '></td>' +
-          '<td style="width:130px;">' + service[0] + '</td><td><b>' + service[1] + '</b></td><td class="available" style="width:120px;">AVAILABLE</td>' +
+          '<td style="width:130px;">' + service[0] + '</td><td><b>' + service[1] + '</b></td>' +
           '<td style="width:90px; text-align:right;">' + Number(service[2]).toFixed(2) + '</td></tr>';
-      }).join('') : '<tr><td colspan="5" class="request-empty">No matching services.</td></tr>';
+      }).join('') : '<tr><td colspan="4" class="request-empty">No matching services.</td></tr>';
     }
 
     function renderRequestCart() {
