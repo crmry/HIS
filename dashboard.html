@@ -4174,9 +4174,18 @@
           if (Array.isArray(enc.clinicalRequests[cat])) {
             savedOrders.clinicalRequests[cat] = enc.clinicalRequests[cat].map(function (item) {
               if (typeof item === 'string') {
-                return { description: item, code: '', priority: 'Routine', remarks: '' };
+                return { description: item, code: '', priority: 'Routine', remarks: '', dateTime: enc.date || '' };
               }
-              return item;
+              var desc = item.description || item.name || '';
+              var prio = item.priority || item.urgency || 'Routine';
+              var rem = item.remarks || item.notes || '';
+              var dt = item.dateTime || enc.date || '';
+              return Object.assign({}, item, {
+                description: desc,
+                priority: prio,
+                remarks: rem,
+                dateTime: dt
+              });
             });
           }
         });
@@ -5492,7 +5501,7 @@
         '</div>' +
         '<div class="table-responsive-wrap">' +
         '<table class="order-card-table request-table" aria-label="Saved requests for selected department">' +
-        '<thead><tr><th style="width:80px;">Code</th><th>Request</th><th style="width:145px;">Date &amp; Time</th><th style="width:80px;">Priority</th><th>Remarks</th><th style="width:65px; text-align:center;">Result</th><th style="width:36px; text-align:center;"></th></tr></thead>' +
+        '<thead><tr><th style="width:80px;">Code</th><th>Request</th><th style="width:145px;">Date &amp; Time</th><th style="width:80px;">Priority</th><th>Remarks</th><th style="width:75px; text-align:center;">RESULT</th><th style="width:36px; text-align:center;"></th></tr></thead>' +
         '<tbody id="clinical-request-list"></tbody>' +
         '</table>' +
         '</div>' +
@@ -5528,7 +5537,7 @@
       list.innerHTML = rows.map(function (row, index) {
         return '<tr><td>' + esc(row.code) + '</td><td><b>' + esc(row.description) + '</b></td><td>' + esc(formatDateTime(row.dateTime)) + '</td>' +
           '<td class="' + (row.priority === 'STAT' ? 'request-priority-stat' : '') + '">' + esc(row.priority) + '</td><td>' + esc(row.remarks) + '</td>' +
-          '<td style="text-align:center;"><button type="button" class="btn btn-mini btn-request-result" data-request-tab="' + esc(activeRequestTab) + '" data-request-index="' + index + '" title="View Result" style="padding:2px 7px; color:#0e3d59; border-color:#bcd;">' + paperIconSvg + '</button></td>' +
+          '<td style="text-align:center;"><button type="button" class="btn btn-mini btn-request-result" data-request-tab="' + esc(activeRequestTab) + '" data-request-index="' + index + '" title="View Result" aria-label="View Result" style="padding:2px 7px;">' + paperIconSvg + '</button></td>' +
           '<td><button type="button" class="btn btn-danger btn-mini" data-remove-request="' + index + '" aria-label="Remove request">&times;</button></td></tr>';
       }).join('');
     }
