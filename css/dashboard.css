@@ -155,6 +155,13 @@
       font-weight: 700;
       color: var(--med-text-main);
     }
+    .patient-info-bar .meta-label-lg {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--med-text-muted);
+      margin-right: 6px;
+      white-space: nowrap;
+    }
     .patient-info-bar .meta-label {
       font-weight: 700;
       color: var(--med-text-muted);

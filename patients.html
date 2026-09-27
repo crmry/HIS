@@ -293,15 +293,14 @@
     patientView.innerHTML = `
       <div class="space-y-5">
         ${section('Patient Information', detailRows([
+          ['Hospital Number', d.hrn],
           ['Name', patientName(d)],
           ['Encounter Number', d.case_no],
           ['Case Type', d.case_type],
           ['Birthday', d.birthdate],
           ['Age', d.age || (d.birthdate ? calculateAge(d.birthdate) : '—')],
           ['Sex', d.gender || d.sex],
-          ['Address', d.address],
-          ['Hospital Number', d.hrn],
-          ['PHIC No.', d.philhealth_no || d.phic_no || '—']
+          ['Address', d.address]
         ]))}
 
         ${section('Patient Encounter', renderEncounters(d.encounters))}
