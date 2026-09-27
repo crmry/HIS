@@ -44,7 +44,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 41,
+        seedVersion: 42,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T16:30:00+08:00',
         data: {
@@ -69,6 +69,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           hx_past: 'Known hypertensive for five years; maintained on amlodipine. No previous tuberculosis treatment.',
           hx_family: 'Father has hypertension and type 2 diabetes mellitus.',
           hx_social: 'Non-smoker; occasional alcohol intake.',
+          hx_allergy: 'No known drug allergies (NKDA). Mild allergic rhinitis to dust mites.',
           pertinent_signs: ['Fever', 'Cough', 'Difficulty breathing', 'Others'],
           pertinent_signs_information: 'Febrile with tachypnea and oxygen saturation of 93% on room air. Productive cough with yellowish sputum.',
           pe_general: 'Awake, coherent, mildly dyspneic',
@@ -502,7 +503,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 41,
+        seedVersion: 42,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -527,6 +528,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           hx_past: 'Type 2 Diabetes Mellitus diagnosed 2020; Essential Hypertension Stage 1 diagnosed 2020. No previous hospitalizations.',
           hx_family: 'Mother with Type 2 Diabetes Mellitus; Father with Hypertension.',
           hx_social: 'Non-smoker, non-alcoholic beverage drinker. Works as an office clerk.',
+          hx_allergy: 'No known food or drug allergies (NKFDA).',
           pertinent_signs: ['Hypertension', 'Diabetes Mellitus', 'Others'],
           pertinent_signs_information: 'Awake, ambulatory, comfortable in chair. BP 124/78 mmHg, HR 72 bpm, afebrile.',
           pe_general: 'Awake, alert, ambulatory, in no acute distress',
@@ -865,7 +867,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function blankPatientRecord() {
       return {
         id: BLANK_PATIENT_ID,
-        seedVersion: 41,
+        seedVersion: 42,
         createdAt: '2026-09-25T10:30:00+08:00',
         updatedAt: '2026-09-25T10:30:00+08:00',
         data: {
@@ -881,6 +883,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           address: '',
           case_no: 'NEW-2026-0001',
           case_type: 'New Patient',
+          hx_allergy: '',
           encounters: [],
           orders: { plans: [], diet: [], iv: [], medications: [], special: [], procedures: [], clinicalRequests: { laboratory: [], radiology: [], respiratory: [], heart: [], eeg: [] }, prescriptions: { items: [] } },
           referrals: []
@@ -892,14 +895,14 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 41) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 42) records[index] = seedPatientRecord();
 
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) records.push(opPatientRecord());
-      else if (Number(records[opIndex].seedVersion || 0) < 41) records[opIndex] = opPatientRecord();
+      else if (Number(records[opIndex].seedVersion || 0) < 42) records[opIndex] = opPatientRecord();
 
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
-      else if (Number(records[blankIndex].seedVersion || 0) < 41) records[blankIndex] = blankPatientRecord();
+      else if (Number(records[blankIndex].seedVersion || 0) < 42) records[blankIndex] = blankPatientRecord();
       savePatients(records);
     }

@@ -565,7 +565,7 @@
                   <li><a href="#hx-family" data-toggle="tab">Family Medical History</a></li>
                   <li><a href="#hx-social" data-toggle="tab">Personal &amp; Social History</a></li>
                   <li><a href="#hx-gyn" data-toggle="tab">Obstetric &amp; Gynecologic History</a></li>
-                   <li><a href="#hx-allergy" data-toggle="tab">Allergy</a></li>
+                  <li><a href="#hx-allergy" data-toggle="tab">Allergies &amp; Adverse Reactions</a></li>
                   <li><a href="#hx-neo" data-toggle="tab">Pediatric &amp; Neonatal History</a></li>
                 </ul>
                 <div class="tab-content">
@@ -591,6 +591,10 @@
                   </div>
                   <div class="tab-pane" id="hx-gyn">
                     <p class="muted">Table OB HX — See suggested interface</p>
+                  </div>
+                  <div class="tab-pane" id="hx-allergy">
+                    <textarea id="hx_allergy" name="hx_allergy" rows="4" class="input-block-level"
+                      placeholder="Document drug/medication allergies, food allergies, environmental allergies, reaction manifestations, and severity (e.g., Penicillin — Anaphylaxis; Seafood — Urticaria; or NKDA / No Known Drug Allergies)..."></textarea>
                   </div>
                   <div class="tab-pane" id="hx-neo">
                     <p class="muted">Neonatal — See suggested interface</p>
@@ -8199,60 +8203,7 @@
       });
     }
 
-    // ── Allergy Tab — Add / Remove Rows ──
-    function renderAllergyRows(rows) {
-      var tbody = document.getElementById('allergy-hx-tbody');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-      (rows || []).forEach(function (row, idx) {
-        var tr = document.createElement('tr');
-        tr.innerHTML =
-          '<td>' + (row.allergen || '') + '</td>' +
-          '<td>' + (row.reaction || '') + '</td>' +
-          '<td>' + (row.severity || '') + '</td>' +
-          '<td>' + (row.status || '') + '</td>' +
-          '<td style="text-align:center;"><button type="button" class="btn btn-mini btn-danger" onclick="window.removeAllergyRow(' + idx + ')"><i class="icon-remove icon-white"></i></button></td>';
-        tbody.appendChild(tr);
-      });
-    }
 
-    function getAllergyRows() {
-      var active = (typeof getActivePatientRecord === 'function') ? getActivePatientRecord() : null;
-      return (active && active.data && Array.isArray(active.data.allergy_hx)) ? active.data.allergy_hx : [];
-    }
-
-    window.addAllergyRow = function () {
-      var allergen = (document.getElementById('allergy-new-allergen') || {}).value || '';
-      var reaction = (document.getElementById('allergy-new-reaction') || {}).value || '';
-      var severity = (document.getElementById('allergy-new-severity') || {}).value || '';
-      var status   = (document.getElementById('allergy-new-status') || {}).value || 'Active';
-      if (!allergen.trim()) { alert('Please enter an allergen name.'); return; }
-      var rows = getAllergyRows();
-      rows.push({ allergen: allergen.trim(), reaction: reaction.trim(), severity: severity, status: status });
-      if (typeof saveCurrentPatientRecord === 'function') {
-        var r = (typeof getActivePatientRecord === 'function') ? getActivePatientRecord() : null;
-        if (r) {
-          r.data = r.data || {};
-          r.data.allergy_hx = rows;
-          saveCurrentPatientRecord({ silent: true, refreshSelector: false });
-        }
-      }
-      renderAllergyRows(rows);
-      ['allergy-new-allergen','allergy-new-reaction'].forEach(function(id){ var el = document.getElementById(id); if(el) el.value=''; });
-      var sev = document.getElementById('allergy-new-severity'); if(sev) sev.value='';
-    };
-
-    window.removeAllergyRow = function (idx) {
-      var rows = getAllergyRows();
-      rows.splice(idx, 1);
-      var r = (typeof getActivePatientRecord === 'function') ? getActivePatientRecord() : null;
-      if (r) {
-        r.data = r.data || {};
-        r.data.allergy_hx = rows;
-        if (typeof saveCurrentPatientRecord === 'function') saveCurrentPatientRecord({ silent: true, refreshSelector: false });
-      }
-      renderAllergyRows(rows);
-    };
 
     // ── Load Patient Record ──
     function loadPatientRecord(record) {
@@ -8679,12 +8630,11 @@
       }
       syncRosOthersUI(hasOthers, savedRosInfo);
 
-      // ── Restore Allergy tab rows ──
-      if (typeof renderAllergyRows === 'function') {
-        renderAllergyRows(Array.isArray(data.allergy_hx) ? data.allergy_hx : []);
+      // ── Restore Allergy notes fallback ──
+      if (!data.hx_allergy && data.allergy_notes) {
+        var hxAllergyEl = document.getElementById('hx_allergy');
+        if (hxAllergyEl) hxAllergyEl.value = data.allergy_notes;
       }
-      var allergyNotesEl = document.getElementById('allergy_notes');
-      if (allergyNotesEl) allergyNotesEl.value = data.allergy_notes || '';
     }
 
 
@@ -8817,13 +8767,6 @@
       if (!data.pertinent_signs || data.pertinent_signs.indexOf('Pain') === -1) {
         data.pain_site = '';
       }
-      /* Allergy history — preserved from addAllergyRow/removeAllergyRow, merge from active record */
-      var activeRec = (typeof getActivePatientRecord === 'function') ? getActivePatientRecord() : null;
-      if (activeRec && activeRec.data && Array.isArray(activeRec.data.allergy_hx)) {
-        data.allergy_hx = activeRec.data.allergy_hx;
-      }
-      var allergyNotesField = document.getElementById('allergy_notes');
-      if (allergyNotesField) data.allergy_notes = allergyNotesField.value || '';
 
       /* Custom disposition */
       if (data.disposition === 'Others') {
