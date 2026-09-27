@@ -276,13 +276,55 @@
             <button type="button" class="btn btn-small" id="print-btn" style="display:none;">PHYSICIAN'S ORDERS / PROGRESS NOTES NURSES'
               COMPLIANCE SHEET</button>
           </div>
-          <span class="patient-name-banner" id="banner-patient-name">—</span>
-          <span class="meta-item"><span class="meta-label">Hospital Number:</span> <span id="banner-hrn">—</span></span>
-          <span class="meta-item"><span class="meta-label">PhilHealth PIN:</span> <span id="banner-phic">—</span></span>
-          <span class="meta-item"><span class="meta-label">Age/Sex:</span> <span id="banner-age-sex">—</span></span>
-          <span class="meta-item"><span class="meta-label">Bdate:</span> <span id="banner-bdate">09/10/1986</span></span>
-          <span class="meta-item"><span class="meta-label">Encounter No.:</span> <span id="banner-encounter-no">001101</span></span>
-          <span class="meta-item"><span class="meta-label">Address:</span> <span id="banner-address">Brgy. Mansilingan, Bacolod City</span></span>
+          <!-- Row 1: Name ------ Encounter Number -->
+          <div class="patient-info-row patient-info-row-split">
+            <div class="patient-info-col">
+              <span class="meta-label">Name:</span>
+              <span class="patient-name-banner" id="banner-patient-name">—</span>
+            </div>
+            <div class="patient-info-col text-right">
+              <span class="meta-label">Encounter Number:</span>
+              <span class="patient-info-val highlight-val" id="banner-encounter-no">001101</span>
+            </div>
+          </div>
+
+          <!-- Row 2: Birthday ---- Age ---- Sex -->
+          <div class="patient-info-row patient-info-row-3col">
+            <div class="patient-info-col">
+              <span class="meta-label">Birthday:</span>
+              <span class="patient-info-val" id="banner-bdate">09/10/1986</span>
+            </div>
+            <div class="patient-info-col">
+              <span class="meta-label">Age:</span>
+              <span class="patient-info-val" id="banner-age">—</span>
+            </div>
+            <div class="patient-info-col">
+              <span class="meta-label">Sex:</span>
+              <span class="patient-info-val" id="banner-sex">—</span>
+            </div>
+            <span id="banner-age-sex" style="display:none;">—</span>
+          </div>
+
+          <!-- Row 3: Address -->
+          <div class="patient-info-row">
+            <div class="patient-info-col patient-info-col-full">
+              <span class="meta-label">Address:</span>
+              <span class="patient-info-val" id="banner-address">Brgy. Mansilingan, Bacolod City</span>
+            </div>
+          </div>
+
+          <!-- Row 4: Hospital Number ---- PHIC Number -->
+          <div class="patient-info-row patient-info-row-split">
+            <div class="patient-info-col">
+              <span class="meta-label">Hospital Number:</span>
+              <span class="patient-info-val" id="banner-hrn">—</span>
+            </div>
+            <div class="patient-info-col text-right">
+              <span class="meta-label">PHIC Number:</span>
+              <span class="patient-info-val" id="banner-phic">—</span>
+            </div>
+          </div>
+
           <span id="banner-ward" style="display:none;"></span>
           <span id="banner-admit-date" style="display:none;">06/12/2026</span>
         </div>
@@ -2542,8 +2584,14 @@
       var phicEl = document.getElementById('banner-phic');
       if (phicEl) phicEl.textContent = d.philhealth_no || d.phic_no || '\u2014';
       var age = calculateAge(d.birthdate);
-      var sex = d.gender === 'Male' ? 'M' : d.gender === 'Female' ? 'F' : '\u2014';
-      document.getElementById('banner-age-sex').textContent = age ? age + ' / ' + sex : sex;
+      var sex = (d.gender === 'Male' || d.gender === 'M') ? 'M' : (d.gender === 'Female' || d.gender === 'F') ? 'F' : (d.gender || '\u2014');
+      var ageVal = age ? age : (d.age || '\u2014');
+      var ageEl = document.getElementById('banner-age');
+      if (ageEl) ageEl.textContent = ageVal;
+      var sexEl = document.getElementById('banner-sex');
+      if (sexEl) sexEl.textContent = sex;
+      var ageSexEl = document.getElementById('banner-age-sex');
+      if (ageSexEl) ageSexEl.textContent = age ? age + ' / ' + sex : sex;
       var bdateEl = document.getElementById('banner-bdate');
       if (bdateEl) {
         bdateEl.textContent = formatDate(d.birthdate) || d.birthdate || '\u2014';
@@ -9046,8 +9094,16 @@
         if (hrnEl) hrnEl.textContent = '—';
         var phicEl = document.getElementById('banner-phic');
         if (phicEl) phicEl.textContent = '—';
-        var ageEl = document.getElementById('banner-age-sex');
+        var ageEl = document.getElementById('banner-age');
         if (ageEl) ageEl.textContent = '—';
+        var sexEl = document.getElementById('banner-sex');
+        if (sexEl) sexEl.textContent = '—';
+        var ageSexEl = document.getElementById('banner-age-sex');
+        if (ageSexEl) ageSexEl.textContent = '—';
+        var bdateEl = document.getElementById('banner-bdate');
+        if (bdateEl) bdateEl.textContent = '—';
+        var encEl = document.getElementById('banner-encounter-no');
+        if (encEl) encEl.textContent = '—';
         var addrEl = document.getElementById('banner-address');
         if (addrEl) addrEl.textContent = '—';
         var wardEl = document.getElementById('banner-ward');

@@ -105,15 +105,18 @@
     .seg-page-title .pull-right { font-weight: 400; }
     .seg-content { padding: 10px 14px 18px; }
 
-    /* ── Patient Banner ── */
+    /* ── Patient Banner (Official DOH Layout) ── */
     .patient-info-bar {
       margin-bottom: 11px;
-      padding: 9px 13px;
+      padding: 10px 14px;
       border: 1px solid var(--med-border);
       border-top: 4px solid var(--med-green);
       border-radius: 3px;
       background: #fbfdfc;
       font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
     .dashlet > .patient-info-bar,
     .dashlet > .bootstrap-widget-content.patient-info-bar {
@@ -121,22 +124,76 @@
       border-radius: 0 0 3px 3px !important;
       margin-bottom: 0 !important;
     }
+    .patient-info-row {
+      display: flex;
+      align-items: baseline;
+      width: 100%;
+      min-width: 0;
+    }
+    .patient-info-row-split {
+      justify-content: space-between;
+    }
+    .patient-info-row-3col {
+      display: flex;
+      align-items: baseline;
+      gap: 40px;
+    }
+    .patient-info-col {
+      display: inline-flex;
+      align-items: baseline;
+      min-width: 0;
+    }
+    .patient-info-col.text-right {
+      justify-content: flex-end;
+      text-align: right;
+    }
+    .patient-info-col-full {
+      width: 100%;
+    }
     .patient-info-bar .patient-name-banner {
       font-size: 14px;
       font-weight: 700;
       color: var(--med-text-main);
-      margin-right: 24px;
+    }
+    .patient-info-bar .meta-label {
+      font-weight: 700;
+      color: var(--med-text-muted);
+      font-size: 12px;
+      margin-right: 6px;
+      white-space: nowrap;
+    }
+    .patient-info-bar .patient-info-val {
+      font-weight: 600;
+      color: var(--med-text-main);
+      font-size: 12px;
+    }
+    .patient-info-bar .patient-info-val.highlight-val {
+      font-weight: 700;
+      color: #1e3a8a;
+      letter-spacing: 0.2px;
     }
     .patient-info-bar .meta-item {
       display: inline-block;
       margin-right: 24px;
       color: var(--med-text-muted);
     }
-    .patient-info-bar .meta-item .meta-label {
-      font-weight: 700;
-      color: var(--med-text-light);
-    }
     .patient-info-bar .pull-right select { margin-bottom: 0; }
+
+    @media (max-width: 768px) {
+      .patient-info-row-split {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+      .patient-info-col.text-right {
+        justify-content: flex-start;
+        text-align: left;
+      }
+      .patient-info-row-3col {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+    }
 
     /* ── UNIFORM DASHLETS (All Headers in Consistent Green) ── */
     .dashlet {
