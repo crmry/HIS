@@ -155,6 +155,11 @@
       font-weight: 700;
       color: var(--med-text-main);
     }
+    .patient-info-bar #banner-hrn {
+      font-size: 18px;
+      font-family: 'Courier New', Courier, monospace;
+      letter-spacing: 0.5px;
+    }
     .patient-info-bar .meta-label-lg {
       font-size: 14px;
       font-weight: 700;
