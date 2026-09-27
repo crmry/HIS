@@ -1006,16 +1006,15 @@
               <table class="table table-bordered table-striped table-hover order-card-table viewable-results-table">
                 <thead>
                   <tr>
-                    <th style="width:135px;">Date &amp; Time</th>
-                    <th style="width:145px;">Department</th>
+                    <th style="width:140px;">Date &amp; Time</th>
+                    <th style="width:160px;">Department</th>
                     <th>Diagnostic Examination / Procedure</th>
-                    <th>Summary Findings / Key Analytes</th>
-                    <th style="width:135px; text-align:center;">Status</th>
-                    <th style="width:65px; text-align:center;">Result</th>
+                    <th style="width:160px; text-align:center;">Status</th>
+                    <th style="width:70px; text-align:center;">Result</th>
                   </tr>
                 </thead>
                 <tbody id="viewable-results-list">
-                  <tr><td colspan="6" style="text-align:center; padding:18px 12px; color:#718096; font-size:12px;">Loading diagnostic results...</td></tr>
+                  <tr><td colspan="5" style="text-align:center; padding:18px 12px; color:#718096; font-size:12px;">Loading diagnostic results...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -4886,7 +4885,7 @@
       if (!listEl) return;
 
       if (filtered.length === 0) {
-        listEl.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:22px 14px; color:#64748b; background:#f8fafc; font-style:italic;">No diagnostic examination results recorded in this section for this patient encounter.</td></tr>';
+        listEl.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:22px 14px; color:#64748b; background:#f8fafc; font-style:italic;">No diagnostic examination results recorded in this section for this patient encounter.</td></tr>';
         return;
       }
 
@@ -4895,13 +4894,11 @@
       var html = filtered.map(function (item) {
         var dateDisplay = esc(formatDateTime(item.date) || formatDate(item.date) || item.date);
         var deptBadgeBg = item.bucket === 'radiology' ? '#047857' : (item.bucket === 'heart' ? '#b91c1c' : (item.bucket === 'pulmonary' ? '#0284c7' : (item.bucket === 'neuro' ? '#6d28d9' : '#1e3a8a')));
-        var summaryHtml = buildExamSummarySnippet(item);
 
         return '<tr>' +
           '<td style="white-space:nowrap; font-weight:600; color:#334155;">' + dateDisplay + '</td>' +
           '<td><span class="badge" style="background:' + deptBadgeBg + '; color:#fff; font-size:10px; padding:2px 6px;">' + esc(item.category) + '</span></td>' +
           '<td><strong style="color:#0e3d59; font-size:12.5px;">' + esc(item.name) + '</strong></td>' +
-          '<td style="font-size:11.5px; line-height:1.45;">' + summaryHtml + '</td>' +
           '<td style="text-align:center;"><span class="badge badge-success" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(item.status) + '</span>' +
           (item.performed_by ? '<div style="font-size:10px; color:#64748b; margin-top:2px;" title="' + esc(item.performed_by) + '">' + esc(item.performed_by.split('/')[0].trim()) + '</div>' : '') +
           '</td>' +
