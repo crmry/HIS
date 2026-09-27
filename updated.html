@@ -1186,7 +1186,7 @@
     <div class="seg-modal">
       <div class="seg-modal-title" id="clinical-request-title">
         Clinical Requests
-        <button type="button" class="seg-modal-close" id="close-request-modal"
+        <button type="button" class="seg-modal-close" id="close-request-modal" onclick="closeRequestModal()"
           aria-label="Close clinical requests">×</button>
       </div>
       <div class="seg-modal-body">
@@ -1298,7 +1298,7 @@
         <span style="display: flex; align-items: center; gap: 6px;">
           <span>📝</span> Write prescription
         </span>
-        <button type="button" class="rx-modal-close" id="close-rx-writer-modal" title="Dock back into Physician's Orders">✕</button>
+        <button type="button" class="rx-modal-close" id="close-rx-writer-modal" onclick="closeRxWriterModal()" title="Dock back into Physician's Orders (Esc)">✕</button>
       </div>
       <div style="padding: 12px 14px; background: #fff; max-height: 85vh; overflow-y: auto;">
         <div id="rx-modal-slot"></div>
@@ -2431,11 +2431,14 @@
       <span class="floating-req-handle-arrow" id="floating-req-toggle-arrow">◀</span>
     </button>
     <div class="floating-req-menu" id="floating-req-menu">
-      <div class="floating-req-header">
-        <div style="font-weight:700; font-size:12px; color:#1b4d3e; display:flex; align-items:center; gap:6px;">
-          <span>⚡ QUICK REQUISITION PAD</span>
+      <div class="floating-req-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="font-weight:700; font-size:12px; color:#1b4d3e; display:flex; align-items:center; gap:6px;">
+            <span>⚡ QUICK REQUISITION PAD</span>
+          </div>
+          <div style="font-size:10px; color:#64748b;">CPOE Diagnostic Orders &amp; Print Slips</div>
         </div>
-        <div style="font-size:10px; color:#64748b;">CPOE Diagnostic Orders &amp; Print Slips</div>
+        <button type="button" id="floating-req-close-btn" onclick="collapseFloatingRequisitionToolkit(event)" title="Collapse Requisitions Dock (Esc)" style="background:none; border:none; color:#64748b; font-size:16px; line-height:1; cursor:pointer; padding:0 2px; font-weight:700;">✕</button>
       </div>
       <div class="floating-req-items">
         <button type="button" class="floating-req-item-btn" id="floating-btn-rx" onclick="openRxWriterFromToolkit(event)" data-station="rx" title="Open Rx Writer / Prescriptions">
@@ -6725,39 +6728,18 @@
 
       // Pop-out / Dock button
       if (e.target && (e.target.id === 'rx-open-modal-btn' || e.target.closest('#rx-open-modal-btn'))) {
-        var container = document.getElementById('rx-writer-main-container');
         var modal = document.getElementById('rx-writer-modal');
-        var modalSlot = document.getElementById('rx-modal-slot');
-        var accMount = document.getElementById('rx-writer-accordion-mount');
-        var btn = document.getElementById('rx-open-modal-btn');
-
-        if (!container || !modal || !modalSlot || !accMount) return;
-
-        if (modal.classList.contains('open')) {
-          accMount.appendChild(container);
-          modal.classList.remove('open');
-          if (btn) btn.innerHTML = '🗖 Pop-out Window';
+        if (modal && (modal.classList.contains('open') || modal.style.display === 'block')) {
+          closeRxWriterModal();
         } else {
-          modalSlot.appendChild(container);
-          modal.classList.add('open');
-          if (btn) btn.innerHTML = '🗕 Dock in Accordion';
+          openRxWriterFromToolkit();
         }
         return;
       }
 
       // Close pop-out modal
       if (e.target && (e.target.id === 'close-rx-writer-modal' || e.target.closest('#close-rx-writer-modal'))) {
-        var containerForClose = document.getElementById('rx-writer-main-container');
-        var modalForClose = document.getElementById('rx-writer-modal');
-        var accMountForClose = document.getElementById('rx-writer-accordion-mount');
-        var btnForClose = document.getElementById('rx-open-modal-btn');
-
-        if (containerForClose && accMountForClose) {
-          accMountForClose.appendChild(containerForClose);
-        }
-        if (modalForClose) modalForClose.classList.remove('open');
-        document.body.classList.remove('modal-lock');
-        if (btnForClose) btnForClose.innerHTML = '🗖 Pop-out Window';
+        closeRxWriterModal();
         return;
       }
 
@@ -7284,9 +7266,23 @@
     // ══════════════════════════════════════════════════════════════════════
     // FLOATING REQUISITION TOOLKIT CONTROLS
     // ══════════════════════════════════════════════════════════════════════
-        // ══════════════════════════════════════════════════════════════════════
-    // FLOATING REQUISITION TOOLKIT CONTROLS
-    // ══════════════════════════════════════════════════════════════════════
+    function collapseFloatingRequisitionToolkit(e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      var toolkit = document.getElementById('floating-req-toolkit');
+      if (!toolkit) return;
+      toolkit.classList.remove('expanded');
+      toolkit.classList.remove('pinned');
+      var arrow = document.getElementById('floating-req-toggle-arrow');
+      if (arrow) arrow.textContent = '\u25C0';
+      var handle = document.getElementById('floating-req-handle');
+      if (handle) handle.setAttribute('aria-expanded', 'false');
+      var pinBtn = document.getElementById('floating-req-pin-btn');
+      if (pinBtn) {
+        pinBtn.textContent = '📌 Pin Requisition Dock';
+        pinBtn.style.color = '#475569';
+      }
+    }
+
     function toggleFloatingRequisitionToolkit(e) {
       if (e && e.stopPropagation) e.stopPropagation();
       var toolkit = document.getElementById('floating-req-toolkit');
@@ -7492,10 +7488,46 @@
       document.body.classList.remove('modal-lock');
     }
 
+    // Modal Backdrop Click Dismissal
+    var clRequestModalBackdrop = document.getElementById('clinical-request-modal');
+    if (clRequestModalBackdrop) {
+      clRequestModalBackdrop.addEventListener('click', function (e) {
+        if (e.target === clRequestModalBackdrop) closeRequestModal();
+      });
+    }
+
+    var rxWriterModalBackdrop = document.getElementById('rx-writer-modal');
+    if (rxWriterModalBackdrop) {
+      rxWriterModalBackdrop.addEventListener('click', function (e) {
+        if (e.target === rxWriterModalBackdrop) {
+          if (typeof closeRxWriterModal === 'function') closeRxWriterModal();
+        }
+      });
+    }
+
+    // Global Escape Key Listener for Modals and Toolkit
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        var rxModal = document.getElementById('rx-writer-modal');
+        if (rxModal && (rxModal.classList.contains('open') || rxModal.style.display === 'block')) {
+          if (typeof closeRxWriterModal === 'function') closeRxWriterModal();
+          return;
+        }
+        var clModal = document.getElementById('clinical-request-modal');
+        if (clModal && (clModal.classList.contains('open') || clModal.style.display === 'block')) {
+          closeRequestModal();
+          return;
+        }
+        collapseFloatingRequisitionToolkit();
+      }
+    });
+
     window.openRxWriterFromToolkit = openRxWriterFromToolkit;
+    window.closeRxWriterModal = closeRxWriterModal;
     window.openRequestModal = openRequestModal;
     window.closeRequestModal = closeRequestModal;
     window.toggleFloatingRequisitionToolkit = toggleFloatingRequisitionToolkit;
+    window.collapseFloatingRequisitionToolkit = collapseFloatingRequisitionToolkit;
     window.togglePinFloatingRequisitionToolkit = togglePinFloatingRequisitionToolkit;
 
     function renderServiceOptions() {

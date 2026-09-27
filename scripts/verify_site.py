@@ -117,36 +117,42 @@ async def scan_single_target(browser_ws, file_url):
                 handle.click();
                 if (!toolkit.classList.contains('expanded')) return 'Handle click did not expand toolkit';
                 
-                // Test all 5 clinical station buttons
-                const tests = [
-                    {btnId: 'floating-btn-rx', modalId: 'rx-writer-modal', closeFn: () => {
-                        const m = document.getElementById('rx-writer-modal');
-                        if (m) { m.classList.remove('open'); m.style.display = 'none'; }
-                        document.body.classList.remove('modal-lock');
-                    }},
-                    {btnId: 'floating-btn-lab', modalId: 'clinical-request-modal', closeFn: () => {
-                        if (typeof window.closeRequestModal === 'function') window.closeRequestModal();
-                    }},
-                    {btnId: 'floating-btn-ddirs', modalId: 'clinical-request-modal', closeFn: () => {
-                        if (typeof window.closeRequestModal === 'function') window.closeRequestModal();
-                    }},
-                    {btnId: 'floating-btn-heart', modalId: 'clinical-request-modal', closeFn: () => {
-                        if (typeof window.closeRequestModal === 'function') window.closeRequestModal();
-                    }},
-                    {btnId: 'floating-btn-pulmo', modalId: 'clinical-request-modal', closeFn: () => {
-                        if (typeof window.closeRequestModal === 'function') window.closeRequestModal();
-                    }}
-                ];
+                // Test all 5 clinical station buttons and their close buttons
+                const rxBtn = document.getElementById('floating-btn-rx');
+                if (!rxBtn) return 'Button floating-btn-rx not found';
+                rxBtn.click();
+                const rxModal = document.getElementById('rx-writer-modal');
+                if (!rxModal || window.getComputedStyle(rxModal).display === 'none') return 'Rx writer modal failed to open';
+                const rxCloseBtn = document.getElementById('close-rx-writer-modal');
+                if (!rxCloseBtn) return 'Close button close-rx-writer-modal not found';
+                rxCloseBtn.click();
+                if (window.getComputedStyle(rxModal).display !== 'none' || rxModal.classList.contains('open')) return 'Rx writer modal failed to close via close button';
 
-                for (let t of tests) {
-                    const btn = document.getElementById(t.btnId);
-                    if (!btn) return 'Button ' + t.btnId + ' not found';
-                    btn.click();
-                    const m = document.getElementById(t.modalId);
-                    if (!m) return 'Modal ' + t.modalId + ' not found';
-                    const isVisible = (m.classList.contains('open') || window.getComputedStyle(m).display === 'block') && window.getComputedStyle(m).display !== 'none';
-                    if (!isVisible) return 'Station ' + t.btnId + ' failed to show modal ' + t.modalId;
-                    t.closeFn();
+                // Test Lab modal & close button
+                const labBtn = document.getElementById('floating-btn-lab');
+                if (!labBtn) return 'Button floating-btn-lab not found';
+                labBtn.click();
+                const clModal = document.getElementById('clinical-request-modal');
+                if (!clModal || window.getComputedStyle(clModal).display === 'none') return 'Clinical request modal failed to open';
+                const clCloseBtn = document.getElementById('close-request-modal');
+                if (!clCloseBtn) return 'Close button close-request-modal not found';
+                clCloseBtn.click();
+                if (window.getComputedStyle(clModal).display !== 'none' || clModal.classList.contains('open')) return 'Clinical modal failed to close via close button';
+
+                // Test Escape key dismissal
+                labBtn.click();
+                if (window.getComputedStyle(clModal).display === 'none') return 'Clinical modal failed to reopen';
+                document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+                if (window.getComputedStyle(clModal).display !== 'none' || clModal.classList.contains('open')) return 'Clinical modal failed to close via Escape key';
+
+                // Test other stations
+                const otherStations = ['floating-btn-ddirs', 'floating-btn-heart', 'floating-btn-pulmo'];
+                for (let sId of otherStations) {
+                    const b = document.getElementById(sId);
+                    if (!b) return 'Button ' + sId + ' not found';
+                    b.click();
+                    if (window.getComputedStyle(clModal).display === 'none') return 'Station ' + sId + ' failed to open modal';
+                    if (typeof window.closeRequestModal === 'function') window.closeRequestModal();
                 }
 
                 // Test pin toggle
@@ -155,6 +161,13 @@ async def scan_single_target(browser_ws, file_url):
                     pinBtn.click();
                     if (!toolkit.classList.contains('pinned')) return 'Pin button failed to pin toolkit';
                     pinBtn.click();
+                }
+
+                // Test toolkit close button
+                const tkCloseBtn = document.getElementById('floating-req-close-btn');
+                if (tkCloseBtn) {
+                    tkCloseBtn.click();
+                    if (toolkit.classList.contains('expanded') || toolkit.classList.contains('pinned')) return 'Toolkit close button failed to collapse toolkit';
                 }
 
                 return 'OK';
