@@ -2511,6 +2511,7 @@
         <button type="button" class="floating-req-item-btn" id="floating-btn-rx" onclick="openRxWriterFromToolkit(event)" data-station="rx" title="Open Rx Writer / Prescriptions">
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">Rx Writer</div>
+            <div class="floating-req-item-sub">Outpatient Prescriptions &amp; Pad</div>
           </div>
           <span class="floating-req-item-action">Open</span>
         </button>
@@ -2802,7 +2803,7 @@
       ivFluids: [],
       transfusions: [],
       cbgs: [
-        { dateTime: '2026-09-26T08:00:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 108, action: 'Target Met (80-130 mg/dL)', notes: 'Routine quarterly diabetes monitoring; good control', nurse: 'M. Tan, RMT / Miguel Santos, MD' }
+        { dateTime: '2026-09-26T08:00:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 108, action: 'Target Met (80-130 mg/dL)', notes: 'Routine quarterly diabetes monitoring; good control', nurse: 'Miguel Santos, MD' }
       ],
       medications: [
         { id: 'op-med-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:30:00+08:00', nextDose: '2026-09-26T19:00:00+08:00', doses24h: '2 doses', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
@@ -4930,9 +4931,7 @@
           '<td style="white-space:nowrap; font-weight:600; color:#334155;">' + dateDisplay + '</td>' +
           '<td><span class="badge" style="background:' + deptBadgeBg + '; color:#fff; font-size:10px; padding:2px 6px;">' + esc(item.category) + '</span></td>' +
           '<td><strong style="color:#0e3d59; font-size:12.5px;">' + esc(item.name) + '</strong></td>' +
-          '<td style="text-align:center;"><span class="badge badge-success" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(item.status) + '</span>' +
-          (item.performed_by ? '<div style="font-size:10px; color:#64748b; margin-top:2px;" title="' + esc(item.performed_by) + '">' + esc(item.performed_by.split('/')[0].trim()) + '</div>' : '') +
-          '</td>' +
+          '<td style="text-align:center;"><span class="badge badge-success" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(item.status) + '</span></td>' +
           '<td style="text-align:center;">' +
           '<button type="button" class="btn btn-mini btn-view-diagnostic-result" data-exam-id="' + esc(item.id) + '" title="View Official Diagnostic Result" aria-label="View Official Diagnostic Result" style="padding:2px 7px;">' +
           paperIconSvg +

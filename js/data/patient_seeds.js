@@ -588,7 +588,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { dateTime: '2026-09-26 09:30 AM', bp: '124/78', hr: '72', rr: '16', temp: '36.5', wt: '68', ht: '168', weight: '68', height: '168', bmi: '24.1', spo2: '99', o2: '99' }
               ],
               cbgs: [
-                { dateTime: '2026-09-26 08:00 AM', timing: 'Fasting Blood Sugar (FBS)', reading: 108, action: 'Target Met (80-130)', notes: 'Routine quarterly monitoring; good control', nurse: 'M. Tan, RMT / Miguel Santos, MD' }
+                { dateTime: '2026-09-26 08:00 AM', timing: 'Fasting Blood Sugar (FBS)', reading: 108, action: 'Target Met (80-130)', notes: 'Routine quarterly monitoring; good control', nurse: 'Miguel Santos, MD' }
               ],
               medications: [
                 { id: 'med-op-0926-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
