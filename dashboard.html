@@ -564,7 +564,8 @@
                   <li><a href="#hx-surgical" data-toggle="tab">Surgical History &amp; Operations</a></li>
                   <li><a href="#hx-family" data-toggle="tab">Family Medical History</a></li>
                   <li><a href="#hx-social" data-toggle="tab">Personal &amp; Social History</a></li>
-                  <li><a href="#hx-gyn" data-toggle="tab">Obstetric &amp; Gynecologic History (OB-GYN)</a></li>
+                  <li><a href="#hx-gyn" data-toggle="tab">Obstetric &amp; Gynecologic History</a></li>
+                   <li><a href="#hx-allergy" data-toggle="tab">Allergy</a></li>
                   <li><a href="#hx-neo" data-toggle="tab">Pediatric &amp; Neonatal History</a></li>
                 </ul>
                 <div class="tab-content">
@@ -641,7 +642,7 @@
                     edema</label>
                   <label><input type="checkbox" name="pertinent_signs[]" value="Myalgia"> Myalgia</label>
                   <label><input type="checkbox" name="pertinent_signs[]" value="Orthopnea"> Orthopnea</label>
-                  <label id="ros-pain-label" class="ros-pain-label"><input type="checkbox" name="pertinent_signs[]" value="Pain" id="sign-pain-check"> <span class="ros-pain-title">Pain,</span><span class="ros-pain-placeholder" id="pain_site_placeholder"> _________________ (site)</span><input type="text" id="pain_site_input" name="pain_site" placeholder="Name site..." list="pain-site-suggestions" class="ros-pain-input" style="display:none;" autocomplete="off" aria-label="Pain site"><span class="ros-pain-suffix" id="pain_site_suffix" style="display:none;">(site)</span></label>
+                  <label id="ros-pain-label" class="ros-pain-label"><input type="checkbox" name="pertinent_signs[]" value="Pain" id="sign-pain-check"> <span class="ros-pain-title">Pain,</span><span class="ros-pain-placeholder" id="pain_site_placeholder"> _________________ (site)</span><input type="text" id="pain_site_input" name="pain_site" placeholder="Name site..." class="ros-pain-input" style="display:none;" autocomplete="off" aria-label="Pain site"><span class="ros-pain-suffix" id="pain_site_suffix" style="display:none;">(site)</span></label>
                   <label><input type="checkbox" name="pertinent_signs[]" value="Palpitations"> Palpitations</label>
                   <label><input type="checkbox" name="pertinent_signs[]" value="Seizures"> Seizures</label>
                   <label><input type="checkbox" name="pertinent_signs[]" value="Skin rashes"> Skin rashes</label>
@@ -651,29 +652,9 @@
                   <label><input type="checkbox" name="pertinent_signs[]" value="Urgency"> Urgency</label>
                   <label><input type="checkbox" name="pertinent_signs[]" value="Vomiting"> Vomiting</label>
                   <label><input type="checkbox" name="pertinent_signs[]" value="Weight loss"> Weight loss</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Others"> Others</label>
+                  <label id="ros-others-label"><input type="checkbox" name="pertinent_signs[]" value="Others" id="sign-others-check"> Others<input type="text" id="ros_others_input" name="ros_others" placeholder="Specify..." class="input-medium" style="display:none; margin-left:6px; font-size:12px;" autocomplete="off" aria-label="Others specify"></label>
                 </div>
-                <datalist id="pain-site-suggestions">
-                  <option value="Head / Cephalic">
-                  <option value="Neck / Cervical">
-                  <option value="Chest / Precordial">
-                  <option value="Epigastric">
-                  <option value="Right Upper Quadrant (RUQ)">
-                  <option value="Right Lower Quadrant (RLQ)">
-                  <option value="Left Upper Quadrant (LUQ)">
-                  <option value="Left Lower Quadrant (LLQ)">
-                  <option value="Suprapubic / Pelvic">
-                  <option value="Flank (Right / Left)">
-                  <option value="Lower Back / Lumbar">
-                  <option value="Upper Back / Thoracic">
-                  <option value="Shoulder">
-                  <option value="Arm / Forearm">
-                  <option value="Hand / Wrist">
-                  <option value="Hip / Groin">
-                  <option value="Knee / Leg">
-                  <option value="Foot / Ankle">
-                  <option value="Generalized / Diffuse">
-                </datalist>
+
                 <textarea id="pertinent_signs_information" name="pertinent_signs_information" rows="3"
                   class="input-block-level"
                   placeholder="Document other review of systems findings, symptoms, onset, severity, and relevant information..."></textarea>
@@ -956,16 +937,16 @@
           </div>
     </div>
 
-    <!-- ROW 4: Admitting Diagnosis -->
+    <!-- ROW 4: Initial Diagnosis -->
     <div class="row-fluid" id="row-admitting-dx">
       <div class="span12" id="admitting-dx-col">
         <div class="dashlet">
           <div class="bootstrap-widget-header">
-            <h3>Admitting Diagnosis</h3>
+            <h3>Initial Diagnosis</h3>
           </div>
           <div class="bootstrap-widget-content" id="dashlet-diagnosis">
             <textarea id="admitting_dx" name="admitting_diagnosis" rows="4" class="input-block-level"
-              placeholder="Enter admitting diagnosis..."></textarea>
+              placeholder="Enter initial diagnosis..."></textarea>
           </div>
         </div>
       </div>
@@ -8162,6 +8143,78 @@
       });
     }
 
+    // ── ROS Others Textbox Toggle ──
+    var othersCheck = document.getElementById('sign-others-check');
+    var othersInput = document.getElementById('ros_others_input');
+    if (othersCheck && othersInput) {
+      othersCheck.addEventListener('change', function () {
+        if (othersCheck.checked) {
+          othersInput.style.display = 'inline-block';
+          othersInput.focus();
+        } else {
+          othersInput.style.display = 'none';
+          othersInput.value = '';
+        }
+      });
+      othersInput.addEventListener('click', function (e) { e.stopPropagation(); });
+      othersInput.addEventListener('mousedown', function (e) { e.stopPropagation(); });
+    }
+
+    // ── Allergy Tab — Add / Remove Rows ──
+    function renderAllergyRows(rows) {
+      var tbody = document.getElementById('allergy-hx-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      (rows || []).forEach(function (row, idx) {
+        var tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td>' + (row.allergen || '') + '</td>' +
+          '<td>' + (row.reaction || '') + '</td>' +
+          '<td>' + (row.severity || '') + '</td>' +
+          '<td>' + (row.status || '') + '</td>' +
+          '<td style="text-align:center;"><button type="button" class="btn btn-mini btn-danger" onclick="window.removeAllergyRow(' + idx + ')"><i class="icon-remove icon-white"></i></button></td>';
+        tbody.appendChild(tr);
+      });
+    }
+
+    function getAllergyRows() {
+      var active = (typeof getActivePatientRecord === 'function') ? getActivePatientRecord() : null;
+      return (active && active.data && Array.isArray(active.data.allergy_hx)) ? active.data.allergy_hx : [];
+    }
+
+    window.addAllergyRow = function () {
+      var allergen = (document.getElementById('allergy-new-allergen') || {}).value || '';
+      var reaction = (document.getElementById('allergy-new-reaction') || {}).value || '';
+      var severity = (document.getElementById('allergy-new-severity') || {}).value || '';
+      var status   = (document.getElementById('allergy-new-status') || {}).value || 'Active';
+      if (!allergen.trim()) { alert('Please enter an allergen name.'); return; }
+      var rows = getAllergyRows();
+      rows.push({ allergen: allergen.trim(), reaction: reaction.trim(), severity: severity, status: status });
+      if (typeof saveCurrentPatientRecord === 'function') {
+        var r = (typeof getActivePatientRecord === 'function') ? getActivePatientRecord() : null;
+        if (r) {
+          r.data = r.data || {};
+          r.data.allergy_hx = rows;
+          saveCurrentPatientRecord({ silent: true, refreshSelector: false });
+        }
+      }
+      renderAllergyRows(rows);
+      ['allergy-new-allergen','allergy-new-reaction'].forEach(function(id){ var el = document.getElementById(id); if(el) el.value=''; });
+      var sev = document.getElementById('allergy-new-severity'); if(sev) sev.value='';
+    };
+
+    window.removeAllergyRow = function (idx) {
+      var rows = getAllergyRows();
+      rows.splice(idx, 1);
+      var r = (typeof getActivePatientRecord === 'function') ? getActivePatientRecord() : null;
+      if (r) {
+        r.data = r.data || {};
+        r.data.allergy_hx = rows;
+        if (typeof saveCurrentPatientRecord === 'function') saveCurrentPatientRecord({ silent: true, refreshSelector: false });
+      }
+      renderAllergyRows(rows);
+    };
+
     // ── Load Patient Record ──
     function loadPatientRecord(record) {
 
@@ -8575,6 +8628,23 @@
         hasPain = true;
       }
       syncPainSiteUI(hasPain, painSiteVal);
+
+      // ── Restore ROS Others textbox state ──
+      var hasOthers = Array.isArray(data.pertinent_signs) && data.pertinent_signs.some(function(s){ return String(s).trim() === 'Others'; });
+      var othersChk = document.getElementById('sign-others-check');
+      var othersInp = document.getElementById('ros_others_input');
+      if (othersChk) othersChk.checked = hasOthers;
+      if (othersInp) {
+        othersInp.style.display = hasOthers ? 'inline-block' : 'none';
+        othersInp.value = data.ros_others || '';
+      }
+
+      // ── Restore Allergy tab rows ──
+      if (typeof renderAllergyRows === 'function') {
+        renderAllergyRows(Array.isArray(data.allergy_hx) ? data.allergy_hx : []);
+      }
+      var allergyNotesEl = document.getElementById('allergy_notes');
+      if (allergyNotesEl) allergyNotesEl.value = data.allergy_notes || '';
     }
 
 
@@ -8697,6 +8767,18 @@
       if (!data.pertinent_signs || data.pertinent_signs.indexOf('Pain') === -1) {
         data.pain_site = '';
       }
+      /* ROS Others free-text */
+      var rosOthersEl = document.getElementById('ros_others_input');
+      data.ros_others = (rosOthersEl && document.getElementById('sign-others-check') && document.getElementById('sign-others-check').checked)
+        ? (rosOthersEl.value || '')
+        : '';
+      /* Allergy history — preserved from addAllergyRow/removeAllergyRow, merge from active record */
+      var activeRec = (typeof getActivePatientRecord === 'function') ? getActivePatientRecord() : null;
+      if (activeRec && activeRec.data && Array.isArray(activeRec.data.allergy_hx)) {
+        data.allergy_hx = activeRec.data.allergy_hx;
+      }
+      var allergyNotesField = document.getElementById('allergy_notes');
+      if (allergyNotesField) data.allergy_notes = allergyNotesField.value || '';
 
       /* Custom disposition */
       if (data.disposition === 'Others') {
