@@ -471,9 +471,9 @@
               <div class="sim-field-group">
                 <label for="enc-tag">Visit / Status Tag</label>
                 <select id="enc-tag" class="sim-select">
-                  <option value="Consultation (OPD)">Consultation (OPD)</option>
-                  <option value="Follow-up (OPD)" selected>Follow-up (OPD)</option>
-                  <option value="Quarterly Review (OPD)">Quarterly Review (OPD)</option>
+                  <option value="Consultation">Consultation</option>
+                  <option value="Follow-up" selected>Follow-up</option>
+                  <option value="Quarterly Review">Quarterly Review</option>
                   <option value="Initial Visit (ER)">Initial Visit (ER)</option>
                   <option value="Ward Rounds (AM)">Ward Rounds (AM)</option>
                   <option value="Ward Rounds (PM)">Ward Rounds (PM)</option>
@@ -486,14 +486,14 @@
               <div class="sim-field-group" style="grid-column: span 2;">
                 <label for="enc-service">Clinical Service / Clinic *</label>
                 <select id="enc-service" class="sim-select">
-                  <option value="Internal Medicine (OPD)" selected>Internal Medicine (OPD)</option>
-                  <option value="Pulmonary & Adult Medicine (OPD)">Pulmonary &amp; Adult Medicine (OPD)</option>
-                  <option value="Ophthalmology Clinic (OPD)">Ophthalmology Clinic (OPD)</option>
-                  <option value="Cardiology Clinic (OPD)">Cardiology Clinic (OPD)</option>
-                  <option value="Internal Medicine (Ward)">Internal Medicine (Ward)</option>
+                  <option value="General Medicine" selected>General Medicine</option>
+                  <option value="Pulmonary & Adult Medicine">Pulmonary &amp; Adult Medicine</option>
+                  <option value="Ophthalmology Clinic">Ophthalmology Clinic</option>
+                  <option value="Cardiology Clinic">Cardiology Clinic</option>
+                  <option value="General Medicine">General Medicine</option>
                   <option value="Emergency Medicine">Emergency Medicine</option>
-                  <option value="Pediatrics (OPD)">Pediatrics (OPD)</option>
-                  <option value="General Surgery (OPD)">General Surgery (OPD)</option>
+                  <option value="Pediatrics">Pediatrics</option>
+                  <option value="General Surgery">General Surgery</option>
                 </select>
               </div>
               <div class="sim-field-group" style="grid-column: span 2;">
@@ -943,7 +943,7 @@
         var encDate = (document.getElementById('enc-date').value || '').trim();
         var encTime = (document.getElementById('enc-time').value || '').trim();
         var encReg = (document.getElementById('enc-registry').value || 'OP').trim();
-        var encTag = (document.getElementById('enc-tag').value || 'Follow-up (OPD)').trim();
+        var encTag = (document.getElementById('enc-tag').value || 'Follow-up').trim();
         var encService = (document.getElementById('enc-service').value || '').trim();
         var encPhysician = (document.getElementById('enc-physician').value || '').trim();
         var encDiag = (document.getElementById('enc-diagnosis').value || '').trim();
@@ -1052,7 +1052,7 @@
           date: yyyy + '-' + mm + '-' + dd,
           time: '04:30 PM',
           registry: 'OP',
-          service: 'Internal Medicine (OPD)',
+          service: 'General Medicine',
           physician: 'Miguel Santos, MD',
           is_current: true,
           status_tag: 'Observation (PM)',
@@ -1082,7 +1082,7 @@
             date: '2026-06-14',
             time: '09:00 AM',
             registry: 'IP',
-            service: 'Internal Medicine (Ward)',
+            service: 'General Medicine',
             physician: 'Miguel Santos, MD',
             is_current: true,
             status_tag: 'Discharge Planning',
@@ -1099,7 +1099,7 @@
             date: '2026-06-13',
             time: '04:30 PM',
             registry: 'IP',
-            service: 'Internal Medicine (Ward)',
+            service: 'General Medicine',
             physician: 'Miguel Santos, MD',
             is_current: false,
             status_tag: 'Ward Round (PM)',
@@ -1113,7 +1113,7 @@
             date: '2026-06-13',
             time: '10:15 AM',
             registry: 'IP',
-            service: 'Internal Medicine (Ward)',
+            service: 'General Medicine',
             physician: 'Miguel Santos, MD',
             is_current: false,
             status_tag: 'Ward Round (AM)',
@@ -1139,7 +1139,7 @@
             results: 'Admitted to Medical Ward',
             progress_notes: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension.',
             orders: [
-              { text: 'Admit to Medical Ward under Internal Medicine service.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
+              { text: 'Admit to Medical Ward under General Medicine service.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
               { text: 'Monitor vital signs every four hours and record intake and output.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:32 PM nurse' },
               { text: 'PNSS 1 L at 80 mL/hour.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['A'], timeSignature: 'A - 12:45 PM nurse' }
             ]
@@ -1162,10 +1162,10 @@
           date: yyyy + '-' + mm + '-' + dd,
           time: '09:30 AM',
           registry: 'OP',
-          service: 'Internal Medicine (OPD)',
+          service: 'General Medicine',
           physician: 'Miguel Santos, MD',
           is_current: true,
-          status_tag: 'Routine Review (OPD)',
+          status_tag: 'Routine Review',
           diagnosis: 'E11.9 - Type 2 diabetes mellitus, well-controlled; I10 - Essential Hypertension, controlled',
           patient_record: 'Ambulatory chronic care quarterly evaluation',
           results: 'Clinically stable',

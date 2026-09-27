@@ -1118,7 +1118,7 @@
                 <option value="PUBLIC HEALTH UNIT">PUBLIC HEALTH UNIT</option>
                 <option value="ENT-HNS">ENT-HNS</option>
                 <option value="ANESTHESIA">ANESTHESIA</option>
-                <option value="INTERNAL MEDICINE">INTERNAL MEDICINE</option>
+                <option value="GENERAL MEDICINE">GENERAL MEDICINE</option>
                 <option value="PEDIATRICS">PEDIATRICS</option>
                 <option value="OBSTETRICS AND GYNECOLOGY">OBSTETRICS AND GYNECOLOGY</option>
                 <option value="FAMILY AND COMMUNITY MEDICINE">FAMILY AND COMMUNITY MEDICINE</option>
@@ -1676,7 +1676,7 @@
         <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; margin-bottom:12px;">
           <div>
             <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Clinical Service</label>
-            <input type="text" id="new-enc-service" value="Internal Medicine" style="width:100%; box-sizing:border-box; height:30px; font-size:12px;">
+            <input type="text" id="new-enc-service" value="General Medicine" style="width:100%; box-sizing:border-box; height:30px; font-size:12px;">
           </div>
           <div>
             <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Attending Physician</label>
@@ -1689,7 +1689,7 @@
               <option value="Morning Rounds">Morning Rounds</option>
               <option value="Bedside Review">Bedside Review</option>
               <option value="Initial Visit (ER)">Initial Visit (ER)</option>
-              <option value="Follow-up (OPD)">Follow-up (OPD)</option>
+              <option value="Follow-up">Follow-up</option>
               <option value="Discharge Planning">Discharge Planning</option>
             </select>
           </div>
@@ -1898,12 +1898,12 @@
               <div class="span8">
                 <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Clinic / Service:</label>
                 <select id="end-care-followup-clinic" class="input-block-level" style="font-size:12px; margin-bottom:0; box-sizing:border-box;">
-                  <option value="Internal Medicine (OPD)" selected>Internal Medicine (OPD)</option>
-                  <option value="Pulmonary &amp; Adult Medicine (OPD)">Pulmonary &amp; Adult Medicine (OPD)</option>
-                  <option value="Ophthalmology Clinic (OPD)">Ophthalmology Clinic (OPD)</option>
-                  <option value="Cardiology Clinic (OPD)">Cardiology Clinic (OPD)</option>
-                  <option value="General Surgery (OPD)">General Surgery (OPD)</option>
-                  <option value="Pediatrics (OPD)">Pediatrics (OPD)</option>
+                  <option value="General Medicine" selected>General Medicine</option>
+                  <option value="Pulmonary &amp; Adult Medicine">Pulmonary &amp; Adult Medicine</option>
+                  <option value="Ophthalmology Clinic">Ophthalmology Clinic</option>
+                  <option value="Cardiology Clinic">Cardiology Clinic</option>
+                  <option value="General Surgery">General Surgery</option>
+                  <option value="Pediatrics">Pediatrics</option>
                 </select>
               </div>
             </div>
@@ -3330,7 +3330,7 @@
         if (isER) {
           history = 'Patient is a 40-year-old female who presented to the Emergency Room with a 3-day history of productive cough with yellowish sputum, progressive dyspnea, and undocumented high-grade fever with chills. No hemoptysis, chest trauma, or orthopnea. Denies recent travel or known COVID-19 contact.\n\nPast Medical History: Known hypertensive for 5 years maintained on Amlodipine 5 mg once daily with fair compliance. No prior asthma, diabetes, or pulmonary tuberculosis.\n\nPersonal / Social History: Non-smoker, occasional social alcoholic beverage drinker, works as an accountant.\n\nFamily History: Father (+) Hypertension and Type 2 Diabetes; Mother (+) Bronchial Asthma.';
         } else if (isIP) {
-          history = 'Hospital Day 2. Patient was admitted to Medical Ward under Internal Medicine. Received IV Ceftriaxone 2 g OD (Day 2) and PO Azithromycin 500 mg OD. Temperature normalized (afebrile at 36.8°C for the past 18 hours). Dyspnea has significantly resolved, patient ambulating comfortably in room. Productive cough is looser and less frequent with clearing sputum.\n\nInterval History: Tolerating low-salt diet well, adequate oral fluid intake. No chest pain, palpitations, or drug adverse events noted. Vital signs stable with SpO2 98% on 2 L/min nasal cannula.\n\nPhysical Examination on Rounds: Chest auscultation shows decreased coarse crackles over the right base with improved bilateral breath sounds. Abdomen soft, non-tender.';
+          history = 'Hospital Day 2. Patient was admitted to Medical Ward under General Medicine. Received IV Ceftriaxone 2 g OD (Day 2) and PO Azithromycin 500 mg OD. Temperature normalized (afebrile at 36.8°C for the past 18 hours). Dyspnea has significantly resolved, patient ambulating comfortably in room. Productive cough is looser and less frequent with clearing sputum.\n\nInterval History: Tolerating low-salt diet well, adequate oral fluid intake. No chest pain, palpitations, or drug adverse events noted. Vital signs stable with SpO2 98% on 2 L/min nasal cannula.\n\nPhysical Examination on Rounds: Chest auscultation shows decreased coarse crackles over the right base with improved bilateral breath sounds. Abdomen soft, non-tender.';
         } else {
           history = pData.hx_present ? (pData.hx_present + (pData.hx_past ? '\n\nPast Medical History: ' + pData.hx_past : '')) : ('Clinical history for encounter date ' + dateStr + ' recorded under ' + (enc.service || 'attending service') + '.');
         }
@@ -4673,9 +4673,9 @@
       var regInput = document.getElementById('new-enc-registry');
       if (regInput) regInput.value = 'OP';
       var srvInput = document.getElementById('new-enc-service');
-      if (srvInput) srvInput.value = 'Internal Medicine (OPD)';
+      if (srvInput) srvInput.value = 'General Medicine';
       var tagInput = document.getElementById('new-enc-status-tag');
-      if (tagInput) tagInput.value = 'Follow-up (OPD)';
+      if (tagInput) tagInput.value = 'Follow-up';
       var diagInput = document.getElementById('new-enc-diagnosis');
       if (diagInput) {
         var pData = currentPatientData();
@@ -4749,7 +4749,7 @@
           return;
         }
         var registry = (document.getElementById('new-enc-registry').value || 'IP').trim();
-        var service = (document.getElementById('new-enc-service').value || 'Internal Medicine').trim();
+        var service = (document.getElementById('new-enc-service').value || 'General Medicine').trim();
         var physician = (document.getElementById('new-enc-physician').value || 'Miguel Santos, MD').trim();
         var statusTag = (document.getElementById('new-enc-status-tag').value || 'Ward Round (PM)').trim();
         var diagnosis = (document.getElementById('new-enc-diagnosis').value || '').trim();
@@ -4837,10 +4837,10 @@
           date: yyyy + '-' + mm + '-' + dd,
           time: timeStr,
           registry: 'OP',
-          service: 'Internal Medicine (OPD)',
+          service: 'General Medicine',
           physician: 'Miguel Santos, MD',
           is_current: true,
-          status_tag: 'Follow-up (OPD)',
+          status_tag: 'Follow-up',
           diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving',
           patient_record: 'Evening clinical monitoring',
           results: 'Clinically stable',
@@ -4872,7 +4872,7 @@
             date: '2026-06-14',
             time: '09:00 AM',
             registry: 'IP',
-            service: 'Internal Medicine',
+            service: 'General Medicine',
             physician: 'Miguel Santos, MD',
             is_current: true,
             status_tag: 'Discharge Planning',
@@ -4889,7 +4889,7 @@
             date: '2026-06-13',
             time: '04:30 PM',
             registry: 'IP',
-            service: 'Internal Medicine',
+            service: 'General Medicine',
             physician: 'Miguel Santos, MD',
             is_current: false,
             status_tag: 'Ward Round (PM)',
@@ -4903,7 +4903,7 @@
             date: '2026-06-13',
             time: '10:15 AM',
             registry: 'IP',
-            service: 'Internal Medicine',
+            service: 'General Medicine',
             physician: 'Miguel Santos, MD',
             is_current: false,
             status_tag: 'Morning Rounds',
@@ -4932,7 +4932,7 @@
             results: 'Admitted to Medical Ward',
             progress_notes: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension',
             orders: [
-              { text: 'Admit to Medical Ward under Internal Medicine service.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
+              { text: 'Admit to Medical Ward under General Medicine service.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
               { text: 'Monitor vital signs every four hours and record intake and output.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:32 PM nurse' },
               { text: 'Low-salt diet as tolerated.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:35 PM nurse' },
               { text: 'PNSS 1 L at 80 mL/hour.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['A'], timeSignature: 'A - 12:45 PM nurse' },
@@ -6420,7 +6420,7 @@
       paper.innerHTML =
         '<div style="text-align:center; border-bottom:2px solid #1f7d45; padding-bottom:8px; margin-bottom:12px;">' +
         '<h2 style="font-size:15px; margin:0 0 2px 0; font-weight:800; color:#1f7d45; letter-spacing:0.5px;">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</h2>' +
-        '<div style="font-size:11px; color:#444; font-weight:bold;">CLMMRH DEPARTMENT OF INTERNAL MEDICINE • OUTPATIENT &amp; INPATIENT SERVICES</div>' +
+        '<div style="font-size:11px; color:#444; font-weight:bold;">CLMMRH DEPARTMENT OF GENERAL MEDICINE • OUTPATIENT &amp; INPATIENT SERVICES</div>' +
         '<div style="font-size:10px; color:#666;">Lacson Street, Bacolod City 6100, Negros Occidental, Philippines • Tel: (034) 700-0000</div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:8px; border-bottom:1px solid #ddd; padding-bottom:5px;">' +
@@ -7092,7 +7092,7 @@
       var sex = (pData.gender || pData.sex || '—').charAt(0).toUpperCase();
       var curEnc = (loadedEncounters && loadedEncounters[activeEncounterRecordIndex]) || {};
       var caseNo = curEnc.encounter_nr || pData.encounter_nr || 'ENC-2026-CURRENT';
-      var ward = curEnc.ward || pData.ward || pData.current_dept || 'Internal Medicine (OPD)';
+      var ward = curEnc.ward || pData.ward || pData.current_dept || 'General Medicine';
       var bed = curEnc.room || pData.room || pData.bed || 'OPD-CONSULT';
       var dx = (document.getElementById('admitting_dx_text') && document.getElementById('admitting_dx_text').value) || curEnc.admitting_diagnosis || pData.admitting_diagnosis || 'For Diagnostic Evaluation';
       var physician = getCurrentPhysicianName() || 'ATTENDING PHYSICIAN, MD';
@@ -9102,7 +9102,7 @@
           '<div><span style="color:#64748b; font-size:11px; display:block;">HOSPITAL NO. (HRN)</span><strong style="font-family:monospace;">' + esc(hrn) + '</strong></div>' +
           '<div><span style="color:#64748b; font-size:11px; display:block;">AGE / SEX</span>' + esc(ageSex) + '</div>' +
           '<div><span style="color:#64748b; font-size:11px; display:block;">CONCLUDING DATE</span><strong style="color:#0284c7;">' + esc(dateStr) + '</strong></div>' +
-          '<div><span style="color:#64748b; font-size:11px; display:block;">SERVICE</span><strong>Internal Medicine (OPD)</strong></div>';
+          '<div><span style="color:#64748b; font-size:11px; display:block;">SERVICE</span><strong>General Medicine</strong></div>';
       }
 
       // Default follow-up date: 7 days from now
@@ -9177,7 +9177,7 @@
       var fuNeeded = document.querySelector('input[name="end_care_fu_needed"]:checked');
       var isFu = fuNeeded && fuNeeded.value === 'Yes';
       var fuDate = isFu ? (document.getElementById('end-care-followup-date').value || '') : '';
-      var fuClinic = isFu ? (document.getElementById('end-care-followup-clinic').value || 'Internal Medicine (OPD)') : '';
+      var fuClinic = isFu ? (document.getElementById('end-care-followup-clinic').value || 'General Medicine') : '';
       var fuReason = isFu ? (document.getElementById('end-care-followup-reason').value || '').trim() : '';
 
       var records = getPatients();
@@ -9195,7 +9195,7 @@
           date: now.toISOString().slice(0, 10),
           time: '10:15 AM',
           registry: 'OP',
-          service: 'Internal Medicine (OPD)',
+          service: 'General Medicine',
           physician: 'Miguel Santos, MD'
         }];
         records[recIdx].data.encounters = encs;
@@ -9214,7 +9214,7 @@
       if (!currEnc.clinicalRequests && typeof clinicalRequests !== 'undefined') {
         currEnc.clinicalRequests = JSON.parse(JSON.stringify(clinicalRequests));
       }
-      currEnc.status_tag = 'Completed (OPD)';
+      currEnc.status_tag = 'Completed';
 
       // Save to localStorage
       savePatients(records);

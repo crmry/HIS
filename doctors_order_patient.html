@@ -1847,7 +1847,7 @@
                 <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; margin-bottom:12px;">
                     <div>
                         <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Clinical Service</label>
-                        <input type="text" id="sheet-enc-service" value="Internal Medicine" style="width:100%; box-sizing:border-box; height:32px; font-size:12px; padding:4px 8px; border:1px solid #ccc; border-radius:3px;">
+                        <input type="text" id="sheet-enc-service" value="General Medicine" style="width:100%; box-sizing:border-box; height:32px; font-size:12px; padding:4px 8px; border:1px solid #ccc; border-radius:3px;">
                     </div>
                     <div>
                         <label style="font-weight:600; font-size:12px; margin-bottom:4px; display:block;">Attending Physician</label>
@@ -1860,7 +1860,7 @@
                             <option value="Morning Rounds">Morning Rounds</option>
                             <option value="Bedside Review">Bedside Review</option>
                             <option value="Initial Visit (ER)">Initial Visit (ER)</option>
-                            <option value="Follow-up (OPD)">Follow-up (OPD)</option>
+                            <option value="Follow-up">Follow-up</option>
                             <option value="Discharge Planning">Discharge Planning</option>
                         </select>
                     </div>
@@ -1971,9 +1971,9 @@
             var regInput = document.getElementById("sheet-enc-registry");
             if (regInput) regInput.value = "OP";
             var srvInput = document.getElementById("sheet-enc-service");
-            if (srvInput) srvInput.value = "Internal Medicine (OPD)";
+            if (srvInput) srvInput.value = "General Medicine";
             var tagInput = document.getElementById("sheet-enc-status-tag");
-            if (tagInput) tagInput.value = "Follow-up (OPD)";
+            if (tagInput) tagInput.value = "Follow-up";
             var diagInput = document.getElementById("sheet-enc-diagnosis");
             if (diagInput && currentLoadedRecord) {
                 var pData = currentLoadedRecord.data || {};
@@ -2045,7 +2045,7 @@
                     return;
                 }
                 var registry = (document.getElementById("sheet-enc-registry").value || "IP").trim();
-                var service = (document.getElementById("sheet-enc-service").value || "Internal Medicine").trim();
+                var service = (document.getElementById("sheet-enc-service").value || "General Medicine").trim();
                 var physician = (document.getElementById("sheet-enc-physician").value || "Dr. Miguel Santos, MD").trim();
                 var statusTag = (document.getElementById("sheet-enc-status-tag").value || "Ward Round (PM)").trim();
                 var diagnosis = (document.getElementById("sheet-enc-diagnosis").value || "").trim();
@@ -2119,10 +2119,10 @@
                     date: yyyy + "-" + mm + "-" + dd,
                     time: timeStr,
                     registry: "OP",
-                    service: "Internal Medicine (OPD)",
+                    service: "General Medicine",
                     physician: "Dr. Miguel Santos, MD",
                     is_current: true,
-                    status_tag: "Follow-up (OPD)",
+                    status_tag: "Follow-up",
                     diagnosis: "J18.9 - Community-Acquired Pneumonia, moderate risk, resolving",
                     patient_record: "Evening clinical monitoring",
                     results: "Clinically stable",
@@ -2153,7 +2153,7 @@
                         date: "2026-06-14",
                         time: "09:00 AM",
                         registry: "IP",
-                        service: "Internal Medicine",
+                        service: "General Medicine",
                         physician: "Dr. Miguel Santos, MD",
                         is_current: true,
                         status_tag: "Discharge Planning",
@@ -2170,7 +2170,7 @@
                         date: "2026-06-13",
                         time: "04:30 PM",
                         registry: "IP",
-                        service: "Internal Medicine",
+                        service: "General Medicine",
                         physician: "Dr. Miguel Santos, MD",
                         is_current: false,
                         status_tag: "Ward Round (PM)",
@@ -2184,7 +2184,7 @@
                         date: "2026-06-13",
                         time: "10:15 AM",
                         registry: "IP",
-                        service: "Internal Medicine",
+                        service: "General Medicine",
                         physician: "Dr. Miguel Santos, MD",
                         is_current: false,
                         status_tag: "Morning Rounds",
@@ -2213,7 +2213,7 @@
                         results: "Admitted to Medical Ward",
                         progress_notes: "Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension",
                         orders: [
-                            { text: "Admit to Medical Ward under Internal Medicine service.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:30 PM nurse" },
+                            { text: "Admit to Medical Ward under General Medicine service.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:30 PM nurse" },
                             { text: "Monitor vital signs every four hours and record intake and output.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:32 PM nurse" },
                             { text: "Low-salt diet as tolerated.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["C"], timeSignature: "C - 12:35 PM nurse" },
                             { text: "PNSS 1 L at 80 mL/hour.", dateTime: "2026-06-12T08:30:00+08:00", cared: ["A"], timeSignature: "A - 12:45 PM nurse" },
