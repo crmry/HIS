@@ -996,6 +996,7 @@
             <div class="viewable-results-nav" id="viewable-results-tabs">
               <button type="button" class="btn btn-small active result-filter-btn" data-result-cat="all">All Results <span class="badge" id="cat-badge-all" style="font-size:10px; margin-left:3px; background:#4a5568;">0</span></button>
               <button type="button" class="btn btn-small result-filter-btn" data-result-cat="laboratory">Laboratory <span class="badge" id="cat-badge-laboratory" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
+              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="radiology">Radiology / Imaging (DDIRS) <span class="badge" id="cat-badge-radiology" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
               <button type="button" class="btn btn-small result-filter-btn" data-result-cat="heart">Heart Station <span class="badge" id="cat-badge-heart" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
               <button type="button" class="btn btn-small result-filter-btn" data-result-cat="pulmonary">Pulmonary Station <span class="badge" id="cat-badge-pulmonary" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
               <button type="button" class="btn btn-small result-filter-btn" data-result-cat="neuro">EEG / Neuro <span class="badge" id="cat-badge-neuro" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
@@ -4791,32 +4792,47 @@
       var exams = [];
       var seenIds = {};
 
-      if (Array.isArray(loadedEncounters)) {
-        loadedEncounters.forEach(function (enc, encIdx) {
-          var encExams = getEncounterExaminations(enc);
-          if (Array.isArray(encExams)) {
-            encExams.forEach(function (x, xIdx) {
-              var examId = x.id || ('EXAM-' + encIdx + '-' + xIdx);
-              if (seenIds[examId]) return;
-              seenIds[examId] = true;
-              exams.push({
-                id: examId,
-                exam: x,
-                enc: enc,
-                encIdx: encIdx,
-                date: x.performed_at || x.dateTime || enc.date || '—',
-                category: x.category || 'Laboratory',
-                bucket: getExamCategoryBucket(x),
-                name: x.name || 'Diagnostic Procedure',
-                status: x.status || 'Completed',
-                performed_by: x.performed_by || x.signee || (enc.physician && enc.physician.name) || 'Clinical Staff',
-                impression: x.impression || '',
-                findings: x.findings || '',
-                analytes: Array.isArray(x.analytes) ? x.analytes : []
-              });
-            });
+      if (Array.isArray(loadedEncounters) && loadedEncounters.length > 0) {
+        // Scope to the current active encounter only.
+        // Past encounter results must not bleed into the active encounter view.
+        var currentEnc = null;
+        var currentEncIdx = -1;
+        for (var i = 0; i < loadedEncounters.length; i++) {
+          if (loadedEncounters[i].is_current || loadedEncounters[i].isCurrent) {
+            currentEnc = loadedEncounters[i];
+            currentEncIdx = i;
+            break;
           }
-        });
+        }
+        // Fallback: use first encounter if none flagged as current
+        if (!currentEnc) {
+          currentEnc = loadedEncounters[0];
+          currentEncIdx = 0;
+        }
+
+        var encExams = getEncounterExaminations(currentEnc);
+        if (Array.isArray(encExams)) {
+          encExams.forEach(function (x, xIdx) {
+            var examId = x.id || ('EXAM-' + currentEncIdx + '-' + xIdx);
+            if (seenIds[examId]) return;
+            seenIds[examId] = true;
+            exams.push({
+              id: examId,
+              exam: x,
+              enc: currentEnc,
+              encIdx: currentEncIdx,
+              date: x.performed_at || x.dateTime || currentEnc.date || '—',
+              category: x.category || 'Laboratory',
+              bucket: getExamCategoryBucket(x),
+              name: x.name || 'Diagnostic Procedure',
+              status: x.status || 'Completed',
+              performed_by: x.performed_by || x.signee || (currentEnc.physician && currentEnc.physician.name) || 'Clinical Staff',
+              impression: x.impression || '',
+              findings: x.findings || '',
+              analytes: Array.isArray(x.analytes) ? x.analytes : []
+            });
+          });
+        }
       }
 
       cachedViewableExaminations = exams;
