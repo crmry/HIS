@@ -1329,24 +1329,14 @@
   <div class="seg-modal-backdrop" id="flowsheet-entry-modal" role="dialog" aria-modal="true" aria-labelledby="flowsheet-modal-heading">
     <div class="seg-modal" style="min-width: 720px; max-width: 860px; margin: 25px auto;">
       <div class="seg-modal-title" id="flowsheet-modal-heading" style="display:flex; justify-content:space-between; align-items:center;">
-        <span><i class="icon-edit"></i> Clinical Flowsheet</span>
+        <span><i class="icon-edit"></i> Clinical Flowsheet<span id="flowsheet-modal-category" style="font-weight:normal; opacity:0.85; font-size:13px; margin-left:6px;"></span></span>
         <button type="button" class="seg-modal-close" id="close-flowsheet-entry-modal">✕</button>
       </div>
       <div class="seg-modal-body" style="padding:16px 20px;">
         <form id="flowsheet-entry-form" onsubmit="return false;" style="margin-bottom:0;">
+          <input type="hidden" id="fe-record-type" value="vitals">
           <div class="row-fluid" style="margin-bottom:12px;">
-            <div class="span6">
-              <label style="font-weight:700;">Record Type to Log:</label>
-              <select id="fe-record-type" class="input-block-level">
-                <option value="ivf">IV Fluid / Medication Drip</option>
-                <option value="transfusion">Blood Transfusion Record</option>
-                <option value="cbg">Capillary Blood Glucose (CBG)</option>
-                <option value="vitals">Vital Signs Monitoring</option>
-                <option value="medication">Medication Administration (MAR)</option>
-                <option value="io">Intake &amp; Output (I&amp;O) Shift</option>
-              </select>
-            </div>
-            <div class="span6">
+            <div class="span12">
               <label style="font-weight:700;">Date & Time of Entry:</label>
               <input type="datetime-local" id="fe-datetime" class="input-block-level">
             </div>
@@ -3098,6 +3088,18 @@
       var typeSelect = document.getElementById('fe-record-type');
       if (typeSelect && type) {
         typeSelect.value = type;
+      }
+      var categoryLabels = {
+        vitals: 'Vital Signs Monitoring',
+        ivf: 'IV Fluid / Medication Drip',
+        transfusion: 'Blood Transfusion Record',
+        cbg: 'Capillary Blood Glucose (CBG)',
+        medication: 'Medication Administration (MAR)',
+        io: 'Intake & Output (I&O) Shift'
+      };
+      var subTitleEl = document.getElementById('flowsheet-modal-category');
+      if (subTitleEl) {
+        subTitleEl.textContent = categoryLabels[type] ? ' • ' + categoryLabels[type] : '';
       }
       var now = new Date();
       var localIso = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
