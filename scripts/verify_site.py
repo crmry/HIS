@@ -132,10 +132,10 @@ async def scan_single_target(browser_ws, file_url):
                 rxCloseBtn.click();
                 if (window.getComputedStyle(rxModal).display !== 'none' || rxModal.classList.contains('open')) return 'Rx writer modal failed to close via close button';
 
-                // Test Lab modal & close button
-                const labBtn = document.getElementById('floating-btn-lab');
-                if (!labBtn) return 'Button floating-btn-lab not found';
-                labBtn.click();
+                // Test Examination Request modal & close button
+                const examBtn = document.getElementById('floating-btn-exam') || document.getElementById('floating-btn-lab');
+                if (!examBtn) return 'Button floating-btn-exam not found';
+                examBtn.click();
                 const clModal = document.getElementById('clinical-request-modal');
                 if (!clModal || window.getComputedStyle(clModal).display === 'none') return 'Clinical request modal failed to open';
                 const clCloseBtn = document.getElementById('close-request-modal');
@@ -144,20 +144,10 @@ async def scan_single_target(browser_ws, file_url):
                 if (window.getComputedStyle(clModal).display !== 'none' || clModal.classList.contains('open')) return 'Clinical modal failed to close via close button';
 
                 // Test Escape key dismissal
-                labBtn.click();
+                examBtn.click();
                 if (window.getComputedStyle(clModal).display === 'none') return 'Clinical modal failed to reopen';
                 document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
                 if (window.getComputedStyle(clModal).display !== 'none' || clModal.classList.contains('open')) return 'Clinical modal failed to close via Escape key';
-
-                // Test other stations
-                const otherStations = ['floating-btn-ddirs', 'floating-btn-heart', 'floating-btn-pulmo'];
-                for (let sId of otherStations) {
-                    const b = document.getElementById(sId);
-                    if (!b) return 'Button ' + sId + ' not found';
-                    b.click();
-                    if (window.getComputedStyle(clModal).display === 'none') return 'Station ' + sId + ' failed to open modal';
-                    if (typeof window.closeRequestModal === 'function') window.closeRequestModal();
-                }
 
                 // Test pin toggle
                 const pinBtn = document.getElementById('floating-req-pin-btn');

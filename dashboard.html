@@ -202,6 +202,7 @@
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
     }
     .floating-req-item-btn[data-station="rx"] { border-left-color: #059669 !important; }
+    .floating-req-item-btn[data-station="examination"],
     .floating-req-item-btn[data-station="laboratory"] { border-left-color: #2563eb !important; }
     .floating-req-item-btn[data-station="radiology"] { border-left-color: #7c3aed !important; }
     .floating-req-item-btn[data-station="heart"] { border-left-color: #dc2626 !important; }
@@ -2516,30 +2517,9 @@
           <span class="floating-req-item-action">Open</span>
         </button>
 
-        <button type="button" class="floating-req-item-btn" id="floating-btn-lab" onclick="openRequestModal('laboratory', event)" data-station="laboratory" title="Laboratory Requisition">
+        <button type="button" class="floating-req-item-btn" id="floating-btn-exam" onclick="openRequestModal('laboratory', event)" data-station="examination" title="Examination Request (Laboratory, Imaging &amp; Diagnostics)">
           <div class="floating-req-item-info">
-            <div class="floating-req-item-title">Labs / Diagnostics</div>
-          </div>
-          <span class="floating-req-item-action">Order</span>
-        </button>
-
-        <button type="button" class="floating-req-item-btn" id="floating-btn-ddirs" onclick="openRequestModal('radiology', event)" data-station="radiology" title="DDIRS / Imaging Requisition">
-          <div class="floating-req-item-info">
-            <div class="floating-req-item-title">DDIRS Imaging</div>
-          </div>
-          <span class="floating-req-item-action">Order</span>
-        </button>
-
-        <button type="button" class="floating-req-item-btn" id="floating-btn-heart" onclick="openRequestModal('heart', event)" data-station="heart" title="Heart Station Requisition">
-          <div class="floating-req-item-info">
-            <div class="floating-req-item-title">Heart Station</div>
-          </div>
-          <span class="floating-req-item-action">Order</span>
-        </button>
-
-        <button type="button" class="floating-req-item-btn" id="floating-btn-pulmo" onclick="openRequestModal('respiratory', event)" data-station="respiratory" title="Pulmonary Station Requisition">
-          <div class="floating-req-item-info">
-            <div class="floating-req-item-title">Pulmonary Station</div>
+            <div class="floating-req-item-title">Examination Request</div>
           </div>
           <span class="floating-req-item-action">Order</span>
         </button>
@@ -8030,31 +8010,10 @@
         btnRx.addEventListener('click', openRxWriterFromToolkit);
       }
 
-      var btnLab = document.getElementById('floating-btn-lab');
-      if (btnLab && !btnLab.hasAttribute('onclick')) {
-        btnLab.addEventListener('click', function (e) {
+      var btnExam = document.getElementById('floating-btn-exam') || document.getElementById('floating-btn-lab');
+      if (btnExam && !btnExam.hasAttribute('onclick')) {
+        btnExam.addEventListener('click', function (e) {
           openRequestModal('laboratory', e);
-        });
-      }
-
-      var btnDdirs = document.getElementById('floating-btn-ddirs');
-      if (btnDdirs && !btnDdirs.hasAttribute('onclick')) {
-        btnDdirs.addEventListener('click', function (e) {
-          openRequestModal('radiology', e);
-        });
-      }
-
-      var btnHeart = document.getElementById('floating-btn-heart');
-      if (btnHeart && !btnHeart.hasAttribute('onclick')) {
-        btnHeart.addEventListener('click', function (e) {
-          openRequestModal('heart', e);
-        });
-      }
-
-      var btnPulmo = document.getElementById('floating-btn-pulmo');
-      if (btnPulmo && !btnPulmo.hasAttribute('onclick')) {
-        btnPulmo.addEventListener('click', function (e) {
-          openRequestModal('respiratory', e);
         });
       }
 
