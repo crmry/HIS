@@ -8146,16 +8146,55 @@
 
     // ── ROS Others Textbox Toggle ──
     var othersCheck = document.getElementById('sign-others-check');
+    var rosInfo = document.getElementById('pertinent_signs_information');
+    var othersLabel = document.getElementById('ros-others-label');
+
+    function syncRosOthersUI(isChecked, infoVal) {
+      var chk = document.getElementById('sign-others-check');
+      var txt = document.getElementById('pertinent_signs_information');
+      if (!chk || !txt) return;
+      var checked = (typeof isChecked === 'boolean') ? isChecked : chk.checked;
+      chk.checked = checked;
+      if (checked) {
+        txt.style.display = 'block';
+        if (typeof infoVal === 'string') {
+          txt.value = infoVal;
+        }
+      } else {
+        txt.style.display = 'none';
+        txt.value = '';
+      }
+    }
+
     if (othersCheck) {
       othersCheck.addEventListener('change', function () {
-        var rosInfo = document.getElementById('pertinent_signs_information');
-        if (!rosInfo) return;
+        syncRosOthersUI(othersCheck.checked);
         if (othersCheck.checked) {
-          rosInfo.style.display = 'block';
-          rosInfo.focus();
-        } else {
-          rosInfo.style.display = 'none';
-          rosInfo.value = '';
+          var t = document.getElementById('pertinent_signs_information');
+          if (t) t.focus();
+        }
+      });
+      othersCheck.addEventListener('click', function () {
+        syncRosOthersUI(othersCheck.checked);
+        if (othersCheck.checked) {
+          var t = document.getElementById('pertinent_signs_information');
+          if (t) t.focus();
+        }
+      });
+    }
+
+    if (othersLabel) {
+      othersLabel.addEventListener('click', function (e) {
+        if (e.target !== othersCheck) {
+          window.setTimeout(function () {
+            if (othersCheck) {
+              syncRosOthersUI(othersCheck.checked);
+              if (othersCheck.checked) {
+                var t = document.getElementById('pertinent_signs_information');
+                if (t) t.focus();
+              }
+            }
+          }, 0);
         }
       });
     }
@@ -8629,12 +8668,16 @@
       }
       syncPainSiteUI(hasPain, painSiteVal);
 
-      // ── Restore ROS Others checkbox state ──
+      // ── Restore ROS Others checkbox state & textarea ──
       var hasOthers = Array.isArray(data.pertinent_signs) && data.pertinent_signs.some(function(s){ return String(s).trim() === 'Others'; });
-      var othersChk = document.getElementById('sign-others-check');
-      var rosInfoEl  = document.getElementById('pertinent_signs_information');
-      if (othersChk) othersChk.checked = hasOthers;
-      if (rosInfoEl) rosInfoEl.style.display = hasOthers ? 'block' : 'none';
+      var savedRosInfo = (data.pertinent_signs_information || data.review_of_systems_information || '');
+      if (!hasOthers && typeof savedRosInfo === 'string' && savedRosInfo.trim().length > 0) {
+        hasOthers = true;
+        if (Array.isArray(data.pertinent_signs)) {
+          data.pertinent_signs.push('Others');
+        }
+      }
+      syncRosOthersUI(hasOthers, savedRosInfo);
 
       // ── Restore Allergy tab rows ──
       if (typeof renderAllergyRows === 'function') {
@@ -8754,13 +8797,23 @@
       var data = serializeNamedControls();
 
 
-      /* Review of Systems alias support */
-      if (data.pertinent_signs) {
-        data.review_of_systems = data.pertinent_signs;
+      /* Review of Systems alias & Others toggle sync */
+      var rosOthersChk = document.getElementById('sign-others-check');
+      var rosInfoField = document.getElementById('pertinent_signs_information');
+      if (rosOthersChk && rosOthersChk.checked) {
+        data.pertinent_signs = Array.isArray(data.pertinent_signs) ? data.pertinent_signs : [];
+        if (data.pertinent_signs.indexOf('Others') === -1) {
+          data.pertinent_signs.push('Others');
+        }
+        data.pertinent_signs_information = rosInfoField ? rosInfoField.value : (data.pertinent_signs_information || '');
+      } else {
+        if (Array.isArray(data.pertinent_signs)) {
+          data.pertinent_signs = data.pertinent_signs.filter(function(s){ return String(s).trim() !== 'Others'; });
+        }
+        data.pertinent_signs_information = '';
       }
-      if (data.pertinent_signs_information) {
-        data.review_of_systems_information = data.pertinent_signs_information;
-      }
+      data.review_of_systems = data.pertinent_signs;
+      data.review_of_systems_information = data.pertinent_signs_information;
       if (!data.pertinent_signs || data.pertinent_signs.indexOf('Pain') === -1) {
         data.pain_site = '';
       }
@@ -9087,11 +9140,7 @@
         if (fBadge) fBadge.style.display = 'none';
 
         syncPainSiteUI(false, '');
-
-        var othersReset = document.getElementById('sign-others-check');
-        var rosInfoReset = document.getElementById('pertinent_signs_information');
-        if (othersReset) othersReset.checked = false;
-        if (rosInfoReset) { rosInfoReset.style.display = 'none'; rosInfoReset.value = ''; }
+        syncRosOthersUI(false, '');
 
         var orderLink = document.getElementById('topbar-orders-link');
         if (orderLink) orderLink.href = 'doctors_order_patient.html';
