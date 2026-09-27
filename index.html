@@ -404,6 +404,7 @@
 
         function fillRows(targetId, prefix, count) {
             const body = document.getElementById(targetId);
+            if (!body) return;
             let html = "";
             for (let i = 1; i <= count; i++) {
                 html += rowHtml(prefix, i);
