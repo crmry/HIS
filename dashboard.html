@@ -996,7 +996,6 @@
             <div class="viewable-results-nav" id="viewable-results-tabs">
               <button type="button" class="btn btn-small active result-filter-btn" data-result-cat="all">All Results <span class="badge" id="cat-badge-all" style="font-size:10px; margin-left:3px; background:#4a5568;">0</span></button>
               <button type="button" class="btn btn-small result-filter-btn" data-result-cat="laboratory">Laboratory <span class="badge" id="cat-badge-laboratory" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
-              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="radiology">Radiology / Imaging (DDIRS) <span class="badge" id="cat-badge-radiology" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
               <button type="button" class="btn btn-small result-filter-btn" data-result-cat="heart">Heart Station <span class="badge" id="cat-badge-heart" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
               <button type="button" class="btn btn-small result-filter-btn" data-result-cat="pulmonary">Pulmonary Station <span class="badge" id="cat-badge-pulmonary" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
               <button type="button" class="btn btn-small result-filter-btn" data-result-cat="neuro">EEG / Neuro <span class="badge" id="cat-badge-neuro" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
@@ -1061,7 +1060,6 @@
         <div class="dashlet" id="dashlet-progress-notes">
           <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
             <h3>Progess Notes (Subjective, Objective, Assessment)</h3>
-            <span class="badge" style="font-size:10px; background:#0e3d59; color:#fff; padding:2px 8px;">DOH SOA Format</span>
           </div>
           <div class="bootstrap-widget-content" id="dashlet-progress-notes-content" style="padding:12px 14px;">
             <textarea id="progress_notes" name="progress_notes" rows="6" class="input-block-level"
@@ -3556,16 +3554,38 @@
             ]
           },
           {
-            id: 'EXAM-20260613-02',
+            id: 'EXAM-20260613-02A',
             category: 'Laboratory - Clinical Chemistry',
-            name: 'Serum Creatinine & Blood Urea Nitrogen (BUN)',
+            name: 'Serum Creatinine',
             performed_at: '2026-06-13 06:35 AM',
             status: 'Completed',
             performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
-            impression: 'Normal baseline renal panel during intravenous antibiotic therapy.',
+            impression: 'Serum creatinine within normal limits during intravenous antibiotic therapy.',
             analytes: [
-              { test: 'Serum Creatinine', value: '0.85', unit: 'mg/dL', reference: '0.50 - 1.10', flag: 'Normal' },
-              { test: 'Blood Urea Nitrogen (BUN)', value: '14.0', unit: 'mg/dL', reference: '7.0 - 20.0', flag: 'Normal' },
+              { test: 'Serum Creatinine', value: '0.85', unit: 'mg/dL', reference: '0.50 - 1.10', flag: 'Normal' }
+            ]
+          },
+          {
+            id: 'EXAM-20260613-02B',
+            category: 'Laboratory - Clinical Chemistry',
+            name: 'Blood Urea Nitrogen (BUN)',
+            performed_at: '2026-06-13 06:35 AM',
+            status: 'Completed',
+            performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+            impression: 'Blood urea nitrogen within normal limits; no azotemia.',
+            analytes: [
+              { test: 'Blood Urea Nitrogen (BUN)', value: '14.0', unit: 'mg/dL', reference: '7.0 - 20.0', flag: 'Normal' }
+            ]
+          },
+          {
+            id: 'EXAM-20260613-02C',
+            category: 'Laboratory - Clinical Chemistry',
+            name: 'Estimated Glomerular Filtration Rate (eGFR)',
+            performed_at: '2026-06-13 06:35 AM',
+            status: 'Completed',
+            performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+            impression: 'eGFR within normal range; renal function preserved.',
+            analytes: [
               { test: 'Estimated GFR (CKD-EPI)', value: '88', unit: 'mL/min/1.73m²', reference: '> 60', flag: 'Normal' }
             ]
           },
@@ -8870,12 +8890,7 @@
 
         var progNotesEl = document.getElementById('progress_notes');
         if (progNotesEl) {
-          var pn = data.progress_notes || (record.data && record.data.progress_notes) || '';
-          if (!pn && Array.isArray(originalData.encounters) && originalData.encounters.length > 0) {
-            var currEnc = originalData.encounters.find(function (e) { return e.is_current; }) || originalData.encounters[0];
-            if (currEnc && currEnc.progress_notes) pn = currEnc.progress_notes;
-          }
-          progNotesEl.value = pn;
+          progNotesEl.value = '';
         }
 
 

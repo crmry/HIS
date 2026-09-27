@@ -44,7 +44,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 42,
+        seedVersion: 43,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T16:30:00+08:00',
         data: {
@@ -160,16 +160,38 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                   ]
                 },
                 {
-                  id: 'EXAM-20260613-02',
+                  id: 'EXAM-20260613-02A',
                   category: 'Laboratory - Clinical Chemistry',
-                  name: 'Serum Creatinine & Blood Urea Nitrogen (BUN)',
+                  name: 'Serum Creatinine',
                   performed_at: '2026-06-13 06:35 AM',
                   status: 'Completed',
                   performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
-                  impression: 'Normal baseline renal panel during intravenous antibiotic therapy.',
+                  impression: 'Serum creatinine within normal limits during intravenous antibiotic therapy.',
                   analytes: [
-                    { test: 'Serum Creatinine', value: '0.85', unit: 'mg/dL', reference: '0.50 - 1.10', flag: 'Normal' },
-                    { test: 'Blood Urea Nitrogen (BUN)', value: '14.0', unit: 'mg/dL', reference: '7.0 - 20.0', flag: 'Normal' },
+                    { test: 'Serum Creatinine', value: '0.85', unit: 'mg/dL', reference: '0.50 - 1.10', flag: 'Normal' }
+                  ]
+                },
+                {
+                  id: 'EXAM-20260613-02B',
+                  category: 'Laboratory - Clinical Chemistry',
+                  name: 'Blood Urea Nitrogen (BUN)',
+                  performed_at: '2026-06-13 06:35 AM',
+                  status: 'Completed',
+                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+                  impression: 'Blood urea nitrogen within normal limits; no azotemia.',
+                  analytes: [
+                    { test: 'Blood Urea Nitrogen (BUN)', value: '14.0', unit: 'mg/dL', reference: '7.0 - 20.0', flag: 'Normal' }
+                  ]
+                },
+                {
+                  id: 'EXAM-20260613-02C',
+                  category: 'Laboratory - Clinical Chemistry',
+                  name: 'Estimated Glomerular Filtration Rate (eGFR)',
+                  performed_at: '2026-06-13 06:35 AM',
+                  status: 'Completed',
+                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+                  impression: 'eGFR within normal range; renal function preserved.',
+                  analytes: [
                     { test: 'Estimated GFR (CKD-EPI)', value: '88', unit: 'mL/min/1.73m²', reference: '> 60', flag: 'Normal' }
                   ]
                 },
@@ -503,7 +525,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 42,
+        seedVersion: 43,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -590,15 +612,26 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               },
               examinations: [
                 {
-                  id: 'EXAM-20260926-01',
+                  id: 'EXAM-20260926-01A',
                   category: 'Laboratory - Clinical Chemistry',
-                  name: 'Glycated Hemoglobin (HbA1c) & Fasting Blood Sugar',
+                  name: 'Fasting Blood Sugar (FBS)',
                   performed_at: '2026-09-26 08:00 AM',
                   status: 'Completed',
                   performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
-                  impression: 'Good glycemic control on current oral regimen; HbA1c within target (< 7.0%).',
+                  impression: 'Mildly elevated fasting blood sugar on current oral hypoglycemic regimen.',
                   analytes: [
-                    { test: 'Fasting Blood Sugar (FBS)', value: '108', unit: 'mg/dL', reference: '70 - 100', flag: 'High' },
+                    { test: 'Fasting Blood Sugar (FBS)', value: '108', unit: 'mg/dL', reference: '70 - 100', flag: 'High' }
+                  ]
+                },
+                {
+                  id: 'EXAM-20260926-01B',
+                  category: 'Laboratory - Clinical Chemistry',
+                  name: 'Glycated Hemoglobin (HbA1c)',
+                  performed_at: '2026-09-26 08:00 AM',
+                  status: 'Completed',
+                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
+                  impression: 'HbA1c within target range (< 7.0%); good glycemic control on current regimen.',
+                  analytes: [
                     { test: 'HbA1c (Glycated Hemoglobin)', value: '6.4', unit: '%', reference: '4.0 - 5.6', flag: 'High' }
                   ]
                 }
@@ -640,7 +673,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { drug: 'Losartan 50 mg tablet', sig: '1 tablet orally once daily', qty: '90 tablets' }
               ],
               clinicalRequests: {
-                laboratory: ['Fasting Blood Sugar (FBS)', 'Glycated Hemoglobin (HbA1c)', 'Serum Creatinine & eGFR'],
+                laboratory: ['Fasting Blood Sugar (FBS)', 'Glycated Hemoglobin (HbA1c)', 'Serum Creatinine', 'Estimated Glomerular Filtration Rate (eGFR)'],
                 radiology: [],
                 respiratory: [],
                 heart: [],
@@ -829,7 +862,8 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { name: 'Glycated Hemoglobin (HbA1c)', urgency: 'Routine', notes: 'Scheduled for December 2026' },
                 { name: 'Fasting Blood Sugar (FBS)', urgency: 'Routine', notes: '10-hour fasting required' },
                 { name: 'Fasting Lipid Profile (Total Cholesterol, Triglycerides, HDL, LDL)', urgency: 'Routine', notes: '10-hour fasting required' },
-                { name: 'Serum Creatinine & eGFR', urgency: 'Routine', notes: 'Renal monitoring' },
+                { name: 'Serum Creatinine', urgency: 'Routine', notes: 'Renal monitoring' },
+                { name: 'Estimated Glomerular Filtration Rate (eGFR)', urgency: 'Routine', notes: 'Renal monitoring' },
                 { name: 'Urine Albumin-to-Creatinine Ratio (UACR)', urgency: 'Routine', notes: 'Diabetic kidney disease screening' }
               ],
               radiology: [],
@@ -867,7 +901,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function blankPatientRecord() {
       return {
         id: BLANK_PATIENT_ID,
-        seedVersion: 42,
+        seedVersion: 43,
         createdAt: '2026-09-25T10:30:00+08:00',
         updatedAt: '2026-09-25T10:30:00+08:00',
         data: {
@@ -895,14 +929,14 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 42) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 43) records[index] = seedPatientRecord();
 
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) records.push(opPatientRecord());
-      else if (Number(records[opIndex].seedVersion || 0) < 42) records[opIndex] = opPatientRecord();
+      else if (Number(records[opIndex].seedVersion || 0) < 43) records[opIndex] = opPatientRecord();
 
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
-      else if (Number(records[blankIndex].seedVersion || 0) < 42) records[blankIndex] = blankPatientRecord();
+      else if (Number(records[blankIndex].seedVersion || 0) < 43) records[blankIndex] = blankPatientRecord();
       savePatients(records);
     }
