@@ -3520,7 +3520,13 @@
       var typeUpper = rawType.toUpperCase();
       var typeClass = typeUpper === 'ER' ? 'type-er' : (typeUpper === 'IP' ? 'type-ip' : 'type-op');
       var serviceDisplay = esc((data && data.service) || 'General Medicine');
-      var doctorDisplay = esc((data && (data.physician || data.attending_physician || data.doctor)) || '—');
+      var rawPhysician = (data && (data.physician || data.attending_physician || data.doctor)) || '—';
+      if (typeof rawPhysician === 'object' && rawPhysician !== null) rawPhysician = rawPhysician.name || '—';
+      var doctorStr = String(rawPhysician).trim();
+      if (/^Dr\.?\s+/i.test(doctorStr) && /,\s*M\.?D\.?/i.test(doctorStr)) {
+        doctorStr = doctorStr.replace(/^Dr\.?\s+/i, '');
+      }
+      var doctorDisplay = esc(doctorStr);
       var diagnosisDisplay = esc(
         (data && data.diagnosis) ||
         (data && data.clinical_record && data.clinical_record.final_diagnosis) ||

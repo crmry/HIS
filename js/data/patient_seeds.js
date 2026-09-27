@@ -44,7 +44,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 38,
+        seedVersion: 39,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T16:30:00+08:00',
         data: {
@@ -502,7 +502,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 38,
+        seedVersion: 39,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -865,7 +865,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function blankPatientRecord() {
       return {
         id: BLANK_PATIENT_ID,
-        seedVersion: 38,
+        seedVersion: 39,
         createdAt: '2026-09-25T10:30:00+08:00',
         updatedAt: '2026-09-25T10:30:00+08:00',
         data: {
@@ -892,14 +892,14 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 38) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 39) records[index] = seedPatientRecord();
 
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) records.push(opPatientRecord());
-      else if (Number(records[opIndex].seedVersion || 0) < 38) records[opIndex] = opPatientRecord();
+      else if (Number(records[opIndex].seedVersion || 0) < 39) records[opIndex] = opPatientRecord();
 
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
-      else if (Number(records[blankIndex].seedVersion || 0) < 38) records[blankIndex] = blankPatientRecord();
+      else if (Number(records[blankIndex].seedVersion || 0) < 39) records[blankIndex] = blankPatientRecord();
       savePatients(records);
     }
