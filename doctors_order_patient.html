@@ -246,6 +246,42 @@
             box-sizing: border-box;
         }
 
+        table.orders tbody td.cell-notes {
+            vertical-align: top;
+        }
+
+        table.orders tbody td.cell-notes textarea {
+            line-height: 1.35;
+        }
+
+        table.orders tbody td.cell-notes.notes-first {
+            border-bottom: hidden;
+        }
+
+        table.orders tbody td.cell-notes.notes-mid {
+            border-top: hidden;
+            border-bottom: hidden;
+        }
+
+        table.orders tbody td.cell-notes.notes-last {
+            border-top: hidden;
+        }
+
+        table.orders tbody td.cell-notes.notes-first textarea {
+            padding-top: 4px;
+            padding-bottom: 3px;
+        }
+
+        table.orders tbody td.cell-notes.notes-mid textarea {
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        table.orders tbody td.cell-notes.notes-last textarea {
+            padding-top: 3px;
+            padding-bottom: 5px;
+        }
+
         table.orders tbody td.mark {
             text-align: center;
             vertical-align: middle;
@@ -1037,7 +1073,7 @@
             return '<div class="footer">Physician\'s Orders Form<br>CLMMRH-MRS.F.032<br>Issued: 2/5/14<br>Issue No. 001</div>';
         }
 
-        function buildOrderRowHtml(item, rowIdx, isFirst, span) {
+        function buildOrderRowHtml(item, rowIdx, isFirst, span, subIdx, totalSpan) {
             const cared = new Set(Array.isArray(item.cared) ? item.cared : []);
             const caredKeys = ["C", "A", "R", "E", "D"];
             let rowContent = "";
@@ -1047,7 +1083,20 @@
                 rowContent += '<td' + rowspanAttr + ' class="cell-datetime"><textarea name="row-' + rowIdx + '-datetime" rows="2">' + escapeHtml(item.dateTime) + '</textarea></td>';
             }
 
-            rowContent += '<td><textarea name="row-' + rowIdx + '-notes" rows="2">' + escapeHtml(item.noteLine) + '</textarea></td>';
+            let notesClass = "cell-notes";
+            const s = typeof subIdx === "number" ? subIdx : 0;
+            const tSpan = typeof totalSpan === "number" ? totalSpan : (span || 1);
+            if (tSpan > 1) {
+                if (s === 0) {
+                    notesClass += " notes-first";
+                } else if (s === tSpan - 1) {
+                    notesClass += " notes-last";
+                } else {
+                    notesClass += " notes-mid";
+                }
+            }
+
+            rowContent += '<td class="' + notesClass + '"><textarea name="row-' + rowIdx + '-notes" rows="2">' + escapeHtml(item.noteLine) + '</textarea></td>';
             rowContent += '<td><textarea name="row-' + rowIdx + '-order" rows="2">' + escapeHtml(item.orderText) + '</textarea></td>';
             caredKeys.forEach(function(k) {
                 const checked = cared.has(k) ? " checked" : "";
@@ -1258,19 +1307,18 @@
                         r++;
                         continue;
                     }
-                    // Count rowspan for same dateTime
+                    // Count rowspan for same encounter / dateTime
+                    var encId = pr.item.encId !== undefined ? pr.item.encId : null;
                     var normDt = normalizeDateTime(pr.item.dateTime);
                     var span2 = 1;
-                    if (normDt) {
-                        while ((r + span2) < pageRows.length &&
-                               pageRows[r + span2].item &&
-                               !pageRows[r + span2].item.isSigRow &&
-                               normalizeDateTime(pageRows[r + span2].item.dateTime) === normDt) {
-                            span2++;
-                        }
+                    while ((r + span2) < pageRows.length &&
+                           pageRows[r + span2].item &&
+                           !pageRows[r + span2].item.isSigRow &&
+                           (encId !== null ? pageRows[r + span2].item.encId === encId : (normDt && normalizeDateTime(pageRows[r + span2].item.dateTime) === normDt))) {
+                        span2++;
                     }
                     for (var s = 0; s < span2; s++) {
-                        inner += buildOrderRowHtml(pageRows[r + s].item, pageRows[r + s].rowIdx, s === 0, span2);
+                        inner += buildOrderRowHtml(pageRows[r + s].item, pageRows[r + s].rowIdx, s === 0, span2, s, span2);
                     }
                     r += span2;
                 }
@@ -1578,6 +1626,7 @@
                     }
 
                     flatRows.push({
+                        encId: blockIdx,
                         dateTime: dt,
                         noteLine: noteLine,
                         orderText: order?.text || "",
