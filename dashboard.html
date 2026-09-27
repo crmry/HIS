@@ -657,6 +657,7 @@
 
                 <textarea id="pertinent_signs_information" name="pertinent_signs_information" rows="3"
                   class="input-block-level"
+                  style="display:none;"
                   placeholder="Document other review of systems findings, symptoms, onset, severity, and relevant information..."></textarea>
               </div>
             </div>
@@ -8147,9 +8148,14 @@
     var othersCheck = document.getElementById('sign-others-check');
     if (othersCheck) {
       othersCheck.addEventListener('change', function () {
+        var rosInfo = document.getElementById('pertinent_signs_information');
+        if (!rosInfo) return;
         if (othersCheck.checked) {
-          var rosInfo = document.getElementById('pertinent_signs_information');
-          if (rosInfo) rosInfo.focus();
+          rosInfo.style.display = 'block';
+          rosInfo.focus();
+        } else {
+          rosInfo.style.display = 'none';
+          rosInfo.value = '';
         }
       });
     }
@@ -8626,7 +8632,9 @@
       // ── Restore ROS Others checkbox state ──
       var hasOthers = Array.isArray(data.pertinent_signs) && data.pertinent_signs.some(function(s){ return String(s).trim() === 'Others'; });
       var othersChk = document.getElementById('sign-others-check');
+      var rosInfoEl  = document.getElementById('pertinent_signs_information');
       if (othersChk) othersChk.checked = hasOthers;
+      if (rosInfoEl) rosInfoEl.style.display = hasOthers ? 'block' : 'none';
 
       // ── Restore Allergy tab rows ──
       if (typeof renderAllergyRows === 'function') {
@@ -9079,6 +9087,11 @@
         if (fBadge) fBadge.style.display = 'none';
 
         syncPainSiteUI(false, '');
+
+        var othersReset = document.getElementById('sign-others-check');
+        var rosInfoReset = document.getElementById('pertinent_signs_information');
+        if (othersReset) othersReset.checked = false;
+        if (rosInfoReset) { rosInfoReset.style.display = 'none'; rosInfoReset.value = ''; }
 
         var orderLink = document.getElementById('topbar-orders-link');
         if (orderLink) orderLink.href = 'doctors_order_patient.html';
