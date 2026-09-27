@@ -170,6 +170,12 @@ async def scan_single_target(browser_ws, file_url):
                     if (toolkit.classList.contains('expanded') || toolkit.classList.contains('pinned')) return 'Toolkit close button failed to collapse toolkit';
                 }
 
+                // Test click-outside collapse on floating requisition toolkit
+                handle.click();
+                if (!toolkit.classList.contains('expanded')) return 'Handle failed to reopen toolkit for outside-click test';
+                document.body.click();
+                if (toolkit.classList.contains('expanded')) return 'Click outside failed to collapse floating toolkit';
+
                 return 'OK';
             })()
             """

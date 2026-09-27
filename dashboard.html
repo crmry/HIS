@@ -162,7 +162,6 @@
       pointer-events: none !important;
     }
     #floating-req-toolkit.expanded #floating-req-menu,
-    #floating-req-toolkit:hover #floating-req-menu,
     #floating-req-toolkit.pinned #floating-req-menu {
       max-width: 290px !important;
       opacity: 1 !important;
@@ -7350,6 +7349,26 @@
       }
     }
 
+    function closeRxWriterModal(e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      var modal = document.getElementById('rx-writer-modal');
+      if (modal) {
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+      }
+      var container = document.getElementById('rx-writer-main-container');
+      var accMount = document.getElementById('rx-writer-accordion-mount');
+      if (container && accMount && !accMount.contains(container)) {
+        accMount.appendChild(container);
+      }
+      document.body.classList.remove('modal-lock');
+      var btn = document.getElementById('rx-open-modal-btn');
+      if (btn) {
+        btn.style.display = 'inline-block';
+        btn.innerHTML = '🗖 Pop-out Window';
+      }
+    }
+
     function initFloatingRequisitionToolkit() {
       var toolkit = document.getElementById('floating-req-toolkit');
       if (!toolkit || toolkit.dataset.initialized === 'true') return;
@@ -7522,6 +7541,17 @@
           return;
         }
         collapseFloatingRequisitionToolkit();
+      }
+    });
+
+    // Click outside floating requisition toolkit to auto-collapse (when not pinned)
+    document.addEventListener('click', function (e) {
+      var toolkit = document.getElementById('floating-req-toolkit');
+      if (!toolkit) return;
+      if (toolkit.classList.contains('expanded') && !toolkit.classList.contains('pinned')) {
+        if (!toolkit.contains(e.target)) {
+          collapseFloatingRequisitionToolkit();
+        }
       }
     });
 

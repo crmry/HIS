@@ -1461,14 +1461,12 @@
       pointer-events: none !important;
     }
     #floating-req-toolkit.expanded #floating-req-menu,
-    #floating-req-toolkit:hover #floating-req-menu,
     #floating-req-toolkit.pinned #floating-req-menu {
       max-width: 290px !important;
       opacity: 1 !important;
       pointer-events: auto !important;
     }
     #floating-req-toolkit.expanded #floating-req-toggle-arrow,
-    #floating-req-toolkit:hover #floating-req-toggle-arrow,
     #floating-req-toolkit.pinned #floating-req-toggle-arrow {
       transform: none !important;
     }
