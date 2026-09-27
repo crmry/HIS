@@ -163,6 +163,11 @@
             width: 72px;
         }
 
+        .field.ward {
+            flex: 1;
+            min-width: 110px;
+        }
+
         .field.admit {
             flex: 1;
         }
@@ -1128,12 +1133,13 @@
             inner += '<p class="form-subtitle">(Authenticate all Orders)</p>';
             inner += '<div class="patient-grid">';
             inner += '<div class="field"><label>Name of Patient</label><span class="field-val"></span></div>';
-            inner += '<div class="field"><label>Hospital No.</label><span class="field-val"></span></div>';
+            inner += '<div class="field"><label>Hospital Number</label><span class="field-val"></span></div>';
             inner += '<div class="field"><label>Address</label><span class="field-val"></span></div>';
-            inner += '<div class="field"><label>Ward / Room</label><span class="field-val"></span></div>';
+            inner += '<div class="field"><label>PHIC No.</label><span class="field-val"></span></div>';
             inner += '<div class="field span-2 split-row">';
             inner += '<div class="field age"><label>Age</label><span class="field-val"></span></div>';
             inner += '<div class="field sex"><label>Sex</label><span class="field-val"></span></div>';
+            inner += '<div class="field ward"><label>Ward / Room</label><span class="field-val"></span></div>';
             inner += '<div class="field admit"><label>Admission Date</label><span class="field-val"></span></div>';
             inner += '</div></div>';
             inner += '<p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>';
@@ -1266,12 +1272,13 @@
                     inner += '<p class="form-subtitle">(Authenticate all Orders)</p>';
                     inner += '<div class="patient-grid">';
                     inner += '<div class="field"><label>Name of Patient</label><span class="field-val">' + escapeHtml(nameVal) + '</span></div>';
-                    inner += '<div class="field"><label>Hospital No.</label><span class="field-val">' + escapeHtml(hrnVal) + (phicVal ? ' &nbsp;|&nbsp; PIN: ' + escapeHtml(phicVal) : '') + '</span></div>';
+                    inner += '<div class="field"><label>Hospital Number</label><span class="field-val">' + escapeHtml(hrnVal) + '</span></div>';
                     inner += '<div class="field"><label>Address</label><span class="field-val">' + escapeHtml(addrVal) + '</span></div>';
-                    inner += '<div class="field"><label>Ward / Room</label><span class="field-val">' + escapeHtml(wardVal) + '</span></div>';
+                    inner += '<div class="field"><label>PHIC No.</label><span class="field-val">' + escapeHtml(phicVal || '—') + '</span></div>';
                     inner += '<div class="field span-2 split-row">';
                     inner += '<div class="field age"><label>Age</label><span class="field-val">' + escapeHtml(ageVal) + '</span></div>';
                     inner += '<div class="field sex"><label>Sex</label><span class="field-val">' + escapeHtml(sexVal) + '</span></div>';
+                    inner += '<div class="field ward"><label>Ward / Room</label><span class="field-val">' + escapeHtml(wardVal) + '</span></div>';
                     inner += '<div class="field admit"><label>Admission Date</label><span class="field-val">' + escapeHtml(admitVal) + '</span></div>';
                     inner += '</div></div>';
                 } else {
@@ -1280,7 +1287,7 @@
                     inner += '<p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>';
                     inner += '<h1 class="form-title" style="font-size:11pt;">PHYSICIAN\'S ORDERS / NURSES\'  COMPLIANCE SHEET — Continuation (Page ' + (pgIdx + 1) + ')</h1>';
                     inner += '</div>';
-                    inner += '<div class="page-cont-note">Patient: ' + escapeHtml(nameVal) + ' &nbsp;|&nbsp; HRN: ' + escapeHtml(hrnVal) + (phicVal ? ' &nbsp;|&nbsp; PIN: ' + escapeHtml(phicVal) : '') + ' &nbsp;|&nbsp; Admission Date: ' + escapeHtml(admitVal) + '</div>';
+                    inner += '<div class="page-cont-note">Patient: ' + escapeHtml(nameVal) + ' &nbsp;|&nbsp; Hospital Number: ' + escapeHtml(hrnVal) + (phicVal ? ' &nbsp;|&nbsp; PHIC No.: ' + escapeHtml(phicVal) : '') + ' &nbsp;|&nbsp; Admission Date: ' + escapeHtml(admitVal) + '</div>';
                 }
 
                 inner += '<p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>';

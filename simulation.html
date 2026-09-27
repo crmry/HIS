@@ -431,7 +431,8 @@
         <button type="button" class="btn-sim-outline btn-sim-sm" id="btn-create-patient-modal">+ New Patient</button>
       </div>
       <div class="patient-info-chips" id="sim-patient-chips">
-        <div class="info-chip"><strong>HRN:</strong> <span id="chip-hrn">—</span></div>
+        <div class="info-chip"><strong>Hospital Number:</strong> <span id="chip-hrn">—</span></div>
+        <div class="info-chip"><strong>PHIC No.:</strong> <span id="chip-phic">—</span></div>
         <div class="info-chip"><strong>Age / Sex:</strong> <span id="chip-age-sex">—</span></div>
         <div class="info-chip"><strong>Registry:</strong> <span id="chip-registry">—</span></div>
         <div class="info-chip"><strong>Encounters:</strong> <span id="chip-encounters-count">0</span></div>
@@ -802,6 +803,8 @@
         var d = rec.data || {};
         var name = [d.last_name, d.first_name, d.middle_name].filter(Boolean).join(' ') || 'Unnamed';
         document.getElementById('chip-hrn').textContent = d.hrn || '—';
+        var chipPhic = document.getElementById('chip-phic');
+        if (chipPhic) chipPhic.textContent = d.philhealth_no || d.phic_no || '—';
         document.getElementById('chip-age-sex').textContent = (d.age ? d.age + 'y / ' : '') + (d.gender || '—');
         document.getElementById('chip-registry').textContent = d.registry || 'OP';
         var encounters = Array.isArray(d.encounters) ? d.encounters : [];

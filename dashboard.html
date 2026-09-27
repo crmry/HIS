@@ -313,14 +313,18 @@
             </div>
           </div>
 
-          <!-- Row 4: Hospital Number ---- PHIC Number -->
-          <div class="patient-info-row patient-info-row-split">
+          <!-- Row 4: Hospital Number -->
+          <div class="patient-info-row">
             <div class="patient-info-col">
               <span class="meta-label">Hospital Number:</span>
               <span class="patient-info-val" id="banner-hrn">—</span>
             </div>
-            <div class="patient-info-col text-right">
-              <span class="meta-label">PHIC Number:</span>
+          </div>
+
+          <!-- Row 5: PHIC No. -->
+          <div class="patient-info-row">
+            <div class="patient-info-col">
+              <span class="meta-label">PHIC No.:</span>
               <span class="patient-info-val" id="banner-phic">—</span>
             </div>
           </div>
@@ -4327,8 +4331,8 @@
       if (bannerElem) {
         bannerElem.innerHTML =
           '<div><strong style="color:#666;">Patient Name:</strong><br><span style="font-weight:700; color:#1b4d3e; font-size:13px;">' + esc(pName) + '</span></div>' +
-          '<div><strong style="color:#666;">Hospital No. (HRN):</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
-          '<div><strong style="color:#666;">PhilHealth PIN:</strong><br><span style="font-family:monospace; font-weight:700; color:#0f4c81;">' + esc(phicNo) + '</span></div>' +
+          '<div><strong style="color:#666;">Hospital Number:</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
+          '<div><strong style="color:#666;">PHIC No.:</strong><br><span style="font-family:monospace; font-weight:700; color:#0f4c81;">' + esc(phicNo) + '</span></div>' +
           '<div><strong style="color:#666;">Age / Sex:</strong><br>' + esc(ageSex) + '</div>' +
           '<div><strong style="color:#666;">Encounter Date:</strong><br><span style="font-weight:700; color:#006dcc;">' + esc(dateFormatted) + '</span></div>' +
           '<div><strong style="color:#666;">Type &amp; Service:</strong><br><span class="badge" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(encType) + '</span> ' + esc(encService) + '</div>';
@@ -4392,8 +4396,8 @@
       if (bannerElem) {
         bannerElem.innerHTML =
           '<div><strong style="color:#666;">Patient Name:</strong><br><span style="font-weight:700; color:#0e3d59; font-size:13px;">' + esc(pName) + '</span></div>' +
-          '<div><strong style="color:#666;">Hospital No. (HRN):</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
-          '<div><strong style="color:#666;">PhilHealth PIN:</strong><br><span style="font-family:monospace; font-weight:700; color:#0f4c81;">' + esc(phicNo) + '</span></div>' +
+          '<div><strong style="color:#666;">Hospital Number:</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
+          '<div><strong style="color:#666;">PHIC No.:</strong><br><span style="font-family:monospace; font-weight:700; color:#0f4c81;">' + esc(phicNo) + '</span></div>' +
           '<div><strong style="color:#666;">Age / Sex:</strong><br>' + esc(ageSex) + '</div>' +
           '<div><strong style="color:#666;">Encounter Date:</strong><br><span style="font-weight:700; color:#006dcc;">' + esc(dateFormatted) + '</span></div>' +
           '<div><strong style="color:#666;">Type &amp; Service:</strong><br><span class="badge" style="background:#0e3d59; color:#fff; font-size:10px;">' + esc(encType) + '</span> ' + esc(encService) + '</div>';
@@ -4573,8 +4577,8 @@
       if (bannerElem) {
         bannerElem.innerHTML =
           '<div><strong style="color:#666;">Patient Name:</strong><br><span style="font-weight:700; color:#0e3d59; font-size:13px;">' + esc(pName) + '</span></div>' +
-          '<div><strong style="color:#666;">Hospital No. (HRN):</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
-          '<div><strong style="color:#666;">PhilHealth PIN:</strong><br><span style="font-family:monospace; font-weight:700; color:#0f4c81;">' + esc(phicNo) + '</span></div>' +
+          '<div><strong style="color:#666;">Hospital Number:</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
+          '<div><strong style="color:#666;">PHIC No.:</strong><br><span style="font-family:monospace; font-weight:700; color:#0f4c81;">' + esc(phicNo) + '</span></div>' +
           '<div><strong style="color:#666;">Age / Sex:</strong><br>' + esc(ageSex) + '</div>' +
           '<div><strong style="color:#666;">Request Order Date:</strong><br><span style="font-weight:700; color:#006dcc;">' + esc(reqDate) + '</span></div>' +
           '<div><strong style="color:#666;">Priority / Department:</strong><br><span class="badge" style="background:' + (req.priority === 'STAT' ? '#c62828' : '#0e3d59') + '; color:#fff; font-size:10px;">' + esc(req.priority || 'Routine') + '</span> ' + esc(tab.label) + '</div>';
@@ -4719,6 +4723,7 @@
       var age = pData.birthdate ? calculateAge(pData.birthdate) : (pData.age || '—');
       var sex = (pData.gender || pData.sex || '—').charAt(0).toUpperCase();
       var ageSex = (age ? age + ' / ' : '') + (sex || '—');
+      var phicNo = pData.philhealth_no || pData.phic_no || '—';
       var dateFormatted = formatDate(enc.date) || enc.date || '—';
       var encType = enc.registry || enc.type || 'IP';
       var encService = enc.service || 'General Medicine';
@@ -4731,9 +4736,9 @@
       html += '</div>';
       html += '<div class="doc-title">CLINICAL ENCOUNTER RECORD</div>';
       html += '<table class="meta-table">';
-      html += '  <tr><td class="meta-label">Patient Name:</td><td class="meta-val"><strong>' + esc(pName) + '</strong></td><td class="meta-label">Hospital No (HRN):</td><td class="meta-val"><strong>' + esc(hrn) + '</strong></td></tr>';
-      html += '  <tr><td class="meta-label">Age / Sex:</td><td class="meta-val">' + esc(ageSex) + '</td><td class="meta-label">Encounter Date:</td><td class="meta-val"><strong>' + esc(dateFormatted) + '</strong></td></tr>';
-      html += '  <tr><td class="meta-label">Encounter Type:</td><td class="meta-val">' + esc(encType) + '</td><td class="meta-label">Attending Service:</td><td class="meta-val">' + esc(encService) + '</td></tr>';
+      html += '  <tr><td class="meta-label">Patient Name:</td><td class="meta-val"><strong>' + esc(pName) + '</strong></td><td class="meta-label">Hospital Number:</td><td class="meta-val"><strong>' + esc(hrn) + '</strong></td></tr>';
+      html += '  <tr><td class="meta-label">Age / Sex:</td><td class="meta-val">' + esc(ageSex) + '</td><td class="meta-label">PHIC No.:</td><td class="meta-val"><strong>' + esc(phicNo) + '</strong></td></tr>';
+      html += '  <tr><td class="meta-label">Encounter Date:</td><td class="meta-val"><strong>' + esc(dateFormatted) + '</strong></td><td class="meta-label">Encounter Type:</td><td class="meta-val">' + esc(encType) + ' (' + esc(encService) + ')</td></tr>';
       html += '</table>';
 
       html += '<div class="section-box">';
@@ -4780,9 +4785,9 @@
       html += '</div>';
       html += '<div class="doc-title">OFFICIAL DIAGNOSTIC EXAMINATION RESULTS</div>';
       html += '<table class="meta-table">';
-      html += '  <tr><td class="meta-label">Patient Name:</td><td class="meta-val"><strong>' + esc(pName) + '</strong></td><td class="meta-label">Hospital No (HRN):</td><td class="meta-val"><strong>' + esc(hrn) + '</strong></td></tr>';
-      html += '  <tr><td class="meta-label">Age / Sex:</td><td class="meta-val">' + esc(ageSex) + '</td><td class="meta-label">Encounter Date:</td><td class="meta-val"><strong>' + esc(dateFormatted) + '</strong></td></tr>';
-      html += '  <tr><td class="meta-label">Encounter Type:</td><td class="meta-val">' + esc(encType) + '</td><td class="meta-label">Attending Service:</td><td class="meta-val">' + esc(encService) + '</td></tr>';
+      html += '  <tr><td class="meta-label">Patient Name:</td><td class="meta-val"><strong>' + esc(pName) + '</strong></td><td class="meta-label">Hospital Number:</td><td class="meta-val"><strong>' + esc(hrn) + '</strong></td></tr>';
+      html += '  <tr><td class="meta-label">Age / Sex:</td><td class="meta-val">' + esc(ageSex) + '</td><td class="meta-label">PHIC No.:</td><td class="meta-val"><strong>' + esc(phicNo) + '</strong></td></tr>';
+      html += '  <tr><td class="meta-label">Encounter Date:</td><td class="meta-val"><strong>' + esc(dateFormatted) + '</strong></td><td class="meta-label">Encounter Type:</td><td class="meta-val">' + esc(encType) + ' (' + esc(encService) + ')</td></tr>';
       html += '</table>';
 
       if (!examinations || examinations.length === 0) {
@@ -6650,16 +6655,17 @@
         '<div style="font-size:11px; color:#444; font-weight:bold;">CLMMRH DEPARTMENT OF GENERAL MEDICINE • OUTPATIENT &amp; INPATIENT SERVICES</div>' +
         '<div style="font-size:10px; color:#666;">Lacson Street, Bacolod City 6100, Negros Occidental, Philippines • Tel: (034) 700-0000</div>' +
         '</div>' +
-        '<div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:8px; border-bottom:1px solid #ddd; padding-bottom:5px;">' +
+        '<div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">' +
         '<div><strong>Patient:</strong> ' + escapeHtml(pName) + '</div>' +
-        '<div><strong>Date:</strong> ' + escapeHtml(rxDate) + '</div>' +
+        '<div><strong>Hospital Number:</strong> ' + escapeHtml(pid) + '</div>' +
+        '</div>' +
+        '<div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">' +
+        '<div><strong>Age / Sex:</strong> ' + escapeHtml(pAge) + ' / ' + escapeHtml(pGender) + '</div>' +
+        '<div><strong>PHIC No.:</strong> ' + escapeHtml(pData.philhealth_no || pData.phic_no || '—') + '</div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:8px; border-bottom:1px solid #ddd; padding-bottom:5px;">' +
-        '<div><strong>Age / Sex:</strong> ' + escapeHtml(pAge) + ' / ' + escapeHtml(pGender) + '</div>' +
-        '<div><strong>Hospital No. (HRN):</strong> ' + escapeHtml(pid) + (pData.philhealth_no ? ' &nbsp;|&nbsp; <strong>PIN:</strong> ' + escapeHtml(pData.philhealth_no) : '') + '</div>' +
-        '</div>' +
-        '<div style="font-size:11px; margin-bottom:8px; border-bottom:1px solid #ddd; padding-bottom:5px;">' +
-        '<strong>Address:</strong> ' + escapeHtml(pAddress) +
+        '<div><strong>Address:</strong> ' + escapeHtml(pAddress) + '</div>' +
+        '<div><strong>Date:</strong> ' + escapeHtml(rxDate) + '</div>' +
         '</div>' +
         (impression && impression !== '—' ? '<div style="font-size:11px; margin-bottom:10px; background:#fbfdfc; padding:4px 6px; border:1px solid #e2ebe5;"><strong>Clinical Impression:</strong> ' + escapeHtml(impression) + '</div>' : '') +
         '<div class="rx-symbol" style="font-family:Georgia, serif; font-size:36px; font-weight:bold; color:#1f7d45; line-height:1; margin:6px 0 10px 0;">℞</div>' +

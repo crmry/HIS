@@ -44,7 +44,7 @@
         <table class="w-full min-w-[900px] border-collapse text-sm">
           <thead class="bg-gray-50">
             <tr class="text-left">
-              <th class="border-b px-4 py-3 font-semibold">HRN</th>
+              <th class="border-b px-4 py-3 font-semibold">Hospital Number</th>
               <th class="border-b px-4 py-3 font-semibold">Patient Name</th>
               <th class="border-b px-4 py-3 font-semibold">Case No.</th>
               <th class="border-b px-4 py-3 font-semibold">Case Type</th>
@@ -260,12 +260,22 @@
     `;
   }
 
+  function calculateAge(birthdate) {
+    if (!birthdate) return '—';
+    const d = new Date(birthdate);
+    if (isNaN(d.getTime())) return '—';
+    const diff = Date.now() - d.getTime();
+    const ageDt = new Date(diff);
+    return Math.abs(ageDt.getUTCFullYear() - 1970);
+  }
+
   function renderPatient(record) {
     const d = record.data || {};
     const genericSkip = new Set([
       'orders', 'doctorOrderSummary', 'encounters', 'obHistory',
       'last_name', 'first_name', 'middle_name', 'hrn', 'case_no',
-      'case_type', 'birthdate', 'gender', 'address'
+      'case_type', 'birthdate', 'gender', 'sex', 'age', 'address',
+      'philhealth_no', 'phic_no'
     ]);
 
     const otherEntries = Object.entries(d)
@@ -283,13 +293,15 @@
     patientView.innerHTML = `
       <div class="space-y-5">
         ${section('Patient Information', detailRows([
-          ['HRN', d.hrn],
-          ['Case No.', d.case_no],
-          ['Case Type', d.case_type],
           ['Name', patientName(d)],
-          ['Birthdate', d.birthdate],
-          ['Gender', d.gender],
-          ['Address', d.address]
+          ['Encounter Number', d.case_no],
+          ['Case Type', d.case_type],
+          ['Birthday', d.birthdate],
+          ['Age', d.age || (d.birthdate ? calculateAge(d.birthdate) : '—')],
+          ['Sex', d.gender || d.sex],
+          ['Address', d.address],
+          ['Hospital Number', d.hrn],
+          ['PHIC No.', d.philhealth_no || d.phic_no || '—']
         ]))}
 
         ${section('Patient Encounter', renderEncounters(d.encounters))}
@@ -316,7 +328,7 @@
     `;
 
     modalTitle.textContent = patientName(d) || 'Patient Record';
-    modalSubtitle.textContent = d.hrn ? 'HRN: ' + d.hrn : '';
+    modalSubtitle.textContent = d.hrn ? 'Hospital Number: ' + d.hrn : '';
   }
 
   function openPatient(id) {

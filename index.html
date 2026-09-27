@@ -122,6 +122,11 @@
             width: 72px;
         }
 
+        .field.ward {
+            flex: 1;
+            min-width: 110px;
+        }
+
         .field.admit {
             flex: 1;
         }
@@ -284,7 +289,7 @@
                 <input id="patient-name" name="patientName" type="text">
             </div>
             <div class="field">
-                <label for="hospital-no">Hospital No.</label>
+                <label for="hospital-no">Hospital Number</label>
                 <input id="hospital-no" name="hospitalNo" type="text">
             </div>
             <div class="field">
@@ -292,8 +297,8 @@
                 <input id="address" name="address" type="text">
             </div>
             <div class="field">
-                <label for="ward-room">Ward / Room</label>
-                <input id="ward-room" name="wardRoom" type="text">
+                <label for="phic-no">PHIC No.</label>
+                <input id="phic-no" name="phicNo" type="text">
             </div>
             <div class="field span-2 split-row">
                 <div class="field age">
@@ -307,6 +312,10 @@
                         <option value="M">M</option>
                         <option value="F">F</option>
                     </select>
+                </div>
+                <div class="field ward">
+                    <label for="ward-room">Ward / Room</label>
+                    <input id="ward-room" name="wardRoom" type="text">
                 </div>
                 <div class="field admit">
                     <label for="admission-date">Admission Date</label>
