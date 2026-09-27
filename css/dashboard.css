@@ -1378,12 +1378,15 @@
     /* ══════════════════════════════════════════════════════════════════════
        FLOATING PINNED REQUISITION TOOLKIT (CENTER-RIGHT SCREEN EDGE)
        ══════════════════════════════════════════════════════════════════════ */
+    body.modal-lock #floating-req-toolkit {
+      display: none !important;
+    }
     #floating-req-toolkit {
       position: fixed !important;
       right: 0 !important;
       top: 50% !important;
       transform: translateY(-50%) !important;
-      z-index: 99999 !important;
+      z-index: 1050 !important;
       display: flex !important;
       flex-direction: row-reverse !important;
       align-items: center !important;
@@ -1407,6 +1410,10 @@
       user-select: none !important;
       border: 1px solid rgba(255, 255, 255, 0.25) !important;
       border-right: none !important;
+      outline: none !important;
+      font-family: inherit !important;
+      line-height: normal !important;
+      text-align: center !important;
       transition: background 0.2s ease, transform 0.15s ease !important;
     }
     #floating-req-handle:hover {
@@ -1431,8 +1438,10 @@
     .floating-req-handle-arrow {
       font-size: 11px !important;
       color: #6ee7b7 !important;
-      transition: transform 0.25s ease !important;
       line-height: 1 !important;
+      writing-mode: horizontal-tb !important;
+      display: inline-block !important;
+      transition: color 0.15s ease !important;
     }
     #floating-req-menu {
       width: 290px !important;
@@ -1461,7 +1470,7 @@
     #floating-req-toolkit.expanded #floating-req-toggle-arrow,
     #floating-req-toolkit:hover #floating-req-toggle-arrow,
     #floating-req-toolkit.pinned #floating-req-toggle-arrow {
-      transform: rotate(180deg) !important;
+      transform: none !important;
     }
     .floating-req-header {
       background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
