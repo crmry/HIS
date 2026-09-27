@@ -2494,7 +2494,7 @@
     <!-- ═══ FLOATING CLINICAL ORDER & REQUISITION TOOLKIT ═══ -->
   <aside id="floating-req-toolkit" class="floating-req-toolkit" aria-label="Clinical Order and Requisition Toolkit">
     <button type="button" class="floating-req-handle" id="floating-req-handle" onclick="toggleFloatingRequisitionToolkit(event)" title="Requisitions (Click to expand / collapse)" aria-expanded="false">
-      <span class="floating-req-handle-text">REQUISITIONS</span>
+      <span class="floating-req-handle-text">DASHLET</span>
       <span class="floating-req-handle-arrow" id="floating-req-toggle-arrow">◀</span>
     </button>
     <div class="floating-req-menu" id="floating-req-menu">
@@ -2511,15 +2511,13 @@
         <button type="button" class="floating-req-item-btn" id="floating-btn-rx" onclick="openRxWriterFromToolkit(event)" data-station="rx" title="Open Rx Writer / Prescriptions">
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">Rx Writer</div>
-            <div class="floating-req-item-sub">Outpatient Prescriptions &amp; Pad</div>
           </div>
           <span class="floating-req-item-action">Open</span>
         </button>
 
         <button type="button" class="floating-req-item-btn" id="floating-btn-lab" onclick="openRequestModal('laboratory', event)" data-station="laboratory" title="Laboratory Requisition">
           <div class="floating-req-item-info">
-            <div class="floating-req-item-title">Laboratory Request</div>
-            <div class="floating-req-item-sub">CBC, Chemistry, Urinalysis, Panels</div>
+            <div class="floating-req-item-title">Labs / Diagnostics</div>
           </div>
           <span class="floating-req-item-action">Order</span>
         </button>
@@ -2527,7 +2525,6 @@
         <button type="button" class="floating-req-item-btn" id="floating-btn-ddirs" onclick="openRequestModal('radiology', event)" data-station="radiology" title="DDIRS / Imaging Requisition">
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">DDIRS Imaging</div>
-            <div class="floating-req-item-sub">X-Ray, Ultrasound, CT Scan, MRI</div>
           </div>
           <span class="floating-req-item-action">Order</span>
         </button>
@@ -2535,7 +2532,6 @@
         <button type="button" class="floating-req-item-btn" id="floating-btn-heart" onclick="openRequestModal('heart', event)" data-station="heart" title="Heart Station Requisition">
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">Heart Station</div>
-            <div class="floating-req-item-sub">12-Lead ECG, 2D Echo, Holter, ABPM</div>
           </div>
           <span class="floating-req-item-action">Order</span>
         </button>
@@ -2543,7 +2539,6 @@
         <button type="button" class="floating-req-item-btn" id="floating-btn-pulmo" onclick="openRequestModal('respiratory', event)" data-station="respiratory" title="Pulmonary Station Requisition">
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">Pulmonary Station</div>
-            <div class="floating-req-item-sub">ABG, Spirometry, PFT, Nebs, 6MWT</div>
           </div>
           <span class="floating-req-item-action">Order</span>
         </button>
