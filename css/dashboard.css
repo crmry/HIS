@@ -115,6 +115,12 @@
       background: #fbfdfc;
       font-size: 12px;
     }
+    .dashlet > .patient-info-bar,
+    .dashlet > .bootstrap-widget-content.patient-info-bar {
+      border-top: 0 !important;
+      border-radius: 0 0 3px 3px !important;
+      margin-bottom: 0 !important;
+    }
     .patient-info-bar .patient-name-banner {
       font-size: 14px;
       font-weight: 700;

@@ -266,21 +266,25 @@
       Physician's Module Dashboard
     </div>
     <div class="seg-content">
-      <!-- ═══ PATIENT INFO BAR ═══ -->
-      <div class="patient-info-bar">
-        <div class="pull-right" style="margin-top:2px;">
-          
-          <button type="button" class="btn btn-small" id="print-btn" style="display:none;">PHYSICIAN'S ORDERS / PROGRESS NOTES NURSES'
-            COMPLIANCE SHEET</button>
+      <!-- ═══ PATIENT INFORMATION ═══ -->
+      <div class="dashlet" id="dashlet-patient-info" style="margin-bottom:12px;">
+        <div class="bootstrap-widget-header">
+          <h3>Patient Information</h3>
         </div>
-        <span class="patient-name-banner" id="banner-patient-name">—</span>
-        <span class="meta-item"><span class="meta-label">Hospital Number:</span> <span id="banner-hrn">—</span></span>
-        <span class="meta-item"><span class="meta-label">Age/Sex:</span> <span id="banner-age-sex">—</span></span>
-        <span class="meta-item"><span class="meta-label">Bdate:</span> <span id="banner-bdate">09/10/1986</span></span>
-        <span class="meta-item"><span class="meta-label">Encounter No.:</span> <span id="banner-encounter-no">001101</span></span>
-        <span class="meta-item"><span class="meta-label">Address:</span> <span id="banner-address">Brgy. Mansilingan, Bacolod City</span></span>
-        <span id="banner-ward" style="display:none;"></span>
-        <span id="banner-admit-date" style="display:none;">06/12/2026</span>
+        <div class="bootstrap-widget-content patient-info-bar" id="patient-info-content" style="border-top:0; border-radius:0 0 3px 3px; margin-bottom:0;">
+          <div class="pull-right" style="margin-top:2px;">
+            <button type="button" class="btn btn-small" id="print-btn" style="display:none;">PHYSICIAN'S ORDERS / PROGRESS NOTES NURSES'
+              COMPLIANCE SHEET</button>
+          </div>
+          <span class="patient-name-banner" id="banner-patient-name">—</span>
+          <span class="meta-item"><span class="meta-label">Hospital Number:</span> <span id="banner-hrn">—</span></span>
+          <span class="meta-item"><span class="meta-label">Age/Sex:</span> <span id="banner-age-sex">—</span></span>
+          <span class="meta-item"><span class="meta-label">Bdate:</span> <span id="banner-bdate">09/10/1986</span></span>
+          <span class="meta-item"><span class="meta-label">Encounter No.:</span> <span id="banner-encounter-no">001101</span></span>
+          <span class="meta-item"><span class="meta-label">Address:</span> <span id="banner-address">Brgy. Mansilingan, Bacolod City</span></span>
+          <span id="banner-ward" style="display:none;"></span>
+          <span id="banner-admit-date" style="display:none;">06/12/2026</span>
+        </div>
       </div>
 
       <!-- ═══ MAIN CONTENT ═══ -->
