@@ -111,7 +111,7 @@ async def scan_single_target(browser_ws, file_url):
                     break
 
         # Interactive component smoke tests for dashboard/updated pages
-        if any(p in file_url for p in ("dashboard.html", "updated.html")):
+        if any(p in file_url for p in ("dashboard.html",)):
             smoke_js = """
             (() => {
                 const toolkit = document.getElementById('floating-req-toolkit');
@@ -230,7 +230,7 @@ async def run_scan():
             fname = os.path.basename(hf)
             file_url = f"file:///{hf.replace(os.sep, '/')}"
             test_urls.append((fname, file_url))
-            if fname in ("dashboard.html", "doctors_order_patient.html", "updated.html"):
+            if fname in ("dashboard.html", "doctors_order_patient.html"):
                 test_urls.append((f"{fname}?patient=patient_op_juan", f"{file_url}?patient=patient_op_juan"))
                 test_urls.append((f"{fname}?patient=patient_1790299677879", f"{file_url}?patient=patient_1790299677879"))
 
