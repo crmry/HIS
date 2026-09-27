@@ -44,7 +44,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 39,
+        seedVersion: 40,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T16:30:00+08:00',
         data: {
@@ -98,7 +98,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               physician: 'Miguel Santos, MD',
               is_current: true,
               status_tag: 'Follow-up',
-              diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension',
+              diagnosis: '',
               patient_record: 'Outpatient progress review and clinical monitoring',
               results: 'Clinically stable',
               progress_notes: 'Outpatient Follow-up. Resting comfortably, afebrile, breathing easily on room air. No chest discomfort or dyspnea.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current outpatient management.',
@@ -502,7 +502,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 39,
+        seedVersion: 40,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -557,7 +557,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               prc_license: '0087654',
               is_current: true,
               status_tag: 'Consultation',
-              diagnosis: 'E11.9 - Type 2 Diabetes Mellitus, well-controlled; I10 - Essential Hypertension',
+              diagnosis: '',
               patient_record: 'Quarterly outpatient diabetes and hypertension refill review',
               results: 'Clinically controlled; HbA1c 6.4%',
               vital_signs: [
@@ -865,7 +865,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function blankPatientRecord() {
       return {
         id: BLANK_PATIENT_ID,
-        seedVersion: 39,
+        seedVersion: 40,
         createdAt: '2026-09-25T10:30:00+08:00',
         updatedAt: '2026-09-25T10:30:00+08:00',
         data: {
@@ -892,14 +892,14 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 39) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 40) records[index] = seedPatientRecord();
 
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) records.push(opPatientRecord());
-      else if (Number(records[opIndex].seedVersion || 0) < 39) records[opIndex] = opPatientRecord();
+      else if (Number(records[opIndex].seedVersion || 0) < 40) records[opIndex] = opPatientRecord();
 
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
-      else if (Number(records[blankIndex].seedVersion || 0) < 39) records[blankIndex] = blankPatientRecord();
+      else if (Number(records[blankIndex].seedVersion || 0) < 40) records[blankIndex] = blankPatientRecord();
       savePatients(records);
     }

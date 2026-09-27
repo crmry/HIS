@@ -1975,9 +1975,8 @@
             var tagInput = document.getElementById("sheet-enc-status-tag");
             if (tagInput) tagInput.value = "Follow-up";
             var diagInput = document.getElementById("sheet-enc-diagnosis");
-            if (diagInput && currentLoadedRecord) {
-                var pData = currentLoadedRecord.data || {};
-                diagInput.value = pData.final_diagnosis || pData.admitting_diagnosis || "Community-Acquired Pneumonia, moderate risk, resolving";
+            if (diagInput) {
+                diagInput.value = "";
             }
             modal.classList.add("open");
         }
@@ -2123,7 +2122,7 @@
                     physician: "Miguel Santos, MD",
                     is_current: true,
                     status_tag: "Follow-up",
-                    diagnosis: "J18.9 - Community-Acquired Pneumonia, moderate risk, resolving",
+                    diagnosis: "",
                     patient_record: "Evening clinical monitoring",
                     results: "Clinically stable",
                     progress_notes: "Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air. No chest discomfort or dyspnea.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.",

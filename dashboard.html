@@ -3344,14 +3344,23 @@
         }
       }
 
-      var finalDiagnosis = rec.final_diagnosis || enc.final_diagnosis || enc.diagnosis || '';
-      if (!finalDiagnosis) {
-        if (isER) {
-          finalDiagnosis = 'Community-Acquired Pneumonia (CAP) - Moderate Risk; Essential Hypertension Stage 2';
-        } else if (isIP) {
-          finalDiagnosis = 'Community-Acquired Pneumonia, resolving on targeted IV antimicrobial therapy; Essential Hypertension, controlled';
-        } else {
-          finalDiagnosis = enc.results || pData.final_diagnosis || 'Pending final diagnostic confirmation';
+      var isCurrent = Boolean(enc.is_current || enc.isCurrent);
+      var finalDiagnosis = '';
+      if (isCurrent) {
+        finalDiagnosis = (rec.final_diagnosis || enc.final_diagnosis || '').trim();
+        if (!finalDiagnosis) {
+          finalDiagnosis = 'Pending final diagnostic confirmation (Consultation in-progress)';
+        }
+      } else {
+        finalDiagnosis = rec.final_diagnosis || enc.final_diagnosis || enc.diagnosis || '';
+        if (!finalDiagnosis) {
+          if (isER) {
+            finalDiagnosis = 'Community-Acquired Pneumonia (CAP) - Moderate Risk; Essential Hypertension Stage 2';
+          } else if (isIP) {
+            finalDiagnosis = 'Community-Acquired Pneumonia, resolving on targeted IV antimicrobial therapy; Essential Hypertension, controlled';
+          } else {
+            finalDiagnosis = enc.results || pData.final_diagnosis || 'Pending final diagnostic confirmation';
+          }
         }
       }
 
@@ -4304,7 +4313,23 @@
       if (hxElem) hxElem.textContent = clinicalRec.history || 'No detailed history recorded.';
 
       var dxElem = document.getElementById('enc-rec-final-diagnosis');
-      if (dxElem) dxElem.textContent = clinicalRec.final_diagnosis || 'Pending final diagnostic confirmation.';
+      if (dxElem) {
+        var isCurrent = Boolean(enc.is_current || enc.isCurrent);
+        var hasFinalDx = Boolean(enc.final_diagnosis || (enc.clinical_record && enc.clinical_record.final_diagnosis));
+        if (isCurrent && !hasFinalDx) {
+          dxElem.textContent = 'Pending final diagnostic confirmation (Consultation in-progress)';
+          dxElem.style.color = '#64748b';
+          dxElem.style.fontStyle = 'italic';
+          dxElem.style.backgroundColor = '#f8fafc';
+          dxElem.style.borderColor = '#e2e8f0';
+        } else {
+          dxElem.textContent = clinicalRec.final_diagnosis || 'Pending final diagnostic confirmation.';
+          dxElem.style.color = '#990000';
+          dxElem.style.fontStyle = 'normal';
+          dxElem.style.backgroundColor = '#fff5f5';
+          dxElem.style.borderColor = '#fed7d7';
+        }
+      }
 
       var modal = document.getElementById('encounter-record-modal');
       if (modal) modal.classList.add('open');
@@ -4692,8 +4717,7 @@
       if (tagInput) tagInput.value = 'Follow-up';
       var diagInput = document.getElementById('new-enc-diagnosis');
       if (diagInput) {
-        var pData = currentPatientData();
-        diagInput.value = (pData && (pData.final_diagnosis || pData.admitting_diagnosis)) || 'Community-Acquired Pneumonia, moderate risk, resolving';
+        diagInput.value = '';
       }
       modal.classList.add('open');
     }
@@ -4855,7 +4879,7 @@
           physician: 'Miguel Santos, MD',
           is_current: true,
           status_tag: 'Follow-up',
-          diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving',
+          diagnosis: '',
           patient_record: 'Evening clinical monitoring',
           results: 'Clinically stable',
           progress_notes: 'Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air. No chest discomfort or dyspnea.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.',
@@ -9130,19 +9154,21 @@
       var fuInput = document.getElementById('end-care-followup-date');
       if (fuInput && !fuInput.value) fuInput.value = fYyyy + '-' + fMm + '-' + fDd;
 
-      // Suggest final diagnosis from current notes or default
+      // Load saved final diagnosis if previously finalized, otherwise leave blank for physician entry
       var finalDxInput = document.getElementById('end-care-final-dx');
-      if (finalDxInput && !finalDxInput.value) {
-        finalDxInput.value = (pData.final_diagnosis || pData.admitting_diagnosis || 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension').trim();
+      if (finalDxInput) {
+        finalDxInput.value = (pData.final_diagnosis || '').trim();
       }
       var icdSelect = document.getElementById('end-care-icd10-select');
       if (icdSelect && finalDxInput) {
         icdSelect.value = '';
-        for (var i = 0; i < icdSelect.options.length; i++) {
-          var optVal = icdSelect.options[i].value;
-          if (optVal && finalDxInput.value.indexOf(optVal.split(' - ')[0]) !== -1) {
-            icdSelect.selectedIndex = i;
-            break;
+        if (finalDxInput.value) {
+          for (var i = 0; i < icdSelect.options.length; i++) {
+            var optVal = icdSelect.options[i].value;
+            if (optVal && finalDxInput.value.indexOf(optVal.split(' - ')[0]) !== -1) {
+              icdSelect.selectedIndex = i;
+              break;
+            }
           }
         }
       }
