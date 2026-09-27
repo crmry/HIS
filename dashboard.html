@@ -4499,6 +4499,182 @@
       if (modal) modal.classList.remove('open');
     }
 
+    function openClinicalRequestResultModal(tabKey, reqIndex) {
+      var reqList = clinicalRequests[tabKey] || [];
+      var req = reqList[reqIndex];
+      if (!req) return;
+
+      var pData = currentPatientData();
+      var pName = patientName(pData) || 'UNKNOWN PATIENT';
+      var hrn = pData.hrn || pData.hospital_number || '—';
+      var age = pData.birthdate ? calculateAge(pData.birthdate) : (pData.age || '—');
+      var sex = (pData.gender || pData.sex || '—').charAt(0).toUpperCase();
+      var ageSex = (age ? age + ' / ' : '') + (sex || '—');
+      var phicNo = pData.philhealth_no || pData.phic_no || '—';
+      var tab = requestTabByKey(tabKey);
+      var reqName = (req.description || req.name || 'Diagnostic Request').trim();
+      var reqCode = (req.code || '').trim();
+      var reqDate = formatDateTime(req.dateTime) || formatDate(req.dateTime) || 'Current Request';
+
+      var allExams = [];
+      if (Array.isArray(loadedEncounters)) {
+        loadedEncounters.forEach(function (enc, encIdx) {
+          var exams = getEncounterExaminations(enc);
+          if (Array.isArray(exams)) {
+            exams.forEach(function (x) { allExams.push({ exam: x, enc: enc, encIdx: encIdx }); });
+          }
+        });
+      }
+
+      var matched = null;
+      var reqLower = reqName.toLowerCase();
+      for (var i = 0; i < allExams.length; i++) {
+        var item = allExams[i];
+        var eName = (item.exam.name || '').toLowerCase();
+        var eCat = (item.exam.category || '').toLowerCase();
+        if (eName.indexOf(reqLower) !== -1 || reqLower.indexOf(eName) !== -1) {
+          matched = item;
+          break;
+        }
+        var keywords = ['cbc', 'hba1c', 'fbs', 'glucose', 'electrolytes', 'x-ray', 'ecg', 'abg', 'creatinine', 'lipid', 'urinalysis', 'albumin', 'potassium', 'sodium'];
+        for (var k = 0; k < keywords.length; k++) {
+          var kw = keywords[k];
+          if (reqLower.indexOf(kw) !== -1 && (eName.indexOf(kw) !== -1 || eCat.indexOf(kw) !== -1)) {
+            matched = item;
+            break;
+          }
+        }
+        if (matched) break;
+
+        if (Array.isArray(item.exam.analytes)) {
+          for (var a = 0; a < item.exam.analytes.length; a++) {
+            var aName = (item.exam.analytes[a].test || '').toLowerCase();
+            if (aName.indexOf(reqLower) !== -1 || reqLower.indexOf(aName) !== -1) {
+              matched = item;
+              break;
+            }
+          }
+        }
+        if (matched) break;
+      }
+
+      if (matched && matched.encIdx != null) {
+        activeEncounterResultsIndex = matched.encIdx;
+      } else if (loadedEncounters && loadedEncounters.length > 0) {
+        activeEncounterResultsIndex = 0;
+      }
+
+      var titleElem = document.getElementById('enc-res-title-info');
+      if (titleElem) {
+        titleElem.textContent = reqName + ' (' + tab.label + (reqCode ? ' • ' + reqCode : '') + ')';
+      }
+
+      var bannerElem = document.getElementById('enc-res-banner');
+      if (bannerElem) {
+        bannerElem.innerHTML =
+          '<div><strong style="color:#666;">Patient Name:</strong><br><span style="font-weight:700; color:#0e3d59; font-size:13px;">' + esc(pName) + '</span></div>' +
+          '<div><strong style="color:#666;">Hospital No. (HRN):</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
+          '<div><strong style="color:#666;">PhilHealth PIN:</strong><br><span style="font-family:monospace; font-weight:700; color:#0f4c81;">' + esc(phicNo) + '</span></div>' +
+          '<div><strong style="color:#666;">Age / Sex:</strong><br>' + esc(ageSex) + '</div>' +
+          '<div><strong style="color:#666;">Request Order Date:</strong><br><span style="font-weight:700; color:#006dcc;">' + esc(reqDate) + '</span></div>' +
+          '<div><strong style="color:#666;">Priority / Department:</strong><br><span class="badge" style="background:' + (req.priority === 'STAT' ? '#c62828' : '#0e3d59') + '; color:#fff; font-size:10px;">' + esc(req.priority || 'Routine') + '</span> ' + esc(tab.label) + '</div>';
+      }
+
+      var contentElem = document.getElementById('enc-res-content');
+      if (contentElem) {
+        if (matched && matched.exam) {
+          var exam = matched.exam;
+          var cat = esc(exam.category || tab.label);
+          var name = esc(exam.name || reqName);
+          var time = esc(exam.performed_at || exam.dateTime || reqDate);
+          var status = esc(exam.status || 'Completed');
+          var staff = esc(exam.performed_by || exam.signee || 'Laboratory Technologist');
+
+          var html = '<div class="encounter-exam-card" style="border: 2px solid #3182ce; box-shadow: 0 2px 8px rgba(49, 130, 206, 0.15);">';
+          html += '  <div class="encounter-exam-header" style="background:#ebf8ff; border-bottom:1px solid #bee3f8;">';
+          html += '    <div class="encounter-exam-title">';
+          html += '      <span class="badge" style="background:#2b6cb0; color:#fff; font-size:10px;">' + cat + '</span>';
+          html += '      <span style="font-weight:700; color:#2c5282;">' + name + '</span>';
+          html += '    </div>';
+          html += '    <div style="font-size:11px; color:#4a5568; display:flex; align-items:center; gap:8px;">';
+          html += '      <span><i class="icon-time"></i> Performed: ' + time + '</span>';
+          html += '      <span class="badge badge-success" style="background:#2e7d32; color:#fff;">' + status + '</span>';
+          html += '    </div>';
+          html += '  </div>';
+
+          html += '  <div class="encounter-exam-body">';
+          if (Array.isArray(exam.analytes) && exam.analytes.length > 0) {
+            html += '    <table class="analyte-table">';
+            html += '      <thead><tr>';
+            html += '        <th>Test / Analyte</th>';
+            html += '        <th style="width:110px;">Result</th>';
+            html += '        <th style="width:90px;">Unit</th>';
+            html += '        <th style="width:140px;">Reference Range</th>';
+            html += '        <th style="width:95px; text-align:center;">Flag</th>';
+            html += '      </tr></thead>';
+            html += '      <tbody>';
+            exam.analytes.forEach(function (ana) {
+              var flag = (ana.flag || 'Normal').trim();
+              var flagClass = 'flag-badge ' + flag.toLowerCase();
+              var flagText = flag === 'High' ? 'HIGH ▲' : (flag === 'Low' ? 'LOW ▼' : 'NORMAL ✓');
+              var isHighlighted = reqLower.indexOf((ana.test || '').toLowerCase()) !== -1 || (ana.test || '').toLowerCase().indexOf(reqLower) !== -1;
+              html += '      <tr style="' + (isHighlighted ? 'background:#f0fff4;' : '') + '">';
+              html += '        <td><strong>' + esc(ana.test) + '</strong>' + (isHighlighted ? ' <span class="badge badge-success" style="font-size:9px; background:#38a169; vertical-align:1px;">Target Request</span>' : '') + '</td>';
+              html += '        <td><span style="font-size:13px; font-weight:700;' + (flag === 'High' ? 'color:#c62828;' : (flag === 'Low' ? 'color:#e65100;' : 'color:#102a43;')) + '">' + esc(ana.value) + '</span></td>';
+              html += '        <td style="color:#627d98;">' + esc(ana.unit || '—') + '</td>';
+              html += '        <td style="color:#486581;">' + esc(ana.reference || '—') + '</td>';
+              html += '        <td style="text-align:center;"><span class="' + flagClass + '">' + flagText + '</span></td>';
+              html += '      </tr>';
+            });
+            html += '      </tbody></table>';
+          }
+
+          if (exam.findings) {
+            html += '    <div style="margin-bottom:8px; font-size:12px; line-height:1.5;">';
+            html += '      <strong style="color:#334e68;">Diagnostic Findings:</strong>';
+            html += '      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:8px 12px; margin-top:4px; color:#102a43; white-space:pre-wrap;">' + esc(exam.findings) + '</div>';
+            html += '    </div>';
+          }
+
+          if (exam.impression) {
+            html += '    <div style="margin-top:8px; background:#effcf6; border:1px solid #b7ebd1; border-left:4px solid #27ab83; border-radius:4px; padding:8px 12px; font-size:12px;">';
+            html += '      <strong style="color:#0e583f;">Diagnostic Impression:</strong> ';
+            html += '      <span style="color:#0e583f; font-weight:600;">' + esc(exam.impression) + '</span>';
+            html += '    </div>';
+          }
+
+          if (staff) {
+            html += '    <div style="margin-top:8px; font-size:11px; color:#829ab1; text-align:right;">';
+            html += '      <i class="icon-user"></i> Validated by: <em>' + staff + '</em>';
+            html += '    </div>';
+          }
+
+          html += '  </div>';
+          html += '</div>';
+
+          contentElem.innerHTML = html;
+        } else {
+          var pendingHtml = '<div style="text-align:center; padding:32px 20px; background:#fbfcfe; border:1px solid #cbd5e1; border-radius:6px;">' +
+            '<div style="font-size:24px; color:#2563eb; margin-bottom:8px;">📄</div>' +
+            '<h4 style="margin:0 0 6px 0; color:#1e293b;">Diagnostic Request Specimen Received</h4>' +
+            '<p style="color:#64748b; margin:0 0 12px 0; font-size:12px;">Request: <strong>' + esc(reqName) + '</strong> (' + esc(tab.label) + ')</p>' +
+            '<div style="display:inline-flex; gap:8px; align-items:center; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:6px 14px; font-size:12px; color:#334155;">' +
+            '  <span><strong>Status:</strong> <span class="badge badge-warning" style="background:#d97706; color:#fff;">Specimen Collected / In-Process</span></span>' +
+            '  <span>•</span>' +
+            '  <span><strong>Priority:</strong> ' + esc(req.priority || 'Routine') + '</span>' +
+            '</div>' +
+            (req.remarks ? '<div style="margin-top:12px; font-size:11.5px; color:#64748b;">Clinical Remarks: <em>' + esc(req.remarks) + '</em></div>' : '') +
+            '<p style="color:#94a3b8; font-size:11px; margin:14px 0 0 0;">Official verified result report will be automatically published upon validation by laboratory personnel.</p>' +
+            '</div>';
+          contentElem.innerHTML = pendingHtml;
+        }
+      }
+
+      var modal = document.getElementById('encounter-results-modal');
+      if (modal) modal.classList.add('open');
+    }
+    window.openClinicalRequestResultModal = openClinicalRequestResultModal;
+
     function printEncounterDocument(title, contentHtml) {
       var w = window.open('', '_blank', 'width=840,height=750');
       if (!w) {
@@ -5268,45 +5444,28 @@
 
         clinicalRequests[tab.key] =
           rows.map(function (row) {
-
+            var desc = (row.description || row.name || '').trim();
+            var code = (row.code || '').trim();
+            if (!code && tab.services) {
+              var dLower = desc.toLowerCase();
+              var s = tab.services.find(function (srv) {
+                var sLower = srv[1].toLowerCase();
+                return sLower.indexOf(dLower) !== -1 || dLower.indexOf(sLower) !== -1;
+              });
+              if (s) code = s[0];
+            }
             return {
-              code:
-                row.code || '',
-
-              description:
-                row.description || '',
-
-              priority:
-                row.priority || 'Routine',
-
-              remarks:
-                row.remarks || '',
-
-              quantity:
-                Number(row.quantity || 1),
-
-              price:
-                Number(row.price || 0),
-
-              dateTime:
-                row.dateTime || '',
-
-              /*
-               * Do NOT assign the current doctor to
-               * an old request if its doctor is unknown.
-               */
-              physician:
-                row.physician || '',
-
-              cared:
-                Array.isArray(row.cared)
-                  ? row.cared.slice()
-                  : [],
-
-              timeSignature:
-                row.timeSignature || ''
+              code: code,
+              description: desc,
+              priority: row.priority || row.urgency || 'Routine',
+              remarks: row.remarks || row.notes || '',
+              quantity: Number(row.quantity || 1),
+              price: Number(row.price || 0),
+              dateTime: row.dateTime || '',
+              physician: row.physician || '',
+              cared: Array.isArray(row.cared) ? row.cared.slice() : [],
+              timeSignature: row.timeSignature || ''
             };
-
           });
 
       });
@@ -5338,7 +5497,7 @@
         '</div>' +
         '<div class="table-responsive-wrap">' +
         '<table class="order-card-table request-table" aria-label="Saved requests for selected department">' +
-        '<thead><tr><th style="width:90px;">Code</th><th>Request</th><th style="width:145px;">Date &amp; Time</th><th style="width:80px;">Priority</th><th>Remarks</th><th style="width:36px; text-align:center;"></th></tr></thead>' +
+        '<thead><tr><th style="width:80px;">Code</th><th>Request</th><th style="width:145px;">Date &amp; Time</th><th style="width:80px;">Priority</th><th>Remarks</th><th style="width:65px; text-align:center;">Result</th><th style="width:36px; text-align:center;"></th></tr></thead>' +
         '<tbody id="clinical-request-list"></tbody>' +
         '</table>' +
         '</div>' +
@@ -5367,12 +5526,14 @@
       var rows = clinicalRequests[activeRequestTab] || [];
       title.textContent = tab.label + ' Requests (' + rows.length + ')';
       if (!rows.length) {
-        list.innerHTML = '<tr><td colspan="6" class="request-empty">Request list is currently empty...</td></tr>';
+        list.innerHTML = '<tr><td colspan="7" class="request-empty">Request list is currently empty...</td></tr>';
         return;
       }
+      var paperIconSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>';
       list.innerHTML = rows.map(function (row, index) {
         return '<tr><td>' + esc(row.code) + '</td><td><b>' + esc(row.description) + '</b></td><td>' + esc(formatDateTime(row.dateTime)) + '</td>' +
           '<td class="' + (row.priority === 'STAT' ? 'request-priority-stat' : '') + '">' + esc(row.priority) + '</td><td>' + esc(row.remarks) + '</td>' +
+          '<td style="text-align:center;"><button type="button" class="btn btn-mini btn-request-result" data-request-tab="' + esc(activeRequestTab) + '" data-request-index="' + index + '" title="View Result" style="padding:2px 7px; color:#0e3d59; border-color:#bcd;">' + paperIconSvg + '</button></td>' +
           '<td><button type="button" class="btn btn-danger btn-mini" data-remove-request="' + index + '" aria-label="Remove request">&times;</button></td></tr>';
       }).join('');
     }
@@ -6993,6 +7154,13 @@
       if (tabBtn) { setActiveRequestTab(tabBtn.dataset.clinicalTab); return; }
       var requestBtn = e.target.closest('#open-request-modal');
       if (requestBtn) { openRequestModal(activeRequestTab); return; }
+      var viewResultBtn = e.target.closest('.btn-request-result');
+      if (viewResultBtn) {
+        var tabKey = viewResultBtn.dataset.requestTab || activeRequestTab;
+        var reqIdx = parseInt(viewResultBtn.dataset.requestIndex, 10);
+        openClinicalRequestResultModal(tabKey, reqIdx);
+        return;
+      }
       var removeRequestBtn = e.target.closest('[data-remove-request]');
       if (removeRequestBtn) {
         clinicalRequests[activeRequestTab].splice(Number(removeRequestBtn.dataset.removeRequest), 1);
