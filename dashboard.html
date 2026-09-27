@@ -654,9 +654,6 @@
                   <label><input type="checkbox" name="pertinent_signs[]" value="Weight loss"> Weight loss</label>
                   <label id="ros-others-label"><input type="checkbox" name="pertinent_signs[]" value="Others" id="sign-others-check"> Others</label>
                 </div>
-                <div id="ros-others-specify-row" style="display:none; margin: 4px 0 6px 0;">
-                  <input type="text" id="ros_others_input" name="ros_others" placeholder="Specify other signs/symptoms..." class="input-block-level" autocomplete="off" aria-label="Others specify" style="font-size:12px;">
-                </div>
 
                 <textarea id="pertinent_signs_information" name="pertinent_signs_information" rows="3"
                   class="input-block-level"
@@ -8148,19 +8145,13 @@
 
     // ── ROS Others Textbox Toggle ──
     var othersCheck = document.getElementById('sign-others-check');
-    var othersInput = document.getElementById('ros_others_input');
-    var othersRow   = document.getElementById('ros-others-specify-row');
     if (othersCheck) {
       othersCheck.addEventListener('change', function () {
-        var show = othersCheck.checked;
-        if (othersRow)  othersRow.style.display  = show ? 'block' : 'none';
-        if (!show && othersInput) othersInput.value = '';
-        if (show && othersInput) othersInput.focus();
+        if (othersCheck.checked) {
+          var rosInfo = document.getElementById('pertinent_signs_information');
+          if (rosInfo) rosInfo.focus();
+        }
       });
-    }
-    if (othersInput) {
-      othersInput.addEventListener('click', function (e) { e.stopPropagation(); });
-      othersInput.addEventListener('mousedown', function (e) { e.stopPropagation(); });
     }
 
     // ── Allergy Tab — Add / Remove Rows ──
@@ -8632,14 +8623,10 @@
       }
       syncPainSiteUI(hasPain, painSiteVal);
 
-      // ── Restore ROS Others textbox state ──
+      // ── Restore ROS Others checkbox state ──
       var hasOthers = Array.isArray(data.pertinent_signs) && data.pertinent_signs.some(function(s){ return String(s).trim() === 'Others'; });
       var othersChk = document.getElementById('sign-others-check');
-      var othersInp = document.getElementById('ros_others_input');
-      var othersRowEl = document.getElementById('ros-others-specify-row');
       if (othersChk) othersChk.checked = hasOthers;
-      if (othersRowEl) othersRowEl.style.display = hasOthers ? 'block' : 'none';
-      if (othersInp) othersInp.value = data.ros_others || '';
 
       // ── Restore Allergy tab rows ──
       if (typeof renderAllergyRows === 'function') {
@@ -8769,11 +8756,6 @@
       if (!data.pertinent_signs || data.pertinent_signs.indexOf('Pain') === -1) {
         data.pain_site = '';
       }
-      /* ROS Others free-text */
-      var rosOthersEl = document.getElementById('ros_others_input');
-      data.ros_others = (rosOthersEl && document.getElementById('sign-others-check') && document.getElementById('sign-others-check').checked)
-        ? (rosOthersEl.value || '')
-        : '';
       /* Allergy history — preserved from addAllergyRow/removeAllergyRow, merge from active record */
       var activeRec = (typeof getActivePatientRecord === 'function') ? getActivePatientRecord() : null;
       if (activeRec && activeRec.data && Array.isArray(activeRec.data.allergy_hx)) {
