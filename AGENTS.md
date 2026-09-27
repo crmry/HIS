@@ -23,11 +23,23 @@
 - **Pre-Commit Headless CDP Verification**:
   - Run `python scripts/verify_site.py` across all workspace pages (`dashboard.html`, `doctors_order_patient.html`, `forms_localstorage.html`, `index.html`, `patients.html`, `simulation.html`) with both default and patient query routes.
   - The build is strictly rejected if any page produces a JavaScript runtime exception (`SyntaxError`, `TypeError`, `ReferenceError`), console error, or HTTP 404 network failure.
+  - **Interactive Widget Smoke Testing**: Any interactive component (e.g., requisition pads, side drawers, CPOE modal launchers) must include automated click verification (`element.click()`) in the test harness to confirm event bindings, modal state toggling, and absence of runtime reference errors.
 - **Global Namespace & Refactoring Safety**:
   - Shared modules (e.g., `js/data/patient_seeds.js`) and consuming HTML files must never declare colliding top-level `const` or `let` variables in the global window scope.
   - Consuming pages must use safe fallback patterns (`var STORAGE_KEY = window.STORAGE_KEY || ...;`) or scoped namespaces (`window.SegHIS`).
   - When extracting or compartmentalizing scripts out of an HTML file, verify that all called helper functions (e.g., `buildEmptyPage`, table builders, renderers, event listeners) remain defined and accessible in the page's runtime scope.
   - Always guard DOM element queries before mutating properties or innerHTML (`if (!el) return;`) to eliminate unhandled null reference crashes.
+
+## Interactive Component & DOM Lifecycle Invariants
+- **DOM-Before-Script Sequencing**:
+  - All persistent UI components, floating drawers, toolkits, and modal structures must be declared in the HTML markup **before** script blocks execute.
+  - Never place interactive component markup beneath core `<script>` tags where synchronous queries fail.
+- **Idempotent Event Listener Guarding**:
+  - Component initialization functions (e.g., `initFloatingRequisitionToolkit()`) must be idempotent.
+  - Always guard with an initialization marker (e.g., `if (container.dataset.initialized === 'true') return; container.dataset.initialized = 'true';`) to prevent double-binding when scripts run across both inline and `DOMContentLoaded` lifecycles.
+- **Modal Layering & Stacking Context Invariants**:
+  - Floating tools and docked panels must respect modal backdrops (e.g., max `z-index: 1050`, below standard modal dialogs at `z-index: 1060+`).
+  - Floating components must cleanly suppress or hide when `.modal-lock` is active on `<body>` (`body.modal-lock #floating-widget { display: none !important; }`).
 
 ## EHR and EMR Architectural & Design Standards
 - **Core Target**: All modules, clinical documentation tools, and order entry interfaces must be designed to fit directly into a hospital **Electronic Health Record (EHR)** and **Electronic Medical Record (EMR)** system (aligned with DOH Philippines, PhilHealth eClaims/CF4, and CLMMRH clinical workflows).

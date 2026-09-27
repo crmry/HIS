@@ -106,6 +106,57 @@ async def scan_single_target(browser_ws, file_url):
             except asyncio.TimeoutError:
                 pass
 
+        # Interactive component smoke tests for dashboard/updated pages
+        if any(p in file_url for p in ("dashboard.html", "updated.html")):
+            smoke_js = """
+            (() => {
+                const toolkit = document.getElementById('floating-req-toolkit');
+                if (!toolkit) return 'No toolkit element found';
+                const handle = document.getElementById('floating-req-handle');
+                if (!handle) return 'No handle found';
+                handle.click();
+                if (!toolkit.classList.contains('expanded')) return 'Handle click did not expand toolkit';
+                
+                // Test lab button
+                const labBtn = document.getElementById('floating-btn-lab');
+                if (labBtn) {
+                    labBtn.click();
+                    const modal = document.getElementById('diagnostic-request-modal');
+                    if (!modal || modal.style.display !== 'block') return 'Lab button failed to open diagnostic modal';
+                    if (typeof window.closeDiagnosticRequestModal === 'function') window.closeDiagnosticRequestModal();
+                }
+                
+                // Test rx button
+                const rxBtn = document.getElementById('floating-btn-rx');
+                if (rxBtn) {
+                    rxBtn.click();
+                    const rxModal = document.getElementById('rx-writer-modal');
+                    if (!rxModal || rxModal.style.display !== 'block') return 'Rx button failed to open rx-writer-modal';
+                    if (typeof window.closeRxWriterModal === 'function') window.closeRxWriterModal();
+                }
+                
+                // Re-toggle handle to collapse
+                handle.click();
+                return 'OK';
+            })()
+            """
+            eval_id = await send("Runtime.evaluate", {"expression": smoke_js, "returnByValue": True})
+            t0 = time.time()
+            while time.time() - t0 < 1.0:
+                try:
+                    raw = await asyncio.wait_for(p_ws.recv(), timeout=0.2)
+                    msg = json.loads(raw)
+                    if msg.get("id") == eval_id:
+                        res = msg.get("result", {}).get("result", {}).get("value")
+                        if res and res != "OK":
+                            errors.append(f"Interactive Smoke Test Failure: {res}")
+                        break
+                    elif msg.get("method") == "Runtime.exceptionThrown":
+                        details = msg.get("params", {}).get("exceptionDetails", {})
+                        errors.append(f"Interactive Smoke Test Exception: {details.get('text')} {details.get('exception', {}).get('description')}")
+                except asyncio.TimeoutError:
+                    pass
+
     # Close target
     async with websockets.connect(browser_ws) as b_ws:
         close_msg = {"id": 1, "method": "Target.closeTarget", "params": {"targetId": target_id}}
