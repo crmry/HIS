@@ -311,13 +311,36 @@
     }
 
     /* ── Nav Tabs (Medical History) ── */
-    .nav-tabs { border-bottom: 1px solid var(--med-border); margin-bottom: 10px; }
+    .nav-tabs {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      border-bottom: 1px solid var(--med-border);
+      margin-bottom: 10px;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+    }
+    .nav-tabs::-webkit-scrollbar {
+      height: 3px;
+    }
+    .nav-tabs::-webkit-scrollbar-thumb {
+      background: var(--med-border);
+      border-radius: 2px;
+    }
+    .nav-tabs > li {
+      float: none;
+      flex-shrink: 0;
+      margin-bottom: -1px;
+    }
     .nav-tabs > li > a {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
-      padding: 6px 12px;
+      padding: 6px 11px;
       color: var(--med-text-muted);
       border-radius: 3px 3px 0 0;
+      white-space: nowrap;
+      margin-right: 2px;
     }
     .nav-tabs > li > a:hover {
       background: var(--med-green-pale);
@@ -330,7 +353,7 @@
       font-weight: 700;
       border: 1px solid var(--med-border);
       border-top: 3px solid var(--med-green);
-      border-bottom-color: transparent;
+      border-bottom-color: #ffffff;
     }
 
     /* ── Review of Systems (Alphabetical Grid) ── */
