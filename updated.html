@@ -278,7 +278,7 @@
       <!-- ═══ PATIENT INFO BAR ═══ -->
       <div class="patient-info-bar">
         <div class="pull-right" style="margin-top:2px;">
-          <button type="button" class="btn btn-inverse btn-small" id="clear-btn" style="display:none;">Clear Form</button>
+          
           <button type="button" class="btn btn-small" id="print-btn" style="display:none;">PHYSICIAN'S ORDERS / PROGRESS NOTES NURSES'
             COMPLIANCE SHEET</button>
         </div>
@@ -3920,7 +3920,6 @@
         document.getElementById('save-patient-btn'),
         document.getElementById('save-followup-btn'),
         document.getElementById('save-referral-btn'),
-        document.getElementById('clear-btn'),
         document.getElementById('btn-finalize-end-care'),
         document.getElementById('open-care-modal-btn')
       ];
@@ -8789,14 +8788,7 @@
 
     // ── Direct Dashboard Bootstrap (Accessible EHR Mode) ──
     bootstrapDashboardData();
-        var clearBtn = document.getElementById('clear-btn');
-    if (clearBtn) {
-      clearBtn.addEventListener('click', function() {
-        if (confirm('Clear all patient data fields? Any unsaved entries will be reset.')) {
-          clearAllPatientFields();
-        }
-      });
-    }
+    
     renderOrderSummary();
     /* =========================================================
    AUTOSAVE CURRENT PHYSICIAN INPUT
