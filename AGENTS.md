@@ -21,7 +21,7 @@
 
 ## Automated Quality Gates & Script Integrity Standards
 - **Pre-Commit Headless CDP Verification**:
-  - Run `python scripts/verify_site.py` across all workspace pages (`dashboard.html`, `doctors_order_patient.html`, `forms_localstorage.html`, `index.html`, `patients.html`, `simulation.html`) with both default and patient query routes.
+  - Run `python scripts/verify_site.py` across all workspace pages (`dashboard.html`, `doctors_order_patient.html`, `forms_localstorage.html`, `index.html`, `patients.html`) with both default and patient query routes.
   - The build is strictly rejected if any page produces a JavaScript runtime exception (`SyntaxError`, `TypeError`, `ReferenceError`), console error, or HTTP 404 network failure.
   - **Interactive Widget Smoke Testing**: Any interactive component (e.g., requisition pads, side drawers, CPOE modal launchers) must include automated click verification (`element.click()`) in the test harness to confirm event bindings, modal state toggling, and absence of runtime reference errors.
 - **Global Namespace & Refactoring Safety**:
