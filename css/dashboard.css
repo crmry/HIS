@@ -508,7 +508,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 0;
     }
     .other-form-list label { display: inline-block; margin-bottom: 0; }
     .other-form-list button { min-width: 140px; }
