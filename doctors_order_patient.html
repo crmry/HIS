@@ -1113,7 +1113,7 @@
                 '<div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
                 '<div class="enc-sig-line-draw">________________________________</div>' +
                 '<div class="enc-sig-name">' + physName + '</div>' +
-                '<div class="enc-sig-lic">PRC Lic. No.: ' + licText + '</div>' +
+                '<div class="enc-sig-lic">PRC Lic. No.: ' + licText + ' &nbsp;|&nbsp; PHIC PAN: 12-0048192-1</div>' +
                 '</div>' +
                 '</td>' +
                 '<td colspan="6" class="enc-sig-spacer"><hr class="enc-sig-divider"></td>' +
@@ -1190,6 +1190,7 @@
             var data = patientData || {};
             var nameVal = document.getElementById("patient-name").value;
             var hrnVal = document.getElementById("hospital-no").value;
+            var phicVal = data.philhealth_no || data.phic_no || "";
             var addrVal = document.getElementById("address").value;
             var wardVal = document.getElementById("ward-room").value;
             var ageVal = document.getElementById("age").value;
@@ -1211,7 +1212,7 @@
                     inner += '<p class="form-subtitle">(Authenticate all Orders)</p>';
                     inner += '<div class="patient-grid">';
                     inner += '<div class="field"><label>Name of Patient</label><span class="field-val">' + escapeHtml(nameVal) + '</span></div>';
-                    inner += '<div class="field"><label>Hospital No.</label><span class="field-val">' + escapeHtml(hrnVal) + '</span></div>';
+                    inner += '<div class="field"><label>Hospital No.</label><span class="field-val">' + escapeHtml(hrnVal) + (phicVal ? ' &nbsp;|&nbsp; PIN: ' + escapeHtml(phicVal) : '') + '</span></div>';
                     inner += '<div class="field"><label>Address</label><span class="field-val">' + escapeHtml(addrVal) + '</span></div>';
                     inner += '<div class="field"><label>Ward / Room</label><span class="field-val">' + escapeHtml(wardVal) + '</span></div>';
                     inner += '<div class="field span-2 split-row">';
@@ -1225,7 +1226,7 @@
                     inner += '<p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>';
                     inner += '<h1 class="form-title" style="font-size:11pt;">PHYSICIAN\'S ORDERS / NURSES\'  COMPLIANCE SHEET — Continuation (Page ' + (pgIdx + 1) + ')</h1>';
                     inner += '</div>';
-                    inner += '<div class="page-cont-note">Patient: ' + escapeHtml(nameVal) + ' &nbsp;|&nbsp; HRN: ' + escapeHtml(hrnVal) + ' &nbsp;|&nbsp; Admission Date: ' + escapeHtml(admitVal) + '</div>';
+                    inner += '<div class="page-cont-note">Patient: ' + escapeHtml(nameVal) + ' &nbsp;|&nbsp; HRN: ' + escapeHtml(hrnVal) + (phicVal ? ' &nbsp;|&nbsp; PIN: ' + escapeHtml(phicVal) : '') + ' &nbsp;|&nbsp; Admission Date: ' + escapeHtml(admitVal) + '</div>';
                 }
 
                 inner += '<p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>';
@@ -1763,7 +1764,7 @@
         <div class="seg-modal" style="min-width: 680px; max-width: 820px;">
             <div class="seg-modal-title" id="sheet-round-heading" style="background: linear-gradient(135deg, #1b4d3e, #0e2f24); color:#fff;">
                 <span style="display:flex; align-items:center; gap:8px;">
-                    <span>🩺</span> Log Clinical Round / Progress Note (DOH SOA Format)
+                    Log Clinical Round / Progress Note (DOH SOA Format)
                 </span>
                 <button type="button" class="seg-modal-close" id="close-sheet-round-modal" title="Close">✕</button>
             </div>
@@ -1853,7 +1854,7 @@
         <div class="seg-modal" style="min-width: 650px; max-width: 780px;">
             <div class="seg-modal-title" id="sheet-sim-heading" style="background: linear-gradient(135deg, #0e3d59, #082638); color:#fff;">
                 <span style="display:flex; align-items:center; gap:8px;">
-                    <span>⚡</span> Client-Side Clinical Round &amp; Stay Simulator
+                    Client-Side Clinical Round &amp; Stay Simulator
                 </span>
                 <button type="button" class="seg-modal-close" id="close-sheet-sim-modal" title="Close">✕</button>
             </div>

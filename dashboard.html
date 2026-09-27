@@ -275,6 +275,7 @@
         </div>
         <span class="patient-name-banner" id="banner-patient-name">—</span>
         <span class="meta-item"><span class="meta-label">Hospital Number:</span> <span id="banner-hrn">—</span></span>
+        <span class="meta-item"><span class="meta-label">PhilHealth PIN:</span> <span id="banner-phic">—</span></span>
         <span class="meta-item"><span class="meta-label">Age/Sex:</span> <span id="banner-age-sex">—</span></span>
         <span class="meta-item"><span class="meta-label">Bdate:</span> <span id="banner-bdate">09/10/1986</span></span>
         <span class="meta-item"><span class="meta-label">Encounter No.:</span> <span id="banner-encounter-no">001101</span></span>
@@ -1129,7 +1130,7 @@
                 placeholder="Enter the reason for referral or co-management..."></textarea>
             </div>
             <div id="referral-readonly-msg" style="display:none; margin-top:8px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; font-size:12px; color:#64748b; font-style:italic;">
-              🔒 Referrals are finalized and signed for this encounter. New referrals must be ordered on the current or next encounter.
+              <i class="icon-lock"></i> Referrals are finalized and signed for this encounter. New referrals must be ordered on the current or next encounter.
             </div>
             <div style="margin-top:8px; text-align:right;">
               <span id="referral-save-status" role="status" aria-live="polite"></span>
@@ -1269,7 +1270,7 @@
     <div class="seg-modal" style="min-width: 680px; max-width: 820px; margin: 15px auto; box-shadow:0 20px 45px rgba(0,0,0,0.3); border-radius:6px; overflow:hidden;">
       <div class="seg-modal-title" id="req-print-modal-title" style="background: linear-gradient(135deg, #1b4d3e, #0f4c81); color:#fff; display:flex; justify-content:space-between; align-items:center; padding:12px 18px;">
         <span style="font-weight:700; font-size:14px; display:flex; align-items:center; gap:8px;">
-          <span>🖨️</span> Official Clinical Requisition Slip Preview
+          Official Clinical Requisition Slip Preview
         </span>
         <button type="button" class="seg-modal-close" id="close-req-print-modal" style="color:#fff; border:none; background:transparent; font-size:18px; cursor:pointer;" title="Close">✕</button>
       </div>
@@ -1290,7 +1291,7 @@
     <div class="seg-modal" style="min-width: 820px; max-width: 1100px; margin: 15px auto;">
       <div class="rx-modal-header" id="rx-modal-heading">
         <span style="display: flex; align-items: center; gap: 6px;">
-          <span>📝</span> Write prescription
+          Write Prescription
         </span>
         <button type="button" class="rx-modal-close" id="close-rx-writer-modal" onclick="closeRxWriterModal()" title="Dock back into Physician's Orders (Esc)">✕</button>
       </div>
@@ -1305,7 +1306,7 @@
     <div class="seg-modal" style="min-width: 650px; max-width: 720px; margin: 15px auto;">
       <div class="rx-modal-header" style="background: linear-gradient(var(--med-slate-light), var(--med-slate-dark)); border-bottom: 2px solid var(--med-green);">
         <span style="display: flex; align-items: center; gap: 6px;">
-          <span>🖨️</span> Prescription Pad Preview
+          Prescription Pad Preview
         </span>
         <button type="button" class="rx-modal-close" id="close-rx-print-modal">✕</button>
       </div>
@@ -1332,12 +1333,12 @@
             <div class="span6">
               <label style="font-weight:700;">Record Type to Log:</label>
               <select id="fe-record-type" class="input-block-level">
-                <option value="ivf">💧 IV Fluid / Medication Drip</option>
-                <option value="transfusion">🩸 Blood Transfusion Record</option>
-                <option value="cbg">⏱️ Capillary Blood Glucose (CBG)</option>
-                <option value="vitals">🩺 Vital Signs Monitoring</option>
-                <option value="medication">💊 Medication Administration (MAR)</option>
-                <option value="io">⚖️ Intake & Output (I&O) Shift</option>
+                <option value="ivf">IV Fluid / Medication Drip</option>
+                <option value="transfusion">Blood Transfusion Record</option>
+                <option value="cbg">Capillary Blood Glucose (CBG)</option>
+                <option value="vitals">Vital Signs Monitoring</option>
+                <option value="medication">Medication Administration (MAR)</option>
+                <option value="io">Intake &amp; Output (I&amp;O) Shift</option>
               </select>
             </div>
             <div class="span6">
@@ -1564,7 +1565,7 @@
     <div class="seg-modal" style="min-width: 760px; max-width: 960px; margin: 25px auto;">
       <div class="seg-modal-title" id="encounter-record-heading" style="display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, #1b4d3e, #0e2f24); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
         <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
-          <span>📋</span> Clinical Encounter Record: <span id="enc-rec-title-info" style="color:#a8e6cf; font-weight:normal; margin-left:4px;"></span>
+          Clinical Encounter Record: <span id="enc-rec-title-info" style="color:#a8e6cf; font-weight:normal; margin-left:4px;"></span>
         </span>
         <button type="button" class="seg-modal-close" id="close-encounter-record-modal" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
       </div>
@@ -1577,7 +1578,7 @@
         <!-- 1. Chief Complaint -->
         <div style="margin-bottom:18px; background:#fff; border:1px solid #e1e8ed; border-left:4px solid #2e7d32; border-radius:4px; padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
           <div style="font-size:13px; font-weight:700; color:#1b4d3e; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-            <span style="font-size:15px;">🩺</span> Chief Complaint
+            Chief Complaint
           </div>
           <div id="enc-rec-chief-complaint" style="font-size:13px; color:#2c3e50; line-height:1.5; white-space:pre-wrap; background:#fbfdfc; padding:10px 14px; border-radius:4px; border:1px solid #edf4f0;">
           </div>
@@ -1586,7 +1587,7 @@
         <!-- 2. History -->
         <div style="margin-bottom:18px; background:#fff; border:1px solid #e1e8ed; border-left:4px solid #006dcc; border-radius:4px; padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
           <div style="font-size:13px; font-weight:700; color:#005580; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-            <span style="font-size:15px;">📜</span> Clinical History
+            Clinical History
           </div>
           <div id="enc-rec-history" style="font-size:13px; color:#2c3e50; line-height:1.6; white-space:pre-wrap; background:#fcfdfe; padding:10px 14px; border-radius:4px; border:1px solid #edf2f7;">
           </div>
@@ -1595,7 +1596,7 @@
         <!-- 3. Final Diagnosis -->
         <div style="margin-bottom:10px; background:#fff; border:1px solid #ffd0d0; border-left:4px solid #d9534f; border-radius:4px; padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
           <div style="font-size:13px; font-weight:700; color:#b92c28; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-            <span style="font-size:15px;">🎯</span> Final Diagnosis
+            Final Diagnosis (ICD-10)
           </div>
           <div id="enc-rec-final-diagnosis" style="font-size:13px; font-weight:600; color:#990000; line-height:1.5; background:#fff5f5; border:1px solid #fed7d7; border-radius:4px; padding:10px 14px; white-space:pre-wrap;">
           </div>
@@ -1616,7 +1617,7 @@
     <div class="seg-modal" style="min-width: 820px; max-width: 1080px; margin: 25px auto;">
       <div class="seg-modal-title" id="encounter-results-heading" style="display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, #0e3d59, #082638); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
         <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
-          <span>🔬</span> Examination Results: <span id="enc-res-title-info" style="color:#90cdf4; font-weight:normal; margin-left:4px;"></span>
+          Examination Results: <span id="enc-res-title-info" style="color:#90cdf4; font-weight:normal; margin-left:4px;"></span>
         </span>
         <button type="button" class="seg-modal-close" id="close-encounter-results-modal" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
       </div>
@@ -1646,7 +1647,7 @@
     <div class="seg-modal" style="min-width: 720px; max-width: 860px; margin: 25px auto;">
       <div class="seg-modal-title" id="encounter-entry-heading" style="display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, #1b4d3e, #0e2f24); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
         <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
-          <span>🩺</span> Log Clinical Round / Progress Note (DOH SOA Format)
+          Log Clinical Round / Progress Note (DOH SOA Format)
         </span>
         <button type="button" class="seg-modal-close" id="close-encounter-entry-modal" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
       </div>
@@ -1740,7 +1741,7 @@
     <div class="seg-modal" style="min-width: 680px; max-width: 800px; margin: 25px auto;">
       <div class="seg-modal-title" id="encounter-sim-heading" style="display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, #0e3d59, #082638); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
         <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
-          <span>⚡</span> Client-Side Clinical Round &amp; Stay Simulator
+          Client-Side Clinical Round &amp; Stay Simulator
         </span>
         <button type="button" class="seg-modal-close" id="close-encounter-sim-modal" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
       </div>
@@ -1788,7 +1789,7 @@
     <div class="seg-modal" style="min-width:750px; max-width:920px; margin:20px auto; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 20px 45px rgba(0,0,0,0.3); border-radius:6px; overflow:hidden;">
       <div class="seg-modal-title" id="end-care-title" style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg, #1b4d3e, #12352b); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
         <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
-          <span>🏁</span> End Patient Care &amp; Conclude Consultation
+          End Patient Care &amp; Conclude Consultation
         </span>
         <button type="button" class="seg-modal-close" id="close-end-care-modal" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
       </div>
@@ -2569,6 +2570,8 @@
       var d = (record && record.data) || {};
       document.getElementById('banner-patient-name').textContent = patientName(d) || 'Unknown Patient';
       document.getElementById('banner-hrn').textContent = d.hrn || '\u2014';
+      var phicEl = document.getElementById('banner-phic');
+      if (phicEl) phicEl.textContent = d.philhealth_no || d.phic_no || '\u2014';
       var age = calculateAge(d.birthdate);
       var sex = d.gender === 'Male' ? 'M' : d.gender === 'Female' ? 'F' : '\u2014';
       document.getElementById('banner-age-sex').textContent = age ? age + ' / ' + sex : sex;
@@ -4274,11 +4277,13 @@
       var titleElem = document.getElementById('enc-rec-title-info');
       if (titleElem) titleElem.textContent = dateFormatted + ' (' + encType + ' • ' + encService + ')';
 
+      var phicNo = pData.philhealth_no || pData.phic_no || '—';
       var bannerElem = document.getElementById('enc-rec-banner');
       if (bannerElem) {
         bannerElem.innerHTML =
           '<div><strong style="color:#666;">Patient Name:</strong><br><span style="font-weight:700; color:#1b4d3e; font-size:13px;">' + esc(pName) + '</span></div>' +
-          '<div><strong style="color:#666;">Hospital Number (HRN):</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
+          '<div><strong style="color:#666;">Hospital No. (HRN):</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
+          '<div><strong style="color:#666;">PhilHealth PIN:</strong><br><span style="font-family:monospace; font-weight:700; color:#0f4c81;">' + esc(phicNo) + '</span></div>' +
           '<div><strong style="color:#666;">Age / Sex:</strong><br>' + esc(ageSex) + '</div>' +
           '<div><strong style="color:#666;">Encounter Date:</strong><br><span style="font-weight:700; color:#006dcc;">' + esc(dateFormatted) + '</span></div>' +
           '<div><strong style="color:#666;">Type &amp; Service:</strong><br><span class="badge" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(encType) + '</span> ' + esc(encService) + '</div>';
@@ -4321,11 +4326,13 @@
       var titleElem = document.getElementById('enc-res-title-info');
       if (titleElem) titleElem.textContent = dateFormatted + ' (' + encType + ' • ' + encService + ')';
 
+      var phicNo = pData.philhealth_no || pData.phic_no || '—';
       var bannerElem = document.getElementById('enc-res-banner');
       if (bannerElem) {
         bannerElem.innerHTML =
           '<div><strong style="color:#666;">Patient Name:</strong><br><span style="font-weight:700; color:#0e3d59; font-size:13px;">' + esc(pName) + '</span></div>' +
-          '<div><strong style="color:#666;">Hospital Number (HRN):</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
+          '<div><strong style="color:#666;">Hospital No. (HRN):</strong><br><span style="font-family:monospace; font-weight:700;">' + esc(hrn) + '</span></div>' +
+          '<div><strong style="color:#666;">PhilHealth PIN:</strong><br><span style="font-family:monospace; font-weight:700; color:#0f4c81;">' + esc(phicNo) + '</span></div>' +
           '<div><strong style="color:#666;">Age / Sex:</strong><br>' + esc(ageSex) + '</div>' +
           '<div><strong style="color:#666;">Encounter Date:</strong><br><span style="font-weight:700; color:#006dcc;">' + esc(dateFormatted) + '</span></div>' +
           '<div><strong style="color:#666;">Type &amp; Service:</strong><br><span class="badge" style="background:#0e3d59; color:#fff; font-size:10px;">' + esc(encType) + '</span> ' + esc(encService) + '</div>';
@@ -4336,7 +4343,6 @@
         if (!examinations || examinations.length === 0) {
           contentElem.innerHTML =
             '<div style="text-align:center; padding:35px 20px; background:#f9fbfc; border:1px dashed #bcd; border-radius:6px;">' +
-            '<div style="font-size:32px; margin-bottom:8px;">🔬</div>' +
             '<h4 style="margin:0 0 6px 0; color:#486581;">No Diagnostic Examinations Recorded</h4>' +
             '<p style="color:#627d98; margin:0 0 12px 0; font-size:12px;">There are no laboratory or imaging examinations performed for encounter date <strong>' + esc(dateFormatted) + '</strong>.</p>' +
             (enc.results ? '<div style="display:inline-block; background:#e8f4fd; border:1px solid #b8daff; border-radius:4px; padding:6px 14px; font-size:12px; color:#004085;"><strong>Recorded Encounter Outcome:</strong> ' + esc(enc.results) + '</div>' : '') +
@@ -5247,12 +5253,7 @@
     }
 
     function getAncillaryIcon(key) {
-      if (key === 'laboratory') return '🧪';
-      if (key === 'radiology') return '🩻';
-      if (key === 'heart') return '🫀';
-      if (key === 'respiratory') return '🫁';
-      if (key === 'eeg') return '🧠';
-      return '📋';
+      return '';
     }
 
     function clinicalTabsMarkup(id) {
@@ -6434,7 +6435,7 @@
         '</div>' +
         '<div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:8px; border-bottom:1px solid #ddd; padding-bottom:5px;">' +
         '<div><strong>Age / Sex:</strong> ' + escapeHtml(pAge) + ' / ' + escapeHtml(pGender) + '</div>' +
-        '<div><strong>Patient Hospital Number:</strong> ' + escapeHtml(pid) + '</div>' +
+        '<div><strong>Hospital No. (HRN):</strong> ' + escapeHtml(pid) + (pData.philhealth_no ? ' &nbsp;|&nbsp; <strong>PIN:</strong> ' + escapeHtml(pData.philhealth_no) : '') + '</div>' +
         '</div>' +
         '<div style="font-size:11px; margin-bottom:8px; border-bottom:1px solid #ddd; padding-bottom:5px;">' +
         '<strong>Address:</strong> ' + escapeHtml(pAddress) +
@@ -6447,7 +6448,7 @@
         '<div style="text-align:center; min-width:240px; font-size:11px;">' +
         '<div style="border-bottom:1px solid #222; margin-bottom:4px; font-weight:bold; font-size:12px;">' + escapeHtml(doctor) + '</div>' +
         '<div style="color:#555;">Attending Physician</div>' +
-        '<div style="font-size:10px; color:#555; margin-top:2px;">Lic. No.: 0123456 &nbsp;|&nbsp; PTR No.: 9876543</div>' +
+        '<div style="font-size:10px; color:#555; margin-top:2px;">PRC Lic. No.: 0094821 &nbsp;|&nbsp; PhilHealth PAN: 12-0048192-1</div>' +
         (licenseNo ? '<div style="font-size:10px; color:#1c527e; font-weight:bold;">DD/DDP (S2) Lic. No.: ' + escapeHtml(licenseNo) + '</div>' : '') +
         '</div>' +
         '</div>';
@@ -6480,7 +6481,7 @@
         '<label for="rx-dd-license">DD/DDP License No.:</label>' +
         '<input type="text" id="rx-dd-license" placeholder="e.g. S2-12345678-0" style="width:230px;" value="' + escapeHtml(licenseVal) + '">' +
         '<div style="margin-left:auto; display:flex; gap:8px;">' +
-        '<button type="button" class="btn btn-mini btn-info" id="rx-open-modal-btn" title="Open in floating window">🗖 Pop-out Window</button>' +
+        '<button type="button" class="btn btn-mini btn-info" id="rx-open-modal-btn" title="Open in floating window">Pop-out Window</button>' +
         '</div>' +
         '</div>' +
 
@@ -6518,7 +6519,7 @@
         '<div class="rx-field-row" style="position:relative;">' +
         '<label>Prescription Date:</label>' +
         '<input type="text" id="rx-prescription-date" value="' + escapeHtml(dtVal) + '" style="cursor:pointer;" title="Click calendar to select date">' +
-        '<button type="button" class="btn btn-mini" id="rx-btn-now" title="Select Date & Time" style="padding:2px 7px; cursor:pointer;" aria-label="Open Calendar">🗓️</button>' +
+        '<button type="button" class="btn btn-mini" id="rx-btn-now" title="Select Date & Time" style="padding:2px 7px; cursor:pointer;" aria-label="Open Calendar">Cal</button>' +
         '<div id="rx-calendar-popup" style="display:none; position:absolute; right:0; top:28px; z-index:9999; background:#ffffff; border:1px solid #cad5dc; border-radius:4px; box-shadow:0 6px 20px rgba(0,0,0,0.22); width:240px; padding:10px; font-family:Arial, sans-serif;">' +
         '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">' +
         '<button type="button" class="btn btn-mini" id="rx-cal-prev" style="padding:1px 6px; font-weight:bold;">◀</button>' +
@@ -6538,14 +6539,14 @@
         '</div>' +
         '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:3px;">' +
         '<label style="width:auto; font-weight:700; color:#4a545a; font-size:11px; margin:0;">Clinical impression:</label>' +
-        '<button type="button" class="btn btn-mini btn-danger" id="rx-btn-clear-impression" style="padding:1px 6px; font-size:10px; line-height:14px;">⛔ Clear</button>' +
+        '<button type="button" class="btn btn-mini btn-danger" id="rx-btn-clear-impression" style="padding:1px 6px; font-size:10px; line-height:14px;">Clear</button>' +
         '</div>' +
         '<textarea id="rx-clinical-impression" rows="4" style="margin-top:2px; flex:1; min-height:85px; width:100%; box-sizing:border-box; font-size:11px; padding:5px 8px; border:1px solid #cad5dc; border-radius:2px; background:#fdfdfd; color:#222; resize:vertical;" placeholder="Clinical impression / diagnosis...">' + escapeHtml(impressionVal) + '</textarea>' +
         '</div>' +
         '</div>' +
 
         '<div class="rx-toolbar">' +
-        '<button type="button" class="btn btn-mini btn-primary" id="rx-btn-add-drug" style="font-weight:600;"><span style="color:#ffcc00; font-size:12px;">💊</span> Add drug</button>' +
+        '<button type="button" class="btn btn-mini btn-primary" id="rx-btn-add-drug" style="font-weight:600;">+ Add Drug</button>' +
         '</div>' +
 
         '<div class="rx-sub-header" style="margin-top:6px; margin-bottom:0;">' +
@@ -6571,7 +6572,7 @@
         '<textarea id="rx-special-instructions" rows="2" style="width:100%; box-sizing:border-box; font-size:11px;" placeholder="Patient instructions, precautions, dietary advice...">' + escapeHtml(specialInstrVal) + '</textarea>' +
 
         '<div class="rx-footer-box" style="display:flex; align-items:center; justify-content:flex-start; gap:12px;">' +
-        '<button type="button" class="btn btn-primary" id="rx-btn-print-pad" style="font-weight:700; padding:6px 16px;"><span style="font-size:13px; margin-right:4px;">🖨️</span> Print Rx Pad</button>' +
+        '<button type="button" class="btn btn-primary" id="rx-btn-print-pad" style="font-weight:700; padding:6px 16px;"><i class="icon-print icon-white"></i> Print Rx Pad</button>' +
         '<span style="font-size:11px; color:#607274; font-style:italic;">(Prescription items are placed and saved into Doctor\'s Orders)</span>' +
         '</div>';
 
@@ -7168,8 +7169,8 @@
           '<tr>' +
             '<td style="padding:4px 8px; border:1px solid #e2e8f0; width:15%; font-weight:700; background:#f8fafc;">Patient Name:</td>' +
             '<td style="padding:4px 8px; border:1px solid #e2e8f0; width:35%; font-weight:700; color:#0f172a;">' + pName + '</td>' +
-            '<td style="padding:4px 8px; border:1px solid #e2e8f0; width:15%; font-weight:700; background:#f8fafc;">HRN / PID:</td>' +
-            '<td style="padding:4px 8px; border:1px solid #e2e8f0; width:35%; font-weight:700; color:#0f4c81;">' + hrn + '</td>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0; width:15%; font-weight:700; background:#f8fafc;">HRN / PIN:</td>' +
+            '<td style="padding:4px 8px; border:1px solid #e2e8f0; width:35%; font-weight:700; color:#0f4c81;">' + hrn + (pData.philhealth_no ? ' &nbsp;|&nbsp; PIN: ' + esc(pData.philhealth_no) : '') + '</td>' +
           '</tr>' +
           '<tr>' +
             '<td style="padding:4px 8px; border:1px solid #e2e8f0; font-weight:700; background:#f8fafc;">Age / Sex:</td>' +
@@ -7214,9 +7215,9 @@
             '<div>System: CLMMRH Health Information System (HIS) v2.5</div>' +
             '<div>Printed: ' + nowStr + '</div>' +
           '</div>' +
-          '<div style="text-align:center; width:220px;">' +
+          '<div style="text-align:center; width:260px;">' +
             '<div style="font-weight:700; color:#0f172a; border-bottom:1px solid #334155; padding-bottom:3px; margin-bottom:2px;">' + physician + '</div>' +
-            '<div style="color:#64748b; font-size:10px;">Attending Physician / Lic. # / Signature</div>' +
+            '<div style="color:#64748b; font-size:10px;">Attending Physician • PRC: 0094821 • PHIC: 12-0048192-1</div>' +
           '</div>' +
         '</div>';
 
@@ -7364,7 +7365,7 @@
       var btn = document.getElementById('rx-open-modal-btn');
       if (btn) {
         btn.style.display = 'inline-block';
-        btn.innerHTML = '🗖 Pop-out Window';
+        btn.innerHTML = 'Pop-out Window';
       }
     }
 
@@ -8943,6 +8944,8 @@
         if (nameEl) nameEl.textContent = '—';
         var hrnEl = document.getElementById('banner-hrn');
         if (hrnEl) hrnEl.textContent = '—';
+        var phicEl = document.getElementById('banner-phic');
+        if (phicEl) phicEl.textContent = '—';
         var ageEl = document.getElementById('banner-age-sex');
         if (ageEl) ageEl.textContent = '—';
         var wardEl = document.getElementById('banner-ward');

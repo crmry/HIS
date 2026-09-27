@@ -44,11 +44,14 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function seedPatientRecord() {
       return {
         id: SEED_PATIENT_ID,
-        seedVersion: 35,
+        seedVersion: 36,
         createdAt: '2026-06-12T08:15:00+08:00',
         updatedAt: '2026-06-13T16:30:00+08:00',
         data: {
           hrn: '0000001677',
+          philhealth_no: '06-025198234-1',
+          phic_member_category: 'Direct Contributor - Employed (Private)',
+          attending_physician: { name: 'Dr. Miguel Santos, MD', prc_no: '0094821', pan_no: '12-0048192-1', s2_no: 'S2-094821-2026' },
           last_name: 'DELA CRUZ',
           first_name: 'MARIA',
           middle_name: 'SANTOS',
@@ -499,11 +502,14 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 35,
+        seedVersion: 36,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
           hrn: '0000001890',
+          philhealth_no: '06-018274910-3',
+          phic_member_category: 'Direct Contributor - Employed (Private)',
+          attending_physician: { name: 'Dr. Miguel Santos, MD', prc_no: '0094821', pan_no: '12-0048192-1', s2_no: 'S2-094821-2026' },
           last_name: 'DEL ROSARIO',
           first_name: 'JUAN',
           middle_name: 'BAUTISTA',
@@ -859,11 +865,14 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function blankPatientRecord() {
       return {
         id: BLANK_PATIENT_ID,
-        seedVersion: 35,
+        seedVersion: 36,
         createdAt: '2026-09-25T10:30:00+08:00',
         updatedAt: '2026-09-25T10:30:00+08:00',
         data: {
           hrn: '0000001678',
+          philhealth_no: '',
+          phic_member_category: '',
+          attending_physician: { name: '', prc_no: '', pan_no: '', s2_no: '' },
           last_name: 'NEW PATIENT',
           first_name: 'SAMPLE',
           middle_name: '',
@@ -882,14 +891,14 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var records = getPatients();
       var index = records.findIndex(function (record) { return record.id === SEED_PATIENT_ID; });
       if (index < 0) records.push(seedPatientRecord());
-      else if (Number(records[index].seedVersion || 0) < 35) records[index] = seedPatientRecord();
+      else if (Number(records[index].seedVersion || 0) < 36) records[index] = seedPatientRecord();
 
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) records.push(opPatientRecord());
-      else if (Number(records[opIndex].seedVersion || 0) < 35) records[opIndex] = opPatientRecord();
+      else if (Number(records[opIndex].seedVersion || 0) < 36) records[opIndex] = opPatientRecord();
 
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
-      else if (Number(records[blankIndex].seedVersion || 0) < 35) records[blankIndex] = blankPatientRecord();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      else if (Number(records[blankIndex].seedVersion || 0) < 36) records[blankIndex] = blankPatientRecord();
+      savePatients(records);
     }
