@@ -1010,12 +1010,13 @@
                     <th style="width:140px;">Date &amp; Time</th>
                     <th style="width:160px;">Department</th>
                     <th>Diagnostic Examination / Procedure</th>
-                    <th style="width:160px; text-align:center;">Status</th>
+                    <th style="width:90px; text-align:center;">Priority</th>
+                    <th style="width:130px; text-align:center;">Status</th>
                     <th style="width:70px; text-align:center;">Result</th>
                   </tr>
                 </thead>
                 <tbody id="viewable-results-list">
-                  <tr><td colspan="5" style="text-align:center; padding:18px 12px; color:#718096; font-size:12px;">Loading diagnostic results...</td></tr>
+                  <tr><td colspan="6" style="text-align:center; padding:18px 12px; color:#718096; font-size:12px;">Loading diagnostic results...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -4792,6 +4793,24 @@
             var examId = x.id || ('EXAM-' + currentEncIdx + '-' + xIdx);
             if (seenIds[examId]) return;
             seenIds[examId] = true;
+            var priorityVal = x.priority;
+            if (!priorityVal && currentEnc && currentEnc.clinical_requests) {
+              for (var tabKey in currentEnc.clinical_requests) {
+                var reqList = currentEnc.clinical_requests[tabKey];
+                if (Array.isArray(reqList)) {
+                  var matchReq = reqList.find(function(r) {
+                    return r.description && x.name && (r.description.toLowerCase().indexOf(x.name.toLowerCase()) !== -1 || x.name.toLowerCase().indexOf(r.description.toLowerCase()) !== -1);
+                  });
+                  if (matchReq && matchReq.priority) {
+                    priorityVal = matchReq.priority;
+                    break;
+                  }
+                }
+              }
+            }
+            if (!priorityVal) priorityVal = 'Routine';
+            if (priorityVal.toUpperCase() === 'URGENT') priorityVal = 'STAT';
+
             exams.push({
               id: examId,
               exam: x,
@@ -4801,6 +4820,7 @@
               category: x.category || 'Laboratory',
               bucket: getExamCategoryBucket(x),
               name: x.name || 'Diagnostic Procedure',
+              priority: priorityVal,
               status: x.status || 'Completed',
               performed_by: x.performed_by || x.signee || (currentEnc.physician && currentEnc.physician.name) || 'Clinical Staff',
               impression: x.impression || '',
@@ -4897,7 +4917,7 @@
       if (!listEl) return;
 
       if (filtered.length === 0) {
-        listEl.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:22px 14px; color:#64748b; background:#f8fafc; font-style:italic;">No diagnostic examination results recorded in this section for this patient encounter.</td></tr>';
+        listEl.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:22px 14px; color:#64748b; background:#f8fafc; font-style:italic;">No diagnostic examination results recorded in this section for this patient encounter.</td></tr>';
         return;
       }
 
@@ -4906,11 +4926,18 @@
       var html = filtered.map(function (item) {
         var dateDisplay = esc(formatDateTime(item.date) || formatDate(item.date) || item.date);
         var deptBadgeBg = item.bucket === 'radiology' ? '#047857' : (item.bucket === 'heart' ? '#b91c1c' : (item.bucket === 'pulmonary' ? '#0284c7' : (item.bucket === 'neuro' ? '#6d28d9' : '#1e3a8a')));
+        var priorityText = (item.priority || (item.exam && item.exam.priority) || 'Routine').trim();
+        if (priorityText.toUpperCase() === 'URGENT') priorityText = 'STAT';
+        var isStat = priorityText.toUpperCase() === 'STAT';
+        var priorityHtml = isStat
+          ? '<span class="badge badge-important" style="background:#dc2626; color:#fff; font-size:10px; font-weight:700; padding:2px 7px;">STAT</span>'
+          : '<span style="color:#475569; font-weight:600; font-size:11px;">Routine</span>';
 
         return '<tr>' +
           '<td style="white-space:nowrap; font-weight:600; color:#334155;">' + dateDisplay + '</td>' +
           '<td><span class="badge" style="background:' + deptBadgeBg + '; color:#fff; font-size:10px; padding:2px 6px;">' + esc(item.category) + '</span></td>' +
           '<td><strong style="color:#0e3d59; font-size:12.5px;">' + esc(item.name) + '</strong></td>' +
+          '<td style="text-align:center;">' + priorityHtml + '</td>' +
           '<td style="text-align:center;"><span class="badge badge-success" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(item.status) + '</span></td>' +
           '<td style="text-align:center;">' +
           '<button type="button" class="btn btn-mini btn-view-diagnostic-result" data-exam-id="' + esc(item.id) + '" title="View Official Diagnostic Result" aria-label="View Official Diagnostic Result" style="padding:2px 7px;">' +
@@ -4945,6 +4972,13 @@
         titleElem.textContent = (exam.name || 'Diagnostic Examination') + ' (' + (exam.category || 'Official Result') + ')';
       }
 
+      var modalPriority = (found.priority || exam.priority || 'Routine').trim();
+      if (modalPriority.toUpperCase() === 'URGENT') modalPriority = 'STAT';
+      var isModalStat = modalPriority.toUpperCase() === 'STAT';
+      var modalPriorityBadge = isModalStat
+        ? '<span class="badge badge-important" style="background:#dc2626; color:#fff; font-size:10px; font-weight:700; padding:2px 6px;">STAT</span>'
+        : '<span class="badge" style="background:#64748b; color:#fff; font-size:10px; font-weight:600; padding:2px 6px;">Routine</span>';
+
       var bannerElem = document.getElementById('enc-res-banner');
       if (bannerElem) {
         bannerElem.innerHTML =
@@ -4952,7 +4986,7 @@
           '<div><strong style="color:#666;">Patient Name:</strong><br><span style="font-weight:700; color:#0e3d59; font-size:13px;">' + esc(pName) + '</span></div>' +
           '<div><strong style="color:#666;">Age / Sex:</strong><br>' + esc(ageSex) + '</div>' +
           '<div><strong style="color:#666;">Exam Date &amp; Time:</strong><br><span style="font-weight:700; color:#006dcc;">' + esc(dateFormatted) + '</span></div>' +
-          '<div><strong style="color:#666;">Department / Status:</strong><br><span class="badge" style="background:#0e3d59; color:#fff; font-size:10px;">' + esc(exam.category || 'Diagnostic') + '</span> <span class="badge badge-success" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(exam.status || 'Completed') + '</span></div>';
+          '<div><strong style="color:#666;">Priority / Status:</strong><br>' + modalPriorityBadge + ' <span class="badge badge-success" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(exam.status || 'Completed') + '</span></div>';
       }
 
       var contentElem = document.getElementById('enc-res-content');
@@ -4971,6 +5005,7 @@
         html += '    </div>';
         html += '    <div style="font-size:11px; color:#4a5568; display:flex; align-items:center; gap:8px;">';
         html += '      <span><i class="icon-time"></i> Performed: ' + time + '</span>';
+        html += '      <span>Priority: ' + modalPriorityBadge + '</span>';
         html += '      <span class="badge badge-success" style="background:#2e7d32; color:#fff;">' + status + '</span>';
         html += '    </div>';
         html += '  </div>';
