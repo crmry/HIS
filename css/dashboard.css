@@ -905,7 +905,8 @@
       font-style: italic;
       text-align: center;
     }
-    .btn-request-result {
+    .btn-request-result,
+    .btn-view-diagnostic-result {
       background: #f8fafc;
       border: 1px solid #cbd5e1;
       border-radius: 4px;
@@ -919,12 +920,73 @@
       line-height: 1;
       transition: all 0.15s ease-in-out;
     }
-    .btn-request-result:hover {
+    .btn-request-result:hover,
+    .btn-view-diagnostic-result:hover {
       background: #e2e8f0;
       color: #004085;
       border-color: #94a3b8;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       transform: translateY(-1px);
+    }
+
+    /* ── DOH Diagnostic Examination Results (Viewable Results) Module ── */
+    #dashlet-viewable-results {
+      margin-bottom: 20px;
+    }
+    .viewable-results-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .result-filter-btn {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #334155;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 4px 10px;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .result-filter-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .result-filter-btn.active {
+      background: #0e3d59 !important;
+      color: #ffffff !important;
+      border-color: #082638 !important;
+      box-shadow: 0 1px 3px rgba(14, 61, 89, 0.25);
+    }
+    .result-filter-btn.active .badge {
+      background: #ffffff !important;
+      color: #0e3d59 !important;
+    }
+    .viewable-results-table {
+      margin-bottom: 0;
+      font-size: 12px;
+    }
+    .viewable-results-table th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      padding: 8px 10px;
+      border-bottom: 2px solid #cbd5e1;
+    }
+    .viewable-results-table td {
+      padding: 8px 10px;
+      vertical-align: middle;
+      border-top: 1px solid #e2e8f0;
     }
 
     /* ── Order Summary Toolbar & Table ── */

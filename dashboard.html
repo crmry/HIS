@@ -981,6 +981,49 @@
           </div>
     </div>
 
+    <!-- ROW 3.5: Diagnostic Examination Results (DOH Viewable Results) -->
+    <div class="row-fluid" id="row-viewable-results">
+      <div class="span12" id="viewable-results-col">
+        <div class="dashlet" id="dashlet-viewable-results">
+          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>Diagnostic Examination Results (Viewable Results)</h3>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="viewable-results-count-badge" class="badge badge-info" style="font-size:11px; padding:2px 8px; background:#0e3d59; color:#fff; font-weight:600;">0 Results</span>
+              <button type="button" class="btn btn-mini" id="btn-refresh-viewable-results" title="Refresh Diagnostic Results"><i class="icon-refresh"></i> Refresh</button>
+            </div>
+          </div>
+          <div class="bootstrap-widget-content" id="dashlet-results-content" style="padding:12px 14px;">
+            <div class="viewable-results-nav" id="viewable-results-tabs">
+              <button type="button" class="btn btn-small active result-filter-btn" data-result-cat="all">All Results <span class="badge" id="cat-badge-all" style="font-size:10px; margin-left:3px; background:#4a5568;">0</span></button>
+              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="laboratory">Laboratory <span class="badge" id="cat-badge-laboratory" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
+              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="radiology">Radiology / Imaging (DDIRS) <span class="badge" id="cat-badge-radiology" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
+              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="heart">Heart Station <span class="badge" id="cat-badge-heart" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
+              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="pulmonary">Pulmonary Station <span class="badge" id="cat-badge-pulmonary" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
+              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="neuro">EEG / Neuro <span class="badge" id="cat-badge-neuro" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
+            </div>
+
+            <div class="table-responsive-wrap" style="overflow-x:auto;">
+              <table class="table table-bordered table-striped table-hover order-card-table viewable-results-table">
+                <thead>
+                  <tr>
+                    <th style="width:135px;">Date &amp; Time</th>
+                    <th style="width:145px;">Department</th>
+                    <th>Diagnostic Examination / Procedure</th>
+                    <th>Summary Findings / Key Analytes</th>
+                    <th style="width:135px; text-align:center;">Status</th>
+                    <th style="width:65px; text-align:center;">Result</th>
+                  </tr>
+                </thead>
+                <tbody id="viewable-results-list">
+                  <tr><td colspan="6" style="text-align:center; padding:18px 12px; color:#718096; font-size:12px;">Loading diagnostic results...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ROW 4: Initial Diagnosis -->
     <div class="row-fluid" id="row-admitting-dx">
       <div class="span12" id="admitting-dx-col">
@@ -4657,8 +4700,9 @@
 
           contentElem.innerHTML = html;
         } else {
+          var paperIconSvg = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:6px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>';
           var pendingHtml = '<div style="text-align:center; padding:32px 20px; background:#fbfcfe; border:1px solid #cbd5e1; border-radius:6px;">' +
-            '<div style="font-size:24px; color:#2563eb; margin-bottom:8px;">📄</div>' +
+            '<div>' + paperIconSvg + '</div>' +
             '<h4 style="margin:0 0 6px 0; color:#1e293b;">Diagnostic Request Specimen Received</h4>' +
             '<p style="color:#64748b; margin:0 0 12px 0; font-size:12px;">Request: <strong>' + esc(reqName) + '</strong> (' + esc(tab.label) + ')</p>' +
             '<div style="display:inline-flex; gap:8px; align-items:center; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:6px 14px; font-size:12px; color:#334155;">' +
@@ -4677,6 +4721,288 @@
       if (modal) modal.classList.add('open');
     }
     window.openClinicalRequestResultModal = openClinicalRequestResultModal;
+
+    /* ═══════════════════════════════════════════════════════════════
+       DOH DIAGNOSTIC EXAMINATION RESULTS (VIEWABLE RESULTS) MODULE
+       ═══════════════════════════════════════════════════════════════ */
+    var activeResultFilterCategory = 'all';
+    var cachedViewableExaminations = [];
+
+    function getExamCategoryBucket(exam) {
+      var catStr = ((exam.category || '') + ' ' + (exam.name || '')).toLowerCase();
+      if (catStr.indexOf('radio') !== -1 || catStr.indexOf('x-ray') !== -1 || catStr.indexOf('ddirs') !== -1 || catStr.indexOf('ultrasound') !== -1 || catStr.indexOf('ct ') !== -1 || catStr.indexOf('mri') !== -1) {
+        return 'radiology';
+      }
+      if (catStr.indexOf('heart') !== -1 || catStr.indexOf('ecg') !== -1 || catStr.indexOf('electrocardiogram') !== -1 || catStr.indexOf('echo') !== -1 || catStr.indexOf('cardio') !== -1 || catStr.indexOf('holter') !== -1) {
+        return 'heart';
+      }
+      if (catStr.indexOf('pulm') !== -1 || catStr.indexOf('respir') !== -1 || catStr.indexOf('abg') !== -1 || catStr.indexOf('arterial blood gas') !== -1 || catStr.indexOf('spirom') !== -1 || catStr.indexOf('oximetry') !== -1) {
+        return 'pulmonary';
+      }
+      if (catStr.indexOf('neuro') !== -1 || catStr.indexOf('eeg') !== -1 || catStr.indexOf('electroenceph') !== -1 || catStr.indexOf('emg') !== -1) {
+        return 'neuro';
+      }
+      return 'laboratory';
+    }
+
+    function collectAllViewableExaminations() {
+      var exams = [];
+      var seenIds = {};
+
+      if (Array.isArray(loadedEncounters)) {
+        loadedEncounters.forEach(function (enc, encIdx) {
+          var encExams = getEncounterExaminations(enc);
+          if (Array.isArray(encExams)) {
+            encExams.forEach(function (x, xIdx) {
+              var examId = x.id || ('EXAM-' + encIdx + '-' + xIdx);
+              if (seenIds[examId]) return;
+              seenIds[examId] = true;
+              exams.push({
+                id: examId,
+                exam: x,
+                enc: enc,
+                encIdx: encIdx,
+                date: x.performed_at || x.dateTime || enc.date || '—',
+                category: x.category || 'Laboratory',
+                bucket: getExamCategoryBucket(x),
+                name: x.name || 'Diagnostic Procedure',
+                status: x.status || 'Completed',
+                performed_by: x.performed_by || x.signee || (enc.physician && enc.physician.name) || 'Clinical Staff',
+                impression: x.impression || '',
+                findings: x.findings || '',
+                analytes: Array.isArray(x.analytes) ? x.analytes : []
+              });
+            });
+          }
+        });
+      }
+
+      cachedViewableExaminations = exams;
+      return exams;
+    }
+
+    function buildExamSummarySnippet(item) {
+      var exam = item.exam || item;
+      if (Array.isArray(exam.analytes) && exam.analytes.length > 0) {
+        var abnormal = [];
+        exam.analytes.forEach(function (a) {
+          var flag = (a.flag || 'Normal').trim();
+          var isHigh = flag.toLowerCase() === 'high';
+          var isLow = flag.toLowerCase() === 'low';
+          if (isHigh || isLow) {
+            var color = isHigh ? '#c62828' : '#d97706';
+            var arrow = isHigh ? '▲' : '▼';
+            abnormal.push('<strong style="color:' + color + ';">' + esc(a.test) + ': ' + esc(a.value) + ' ' + esc(a.unit || '') + ' (' + esc(flag.toUpperCase()) + ' ' + arrow + ')</strong>');
+          }
+        });
+
+        if (abnormal.length > 0) {
+          var html = abnormal.slice(0, 3).join(', ');
+          if (exam.impression) {
+            html += '<div style="margin-top:2px; font-size:11px; color:#0e583f;"><em>Impression: ' + esc(exam.impression) + '</em></div>';
+          }
+          return html;
+        } else {
+          return '<span style="color:#2e7d32; font-weight:600;">Normal:</span> All ' + exam.analytes.length + ' analytes within reference limits' + (exam.impression ? ' • <em style="color:#0e583f;">' + esc(exam.impression) + '</em>' : '');
+        }
+      }
+
+      if (exam.impression) {
+        return '<strong style="color:#0e583f;">Impression:</strong> ' + esc(exam.impression);
+      }
+      if (exam.findings) {
+        var excerpt = exam.findings.length > 120 ? exam.findings.substring(0, 117) + '...' : exam.findings;
+        return '<span style="color:#334e68;">Findings:</span> ' + esc(excerpt);
+      }
+      return '<span style="color:#64748b; font-style:italic;">Official report filed and validated.</span>';
+    }
+
+    function renderViewableResults(filterCat) {
+      if (filterCat) activeResultFilterCategory = filterCat;
+      var exams = collectAllViewableExaminations();
+
+      // Update nav tab counts
+      var counts = { all: exams.length, laboratory: 0, radiology: 0, heart: 0, pulmonary: 0, neuro: 0 };
+      exams.forEach(function (x) {
+        if (counts[x.bucket] != null) counts[x.bucket]++;
+      });
+
+      var badgeAll = document.getElementById('cat-badge-all');
+      if (badgeAll) badgeAll.textContent = counts.all;
+      var badgeLab = document.getElementById('cat-badge-laboratory');
+      if (badgeLab) badgeLab.textContent = counts.laboratory;
+      var badgeRad = document.getElementById('cat-badge-radiology');
+      if (badgeRad) badgeRad.textContent = counts.radiology;
+      var badgeHeart = document.getElementById('cat-badge-heart');
+      if (badgeHeart) badgeHeart.textContent = counts.heart;
+      var badgePulm = document.getElementById('cat-badge-pulmonary');
+      if (badgePulm) badgePulm.textContent = counts.pulmonary;
+      var badgeNeuro = document.getElementById('cat-badge-neuro');
+      if (badgeNeuro) badgeNeuro.textContent = counts.neuro;
+
+      var mainBadge = document.getElementById('viewable-results-count-badge');
+      if (mainBadge) mainBadge.textContent = counts.all + ' Result' + (counts.all === 1 ? '' : 's');
+
+      // Update active nav button
+      var navBtns = document.querySelectorAll('.result-filter-btn');
+      navBtns.forEach(function (btn) {
+        if (btn.dataset.resultCat === activeResultFilterCategory) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Filter exams
+      var filtered = exams.filter(function (x) {
+        if (activeResultFilterCategory === 'all') return true;
+        return x.bucket === activeResultFilterCategory;
+      });
+
+      var listEl = document.getElementById('viewable-results-list');
+      if (!listEl) return;
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:22px 14px; color:#64748b; background:#f8fafc; font-style:italic;">No diagnostic examination results recorded in this section for this patient encounter.</td></tr>';
+        return;
+      }
+
+      var paperIconSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>';
+
+      var html = filtered.map(function (item) {
+        var dateDisplay = esc(formatDateTime(item.date) || formatDate(item.date) || item.date);
+        var deptBadgeBg = item.bucket === 'radiology' ? '#047857' : (item.bucket === 'heart' ? '#b91c1c' : (item.bucket === 'pulmonary' ? '#0284c7' : (item.bucket === 'neuro' ? '#6d28d9' : '#1e3a8a')));
+        var summaryHtml = buildExamSummarySnippet(item);
+
+        return '<tr>' +
+          '<td style="white-space:nowrap; font-weight:600; color:#334155;">' + dateDisplay + '</td>' +
+          '<td><span class="badge" style="background:' + deptBadgeBg + '; color:#fff; font-size:10px; padding:2px 6px;">' + esc(item.category) + '</span></td>' +
+          '<td><strong style="color:#0e3d59; font-size:12.5px;">' + esc(item.name) + '</strong></td>' +
+          '<td style="font-size:11.5px; line-height:1.45;">' + summaryHtml + '</td>' +
+          '<td style="text-align:center;"><span class="badge badge-success" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(item.status) + '</span>' +
+          (item.performed_by ? '<div style="font-size:10px; color:#64748b; margin-top:2px;" title="' + esc(item.performed_by) + '">' + esc(item.performed_by.split('/')[0].trim()) + '</div>' : '') +
+          '</td>' +
+          '<td style="text-align:center;">' +
+          '<button type="button" class="btn btn-mini btn-view-diagnostic-result" data-exam-id="' + esc(item.id) + '" title="View Official Diagnostic Result" aria-label="View Official Diagnostic Result" style="padding:2px 7px;">' +
+          paperIconSvg +
+          '</button>' +
+          '</td>' +
+          '</tr>';
+      }).join('');
+
+      listEl.innerHTML = html;
+    }
+
+    function openDiagnosticExamResultModal(examId) {
+      var found = cachedViewableExaminations.find(function (x) { return x.id === examId; });
+      if (!found) return;
+
+      var pData = currentPatientData();
+      var pName = patientName(pData) || 'UNKNOWN PATIENT';
+      var hrn = pData.hrn || pData.hospital_number || '—';
+      var age = pData.birthdate ? calculateAge(pData.birthdate) : (pData.age || '—');
+      var sex = (pData.gender || pData.sex || '—').charAt(0).toUpperCase();
+      var ageSex = (age ? age + ' / ' : '') + (sex || '—');
+      var exam = found.exam;
+      var dateFormatted = formatDateTime(found.date) || formatDate(found.date) || found.date;
+
+      if (found.encIdx != null) {
+        activeEncounterResultsIndex = found.encIdx;
+      }
+
+      var titleElem = document.getElementById('enc-res-title-info');
+      if (titleElem) {
+        titleElem.textContent = (exam.name || 'Diagnostic Examination') + ' (' + (exam.category || 'Official Result') + ')';
+      }
+
+      var bannerElem = document.getElementById('enc-res-banner');
+      if (bannerElem) {
+        bannerElem.innerHTML =
+          '<div><strong style="color:#666;">Hospital Number:</strong><br><span style="font-family:monospace; font-weight:700; font-size:13px;">' + esc(hrn) + '</span></div>' +
+          '<div><strong style="color:#666;">Patient Name:</strong><br><span style="font-weight:700; color:#0e3d59; font-size:13px;">' + esc(pName) + '</span></div>' +
+          '<div><strong style="color:#666;">Age / Sex:</strong><br>' + esc(ageSex) + '</div>' +
+          '<div><strong style="color:#666;">Exam Date &amp; Time:</strong><br><span style="font-weight:700; color:#006dcc;">' + esc(dateFormatted) + '</span></div>' +
+          '<div><strong style="color:#666;">Department / Status:</strong><br><span class="badge" style="background:#0e3d59; color:#fff; font-size:10px;">' + esc(exam.category || 'Diagnostic') + '</span> <span class="badge badge-success" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(exam.status || 'Completed') + '</span></div>';
+      }
+
+      var contentElem = document.getElementById('enc-res-content');
+      if (contentElem) {
+        var cat = esc(exam.category || 'Diagnostic Examination');
+        var name = esc(exam.name || 'Diagnostic Examination');
+        var time = esc(dateFormatted);
+        var status = esc(exam.status || 'Completed');
+        var staff = esc(exam.performed_by || exam.signee || 'Laboratory Technologist');
+
+        var html = '<div class="encounter-exam-card" style="border: 2px solid #3182ce; box-shadow: 0 2px 8px rgba(49, 130, 206, 0.15);">';
+        html += '  <div class="encounter-exam-header" style="background:#ebf8ff; border-bottom:1px solid #bee3f8;">';
+        html += '    <div class="encounter-exam-title">';
+        html += '      <span class="badge" style="background:#2b6cb0; color:#fff; font-size:10px;">' + cat + '</span>';
+        html += '      <span style="font-weight:700; color:#2c5282;">' + name + '</span>';
+        html += '    </div>';
+        html += '    <div style="font-size:11px; color:#4a5568; display:flex; align-items:center; gap:8px;">';
+        html += '      <span><i class="icon-time"></i> Performed: ' + time + '</span>';
+        html += '      <span class="badge badge-success" style="background:#2e7d32; color:#fff;">' + status + '</span>';
+        html += '    </div>';
+        html += '  </div>';
+
+        html += '  <div class="encounter-exam-body">';
+        if (Array.isArray(exam.analytes) && exam.analytes.length > 0) {
+          html += '    <table class="analyte-table">';
+          html += '      <thead><tr>';
+          html += '        <th>Test / Analyte</th>';
+          html += '        <th style="width:110px;">Result</th>';
+          html += '        <th style="width:90px;">Unit</th>';
+          html += '        <th style="width:140px;">Reference Range</th>';
+          html += '        <th style="width:95px; text-align:center;">Flag</th>';
+          html += '      </tr></thead>';
+          html += '      <tbody>';
+          exam.analytes.forEach(function (ana) {
+            var flag = (ana.flag || 'Normal').trim();
+            var flagClass = 'flag-badge ' + flag.toLowerCase();
+            var flagText = flag === 'High' ? 'HIGH ▲' : (flag === 'Low' ? 'LOW ▼' : 'NORMAL ✓');
+            html += '      <tr>';
+            html += '        <td><strong>' + esc(ana.test) + '</strong></td>';
+            html += '        <td><span style="font-size:13px; font-weight:700;' + (flag === 'High' ? 'color:#c62828;' : (flag === 'Low' ? 'color:#e65100;' : 'color:#102a43;')) + '">' + esc(ana.value) + '</span></td>';
+            html += '        <td style="color:#627d98;">' + esc(ana.unit || '—') + '</td>';
+            html += '        <td style="color:#486581;">' + esc(ana.reference || '—') + '</td>';
+            html += '        <td style="text-align:center;"><span class="' + flagClass + '">' + flagText + '</span></td>';
+            html += '      </tr>';
+          });
+          html += '      </tbody></table>';
+        }
+
+        if (exam.findings) {
+          html += '    <div style="margin-bottom:8px; font-size:12px; line-height:1.5;">';
+          html += '      <strong style="color:#334e68;">Diagnostic Findings:</strong>';
+          html += '      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:8px 12px; margin-top:4px; color:#102a43; white-space:pre-wrap;">' + esc(exam.findings) + '</div>';
+          html += '    </div>';
+        }
+
+        if (exam.impression) {
+          html += '    <div style="margin-top:8px; background:#effcf6; border:1px solid #b7ebd1; border-left:4px solid #27ab83; border-radius:4px; padding:8px 12px; font-size:12px;">';
+          html += '      <strong style="color:#0e583f;">Diagnostic Impression:</strong> ';
+          html += '      <span style="color:#0e583f; font-weight:600;">' + esc(exam.impression) + '</span>';
+          html += '    </div>';
+        }
+
+        if (staff) {
+          html += '    <div style="margin-top:8px; font-size:11px; color:#829ab1; text-align:right;">';
+          html += '      <i class="icon-user"></i> Validated by: <em>' + staff + '</em>';
+          html += '    </div>';
+        }
+
+        html += '  </div>';
+        html += '</div>';
+
+        contentElem.innerHTML = html;
+      }
+
+      var modal = document.getElementById('encounter-results-modal');
+      if (modal) modal.classList.add('open');
+    }
+
+    window.renderViewableResults = renderViewableResults;
+    window.openDiagnosticExamResultModal = openDiagnosticExamResultModal;
 
     function printEncounterDocument(title, contentHtml) {
       var w = window.open('', '_blank', 'width=840,height=750');
@@ -4886,6 +5212,36 @@
     if (resModalBackdrop) {
       resModalBackdrop.addEventListener('click', function (e) {
         if (e.target === resModalBackdrop) closeEncounterResultsModal();
+      });
+    }
+
+    // Viewable Results module interaction listeners
+    var viewableResultsTabs = document.getElementById('viewable-results-tabs');
+    if (viewableResultsTabs) {
+      viewableResultsTabs.addEventListener('click', function (e) {
+        var filterBtn = e.target.closest('.result-filter-btn');
+        if (filterBtn) {
+          var cat = filterBtn.dataset.resultCat || 'all';
+          renderViewableResults(cat);
+        }
+      });
+    }
+
+    var viewableResultsList = document.getElementById('viewable-results-list');
+    if (viewableResultsList) {
+      viewableResultsList.addEventListener('click', function (e) {
+        var btn = e.target.closest('.btn-view-diagnostic-result');
+        if (btn) {
+          var examId = btn.dataset.examId;
+          openDiagnosticExamResultModal(examId);
+        }
+      });
+    }
+
+    var refreshResultsBtn = document.getElementById('btn-refresh-viewable-results');
+    if (refreshResultsBtn) {
+      refreshResultsBtn.addEventListener('click', function () {
+        renderViewableResults();
       });
     }
 
@@ -5317,6 +5673,7 @@
       encRows.innerHTML = '';
       if (!loadedEncounters || loadedEncounters.length === 0) {
         encRows.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:18px 12px; color:#718096; font-size:12px;">No patient encounters recorded yet.</td></tr>';
+        renderViewableResults();
         return;
       }
 
@@ -5341,12 +5698,14 @@
       if (filtered.length === 0) {
         var deptName = activeEncounterDeptFilter === 'IP' ? 'InPatient (IP)' : (activeEncounterDeptFilter === 'OP' ? 'OutPatient (OP)' : 'Emergency Department (ER)');
         encRows.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:18px 12px; color:#718096; font-size:12px;">No ' + deptName + ' encounters found for this patient.</td></tr>';
+        renderViewableResults();
         return;
       }
 
       filtered.forEach(function (item) {
         addEncounterRow(item.enc, item.originalIdx, loadedEncounters);
       });
+      renderViewableResults();
     }
 
     function getEncounters() {
@@ -5501,7 +5860,7 @@
         '</div>' +
         '<div class="table-responsive-wrap">' +
         '<table class="order-card-table request-table" aria-label="Saved requests for selected department">' +
-        '<thead><tr><th style="width:80px;">Code</th><th>Request</th><th style="width:145px;">Date &amp; Time</th><th style="width:80px;">Priority</th><th>Remarks</th><th style="width:75px; text-align:center;">RESULT</th><th style="width:36px; text-align:center;"></th></tr></thead>' +
+        '<thead><tr><th style="width:80px;">Code</th><th>Request</th><th style="width:145px;">Date &amp; Time</th><th style="width:80px;">Priority</th><th>Remarks</th><th style="width:36px; text-align:center;"></th></tr></thead>' +
         '<tbody id="clinical-request-list"></tbody>' +
         '</table>' +
         '</div>' +
@@ -5530,14 +5889,12 @@
       var rows = clinicalRequests[activeRequestTab] || [];
       title.textContent = tab.label + ' Requests (' + rows.length + ')';
       if (!rows.length) {
-        list.innerHTML = '<tr><td colspan="7" class="request-empty">Request list is currently empty...</td></tr>';
+        list.innerHTML = '<tr><td colspan="6" class="request-empty">Request list is currently empty...</td></tr>';
         return;
       }
-      var paperIconSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>';
       list.innerHTML = rows.map(function (row, index) {
         return '<tr><td>' + esc(row.code) + '</td><td><b>' + esc(row.description) + '</b></td><td>' + esc(formatDateTime(row.dateTime)) + '</td>' +
           '<td class="' + (row.priority === 'STAT' ? 'request-priority-stat' : '') + '">' + esc(row.priority) + '</td><td>' + esc(row.remarks) + '</td>' +
-          '<td style="text-align:center;"><button type="button" class="btn btn-mini btn-request-result" data-request-tab="' + esc(activeRequestTab) + '" data-request-index="' + index + '" title="View Result" aria-label="View Result" style="padding:2px 7px;">' + paperIconSvg + '</button></td>' +
           '<td><button type="button" class="btn btn-danger btn-mini" data-remove-request="' + index + '" aria-label="Remove request">&times;</button></td></tr>';
       }).join('');
     }
@@ -7157,13 +7514,6 @@
       if (tabBtn) { setActiveRequestTab(tabBtn.dataset.clinicalTab); return; }
       var requestBtn = e.target.closest('#open-request-modal');
       if (requestBtn) { openRequestModal(activeRequestTab); return; }
-      var viewResultBtn = e.target.closest('.btn-request-result');
-      if (viewResultBtn) {
-        var tabKey = viewResultBtn.dataset.requestTab || activeRequestTab;
-        var reqIdx = parseInt(viewResultBtn.dataset.requestIndex, 10);
-        openClinicalRequestResultModal(tabKey, reqIdx);
-        return;
-      }
       var removeRequestBtn = e.target.closest('[data-remove-request]');
       if (removeRequestBtn) {
         clinicalRequests[activeRequestTab].splice(Number(removeRequestBtn.dataset.removeRequest), 1);
@@ -9615,6 +9965,11 @@
     }
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initFloatingRequisitionToolkit);
+    }
+
+    // Initialize DOH Diagnostic Examination Results (Viewable Results) module
+    if (typeof renderViewableResults === 'function') {
+      renderViewableResults();
     }
 
   </script>
