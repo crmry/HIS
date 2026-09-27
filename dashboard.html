@@ -4407,77 +4407,7 @@
       w.document.write('@media print { body { margin: 10mm; } }');
       w.document.write('</style></head><body>');
       w.document.write(contentHtml);
-      w.document.write('  <!-- ═══ FLOATING CLINICAL ORDER & REQUISITION TOOLKIT ═══ -->
-  <aside id="floating-req-toolkit" class="floating-req-toolkit" aria-label="Clinical Order and Requisition Toolkit">
-    <div class="floating-req-handle" id="floating-req-handle" title="Clinical Order & Requisition Toolkit (Click to expand / collapse)">
-      <span class="floating-req-handle-icon">⚡</span>
-      <span class="floating-req-handle-text">REQUISITIONS</span>
-      <span class="floating-req-handle-arrow" id="floating-req-toggle-arrow">◀</span>
-    </div>
-    <div class="floating-req-menu" id="floating-req-menu">
-      <div class="floating-req-header">
-        <div style="font-weight:700; font-size:12px; color:#1b4d3e; display:flex; align-items:center; gap:6px;">
-          <span>⚡ QUICK REQUISITION PAD</span>
-        </div>
-        <div style="font-size:10px; color:#64748b;">CPOE Diagnostic Orders &amp; Print Slips</div>
-      </div>
-      <div class="floating-req-items">
-        <button type="button" class="floating-req-item-btn" id="floating-btn-rx" data-station="rx" title="Open Rx Writer / Prescriptions">
-          <span class="floating-req-item-icon" style="background:#ecfdf5; color:#059669; border-color:#a7f3d0;">💊</span>
-          <div class="floating-req-item-info">
-            <div class="floating-req-item-title">Rx Writer</div>
-            <div class="floating-req-item-sub">Outpatient Prescriptions &amp; Pad</div>
-          </div>
-          <span class="floating-req-item-action">Open ↗</span>
-        </button>
-
-        <button type="button" class="floating-req-item-btn" id="floating-btn-lab" data-station="laboratory" title="Laboratory Requisition">
-          <span class="floating-req-item-icon" style="background:#eff6ff; color:#2563eb; border-color:#bfdbfe;">🧪</span>
-          <div class="floating-req-item-info">
-            <div class="floating-req-item-title">Laboratory Request</div>
-            <div class="floating-req-item-sub">CBC, Chemistry, Urinalysis, Panels</div>
-          </div>
-          <span class="floating-req-item-action">Order ↗</span>
-        </button>
-
-        <button type="button" class="floating-req-item-btn" id="floating-btn-ddirs" data-station="radiology" title="DDIRS / Imaging Requisition">
-          <span class="floating-req-item-icon" style="background:#fdf2f8; color:#db2777; border-color:#fbcfe8;">🩻</span>
-          <div class="floating-req-item-info">
-            <div class="floating-req-item-title">DDIRS Request</div>
-            <div class="floating-req-item-sub">X-Ray, Ultrasound, CT Scan, MRI</div>
-          </div>
-          <span class="floating-req-item-action">Order ↗</span>
-        </button>
-
-        <button type="button" class="floating-req-item-btn" id="floating-btn-heart" data-station="heart" title="Heart Station Requisition">
-          <span class="floating-req-item-icon" style="background:#fef2f2; color:#dc2626; border-color:#fecaca;">🫀</span>
-          <div class="floating-req-item-info">
-            <div class="floating-req-item-title">Heart Station Request</div>
-            <div class="floating-req-item-sub">12-Lead ECG, 2D Echo, Holter, ABPM</div>
-          </div>
-          <span class="floating-req-item-action">Order ↗</span>
-        </button>
-
-        <button type="button" class="floating-req-item-btn" id="floating-btn-pulmo" data-station="respiratory" title="Pulmonary Station Requisition">
-          <span class="floating-req-item-icon" style="background:#f0fdfa; color:#0d9488; border-color:#99f6e4;">🫁</span>
-          <div class="floating-req-item-info">
-            <div class="floating-req-item-title">Pulmonary Station</div>
-            <div class="floating-req-item-sub">ABG, Spirometry, PFT, Nebs, 6MWT</div>
-          </div>
-          <span class="floating-req-item-action">Order ↗</span>
-        </button>
-      </div>
-      <div class="floating-req-footer">
-        <button type="button" class="btn btn-mini btn-block" id="floating-req-pin-btn" style="font-size:10px; color:#475569;">
-          📌 Pin Requisition Dock
-        </button>
-      </div>
-    </div>
-  </aside>
-
-
-  
-</body></html>');
+      w.document.write('</body></html>');
       w.document.close();
       setTimeout(function () {
         w.focus();
@@ -5132,7 +5062,6 @@
       { key: 'iv', title: 'IV', one: 'IV order', by: '' },
       { key: 'clinicalRequests', title: 'Labs / Diagnostics', clinical: true, by: '' },
       { key: 'medications', title: 'Drugs and Medicines', one: 'medication', structuredMedication: true, by: '' },
-      { key: 'rxWriter', title: 'Rx Writer', rxWriter: true, by: '' },
       { key: 'special', title: 'Special Orders', one: 'special order', by: '' },
       { key: 'procedures', title: 'Procedures', one: 'procedure', by: '' }
     ];
@@ -7300,18 +7229,19 @@
         alert('Historical encounters are signed records and cannot be altered. Orders must be placed on the current or next encounter.');
         return;
       }
-      var container = document.getElementById('rx-writer-main-container');
       var modal = document.getElementById('rx-writer-modal');
       var modalSlot = document.getElementById('rx-modal-slot');
-      var btn = document.getElementById('rx-open-modal-btn');
-      if (container && modal && modalSlot) {
-        modalSlot.appendChild(container);
+      var container = document.getElementById('rx-writer-main-container');
+      if (!container) {
+        container = buildRxWriterUI((currentEncounterRecord() && currentEncounterRecord().prescriptions) || {});
+      }
+      if (modal && modalSlot && container) {
+        if (!modalSlot.contains(container)) {
+          modalSlot.appendChild(container);
+        }
         modal.classList.add('open');
-        if (btn) btn.innerHTML = '🗕 Dock in Accordion';
-      } else {
-        // Fallback: scroll to Rx Writer
-        var rxDashlet = document.getElementById('rx-writer-accordion-mount') || document.querySelector('.orders-group-rxwriter');
-        if (rxDashlet) rxDashlet.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        var btn = document.getElementById('rx-open-modal-btn');
+        if (btn) btn.style.display = 'none';
       }
     }
 
@@ -9127,7 +9057,74 @@
 
   </script>
 
+  <!-- ═══ FLOATING CLINICAL ORDER & REQUISITION TOOLKIT ═══ -->
+  <!-- ═══ FLOATING CLINICAL ORDER & REQUISITION TOOLKIT ═══ -->
+  <aside id="floating-req-toolkit" class="floating-req-toolkit" aria-label="Clinical Order and Requisition Toolkit">
+    <div class="floating-req-handle" id="floating-req-handle" title="Clinical Order & Requisition Toolkit (Click to expand / collapse)">
+      <span class="floating-req-handle-icon">⚡</span>
+      <span class="floating-req-handle-text">REQUISITIONS</span>
+      <span class="floating-req-handle-arrow" id="floating-req-toggle-arrow">◀</span>
+    </div>
+    <div class="floating-req-menu" id="floating-req-menu">
+      <div class="floating-req-header">
+        <div style="font-weight:700; font-size:12px; color:#1b4d3e; display:flex; align-items:center; gap:6px;">
+          <span>⚡ QUICK REQUISITION PAD</span>
+        </div>
+        <div style="font-size:10px; color:#64748b;">CPOE Diagnostic Orders &amp; Print Slips</div>
+      </div>
+      <div class="floating-req-items">
+        <button type="button" class="floating-req-item-btn" id="floating-btn-rx" data-station="rx" title="Open Rx Writer / Prescriptions">
+          <span class="floating-req-item-icon" style="background:#ecfdf5; color:#059669; border-color:#a7f3d0;">💊</span>
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">Rx Writer</div>
+            <div class="floating-req-item-sub">Outpatient Prescriptions &amp; Pad</div>
+          </div>
+          <span class="floating-req-item-action">Open ↗</span>
+        </button>
 
+        <button type="button" class="floating-req-item-btn" id="floating-btn-lab" data-station="laboratory" title="Laboratory Requisition">
+          <span class="floating-req-item-icon" style="background:#eff6ff; color:#2563eb; border-color:#bfdbfe;">🧪</span>
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">Laboratory Request</div>
+            <div class="floating-req-item-sub">CBC, Chemistry, Urinalysis, Panels</div>
+          </div>
+          <span class="floating-req-item-action">Order ↗</span>
+        </button>
+
+        <button type="button" class="floating-req-item-btn" id="floating-btn-ddirs" data-station="radiology" title="DDIRS / Imaging Requisition">
+          <span class="floating-req-item-icon" style="background:#fdf2f8; color:#db2777; border-color:#fbcfe8;">🩻</span>
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">DDIRS Request</div>
+            <div class="floating-req-item-sub">X-Ray, Ultrasound, CT Scan, MRI</div>
+          </div>
+          <span class="floating-req-item-action">Order ↗</span>
+        </button>
+
+        <button type="button" class="floating-req-item-btn" id="floating-btn-heart" data-station="heart" title="Heart Station Requisition">
+          <span class="floating-req-item-icon" style="background:#fef2f2; color:#dc2626; border-color:#fecaca;">🫀</span>
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">Heart Station Request</div>
+            <div class="floating-req-item-sub">12-Lead ECG, 2D Echo, Holter, ABPM</div>
+          </div>
+          <span class="floating-req-item-action">Order ↗</span>
+        </button>
+
+        <button type="button" class="floating-req-item-btn" id="floating-btn-pulmo" data-station="respiratory" title="Pulmonary Station Requisition">
+          <span class="floating-req-item-icon" style="background:#f0fdfa; color:#0d9488; border-color:#99f6e4;">🫁</span>
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">Pulmonary Station</div>
+            <div class="floating-req-item-sub">ABG, Spirometry, PFT, Nebs, 6MWT</div>
+          </div>
+          <span class="floating-req-item-action">Order ↗</span>
+        </button>
+      </div>
+      <div class="floating-req-footer">
+        <button type="button" class="btn btn-mini btn-block" id="floating-req-pin-btn" style="font-size:10px; color:#475569;">
+          📌 Pin Requisition Dock
+        </button>
+      </div>
+    </div>
+  </aside>
 
 </body>
 
