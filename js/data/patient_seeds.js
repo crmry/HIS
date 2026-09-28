@@ -525,9 +525,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 43,
+        seedVersion: 44,
         createdAt: '2026-03-14T08:45:00+08:00',
-        updatedAt: '2026-09-26T09:30:00+08:00',
+        updatedAt: '2026-06-20T10:30:00+08:00',
         data: {
           hrn: '0000001890',
           philhealth_no: '06-018274910-3',
@@ -541,18 +541,18 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           address: 'Brgy. Bata, Bacolod City, Negros Occidental',
           ward_room: 'OPD - Room 104',
           ward_area: 'General Medicine',
-          case_no: 'OP-2026-0926-0042',
-          encounter_no: 'OP-2026-0926-0042',
+          case_no: 'OP-2026-0620-0038',
+          encounter_no: 'OP-2026-0620-0038',
           case_type: 'OP Patient',
-          chief_complaint: 'Quarterly routine follow-up for Type 2 Diabetes Mellitus and Essential Hypertension; maintenance prescription renewal.',
-          hx_present: 'Patient is a 48-year-old male, known hypertensive and diabetic for 6 years, presenting to the General Medicine Outpatient Clinic for scheduled quarterly monitoring and prescription renewal. Currently asymptomatic; denies polyuria, polydipsia, blurred vision, numbness of extremities, chest pain, or dyspnea. Adherent with oral maintenance therapy.',
+          chief_complaint: 'Semi-annual comprehensive outpatient review and lab orders; glycemic monitoring.',
+          hx_present: 'Patient is a 48-year-old male, known hypertensive and diabetic for 6 years, presenting for scheduled semi-annual review. Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea. Compliant with Metformin 500 mg BID and Losartan 50 mg OD. Home BP ranges 130-138/80-86 mmHg.',
           hx_surgical: 'No previous surgical procedures.',
           hx_past: 'Type 2 Diabetes Mellitus diagnosed 2020; Essential Hypertension Stage 1 diagnosed 2020. No previous hospitalizations.',
           hx_family: 'Mother with Type 2 Diabetes Mellitus; Father with Hypertension.',
           hx_social: 'Non-smoker, non-alcoholic beverage drinker. Works as an office clerk.',
           hx_allergy: 'No known food or drug allergies (NKFDA).',
           pertinent_signs: ['Hypertension', 'Diabetes Mellitus', 'Others'],
-          pertinent_signs_information: 'Awake, ambulatory, comfortable in chair. BP 124/78 mmHg, HR 72 bpm, afebrile.',
+          pertinent_signs_information: 'Awake, ambulatory, comfortable in chair. BP 134/84 mmHg, HR 76 bpm, afebrile.',
           pe_general: 'Awake, alert, ambulatory, in no acute distress',
           pe_heent: 'Anicteric sclerae, pink palpebral conjunctivae, moist oral mucosa, no neck vein engorgement',
           pe_chest_lungs: 'Clear and symmetric breath sounds bilaterally; no wheezes or crackles',
@@ -564,79 +564,14 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           pe_other: '',
           other_forms: [],
           other_forms_notes: 'Chronic disease outpatient care record.',
-          vs_bp: '124/78', vs_hr: '72', vs_rr: '16', vs_temp: '36.5', vs_spo2: '99', vs_weight: '68', vs_height: '168', vs_date_time: '2026-09-26T09:30:00+08:00',
+          vs_bp: '134/84', vs_hr: '76', vs_rr: '18', vs_temp: '36.6', vs_spo2: '98', vs_weight: '70', vs_height: '168', vs_date_time: '2026-06-20T10:00:00+08:00',
           vital_signs: [
-            { dateTime: '2026-09-26T09:30:00+08:00', bp: '124/78', hr: '72', rr: '16', temp: '36.5', wt: '68', ht: '168', weight: '68', height: '168', bmi: '24.1', spo2: '99', o2: '99' }
+            { dateTime: '2026-06-20T10:00:00+08:00', bp: '134/84', hr: '76', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '98', o2: '98' }
           ],
-          admitting_diagnosis: 'E11.9 - Type 2 Diabetes Mellitus without complications; I10 - Essential (primary) Hypertension.',
+          admitting_diagnosis: 'E11.9 - Type 2 Diabetes Mellitus; I10 - Essential (primary) Hypertension.',
           final_diagnosis: '', // Blank for current active consultation; finalized on historical encounters
-          progress_notes: 'Outpatient Consultation (General Medicine). Routine quarterly diabetes and hypertension follow-up.\nPatient feels well, asymptomatic. Good adherence with Metformin, Empagliflozin, and Losartan. No hypoglycemic symptoms or pedal swelling.\nVital signs: BP 124/78 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% ambient air. Weight 68 kg, BMI 24.1.\nPhysical Exam: Clear breath sounds, normal heart sounds, bilateral dorsalis pedis pulses palpable, monofilament foot screen normal.\nLaboratory Review: HbA1c 6.4%, FBS 108 mg/dL, Serum Creatinine 0.9 mg/dL, eGFR > 90 mL/min, Urine Albumin-Creatinine Ratio normal.\nDiagnosis: Type 2 Diabetes Mellitus, well-controlled; Essential Hypertension, controlled.\nPlan: Maintain current oral regimen. Diabetic low-salt diet. Follow-up after 3 months.',
+          progress_notes: 'Outpatient Follow-up (General Medicine). Semi-annual comprehensive review.\nBlood pressure mildly elevated at 134/84 mmHg. Fasting blood sugar 132 mg/dL, HbA1c 7.2%.\nWeight: 70 kg, BMI: 24.8. Physical examination unremarkable.\nDiagnosis: Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension.\nPlan: Add Empagliflozin 10 mg OD for cardioprotective glycemic control. Continue Metformin and Losartan. Dietary counseling.',
           encounters: [
-            {
-              date: '2026-09-26',
-              time: '09:30 AM',
-              registry: 'OP',
-              service: 'General Medicine',
-              physician: 'Miguel Santos, MD',
-              prc_license: '0087654',
-              is_current: true,
-              status_tag: 'Consultation',
-              diagnosis: '',
-              patient_record: 'Quarterly outpatient diabetes and hypertension refill review',
-              results: 'Clinically controlled; HbA1c 6.4%',
-              vital_signs: [
-                { dateTime: '2026-09-26 09:30 AM', bp: '124/78', hr: '72', rr: '16', temp: '36.5', wt: '68', ht: '168', weight: '68', height: '168', bmi: '24.1', spo2: '99', o2: '99' }
-              ],
-              cbgs: [
-                { dateTime: '2026-09-26 08:00 AM', timing: 'Fasting Blood Sugar (FBS)', reading: 108, action: 'Target Met (80-130)', notes: 'Routine quarterly monitoring; good control', nurse: 'Miguel Santos, MD' }
-              ],
-              medications: [
-                { id: 'med-op-0926-1', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
-                { id: 'med-op-0926-2', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
-                { id: 'med-op-0926-3', name: 'Losartan Potassium 50 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
-                { id: 'med-op-0926-4', name: 'Amlodipine 5 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Essential Hypertension', started: '2026-09-26T09:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' }
-              ],
-              progress_notes: 'Outpatient Consultation (General Medicine). Routine quarterly diabetes and hypertension follow-up.\nPatient feels well, asymptomatic. Good adherence with Metformin, Empagliflozin, and Losartan. No hypoglycemic symptoms or pedal swelling.\nVital signs: BP 124/78 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% ambient air. Weight 68 kg, BMI 24.1.\nPhysical Exam: Clear breath sounds, normal heart sounds, bilateral dorsalis pedis pulses palpable, monofilament foot screen normal.\nLaboratory Review: HbA1c 6.4%, FBS 108 mg/dL, Serum Creatinine 0.9 mg/dL, eGFR > 90 mL/min, Urine Albumin-Creatinine Ratio normal.\nDiagnosis: Type 2 Diabetes Mellitus, well-controlled; Essential Hypertension, controlled.\nPlan: Maintain current oral regimen. Diabetic low-salt diet. Follow-up after 3 months.',
-              orders: [
-                { text: 'Continue Metformin 500 mg tablet twice daily with meals.', dateTime: '2026-09-26T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 9:45 AM nurse' },
-                { text: 'Continue Empagliflozin 10 mg tablet once daily in the morning.', dateTime: '2026-09-26T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 9:46 AM nurse' },
-                { text: 'Continue Losartan Potassium 50 mg tablet once daily in the morning.', dateTime: '2026-09-26T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 9:48 AM nurse' },
-                { text: 'Continue Amlodipine 5 mg tablet once daily in the morning.', dateTime: '2026-09-26T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 9:50 AM nurse' },
-                { text: 'Repeat Fasting Blood Sugar (FBS), HbA1c, and Lipid Profile after 3 months.', dateTime: '2026-09-26T09:30:00+08:00', cared: ['R'], timeSignature: 'R - 9:55 AM physician' },
-                { text: 'Follow-up at General Medicine Outpatient Clinic after 3 months (December 2026).', dateTime: '2026-09-26T09:30:00+08:00', cared: ['C'], timeSignature: 'C - 10:00 AM nurse' }
-              ],
-              clinical_record: {
-                chief_complaint: 'Routine quarterly diabetes and hypertension follow-up; prescription renewal',
-                history: 'Patient is a 48-year-old male presenting for scheduled outpatient evaluation. Diagnosed with Type 2 Diabetes Mellitus and Essential Hypertension in 2020. Denies symptoms of polyuria, polydipsia, weight loss, visual changes, or chest pain. Compliant with oral hypoglycemic and antihypertensive medications. Exercises by walking 30 minutes daily; compliant with diabetic meal plan.\n\nInterval History: Self-monitoring blood glucose logs show fasting blood sugar levels ranging 100-118 mg/dL. No episodes of shakiness, sweating, or lightheadedness indicative of hypoglycemia.\n\nPhysical Examination: General: Alert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis and posterior tibial pulses palpable, vibration and 10g monofilament sensation intact bilaterally.',
-                final_diagnosis: 'Type 2 Diabetes Mellitus, well-controlled without acute complications; Essential (primary) Hypertension, controlled (ICD-10: E11.9, I10)'
-              },
-              examinations: [
-                {
-                  id: 'EXAM-20260926-01A',
-                  category: 'Laboratory - Clinical Chemistry',
-                  name: 'Fasting Blood Sugar (FBS)',
-                  performed_at: '2026-09-26 08:00 AM',
-                  status: 'Completed',
-                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
-                  impression: 'Mildly elevated fasting blood sugar on current oral hypoglycemic regimen.',
-                  analytes: [
-                    { test: 'Fasting Blood Sugar (FBS)', value: '108', unit: 'mg/dL', reference: '70 - 100', flag: 'High' }
-                  ]
-                },
-                {
-                  id: 'EXAM-20260926-01B',
-                  category: 'Laboratory - Clinical Chemistry',
-                  name: 'Glycated Hemoglobin (HbA1c)',
-                  performed_at: '2026-09-26 08:00 AM',
-                  status: 'Completed',
-                  performed_by: 'M. Tan, RMT / Validated by Dr. E. Gomez, Pathologist',
-                  impression: 'HbA1c within target range (< 7.0%); good glycemic control on current regimen.',
-                  analytes: [
-                    { test: 'HbA1c (Glycated Hemoglobin)', value: '6.4', unit: '%', reference: '4.0 - 5.6', flag: 'High' }
-                  ]
-                }
-              ]
-            },
             {
               date: '2026-06-20',
               time: '10:00 AM',
@@ -644,7 +579,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               service: 'General Medicine',
               physician: 'Miguel Santos, MD',
               prc_license: '0087654',
-              is_current: false,
+              is_current: true,
               status_tag: 'Follow-up',
               diagnosis: 'E11.9 - Type 2 Diabetes Mellitus; I10 - Essential Hypertension',
               patient_record: 'Semi-annual comprehensive outpatient review and lab orders',
@@ -836,10 +771,10 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           ],
           orders: {
             plans: [
-              { text: 'Annual dilated eye examination / fundoscopy' },
-              { text: 'Comprehensive diabetic foot examination completed; repeat annually' },
-              { text: 'Repeat HbA1c, Fasting Blood Sugar (FBS), and Fasting Lipid Profile in 3 months' },
-              { text: 'Follow-up at General Medicine Outpatient Clinic after 3 months (December 2026)' }
+              { text: 'Start Empagliflozin 10 mg tablet once daily in the morning.' },
+              { text: 'Continue Metformin 500 mg tablet twice daily with meals.' },
+              { text: 'Reinforce diabetic meal plan and 30 minutes daily walking.' },
+              { text: 'Follow-up at General Medicine Outpatient Clinic after 3 months (September 2026).' }
             ],
             diet: [
               { text: 'Diabetic Diet (1,800 kcal/day), low-salt, low-fat' },
@@ -847,10 +782,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
             ],
             iv: [],
             medications: [
-              { text: 'Metformin 500 mg tablet - 1 tablet twice daily with meals (PO)' },
               { text: 'Empagliflozin 10 mg tablet - 1 tablet once daily in the morning (PO)' },
-              { text: 'Losartan Potassium 50 mg tablet - 1 tablet once daily in the morning (PO)' },
-              { text: 'Amlodipine 5 mg tablet - 1 tablet once daily in the morning (PO)' }
+              { text: 'Metformin 500 mg tablet - 1 tablet twice daily with meals (PO)' },
+              { text: 'Losartan Potassium 50 mg tablet - 1 tablet once daily in the morning (PO)' }
             ],
             special: [
               { text: 'Monitor home fasting blood glucose twice weekly (target: 80 - 130 mg/dL)' },
@@ -859,41 +793,29 @@ if (typeof window !== 'undefined' && window.addEventListener) {
             procedures: [],
             clinicalRequests: {
               laboratory: [
-                { name: 'Glycated Hemoglobin (HbA1c)', urgency: 'Routine', notes: 'Scheduled for December 2026' },
-                { name: 'Fasting Blood Sugar (FBS)', urgency: 'Routine', notes: '10-hour fasting required' },
-                { name: 'Fasting Lipid Profile (Total Cholesterol, Triglycerides, HDL, LDL)', urgency: 'Routine', notes: '10-hour fasting required' },
+                { name: 'Fasting Blood Sugar (FBS)', urgency: 'Routine', notes: 'Scheduled for September 2026 review' },
+                { name: 'Glycated Hemoglobin (HbA1c)', urgency: 'Routine', notes: 'Quarterly monitoring' },
                 { name: 'Serum Creatinine', urgency: 'Routine', notes: 'Renal monitoring' },
-                { name: 'Estimated Glomerular Filtration Rate (eGFR)', urgency: 'Routine', notes: 'Renal monitoring' },
-                { name: 'Urine Albumin-to-Creatinine Ratio (UACR)', urgency: 'Routine', notes: 'Diabetic kidney disease screening' }
+                { name: 'Estimated Glomerular Filtration Rate (eGFR)', urgency: 'Routine', notes: 'Renal monitoring' }
               ],
               radiology: [],
               respiratory: [],
-              heart: [
-                { name: '12-Lead Electrocardiogram (ECG)', urgency: 'Routine', notes: 'Annual cardiovascular risk screening' }
-              ],
+              heart: [],
               eeg: []
             },
             prescriptions: {
               items: [
-                { drug: 'Metformin 500 mg tablet', dosage: '500 mg', route: 'PO', frequency: 'BID with meals', duration: '90 days', quantity: '180 tablets', instructions: 'Take with morning and evening meals' },
                 { drug: 'Empagliflozin 10 mg tablet', dosage: '10 mg', route: 'PO', frequency: 'OD morning', duration: '90 days', quantity: '90 tablets', instructions: 'Take once daily in the morning with or without food' },
-                { drug: 'Losartan Potassium 50 mg tablet', dosage: '50 mg', route: 'PO', frequency: 'OD morning', duration: '90 days', quantity: '90 tablets', instructions: 'Take once daily in the morning for blood pressure' },
-                { drug: 'Amlodipine 5 mg tablet', dosage: '5 mg', route: 'PO', frequency: 'OD morning', duration: '90 days', quantity: '90 tablets', instructions: 'Take once daily in the morning' }
+                { drug: 'Metformin 500 mg tablet', dosage: '500 mg', route: 'PO', frequency: 'BID with meals', duration: '90 days', quantity: '180 tablets', instructions: 'Take with morning and evening meals' },
+                { drug: 'Losartan Potassium 50 mg tablet', dosage: '50 mg', route: 'PO', frequency: 'OD morning', duration: '90 days', quantity: '90 tablets', instructions: 'Take once daily in the morning for blood pressure' }
               ]
             }
           },
-          referrals: [
-            {
-              date: '2026-09-26',
-              department: 'OPHTHALMOLOGY',
-              doctor: 'Dr. Andrea Reyes',
-              reason: 'Annual diabetic retinopathy screening / dilated fundoscopy'
-            }
-          ],
+          referrals: [],
           disposition: 'Treated and Discharged',
           follow_up_needed: 'Yes',
-          follow_up_date: '2026-12-26',
-          follow_up_reason: 'Quarterly chronic disease monitoring (T2DM and Hypertension) with repeat HbA1c and lipid profile.'
+          follow_up_date: '2026-09-26',
+          follow_up_reason: 'Quarterly review of glycemic control and HbA1c response after Empagliflozin addition.'
         }
       };
     }
@@ -932,8 +854,18 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       else if (Number(records[index].seedVersion || 0) < 43) records[index] = seedPatientRecord();
 
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
-      if (opIndex < 0) records.push(opPatientRecord());
-      else if (Number(records[opIndex].seedVersion || 0) < 43) records[opIndex] = opPatientRecord();
+      if (opIndex < 0) {
+        records.push(opPatientRecord());
+      } else if (Number(records[opIndex].seedVersion || 0) < 44) {
+        records[opIndex] = opPatientRecord();
+        try {
+          var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
+          if (store && store[OP_PATIENT_ID]) {
+            delete store[OP_PATIENT_ID];
+            localStorage.setItem('clmmrh_chart_monitoring_data_v1', JSON.stringify(store));
+          }
+        } catch (e) {}
+      }
 
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
