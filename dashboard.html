@@ -350,7 +350,7 @@
                 <table class="table table-bordered table-striped table-hover encounter-table" id="encounter-table">
                   <thead>
                     <tr>
-                      <th style="width:165px; cursor:pointer; user-select:none;" id="th-encounter-date" title="Sorted newest first (Reverse chronological). Click to sort oldest first.">Date <span id="encounter-date-sort-indicator" style="font-size:10px; margin-left:2px; opacity:0.85;">▼</span></th>
+                      <th style="width:175px; min-width:175px; cursor:pointer; user-select:none;" id="th-encounter-date" title="Sorted newest first (Reverse chronological). Click to sort oldest first.">Date <span id="encounter-date-sort-indicator" style="font-size:10px; margin-left:2px; opacity:0.85;">▼</span></th>
                       <th style="width:110px; text-align:center;">Registry Type</th>
                       <th style="width:180px;">Service</th>
                       <th style="width:180px;">Physician</th>
@@ -3597,6 +3597,8 @@
 
     function isInitialEncounter(enc, index, allEncounters) {
       if (!enc) return false;
+      // 2026-03-14 is a subsequent consultation; only 2025-09-18 is the initial visit for patient_op_juan
+      if (enc.date === '2026-03-14' || String(enc.date || '').startsWith('2026-03-14')) return false;
       if (enc.is_initial || enc.isInitial) return true;
       if (enc.date === '2025-09-18' || String(enc.date || '').startsWith('2025-09-18')) return true;
       var list = Array.isArray(allEncounters) ? allEncounters : loadedEncounters;
@@ -3668,8 +3670,8 @@
 
       var isInitial = !isCurrent && isInitialEncounter(data, index, allEncounters);
 
-      var currentBadge = isCurrent ? '<span class="badge badge-info" style="font-size:10px; font-weight:700; background:#0066cc; padding:2px 6px; border-radius:3px; vertical-align:middle; letter-spacing:0.2px;">Current</span>' : '';
-      var initialBadge = isInitial ? '<span class="badge badge-inverse" style="font-size:10px; font-weight:700; background:#475569; padding:2px 6px; border-radius:3px; vertical-align:middle; letter-spacing:0.2px;">Initial</span>' : '';
+      var currentBadge = isCurrent ? '<span class="badge badge-info" style="font-size:10px; font-weight:700; background:#0066cc; padding:2px 6px; border-radius:3px; vertical-align:middle; letter-spacing:0.2px; display:inline-block; line-height:normal;">Current</span>' : '';
+      var initialBadge = isInitial ? '<span class="badge badge-inverse" style="font-size:10px; font-weight:700; background:#475569; padding:2px 6px; border-radius:3px; vertical-align:middle; letter-spacing:0.2px; display:inline-block; line-height:normal;">Initial</span>' : '';
       var timeDisplay = (data && data.time) ? '<div style="font-size:11px; color:#64748b; margin-top:2px; font-weight:500;">' + esc(data.time) + '</div>' : '';
 
       var pData = currentPatientData();

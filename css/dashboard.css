@@ -1396,6 +1396,10 @@
       letter-spacing: 0.2px;
       text-shadow: none !important;
     }
+    .encounter-table thead th#th-encounter-date {
+      width: 175px !important;
+      min-width: 175px !important;
+    }
     .encounter-table thead th#th-encounter-date:hover {
       background: #233446 !important;
       cursor: pointer;
@@ -1408,6 +1412,9 @@
       vertical-align: middle;
       line-height: 1.4;
       background: #ffffff;
+    }
+    .encounter-table tbody td:first-child {
+      white-space: nowrap !important;
     }
     .encounter-table tbody tr:hover td {
       background-color: #f8fafc;

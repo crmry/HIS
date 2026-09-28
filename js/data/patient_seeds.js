@@ -525,7 +525,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 48,
+        seedVersion: 49,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -652,7 +652,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               physician: 'Miguel Santos, MD',
               prc_license: '0087654',
               is_current: false,
-              status_tag: 'Initial Visit',
+              status_tag: 'Follow-up Visit',
               diagnosis: 'E11.9 - Type 2 Diabetes Mellitus; I10 - Essential Hypertension',
               patient_record: 'First outpatient consultation at CLMMRH OPD',
               results: 'Transferred maintenance care to CLMMRH Outpatient Service',
@@ -855,7 +855,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.push(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 48) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 49) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
