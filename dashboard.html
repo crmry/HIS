@@ -605,7 +605,7 @@
                   <li><a href="#hx-family" data-toggle="tab">Family Medical History</a></li>
                   <li><a href="#hx-social" data-toggle="tab">Personal &amp; Social History</a></li>
                   <li><a href="#hx-gyn" data-toggle="tab">Obstetric &amp; Gynecologic History</a></li>
-                  <li><a href="#hx-neo" data-toggle="tab">Pediatric &amp; Neonatal History</a></li>
+                  <li><a href="#hx-neo" data-toggle="tab">Neonatal History</a></li>
                   <li><a href="#hx-allergy" data-toggle="tab">Allergies</a></li>
                 </ul>
                 <div class="tab-content">
@@ -5722,6 +5722,7 @@
     }
 
     function renderEncounters(encounters, preserveFilter) {
+      window._hasRenderedCurrentEncounter = false;
       if (!preserveFilter && encounters) {
         loadedEncounters = Array.isArray(encounters) ? JSON.parse(JSON.stringify(encounters)) : [];
       }

@@ -525,7 +525,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 45,
+        seedVersion: 46,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -544,31 +544,29 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           case_no: 'OP-2026-0926-0042',
           encounter_no: 'OP-2026-0926-0042',
           case_type: 'OP Patient',
-          chief_complaint: 'Quarterly routine follow-up for Type 2 Diabetes Mellitus and Essential Hypertension; maintenance prescription renewal.',
-          hx_present: 'Patient is a 48-year-old male, known hypertensive and diabetic for 6 years, presenting to the General Medicine Outpatient Clinic for scheduled quarterly monitoring and prescription renewal. Currently asymptomatic; denies polyuria, polydipsia, blurred vision, numbness of extremities, chest pain, or dyspnea. Adherent with oral maintenance therapy.',
+          chief_complaint: '',
+          hx_present: '',
           hx_surgical: 'No previous surgical procedures.',
           hx_past: 'Type 2 Diabetes Mellitus diagnosed 2020; Essential Hypertension Stage 1 diagnosed 2020. No previous hospitalizations.',
           hx_family: 'Mother with Type 2 Diabetes Mellitus; Father with Hypertension.',
           hx_social: 'Non-smoker, non-alcoholic beverage drinker. Works as an office clerk.',
           hx_allergy: 'No known food or drug allergies (NKFDA).',
-          pertinent_signs: ['Hypertension', 'Diabetes Mellitus', 'Others'],
-          pertinent_signs_information: 'Awake, ambulatory, comfortable in chair. BP 124/78 mmHg, HR 72 bpm, afebrile.',
-          pe_general: 'Awake, alert, ambulatory, in no acute distress',
-          pe_heent: 'Anicteric sclerae, pink palpebral conjunctivae, moist oral mucosa, no neck vein engorgement',
-          pe_chest_lungs: 'Clear and symmetric breath sounds bilaterally; no wheezes or crackles',
-          pe_cardiovascular: 'Normal rate, regular rhythm, normal S1 and S2, no murmurs',
-          pe_abdomen: 'Flat, soft, non-tender, normoactive bowel sounds',
-          pe_extremities: 'No pedal edema, peripheral pulses full and bounding, monofilament sensory testing intact on bilateral feet',
-          pe_neurologic: 'Grossly intact, cranial nerves intact, no focal deficits',
-          pe_skin: 'Warm, good turgor, no diabetic dermopathy or foot ulcers',
+          pertinent_signs: [],
+          pertinent_signs_information: '',
+          pe_general: '',
+          pe_heent: '',
+          pe_chest_lungs: '',
+          pe_cardiovascular: '',
+          pe_abdomen: '',
+          pe_extremities: '',
+          pe_neurologic: '',
+          pe_skin: '',
           pe_other: '',
           other_forms: [],
-          other_forms_notes: 'Chronic disease outpatient care record.',
-          vs_bp: '124/78', vs_hr: '72', vs_rr: '16', vs_temp: '36.5', vs_spo2: '99', vs_weight: '68', vs_height: '168', vs_date_time: '2026-09-26T09:30:00+08:00',
-          vital_signs: [
-            { dateTime: '2026-09-26T09:30:00+08:00', bp: '124/78', hr: '72', rr: '16', temp: '36.5', wt: '68', ht: '168', weight: '68', height: '168', bmi: '24.1', spo2: '99', o2: '99' }
-          ],
-          admitting_diagnosis: 'E11.9 - Type 2 Diabetes Mellitus without complications; I10 - Essential (primary) Hypertension.',
+          other_forms_notes: '',
+          vs_bp: '', vs_hr: '', vs_rr: '', vs_temp: '', vs_spo2: '', vs_weight: '', vs_height: '', vs_date_time: '',
+          vital_signs: [],
+          admitting_diagnosis: '',
           final_diagnosis: '', // Blank for current active consultation; finalized on historical encounters
           progress_notes: '',
           encounters: [
@@ -582,18 +580,16 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               is_current: true,
               status_tag: 'Consultation',
               diagnosis: '',
-              patient_record: 'Quarterly outpatient diabetes and hypertension refill review',
+              patient_record: '',
               results: '',
-              vital_signs: [
-                { dateTime: '2026-09-26 09:30 AM', bp: '124/78', hr: '72', rr: '16', temp: '36.5', wt: '68', ht: '168', weight: '68', height: '168', bmi: '24.1', spo2: '99', o2: '99' }
-              ],
+              vital_signs: [],
               cbgs: [],
               medications: [],
               progress_notes: '',
               orders: [],
               clinical_record: {
-                chief_complaint: 'Routine quarterly diabetes and hypertension follow-up; prescription renewal',
-                history: 'Patient is a 48-year-old male, known hypertensive and diabetic for 6 years, presenting for scheduled quarterly evaluation. Denies acute complaints. Compliant with oral maintenance therapy.',
+                chief_complaint: '',
+                history: '',
                 final_diagnosis: ''
               },
               examinations: []
@@ -858,7 +854,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.push(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 45) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 46) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
