@@ -525,7 +525,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 47,
+        seedVersion: 48,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -770,7 +770,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 history: 'Patient is a 47-year-old male presenting with a 2-month history of right knee pain without prior trauma. Denies knee locking, giving way, or redness. Digital knee radiograph confirms mild primary osteoarthritis.',
                 final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, Grade II (ICD-10: M17.11)'
               },
-              progress_notes: 'Initial Outpatient Consultation (Orthopedics). Right knee pain evaluation.\nSubjective: 2-month history of dull aching pain over the medial aspect of the right knee, aggravated by prolonged standing and climbing stairs. Pain score 6/10. No history of direct knee trauma, fall, or fever.\nObjective: Vital signs: BP 126/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.7 °C. Weight 70 kg, BMI 24.8. Right knee examination: Mild tenderness on palpation of medial joint line. No knee joint effusion or ballottable patella. Active flexion 120°, extension 0°. Lachman and pivot-shift tests negative. Neurovascular examination intact.\nDiagnostic Imaging: Digital Knee Radiograph (AP & Lateral Weight-Bearing Views): Mild medial compartment joint space narrowing, subchondral sclerosis, and minimal osteophyte formation at medial tibial spine. Alignment intact; no fracture or osteolytic lesion.\nAssessment: Unilateral Primary Osteoarthritis, Right Knee, Kellgren-Lawrence Grade II (M17.11).\nPlan: Celecoxib 200 mg cap PO once daily for 14 days. Paracetamol 500 mg tab PO TID PRN. Referral to Physical Therapy for quadriceps rehabilitation and joint kinematics. Follow-up after 12 weeks.',
+              progress_notes: '',
               orders: [
                 { text: 'Digital Knee Radiograph (AP and Lateral Weight-Bearing Views) completed: Mild medial joint space narrowing.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:45 PM nurse' },
                 { text: 'Celecoxib 200 mg capsule once daily after meals for 14 days.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:50 PM nurse' },
@@ -855,7 +855,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.push(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 46) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 48) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
