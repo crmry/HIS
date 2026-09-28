@@ -6089,6 +6089,23 @@
       'Metformin', 'Insulin Regular (Human)', 'Diphenhydramine', 'Hydrocortisone'
     ];
 
+    var SAMPLE_PREPARATIONS = [
+      '500 mg tablet',
+      '250 mg capsule',
+      '500 mg capsule',
+      '120 mg/5 mL syrup',
+      '250 mg/5 mL suspension',
+      '1 g vial',
+      '500 mg vial',
+      '150 mg/mL ampule',
+      '2.5 mg/2.5 mL nebule',
+      '100 mcg/dose MDI inhaler',
+      '5 mg chewable tablet',
+      '10 mg/mL oral drops',
+      '0.5% ophthalmic drops',
+      '1% topical cream'
+    ];
+
     var DOSE_UNITS = ['mg', 'g', 'mcg', 'mL', 'units', 'mEq', 'tab', 'cap', 'neb', 'puff', 'drops'];
 
     var MED_ROUTES = [
@@ -6234,6 +6251,9 @@
         '<datalist id="med-sample-generics">' +
         SAMPLE_GENERICS.map(function (g) { return '<option value="' + esc(g) + '">'; }).join('') +
         '</datalist>' +
+        '<datalist id="med-sample-preparations">' +
+        SAMPLE_PREPARATIONS.map(function (p) { return '<option value="' + esc(p) + '">'; }).join('') +
+        '</datalist>' +
         '<datalist id="med-sample-precautions">' +
         SAMPLE_PRECAUTIONS.map(function (p) { return '<option value="' + esc(p) + '">'; }).join('') +
         '</datalist>' +
@@ -6285,9 +6305,10 @@
       }
 
       // Scheduled / Intermittent
-      var genericName = item.genericName || item.medication || '';
+      var genericName = item.genericName || item.medication || item.drug || '';
+      var preparation = item.preparation || item.dosageForm || '';
       var dose = [item.dose, item.doseUnit].filter(Boolean).join(' ');
-      var parts = [genericName, dose, item.route, item.frequency, item.duration ? 'x ' + item.duration : '']
+      var parts = [genericName, preparation, dose, item.route, item.frequency, item.duration ? 'x ' + item.duration : '']
         .map(function (v) { return String(v || '').trim(); }).filter(Boolean);
       var text = parts.join(' - ');
       if (!text && item.text) text = String(item.text).trim();
@@ -6394,7 +6415,7 @@
       var row = document.createElement('tr');
       row.className = 'medication-row med-row-scheduled';
       row.dataset.orderType = 'scheduled';
-      var isExisting = !!(data && (data.genericName || data.medication || data.text || data.dateTime || data.physician));
+      var isExisting = !!(data && (data.genericName || data.medication || data.drug || data.preparation || data.text || data.dateTime || data.physician));
       row.dataset.physician = isExisting ? (data.physician || '') : getCurrentPhysicianName();
       row.dataset.createdAt = (data && data.dateTime) || '';
       row.dataset.cared = JSON.stringify(data && Array.isArray(data.cared) ? data.cared : []);
@@ -6408,7 +6429,8 @@
       }
 
       row.innerHTML =
-        '<td><input type="text" data-medication-field="genericName" list="med-sample-generics" value="' + esc((data && (data.genericName || data.medication)) || '') + '" placeholder="e.g. Paracetamol" aria-label="Generic name"></td>' +
+        '<td><input type="text" data-medication-field="genericName" list="med-sample-generics" value="' + esc((data && (data.genericName || data.medication || data.drug)) || '') + '" placeholder="e.g. Paracetamol" aria-label="Generic name"></td>' +
+        '<td><input type="text" data-medication-field="preparation" list="med-sample-preparations" value="' + esc((data && (data.preparation || data.dosageForm)) || '') + '" placeholder="e.g. 500 mg tablet, 250 mg/5 mL susp, 1 g vial" aria-label="Preparation"></td>' +
         '<td><div style="display:flex; gap:3px;"><input type="text" data-medication-field="dose" value="' + esc(doseVal) + '" placeholder="500" style="width:55%;" aria-label="Dose"><select data-medication-field="doseUnit" style="width:45%;" aria-label="Dose unit">' + renderSelectOptions(DOSE_UNITS, doseUnit || 'mg') + '</select></div></td>' +
         '<td><select data-medication-field="route" aria-label="Route">' + renderSelectOptions(MED_ROUTES, data && data.route, '-- Route --') + '</select></td>' +
         '<td><select data-medication-field="frequency" aria-label="Frequency">' + renderSelectOptions(MED_FREQUENCIES, data && data.frequency, '-- Frequency --') + '</select></td>' +
@@ -6516,11 +6538,12 @@
         '<div class="table-responsive-wrap">' +
         '<table class="order-card-table medication-grid" aria-label="Medication orders">' +
         '<thead><tr>' +
-        '<th style="width:23%;"><span class="required">*</span>Generic Name</th>' +
-        '<th style="width:14%;"><span class="required">*</span>Dose &amp; Unit</th>' +
-        '<th style="width:13%;"><span class="required">*</span>Route</th>' +
-        '<th style="width:14%;"><span class="required">*</span>Frequency</th>' +
-        '<th style="width:12%;"><span class="required">*</span>Duration</th>' +
+        '<th style="width:18%;"><span class="required">*</span>Generic Name</th>' +
+        '<th style="width:16%;">Preparation</th>' +
+        '<th style="width:13%;"><span class="required">*</span>Dose &amp; Unit</th>' +
+        '<th style="width:12%;"><span class="required">*</span>Route</th>' +
+        '<th style="width:13%;"><span class="required">*</span>Frequency</th>' +
+        '<th style="width:11%;"><span class="required">*</span>Duration</th>' +
         '<th>Drug Precautions / Safety Instructions</th>' +
         '<th style="width:36px; text-align:center;"></th>' +
         '</tr></thead>' +

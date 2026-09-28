@@ -709,11 +709,14 @@
 
         function medicationOrderText(item) {
             if (!item) return "";
-            const parts = [item.medication, item.preparation, item.dose, item.route, item.frequency, item.timing]
+            const medName = item.medication || item.genericName || item.drug || "";
+            const doseCombined = [item.dose, item.doseUnit].filter(Boolean).join(" ");
+            const parts = [medName, item.preparation, doseCombined, item.route, item.frequency, item.timing || item.duration]
                 .map(value => String(value || "").trim()).filter(Boolean);
             let text = parts.join(" - ");
             if (!text && item.text) text = String(item.text).trim();
-            if (item.remarks) text += (text ? " - " : "") + "Remarks: " + String(item.remarks).trim();
+            const note = item.remarks || item.precautions;
+            if (note) text += (text ? " - " : "") + "Remarks: " + String(note).trim();
             return text;
         }
 
