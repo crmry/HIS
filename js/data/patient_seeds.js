@@ -525,7 +525,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 46,
+        seedVersion: 47,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -740,6 +740,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               physician: 'Paolo Cruz, MD',
               prc_license: '0091245',
               is_current: false,
+              is_initial: true,
               status_tag: 'Initial Visit',
               diagnosis: 'M17.11 - Unilateral Primary Osteoarthritis, Right Knee, mild',
               patient_record: 'Initial orthopedic evaluation for progressive right knee joint pain',

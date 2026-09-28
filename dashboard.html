@@ -3642,7 +3642,30 @@
       tr.dataset.encounterIndex = String(index);
       tr.dataset.registryType = typeUpper;
 
+      var isInitial = false;
+      if (!isCurrent) {
+        if (data && (data.is_initial || data.isInitial)) {
+          isInitial = true;
+        } else if (data && (data.date === '2025-09-18' || data.date === '2025-09-18T14:30:00+08:00')) {
+          isInitial = true;
+        } else if (typeof parseEncounterDateTime === 'function' && allEncounters && allEncounters.length > 1) {
+          var oldestIdx = -1;
+          var oldestTime = Infinity;
+          for (var ei = 0; ei < allEncounters.length; ei++) {
+            var t = parseEncounterDateTime(allEncounters[ei]);
+            if (t > 0 && t < oldestTime) {
+              oldestTime = t;
+              oldestIdx = ei;
+            }
+          }
+          if (oldestIdx === index) {
+            isInitial = true;
+          }
+        }
+      }
+
       var currentBadge = isCurrent ? ' <span class="badge badge-info" style="font-size:9px; background:#0066cc; vertical-align:middle; margin-left:3px;">Current</span>' : '';
+      var initialBadge = isInitial ? ' <span class="badge badge-inverse" style="font-size:9px; background:#475569; vertical-align:middle; margin-left:3px;">Initial</span>' : '';
       var timeDisplay = (data && data.time) ? '<div style="font-size:11px; color:#555; margin-top:2px; font-weight:normal;">' + esc(data.time) + '</div>' : '';
 
       var pData = currentPatientData();
@@ -3662,7 +3685,7 @@
       }
 
       tr.innerHTML =
-        '<td><strong>' + dateDisplay + '</strong>' + timeDisplay + currentBadge + '</td>' +
+        '<td><strong>' + dateDisplay + '</strong>' + currentBadge + initialBadge + timeDisplay + '</td>' +
         '<td style="text-align:center;"><span class="encounter-type-badge ' + typeClass + '">' + esc(typeUpper) + '</span></td>' +
         '<td>' + serviceDisplay + '</td>' +
         '<td><i class="icon-user" style="opacity:0.6; margin-right:3px;"></i>' + doctorDisplay + '</td>' +
