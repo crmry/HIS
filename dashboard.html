@@ -6432,7 +6432,7 @@
 
       row.innerHTML =
         '<td><input type="text" data-medication-field="genericName" list="med-sample-generics" value="' + esc((data && (data.genericName || data.medication || data.drug)) || '') + '" placeholder="e.g. Paracetamol" aria-label="Generic name"></td>' +
-        '<td><input type="text" data-medication-field="preparation" list="med-sample-preparations" value="' + esc((data && (data.preparation || data.dosageForm)) || '') + '" placeholder="e.g. 500 mg tablet, 250 mg/5 mL susp, 1 g vial" aria-label="Preparation"></td>' +
+        '<td><input type="text" data-medication-field="preparation" value="' + esc((data && (data.preparation || data.dosageForm)) || '') + '" placeholder="e.g. 500 mg tablet, 250 mg/5 mL susp, 1 g vial" aria-label="Preparation"></td>' +
         '<td><div style="display:flex; gap:3px;"><input type="text" data-medication-field="dose" value="' + esc(doseVal) + '" placeholder="500" style="width:55%;" aria-label="Dose"><select data-medication-field="doseUnit" style="width:45%;" aria-label="Dose unit">' + renderSelectOptions(DOSE_UNITS, doseUnit || 'mg') + '</select></div></td>' +
         '<td><select data-medication-field="route" aria-label="Route">' + renderSelectOptions(MED_ROUTES, data && data.route, '-- Route --') + '</select></td>' +
         '<td><select data-medication-field="frequency" aria-label="Frequency">' + renderSelectOptions(MED_FREQUENCIES, data && data.frequency, '-- Frequency --') + '</select></td>' +
