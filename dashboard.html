@@ -2661,9 +2661,10 @@
        DOCTOR'S MODULE DASHBOARD — LOGIC
        ═══════════════════════════════════════════ */
 
-    var STORAGE_KEY = 'clmmrh_patients_v1';
-    var SEED_PATIENT_ID = 'patient_1790299677879';
-    var BLANK_PATIENT_ID = 'patient_new_blank_1790299677880';
+    var STORAGE_KEY = window.STORAGE_KEY || 'clmmrh_patients_v1';
+    var SEED_PATIENT_ID = window.SEED_PATIENT_ID || 'patient_op_juan';
+    var OP_PATIENT_ID = window.OP_PATIENT_ID || 'patient_op_juan';
+    var BLANK_PATIENT_ID = window.BLANK_PATIENT_ID || 'patient_new_blank_1790299677880';
     /* Authenticated physician and clinical user session context */
     window.CURRENT_PHYSICIAN_NAME =
       window.CURRENT_PHYSICIAN_NAME ||
@@ -2727,7 +2728,7 @@
         var opt = document.createElement('option');
         opt.value = r.id;
         var d = r.data || {};
-        opt.textContent = (patientName(d) || 'Unnamed') + (d.hrn ? ' \u2014 ' + d.hrn : '') + (r.id === SEED_PATIENT_ID ? ' (Inpatient \u2014 Medical Ward)' : r.id === OP_PATIENT_ID ? ' (Outpatient \u2014 Adult Medicine OPD)' : r.id === BLANK_PATIENT_ID ? ' (New Patient \u2014 Blank Chart)' : '');
+        opt.textContent = (patientName(d) || 'Unnamed') + (d.hrn ? ' \u2014 ' + d.hrn : '') + (r.id === OP_PATIENT_ID ? ' (Outpatient \u2014 Adult Medicine OPD)' : r.id === BLANK_PATIENT_ID ? ' (New Patient \u2014 Blank Chart)' : '');
         selector.appendChild(opt);
       });
     }

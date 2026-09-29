@@ -90,8 +90,9 @@
     </div>
   </div>
 
+<script src="js/data/patient_seeds.js"></script>
 <script>
-  const STORAGE_KEY = 'clmmrh_patients_v1';
+  var STORAGE_KEY = window.STORAGE_KEY || 'clmmrh_patients_v1';
   const rowsEl = document.getElementById('patient-rows');
   const emptyEl = document.getElementById('empty');
   const searchEl = document.getElementById('search');
@@ -101,19 +102,19 @@
   const modalTitle = document.getElementById('modal-title');
   const modalSubtitle = document.getElementById('modal-subtitle');
 
-  function safeParse(value, fallback) {
+  var safeParse = window.safeParse || function(value, fallback) {
     try {
       const parsed = JSON.parse(value);
       return parsed ?? fallback;
     } catch (_) {
       return fallback;
     }
-  }
+  };
 
-  function getPatients() {
+  var getPatients = window.getPatients || function() {
     const records = safeParse(localStorage.getItem(STORAGE_KEY), []);
     return Array.isArray(records) ? records : [];
-  }
+  };
 
   function esc(value) {
     return String(value ?? '')
@@ -398,6 +399,14 @@
                  class="rounded bg-green-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-green-700">
                 Physician Order Sheet
               </a>
+              <button type="button"
+                      data-delete="${esc(record.id)}"
+                      data-name="${esc(patientName(d))}"
+                      data-hrn="${esc(d.hrn || '')}"
+                      class="rounded border border-red-300 bg-white px-2.5 py-1.5 text-sm font-semibold text-red-600 hover:bg-red-50 hover:border-red-400"
+                      title="Delete patient record">
+                Delete
+              </button>
             </div>
           </td>
         </tr>
@@ -411,8 +420,27 @@
   searchEl.addEventListener('input', renderList);
 
   rowsEl.addEventListener('click', event => {
-    const button = event.target.closest('[data-view]');
-    if (button) openPatient(button.dataset.view);
+    const viewButton = event.target.closest('[data-view]');
+    if (viewButton) openPatient(viewButton.dataset.view);
+
+    const delButton = event.target.closest('[data-delete]');
+    if (delButton) {
+      const id = delButton.dataset.delete;
+      const name = delButton.dataset.name || 'this patient';
+      const hrn = delButton.dataset.hrn ? ` (HRN: ${delButton.dataset.hrn})` : '';
+      if (window.confirm(`Are you sure you want to delete ${name}${hrn}? This will remove the patient record from this browser storage.`)) {
+        const remaining = getPatients().filter(r => r.id !== id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(remaining));
+        try {
+          const mStore = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
+          if (mStore && mStore[id]) {
+            delete mStore[id];
+            localStorage.setItem('clmmrh_chart_monitoring_data_v1', JSON.stringify(mStore));
+          }
+        } catch (_) {}
+        renderList();
+      }
+    }
   });
 
   document.getElementById('close-modal').addEventListener('click', closeModal);
@@ -424,6 +452,9 @@
   });
 
   window.addEventListener('storage', renderList);
+  if (typeof ensureSeedPatient === 'function') {
+    ensureSeedPatient();
+  }
   renderList();
 </script>
 </body>

@@ -268,7 +268,7 @@ async def run_scan():
             test_urls.append((fname, file_url))
             if fname in ("dashboard.html", "doctors_order_patient.html", "opd_record_patient.html"):
                 test_urls.append((f"{fname}?patient=patient_op_juan", f"{file_url}?patient=patient_op_juan"))
-                test_urls.append((f"{fname}?patient=patient_1790299677879", f"{file_url}?patient=patient_1790299677879"))
+                test_urls.append((f"{fname}?patient=patient_new_blank_1790299677880", f"{file_url}?patient=patient_new_blank_1790299677880"))
 
         results = {}
         print("Running Site-Wide Automated Quality Gate...")
