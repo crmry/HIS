@@ -347,29 +347,49 @@
       margin: 1px 0 2px;
     }
 
-    /* 7. Disposition Checkboxes (NO horizontal rule separating from Service Rendered) */
+    /* 7. Disposition Checkboxes & Physician Signature Row (Side-by-Side as in PDF) */
+    .bottom-disposition-sig-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 4px;
+      margin-bottom: 2px;
+    }
+
     .disp-section {
-      margin-top: 3px;
+      width: 410px;
     }
 
     .disp-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 1.2fr 1.1fr;
-      gap: 2px 10px;
+      display: flex;
+      gap: 12px;
       font-size: 7pt;
-      margin: 1px 0 2px;
+      margin: 1px 0 0;
+    }
+
+    .disp-col:nth-child(1) {
+      width: 130px;
+    }
+
+    .disp-col:nth-child(2) {
+      width: 155px;
+    }
+
+    .disp-col:nth-child(3) {
+      width: 105px;
     }
 
     .disp-item {
       display: flex;
       align-items: center;
-      gap: 5px;
-      line-height: 1.25;
+      gap: 4px;
+      line-height: 1.35;
+      margin-bottom: 1px;
     }
 
     .disp-square {
-      width: 12px;
-      height: 12px;
+      width: 13px;
+      height: 13px;
       border: 1px solid #000000;
       display: inline-flex;
       align-items: center;
@@ -386,19 +406,21 @@
       color: #000000;
     }
 
-    /* 8. Dual Physician Signatures Block */
+    /* 8. Physician Signature Block (Positioned on the Right Side) */
     .physician-auth-section {
-      margin-top: 6px;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      margin-bottom: 2px;
     }
 
     .signature-top-row {
-      display: flex;
-      justify-content: flex-end;
-      padding-right: 12px;
+      text-align: left;
+      padding-left: 8px;
     }
 
     .phys-stack {
-      min-width: 280px;
       text-align: left;
     }
 
@@ -430,11 +452,33 @@
 
     .signature-under-row {
       display: flex;
-      justify-content: space-between;
-      align-items: baseline;
+      flex-direction: column;
+      align-items: center;
       font-size: 7pt;
       line-height: 1.2;
-      padding: 0 4px;
+    }
+
+    .sig-over-printed-title {
+      font-size: 7pt;
+      font-weight: normal;
+      text-align: center;
+    }
+
+    .license-under-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: baseline;
+      width: 100%;
+      margin-top: 2px;
+      font-size: 7pt;
+    }
+
+    .license-under-rule {
+      display: inline-block;
+      border-bottom: 1px solid #000000;
+      min-width: 120px;
+      margin-left: 4px;
+      height: 1px;
     }
 
     .supervising-block {
@@ -679,83 +723,80 @@ Celecoxib 200 mg capsule once daily after meals for 14 days. Paracetamol 500 mg 
 Refer to Physical Medicine and Rehabilitation for 6 sessions of knee physical therapy. Follow-up after 3 months.</div>
       </div>
 
-      <!-- 7. Disposition (Directly below Service Rendered, NO extra horizontal line!) -->
-      <div class="disp-section">
-        <div class="section-lbl" style="margin-bottom:2px;">Disposition:</div>
-        <div class="disp-grid">
-          <!-- Col 1 -->
-          <div>
-            <div class="disp-item">
-              <span class="disp-square checked" id="box-treated"></span>
-              <span>Treated &amp; Discharged</span>
+      <!-- 7. Disposition (Left) & Physician Signature (Right) -->
+      <div class="bottom-disposition-sig-row">
+        <!-- Left: Disposition -->
+        <div class="disp-section">
+          <div class="section-lbl" style="margin-bottom:2px;">Disposition:</div>
+          <div class="disp-grid">
+            <!-- Col 1 -->
+            <div class="disp-col">
+              <div class="disp-item">
+                <span class="disp-square checked" id="box-treated"></span>
+                <span>Treated &amp; Discharged</span>
+              </div>
+              <div class="disp-item">
+                <span class="disp-square" id="box-admitted"></span>
+                <span>Admitted</span>
+              </div>
+              <div class="disp-item">
+                <span class="disp-square" id="box-refused"></span>
+                <span>Refused Admission/DAMA</span>
+              </div>
             </div>
-            <div class="disp-item">
-              <span class="disp-square" id="box-admitted"></span>
-              <span>Admitted</span>
+            <!-- Col 2 -->
+            <div class="disp-col">
+              <div class="disp-item">
+                <span class="disp-square" id="box-not-around"></span>
+                <span>Not Around When Called</span>
+              </div>
+              <div class="disp-item">
+                <span class="disp-square" id="box-er"></span>
+                <span>Sent Directly to E.R.</span>
+              </div>
+              <div class="disp-item">
+                <span class="disp-square" id="box-referred"></span>
+                <span>Referred to Other Health Facility</span>
+              </div>
             </div>
-            <div class="disp-item">
-              <span class="disp-square" id="box-refused"></span>
-              <span>Refused Admission/DAMA</span>
+            <!-- Col 3 -->
+            <div class="disp-col">
+              <div class="disp-item">
+                <span class="disp-square" id="box-rescheduled"></span>
+                <span>Rescheduled</span>
+              </div>
+              <div class="disp-item">
+                <span class="disp-square" id="box-minor-or"></span>
+                <span>STAT Minor OR</span>
+              </div>
             </div>
-          </div>
-          <!-- Col 2 -->
-          <div>
-            <div class="disp-item">
-              <span class="disp-square" id="box-not-around"></span>
-              <span>Not Around When Called</span>
-            </div>
-            <div class="disp-item">
-              <span class="disp-square" id="box-er"></span>
-              <span>Sent Directly to E.R.</span>
-            </div>
-            <div class="disp-item">
-              <span class="disp-square" id="box-referred"></span>
-              <span>Referred to Other Health Facility</span>
-            </div>
-          </div>
-          <!-- Col 3 -->
-          <div>
-            <div class="disp-item">
-              <span class="disp-square" id="box-rescheduled"></span>
-              <span>Rescheduled</span>
-            </div>
-            <div class="disp-item">
-              <span class="disp-square" id="box-minor-or"></span>
-              <span>STAT Minor OR</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom Container: Dual Physician Signatures & Footer -->
-    <div>
-      <!-- 8. Physician Signature Block -->
-      <div class="physician-auth-section">
-        <!-- Top Signature (Attending Physician on Right) -->
-        <div class="signature-top-row">
-          <div class="phys-stack">
-            <div class="phys-cursive-line" id="opd-phys-cursive">Paolo Cruz</div>
-            <div class="phys-detail-bold" id="opd-phys-name">PAOLO CRUZ, MD.</div>
-            <div class="phys-detail-reg" id="opd-phys-lic">LICENSE NO, 0091245</div>
-            <div class="phys-detail-reg" id="opd-phys-datetime">DATE &amp; TIME 09/18/2025 02:30 PM</div>
           </div>
         </div>
 
-        <div class="full-signature-line"></div>
+        <!-- Right: Physician Signature Block -->
+        <div class="physician-auth-section">
+          <div class="signature-top-row">
+            <div class="phys-stack">
+              <div class="phys-cursive-line" id="opd-phys-cursive">Paolo Cruz</div>
+              <div class="phys-detail-bold" id="opd-phys-name">PAOLO CRUZ, MD.</div>
+              <div class="phys-detail-reg" id="opd-phys-lic">LICENSE NO, 0091245</div>
+              <div class="phys-detail-reg" id="opd-phys-datetime">DATE &amp; TIME 09/18/2025 02:30 PM</div>
+            </div>
+          </div>
 
-        <div class="signature-under-row">
-          <div style="flex:1;"></div>
-          <div style="font-size:7pt; font-weight:normal; text-align:center; flex:2;">
+          <div class="full-signature-line"></div>
+
+          <div class="sig-over-printed-title">
             Physician's Signature over Printed Name
           </div>
-          <div style="text-align:right; flex:1.5;">
-            License No. <span style="display:inline-block; border-bottom:1px solid #000000; min-width:140px;"></span>
+          <div class="license-under-row">
+            <span>License No.</span>
+            <span class="license-under-rule"></span>
           </div>
         </div>
       </div>
 
-      <!-- 9. Institutional Form Footer (Bottom Left) -->
+      <!-- 8. Institutional Form Footer (Bottom Left) -->
       <div class="opd-page-footer">
         <div>OPD Face Sheet</div>
         <div>OPD.F.014</div>
