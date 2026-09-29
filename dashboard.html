@@ -610,16 +610,28 @@
                 </ul>
                 <div class="tab-content">
                   <div class="tab-pane active" id="hx-present">
-                    <textarea id="hx_present" name="hx_present" rows="4" class="input-block-level"
-                      placeholder="History of present illness..."></textarea>
+                    <div style="margin-bottom: 8px;">
+                      <label style="font-size:11px; font-weight:700; color:#0f4c81; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:3px; display:block;">Current Consultation (Editable)</label>
+                      <textarea id="hx_present" name="hx_present" rows="4" class="input-block-level"
+                        placeholder="History of present illness for current consultation..."></textarea>
+                    </div>
+                    <div id="hx-present-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-past">
-                    <textarea id="hx_past" name="hx_past" rows="4" class="input-block-level"
-                      placeholder="Past medical history..."></textarea>
+                    <div style="margin-bottom: 8px;">
+                      <label style="font-size:11px; font-weight:700; color:#0f4c81; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:3px; display:block;">Current Consultation (Editable)</label>
+                      <textarea id="hx_past" name="hx_past" rows="4" class="input-block-level"
+                        placeholder="Past medical history..."></textarea>
+                    </div>
+                    <div id="hx-past-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-surgical">
-                    <textarea id="hx_surgical" name="hx_surgical" rows="4" class="input-block-level"
-                      placeholder="Surgical history..."></textarea>
+                    <div style="margin-bottom: 8px;">
+                      <label style="font-size:11px; font-weight:700; color:#0f4c81; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:3px; display:block;">Current Consultation (Editable)</label>
+                      <textarea id="hx_surgical" name="hx_surgical" rows="4" class="input-block-level"
+                        placeholder="Surgical history &amp; operations..."></textarea>
+                    </div>
+                    <div id="hx-surgical-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-family">
                     <textarea id="hx_family" name="hx_family" rows="4" class="input-block-level"
@@ -3716,6 +3728,207 @@
       encRows.appendChild(tr);
     }
 
+    function renderHistoricalMedicalHistory(encounters) {
+      var pContainer = document.getElementById('hx-present-timeline');
+      var pmhContainer = document.getElementById('hx-past-timeline');
+      var surgContainer = document.getElementById('hx-surgical-timeline');
+
+      if (!pContainer && !pmhContainer && !surgContainer) return;
+      if (pContainer) pContainer.innerHTML = '';
+      if (pmhContainer) pmhContainer.innerHTML = '';
+      if (surgContainer) surgContainer.innerHTML = '';
+
+      var list = Array.isArray(encounters) ? encounters.slice() : [];
+      if (list.length === 0) return;
+
+      // Sort reverse-chronologically (newest prior visit first)
+      list.sort(function (a, b) {
+        var ta = typeof parseEncounterDateTime === 'function' ? parseEncounterDateTime(a) : 0;
+        var tb = typeof parseEncounterDateTime === 'function' ? parseEncounterDateTime(b) : 0;
+        return tb - ta;
+      });
+
+      // Identify current encounter (top row editable text area is reserved for current encounter)
+      var currentEnc = list.find(function (e) { return e && (e.is_current || e.isCurrent); });
+      if (!currentEnc && list.length > 0) {
+        currentEnc = list[0];
+      }
+
+      // Filter out the current encounter so only previous encounters appear in timeline rows
+      var prevEncounters = list.filter(function (e) {
+        return e !== currentEnc;
+      });
+
+      if (prevEncounters.length === 0) return;
+
+      function formatHdrDate(dStr) {
+        if (!dStr) return '—';
+        return formatDate(dStr) || dStr;
+      }
+
+      // 1. History of Present Illness (HPI)
+      if (pContainer) {
+        var hpiHtml = '';
+        prevEncounters.forEach(function (enc) {
+          var medHx = (enc.clinical_record && enc.clinical_record.history) ||
+                      enc.hx_present ||
+                      enc.patient_record ||
+                      (enc.clinical_record && enc.clinical_record.chief_complaint) ||
+                      enc.chief_complaint || '';
+          var progNotes = enc.progress_notes || '';
+
+          if (!medHx.trim() && !progNotes.trim()) return;
+
+          var rawType = ((enc.registry || enc.type) || 'OP').trim().toUpperCase();
+          var typeClass = rawType === 'ER' ? 'type-er' : (rawType === 'IP' ? 'type-ip' : 'type-op');
+          var deptTitle = rawType === 'ER' ? 'Emergency Department (ER)' : (rawType === 'IP' ? 'Inpatient Ward (IP)' : 'Outpatient Consultation (OPD)');
+          var srv = enc.service || (rawType === 'IP' ? 'Inpatient Service' : 'General Medicine');
+          var dDisplay = formatHdrDate(enc.date);
+          var timeStr = enc.time ? ' &bull; ' + esc(enc.time) : '';
+
+          var medHxPara = medHx ? '<div style="margin-bottom:6px;"><strong style="font-size:11px; text-transform:uppercase; color:#475569; letter-spacing:0.3px; display:block; margin-bottom:2px;">Medical History:</strong>' + esc(medHx) + '</div>' : '';
+          var progNotesPara = '';
+          if (progNotes && progNotes.trim() !== medHx.trim()) {
+            progNotesPara = '<div style="border-top:1px dashed #cbd5e1; padding-top:6px; margin-top:6px;"><strong style="font-size:11px; text-transform:uppercase; color:#475569; letter-spacing:0.3px; display:block; margin-bottom:2px;">Progress Notes:</strong><div style="white-space:pre-line;">' + esc(progNotes) + '</div></div>';
+          }
+
+          hpiHtml +=
+            '<div class="encounter-hx-card" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:10px 14px; margin-top:8px; background:#f8fafc;">' +
+            '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">' +
+            '    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
+            '      <span class="encounter-type-badge ' + typeClass + '" style="font-size:9.5px; padding:1px 6px;">' + esc(rawType) + '</span>' +
+            '      <strong style="font-size:12px; color:#0f172a;">' + esc(dDisplay) + '</strong>' +
+            '      <span style="font-size:11.5px; color:#64748b; font-weight:500;">&bull; ' + esc(srv) + ' (' + esc(deptTitle) + ')' + timeStr + '</span>' +
+            '    </div>' +
+            '  </div>' +
+            '  <div style="font-size:12px; color:#1e293b; line-height:1.55;">' +
+                 medHxPara +
+                 progNotesPara +
+            '  </div>' +
+            '</div>';
+        });
+
+        if (hpiHtml) {
+          pContainer.innerHTML =
+            '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #e2e8f0;">' +
+            '  <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Reverse Chronological)</div>' +
+               hpiHtml +
+            '</div>';
+        }
+      }
+
+      // 2. Past Medical History (PMH)
+      if (pmhContainer) {
+        var pmhHtml = '';
+        prevEncounters.forEach(function (enc) {
+          var dx = (enc.clinical_record && enc.clinical_record.final_diagnosis) ||
+                   enc.final_diagnosis ||
+                   enc.diagnosis ||
+                   enc.admitting_diagnosis || '';
+          var pmhText = enc.hx_past || '';
+
+          if (!dx.trim() && !pmhText.trim()) return;
+
+          var rawType = ((enc.registry || enc.type) || 'OP').trim().toUpperCase();
+          var typeClass = rawType === 'ER' ? 'type-er' : (rawType === 'IP' ? 'type-ip' : 'type-op');
+          var deptTitle = rawType === 'ER' ? 'Emergency (ER)' : (rawType === 'IP' ? 'Inpatient (IP)' : 'Outpatient (OPD)');
+          var srv = enc.service || (rawType === 'IP' ? 'Inpatient Service' : 'General Medicine');
+          var dDisplay = formatHdrDate(enc.date);
+
+          pmhHtml +=
+            '<div class="encounter-hx-card" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:10px 14px; margin-top:8px; background:#f8fafc;">' +
+            '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">' +
+            '    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
+            '      <span class="encounter-type-badge ' + typeClass + '" style="font-size:9.5px; padding:1px 6px;">' + esc(rawType) + '</span>' +
+            '      <strong style="font-size:12px; color:#0f172a;">' + esc(dDisplay) + '</strong>' +
+            '      <span style="font-size:11.5px; color:#64748b; font-weight:500;">&bull; ' + esc(srv) + ' (' + esc(deptTitle) + ')</span>' +
+            '    </div>' +
+            '  </div>' +
+            '  <div style="font-size:12px; color:#1e293b; line-height:1.55;">' +
+                 (dx ? '<div><strong style="font-size:11px; text-transform:uppercase; color:#475569; letter-spacing:0.3px; display:block; margin-bottom:2px;">Encounter Diagnosis:</strong>' + esc(dx) + '</div>' : '') +
+                 (pmhText ? '<div style="margin-top:4px;"><strong style="font-size:11px; text-transform:uppercase; color:#475569; letter-spacing:0.3px; display:block; margin-bottom:2px;">Documented PMH:</strong>' + esc(pmhText) + '</div>' : '') +
+            '  </div>' +
+            '</div>';
+        });
+
+        if (pmhHtml) {
+          pmhContainer.innerHTML =
+            '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #e2e8f0;">' +
+            '  <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Clinical Diagnoses)</div>' +
+               pmhHtml +
+            '</div>';
+        }
+      }
+
+      // 3. Surgical History & Operations
+      if (surgContainer) {
+        var surgHtml = '';
+        prevEncounters.forEach(function (enc) {
+          var surgItems = [];
+          if (Array.isArray(enc.orders)) {
+            enc.orders.forEach(function (o) {
+              var ot = typeof o === 'string' ? o : (o && o.text ? o.text : '');
+              if (/appendectomy|fracture|orif|reduction|debridement|excision|biopsy|cholecystectomy|laparotomy|herniotomy|amputation|surgery|surgical|operation/i.test(ot)) {
+                surgItems.push(ot);
+              }
+            });
+          }
+          if (enc.clinicalRequests && Array.isArray(enc.clinicalRequests.procedures)) {
+            enc.clinicalRequests.procedures.forEach(function (p) {
+              surgItems.push(typeof p === 'string' ? p : (p.name || ''));
+            });
+          }
+          var dxAndNotes = ((enc.diagnosis || '') + ' ' + (enc.progress_notes || '') + ' ' + ((enc.clinical_record && enc.clinical_record.history) || '') + ' ' + (enc.patient_record || '') + ' ' + (enc.hx_surgical || ''));
+          var matchSurg = dxAndNotes.match(/(?:S\/P|Status Post|Underwent|Procedure:?)\s*([^.,\n\r]+)/i);
+          if (matchSurg && matchSurg[1]) {
+            var spText = matchSurg[0].trim();
+            if (!surgItems.some(function(item) { return item.toLowerCase().includes(spText.toLowerCase()); })) {
+              surgItems.push(spText);
+            }
+          }
+          if (/appendectomy|fracture|orif|hernia repair|cholecystectomy|laparoscopic|surgical|post-operative/i.test(enc.diagnosis || '')) {
+            if (!surgItems.length) {
+              surgItems.push(enc.diagnosis);
+            }
+          }
+          if (enc.hx_surgical && enc.hx_surgical.trim() && !/no significant|none/i.test(enc.hx_surgical)) {
+            surgItems.push(enc.hx_surgical.trim());
+          }
+
+          if (surgItems.length === 0) return;
+
+          var rawType = ((enc.registry || enc.type) || 'IP').trim().toUpperCase();
+          var typeClass = rawType === 'ER' ? 'type-er' : (rawType === 'IP' ? 'type-ip' : 'type-op');
+          var deptTitle = rawType === 'ER' ? 'Emergency (ER)' : (rawType === 'IP' ? 'Inpatient (IP)' : 'Outpatient (OPD)');
+          var srv = enc.service || (rawType === 'IP' ? 'Surgical / Inpatient Ward' : 'General Surgery');
+          var dDisplay = formatHdrDate(enc.date);
+
+          surgHtml +=
+            '<div class="encounter-hx-card" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:10px 14px; margin-top:8px; background:#f8fafc;">' +
+            '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">' +
+            '    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
+            '      <span class="encounter-type-badge ' + typeClass + '" style="font-size:9.5px; padding:1px 6px;">' + esc(rawType) + '</span>' +
+            '      <strong style="font-size:12px; color:#0f172a;">' + esc(dDisplay) + '</strong>' +
+            '      <span style="font-size:11.5px; color:#64748b; font-weight:500;">&bull; ' + esc(srv) + ' (' + esc(deptTitle) + ')</span>' +
+            '    </div>' +
+            '  </div>' +
+            '  <div style="font-size:12px; color:#1e293b; line-height:1.55;">' +
+                 '<strong style="font-size:11px; text-transform:uppercase; color:#475569; letter-spacing:0.3px; display:block; margin-bottom:2px;">Documented Operation / Surgical Procedure:</strong>' +
+                 surgItems.map(function(it) { return '<div>&bull; ' + esc(it) + '</div>'; }).join('') +
+            '  </div>' +
+            '</div>';
+        });
+
+        if (surgHtml) {
+          surgContainer.innerHTML =
+            '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #e2e8f0;">' +
+            '  <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Surgical Operations &amp; Procedures)</div>' +
+               surgHtml +
+            '</div>';
+        }
+      }
+    }
+
     var activeInspectedEncounterIndex = null;
 
     function renderEncounterVitalSigns(enc) {
@@ -5819,6 +6032,7 @@
         addEncounterRow(item.enc, item.originalIdx, loadedEncounters);
       });
       renderViewableResults();
+      renderHistoricalMedicalHistory(loadedEncounters);
     }
 
     function getEncounters() {
@@ -8994,6 +9208,11 @@
          existing structured encounter logic.
         */
         renderEncounters(
+          Array.isArray(originalData.encounters)
+            ? originalData.encounters
+            : []
+        );
+        renderHistoricalMedicalHistory(
           Array.isArray(originalData.encounters)
             ? originalData.encounters
             : []
