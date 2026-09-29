@@ -195,6 +195,22 @@ async def scan_single_target(browser_ws, file_url):
                     if (window.currentHxFilter !== 'ALL') return 'Clicking ALL filter did not update currentHxFilter';
                 }
 
+                // Test Medical History Accordion Card Toggling & Expand/Collapse
+                const firstCardHdr = document.querySelector('.encounter-hx-header');
+                if (firstCardHdr) {
+                    const card = firstCardHdr.closest('.encounter-hx-card');
+                    firstCardHdr.click();
+                    if (!card.classList.contains('collapsed')) return 'Clicking card header did not collapse card';
+                    firstCardHdr.click();
+                    if (card.classList.contains('collapsed')) return 'Clicking card header again did not expand card';
+                }
+                const collapseAllBtn = document.querySelector('.hx-accordion-actions button:nth-child(2)');
+                const expandAllBtn = document.querySelector('.hx-accordion-actions button:nth-child(1)');
+                if (collapseAllBtn && expandAllBtn) {
+                    collapseAllBtn.click();
+                    expandAllBtn.click();
+                }
+
                 return 'OK';
             })()
             """

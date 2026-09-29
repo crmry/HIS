@@ -281,6 +281,64 @@
       background: #c62828 !important;
       border-color: #c62828 !important;
     }
+    /* Collapsible Accordion & Pagination for Timeline Cards */
+    .encounter-hx-card {
+      transition: box-shadow 0.15s ease-in-out;
+    }
+    .encounter-hx-header {
+      padding: 4px 6px;
+      margin: -2px -4px 4px -4px;
+      border-radius: 3px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.12s ease-in-out;
+    }
+    .encounter-hx-header:hover {
+      background: rgba(148, 163, 184, 0.12);
+    }
+    .hx-accordion-glyph {
+      display: inline-block;
+      width: 11px;
+      font-size: 9px;
+      color: #64748b;
+      transition: transform 0.15s ease-in-out;
+    }
+    .encounter-hx-card.collapsed .hx-accordion-glyph {
+      transform: rotate(-90deg);
+    }
+    .encounter-hx-card.collapsed .encounter-hx-body {
+      display: none !important;
+    }
+    .encounter-hx-card.collapsed .hx-toggle-hint .label-collapse {
+      display: none !important;
+    }
+    .encounter-hx-card:not(.collapsed) .hx-toggle-hint .label-expand {
+      display: none !important;
+    }
+    .btn-hx-page {
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      padding: 2px 9px !important;
+      border: 1px solid #cbd5e1 !important;
+      background: #ffffff !important;
+      color: #334155 !important;
+      border-radius: 3px !important;
+      cursor: pointer !important;
+      line-height: 1.4 !important;
+      transition: all 0.12s ease-in-out !important;
+    }
+    .btn-hx-page:hover:not([disabled]) {
+      background: #e2e8f0 !important;
+      color: #0f172a !important;
+      border-color: #94a3b8 !important;
+    }
+    .btn-hx-page[disabled] {
+      opacity: 0.45 !important;
+      cursor: not-allowed !important;
+      background: #f1f5f9 !important;
+      border-color: #e2e8f0 !important;
+      color: #94a3b8 !important;
+    }
   </style>
 </head>
 
@@ -3772,6 +3830,119 @@
     }
 
     window.currentHxFilter = 'ALL';
+    window.hxTimelinePages = {};
+    var HX_PAGE_SIZE = 3;
+
+    function toggleHxCard(headerEl) {
+      var card = headerEl.closest('.encounter-hx-card');
+      if (!card) return;
+      card.classList.toggle('collapsed');
+      var glyph = card.querySelector('.hx-accordion-glyph');
+      if (glyph) {
+        glyph.textContent = card.classList.contains('collapsed') ? '▶' : '▼';
+      }
+    }
+    window.toggleHxCard = toggleHxCard;
+
+    function toggleAllHxCards(timelineId, expand) {
+      var timeline = document.getElementById(timelineId);
+      if (!timeline) return;
+      var cards = timeline.querySelectorAll('.encounter-hx-card');
+      cards.forEach(function (card) {
+        if (expand) {
+          card.classList.remove('collapsed');
+        } else {
+          card.classList.add('collapsed');
+        }
+        var glyph = card.querySelector('.hx-accordion-glyph');
+        if (glyph) {
+          glyph.textContent = card.classList.contains('collapsed') ? '▶' : '▼';
+        }
+      });
+    }
+    window.toggleAllHxCards = toggleAllHxCards;
+
+    function changeHxPage(timelineId, delta) {
+      var curPage = window.hxTimelinePages[timelineId] || 1;
+      window.hxTimelinePages[timelineId] = Math.max(1, curPage + delta);
+      updateTimelineDisplay(timelineId);
+    }
+    window.changeHxPage = changeHxPage;
+
+    function updateTimelineDisplay(timelineId) {
+      var timeline = document.getElementById(timelineId);
+      if (!timeline) return;
+
+      var curFilter = window.currentHxFilter || 'ALL';
+      var cards = Array.prototype.slice.call(timeline.querySelectorAll('.encounter-hx-card'));
+      
+      // Filter matching cards
+      var matchingCards = cards.filter(function (card) {
+        var reg = (card.getAttribute('data-registry') || '').toUpperCase();
+        return curFilter === 'ALL' || reg === curFilter;
+      });
+
+      var totalMatching = matchingCards.length;
+      var totalPages = Math.max(1, Math.ceil(totalMatching / HX_PAGE_SIZE));
+      var curPage = window.hxTimelinePages[timelineId] || 1;
+      if (curPage > totalPages) curPage = totalPages;
+      if (curPage < 1) curPage = 1;
+      window.hxTimelinePages[timelineId] = curPage;
+
+      // Hide all cards first
+      cards.forEach(function (card) {
+        card.style.display = 'none';
+      });
+
+      // Show cards on current page (up to 3)
+      var startIdx = (curPage - 1) * HX_PAGE_SIZE;
+      var endIdx = startIdx + HX_PAGE_SIZE;
+      matchingCards.forEach(function (card, idx) {
+        if (idx >= startIdx && idx < endIdx) {
+          card.style.display = '';
+        }
+      });
+
+      // Empty state notice
+      var emptyMsg = timeline.querySelector('.hx-empty-filter-msg');
+      if (cards.length > 0 && totalMatching === 0) {
+        if (!emptyMsg) {
+          emptyMsg = document.createElement('div');
+          emptyMsg.className = 'hx-empty-filter-msg';
+          emptyMsg.style.cssText = 'padding:10px 14px; text-align:center; font-size:11.5px; color:#64748b; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:4px; margin-top:8px;';
+          timeline.appendChild(emptyMsg);
+        }
+        var labelName = curFilter === 'IP' ? 'Inpatient (IP)' : (curFilter === 'ER' ? 'Emergency (ER)' : 'Outpatient (OPD)');
+        emptyMsg.textContent = 'No previous ' + labelName + ' records found for this section.';
+        emptyMsg.style.display = 'block';
+      } else if (emptyMsg) {
+        emptyMsg.style.display = 'none';
+      }
+
+      // Pagination toolbar
+      var pagWrapper = timeline.querySelector('.hx-pagination-wrapper');
+      if (pagWrapper) {
+        if (totalMatching <= HX_PAGE_SIZE) {
+          pagWrapper.style.display = 'none';
+        } else {
+          pagWrapper.style.display = 'flex';
+          var fromNum = startIdx + 1;
+          var toNum = Math.min(endIdx, totalMatching);
+          
+          pagWrapper.innerHTML =
+            '<div class="hx-page-info" style="font-size:11px; color:#64748b; font-weight:500;">' +
+            '  Showing <strong>' + fromNum + '&ndash;' + toNum + '</strong> of <strong>' + totalMatching + '</strong> records' +
+            '</div>' +
+            '<div class="hx-page-actions" style="display:inline-flex; align-items:center; gap:4px;">' +
+            '  <button type="button" class="btn btn-mini btn-hx-page" ' + (curPage <= 1 ? 'disabled="disabled"' : '') + ' onclick="changeHxPage(\'' + timelineId + '\', -1)">‹ Prev</button>' +
+            '  <span style="font-size:11px; font-weight:600; color:#334155; padding:0 4px;">Page ' + curPage + ' of ' + totalPages + '</span>' +
+            '  <button type="button" class="btn btn-mini btn-hx-page" ' + (curPage >= totalPages ? 'disabled="disabled"' : '') + ' onclick="changeHxPage(\'' + timelineId + '\', 1)">Next ›</button>' +
+            '</div>';
+        }
+      }
+    }
+    window.updateTimelineDisplay = updateTimelineDisplay;
+
     function setHistoricalEncounterFilter(filterType) {
       window.currentHxFilter = filterType || 'ALL';
       var allButtons = document.querySelectorAll('.btn-hx-filter');
@@ -3783,33 +3954,10 @@
         }
       });
 
-      document.querySelectorAll('.encounter-hx-timeline').forEach(function (timeline) {
-        var cards = timeline.querySelectorAll('.encounter-hx-card');
-        var visibleCount = 0;
-        cards.forEach(function (card) {
-          var reg = (card.getAttribute('data-registry') || '').toUpperCase();
-          if (window.currentHxFilter === 'ALL' || reg === window.currentHxFilter) {
-            card.style.display = '';
-            visibleCount++;
-          } else {
-            card.style.display = 'none';
-          }
-        });
-
-        var emptyMsg = timeline.querySelector('.hx-empty-filter-msg');
-        if (cards.length > 0 && visibleCount === 0) {
-          if (!emptyMsg) {
-            emptyMsg = document.createElement('div');
-            emptyMsg.className = 'hx-empty-filter-msg';
-            emptyMsg.style.cssText = 'padding:10px 14px; text-align:center; font-size:11.5px; color:#64748b; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:4px; margin-top:8px;';
-            timeline.appendChild(emptyMsg);
-          }
-          var labelName = window.currentHxFilter === 'IP' ? 'Inpatient (IP)' : (window.currentHxFilter === 'ER' ? 'Emergency (ER)' : 'Outpatient (OPD)');
-          emptyMsg.textContent = 'No previous ' + labelName + ' records found for this section.';
-          emptyMsg.style.display = 'block';
-        } else if (emptyMsg) {
-          emptyMsg.style.display = 'none';
-        }
+      var timelineIds = ['hx-present-timeline', 'hx-past-timeline', 'hx-surgical-timeline', 'hx-family-timeline', 'hx-social-timeline', 'hx-allergy-timeline'];
+      timelineIds.forEach(function (tid) {
+        window.hxTimelinePages[tid] = 1;
+        updateTimelineDisplay(tid);
       });
     }
     window.setHistoricalEncounterFilter = setHistoricalEncounterFilter;
@@ -3858,15 +4006,21 @@
         return formatDate(dStr) || dStr;
       }
 
-      function buildFilterToolbarHtml() {
+      function buildFilterToolbarHtml(timelineId) {
         var cur = window.currentHxFilter || 'ALL';
-        return '<div class="hx-filter-toolbar" style="display:flex; align-items:center; justify-content:flex-end; gap:6px; margin-top:8px; margin-bottom:6px; padding:4px 0;">' +
-               '  <span style="font-size:11px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.3px;">Filter:</span>' +
-               '  <div class="btn-group" style="display:inline-flex; gap:2px;">' +
-               '    <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'ALL' ? ' active' : '') + '" data-filter="ALL" onclick="setHistoricalEncounterFilter(\'ALL\')">ALL</button>' +
-               '    <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'IP' ? ' active' : '') + '" data-filter="IP" onclick="setHistoricalEncounterFilter(\'IP\')">IP</button>' +
-               '    <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'OP' ? ' active' : '') + '" data-filter="OP" onclick="setHistoricalEncounterFilter(\'OP\')">OP</button>' +
-               '    <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'ER' ? ' active' : '') + '" data-filter="ER" onclick="setHistoricalEncounterFilter(\'ER\')">ER</button>' +
+        return '<div class="hx-filter-toolbar" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:8px; margin-bottom:6px; padding:4px 0;">' +
+               '  <div class="hx-accordion-actions" style="display:inline-flex; gap:4px; align-items:center;">' +
+               '    <button type="button" class="btn btn-mini" style="font-size:10.5px; padding:1px 6px; color:#475569;" title="Expand all encounters in this section" onclick="toggleAllHxCards(\'' + timelineId + '\', true)">Expand All</button>' +
+               '    <button type="button" class="btn btn-mini" style="font-size:10.5px; padding:1px 6px; color:#475569;" title="Collapse all encounters in this section" onclick="toggleAllHxCards(\'' + timelineId + '\', false)">Collapse All</button>' +
+               '  </div>' +
+               '  <div style="display:inline-flex; align-items:center; gap:6px;">' +
+               '    <span style="font-size:11px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.3px;">Filter:</span>' +
+               '    <div class="btn-group" style="display:inline-flex; gap:2px;">' +
+               '      <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'ALL' ? ' active' : '') + '" data-filter="ALL" onclick="setHistoricalEncounterFilter(\'ALL\')">ALL</button>' +
+               '      <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'IP' ? ' active' : '') + '" data-filter="IP" onclick="setHistoricalEncounterFilter(\'IP\')">IP</button>' +
+               '      <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'OP' ? ' active' : '') + '" data-filter="OP" onclick="setHistoricalEncounterFilter(\'OP\')">OP</button>' +
+               '      <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'ER' ? ' active' : '') + '" data-filter="ER" onclick="setHistoricalEncounterFilter(\'ER\')">ER</button>' +
+               '    </div>' +
                '  </div>' +
                '</div>';
       }
@@ -3897,15 +4051,19 @@
           }
 
           hpiHtml +=
-            '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:10px 14px; margin-top:8px; background:#f8fafc;">' +
-            '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">' +
+            '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:8px; background:#f8fafc;">' +
+            '  <div class="encounter-hx-header" onclick="toggleHxCard(this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; user-select:none; margin-bottom:4px;">' +
             '    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
+            '      <span class="hx-accordion-glyph">▼</span>' +
             '      <span class="encounter-type-badge ' + typeClass + '" style="font-size:9.5px; padding:1px 6px;">' + esc(rawType) + '</span>' +
             '      <strong style="font-size:12px; color:#0f172a;">' + esc(dDisplay) + '</strong>' +
             '      <span style="font-size:11.5px; color:#64748b; font-weight:500;">' + (srv ? '&bull; ' + esc(srv) : '') + timeStr + '</span>' +
             '    </div>' +
+            '    <div style="font-size:10.5px; color:#94a3b8; font-weight:500;" class="hx-toggle-hint">' +
+            '      <span class="label-collapse">Collapse</span><span class="label-expand">Expand</span>' +
+            '    </div>' +
             '  </div>' +
-            '  <div style="font-size:12px; color:#1e293b; line-height:1.55;">' +
+            '  <div class="encounter-hx-body" style="font-size:12px; color:#1e293b; line-height:1.55; border-top:1px solid #f1f5f9; padding-top:6px; margin-top:4px;">' +
                  medHxPara +
                  progNotesPara +
             '  </div>' +
@@ -3915,8 +4073,9 @@
         if (hpiHtml) {
           pContainer.innerHTML =
             '<div style="margin-top:10px;">' +
-               buildFilterToolbarHtml() +
+               buildFilterToolbarHtml('hx-present-timeline') +
                hpiHtml +
+               '<div class="hx-pagination-wrapper" style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding:6px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px;"></div>' +
             '</div>';
         }
       }
@@ -3940,15 +4099,19 @@
           var dDisplay = formatHdrDate(enc.date);
 
           pmhHtml +=
-            '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:10px 14px; margin-top:8px; background:#f8fafc;">' +
-            '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">' +
+            '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:8px; background:#f8fafc;">' +
+            '  <div class="encounter-hx-header" onclick="toggleHxCard(this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; user-select:none; margin-bottom:4px;">' +
             '    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
+            '      <span class="hx-accordion-glyph">▼</span>' +
             '      <span class="encounter-type-badge ' + typeClass + '" style="font-size:9.5px; padding:1px 6px;">' + esc(rawType) + '</span>' +
             '      <strong style="font-size:12px; color:#0f172a;">' + esc(dDisplay) + '</strong>' +
             '      <span style="font-size:11.5px; color:#64748b; font-weight:500;">' + (srv ? '&bull; ' + esc(srv) : '') + '</span>' +
             '    </div>' +
+            '    <div style="font-size:10.5px; color:#94a3b8; font-weight:500;" class="hx-toggle-hint">' +
+            '      <span class="label-collapse">Collapse</span><span class="label-expand">Expand</span>' +
+            '    </div>' +
             '  </div>' +
-            '  <div style="font-size:12px; color:#1e293b; line-height:1.55;">' +
+            '  <div class="encounter-hx-body" style="font-size:12px; color:#1e293b; line-height:1.55; border-top:1px solid #f1f5f9; padding-top:6px; margin-top:4px;">' +
                  (dx ? '<div>' + esc(dx) + '</div>' : '') +
                  (pmhText && pmhText !== dx ? '<div style="margin-top:4px; color:#475569;">' + esc(pmhText) + '</div>' : '') +
             '  </div>' +
@@ -3958,8 +4121,9 @@
         if (pmhHtml) {
           pmhContainer.innerHTML =
             '<div style="margin-top:10px;">' +
-               buildFilterToolbarHtml() +
+               buildFilterToolbarHtml('hx-past-timeline') +
                pmhHtml +
+               '<div class="hx-pagination-wrapper" style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding:6px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px;"></div>' +
             '</div>';
         }
       }
@@ -4007,15 +4171,19 @@
           var dDisplay = formatHdrDate(enc.date);
 
           surgHtml +=
-            '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:10px 14px; margin-top:8px; background:#f8fafc;">' +
-            '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">' +
+            '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:8px; background:#f8fafc;">' +
+            '  <div class="encounter-hx-header" onclick="toggleHxCard(this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; user-select:none; margin-bottom:4px;">' +
             '    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
+            '      <span class="hx-accordion-glyph">▼</span>' +
             '      <span class="encounter-type-badge ' + typeClass + '" style="font-size:9.5px; padding:1px 6px;">' + esc(rawType) + '</span>' +
             '      <strong style="font-size:12px; color:#0f172a;">' + esc(dDisplay) + '</strong>' +
             '      <span style="font-size:11.5px; color:#64748b; font-weight:500;">' + (srv ? '&bull; ' + esc(srv) : '') + '</span>' +
             '    </div>' +
+            '    <div style="font-size:10.5px; color:#94a3b8; font-weight:500;" class="hx-toggle-hint">' +
+            '      <span class="label-collapse">Collapse</span><span class="label-expand">Expand</span>' +
+            '    </div>' +
             '  </div>' +
-            '  <div style="font-size:12px; color:#1e293b; line-height:1.55;">' +
+            '  <div class="encounter-hx-body" style="font-size:12px; color:#1e293b; line-height:1.55; border-top:1px solid #f1f5f9; padding-top:6px; margin-top:4px;">' +
                  surgItems.map(function(it) { return '<div>&bull; ' + esc(cleanDiagnosis(it)) + '</div>'; }).join('') +
             '  </div>' +
             '</div>';
@@ -4024,8 +4192,9 @@
         if (surgHtml) {
           surgContainer.innerHTML =
             '<div style="margin-top:10px;">' +
-               buildFilterToolbarHtml() +
+               buildFilterToolbarHtml('hx-surgical-timeline') +
                surgHtml +
+               '<div class="hx-pagination-wrapper" style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding:6px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px;"></div>' +
             '</div>';
         }
       }
@@ -4043,16 +4212,22 @@
 
           famHtml +=
             '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:6px; background:#f8fafc;">' +
-            '  <div style="font-size:11px; margin-bottom:4px;"><span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
-            '  <div style="font-size:12px; color:#1e293b;">' + esc(cleanDiagnosis(famText)) + '</div>' +
+            '  <div class="encounter-hx-header" onclick="toggleHxCard(this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; user-select:none; margin-bottom:4px;">' +
+            '    <div style="font-size:11px;"><span class="hx-accordion-glyph">▼</span> <span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
+            '    <div style="font-size:10.5px; color:#94a3b8; font-weight:500;" class="hx-toggle-hint">' +
+            '      <span class="label-collapse">Collapse</span><span class="label-expand">Expand</span>' +
+            '    </div>' +
+            '  </div>' +
+            '  <div class="encounter-hx-body" style="font-size:12px; color:#1e293b; border-top:1px solid #f1f5f9; padding-top:4px; margin-top:2px;">' + esc(cleanDiagnosis(famText)) + '</div>' +
             '</div>';
         });
 
         if (famHtml) {
           famContainer.innerHTML =
             '<div style="margin-top:10px;">' +
-               buildFilterToolbarHtml() +
+               buildFilterToolbarHtml('hx-family-timeline') +
                famHtml +
+               '<div class="hx-pagination-wrapper" style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding:6px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px;"></div>' +
             '</div>';
         }
       }
@@ -4070,16 +4245,22 @@
 
           socHtml +=
             '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:6px; background:#f8fafc;">' +
-            '  <div style="font-size:11px; margin-bottom:4px;"><span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
-            '  <div style="font-size:12px; color:#1e293b;">' + esc(cleanDiagnosis(socText)) + '</div>' +
+            '  <div class="encounter-hx-header" onclick="toggleHxCard(this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; user-select:none; margin-bottom:4px;">' +
+            '    <div style="font-size:11px;"><span class="hx-accordion-glyph">▼</span> <span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
+            '    <div style="font-size:10.5px; color:#94a3b8; font-weight:500;" class="hx-toggle-hint">' +
+            '      <span class="label-collapse">Collapse</span><span class="label-expand">Expand</span>' +
+            '    </div>' +
+            '  </div>' +
+            '  <div class="encounter-hx-body" style="font-size:12px; color:#1e293b; border-top:1px solid #f1f5f9; padding-top:4px; margin-top:2px;">' + esc(cleanDiagnosis(socText)) + '</div>' +
             '</div>';
         });
 
         if (socHtml) {
           socContainer.innerHTML =
             '<div style="margin-top:10px;">' +
-               buildFilterToolbarHtml() +
+               buildFilterToolbarHtml('hx-social-timeline') +
                socHtml +
+               '<div class="hx-pagination-wrapper" style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding:6px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px;"></div>' +
             '</div>';
         }
       }
@@ -4097,16 +4278,22 @@
 
           algHtml +=
             '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #fed7aa; border-left:3px solid #ea580c; border-radius:4px; padding:8px 12px; margin-top:6px; background:#fffaf0;">' +
-            '  <div style="font-size:11px; margin-bottom:4px;"><span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
-            '  <div style="font-size:12px; color:#9a3412; font-weight:500;">' + esc(cleanDiagnosis(algText)) + '</div>' +
+            '  <div class="encounter-hx-header" onclick="toggleHxCard(this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; user-select:none; margin-bottom:4px;">' +
+            '    <div style="font-size:11px;"><span class="hx-accordion-glyph">▼</span> <span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
+            '    <div style="font-size:10.5px; color:#9a3412; font-weight:500;" class="hx-toggle-hint">' +
+            '      <span class="label-collapse">Collapse</span><span class="label-expand">Expand</span>' +
+            '    </div>' +
+            '  </div>' +
+            '  <div class="encounter-hx-body" style="font-size:12px; color:#9a3412; font-weight:500; border-top:1px solid #fed7aa; padding-top:4px; margin-top:2px;">' + esc(cleanDiagnosis(algText)) + '</div>' +
             '</div>';
         });
 
         if (algHtml) {
           algContainer.innerHTML =
             '<div style="margin-top:10px;">' +
-               buildFilterToolbarHtml() +
+               buildFilterToolbarHtml('hx-allergy-timeline') +
                algHtml +
+               '<div class="hx-pagination-wrapper" style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding:6px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px;"></div>' +
             '</div>';
         }
       }
