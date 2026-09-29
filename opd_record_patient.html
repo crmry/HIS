@@ -753,19 +753,6 @@ Refer to Physical Medicine and Rehabilitation for 6 sessions of knee physical th
             License No. <span style="display:inline-block; border-bottom:1px solid #000000; min-width:140px;"></span>
           </div>
         </div>
-
-        <!-- Second / Supervising Physician Signature -->
-        <div class="supervising-block">
-          <div class="phys-stack">
-            <div class="phys-cursive-line" id="opd-supervising-cursive">Maria Santos-Reyes</div>
-            <div class="phys-detail-bold" id="opd-supervising-name">MARIA SANTOS-REYES, MD.</div>
-            <div class="phys-detail-reg" id="opd-supervising-lic">LICENSE NO, 0084319</div>
-            <div class="phys-detail-reg" id="opd-supervising-datetime">DATE &amp; TIME 09/18/2025 03:15 PM</div>
-            <div class="supervision-note">
-              (The required number of physicians changes based on the scenario where supervision, validation, or authorization by another physician is required)
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- 9. Institutional Form Footer (Bottom Left) -->
@@ -1061,17 +1048,6 @@ Refer to Physical Medicine and Rehabilitation for 6 sessions of knee physical th
         document.getElementById('opd-phys-name').textContent = printDoc;
         document.getElementById('opd-phys-lic').textContent = 'LICENSE NO, ' + lic;
         document.getElementById('opd-phys-datetime').textContent = 'DATE & TIME ' + txDate + ' ' + (initialEnc.time || '02:30 PM');
-
-        // Supervising Physician
-        var supDoc = (data.resident_physician && data.resident_physician.name) || 'Maria Santos-Reyes, MD, FPCP';
-        var supLic = (data.resident_physician && data.resident_physician.prc_no) || '0084319';
-        var supSig = supDoc.replace(/^Dr\.\s*/i, '').replace(/,\s*(MD|FPCP).*$/i, '').trim();
-        var printSupDoc = supSig.toUpperCase() + ', MD.';
-
-        document.getElementById('opd-supervising-cursive').textContent = supSig;
-        document.getElementById('opd-supervising-name').textContent = printSupDoc;
-        document.getElementById('opd-supervising-lic').textContent = 'LICENSE NO, ' + supLic;
-        document.getElementById('opd-supervising-datetime').textContent = 'DATE & TIME ' + txDate + ' ' + timeOut;
 
         if (getUrlParam('print') === '1' || getUrlParam('print') === 'true' || getUrlParam('autoprint') === '1') {
           setTimeout(function () {
