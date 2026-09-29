@@ -245,6 +245,42 @@
       background: #f8fafc !important;
       border-top: 1px solid #e2e8f0 !important;
     }
+    /* Longitudinal Medical History Encounter Filter */
+    .btn-hx-filter {
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      padding: 2px 9px !important;
+      border: 1px solid #cbd5e1 !important;
+      background: #f8fafc !important;
+      color: #475569 !important;
+      border-radius: 3px !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease-in-out !important;
+      line-height: 1.4 !important;
+    }
+    .btn-hx-filter:hover {
+      background: #e2e8f0 !important;
+      color: #1e293b !important;
+    }
+    .btn-hx-filter.active {
+      background: #0f4c81 !important;
+      color: #ffffff !important;
+      border-color: #0f4c81 !important;
+      font-weight: 700 !important;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+    }
+    .btn-hx-filter[data-filter="IP"].active {
+      background: #1565c0 !important;
+      border-color: #1565c0 !important;
+    }
+    .btn-hx-filter[data-filter="OP"].active {
+      background: #2e7d32 !important;
+      border-color: #2e7d32 !important;
+    }
+    .btn-hx-filter[data-filter="ER"].active {
+      background: #c62828 !important;
+      border-color: #c62828 !important;
+    }
   </style>
 </head>
 
@@ -3735,6 +3771,49 @@
       encRows.appendChild(tr);
     }
 
+    window.currentHxFilter = 'ALL';
+    function setHistoricalEncounterFilter(filterType) {
+      window.currentHxFilter = filterType || 'ALL';
+      var allButtons = document.querySelectorAll('.btn-hx-filter');
+      allButtons.forEach(function (btn) {
+        if (btn.getAttribute('data-filter') === window.currentHxFilter) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      document.querySelectorAll('.encounter-hx-timeline').forEach(function (timeline) {
+        var cards = timeline.querySelectorAll('.encounter-hx-card');
+        var visibleCount = 0;
+        cards.forEach(function (card) {
+          var reg = (card.getAttribute('data-registry') || '').toUpperCase();
+          if (window.currentHxFilter === 'ALL' || reg === window.currentHxFilter) {
+            card.style.display = '';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        var emptyMsg = timeline.querySelector('.hx-empty-filter-msg');
+        if (cards.length > 0 && visibleCount === 0) {
+          if (!emptyMsg) {
+            emptyMsg = document.createElement('div');
+            emptyMsg.className = 'hx-empty-filter-msg';
+            emptyMsg.style.cssText = 'padding:10px 14px; text-align:center; font-size:11.5px; color:#64748b; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:4px; margin-top:8px;';
+            timeline.appendChild(emptyMsg);
+          }
+          var labelName = window.currentHxFilter === 'IP' ? 'Inpatient (IP)' : (window.currentHxFilter === 'ER' ? 'Emergency (ER)' : 'Outpatient (OPD)');
+          emptyMsg.textContent = 'No previous ' + labelName + ' records found for this section.';
+          emptyMsg.style.display = 'block';
+        } else if (emptyMsg) {
+          emptyMsg.style.display = 'none';
+        }
+      });
+    }
+    window.setHistoricalEncounterFilter = setHistoricalEncounterFilter;
+
     function renderHistoricalMedicalHistory(encounters) {
       var pContainer = document.getElementById('hx-present-timeline');
       var pmhContainer = document.getElementById('hx-past-timeline');
@@ -3779,6 +3858,19 @@
         return formatDate(dStr) || dStr;
       }
 
+      function buildFilterToolbarHtml() {
+        var cur = window.currentHxFilter || 'ALL';
+        return '<div class="hx-filter-toolbar" style="display:flex; align-items:center; justify-content:flex-end; gap:6px; margin-top:8px; margin-bottom:6px; padding:4px 0;">' +
+               '  <span style="font-size:11px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.3px;">Filter:</span>' +
+               '  <div class="btn-group" style="display:inline-flex; gap:2px;">' +
+               '    <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'ALL' ? ' active' : '') + '" data-filter="ALL" onclick="setHistoricalEncounterFilter(\'ALL\')">ALL</button>' +
+               '    <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'IP' ? ' active' : '') + '" data-filter="IP" onclick="setHistoricalEncounterFilter(\'IP\')">IP</button>' +
+               '    <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'OP' ? ' active' : '') + '" data-filter="OP" onclick="setHistoricalEncounterFilter(\'OP\')">OP</button>' +
+               '    <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'ER' ? ' active' : '') + '" data-filter="ER" onclick="setHistoricalEncounterFilter(\'ER\')">ER</button>' +
+               '  </div>' +
+               '</div>';
+      }
+
       // 1. History of Present Illness (HPI)
       if (pContainer) {
         var hpiHtml = '';
@@ -3806,7 +3898,7 @@
           }
 
           hpiHtml +=
-            '<div class="encounter-hx-card" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:10px 14px; margin-top:8px; background:#f8fafc;">' +
+            '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:10px 14px; margin-top:8px; background:#f8fafc;">' +
             '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">' +
             '    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
             '      <span class="encounter-type-badge ' + typeClass + '" style="font-size:9.5px; padding:1px 6px;">' + esc(rawType) + '</span>' +
@@ -3824,6 +3916,7 @@
         if (hpiHtml) {
           pContainer.innerHTML =
             '<div style="margin-top:10px;">' +
+               buildFilterToolbarHtml() +
                hpiHtml +
             '</div>';
         }
@@ -3849,7 +3942,7 @@
           var dDisplay = formatHdrDate(enc.date);
 
           pmhHtml +=
-            '<div class="encounter-hx-card" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:10px 14px; margin-top:8px; background:#f8fafc;">' +
+            '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:10px 14px; margin-top:8px; background:#f8fafc;">' +
             '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">' +
             '    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
             '      <span class="encounter-type-badge ' + typeClass + '" style="font-size:9.5px; padding:1px 6px;">' + esc(rawType) + '</span>' +
@@ -3867,6 +3960,7 @@
         if (pmhHtml) {
           pmhContainer.innerHTML =
             '<div style="margin-top:10px;">' +
+               buildFilterToolbarHtml() +
                pmhHtml +
             '</div>';
         }
@@ -3916,7 +4010,7 @@
           var dDisplay = formatHdrDate(enc.date);
 
           surgHtml +=
-            '<div class="encounter-hx-card" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:10px 14px; margin-top:8px; background:#f8fafc;">' +
+            '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:10px 14px; margin-top:8px; background:#f8fafc;">' +
             '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">' +
             '    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">' +
             '      <span class="encounter-type-badge ' + typeClass + '" style="font-size:9.5px; padding:1px 6px;">' + esc(rawType) + '</span>' +
@@ -3933,6 +4027,7 @@
         if (surgHtml) {
           surgContainer.innerHTML =
             '<div style="margin-top:10px;">' +
+               buildFilterToolbarHtml() +
                surgHtml +
             '</div>';
         }
@@ -3950,7 +4045,7 @@
           var dDisplay = formatHdrDate(enc.date);
 
           famHtml +=
-            '<div class="encounter-hx-card" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:6px; background:#f8fafc;">' +
+            '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:6px; background:#f8fafc;">' +
             '  <div style="font-size:11px; margin-bottom:4px;"><span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
             '  <div style="font-size:12px; color:#1e293b;">' + esc(cleanDiagnosis(famText)) + '</div>' +
             '</div>';
@@ -3959,6 +4054,7 @@
         if (famHtml) {
           famContainer.innerHTML =
             '<div style="margin-top:10px;">' +
+               buildFilterToolbarHtml() +
                famHtml +
             '</div>';
         }
@@ -3976,7 +4072,7 @@
           var dDisplay = formatHdrDate(enc.date);
 
           socHtml +=
-            '<div class="encounter-hx-card" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:6px; background:#f8fafc;">' +
+            '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:6px; background:#f8fafc;">' +
             '  <div style="font-size:11px; margin-bottom:4px;"><span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
             '  <div style="font-size:12px; color:#1e293b;">' + esc(cleanDiagnosis(socText)) + '</div>' +
             '</div>';
@@ -3985,6 +4081,7 @@
         if (socHtml) {
           socContainer.innerHTML =
             '<div style="margin-top:10px;">' +
+               buildFilterToolbarHtml() +
                socHtml +
             '</div>';
         }
@@ -4002,7 +4099,7 @@
           var dDisplay = formatHdrDate(enc.date);
 
           algHtml +=
-            '<div class="encounter-hx-card" style="border:1px solid #fed7aa; border-left:3px solid #ea580c; border-radius:4px; padding:8px 12px; margin-top:6px; background:#fffaf0;">' +
+            '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #fed7aa; border-left:3px solid #ea580c; border-radius:4px; padding:8px 12px; margin-top:6px; background:#fffaf0;">' +
             '  <div style="font-size:11px; margin-bottom:4px;"><span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
             '  <div style="font-size:12px; color:#9a3412; font-weight:500;">' + esc(cleanDiagnosis(algText)) + '</div>' +
             '</div>';
@@ -4011,10 +4108,13 @@
         if (algHtml) {
           algContainer.innerHTML =
             '<div style="margin-top:10px;">' +
+               buildFilterToolbarHtml() +
                algHtml +
             '</div>';
         }
       }
+
+      setHistoricalEncounterFilter(window.currentHxFilter || 'ALL');
     }
 
     var activeInspectedEncounterIndex = null;

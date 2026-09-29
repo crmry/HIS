@@ -179,6 +179,22 @@ async def scan_single_target(browser_ws, file_url):
                 document.body.click();
                 if (toolkit.classList.contains('expanded')) return 'Click outside failed to collapse floating toolkit';
 
+                // Test Medical History Encounter Registry Filters (ALL/IP/OP/ER)
+                const ipFilterBtn = document.querySelector('.btn-hx-filter[data-filter="IP"]');
+                const allFilterBtn = document.querySelector('.btn-hx-filter[data-filter="ALL"]');
+                const erFilterBtn = document.querySelector('.btn-hx-filter[data-filter="ER"]');
+                const opFilterBtn = document.querySelector('.btn-hx-filter[data-filter="OP"]');
+                if (ipFilterBtn && allFilterBtn && erFilterBtn && opFilterBtn) {
+                    ipFilterBtn.click();
+                    if (window.currentHxFilter !== 'IP') return 'Clicking IP filter did not update currentHxFilter';
+                    erFilterBtn.click();
+                    if (window.currentHxFilter !== 'ER') return 'Clicking ER filter did not update currentHxFilter';
+                    opFilterBtn.click();
+                    if (window.currentHxFilter !== 'OP') return 'Clicking OP filter did not update currentHxFilter';
+                    allFilterBtn.click();
+                    if (window.currentHxFilter !== 'ALL') return 'Clicking ALL filter did not update currentHxFilter';
+                }
+
                 return 'OK';
             })()
             """
