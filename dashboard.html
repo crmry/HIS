@@ -610,36 +610,29 @@
                 </ul>
                 <div class="tab-content">
                   <div class="tab-pane active" id="hx-present">
-                    <div style="margin-bottom: 8px;">
-                      <label style="font-size:11px; font-weight:700; color:#0f4c81; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:3px; display:block;">Current Consultation (Editable)</label>
-                      <textarea id="hx_present" name="hx_present" rows="4" class="input-block-level"
-                        placeholder="History of present illness for current consultation..."></textarea>
-                    </div>
+                    <textarea id="hx_present" name="hx_present" rows="4" class="input-block-level"
+                      placeholder="History of present illness..."></textarea>
                     <div id="hx-present-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-past">
-                    <div style="margin-bottom: 8px;">
-                      <label style="font-size:11px; font-weight:700; color:#0f4c81; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:3px; display:block;">Current Consultation (Editable)</label>
-                      <textarea id="hx_past" name="hx_past" rows="4" class="input-block-level"
-                        placeholder="Past medical history..."></textarea>
-                    </div>
+                    <textarea id="hx_past" name="hx_past" rows="4" class="input-block-level"
+                      placeholder="Past medical history..."></textarea>
                     <div id="hx-past-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-surgical">
-                    <div style="margin-bottom: 8px;">
-                      <label style="font-size:11px; font-weight:700; color:#0f4c81; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:3px; display:block;">Current Consultation (Editable)</label>
-                      <textarea id="hx_surgical" name="hx_surgical" rows="4" class="input-block-level"
-                        placeholder="Surgical history &amp; operations..."></textarea>
-                    </div>
+                    <textarea id="hx_surgical" name="hx_surgical" rows="4" class="input-block-level"
+                      placeholder="Surgical history &amp; operations..."></textarea>
                     <div id="hx-surgical-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-family">
                     <textarea id="hx_family" name="hx_family" rows="4" class="input-block-level"
                       placeholder="Family history..."></textarea>
+                    <div id="hx-family-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-social">
                     <textarea id="hx_social" name="hx_social" rows="4" class="input-block-level"
                       placeholder="Social history..."></textarea>
+                    <div id="hx-social-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-gyn">
                     <p class="muted">Table OB HX — See suggested interface</p>
@@ -650,6 +643,7 @@
                   <div class="tab-pane" id="hx-allergy">
                     <textarea id="hx_allergy" name="hx_allergy" rows="4" class="input-block-level"
                       placeholder="Document drug allergies, food allergies, environmental allergies, reaction manifestations, and severity (e.g., Penicillin — Anaphylaxis; Seafood — Urticaria; or No Known Allergies / NKDA)..."></textarea>
+                    <div id="hx-allergy-timeline" class="encounter-hx-timeline"></div>
                   </div>
                 </div>
               </div>
@@ -1935,7 +1929,7 @@
             </select>
           </div>
           <div>
-            <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Final Diagnosis (Manually typed / editable by Doctor):</label>
+            <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Final Diagnosis:</label>
             <textarea id="end-care-final-dx" rows="3" class="input-block-level" placeholder="Type or refine complete final clinical diagnosis..." style="font-size:13px; font-weight:600; color:#0f4c81; box-sizing:border-box;"></textarea>
           </div>
         </div>
@@ -3732,11 +3726,17 @@
       var pContainer = document.getElementById('hx-present-timeline');
       var pmhContainer = document.getElementById('hx-past-timeline');
       var surgContainer = document.getElementById('hx-surgical-timeline');
+      var famContainer = document.getElementById('hx-family-timeline');
+      var socContainer = document.getElementById('hx-social-timeline');
+      var algContainer = document.getElementById('hx-allergy-timeline');
 
-      if (!pContainer && !pmhContainer && !surgContainer) return;
+      if (!pContainer && !pmhContainer && !surgContainer && !famContainer && !socContainer && !algContainer) return;
       if (pContainer) pContainer.innerHTML = '';
       if (pmhContainer) pmhContainer.innerHTML = '';
       if (surgContainer) surgContainer.innerHTML = '';
+      if (famContainer) famContainer.innerHTML = '';
+      if (socContainer) socContainer.innerHTML = '';
+      if (algContainer) algContainer.innerHTML = '';
 
       var list = Array.isArray(encounters) ? encounters.slice() : [];
       if (list.length === 0) return;
@@ -3924,6 +3924,87 @@
             '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #e2e8f0;">' +
             '  <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Surgical Operations &amp; Procedures)</div>' +
                surgHtml +
+            '</div>';
+        }
+      }
+
+      // 4. Family Medical History
+      if (famContainer) {
+        var famHtml = '';
+        prevEncounters.forEach(function (enc) {
+          var famText = enc.hx_family || (enc.clinical_record && enc.clinical_record.family_history) || '';
+          if (!famText.trim() || /no significant|none/i.test(famText.trim())) return;
+
+          var rawType = ((enc.registry || enc.type) || 'OP').trim().toUpperCase();
+          var typeClass = rawType === 'ER' ? 'type-er' : (rawType === 'IP' ? 'type-ip' : 'type-op');
+          var dDisplay = formatHdrDate(enc.date);
+
+          famHtml +=
+            '<div class="encounter-hx-card" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:6px; background:#f8fafc;">' +
+            '  <div style="font-size:11px; margin-bottom:4px;"><span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
+            '  <div style="font-size:12px; color:#1e293b;">' + esc(famText) + '</div>' +
+            '</div>';
+        });
+
+        if (famHtml) {
+          famContainer.innerHTML =
+            '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #e2e8f0;">' +
+            '  <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Documented Family History)</div>' +
+               famHtml +
+            '</div>';
+        }
+      }
+
+      // 5. Personal & Social History
+      if (socContainer) {
+        var socHtml = '';
+        prevEncounters.forEach(function (enc) {
+          var socText = enc.hx_social || (enc.clinical_record && enc.clinical_record.social_history) || '';
+          if (!socText.trim() || /no significant|none/i.test(socText.trim())) return;
+
+          var rawType = ((enc.registry || enc.type) || 'OP').trim().toUpperCase();
+          var typeClass = rawType === 'ER' ? 'type-er' : (rawType === 'IP' ? 'type-ip' : 'type-op');
+          var dDisplay = formatHdrDate(enc.date);
+
+          socHtml +=
+            '<div class="encounter-hx-card" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:6px; background:#f8fafc;">' +
+            '  <div style="font-size:11px; margin-bottom:4px;"><span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
+            '  <div style="font-size:12px; color:#1e293b;">' + esc(socText) + '</div>' +
+            '</div>';
+        });
+
+        if (socHtml) {
+          socContainer.innerHTML =
+            '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #e2e8f0;">' +
+            '  <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Documented Personal &amp; Social History)</div>' +
+               socHtml +
+            '</div>';
+        }
+      }
+
+      // 6. Allergies
+      if (algContainer) {
+        var algHtml = '';
+        prevEncounters.forEach(function (enc) {
+          var algText = enc.hx_allergy || enc.allergies || (enc.clinical_record && enc.clinical_record.allergies) || '';
+          if (!algText.trim() || /no known|nkda|none/i.test(algText.trim())) return;
+
+          var rawType = ((enc.registry || enc.type) || 'OP').trim().toUpperCase();
+          var typeClass = rawType === 'ER' ? 'type-er' : (rawType === 'IP' ? 'type-ip' : 'type-op');
+          var dDisplay = formatHdrDate(enc.date);
+
+          algHtml +=
+            '<div class="encounter-hx-card" style="border:1px solid #fed7aa; border-left:3px solid #ea580c; border-radius:4px; padding:8px 12px; margin-top:6px; background:#fffaf0;">' +
+            '  <div style="font-size:11px; margin-bottom:4px;"><span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
+            '  <div style="font-size:12px; color:#9a3412; font-weight:500;">' + esc(algText) + '</div>' +
+            '</div>';
+        });
+
+        if (algHtml) {
+          algContainer.innerHTML =
+            '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #fed7aa;">' +
+            '  <div style="font-size:11px; font-weight:700; color:#c2410c; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Documented Allergies)</div>' +
+               algHtml +
             '</div>';
         }
       }
