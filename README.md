@@ -8,6 +8,7 @@ A web-based clinical dashboard and hospital information system designed for atte
 - **Patient List:** [https://crmry.github.io/HIS/patients.html](https://crmry.github.io/HIS/patients.html)
 - **Patient Registration:** [https://crmry.github.io/HIS/forms_localstorage.html](https://crmry.github.io/HIS/forms_localstorage.html)
 - **Order & Compliance Sheet:** [https://crmry.github.io/HIS/doctors_order_patient.html](https://crmry.github.io/HIS/doctors_order_patient.html)
+- **OPD Record / Face Sheet (Initial Encounter — Form OPD.F.014):** [https://crmry.github.io/HIS/opd_record_patient.html](https://crmry.github.io/HIS/opd_record_patient.html)
 - **Progress Notes / Printable Sheet:** [https://crmry.github.io/HIS/index.html](https://crmry.github.io/HIS/index.html)
 
 ---
