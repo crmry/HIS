@@ -3748,7 +3748,7 @@
         return tb - ta;
       });
 
-      // Identify current encounter (top row editable text area is reserved for current encounter)
+      // Identify current encounter (top row text area is reserved for current encounter)
       var currentEnc = list.find(function (e) { return e && (e.is_current || e.isCurrent); });
       if (!currentEnc && list.length > 0) {
         currentEnc = list[0];
@@ -3810,8 +3810,7 @@
 
         if (hpiHtml) {
           pContainer.innerHTML =
-            '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #e2e8f0;">' +
-            '  <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Reverse Chronological)</div>' +
+            '<div style="margin-top:10px;">' +
                hpiHtml +
             '</div>';
         }
@@ -3853,8 +3852,7 @@
 
         if (pmhHtml) {
           pmhContainer.innerHTML =
-            '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #e2e8f0;">' +
-            '  <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Clinical Diagnoses)</div>' +
+            '<div style="margin-top:10px;">' +
                pmhHtml +
             '</div>';
         }
@@ -3921,8 +3919,7 @@
 
         if (surgHtml) {
           surgContainer.innerHTML =
-            '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #e2e8f0;">' +
-            '  <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Surgical Operations &amp; Procedures)</div>' +
+            '<div style="margin-top:10px;">' +
                surgHtml +
             '</div>';
         }
@@ -3948,8 +3945,7 @@
 
         if (famHtml) {
           famContainer.innerHTML =
-            '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #e2e8f0;">' +
-            '  <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Documented Family History)</div>' +
+            '<div style="margin-top:10px;">' +
                famHtml +
             '</div>';
         }
@@ -3975,8 +3971,7 @@
 
         if (socHtml) {
           socContainer.innerHTML =
-            '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #e2e8f0;">' +
-            '  <div style="font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Documented Personal &amp; Social History)</div>' +
+            '<div style="margin-top:10px;">' +
                socHtml +
             '</div>';
         }
@@ -4002,8 +3997,7 @@
 
         if (algHtml) {
           algContainer.innerHTML =
-            '<div style="margin-top:14px; padding-top:8px; border-top:1px solid #fed7aa;">' +
-            '  <div style="font-size:11px; font-weight:700; color:#c2410c; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">Previous Encounters (Documented Allergies)</div>' +
+            '<div style="margin-top:10px;">' +
                algHtml +
             '</div>';
         }
@@ -4411,7 +4405,7 @@
       var enc = loadedEncounters[index];
       var isCurrent = Boolean(enc.is_current || enc.isCurrent);
 
-      // If clicking current encounter: restore active editable view
+      // If clicking current encounter: restore active consultation view
       if (isCurrent) {
         restoreCurrentEncounterView();
         return;
