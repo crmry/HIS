@@ -1120,6 +1120,12 @@
         document.getElementById('opd-supervising-name').textContent = cleanSupDoc;
         document.getElementById('opd-supervising-lic').textContent = 'PRC License No.: ' + supLic;
         document.getElementById('opd-supervising-datetime').textContent = 'DATE & TIME: ' + txDate + ' ' + timeOut;
+
+        if (getUrlParam('print') === '1' || getUrlParam('print') === 'true' || getUrlParam('autoprint') === '1') {
+          setTimeout(function () {
+            window.print();
+          }, 400);
+        }
       }
 
       window.addEventListener('DOMContentLoaded', loadInitialOpdRecord);
