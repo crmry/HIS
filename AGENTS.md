@@ -68,6 +68,9 @@
   - **Physician Professional Credentials**: All doctor's orders, prescriptions, and encounter certifications must include the physician's full name without redundant titles (use either post-nominal 'MD' e.g., 'Paolo Cruz, MD', or 'Dr. Paolo Cruz', never duplicate 'Dr. Paolo Cruz, MD'), PRC License Number, and S2 License (for regulated medications) per DOH A.O. 2021-0037. PHIC PAN is not required on bedside order sheets or signature blocks.
   - **Standardized Diagnostic & Procedural Coding**: Diagnoses must enforce ICD-10 format, and procedural documentation must reference PhilHealth Relative Value Scale (RVS) codes with anatomical laterality where indicated.
   - **Strictly Minimalist Clinical Typography**: Purge all consumer emoji glyphs from headers, tabs, select inputs, and modal dialogs to maintain an authentic, high-trust hospital EHR aesthetic.
+  - **Encounter Registry Badge & Label Conciseness**:
+    - Never append redundant parenthetical registry descriptors (e.g., `(Outpatient Consultation (OPD))`, `(Emergency Department (ER))`, `(Inpatient Ward (IP))`) to specialty or service names when an encounter badge (`[IP]`, `[OP]`, `[ER]`) is already rendered.
+    - Keep service and department labels clean, concise, and focused on the clinical specialty (e.g., `• Emergency Medicine • 08:30 AM` or `• General Surgery`).
   - **Production Code Hygiene & Authentic Hospital Terminology (Zero AI Markers)**:
     - Maintain production hospital engineering standards throughout all code comments, documentation, and user interfaces.
     - Strictly purge and ban conversational AI markers, prompts, assistant meta-commentary, or artificial demo qualifiers (e.g., "per user request", "STATIC PROTOTYPE ONLY", "mock datasets", "Zero Orders Demo", "(Seed — Previous Patient)", "(Sample — Outpatient Only, OPD)", "(Example — New Patient, Blank)").
