@@ -1369,11 +1369,352 @@
       .dashlet { page-break-inside: avoid; }
     }
 
+    /* ══════════════════════════════════════════════════════════════════════
+       RESPONSIVE TABLET & MOBILE VIEWPORT SYSTEM (<= 980px, <= 768px, <= 480px)
+       ══════════════════════════════════════════════════════════════════════ */
     @media (max-width: 980px) {
-      .seg-topbar { padding: 0 8px; overflow-x: auto; }
-      .seg-page { width: calc(100% - 16px); margin-top: 8px; }
+      .seg-topbar { padding: 0 10px; overflow-x: auto; }
+      .seg-page { width: calc(100% - 16px); margin: 8px auto 20px; }
       .seg-modal-backdrop { padding: 8px; }
-      .seg-modal { min-width: 760px; }
+    }
+
+    @media (max-width: 768px) {
+      /* ── Viewport & Container Reset ── */
+      html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+      }
+      .seg-topbar {
+        position: relative !important;
+        height: auto !important;
+        min-height: 38px !important;
+        padding: 4px 8px !important;
+        white-space: nowrap !important;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        align-items: center !important;
+        gap: 6px !important;
+        box-sizing: border-box !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15) !important;
+      }
+      .seg-topbar a, .seg-topbar span {
+        height: 28px !important;
+        line-height: 28px !important;
+        padding: 0 10px !important;
+        font-size: 11px !important;
+        border-radius: 4px !important;
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+      }
+      .seg-topbar .seg-right {
+        float: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        margin-left: auto !important;
+        border: none !important;
+        padding: 0 !important;
+        flex-shrink: 0 !important;
+      }
+      .seg-topbar .seg-end {
+        height: 28px !important;
+        line-height: 26px !important;
+        margin-top: 0 !important;
+        padding: 0 10px !important;
+        font-size: 11px !important;
+        flex-shrink: 0 !important;
+      }
+
+      .seg-page {
+        width: 100% !important;
+        margin: 0 0 20px 0 !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        box-sizing: border-box !important;
+      }
+      .seg-page-title {
+        margin: 0 !important;
+        border-radius: 0 !important;
+        font-size: 13px !important;
+        padding: 6px 10px !important;
+      }
+      .seg-content {
+        padding: 8px 6px 16px !important;
+      }
+
+      /* ── Bootstrap Grid Collapse ── */
+      .row-fluid {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-bottom: 0 !important;
+      }
+      .row-fluid [class*="span"] {
+        display: block !important;
+        float: none !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        box-sizing: border-box !important;
+        margin-bottom: 10px !important;
+      }
+
+      /* ── Patient Information Demographic Card ── */
+      .patient-info-bar {
+        padding: 8px 10px !important;
+        font-size: 11.5px !important;
+      }
+      .patient-info-row {
+        flex-wrap: wrap !important;
+        gap: 4px 12px !important;
+        margin-bottom: 4px !important;
+      }
+      .patient-info-row-split {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 4px !important;
+      }
+      .patient-info-col.text-right {
+        justify-content: flex-start !important;
+        text-align: left !important;
+      }
+      .patient-info-row-3col {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px 14px !important;
+      }
+      .patient-info-bar #banner-hrn {
+        font-size: 15px !important;
+      }
+      .patient-info-bar .patient-name-banner {
+        font-size: 13.5px !important;
+      }
+
+      /* ── Tables & Horizontal Scroll Assurance ── */
+      .bootstrap-widget-content,
+      .tab-content,
+      #dashlet-encounter,
+      .referral-table-wrap {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      .encounter-table,
+      .vitals-grid,
+      .referral-table,
+      .analyte-table,
+      #viewable-results-table {
+        min-width: 620px !important;
+      }
+
+      /* ── Dashlet Headers & Collapsible Bars ── */
+      .dashlet > .bootstrap-widget-header {
+        height: auto !important;
+        min-height: 28px !important;
+        padding: 5px 8px !important;
+        line-height: normal !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+      }
+      .dashlet > .bootstrap-widget-header h3 {
+        line-height: normal !important;
+        font-size: 12px !important;
+      }
+      .dashlet > .bootstrap-widget-header .pull-right {
+        float: none !important;
+        margin: 0 !important;
+      }
+
+      /* ── Tabs (Flowsheet & Ancillary Stations) ── */
+      .nav-tabs {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        border-bottom: 2px solid var(--med-green) !important;
+        margin-bottom: 10px !important;
+        padding-bottom: 2px !important;
+        scrollbar-width: none !important;
+      }
+      .nav-tabs::-webkit-scrollbar {
+        display: none !important;
+      }
+      .nav-tabs > li {
+        flex: 0 0 auto !important;
+        float: none !important;
+        margin-bottom: 0 !important;
+      }
+      .nav-tabs > li > a {
+        padding: 6px 9px !important;
+        font-size: 11px !important;
+        white-space: nowrap !important;
+      }
+
+      .clinical-tabs,
+      #modal-clinical-tabs,
+      #dashboard-clinical-tabs {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        margin: 8px 0 10px 0 !important;
+        padding-bottom: 4px !important;
+      }
+      .clinical-tabs::-webkit-scrollbar,
+      #modal-clinical-tabs::-webkit-scrollbar,
+      #dashboard-clinical-tabs::-webkit-scrollbar {
+        display: none !important;
+      }
+      .clinical-tabs li,
+      #modal-clinical-tabs li,
+      #dashboard-clinical-tabs li {
+        flex: 0 0 auto !important;
+        min-width: 115px !important;
+      }
+
+      /* ── Form Inputs & Textareas ── */
+      input[type="text"],
+      input[type="search"],
+      input[type="date"],
+      input[type="time"],
+      input[type="number"],
+      select,
+      textarea {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 13px !important;
+      }
+      .input-block-level {
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      /* ── Floating Pinned Requisition Toolkit (Mobile Bottom Dock) ── */
+      #floating-req-toolkit {
+        top: auto !important;
+        bottom: 14px !important;
+        right: 12px !important;
+        transform: none !important;
+        flex-direction: column-reverse !important;
+        align-items: flex-end !important;
+        z-index: 1050 !important;
+      }
+      #floating-req-handle {
+        padding: 8px 14px !important;
+        border-radius: 20px !important;
+        flex-direction: row !important;
+        gap: 7px !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.35) !important;
+      }
+      .floating-req-handle-text {
+        writing-mode: horizontal-tb !important;
+        transform: none !important;
+        font-size: 11px !important;
+        letter-spacing: 1px !important;
+      }
+      .floating-req-handle-arrow {
+        transform: rotate(-90deg) !important;
+      }
+      #floating-req-menu {
+        width: calc(100vw - 24px) !important;
+        max-width: 320px !important;
+        border-radius: 8px !important;
+        border: 1px solid #cbd5e1 !important;
+        margin-bottom: 8px !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25) !important;
+      }
+      #floating-req-toolkit.expanded #floating-req-menu,
+      #floating-req-toolkit.pinned #floating-req-menu {
+        max-width: 320px !important;
+      }
+
+      /* ── Modals on Small Viewports ── */
+      .seg-modal-backdrop {
+        padding: 6px 4px !important;
+      }
+      .seg-modal {
+        min-width: 0 !important;
+        width: 96vw !important;
+        max-width: 96vw !important;
+        margin: 6px auto !important;
+        border-radius: 6px !important;
+        box-sizing: border-box !important;
+      }
+      .seg-modal-body {
+        padding: 12px 10px !important;
+        max-height: 78vh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        box-sizing: border-box !important;
+      }
+      .request-patient-details span {
+        width: 100% !important;
+        display: block !important;
+        margin-bottom: 4px !important;
+      }
+      .request-search-bar {
+        margin: 8px 0 !important;
+        padding: 8px !important;
+      }
+      .request-search-bar label,
+      .request-search-bar input[type=text] {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 6px !important;
+      }
+      .request-search-bar .priority-box {
+        float: none !important;
+        margin-top: 6px !important;
+      }
+      .request-services-wrap {
+        margin: 0 !important;
+        max-height: 200px !important;
+      }
+      .request-cart-wrap {
+        margin: 8px 0 !important;
+      }
+      .request-totals {
+        width: 100% !important;
+        margin: 10px 0 0 !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .seg-topbar {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 4px 6px !important;
+        gap: 4px !important;
+      }
+      .seg-topbar a, .seg-topbar span {
+        font-size: 10.5px !important;
+        padding: 0 8px !important;
+      }
+      .seg-topbar .seg-right {
+        margin-left: auto !important;
+      }
+      .flowsheet-toolbar {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+      }
+      .encounter-hx-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 4px !important;
+      }
     }
 
     /* ── Patient Encounter Table (Clean HIS Design per Reference) ── */

@@ -8,8 +8,8 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 
-  <title>Physician's Module — CLMMRH | SegHIS</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <style>
@@ -360,6 +360,112 @@
       border-color: #0f4c81 !important;
       outline: none !important;
       box-shadow: 0 0 0 2px rgba(15, 76, 129, 0.15) !important;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       MOBILE VIEWPORT & TOUCH RESPONSIVE OVERRIDES (<= 768px)
+       ══════════════════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      /* Single-line horizontal scrollable top navigation */
+      .seg-topbar {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 5px 8px !important;
+        min-height: 38px !important;
+        gap: 6px !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
+      }
+      .seg-topbar a {
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        padding: 4px 8px !important;
+        font-size: 11px !important;
+      }
+      .seg-topbar .seg-right {
+        margin-left: auto !important;
+        white-space: nowrap !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        flex-shrink: 0 !important;
+        padding-left: 6px !important;
+      }
+      .seg-topbar .seg-right #seg-clock {
+        display: none !important;
+      }
+      .seg-topbar .seg-right .btn-mini {
+        padding: 2px 6px !important;
+        font-size: 10.5px !important;
+      }
+
+      /* Dock floating requisition toolkit to bottom-right pill button */
+      #floating-req-toolkit {
+        top: auto !important;
+        bottom: 14px !important;
+        right: 12px !important;
+        transform: none !important;
+        flex-direction: column-reverse !important;
+        align-items: flex-end !important;
+        z-index: 1050 !important;
+      }
+      #floating-req-handle {
+        flex-direction: row !important;
+        border-radius: 20px !important;
+        padding: 7px 14px !important;
+        border: 1px solid rgba(255, 255, 255, 0.35) !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28) !important;
+        gap: 6px !important;
+        background: linear-gradient(135deg, #1b4d3e, #0e2f24) !important;
+      }
+      .floating-req-handle-text {
+        writing-mode: horizontal-tb !important;
+        text-orientation: initial !important;
+        transform: none !important;
+        font-size: 11px !important;
+        letter-spacing: 0.5px !important;
+        font-weight: 700 !important;
+      }
+      .floating-req-handle-arrow {
+        transform: rotate(-90deg) !important;
+        transition: transform 0.2s ease !important;
+        font-size: 10px !important;
+      }
+      #floating-req-toolkit.expanded .floating-req-handle-arrow,
+      #floating-req-toolkit.pinned .floating-req-handle-arrow {
+        transform: rotate(90deg) !important;
+      }
+      #floating-req-menu {
+        width: calc(100vw - 24px) !important;
+        max-width: 320px !important;
+        border-radius: 8px !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25) !important;
+        margin-bottom: 8px !important;
+        max-height: 70vh !important;
+        overflow-y: auto !important;
+      }
+      #floating-req-toolkit.expanded #floating-req-menu,
+      #floating-req-toolkit.pinned #floating-req-menu {
+        max-width: 320px !important;
+      }
+
+      /* Modal responsive containment */
+      .seg-modal {
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+      }
+      .seg-modal-backdrop {
+        padding: 8px !important;
+      }
+      .seg-modal-body {
+        padding: 12px 14px !important;
+      }
     }
   </style>
 </head>
@@ -2618,7 +2724,7 @@
     <!-- ═══ FLOATING CLINICAL ORDER & REQUISITION TOOLKIT ═══ -->
   <aside id="floating-req-toolkit" class="floating-req-toolkit" aria-label="Clinical Order and Requisition Toolkit">
     <button type="button" class="floating-req-handle" id="floating-req-handle" onclick="toggleFloatingRequisitionToolkit(event)" title="Requisitions (Click to expand / collapse)" aria-expanded="false">
-      <span class="floating-req-handle-text">DASHLET</span>
+      <span class="floating-req-handle-text">REQUISITIONS</span>
       <span class="floating-req-handle-arrow" id="floating-req-toggle-arrow">◀</span>
     </button>
     <div class="floating-req-menu" id="floating-req-menu">
