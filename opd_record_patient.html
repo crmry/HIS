@@ -278,9 +278,7 @@ Physical Examination: General Survey: Conscious, coherent, ambulatory. HEENT: An
       <!-- Services -->
       <section class="mb-3.5 px-1">
         <div class="font-bold text-[11px] mb-0.5">Service/Treatment/Procedure Rendered:</div>
-        <div class="text-[9.5px] whitespace-pre-line leading-relaxed text-gray-900" id="opd-procedures-rendered">Digital Knee Radiograph (AP and Lateral Weight-Bearing Views) completed: Mild medial joint space narrowing.
-Celecoxib 200 mg capsule once daily after meals for 14 days. Paracetamol 500 mg tablet q6h PRN for knee pain.
-Refer to Physical Medicine and Rehabilitation for 6 sessions of knee physical therapy. Follow-up after 3 months.</div>
+        <div class="text-[9.5px] whitespace-pre-line leading-relaxed text-gray-900" id="opd-procedures-rendered">See Physicians’ Order / Progress Notes</div>
       </section>
 
       <!-- Disposition -->
@@ -598,23 +596,9 @@ Refer to Physical Medicine and Rehabilitation for 6 sessions of knee physical th
         var tOutEl = document.getElementById('opd-time-out');
         if (tOutEl) tOutEl.textContent = timeOut;
 
-        // 6. Services & Procedures Rendered
-        var procList = [];
-        if (Array.isArray(initialEnc.orders) && initialEnc.orders.length) {
-          initialEnc.orders.forEach(function (o) { if (o.text) procList.push(o.text); });
-        }
-        if (initialEnc.clinicalRequests && Array.isArray(initialEnc.clinicalRequests.radiology)) {
-          initialEnc.clinicalRequests.radiology.forEach(function (r) { procList.push('Radiology: ' + r); });
-        }
-        if (!procList.length) {
-          procList = [
-            'Digital Knee Radiograph (AP and Lateral Weight-Bearing Views) completed: Mild medial joint space narrowing.',
-            'Celecoxib 200 mg capsule once daily after meals for 14 days. Paracetamol 500 mg tablet q6h PRN for knee pain.',
-            'Refer to Physical Medicine and Rehabilitation for 6 sessions of knee physical therapy. Follow-up after 3 months.'
-          ];
-        }
+        // 6. Services & Procedures Rendered - Fixed clinical cross-reference
         var procEl = document.getElementById('opd-procedures-rendered');
-        if (procEl) procEl.textContent = procList.join('\n');
+        if (procEl) procEl.textContent = 'See Physicians’ Order / Progress Notes';
 
         // 7. Dispositions
         var dispVal = (initialEnc.disposition || data.disposition || 'Treated & Discharged').toLowerCase();
