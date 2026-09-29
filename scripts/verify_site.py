@@ -211,6 +211,17 @@ async def scan_single_target(browser_ws, file_url):
                     expandAllBtn.click();
                 }
 
+                // Test Pagination Page Size Input Control & Navigation
+                const sizeInput = document.querySelector('.hx-page-size-input');
+                if (sizeInput) {
+                    if (sizeInput.value !== '2') return 'Default page size input should be 2';
+                    sizeInput.value = '3';
+                    sizeInput.onchange();
+                    if (window.hxPageSizes['hx-present-timeline'] !== 3) return 'Changing page size input did not update hxPageSizes';
+                    sizeInput.value = '2';
+                    sizeInput.onchange();
+                }
+
                 return 'OK';
             })()
             """

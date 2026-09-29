@@ -339,6 +339,28 @@
       border-color: #e2e8f0 !important;
       color: #94a3b8 !important;
     }
+    .hx-page-size-input {
+      width: 44px !important;
+      height: 22px !important;
+      line-height: 22px !important;
+      font-size: 11.5px !important;
+      font-weight: 600 !important;
+      color: #1e293b !important;
+      text-align: center !important;
+      padding: 1px 4px !important;
+      margin: 0 !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 3px !important;
+      background: #ffffff !important;
+      box-shadow: none !important;
+      display: inline-block !important;
+      vertical-align: middle !important;
+    }
+    .hx-page-size-input:focus {
+      border-color: #0f4c81 !important;
+      outline: none !important;
+      box-shadow: 0 0 0 2px rgba(15, 76, 129, 0.15) !important;
+    }
   </style>
 </head>
 
@@ -3831,7 +3853,23 @@
 
     window.currentHxFilter = 'ALL';
     window.hxTimelinePages = {};
-    var HX_PAGE_SIZE = 3;
+    window.hxPageSizes = {};
+    var DEFAULT_HX_PAGE_SIZE = 2;
+
+    function getHxPageSize(timelineId) {
+      var size = window.hxPageSizes[timelineId];
+      if (typeof size === 'number' && size >= 1) return size;
+      return DEFAULT_HX_PAGE_SIZE;
+    }
+
+    function changeHxPageSize(timelineId, val) {
+      var parsed = parseInt(val, 10);
+      if (isNaN(parsed) || parsed < 1) parsed = DEFAULT_HX_PAGE_SIZE;
+      window.hxPageSizes[timelineId] = parsed;
+      window.hxTimelinePages[timelineId] = 1;
+      updateTimelineDisplay(timelineId);
+    }
+    window.changeHxPageSize = changeHxPageSize;
 
     function toggleHxCard(headerEl) {
       var card = headerEl.closest('.encounter-hx-card');
@@ -3883,7 +3921,8 @@
       });
 
       var totalMatching = matchingCards.length;
-      var totalPages = Math.max(1, Math.ceil(totalMatching / HX_PAGE_SIZE));
+      var pageSize = getHxPageSize(timelineId);
+      var totalPages = Math.max(1, Math.ceil(totalMatching / pageSize));
       var curPage = window.hxTimelinePages[timelineId] || 1;
       if (curPage > totalPages) curPage = totalPages;
       if (curPage < 1) curPage = 1;
@@ -3894,9 +3933,9 @@
         card.style.display = 'none';
       });
 
-      // Show cards on current page (up to 3)
-      var startIdx = (curPage - 1) * HX_PAGE_SIZE;
-      var endIdx = startIdx + HX_PAGE_SIZE;
+      // Show cards on current page (up to pageSize)
+      var startIdx = (curPage - 1) * pageSize;
+      var endIdx = startIdx + pageSize;
       matchingCards.forEach(function (card, idx) {
         if (idx >= startIdx && idx < endIdx) {
           card.style.display = '';
@@ -3922,7 +3961,7 @@
       // Pagination toolbar
       var pagWrapper = timeline.querySelector('.hx-pagination-wrapper');
       if (pagWrapper) {
-        if (totalMatching <= HX_PAGE_SIZE) {
+        if (totalMatching === 0) {
           pagWrapper.style.display = 'none';
         } else {
           pagWrapper.style.display = 'flex';
@@ -3930,8 +3969,17 @@
           var toNum = Math.min(endIdx, totalMatching);
           
           pagWrapper.innerHTML =
-            '<div class="hx-page-info" style="font-size:11px; color:#64748b; font-weight:500;">' +
-            '  Showing <strong>' + fromNum + '&ndash;' + toNum + '</strong> of <strong>' + totalMatching + '</strong> records' +
+            '<div style="display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap;">' +
+            '  <div class="hx-page-info" style="font-size:11px; color:#64748b; font-weight:500;">' +
+            '    Showing <strong>' + fromNum + '&ndash;' + toNum + '</strong> of <strong>' + totalMatching + '</strong> records' +
+            '  </div>' +
+            '  <div class="hx-page-size-control" style="display:inline-flex; align-items:center; gap:4px; font-size:11px; color:#64748b;">' +
+            '    <span>Show:</span>' +
+            '    <input type="number" min="1" max="50" class="hx-page-size-input" value="' + pageSize + '" ' +
+            '           title="Number of encounters displayed per page" ' +
+            '           onchange="changeHxPageSize(\'' + timelineId + '\', this.value)">' +
+            '    <span>/ page</span>' +
+            '  </div>' +
             '</div>' +
             '<div class="hx-page-actions" style="display:inline-flex; align-items:center; gap:4px;">' +
             '  <button type="button" class="btn btn-mini btn-hx-page" ' + (curPage <= 1 ? 'disabled="disabled"' : '') + ' onclick="changeHxPage(\'' + timelineId + '\', -1)">‹ Prev</button>' +
