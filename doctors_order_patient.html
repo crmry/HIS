@@ -38,27 +38,6 @@
             flex: 1;
         }
 
-        .page-cont-header {
-            text-align: center;
-            margin-bottom: 8px;
-        }
-
-        .page-cont-header .hospital-name {
-            font-size: 11pt;
-            margin-bottom: 1px;
-        }
-
-        .page-cont-header .form-title {
-            font-size: 11pt;
-        }
-
-        .page-cont-note {
-            text-align: center;
-            font-size: 9pt;
-            font-style: italic;
-            margin-bottom: 8px;
-            color: #444;
-        }
 
         #pages-container > .page + .page {
             margin-top: 32px;
@@ -1194,14 +1173,12 @@
         }
 
         // Split flatRows into pages based on available pixel height per page.
-        // Page 1 has a larger header; continuation pages have a compact header.
+        // Standard full hospital header is rendered consistently across all pages.
         // Returns an array of arrays (each inner array = rows for that page).
         function splitRowsIntoPages(flatRows) {
-            // A4 page body budgets:
-            // Page 1: 1122px - 91px padding - ~310px header/grid/legend/footer = ~720px (~20 standard 9.2mm rows)
-            // Continuation: 1122px - 91px padding - ~170px cont-header/legend/footer = ~860px (~24 standard 9.2mm rows)
-            var PAGE1_BUDGET = 720;
-            var CONT_BUDGET = 860;
+            // A4 page body budget:
+            // 1122px - 91px padding - ~310px header/grid/legend/footer = ~720px (~20 standard 9.2mm rows)
+            var PAGE_BUDGET = 720;
             var ROW_HEIGHT = 35;
             var MIN_BLANK_ROWS = 3;
             var SIG_HEIGHT = 60;
@@ -1212,7 +1189,7 @@
             var pageNum = 0;
 
             while (i < flatRows.length || pageNum === 0) {
-                var budget = (pageNum === 0) ? PAGE1_BUDGET : CONT_BUDGET;
+                var budget = PAGE_BUDGET;
                 var usedHeight = 0;
                 var pageRows = [];
 
@@ -1316,30 +1293,21 @@
 
                 var inner = "";
 
-                if (pgIdx === 0) {
-                    // Full header for page 1
-                    inner += '<p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>';
-                    inner += '<p class="hospital-address">Lacson - Burgos Streets, Bacolod City</p>';
-                    inner += '<h1 class="form-title">PHYSICIAN\'S ORDERS / PROGRESS NOTES<br>NURSES\'  COMPLIANCE SHEET</h1>';
-                    inner += '<p class="form-subtitle">(Authenticate all Orders)</p>';
-                    inner += '<div class="patient-grid">';
-                    inner += '<div class="field"><label>Name of Patient</label><span class="field-val">' + escapeHtml(nameVal) + '</span></div>';
-                    inner += '<div class="field"><label>Hospital Number</label><span class="field-val">' + escapeHtml(hrnVal) + '</span></div>';
-                    inner += '<div class="field"><label>Address</label><span class="field-val">' + escapeHtml(addrVal) + '</span></div>';
-                    inner += '<div class="field"><label>Ward / Room</label><span class="field-val">' + escapeHtml(wardVal) + '</span></div>';
-                    inner += '<div class="field span-2 split-row">';
-                    inner += '<div class="field age"><label>Age</label><span class="field-val">' + escapeHtml(ageVal) + '</span></div>';
-                    inner += '<div class="field sex"><label>Sex</label><span class="field-val">' + escapeHtml(sexVal) + '</span></div>';
-                    inner += '<div class="field admit"><label>Admission Date</label><span class="field-val">' + escapeHtml(admitVal) + '</span></div>';
-                    inner += '</div></div>';
-                } else {
-                    // Compact continuation header for page 2+
-                    inner += '<div class="page-cont-header">';
-                    inner += '<p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>';
-                    inner += '<h1 class="form-title" style="font-size:11pt;">PHYSICIAN\'S ORDERS / NURSES\'  COMPLIANCE SHEET — Continuation (Page ' + (pgIdx + 1) + ')</h1>';
-                    inner += '</div>';
-                    inner += '<div class="page-cont-note">Patient: ' + escapeHtml(nameVal) + ' &nbsp;|&nbsp; Hospital Number: ' + escapeHtml(hrnVal) + ' &nbsp;|&nbsp; Admission Date: ' + escapeHtml(admitVal) + '</div>';
-                }
+                // Standard full official hospital header across all pages
+                inner += '<p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>';
+                inner += '<p class="hospital-address">Lacson - Burgos Streets, Bacolod City</p>';
+                inner += '<h1 class="form-title">PHYSICIAN\'S ORDERS / PROGRESS NOTES<br>NURSES\'  COMPLIANCE SHEET</h1>';
+                inner += '<p class="form-subtitle">(Authenticate all Orders)</p>';
+                inner += '<div class="patient-grid">';
+                inner += '<div class="field"><label>Name of Patient</label><span class="field-val">' + escapeHtml(nameVal) + '</span></div>';
+                inner += '<div class="field"><label>Hospital Number</label><span class="field-val">' + escapeHtml(hrnVal) + '</span></div>';
+                inner += '<div class="field"><label>Address</label><span class="field-val">' + escapeHtml(addrVal) + '</span></div>';
+                inner += '<div class="field"><label>Ward / Room</label><span class="field-val">' + escapeHtml(wardVal) + '</span></div>';
+                inner += '<div class="field span-2 split-row">';
+                inner += '<div class="field age"><label>Age</label><span class="field-val">' + escapeHtml(ageVal) + '</span></div>';
+                inner += '<div class="field sex"><label>Sex</label><span class="field-val">' + escapeHtml(sexVal) + '</span></div>';
+                inner += '<div class="field admit"><label>Admission Date</label><span class="field-val">' + escapeHtml(admitVal) + '</span></div>';
+                inner += '</div></div>';
 
                 inner += '<p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>';
 
