@@ -1400,6 +1400,10 @@
       width: 175px !important;
       min-width: 175px !important;
     }
+    .encounter-table thead th#th-encounter-action {
+      width: 75px !important;
+      min-width: 75px !important;
+    }
     .encounter-table thead th#th-encounter-date:hover {
       background: #233446 !important;
       cursor: pointer;
@@ -1473,6 +1477,7 @@
       text-shadow: none !important;
     }
     .btn-encounter-record {
+      display: none !important;
       color: #166534 !important;
       background: #f0fdf4 !important;
       border: 1px solid #bbf7d0 !important;
@@ -1483,6 +1488,7 @@
       color: #14532d !important;
     }
     .btn-encounter-results {
+      display: none !important;
       color: #0369a1 !important;
       background: #f0f9ff !important;
       border: 1px solid #bae6fd !important;

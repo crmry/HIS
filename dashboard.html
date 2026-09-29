@@ -355,7 +355,7 @@
                       <th style="width:180px;">Service</th>
                       <th style="width:180px;">Physician</th>
                       <th>Diagnosis</th>
-                      <th style="width:190px; text-align:center;">Action</th>
+                      <th style="width:75px; min-width:75px; text-align:center;" id="th-encounter-action">Action</th>
                     </tr>
                   </thead>
                   <tbody id="encounter-rows"></tbody>
@@ -3701,10 +3701,10 @@
         '<td>' + diagnosisCellHtml + '</td>' +
         '<td style="text-align:center;">' +
         '  <div class="encounter-actions-cell">' +
-        '    <button type="button" class="btn btn-mini btn-enc-action btn-encounter-record" data-encounter-index="' + index + '" title="View Clinical Record (Chief Complaint, History, Final Diagnosis)">' +
+        '    <button type="button" class="btn btn-mini btn-enc-action btn-encounter-record" data-encounter-index="' + index + '" style="display:none;" title="View Clinical Record (Chief Complaint, History, Final Diagnosis)">' +
         '      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>Record' +
         '    </button>' +
-        '    <button type="button" class="btn btn-mini btn-enc-action btn-encounter-results" data-encounter-index="' + index + '" title="View Diagnostic Examination Results">' +
+        '    <button type="button" class="btn btn-mini btn-enc-action btn-encounter-results" data-encounter-index="' + index + '" style="display:none;" title="View Diagnostic Examination Results">' +
         '      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:3px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>Result' +
         '    </button>' +
         '    <a href="' + encUrl + '" target="_blank" class="btn btn-mini btn-enc-action btn-encounter-view" data-encounter-index="' + index + '" title="' + encViewTitle + '">' +
