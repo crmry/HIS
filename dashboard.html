@@ -4056,19 +4056,13 @@
 
       function buildFilterToolbarHtml(timelineId) {
         var cur = window.currentHxFilter || 'ALL';
-        return '<div class="hx-filter-toolbar" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:8px; margin-bottom:6px; padding:4px 0;">' +
-               '  <div class="hx-accordion-actions" style="display:inline-flex; gap:4px; align-items:center;">' +
-               '    <button type="button" class="btn btn-mini" style="font-size:10.5px; padding:1px 6px; color:#475569;" title="Expand all encounters in this section" onclick="toggleAllHxCards(\'' + timelineId + '\', true)">Expand All</button>' +
-               '    <button type="button" class="btn btn-mini" style="font-size:10.5px; padding:1px 6px; color:#475569;" title="Collapse all encounters in this section" onclick="toggleAllHxCards(\'' + timelineId + '\', false)">Collapse All</button>' +
-               '  </div>' +
-               '  <div style="display:inline-flex; align-items:center; gap:6px;">' +
-               '    <span style="font-size:11px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.3px;">Filter:</span>' +
-               '    <div class="btn-group" style="display:inline-flex; gap:2px;">' +
-               '      <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'ALL' ? ' active' : '') + '" data-filter="ALL" onclick="setHistoricalEncounterFilter(\'ALL\')">ALL</button>' +
-               '      <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'IP' ? ' active' : '') + '" data-filter="IP" onclick="setHistoricalEncounterFilter(\'IP\')">IP</button>' +
-               '      <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'OP' ? ' active' : '') + '" data-filter="OP" onclick="setHistoricalEncounterFilter(\'OP\')">OP</button>' +
-               '      <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'ER' ? ' active' : '') + '" data-filter="ER" onclick="setHistoricalEncounterFilter(\'ER\')">ER</button>' +
-               '    </div>' +
+        return '<div class="hx-filter-toolbar" style="display:flex; align-items:center; justify-content:flex-end; gap:6px; margin-top:8px; margin-bottom:6px; padding:4px 0;">' +
+               '  <span style="font-size:11px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.3px;">Filter:</span>' +
+               '  <div class="btn-group" style="display:inline-flex; gap:2px;">' +
+               '    <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'ALL' ? ' active' : '') + '" data-filter="ALL" onclick="setHistoricalEncounterFilter(\'ALL\')">ALL</button>' +
+               '    <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'IP' ? ' active' : '') + '" data-filter="IP" onclick="setHistoricalEncounterFilter(\'IP\')">IP</button>' +
+               '    <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'OP' ? ' active' : '') + '" data-filter="OP" onclick="setHistoricalEncounterFilter(\'OP\')">OP</button>' +
+               '    <button type="button" class="btn btn-mini btn-hx-filter' + (cur === 'ER' ? ' active' : '') + '" data-filter="ER" onclick="setHistoricalEncounterFilter(\'ER\')">ER</button>' +
                '  </div>' +
                '</div>';
       }
