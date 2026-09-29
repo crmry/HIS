@@ -8,12 +8,12 @@
   <style>
     /* ═══════════════════════════════════════════════════════════════
        CLMMRH Form OPD.F.014 — Out-Patient Department Record (Face Sheet)
-       Hospital Form II — Official Black & White Single-Page Layout
+       Hospital Form II — Exact Black & White Single-Page Form
        Effectivity Date: 02/20/2023 | Issue No.: 007
        ═══════════════════════════════════════════════════════════════ */
     @page {
       size: A4 portrait;
-      margin: 6mm 10mm 6mm 10mm;
+      margin: 8mm 12mm 8mm 12mm;
     }
 
     * {
@@ -27,15 +27,15 @@
       color: #000000;
       font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
       font-size: 7.5pt;
-      line-height: 1.22;
+      line-height: 1.25;
       margin: 0;
-      padding: 12px 0 24px;
+      padding: 10px 0 20px;
     }
 
-    /* Screen Top Navigation & Actions Bar (Strict Monochrome) */
+    /* Screen Top Actions Bar (Monochrome) */
     .top-actions {
       width: 794px;
-      margin: 0 auto 8px;
+      margin: 0 auto 6px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -47,7 +47,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 12px;
+      padding: 4px 10px;
       font-size: 11px;
       font-weight: bold;
       border: 1px solid #000000;
@@ -56,7 +56,6 @@
       cursor: pointer;
       text-decoration: none;
       border-radius: 2px;
-      transition: background 0.15s ease;
     }
 
     .top-actions .btn:hover {
@@ -76,7 +75,7 @@
 
     .top-actions select {
       font-size: 11px;
-      height: 28px;
+      height: 26px;
       padding: 2px 6px;
       border: 1px solid #000000;
       border-radius: 2px;
@@ -84,33 +83,26 @@
       color: #000000;
     }
 
-    /* Single-Page Sheet Container (A4 Exact Ratio) */
+    /* Single-Page A4 Sheet (Exact Paper Dimensions) */
     .page-sheet {
       background: #ffffff;
       width: 794px;
-      min-height: 1080px;
-      max-height: 1120px;
+      height: 1090px;
       margin: 0 auto;
-      padding: 20px 32px 18px 32px;
+      padding: 20px 36px 16px 36px;
       box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
       position: relative;
       color: #000000;
-    }
-
-    /* Full-width Divider Line */
-    .form-rule {
-      border: 0;
-      border-top: 1px solid #000000;
-      margin: 3px 0;
-      height: 0;
-      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     /* 1. Hospital Header */
     .header-center {
       text-align: center;
-      line-height: 1.18;
-      margin-bottom: 3px;
+      line-height: 1.2;
+      margin-bottom: 2px;
     }
 
     .header-center .h-sub {
@@ -119,31 +111,27 @@
     }
 
     .header-center .h-main {
-      font-size: 9.5pt;
+      font-size: 9pt;
       font-weight: bold;
       margin: 1px 0;
       letter-spacing: 0.1px;
     }
 
     .header-center .h-title {
-      font-size: 9.5pt;
+      font-size: 9pt;
       font-weight: bold;
       margin: 2px 0 0;
       letter-spacing: 0.2px;
     }
 
-    /* 2. Sub-Header Row */
+    /* 2. Sub-Header: Hospital Form II & Clinic (Left) | Hospital # (Right) */
     .sub-header-row {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      margin-top: 2px;
-      margin-bottom: 3px;
+      margin-top: 4px;
+      margin-bottom: 4px;
       font-size: 8pt;
-    }
-
-    .sub-header-left {
-      line-height: 1.25;
     }
 
     .form-ii-title {
@@ -151,108 +139,90 @@
       font-size: 8.5pt;
     }
 
-    .clinic-row {
+    .clinic-line-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-top: 1px;
+    }
+
+    .underline-clinic {
+      font-weight: bold;
+      border-bottom: 1px solid #000000;
+      min-width: 170px;
+      display: inline-block;
+      padding-left: 2px;
+    }
+
+    .hosp-num-wrap {
       display: flex;
       align-items: baseline;
       gap: 4px;
     }
 
-    .clinic-row-underlined {
+    .underline-hrn {
       font-weight: bold;
-      border-bottom: 1px solid #000000;
-      padding-right: 28px;
-      min-width: 120px;
-      display: inline-block;
-    }
-
-    .sub-header-right {
-      text-align: right;
-      font-size: 8pt;
-      line-height: 1.25;
-    }
-
-    .hosp-no-val {
-      font-weight: bold;
-      font-size: 9.5pt;
+      font-size: 9pt;
       font-family: "Courier New", Courier, monospace;
-      margin-left: 3px;
+      border-bottom: 1px solid #000000;
+      min-width: 130px;
+      display: inline-block;
+      text-align: center;
     }
 
-    /* 3. Demographics Box */
+    /* 3. Demographics Box (Outer rectangle border ONLY, NO interior vertical borders!) */
     .demo-box {
       border: 1px solid #000000;
       margin: 2px 0 3px;
       font-size: 7pt;
     }
 
-    .demo-row {
-      display: flex;
+    .demo-hr-row {
       border-bottom: 1px solid #000000;
-      min-height: 18px;
-      align-items: stretch;
-    }
-
-    .demo-row:last-child {
-      border-bottom: none;
-    }
-
-    .demo-row-names {
-      min-height: 28px;
-    }
-
-    .demo-col-name {
-      flex: 1;
-      border-right: 1px solid #000000;
-      padding: 2px 6px 1px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      text-align: center;
-    }
-
-    .demo-col-name:last-child {
-      border-right: none;
-    }
-
-    .name-val {
-      font-weight: bold;
-      font-size: 8pt;
-      text-align: center;
-      min-height: 12px;
-    }
-
-    .name-underline {
-      border-bottom: 1px solid #000000;
-      margin: 1px 12px 1px;
-    }
-
-    .name-lbl {
-      font-size: 6.5pt;
-      font-weight: bold;
-      text-align: center;
-      letter-spacing: 0.3px;
-    }
-
-    .demo-cell {
-      padding: 2px 5px;
-      display: flex;
-      align-items: baseline;
-      border-right: 1px solid #000000;
+      padding: 1.5px 6px;
       line-height: 1.25;
     }
 
-    .demo-cell:last-child {
-      border-right: none;
+    .demo-hr-row:last-child {
+      border-bottom: none;
     }
 
-    .demo-cell.full-width {
+    /* Names row: 3 columns with NO vertical divider borders */
+    .demo-names-values {
+      display: flex;
+      justify-content: space-around;
+      padding: 2px 6px 1px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 8pt;
+      border-bottom: 1px solid #000000;
+    }
+
+    .demo-name-item {
       flex: 1;
-      border-right: none;
+      text-align: center;
+    }
+
+    .demo-names-labels {
+      display: flex;
+      justify-content: space-around;
+      padding: 1px 6px 2px;
+      text-align: center;
+      font-size: 6.5pt;
+      font-weight: bold;
+      letter-spacing: 0.3px;
+      border-bottom: 1px solid #000000;
+    }
+
+    .demo-flex-spread {
+      display: flex;
+      justify-content: flex-start;
+      gap: 16px;
     }
 
     .field-lbl {
       font-weight: bold;
-      margin-right: 4px;
+      margin-right: 3px;
       white-space: nowrap;
     }
 
@@ -275,35 +245,39 @@
       white-space: nowrap;
     }
 
-    /* 5. Two-Column Middle Section */
+    .section-divider-line {
+      border: 0;
+      border-top: 1px solid #000000;
+      margin: 3px 0 4px;
+      height: 0;
+      width: 100%;
+    }
+
+    /* 5. Middle Section (Two columns, NO vertical divider border!) */
     .middle-two-col {
       display: flex;
-      gap: 12px;
-      margin: 2px 0;
-      align-items: stretch;
+      gap: 16px;
+      margin: 1px 0 2px;
+      align-items: flex-start;
     }
 
     .middle-col-left {
-      flex: 1.85;
+      flex: 1.75;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      padding-right: 2px;
     }
 
     .middle-col-right {
-      flex: 1.15;
-      border-left: 1px solid #000000;
-      padding-left: 10px;
+      flex: 1.25;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      /* NO border-left: pure whitespace separation */
     }
 
     .section-lbl {
       font-weight: bold;
       font-size: 7.5pt;
-      margin: 2px 0 1px;
+      margin: 1px 0 1px;
     }
 
     .hpi-pe-box {
@@ -323,18 +297,13 @@
     .vs-heading {
       font-weight: bold;
       font-size: 7.5pt;
-      margin: 1px 0 0;
+      margin: 0;
     }
 
     .vs-time-line {
       font-size: 7pt;
       font-weight: bold;
       margin: 0 0 2px;
-    }
-
-    .vs-line-table {
-      width: 100%;
-      margin: 1px 0 4px;
     }
 
     .vs-line-row {
@@ -346,7 +315,7 @@
     }
 
     .vs-field-lbl {
-      min-width: 68px;
+      min-width: 72px;
       font-weight: normal;
       white-space: nowrap;
     }
@@ -362,14 +331,14 @@
     /* Staff Nurse Signature */
     .staff-sig-section {
       text-align: center;
-      margin: 3px 0 4px;
+      margin: 3px 0 2px;
     }
 
     .nurse-sig-cursive {
       font-family: "Brush Script MT", "Segoe Script", cursive;
       font-size: 13pt;
       line-height: 0.9;
-      margin-bottom: -2px;
+      margin-bottom: -1px;
       color: #000000;
     }
 
@@ -391,8 +360,7 @@
 
     /* Consultation Time Area */
     .consult-time-box {
-      margin-top: 4px;
-      padding-top: 2px;
+      margin-top: 3px;
       font-size: 7pt;
       line-height: 1.2;
     }
@@ -409,7 +377,7 @@
     }
 
     .c-lbl {
-      min-width: 28px;
+      min-width: 26px;
       font-weight: normal;
     }
 
@@ -425,11 +393,15 @@
       margin: 1px 0 2px;
     }
 
-    /* 7. Disposition Checkboxes */
+    /* 7. Disposition Checkboxes (NO horizontal rule separating from Service Rendered) */
+    .disp-section {
+      margin-top: 3px;
+    }
+
     .disp-grid {
       display: grid;
-      grid-template-columns: 1.1fr 1.2fr 1.2fr;
-      gap: 2px 8px;
+      grid-template-columns: 1.1fr 1.2fr 1.1fr;
+      gap: 2px 10px;
       font-size: 7pt;
       margin: 1px 0 2px;
     }
@@ -442,8 +414,8 @@
     }
 
     .disp-square {
-      width: 11px;
-      height: 11px;
+      width: 12px;
+      height: 12px;
       border: 1px solid #000000;
       display: inline-flex;
       align-items: center;
@@ -460,27 +432,27 @@
       color: #000000;
     }
 
-    /* 8. Dual Physician Signatures */
+    /* 8. Dual Physician Signatures Block */
     .physician-auth-section {
-      margin-top: 3px;
+      margin-top: 6px;
     }
 
-    .physician-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-    }
-
-    .phys-col {
+    .signature-top-row {
       display: flex;
-      flex-direction: column;
+      justify-content: flex-end;
+      padding-right: 12px;
+    }
+
+    .phys-stack {
+      min-width: 280px;
+      text-align: left;
     }
 
     .phys-cursive-line {
       font-family: "Brush Script MT", "Segoe Script", cursive;
       font-size: 15pt;
       line-height: 0.95;
-      margin-bottom: -2px;
+      margin-bottom: -1px;
       color: #000000;
       min-height: 16px;
     }
@@ -496,30 +468,42 @@
       line-height: 1.2;
     }
 
-    .phys-rule {
+    .full-signature-line {
       border-bottom: 1px solid #000000;
       margin: 2px 0 2px;
       width: 100%;
     }
 
-    .phys-bottom-title {
+    .signature-under-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
       font-size: 7pt;
       line-height: 1.2;
+      padding: 0 4px;
+    }
+
+    .supervising-block {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 4px;
+      padding-right: 12px;
     }
 
     .supervision-note {
       font-size: 6.5pt;
       line-height: 1.18;
       font-style: italic;
-      margin-top: 1px;
+      margin-top: 2px;
+      max-width: 320px;
     }
 
     /* 9. Institutional Footer (Bottom Left) */
     .opd-page-footer {
-      margin-top: 6px;
       font-size: 6.5pt;
       line-height: 1.2;
       color: #000000;
+      margin-top: 4px;
     }
 
     @media print {
@@ -537,9 +521,8 @@
         border: none;
         padding: 0;
         width: 100%;
+        height: 100%;
         margin: 0;
-        min-height: auto;
-        max-height: none;
         page-break-after: avoid;
         break-after: avoid;
       }
@@ -574,146 +557,110 @@
        ═══════════════════════════════════════════════════════════════ -->
   <div class="page-sheet" id="printable-opd-record">
 
-    <!-- 1. Centered Hospital Header -->
-    <div class="header-center">
-      <div class="h-sub">Republic of the Philippines</div>
-      <div class="h-sub">Department of Health</div>
-      <div class="h-main">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</div>
-      <div class="h-sub">Lacson-Burgos Sts., Bacolod City 6100</div>
-      <div class="h-title">OUT-PATIENT DEPARTMENT RECORD</div>
-    </div>
-
-    <!-- 2. Sub-Header: Form II & Clinic (Left) | Hospital # (Right) -->
-    <div class="sub-header-row">
-      <div class="sub-header-left">
-        <div class="form-ii-title">HOSPITAL FORM II</div>
-        <div class="clinic-row">
-          <span>CLINIC:</span>
-          <span class="clinic-row-underlined" id="opd-clinic">PT Rehab</span>
-        </div>
+    <!-- Top Container -->
+    <div>
+      <!-- 1. Centered Hospital Header -->
+      <div class="header-center">
+        <div class="h-sub">Republic of the Philippines</div>
+        <div class="h-sub">Department of Health</div>
+        <div class="h-main">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</div>
+        <div class="h-sub">Lacson-Burgos Sts., Bacolod City 6100</div>
+        <div class="h-title">OUT-PATIENT DEPARTMENT RECORD</div>
       </div>
-      <div class="sub-header-right">
-        <span>HOSPITAL #:</span>
-        <span class="hosp-no-val" id="opd-hrn">0000199337</span>
-      </div>
-    </div>
 
-    <!-- 3. Demographics Box (Grid with crisp borders) -->
-    <div class="demo-box">
-      <!-- Row 1: Surname | Name | Middle Name (Centered above & below line) -->
-      <div class="demo-row demo-row-names">
-        <div class="demo-col-name">
-          <div class="name-val" id="opd-surname">DEL ROSARIO</div>
-          <div class="name-underline"></div>
-          <div class="name-lbl">SURNAME</div>
+      <!-- 2. Sub-Header: Form II & Clinic (Left) | Hospital # (Right) -->
+      <div class="sub-header-row">
+        <div>
+          <div class="form-ii-title">HOSPITAL FORM II</div>
+          <div class="clinic-line-wrap">
+            <span>CLINIC:</span>
+            <span class="underline-clinic" id="opd-clinic">PT Rehab</span>
+          </div>
         </div>
-        <div class="demo-col-name">
-          <div class="name-val" id="opd-first-name">JUAN</div>
-          <div class="name-underline"></div>
-          <div class="name-lbl">NAME</div>
-        </div>
-        <div class="demo-col-name">
-          <div class="name-val" id="opd-middle-name">BAUTISTA</div>
-          <div class="name-underline"></div>
-          <div class="name-lbl">MIDDLE NAME</div>
+        <div class="hosp-num-wrap">
+          <span>HOSPITAL #:</span>
+          <span class="underline-hrn" id="opd-hrn">0000199337</span>
         </div>
       </div>
 
-      <!-- Row 2: Address -->
-      <div class="demo-row">
-        <div class="demo-cell full-width">
-          <span class="field-lbl">ADDRESS:</span>
-          <span class="field-val" id="opd-address">Brgy. Bata, Bacolod City, Negros Occidental</span>
+      <!-- 3. Demographics Box (NO interior vertical borders!) -->
+      <div class="demo-box">
+        <!-- Row 1: Surname | Name | Middle Name values -->
+        <div class="demo-names-values">
+          <div class="demo-name-item" id="opd-surname">DEL ROSARIO</div>
+          <div class="demo-name-item" id="opd-first-name">JUAN</div>
+          <div class="demo-name-item" id="opd-middle-name">BAUTISTA</div>
         </div>
-      </div>
+        <!-- Row 1: Labels -->
+        <div class="demo-names-labels">
+          <div class="demo-name-item">SURNAME</div>
+          <div class="demo-name-item">NAME</div>
+          <div class="demo-name-item">MIDDLE NAME</div>
+        </div>
 
-      <!-- Row 3: Birthdate | Age | Sex | Status | Nationality -->
-      <div class="demo-row">
-        <div class="demo-cell" style="flex: 1.4;">
-          <span class="field-lbl">BIRTHDATE</span>
-          <span class="field-val" id="opd-birthdate">04/12/1978</span>
+        <!-- Row 2: Address -->
+        <div class="demo-hr-row">
+          <span class="field-lbl">ADDRESS:,</span>
+          <span class="field-val" id="opd-address">Brgy. Bata, Bacolod City, Negros Occidental</span>)
         </div>
-        <div class="demo-cell" style="flex: 0.9;">
-          <span class="field-lbl">AGE:</span>
-          <span class="field-val" id="opd-age">48</span>
-        </div>
-        <div class="demo-cell" style="flex: 0.8;">
-          <span class="field-lbl">SEX:</span>
-          <span class="field-val" id="opd-sex">M</span>
-        </div>
-        <div class="demo-cell" style="flex: 1.1;">
-          <span class="field-lbl">STATUS:</span>
-          <span class="field-val" id="opd-civil-status">Married</span>
-        </div>
-        <div class="demo-cell" style="flex: 1.2;">
-          <span class="field-lbl">NATIONALITY:</span>
-          <span class="field-val" id="opd-nationality">Filipino</span>
-        </div>
-      </div>
 
-      <!-- Row 4: Informant | Contact No | Religion -->
-      <div class="demo-row">
-        <div class="demo-cell" style="flex: 1.4;">
-          <span class="field-lbl">INFORMANT:</span>
-          <span class="field-val" id="opd-informant">Patient</span>
+        <!-- Row 3: Birthdate, Age, Sex, Status, Nationality (No vertical dividers) -->
+        <div class="demo-hr-row demo-flex-spread">
+          <div><span class="field-lbl">BIRTHDATE</span> <span class="field-val" id="opd-birthdate">04/12/1978</span></div>
+          <div><span class="field-lbl">AGE:</span> <span class="field-val" id="opd-age">48</span></div>
+          <div><span class="field-lbl">SEX:</span> <span class="field-val" id="opd-sex">M</span></div>
+          <div><span class="field-lbl">STATUS:</span> <span class="field-val" id="opd-civil-status">Married</span></div>
+          <div><span class="field-lbl">NATIONALITY:</span> <span class="field-val" id="opd-nationality">Filipino</span></div>
         </div>
-        <div class="demo-cell" style="flex: 1.6;">
-          <span class="field-lbl">CONTACT NO:</span>
-          <span class="field-val" id="opd-contact">09502946085</span>
-        </div>
-        <div class="demo-cell" style="flex: 2.0;">
-          <span class="field-lbl">RELIGION:</span>
-          <span class="field-val" id="opd-religion">ROMAN CATHOLIC (RC)</span>
-        </div>
-      </div>
 
-      <!-- Row 5: Date & Time of Transaction -->
-      <div class="demo-row">
-        <div class="demo-cell full-width">
+        <!-- Row 4: Informant, Contact No, Religion (No vertical dividers) -->
+        <div class="demo-hr-row demo-flex-spread">
+          <div><span class="field-lbl">INFORMANT:</span> <span class="field-val" id="opd-informant">Patient</span></div>
+          <div><span class="field-lbl">CONTACT NO:</span> <span class="field-val" id="opd-contact">09502946085</span></div>
+          <div><span class="field-lbl">RELIGION:</span> <span class="field-val" id="opd-religion">ROMAN CATHOLIC (RC)</span></div>
+        </div>
+
+        <!-- Row 5: Date & Time of Transaction -->
+        <div class="demo-hr-row">
           <span class="field-lbl">DATE &amp; TIME OF TRANSACTION:</span>
           <span class="field-val" id="opd-transaction-dt">07/14/2026 1:55:00PM</span>
         </div>
       </div>
-    </div>
 
-    <!-- 4. Chief Complaints -->
-    <div class="cc-row">
-      <span class="cc-lbl">Chief Complaints:</span>
-      <span class="field-val" id="opd-chief-complaint">Right knee joint aching pain on walking and climbing stairs x 2 months</span>
-    </div>
-
-    <hr class="form-rule">
-
-    <!-- 5. Two-Column Middle Section -->
-    <div class="middle-two-col">
-      <!-- Left Column: History of Present Illness and P.E.. & DIAGNOSIS -->
-      <div class="middle-col-left">
-        <div class="section-lbl">History of Present Illness and P.E..</div>
-        <div class="hpi-pe-box" id="opd-hpi-pe">Patient is a 47-year-old male presenting with a 2-month history of right knee pain without prior trauma. Denies knee locking, giving way, or redness. Range of motion preserved without antalgic gait.
-
-Past Medical History: Type 2 Diabetes Mellitus diagnosed 2020; Essential Hypertension Stage 1 diagnosed 2020.
-Personal / Social History: Non-smoker, non-alcoholic beverage drinker. Works as an office clerk.
-Family History: Mother (+) T2DM; Father (+) Hypertension.
-Allergies: No Known Drug Allergies (NKDA).
-
-Pertinent Signs and Symptoms: Knee joint ache, localized joint crepitus; afebrile; denies constitutional signs.
-
-Physical Examination: General Survey: Conscious, coherent, ambulatory without acute distress. HEENT: Anicteric sclerae, pink conjunctivae, supple neck. Chest &amp; Lungs: Clear breath sounds bilaterally, no rales/wheezes. Cardiovascular: Normal rate, regular rhythm, normal S1/S2, no murmurs. Abdomen: Soft, non-tender, no organomegaly. Extremities / PE: Right knee: Mild medial joint line crepitus. Negative drawer and McMurray tests. Neurologic: Intact motor and sensory examination, GCS 15. Skin: Good turgor, no petechiae/cyanosis.</div>
-
-        <div class="section-lbl" style="margin-top: 3px;">DIAGNOSIS:</div>
-        <div class="diag-box">
-          <div id="opd-diagnosis" style="font-weight:bold;">M17.11 - Unilateral Primary Osteoarthritis, Right Knee, mild</div>
-          <div id="opd-secondary-diagnosis" style="margin-top: 1px;">Initial Clinical Impression: Right knee joint aching pain on walking and climbing stairs x 2 months</div>
-        </div>
+      <!-- 4. Chief Complaints -->
+      <div class="cc-row">
+        <span class="cc-lbl">Chief Complaints:</span>
+        <span class="field-val" id="opd-chief-complaint">Right knee joint aching pain on walking and climbing stairs x 2 months</span>
       </div>
 
-      <!-- Right Column: Vital Signs & Consultation Time -->
-      <div class="middle-col-right">
-        <div>
-          <div class="vs-heading">VITAL SIGNS:</div>
-          <div class="vs-time-line">TIME TAKEN: <span id="vs-time" style="font-weight:normal;">02:30 PM</span></div>
+      <hr class="section-divider-line">
 
-          <div class="vs-line-table">
+      <!-- 5. Middle Section (Two Columns, NO vertical divider border!) -->
+      <div class="middle-two-col">
+        <!-- Left Column: Medical History & PE + DIAGNOSIS -->
+        <div class="middle-col-left">
+          <div class="section-lbl">History of Present Illness and P.E..</div>
+          <div class="hpi-pe-box" id="opd-hpi-pe">Patient is a 47-year-old male presenting with a 2-month history of right knee pain without prior trauma. Denies knee locking, giving way, or redness. Range of motion preserved without antalgic gait.
+
+Past Medical History: Type 2 Diabetes Mellitus; Essential Hypertension Stage 1. Personal/Social History: Non-smoker, non-drinker. Family History: Mother (+) T2DM; Father (+) HTN. Allergies: No Known Drug Allergies (NKDA).
+
+Pertinent Signs and Symptoms: Localized right knee joint ache, joint line crepitus; afebrile.
+
+Physical Examination: General Survey: Conscious, coherent, ambulatory. HEENT: Anicteric sclerae, pink conjunctivae. Chest &amp; Lungs: Clear breath sounds bilaterally. Cardiovascular: Normal rate, regular rhythm. Abdomen: Soft, non-tender. Extremities / PE: Right knee: Mild medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative. Neurologic: Intact, GCS 15. Skin: Good turgor, no petechiae.</div>
+
+          <div class="section-lbl" style="margin-top: 2px;">DIAGNOSIS:</div>
+          <div class="diag-box">
+            <div id="opd-diagnosis" style="font-weight:bold;">M17.11 - Unilateral Primary Osteoarthritis, Right Knee, mild</div>
+            <div id="opd-secondary-diagnosis" style="margin-top: 1px;">Initial Clinical Impression: Right knee joint aching pain on walking and climbing stairs x 2 months</div>
+          </div>
+        </div>
+
+        <!-- Right Column: Vital Signs & Consultation Time -->
+        <div class="middle-col-right">
+          <div>
+            <div class="vs-heading">VITAL SIGNS:</div>
+            <div class="vs-time-line">TIME TAKEN: <span id="vs-time" style="font-weight:normal;">02:30 PM</span></div>
+
             <div class="vs-line-row">
               <span class="vs-field-lbl">BP mmHg:</span>
               <span class="vs-field-val" id="vs-bp">126/80</span>
@@ -742,136 +689,138 @@ Physical Examination: General Survey: Conscious, coherent, ambulatory without ac
               <span class="vs-field-lbl">Height in cms:</span>
               <span class="vs-field-val" id="vs-ht">168</span>
             </div>
+
+            <!-- Staff Nurse Signature -->
+            <div class="staff-sig-section">
+              <div class="nurse-sig-cursive" id="opd-nurse-sig">E. Dela Cruz</div>
+              <div class="staff-lic-line">Lic No.: <strong id="opd-nurse-lic">0078214</strong></div>
+              <div class="staff-sig-rule"></div>
+              <div class="staff-sig-sublbl">Name and Signature of Staff</div>
+            </div>
           </div>
 
-          <!-- Staff Nurse Authentication -->
-          <div class="staff-sig-section">
-            <div class="nurse-sig-cursive" id="opd-nurse-sig">E. Dela Cruz</div>
-            <div class="staff-lic-line">Lic No.: <strong id="opd-nurse-lic">0078214</strong></div>
-            <div class="staff-sig-rule"></div>
-            <div class="staff-sig-sublbl">Name and Signature of Staff</div>
+          <!-- Consultation Time -->
+          <div class="consult-time-box">
+            <div class="consult-title-bold">CONSULTATION</div>
+            <div class="consult-title-bold">TIME:</div>
+            <div class="consult-time-row" style="margin-top:1px;">
+              <span class="c-lbl">IN</span>
+              <span>:</span>
+              <span class="c-val" id="opd-time-in">02:30 PM</span>
+            </div>
+            <div class="consult-time-row">
+              <span class="c-lbl">OUT</span>
+              <span>:</span>
+              <span class="c-val" id="opd-time-out">03:15 PM</span>
+            </div>
           </div>
         </div>
+      </div>
 
-        <!-- Consultation Time -->
-        <div class="consult-time-box">
-          <div class="consult-title-bold">CONSULTATION</div>
-          <div class="consult-title-bold">TIME:</div>
-          <div class="consult-time-row" style="margin-top:2px;">
-            <span class="c-lbl">IN</span>
-            <span>:</span>
-            <span class="c-val" id="opd-time-in">02:30 PM</span>
+      <!-- 6. Service / Treatment / Procedure Rendered -->
+      <div style="margin-top: 2px;">
+        <div class="section-lbl">Service/Treatment/Procedure Rendered:</div>
+        <div class="service-rendered-box" id="opd-procedures-rendered">Digital Knee Radiograph (AP and Lateral Weight-Bearing Views) completed: Mild medial joint space narrowing.
+Celecoxib 200 mg capsule once daily after meals for 14 days. Paracetamol 500 mg tablet q6h PRN for knee pain.
+Refer to Physical Medicine and Rehabilitation for 6 sessions of knee physical therapy. Follow-up after 3 months.</div>
+      </div>
+
+      <!-- 7. Disposition (Directly below Service Rendered, NO extra horizontal line!) -->
+      <div class="disp-section">
+        <div class="section-lbl" style="margin-bottom:2px;">Disposition:</div>
+        <div class="disp-grid">
+          <!-- Col 1 -->
+          <div>
+            <div class="disp-item">
+              <span class="disp-square checked" id="box-treated"></span>
+              <span>Treated &amp; Discharged</span>
+            </div>
+            <div class="disp-item">
+              <span class="disp-square" id="box-admitted"></span>
+              <span>Admitted</span>
+            </div>
+            <div class="disp-item">
+              <span class="disp-square" id="box-refused"></span>
+              <span>Refused Admission/DAMA</span>
+            </div>
           </div>
-          <div class="consult-time-row">
-            <span class="c-lbl">OUT</span>
-            <span>:</span>
-            <span class="c-val" id="opd-time-out">03:15 PM</span>
+          <!-- Col 2 -->
+          <div>
+            <div class="disp-item">
+              <span class="disp-square" id="box-not-around"></span>
+              <span>Not Around When Called</span>
+            </div>
+            <div class="disp-item">
+              <span class="disp-square" id="box-er"></span>
+              <span>Sent Directly to E.R.</span>
+            </div>
+            <div class="disp-item">
+              <span class="disp-square" id="box-referred"></span>
+              <span>Referred to Other Health Facility</span>
+            </div>
+          </div>
+          <!-- Col 3 -->
+          <div>
+            <div class="disp-item">
+              <span class="disp-square" id="box-rescheduled"></span>
+              <span>Rescheduled</span>
+            </div>
+            <div class="disp-item">
+              <span class="disp-square" id="box-minor-or"></span>
+              <span>STAT Minor OR</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <hr class="form-rule">
-
-    <!-- 6. Service / Treatment / Procedure Rendered -->
+    <!-- Bottom Container: Dual Physician Signatures & Footer -->
     <div>
-      <div class="section-lbl">Service/Treatment/Procedure Rendered:</div>
-      <div class="service-rendered-box" id="opd-procedures-rendered">Digital Knee Radiograph (AP and Lateral Weight-Bearing Views) completed: Mild medial joint space narrowing.
-Celecoxib 200 mg capsule once daily after meals for 14 days.
-Paracetamol 500 mg tablet every 6 hours PRN for breakthrough knee pain.
-Refer to Physical Medicine and Rehabilitation for 6 sessions of knee physical therapy.
-Follow-up at Orthopedics Outpatient Clinic after 3 months.
-Radiology: Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)</div>
-    </div>
+      <!-- 8. Physician Signature Block -->
+      <div class="physician-auth-section">
+        <!-- Top Signature (Attending Physician on Right) -->
+        <div class="signature-top-row">
+          <div class="phys-stack">
+            <div class="phys-cursive-line" id="opd-phys-cursive">Paolo Cruz</div>
+            <div class="phys-detail-bold" id="opd-phys-name">PAOLO CRUZ, MD.</div>
+            <div class="phys-detail-reg" id="opd-phys-lic">LICENSE NO, 0091245</div>
+            <div class="phys-detail-reg" id="opd-phys-datetime">DATE &amp; TIME 09/18/2025 02:30 PM</div>
+          </div>
+        </div>
 
-    <!-- 7. Disposition -->
-    <div style="margin-top: 2px;">
-      <div class="section-lbl" style="margin-bottom:2px;">Disposition:</div>
-      <div class="disp-grid">
-        <!-- Col 1 -->
-        <div>
-          <div class="disp-item">
-            <span class="disp-square checked" id="box-treated"></span>
-            <span>Treated &amp; Discharged</span>
+        <div class="full-signature-line"></div>
+
+        <div class="signature-under-row">
+          <div style="flex:1;"></div>
+          <div style="font-size:7pt; font-weight:normal; text-align:center; flex:2;">
+            Physician's Signature over Printed Name
           </div>
-          <div class="disp-item">
-            <span class="disp-square" id="box-admitted"></span>
-            <span>Admitted</span>
-          </div>
-          <div class="disp-item">
-            <span class="disp-square" id="box-refused"></span>
-            <span>Refused Admission/DAMA</span>
+          <div style="text-align:right; flex:1.5;">
+            License No. <span style="display:inline-block; border-bottom:1px solid #000000; min-width:140px;"></span>
           </div>
         </div>
-        <!-- Col 2 -->
-        <div>
-          <div class="disp-item">
-            <span class="disp-square" id="box-not-around"></span>
-            <span>Not Around When Called</span>
-          </div>
-          <div class="disp-item">
-            <span class="disp-square" id="box-er"></span>
-            <span>Sent Directly to E.R.</span>
-          </div>
-          <div class="disp-item">
-            <span class="disp-square" id="box-referred"></span>
-            <span>Referred to Other Health Facility</span>
-          </div>
-        </div>
-        <!-- Col 3 -->
-        <div>
-          <div class="disp-item">
-            <span class="disp-square" id="box-rescheduled"></span>
-            <span>Rescheduled</span>
-          </div>
-          <div class="disp-item">
-            <span class="disp-square" id="box-minor-or"></span>
-            <span>STAT Minor OR</span>
-          </div>
-          <div class="disp-item">
-            <span class="disp-square" id="box-others"></span>
-            <span>Others: <span id="opd-others-text" style="font-weight:normal;">(consult time ended: <span id="opd-consult-ended-span">03:15 PM</span>)</span></span>
+
+        <!-- Second / Supervising Physician Signature -->
+        <div class="supervising-block">
+          <div class="phys-stack">
+            <div class="phys-cursive-line" id="opd-supervising-cursive">Maria Santos-Reyes</div>
+            <div class="phys-detail-bold" id="opd-supervising-name">MARIA SANTOS-REYES, MD.</div>
+            <div class="phys-detail-reg" id="opd-supervising-lic">LICENSE NO, 0084319</div>
+            <div class="phys-detail-reg" id="opd-supervising-datetime">DATE &amp; TIME 09/18/2025 03:15 PM</div>
+            <div class="supervision-note">
+              (The required number of physicians changes based on the scenario where supervision, validation, or authorization by another physician is required)
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <hr class="form-rule" style="margin-top:4px;">
-
-    <!-- 8. Dual Physician Signatures & Authentications -->
-    <div class="physician-auth-section">
-      <div class="physician-grid">
-        <!-- Left: Attending Physician -->
-        <div class="phys-col">
-          <div class="phys-cursive-line" id="opd-phys-cursive">Paolo Cruz</div>
-          <div class="phys-detail-bold" id="opd-phys-name">PAOLO CRUZ, MD.</div>
-          <div class="phys-detail-reg" id="opd-phys-lic">LICENSE NO, 0091245</div>
-          <div class="phys-detail-reg" id="opd-phys-datetime">DATE &amp; TIME 09/18/2025 02:30 PM</div>
-          <div class="phys-rule"></div>
-          <div class="phys-bottom-title">Physician's Signature over Printed Name</div>
-          <div class="phys-bottom-title">License No.</div>
-        </div>
-
-        <!-- Right: Supervising / Validating Physician -->
-        <div class="phys-col">
-          <div class="phys-cursive-line" id="opd-supervising-cursive">Maria Santos-Reyes</div>
-          <div class="phys-detail-bold" id="opd-supervising-name">MARIA SANTOS-REYES, MD.</div>
-          <div class="phys-detail-reg" id="opd-supervising-lic">LICENSE NO, 0084319</div>
-          <div class="phys-detail-reg" id="opd-supervising-datetime">DATE &amp; TIME 09/18/2025 03:15 PM</div>
-          <div class="phys-rule"></div>
-          <div class="supervision-note">
-            (The required number of physicians changes based on the scenario where supervision, validation, or authorization by another physician is required)
-          </div>
-        </div>
+      <!-- 9. Institutional Form Footer (Bottom Left) -->
+      <div class="opd-page-footer">
+        <div>OPD Face Sheet</div>
+        <div>OPD.F.014</div>
+        <div>Effectivity Date: 02/20/2023</div>
+        <div>Issue No.: 007</div>
       </div>
-    </div>
-
-    <!-- 9. Institutional Form Footer (Bottom Left) -->
-    <div class="opd-page-footer">
-      <div>OPD Face Sheet</div>
-      <div>OPD.F.014</div>
-      <div>Effectivity Date: 02/20/2023</div>
-      <div>Issue No.: 007</div>
     </div>
 
   </div>
@@ -946,7 +895,7 @@ Radiology: Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)</div>
         var data = record.data;
         var encounters = Array.isArray(data.encounters) ? data.encounters : [];
 
-        // Identify the Initial Encounter
+        // Identify Initial Encounter
         var initialEnc = null;
         if (encDate) {
           initialEnc = encounters.find(function (e) { return e.date === encDate; });
@@ -1001,7 +950,7 @@ Radiology: Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)</div>
         var clinicName = initialEnc.service || data.ward_area || 'PT Rehab';
         document.getElementById('opd-clinic').textContent = clinicName;
 
-        // 2. Chief Complaint (CHIEF COMPLAINT ENCODED BY NURSES)
+        // 2. Chief Complaint
         var cc = (initialEnc.clinical_record && initialEnc.clinical_record.chief_complaint) ||
                  initialEnc.chief_complaint ||
                  data.visit_chief_complaint ||
@@ -1009,7 +958,7 @@ Radiology: Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)</div>
                  'Right knee joint aching pain on walking and climbing stairs x 2 months';
         document.getElementById('opd-chief-complaint').textContent = cc;
 
-        // 3. Medical History & PE (DOCTORS MODULE OUTPUT)
+        // 3. Medical History & PE
         var hpiText = (initialEnc.clinical_record && initialEnc.clinical_record.history) ||
                       data.hx_present ||
                       initialEnc.patient_record ||
@@ -1032,21 +981,21 @@ Radiology: Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)</div>
 
         var signs = Array.isArray(data.pertinent_signs) ? data.pertinent_signs : [];
         var signsInfo = data.pertinent_signs_information || '';
-        var signsText = signs.length ? (signs.join(', ') + (signsInfo ? ' — ' + signsInfo : '')) : 'Knee joint ache, localized joint crepitus; afebrile; denies constitutional signs.';
+        var signsText = signs.length ? (signs.join(', ') + (signsInfo ? ' — ' + signsInfo : '')) : 'Localized right knee joint ache, joint line crepitus; afebrile.';
         fullHistAndPe += '\n\nPertinent Signs and Symptoms: ' + signsText;
 
-        fullHistAndPe += '\n\nPhysical Examination: General Survey: ' + (data.pe_general_survey || data.pe_general || 'Conscious, coherent, ambulatory without acute distress') +
-          '. HEENT: ' + (Array.isArray(data.pe_heent) && data.pe_heent.length ? data.pe_heent.join(', ') : (data.pe_heent_other || data.pe_heent || 'Anicteric sclerae, pink conjunctivae, supple neck')) +
-          '. Chest & Lungs: ' + (Array.isArray(data.pe_chest_lungs) && data.pe_chest_lungs.length ? data.pe_chest_lungs.join(', ') : (data.pe_chest_lungs_other || data.pe_chest_lungs || 'Clear breath sounds bilaterally, no rales/wheezes')) +
-          '. Cardiovascular: ' + (data.pe_cvs_other || data.pe_cardiovascular || 'Normal rate, regular rhythm, normal S1/S2, no murmurs') +
-          '. Abdomen: ' + (Array.isArray(data.pe_abdomen) && data.pe_abdomen.length ? data.pe_abdomen.join(', ') : (data.pe_abdomen_other || data.pe_abdomen || 'Soft, non-tender, no organomegaly')) +
+        fullHistAndPe += '\n\nPhysical Examination: General Survey: ' + (data.pe_general_survey || data.pe_general || 'Conscious, coherent, ambulatory') +
+          '. HEENT: ' + (Array.isArray(data.pe_heent) && data.pe_heent.length ? data.pe_heent.join(', ') : (data.pe_heent_other || data.pe_heent || 'Anicteric sclerae, pink conjunctivae')) +
+          '. Chest & Lungs: ' + (Array.isArray(data.pe_chest_lungs) && data.pe_chest_lungs.length ? data.pe_chest_lungs.join(', ') : (data.pe_chest_lungs_other || data.pe_chest_lungs || 'Clear breath sounds bilaterally')) +
+          '. Cardiovascular: ' + (data.pe_cvs_other || data.pe_cardiovascular || 'Normal rate, regular rhythm') +
+          '. Abdomen: ' + (Array.isArray(data.pe_abdomen) && data.pe_abdomen.length ? data.pe_abdomen.join(', ') : (data.pe_abdomen_other || data.pe_abdomen || 'Soft, non-tender')) +
           '. Extremities / PE: ' + (initialEnc.results || data.pe_skin_extremities_other || data.pe_extremities || 'Right knee: Mild medial joint line crepitus. Negative drawer and McMurray tests.') +
-          '. Neurologic: ' + (data.pe_neuro_exam_other || data.pe_neurologic || 'Intact motor and sensory examination, GCS 15') +
-          '. Skin: ' + (data.pe_skin_extremities || data.pe_skin || 'Good turgor, no petechiae/cyanosis') + '.';
+          '. Neurologic: ' + (data.pe_neuro_exam_other || data.pe_neurologic || 'Intact, GCS 15') +
+          '. Skin: ' + (data.pe_skin_extremities || data.pe_skin || 'Good turgor, no petechiae') + '.';
 
         document.getElementById('opd-hpi-pe').textContent = fullHistAndPe;
 
-        // 4. Vital Signs Table & Staff Nurse Authentication
+        // 4. Vital Signs Table
         var vsList = Array.isArray(initialEnc.vital_signs) && initialEnc.vital_signs.length ? initialEnc.vital_signs :
                      (Array.isArray(data.vital_signs) && data.vital_signs.length ? data.vital_signs : []);
         var vs = vsList[0] || {
@@ -1073,7 +1022,7 @@ Radiology: Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)</div>
         document.getElementById('opd-nurse-sig').textContent = cleanNurseName;
         document.getElementById('opd-nurse-lic').textContent = data.triage_nurse_lic || '0078214';
 
-        // 5. Diagnosis (Final Diagnosis and other diagnosis from Doctor's Module)
+        // 5. Diagnosis
         var primaryDx = initialEnc.diagnosis || (initialEnc.clinical_record && initialEnc.clinical_record.final_diagnosis) || data.final_diagnosis || data.admitting_diagnosis || 'M17.11 - Unilateral Primary Osteoarthritis, Right Knee, mild';
         document.getElementById('opd-diagnosis').textContent = primaryDx;
 
@@ -1089,7 +1038,7 @@ Radiology: Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)</div>
         }
         document.getElementById('opd-secondary-diagnosis').textContent = secondaryParts.join(' | ');
 
-        // Consultation Time: IN and OUT
+        // Consultation Time
         var timeIn = initialEnc.time || '02:30 PM';
         document.getElementById('opd-time-in').textContent = timeIn;
 
@@ -1097,7 +1046,6 @@ Radiology: Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)</div>
         if (timeIn.indexOf('AM') !== -1) timeOut = '11:45 AM';
         if (timeIn.indexOf('08:') !== -1) timeOut = '09:30 AM';
         document.getElementById('opd-time-out').textContent = timeOut;
-        document.getElementById('opd-consult-ended-span').textContent = timeOut;
 
         // 6. Services & Procedures Rendered
         var procList = [];
@@ -1110,11 +1058,8 @@ Radiology: Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)</div>
         if (!procList.length) {
           procList = [
             'Digital Knee Radiograph (AP and Lateral Weight-Bearing Views) completed: Mild medial joint space narrowing.',
-            'Celecoxib 200 mg capsule once daily after meals for 14 days.',
-            'Paracetamol 500 mg tablet every 6 hours PRN for breakthrough knee pain.',
-            'Refer to Physical Medicine and Rehabilitation for 6 sessions of knee physical therapy.',
-            'Follow-up at Orthopedics Outpatient Clinic after 3 months.',
-            'Radiology: Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)'
+            'Celecoxib 200 mg capsule once daily after meals for 14 days. Paracetamol 500 mg tablet q6h PRN for knee pain.',
+            'Refer to Physical Medicine and Rehabilitation for 6 sessions of knee physical therapy. Follow-up after 3 months.'
           ];
         }
         document.getElementById('opd-procedures-rendered').textContent = procList.join('\n');
@@ -1129,8 +1074,7 @@ Radiology: Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)</div>
           'er': document.getElementById('box-er'),
           'referred': document.getElementById('box-referred'),
           'rescheduled': document.getElementById('box-rescheduled'),
-          'minor-or': document.getElementById('box-minor-or'),
-          'others': document.getElementById('box-others')
+          'minor-or': document.getElementById('box-minor-or')
         };
 
         Object.keys(boxIds).forEach(function (k) {
@@ -1151,16 +1095,12 @@ Radiology: Digital Knee Radiograph (AP and Lateral Weight-Bearing Views)</div>
           if (boxIds.rescheduled) boxIds.rescheduled.classList.add('checked');
         } else if (dispVal.indexOf('minor or') !== -1) {
           if (boxIds['minor-or']) boxIds['minor-or'].classList.add('checked');
-        } else {
-          if (boxIds.others) boxIds.others.classList.add('checked');
         }
 
         // 8. Physician Authentications
-        // Primary Physician
         var rawDoc = initialEnc.physician || (data.attending_physician && data.attending_physician.name) || 'Paolo Cruz, MD';
         var sigText = rawDoc.replace(/^Dr\.\s*/i, '').replace(/,\s*MD\.?$/i, '').trim();
         var printDoc = sigText.toUpperCase() + ', MD.';
-
         var lic = initialEnc.prc_license || (data.attending_physician && data.attending_physician.prc_no) || '0091245';
 
         document.getElementById('opd-phys-cursive').textContent = sigText;
