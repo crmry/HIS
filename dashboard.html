@@ -3627,6 +3627,20 @@
       return false;
     }
 
+    function cleanDiagnosis(dxStr) {
+      if (!dxStr) return '';
+      var s = String(dxStr);
+      // Strip parenthetical or bracketed ICD annotations: e.g. (ICD-10: E11.9, I10), (ICD-10: M17.11), (K35.80), [ICD-10: ...]
+      s = s.replace(/\s*[\(\[]\s*(?:ICD(?:-?10)?(?:\s*:\s*|\s+))?[A-Z][0-9]{1,2}(?:\.[0-9A-Z]{1,4})?(?:\s*,\s*[A-Z0-9\.\s]+)*[\)\]]/gi, '');
+      // Strip any remaining (ICD-10: ...) or (ICD: ...) generic pattern
+      s = s.replace(/\s*[\(\[]\s*ICD[^\)\]]+[\)\]]/gi, '');
+      // Strip leading code prefix on diagnoses: e.g. "E11.9 - Type 2 Diabetes" -> "Type 2 Diabetes"
+      s = s.replace(/^[A-Z][0-9]{1,2}(?:\.[0-9A-Z]{1,4})?\s*-\s*/gi, '');
+      // Strip code prefixes following semicolons: e.g. "; I10 - Hypertension" -> "; Hypertension"
+      s = s.replace(/(;\s*)[A-Z][0-9]{1,2}(?:\.[0-9A-Z]{1,4})?\s*-\s*/gi, '$1');
+      return s.trim();
+    }
+
     function addEncounterRow(data, index, allEncounters) {
       if (typeof index !== 'number') {
         index = encRows ? encRows.children.length : 0;
@@ -3644,13 +3658,12 @@
         doctorStr = doctorStr.replace(/^Dr\.?\s+/i, '');
       }
       var doctorDisplay = esc(doctorStr);
-      var diagnosisDisplay = esc(
-        (data && data.diagnosis) ||
+      var rawDiagnosis = (data && data.diagnosis) ||
         (data && data.clinical_record && data.clinical_record.final_diagnosis) ||
         (data && data.final_diagnosis) ||
         (data && data.results) ||
-        'Pending diagnostic evaluation'
-      );
+        'Pending diagnostic evaluation';
+      var diagnosisDisplay = esc(cleanDiagnosis(rawDiagnosis));
 
       var isCurrent = false;
       if (data && typeof data.is_current === 'boolean') {
@@ -3786,10 +3799,10 @@
           var dDisplay = formatHdrDate(enc.date);
           var timeStr = enc.time ? ' &bull; ' + esc(enc.time) : '';
 
-          var medHxPara = medHx ? '<div style="margin-bottom:6px;"><strong style="font-size:11px; text-transform:uppercase; color:#475569; letter-spacing:0.3px; display:block; margin-bottom:2px;">Medical History:</strong>' + esc(medHx) + '</div>' : '';
+          var medHxPara = medHx ? '<div style="margin-bottom:6px;">' + esc(cleanDiagnosis(medHx)) + '</div>' : '';
           var progNotesPara = '';
           if (progNotes && progNotes.trim() !== medHx.trim()) {
-            progNotesPara = '<div style="border-top:1px dashed #cbd5e1; padding-top:6px; margin-top:6px;"><strong style="font-size:11px; text-transform:uppercase; color:#475569; letter-spacing:0.3px; display:block; margin-bottom:2px;">Progress Notes:</strong><div style="white-space:pre-line;">' + esc(progNotes) + '</div></div>';
+            progNotesPara = '<div style="border-top:1px dashed #cbd5e1; padding-top:6px; margin-top:6px; white-space:pre-line;">' + esc(cleanDiagnosis(progNotes)) + '</div>';
           }
 
           hpiHtml +=
@@ -3820,11 +3833,12 @@
       if (pmhContainer) {
         var pmhHtml = '';
         prevEncounters.forEach(function (enc) {
-          var dx = (enc.clinical_record && enc.clinical_record.final_diagnosis) ||
+          var rawDx = (enc.clinical_record && enc.clinical_record.final_diagnosis) ||
                    enc.final_diagnosis ||
                    enc.diagnosis ||
                    enc.admitting_diagnosis || '';
-          var pmhText = enc.hx_past || '';
+          var dx = cleanDiagnosis(rawDx);
+          var pmhText = cleanDiagnosis(enc.hx_past || '');
 
           if (!dx.trim() && !pmhText.trim()) return;
 
@@ -3844,8 +3858,8 @@
             '    </div>' +
             '  </div>' +
             '  <div style="font-size:12px; color:#1e293b; line-height:1.55;">' +
-                 (dx ? '<div><strong style="font-size:11px; text-transform:uppercase; color:#475569; letter-spacing:0.3px; display:block; margin-bottom:2px;">Encounter Diagnosis:</strong>' + esc(dx) + '</div>' : '') +
-                 (pmhText ? '<div style="margin-top:4px;"><strong style="font-size:11px; text-transform:uppercase; color:#475569; letter-spacing:0.3px; display:block; margin-bottom:2px;">Documented PMH:</strong>' + esc(pmhText) + '</div>' : '') +
+                 (dx ? '<div>' + esc(dx) + '</div>' : '') +
+                 (pmhText && pmhText !== dx ? '<div style="margin-top:4px; color:#475569;">' + esc(pmhText) + '</div>' : '') +
             '  </div>' +
             '</div>';
         });
@@ -3911,8 +3925,7 @@
             '    </div>' +
             '  </div>' +
             '  <div style="font-size:12px; color:#1e293b; line-height:1.55;">' +
-                 '<strong style="font-size:11px; text-transform:uppercase; color:#475569; letter-spacing:0.3px; display:block; margin-bottom:2px;">Documented Operation / Surgical Procedure:</strong>' +
-                 surgItems.map(function(it) { return '<div>&bull; ' + esc(it) + '</div>'; }).join('') +
+                 surgItems.map(function(it) { return '<div>&bull; ' + esc(cleanDiagnosis(it)) + '</div>'; }).join('') +
             '  </div>' +
             '</div>';
         });
@@ -3939,7 +3952,7 @@
           famHtml +=
             '<div class="encounter-hx-card" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:6px; background:#f8fafc;">' +
             '  <div style="font-size:11px; margin-bottom:4px;"><span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
-            '  <div style="font-size:12px; color:#1e293b;">' + esc(famText) + '</div>' +
+            '  <div style="font-size:12px; color:#1e293b;">' + esc(cleanDiagnosis(famText)) + '</div>' +
             '</div>';
         });
 
@@ -3965,7 +3978,7 @@
           socHtml +=
             '<div class="encounter-hx-card" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:6px; background:#f8fafc;">' +
             '  <div style="font-size:11px; margin-bottom:4px;"><span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
-            '  <div style="font-size:12px; color:#1e293b;">' + esc(socText) + '</div>' +
+            '  <div style="font-size:12px; color:#1e293b;">' + esc(cleanDiagnosis(socText)) + '</div>' +
             '</div>';
         });
 
@@ -3991,7 +4004,7 @@
           algHtml +=
             '<div class="encounter-hx-card" style="border:1px solid #fed7aa; border-left:3px solid #ea580c; border-radius:4px; padding:8px 12px; margin-top:6px; background:#fffaf0;">' +
             '  <div style="font-size:11px; margin-bottom:4px;"><span class="encounter-type-badge ' + typeClass + '" style="font-size:9px; padding:1px 5px;">' + esc(rawType) + '</span> <strong>' + esc(dDisplay) + '</strong></div>' +
-            '  <div style="font-size:12px; color:#9a3412; font-weight:500;">' + esc(algText) + '</div>' +
+            '  <div style="font-size:12px; color:#9a3412; font-weight:500;">' + esc(cleanDiagnosis(algText)) + '</div>' +
             '</div>';
         });
 

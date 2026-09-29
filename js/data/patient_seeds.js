@@ -128,7 +128,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               clinical_record: {
                 chief_complaint: 'Outpatient consultation and prescription review; follow-up of productive cough and low-grade fever.',
                 history: 'Outpatient Consultation. Productive cough decreasing, dyspnea significantly resolved. Chest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.',
-                final_diagnosis: 'Community-Acquired Pneumonia, moderate risk, resolving on targeted oral antibiotics; Essential Hypertension (ICD-10: J18.9, I10)'
+                final_diagnosis: 'Community-Acquired Pneumonia, moderate risk, resolving on targeted oral antibiotics; Essential Hypertension'
               },
               progress_notes: 'Outpatient Consultation. Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted oral antibiotics',
               orders: [
@@ -401,9 +401,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               clinical_record: {
                 chief_complaint: 'Severe right lower quadrant (RLQ) abdominal pain with nausea x 2 days',
                 history: 'Patient was admitted through the ER due to a 2-day history of periumbilical pain migrating to the right lower quadrant, accompanied by low-grade fever and anorexia. Physical exam demonstrated marked tenderness at McBurney\'s point with rebound tenderness. Emergency ultrasound confirmed acute appendicitis (non-perforated). Patient underwent an uncomplicated laparoscopic appendectomy under general endotracheal anesthesia on 04/10/2026. Post-operative course was smooth; surgical port sites dry and intact, bowel sounds normoactive on Post-Op Day 1, afebrile, and pain well controlled on oral analgesics.',
-                final_diagnosis: 'Acute Appendicitis, Non-perforated; Status Post Laparoscopic Appendectomy (ICD-10: K35.80)'
+                final_diagnosis: 'Acute Appendicitis, Non-perforated; Status Post Laparoscopic Appendectomy'
               },
-              progress_notes: 'Post-Operative Day 1. S/P Laparoscopic Appendectomy. Tolerating clear liquids, afebrile.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99%\nAbdomen: Soft, mild peri-incisional tenderness, surgical port sites clean, dry, and intact.\nDiagnosis: Acute Appendicitis, Non-perforated; Status Post Laparoscopic Appendectomy (K35.80)',
+              progress_notes: 'Post-Operative Day 1. S/P Laparoscopic Appendectomy. Tolerating clear liquids, afebrile.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99%\nAbdomen: Soft, mild peri-incisional tenderness, surgical port sites clean, dry, and intact.\nDiagnosis: Acute Appendicitis, Non-perforated; Status Post Laparoscopic Appendectomy',
               orders: [
                 { text: 'NPO temporarily until fully awake, then may start clear liquids as tolerated.', dateTime: '2026-04-10T10:30:00+08:00', cared: ['C'], timeSignature: 'C - 10:45 AM nurse' },
                 { text: 'PNSS 1 L at 100 mL/hour.', dateTime: '2026-04-10T10:30:00+08:00', cared: ['A'], timeSignature: 'A - 11:00 AM nurse' },
@@ -622,7 +622,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               clinical_record: {
                 chief_complaint: 'Semi-annual comprehensive outpatient review and lab orders',
                 history: 'Patient is a 48-year-old male presenting for scheduled semi-annual review. Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea. Compliant with Metformin 500 mg BID and Losartan 50 mg OD. Home BP ranges 130-138/80-86 mmHg.\n\nPhysical Examination: General: Alert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis pulses palpable.',
-                final_diagnosis: 'Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension (ICD-10: E11.9, I10)'
+                final_diagnosis: 'Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension'
               },
               prescriptions: [
                 { drug: 'Empagliflozin 10 mg tablet', sig: '1 tablet orally once daily in the morning', qty: '90 tablets' },
@@ -668,7 +668,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               clinical_record: {
                 chief_complaint: 'Initial outpatient registration and care transfer to CLMMRH Chronic Disease Management Program.',
                 history: 'Known diabetic and hypertensive for 6 years, transferring routine management to CLMMRH Outpatient Service. Denies acute complaints. Compliant with oral maintenance therapy.',
-                final_diagnosis: 'Type 2 Diabetes Mellitus; Essential Hypertension Stage 1 (ICD-10: E11.9, I10)'
+                final_diagnosis: 'Type 2 Diabetes Mellitus; Essential Hypertension Stage 1'
               },
               prescriptions: [
                 { drug: 'Metformin 500 mg tablet', sig: '1 tablet orally twice daily with meals', qty: '90 tablets' },
@@ -722,7 +722,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               clinical_record: {
                 chief_complaint: 'Follow-up right knee pain and mobility assessment',
                 history: 'Patient is a 47-year-old male with diagnosed mild primary osteoarthritis of the right knee returning for scheduled 3-month orthopedic follow-up. Demonstrates good symptom improvement on physical therapy and home quadriceps rehabilitation.',
-                final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, clinically stable (ICD-10: M17.11)'
+                final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, clinically stable'
               },
               progress_notes: 'Outpatient Follow-up (Orthopedics). Right knee joint review.\nSubjective: Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises. No morning joint stiffness > 30 minutes, no joint locking or giving way.\nObjective: Gait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.\nAssessment: Unilateral Primary Osteoarthritis, Right Knee (M17.11), clinically improved with low disease activity.\nPlan: Shift Celecoxib to strictly PRN for pain flare-ups. Continue low-impact physical exercise (swimming, cycling, walking on flat ground). Avoid deep squats and kneeling. Return for annual orthopedic surveillance or if joint swelling occurs.',
               orders: [
@@ -768,7 +768,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               clinical_record: {
                 chief_complaint: 'Right knee joint aching pain on walking and climbing stairs x 2 months',
                 history: 'Patient is a 47-year-old male presenting with a 2-month history of right knee pain without prior trauma. Denies knee locking, giving way, or redness. Digital knee radiograph confirms mild primary osteoarthritis.',
-                final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, Grade II (ICD-10: M17.11)'
+                final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, Grade II'
               },
               progress_notes: '',
               orders: [
