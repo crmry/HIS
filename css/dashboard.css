@@ -1434,7 +1434,7 @@
       font-weight: 700;
     }
     .encounter-table tbody tr {
-      cursor: pointer;
+      cursor: default;
     }
     .encounter-type-badge {
       display: inline-block;
