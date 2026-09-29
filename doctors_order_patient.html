@@ -1156,8 +1156,8 @@
         // Estimate row height in pixels for pagination.
         // A typical order row is ~38px (2 textarea rows + padding).
         // Multiline progress notes add more; we add 16px per extra newline.
-        function buildSignatureRowHtml(physician, license) {
-            // Physician authentication stamp row — rendered between encounter blocks.
+        function buildSignatureRowHtml(physician, license, isContinuation, nextPage) {
+            // Physician authentication stamp row — rendered between encounter blocks or at page continuation breaks.
             // Cols 1-2 (DATE/TIME + PROGRESS NOTES, colspan=2): dashed separator line.
             // Col 3 (PHYSICIAN'S ORDER, colspan=1): physician digital signature, name, and PRC license stamp.
             // Cols 4-9 (C+A+R+E+D + TIME/SIGNATURE, colspan=6): dashed separator line (nurses module).
@@ -1169,7 +1169,10 @@
             var physName = rawName ? escapeHtml(rawName) : '&mdash;';
             var licText  = license  ? escapeHtml(license)   : '&mdash;';
             var sigLabel = rawName ? rawName.replace(/^Dr\.\s*/i, '').replace(/,\s*MD$/i, '').trim() : 'M. Santos';
-            return '<tr class="enc-sig-row">' +
+            var contNotice = isContinuation
+                ? '<div class="enc-sig-cont" style="font-size:7pt; color:#475569; font-style:italic; margin-top:2px;">(Orders continued on Page ' + (nextPage || 'next') + ')</div>'
+                : '';
+            return '<tr class="enc-sig-row' + (isContinuation ? ' enc-sig-row-cont' : '') + '">' +
                 '<td colspan="2" class="enc-sig-spacer"><hr class="enc-sig-divider"></td>' +
                 '<td class="enc-sig-stamp">' +
                 '<div class="enc-sig-block">' +
@@ -1177,6 +1180,7 @@
                 '<div class="enc-sig-line-draw">________________________________</div>' +
                 '<div class="enc-sig-name">' + physName + '</div>' +
                 '<div class="enc-sig-lic">PRC Lic. No.: ' + licText + '</div>' +
+                contNotice +
                 '</div>' +
                 '</td>' +
                 '<td colspan="6" class="enc-sig-spacer"><hr class="enc-sig-divider"></td>' +
@@ -1185,7 +1189,7 @@
 
         function estimateRowHeight(item) {
             if (!item) return 35;
-            if (item.isSigRow) return 55; // signature stamp row is ~55px
+            if (item.isSigRow) return item.isContinuationSig ? 60 : 55; // signature stamp row
             return 35; // Each table row is fixed height 9.2mm (~35px) in hospital compliance form
         }
 
@@ -1200,6 +1204,7 @@
             var CONT_BUDGET = 860;
             var ROW_HEIGHT = 35;
             var MIN_BLANK_ROWS = 3;
+            var SIG_HEIGHT = 60;
 
             var pages = [];
             var i = 0;
@@ -1221,6 +1226,50 @@
                     usedHeight += h;
                     i++;
                     globalRowIdx++;
+                }
+
+                // If this is NOT the last page (more data rows remain in flatRows):
+                // Check if the page ended in the middle of an encounter (i.e. last item is not a signature row).
+                // Per hospital clinical documentation standards: if an order list does not fit on the current page,
+                // the current page MUST terminate with an authenticating physician signature verifying that this page is ended
+                // before continuing to the next page.
+                if (i < flatRows.length && pageRows.length > 0) {
+                    var lastPageItem = pageRows[pageRows.length - 1].item;
+                    if (lastPageItem && !lastPageItem.isSigRow) {
+                        // Make sure the signature row fits within the page budget.
+                        // If usedHeight + SIG_HEIGHT > budget, pop the last order row(s) to postpone to the next page.
+                        while (pageRows.length > 1 && (usedHeight + SIG_HEIGHT > budget)) {
+                            var popped = pageRows.pop();
+                            i--;
+                            globalRowIdx--;
+                            usedHeight -= estimateRowHeight(popped.item);
+                        }
+
+                        // Determine the physician and PRC license for this encounter
+                        var physician = (lastPageItem && lastPageItem.physician) || "";
+                        var prc_license = (lastPageItem && lastPageItem.prc_license) || "";
+                        if (!physician) {
+                            for (var k = i; k < flatRows.length; k++) {
+                                if (flatRows[k].encId === lastPageItem.encId && flatRows[k].isSigRow) {
+                                    physician = flatRows[k].physician || "";
+                                    prc_license = flatRows[k].prc_license || "";
+                                    break;
+                                }
+                            }
+                        }
+
+                        pageRows.push({
+                            item: {
+                                isSigRow: true,
+                                isContinuationSig: true,
+                                nextPage: pageNum + 2,
+                                physician: physician,
+                                prc_license: prc_license
+                            },
+                            rowIdx: globalRowIdx++
+                        });
+                        usedHeight += SIG_HEIGHT;
+                    }
                 }
 
                 // If this is the LAST page (no data rows remain), fill remaining space with blank rows
@@ -1311,8 +1360,8 @@
                         continue;
                     }
                     if (pr.item.isSigRow) {
-                        // Physician authentication stamp between encounters
-                        inner += buildSignatureRowHtml(pr.item.physician, pr.item.prc_license);
+                        // Physician authentication stamp (standard between encounters or page continuation break)
+                        inner += buildSignatureRowHtml(pr.item.physician, pr.item.prc_license, pr.item.isContinuationSig, pr.item.nextPage);
                         r++;
                         continue;
                     }
@@ -1640,7 +1689,9 @@
                         noteLine: noteLine,
                         orderText: order?.text || "",
                         cared: Array.isArray(order?.cared) ? order.cared : [],
-                        timeSignature: order?.timeSignature || ""
+                        timeSignature: order?.timeSignature || "",
+                        physician: block.physician || "",
+                        prc_license: block.prc_license || ""
                     });
                 }
 

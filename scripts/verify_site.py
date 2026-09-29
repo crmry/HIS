@@ -22,10 +22,19 @@ WORKSPACE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 # Locate Chromium installed via Playwright / ms-playwright
 POSSIBLE_CHROME_PATHS = [
+    # Windows paths
     os.path.expandvars(r"%LOCALAPPDATA%\ms-playwright\chromium-1200\chrome-win64\chrome.exe"),
     r"C:\Program Files\Google\Chrome\Application\chrome.exe",
     r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
-    os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe")
+    os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"),
+    # macOS paths
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+    "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+    "/Applications/Chromium.app/Contents/MacOS/Chromium",
+    os.path.expanduser("~/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"),
+    os.path.expanduser("~/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"),
+    os.path.expanduser("~/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"),
 ]
 
 CHROME_PATH = None
