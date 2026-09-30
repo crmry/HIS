@@ -623,9 +623,9 @@
   <!-- Hospital Patient Demographic Bar -->
   <header class="patient-banner">
     <div class="patient-info-left">
-      <div class="patient-name">DELA CRUZ, JUANITA B.</div>
-      <div class="patient-meta-pill">HRN: <strong>2026-001245</strong></div>
-      <div class="patient-meta-pill">Age: <strong>32 / Female</strong></div>
+      <div class="patient-name">DEL ROSARIO, JOAN B.</div>
+      <div class="patient-meta-pill">HRN: <strong>0000001890</strong></div>
+      <div class="patient-meta-pill">Age: <strong>48 / Female</strong></div>
       <div class="patient-meta-pill">Civil Status: <strong>Married</strong></div>
       <div class="patient-meta-pill">Service: <strong>OB-Gyne OPD</strong></div>
     </div>
@@ -647,22 +647,23 @@
       <!-- TOP SUMMARY CARDS (4 CARDS) -->
       <section class="summary-cards-grid" aria-label="OB-Gyne Clinical Highlights">
 
-        <!-- Card 1: Obstetric Score (GTPAL) -->
+        <!-- Card 1: Obstetric Score (GTPAL & G-P) -->
         <article class="summary-card" id="card-obstetric-score">
           <div>
-            <div class="summary-card-title">Obstetric Score</div>
-            <div class="summary-card-value" id="val-obstetric-score">G3 T2 P0 A1 L2</div>
+            <div class="summary-card-title">Obstetric Score (DOH / POGS)</div>
+            <div class="summary-card-value" id="val-obstetric-score">G3P2 (2-0-1-2)</div>
           </div>
-          <div class="summary-card-footer">Auto-derived</div>
+          <div class="summary-card-footer" id="val-obstetric-sub">G3 T2 P0 A1 L2 • Auto-derived</div>
         </article>
 
-        <!-- Card 2: Current LMP -->
+        <!-- Card 2: Current LMP & PMP -->
         <article class="summary-card" id="card-current-lmp">
           <div>
-            <div class="summary-card-title">Current LMP</div>
+            <div class="summary-card-title">Current LMP &amp; Baseline PMP</div>
             <div class="summary-card-value" id="val-current-lmp">09/05/2026</div>
           </div>
-          <div class="summary-card-footer">
+          <div class="summary-card-footer" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+            <span id="val-pmp-sub">PMP: 08/08/2026 (28d cycle)</span>
             <button type="button" class="btn-card-action" onclick="openLmpModal()">Update / History</button>
           </div>
         </article>
@@ -673,16 +674,17 @@
             <div class="summary-card-title">Estimated Date of Delivery</div>
             <div class="summary-card-value" id="val-edd">06/12/2027</div>
           </div>
-          <div class="summary-card-footer" id="val-edd-sub">When applicable</div>
+          <div class="summary-card-footer" id="val-edd-sub">EGA: 3 wks 4 days (Naegele)</div>
         </article>
 
         <!-- Card 4: Pregnancy Records -->
         <article class="summary-card" id="card-pregnancy-records">
           <div>
-            <div class="summary-card-title">Pregnancy Records</div>
+            <div class="summary-card-title">Pregnancy Records (HFDB)</div>
             <div class="summary-card-value" id="val-pregnancy-count">3</div>
           </div>
-          <div class="summary-card-footer">
+          <div class="summary-card-footer" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+            <span style="font-size:11px; color:var(--slate-500);">Longitudinal dataset</span>
             <button type="button" class="btn-card-primary" onclick="openAddPregModal()">+ Add Pregnancy</button>
           </div>
         </article>
@@ -708,29 +710,29 @@
                 <th>OUTCOME</th>
                 <th>MODE OF DELIVERY</th>
                 <th>GA</th>
-                <th>SEX</th>
-                <th>BIRTH WEIGHT</th>
-                <th>MULTIPLE</th>
-                <th>COMPLICATIONS / REMARKS</th>
+                <th>SEX &amp; WEIGHT</th>
+                <th>PLACE OF DELIVERY</th>
+                <th>ATTENDANT</th>
+                <th>MATERNAL &amp; NEONATAL COMPLICATIONS</th>
                 <th style="text-align:right;">ACTIONS</th>
               </tr>
             </thead>
             <tbody id="tbody-pregnancies">
-              <!-- Dynamically rendered -->
+              <!-- Dynamically rendered per DOH HFDB dataset standards -->
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- TAB 2: GYNECOLOGIC HISTORY -->
+      <!-- TAB 2: GYNECOLOGIC HISTORY (DOH HFDB & POGS CLINICAL DATASETS) -->
       <section class="tab-panel" id="tab-gynecologic" role="tabpanel">
         <form id="form-gyne" onsubmit="saveGyneHistory(event)">
 
-          <!-- Menstrual History -->
+          <!-- 1. Menstrual Cycle & Bleeding Profile -->
           <div class="section-card">
             <div class="section-card-header">
-              <span class="section-card-title">Menstrual Cycle &amp; Bleeding Profile</span>
-              <button type="button" class="btn-card-action" onclick="openLmpModal()">Manage LMP History</button>
+              <span class="section-card-title">1. Menstrual Cycle &amp; Bleeding Profile (DOH HFDB Standard)</span>
+              <button type="button" class="btn-card-action" onclick="openLmpModal()">Manage LMP / PMP History</button>
             </div>
             <div class="form-row-grid">
               <div class="form-field">
@@ -738,43 +740,135 @@
                 <input type="number" id="gyne-menarche" class="form-control" placeholder="e.g. 12" min="8" max="25" value="12">
               </div>
               <div class="form-field">
+                <label for="gyne-lmp-view">Current LMP Date</label>
+                <input type="text" id="gyne-lmp-view" class="form-control" value="09/05/2026" readonly style="background:#f8fafc; font-weight:600;">
+              </div>
+              <div class="form-field">
+                <label for="gyne-pmp-view">Previous Menstrual Period (PMP)</label>
+                <input type="text" id="gyne-pmp-view" class="form-control" value="08/08/2026" readonly style="background:#f8fafc; font-weight:600;">
+              </div>
+              <div class="form-field">
                 <label for="gyne-interval">Cycle Interval / Regularity</label>
                 <select id="gyne-interval" class="form-control">
                   <option value="Regular (28-30 days)" selected>Regular (28-30 days)</option>
-                  <option value="Irregular">Irregular</option>
+                  <option value="Regular (21-27 days)">Regular (21-27 days)</option>
+                  <option value="Regular (31-35 days)">Regular (31-35 days)</option>
+                  <option value="Irregular / Variable">Irregular / Variable</option>
                   <option value="Oligomenorrhea (>35 days)">Oligomenorrhea (&gt;35 days)</option>
                   <option value="Polymenorrhea (<21 days)">Polymenorrhea (&lt;21 days)</option>
-                  <option value="Amenorrhea">Amenorrhea</option>
+                  <option value="Amenorrhea (>6 months)">Amenorrhea (&gt;6 months)</option>
                 </select>
               </div>
+            </div>
+            <div class="form-row-grid">
               <div class="form-field">
                 <label for="gyne-duration">Bleeding Duration (Days)</label>
                 <input type="number" id="gyne-duration" class="form-control" placeholder="e.g. 4-5" min="1" max="15" value="4">
               </div>
               <div class="form-field">
-                <label for="gyne-flow">Flow Intensity &amp; Pads/Day</label>
+                <label for="gyne-flow">Flow Intensity &amp; Quantification</label>
                 <select id="gyne-flow" class="form-control">
-                  <option value="Moderate (3-4 pads/day)" selected>Moderate (3-4 pads/day)</option>
-                  <option value="Scanty (1-2 pads/day)">Scanty (1-2 pads/day)</option>
-                  <option value="Heavy / Menorrhagia (>5 pads/day)">Heavy / Menorrhagia (&gt;5 pads/day)</option>
+                  <option value="Moderate (3-4 pads/day, no clots)" selected>Moderate (3-4 pads/day, no clots)</option>
+                  <option value="Scanty / Light (1-2 pads/day)">Scanty / Light (1-2 pads/day)</option>
+                  <option value="Heavy / Menorrhagia (>5 pads/day with clots)">Heavy / Menorrhagia (&gt;5 pads/day with clots)</option>
                 </select>
               </div>
               <div class="form-field">
                 <label for="gyne-dysmenorrhea">Dysmenorrhea / Pelvic Pain</label>
                 <select id="gyne-dysmenorrhea" class="form-control">
-                  <option value="Mild / Tolerable" selected>Mild / Tolerable</option>
+                  <option value="Mild / Tolerable (No analgesics required)" selected>Mild / Tolerable (No analgesics required)</option>
                   <option value="None">None</option>
-                  <option value="Moderate (Requires Analgesics)">Moderate (Requires Analgesics)</option>
+                  <option value="Moderate (Requires analgesics)">Moderate (Requires analgesics)</option>
                   <option value="Severe / Incapacitating">Severe / Incapacitating</option>
+                  <option value="Primary Dysmenorrhea (Spasmodic)">Primary Dysmenorrhea (Spasmodic)</option>
+                  <option value="Secondary Dysmenorrhea (Congestive / Endometriosis)">Secondary Dysmenorrhea (Congestive / Endometriosis)</option>
                 </select>
               </div>
             </div>
           </div>
 
-          <!-- Contraception & Family Planning -->
+          <!-- 2. Menopause & Climacteric Profile -->
           <div class="section-card">
             <div class="section-card-header">
-              <span class="section-card-title">Contraceptive History &amp; Sexual Health</span>
+              <span class="section-card-title">2. Menopause &amp; Climacteric Profile (DOH HFDB Morbidity Standard)</span>
+            </div>
+            <div class="form-row-grid">
+              <div class="form-field">
+                <label for="gyne-menopause-status">Menopausal Status</label>
+                <select id="gyne-menopause-status" class="form-control" onchange="toggleMenopauseFields(this.value)">
+                  <option value="Pre-menopausal (Regular ovulatory cycles)" selected>Pre-menopausal (Regular ovulatory cycles)</option>
+                  <option value="Peri-menopausal (Climacteric symptoms, irregular intervals)">Peri-menopausal (Climacteric symptoms)</option>
+                  <option value="Post-menopausal (≥12 consecutive months amenorrhea)">Post-menopausal (&ge;12 mos amenorrhea)</option>
+                  <option value="Surgical Menopause (Bilateral Oophorectomy)">Surgical Menopause (Bilateral Oophorectomy)</option>
+                </select>
+              </div>
+              <div class="form-field" id="wrap-menopause-age">
+                <label for="gyne-menopause-age">Age of Menopause (Years)</label>
+                <input type="number" id="gyne-menopause-age" class="form-control" placeholder="e.g. 48" min="30" max="65" value="">
+              </div>
+              <div class="form-field">
+                <label for="gyne-pmb">Post-Menopausal Bleeding (Red Flag)</label>
+                <select id="gyne-pmb" class="form-control">
+                  <option value="No (Asymptomatic)" selected>No (Asymptomatic)</option>
+                  <option value="Yes (Urgent Evaluation Required)">Yes (Urgent Evaluation Required)</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="gyne-climacteric">Vasomotor / Climacteric Symptoms</label>
+                <select id="gyne-climacteric" class="form-control">
+                  <option value="None" selected>None</option>
+                  <option value="Vasomotor (Hot flushes, night sweats)">Vasomotor (Hot flushes, night sweats)</option>
+                  <option value="Genitourinary Syndrome of Menopause (Vaginal dryness)">Genitourinary Syndrome (Vaginal dryness)</option>
+                  <option value="Mood / Sleep Disturbances">Mood / Sleep Disturbances</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Coitarche, Sexual History & Pelvic Infections -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <span class="section-card-title">3. Coitarche, Sexual History &amp; Pelvic Infections (DOH Standard)</span>
+            </div>
+            <div class="form-row-grid">
+              <div class="form-field">
+                <label for="gyne-coitarche">Age of Coitarche (First Sexual Debut)</label>
+                <input type="number" id="gyne-coitarche" class="form-control" placeholder="e.g. 20" min="10" max="50" value="20">
+              </div>
+              <div class="form-field">
+                <label for="gyne-sexual-activity">Sexual Activity Status</label>
+                <select id="gyne-sexual-activity" class="form-control">
+                  <option value="Sexually Active" selected>Sexually Active</option>
+                  <option value="Not currently active">Not currently active</option>
+                  <option value="Never sexually active">Never sexually active</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="gyne-infections">History of STIs / Pelvic Infections</label>
+                <select id="gyne-infections" class="form-control">
+                  <option value="None reported / Denies history of STIs" selected>None reported / Denies history of STIs</option>
+                  <option value="Pelvic Inflammatory Disease (PID)">Pelvic Inflammatory Disease (PID)</option>
+                  <option value="Bacterial Vaginosis">Bacterial Vaginosis</option>
+                  <option value="Vulvovaginal Candidiasis">Vulvovaginal Candidiasis</option>
+                  <option value="Trichomoniasis">Trichomoniasis</option>
+                  <option value="Cervicitis">Cervicitis</option>
+                  <option value="Genital Herpes (HSV)">Genital Herpes (HSV)</option>
+                  <option value="Human Papillomavirus (HPV) / Warts">HPV / Genital Warts</option>
+                  <option value="Syphilis / Treponema pallidum">Syphilis</option>
+                  <option value="Gonorrhea / Chlamydia">Gonorrhea / Chlamydia</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="gyne-infection-treatment">Infection Treatment &amp; Outcome</label>
+                <input type="text" id="gyne-infection-treatment" class="form-control" placeholder="e.g. N/A or Completed course, resolved" value="N/A">
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Contraceptive History & Family Planning -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <span class="section-card-title">4. Contraceptive History &amp; Family Planning (DOH Method Taxonomy)</span>
             </div>
             <div class="form-row-grid">
               <div class="form-field">
@@ -782,16 +876,19 @@
                 <select id="gyne-contraceptive-current" class="form-control">
                   <option value="None / Natural Family Planning">None / Natural Family Planning</option>
                   <option value="Combined Oral Contraceptive Pills (COCP)" selected>Combined Oral Contraceptive Pills (COCP)</option>
-                  <option value="Progestin-Only Injectable (DMPA)">Progestin-Only Injectable (DMPA)</option>
-                  <option value="Intrauterine Device (IUD)">Intrauterine Device (IUD)</option>
-                  <option value="Subdermal Implant">Subdermal Implant</option>
-                  <option value="Barrier (Condoms)">Barrier (Condoms)</option>
+                  <option value="Progestin-Only Pills (POP)">Progestin-Only Pills (POP)</option>
+                  <option value="Progestin-Only Injectable (DMPA / Depo)">Progestin-Only Injectable (DMPA)</option>
+                  <option value="Subdermal Implant (Implanon / Jadelle)">Subdermal Implant (Implanon / Jadelle)</option>
+                  <option value="Intrauterine Device — Copper T380A">Intrauterine Device — Copper T380A</option>
+                  <option value="Intrauterine Device — Levonorgestrel (LNG-IUD)">Intrauterine Device — LNG-IUD</option>
+                  <option value="Barrier (Male / Female Condoms)">Barrier (Condoms)</option>
                   <option value="Bilateral Tubal Ligation (BTL)">Bilateral Tubal Ligation (BTL)</option>
+                  <option value="Vasectomy (Partner)">Vasectomy (Partner)</option>
                 </select>
               </div>
               <div class="form-field">
-                <label for="gyne-contraceptive-duration">Duration of Use</label>
-                <input type="text" id="gyne-contraceptive-duration" class="form-control" placeholder="e.g. 1 year" value="18 months">
+                <label for="gyne-contraceptive-duration">Duration of Current Use</label>
+                <input type="text" id="gyne-contraceptive-duration" class="form-control" placeholder="e.g. 18 months" value="18 months">
               </div>
               <div class="form-field">
                 <label for="gyne-contraceptive-past">Previous Methods &amp; Complications</label>
@@ -800,24 +897,79 @@
             </div>
           </div>
 
-          <!-- Cervical & Pelvic Findings / Previous Diagnoses -->
+          <!-- 5. Cervical Cancer Screening & HPV Status -->
           <div class="section-card">
             <div class="section-card-header">
-              <span class="section-card-title">Gynecologic Findings, Screenings &amp; Diagnoses</span>
+              <span class="section-card-title">5. Cervical Cancer Screening &amp; HPV Status (Bethesda System / DOH)</span>
             </div>
             <div class="form-row-grid">
               <div class="form-field">
-                <label for="gyne-last-pap">Last Pap Smear Date &amp; Result</label>
-                <input type="text" id="gyne-last-pap" class="form-control" placeholder="e.g. 11/2025 — Negative for Intraepithelial Lesion (NILM)" value="11/14/2025 — Normal (NILM)">
+                <label for="gyne-screening-modality">Screening Modality</label>
+                <select id="gyne-screening-modality" class="form-control">
+                  <option value="Conventional Pap Smear" selected>Conventional Pap Smear</option>
+                  <option value="Liquid-Based Cytology (LBC)">Liquid-Based Cytology (LBC)</option>
+                  <option value="HPV DNA Testing (High-Risk)">HPV DNA Testing (High-Risk)</option>
+                  <option value="Visual Inspection with Acetic Acid (VIA)">Visual Inspection with Acetic Acid (VIA)</option>
+                  <option value="Never screened">Never screened</option>
+                </select>
               </div>
               <div class="form-field">
-                <label for="gyne-diagnoses">Previous Gynecologic Diagnoses</label>
-                <input type="text" id="gyne-diagnoses" class="form-control" placeholder="e.g. Dysfunctional Uterine Bleeding, Cervicitis, PCOS" value="Mild Dysmenorrhea, resolved">
+                <label for="gyne-last-pap-date">Date of Last Screening</label>
+                <input type="date" id="gyne-last-pap-date" class="form-control" value="2025-11-14">
+              </div>
+              <div class="form-field">
+                <label for="gyne-last-pap">Screening Result (Bethesda 2014)</label>
+                <select id="gyne-last-pap" class="form-control">
+                  <option value="Negative for Intraepithelial Lesion or Malignancy (NILM) / Normal" selected>Negative for Intraepithelial Lesion (NILM)</option>
+                  <option value="Atypical Squamous Cells of Undetermined Significance (ASC-US)">ASC-US</option>
+                  <option value="Atypical Squamous Cells cannot exclude HSIL (ASC-H)">ASC-H</option>
+                  <option value="Low-Grade Squamous Intraepithelial Lesion (LSIL)">LSIL</option>
+                  <option value="High-Grade Squamous Intraepithelial Lesion (HSIL)">HSIL</option>
+                  <option value="Atypical Glandular Cells (AGC)">Atypical Glandular Cells (AGC)</option>
+                  <option value="Suspicious for Malignancy">Suspicious for Malignancy</option>
+                  <option value="Unsatisfactory / Inadequate Specimen">Unsatisfactory / Inadequate Specimen</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="gyne-hpv-vaccine">HPV Vaccination Status</label>
+                <select id="gyne-hpv-vaccine" class="form-control">
+                  <option value="Completed (Full series — 3 doses)" selected>Completed (Full series — 3 doses)</option>
+                  <option value="Completed (Full series — 2 doses if <15y)">Completed (Full series — 2 doses)</option>
+                  <option value="Incomplete (1 dose)">Incomplete (1 dose)</option>
+                  <option value="Unvaccinated / None">Unvaccinated / None</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Gynecologic Morbidities & Surgical History -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <span class="section-card-title">6. Gynecologic Morbidities &amp; Pelvic Surgeries (PALM-COEIN / POGS)</span>
+            </div>
+            <div class="form-row-grid">
+              <div class="form-field">
+                <label for="gyne-diagnoses">Previous Gynecologic Diagnoses (PALM-COEIN)</label>
+                <input type="text" id="gyne-diagnoses" class="form-control" placeholder="e.g. Mild Dysmenorrhea, resolved; Myoma Uteri; PCOS" value="Mild Dysmenorrhea, resolved">
+              </div>
+              <div class="form-field">
+                <label for="gyne-surgeries">Previous Gynecologic / Pelvic Surgeries</label>
+                <select id="gyne-surgeries" class="form-control">
+                  <option value="Dilatation &amp; Curettage (D&amp;C / Raspa) — 2025" selected>Dilatation &amp; Curettage (D&amp;C / Raspa) — 2025</option>
+                  <option value="None / No prior gynecologic surgery">None / No prior gynecologic surgery</option>
+                  <option value="Abdominal / Laparoscopic Myomectomy">Myomectomy</option>
+                  <option value="Oophorocystectomy (Ovarian Cystectomy)">Oophorocystectomy</option>
+                  <option value="Unilateral / Bilateral Oophorectomy">Oophorectomy</option>
+                  <option value="Total Abdominal Hysterectomy (TAH)">Total Abdominal Hysterectomy (TAH)</option>
+                  <option value="Total Abdominal Hysterectomy with BSO (TAHBSO)">TAHBSO</option>
+                  <option value="Diagnostic Laparoscopy / Hysteroscopy">Diagnostic Laparoscopy / Hysteroscopy</option>
+                  <option value="Bilateral Tubal Ligation (BTL)">Bilateral Tubal Ligation (BTL)</option>
+                </select>
               </div>
             </div>
             <div class="form-field" style="margin-top:10px;">
-              <label for="gyne-remarks">Clinical Remarks / Gynecologic Notes</label>
-              <textarea id="gyne-remarks" class="form-control" placeholder="Enter clinical remarks or relevant pelvic ultrasound findings...">Patient is compliant with prescribed oral contraceptive regimen; denies abnormal intermenstrual bleeding, postcoital spotting, or foul-smelling vaginal discharge.</textarea>
+              <label for="gyne-remarks">Pelvic Ultrasound Correlates &amp; Gynecologic Clinical Notes</label>
+              <textarea id="gyne-remarks" class="form-control" rows="3" placeholder="Document pelvic ultrasound findings (endometrial stripe thickness, myometrium, ovaries) and clinical remarks...">Patient is compliant with prescribed oral contraceptive regimen; denies abnormal intermenstrual bleeding, postcoital spotting, or foul-smelling vaginal discharge. Pelvic ultrasound reveals normal anteverted uterus, homogenous myometrium, endometrial thickness 5.2 mm, normal bilateral ovaries.</textarea>
             </div>
             <div style="display:flex; justify-content:flex-end; margin-top:14px;">
               <button type="submit" class="btn-card-primary">Save Gynecologic Record</button>
@@ -968,11 +1120,11 @@
 
 <!-- ════════════════ MODALS ════════════════ -->
 
-<!-- Modal 1: Add / Edit Pregnancy Record -->
+<!-- Modal 1: Add / Edit Pregnancy Record (DOH HFDB Dataset) -->
 <div class="modal-overlay" id="modal-pregnancy">
-  <div class="modal-dialog">
+  <div class="modal-dialog" style="max-width:740px;">
     <div class="modal-header">
-      <h3 id="modal-pregnancy-title">Add Pregnancy Record</h3>
+      <h3 id="modal-pregnancy-title">Add Pregnancy Record (DOH HFDB Standard)</h3>
       <button type="button" class="btn-close-modal" onclick="closePregnancyModal()">&times;</button>
     </div>
     <form id="form-pregnancy" onsubmit="handlePregnancySubmit(event)">
@@ -984,38 +1136,47 @@
             <input type="text" id="preg-sequence" class="form-control" placeholder="e.g. P1, P2" required>
           </div>
           <div class="form-field">
-            <label for="preg-year">Year / Date</label>
+            <label for="preg-year">Year / Date of Delivery or Termination</label>
             <input type="text" id="preg-year" class="form-control" placeholder="e.g. 2023 or 2023-04-15" required>
           </div>
         </div>
         <div class="form-row-grid">
           <div class="form-field">
-            <label for="preg-outcome">Pregnancy Outcome</label>
+            <label for="preg-outcome">Pregnancy Outcome (DOH HFDB Category)</label>
             <select id="preg-outcome" class="form-control" onchange="handleOutcomeChange(this.value)" required>
-              <option value="Live Birth">Live Birth</option>
-              <option value="Abortion / Miscarriage">Abortion / Miscarriage</option>
-              <option value="Stillbirth">Stillbirth</option>
+              <option value="Full Term Live Birth">Full Term Live Birth</option>
+              <option value="Preterm Live Birth">Preterm Live Birth</option>
+              <option value="Spontaneous Abortion / Miscarriage">Spontaneous Abortion / Miscarriage</option>
+              <option value="Induced / Therapeutic Abortion">Induced / Therapeutic Abortion</option>
               <option value="Ectopic Pregnancy">Ectopic Pregnancy</option>
-              <option value="Molar Pregnancy">Molar Pregnancy</option>
+              <option value="Hydatidiform Mole (Molar)">Hydatidiform Mole (Molar)</option>
+              <option value="Intrauterine Fetal Demise (IUFD) / Stillbirth">Intrauterine Fetal Demise (IUFD) / Stillbirth</option>
               <option value="Current Pregnancy">Current Pregnancy</option>
             </select>
           </div>
           <div class="form-field">
-            <label for="preg-mode">Mode of Delivery</label>
+            <label for="preg-mode">Mode of Delivery / Intervention</label>
             <select id="preg-mode" class="form-control">
-              <option value="Normal Vaginal Delivery">Normal Vaginal Delivery</option>
-              <option value="Cesarean Section">Cesarean Section</option>
-              <option value="Assisted Vaginal Delivery">Assisted Vaginal Delivery</option>
+              <option value="Normal Spontaneous Vaginal Delivery (SVD)">Normal Spontaneous Vaginal Delivery (SVD)</option>
+              <option value="Low Segment Cesarean Section (LSCS) — Primary">Low Segment Cesarean Section (LSCS) — Primary</option>
+              <option value="Low Segment Cesarean Section (LSCS) — Repeat">Low Segment Cesarean Section (LSCS) — Repeat</option>
+              <option value="Assisted Vaginal Delivery (Vacuum Extraction)">Assisted Vaginal Delivery (Vacuum Extraction)</option>
+              <option value="Assisted Vaginal Delivery (Forceps)">Assisted Vaginal Delivery (Forceps)</option>
+              <option value="Laparotomy / Salpingectomy (Ectopic)">Laparotomy / Salpingectomy (Ectopic)</option>
+              <option value="Dilatation &amp; Curettage (D&amp;C / Raspa)">Dilatation &amp; Curettage (D&amp;C / Raspa)</option>
+              <option value="Manual Vacuum Aspiration (MVA)">Manual Vacuum Aspiration (MVA)</option>
+              <option value="Expectant / Medical Management">Expectant / Medical Management</option>
               <option value="N/A">N/A</option>
             </select>
           </div>
         </div>
         <div class="form-row-grid">
           <div class="form-field">
-            <label for="preg-term">Term Status</label>
+            <label for="preg-term">Term Classification</label>
             <select id="preg-term" class="form-control">
-              <option value="Term">Term (37+ weeks)</option>
-              <option value="Preterm">Preterm (<37 weeks)</option>
+              <option value="Term">Term (≥37 weeks)</option>
+              <option value="Preterm">Preterm (20 to <37 weeks)</option>
+              <option value="Abortion">Abortion (<20 weeks)</option>
               <option value="N/A">N/A</option>
             </select>
           </div>
@@ -1026,25 +1187,52 @@
         </div>
         <div class="form-row-grid">
           <div class="form-field">
+            <label for="preg-place">Place of Delivery (DOH HFDB Facility Standard)</label>
+            <select id="preg-place" class="form-control">
+              <option value="Tertiary Hospital (CLMMRH / Government)" selected>Tertiary Hospital (CLMMRH / Government)</option>
+              <option value="LGU / District Hospital">LGU / District Hospital</option>
+              <option value="Private Hospital / Medical Center">Private Hospital / Medical Center</option>
+              <option value="Birthing Home / Lying-In Clinic / RHU">Birthing Home / Lying-In Clinic / RHU</option>
+              <option value="Home Delivery">Home Delivery</option>
+              <option value="In Transit / Other">In Transit / Other</option>
+              <option value="N/A">N/A (Early termination)</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="preg-attendant">Attendant at Birth (DOH Quality Indicator)</label>
+            <select id="preg-attendant" class="form-control">
+              <option value="OB-Gyne Specialist / Physician" selected>OB-Gyne Specialist / Physician</option>
+              <option value="Resident Physician / Medical Officer">Resident Physician / Medical Officer</option>
+              <option value="Registered Midwife">Registered Midwife</option>
+              <option value="Registered Nurse">Registered Nurse</option>
+              <option value="Traditional Birth Attendant (Hilot)">Traditional Birth Attendant (Hilot)</option>
+              <option value="Unattended / None">Unattended / None</option>
+              <option value="N/A">N/A</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-grid">
+          <div class="form-field">
             <label for="preg-sex">Baby Sex</label>
             <select id="preg-sex" class="form-control">
               <option value="Female">Female</option>
               <option value="Male">Male</option>
-              <option value="Indeterminate">Indeterminate</option>
+              <option value="Ambiguous / Indeterminate">Ambiguous / Indeterminate</option>
               <option value="N/A">N/A</option>
             </select>
           </div>
           <div class="form-field">
-            <label for="preg-weight">Birth Weight</label>
-            <input type="text" id="preg-weight" class="form-control" placeholder="e.g. 3.1 kg or N/A">
+            <label for="preg-weight">Birth Weight (kg / grams)</label>
+            <input type="text" id="preg-weight" class="form-control" placeholder="e.g. 3.10 kg (3,100 g) or N/A">
           </div>
           <div class="form-field">
             <label for="preg-multiple">Multiple Pregnancy</label>
             <select id="preg-multiple" class="form-control">
-              <option value="No">No (Singleton)</option>
-              <option value="Twins">Twins</option>
+              <option value="No (Singleton)">No (Singleton)</option>
+              <option value="Twins (Diamniotic / Dichorionic)">Twins (Diamniotic / Dichorionic)</option>
+              <option value="Twins (Monochorionic / Diamniotic)">Twins (Monochorionic / Diamniotic)</option>
               <option value="Triplets">Triplets</option>
-              <option value="Other">Other Multiple</option>
+              <option value="Other Multiple Gestation">Other Multiple Gestation</option>
             </select>
           </div>
           <div class="form-field">
@@ -1052,53 +1240,96 @@
             <input type="number" id="preg-living" class="form-control" min="0" max="5" value="1" required>
           </div>
         </div>
+        <div class="form-row-grid">
+          <div class="form-field">
+            <label for="preg-maternal-comp">Maternal / Intrapartum Complications (DOH HFDB Morbidity)</label>
+            <select id="preg-maternal-comp" class="form-control">
+              <option value="None / Uncomplicated" selected>None / Uncomplicated</option>
+              <option value="Gestational Hypertension">Gestational Hypertension</option>
+              <option value="Preeclampsia (without severe features)">Preeclampsia (without severe features)</option>
+              <option value="Preeclampsia (with severe features) / Eclampsia">Preeclampsia (with severe features) / Eclampsia</option>
+              <option value="Gestational Diabetes Mellitus (GDM)">Gestational Diabetes Mellitus (GDM)</option>
+              <option value="Postpartum Hemorrhage (PPH / Atony)">Postpartum Hemorrhage (PPH / Atony)</option>
+              <option value="Premature Rupture of Membranes (PROM / PPROM)">Premature Rupture of Membranes (PROM)</option>
+              <option value="Chorioamnionitis / Puerperal Sepsis">Chorioamnionitis / Puerperal Sepsis</option>
+              <option value="Perineal Laceration (1st Degree)">Perineal Laceration (1st Degree)</option>
+              <option value="Perineal Laceration (2nd Degree, repaired)">Perineal Laceration (2nd Degree, repaired)</option>
+              <option value="Perineal Laceration (3rd / 4th Degree / OASIS)">Perineal Laceration (3rd / 4th Degree / OASIS)</option>
+              <option value="Episiotomy (Mediolateral)">Episiotomy (Mediolateral)</option>
+              <option value="Placental Complication (Previa / Abruption / Retained)">Placental Complication (Previa / Abruption)</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="preg-fetal-outcome">Fetal / Neonatal Condition (DOH HFDB Standard)</label>
+            <select id="preg-fetal-outcome" class="form-control">
+              <option value="Living &amp; Well (APGAR 9, 10)" selected>Living &amp; Well (APGAR 9, 10)</option>
+              <option value="Living &amp; Well">Living &amp; Well</option>
+              <option value="Neonatal Sepsis">Neonatal Sepsis</option>
+              <option value="Respiratory Distress Syndrome (RDS)">Respiratory Distress Syndrome (RDS)</option>
+              <option value="Birth Asphyxia / Low APGAR">Birth Asphyxia / Low APGAR</option>
+              <option value="NICU Admission">NICU Admission</option>
+              <option value="Congenital Anomaly">Congenital Anomaly</option>
+              <option value="Neonatal Demise / Death">Neonatal Demise / Death</option>
+              <option value="Stillbirth / Non-viable">Stillbirth / Non-viable</option>
+            </select>
+          </div>
+        </div>
         <div class="form-field" style="margin-top:10px;">
-          <label for="preg-remarks">Complications / Remarks</label>
-          <textarea id="preg-remarks" class="form-control" placeholder="Specify any maternal, fetal, or delivery complications or notes..."></textarea>
+          <label for="preg-remarks">Clinical Remarks &amp; Delivery Indications</label>
+          <textarea id="preg-remarks" class="form-control" rows="2" placeholder="Specify clinical indication for C-section, delivery findings, newborn name, or special notes..."></textarea>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-card-action" onclick="closePregnancyModal()">Cancel</button>
-        <button type="submit" class="btn-card-primary" id="btn-save-preg">Save Pregnancy</button>
+        <button type="submit" class="btn-card-primary" id="btn-save-preg">Save Pregnancy Record</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- Modal 2: LMP Update & Longitudinal History Modal -->
+<!-- Modal 2: LMP & PMP Management & Longitudinal History Modal (DOH Standard) -->
 <div class="modal-overlay" id="modal-lmp">
-  <div class="modal-dialog">
+  <div class="modal-dialog" style="max-width:720px;">
     <div class="modal-header">
-      <h3>Last Menstrual Period (LMP) Management</h3>
+      <h3>Last Menstrual Period (LMP) &amp; PMP Management (DOH HFDB Standard)</h3>
       <button type="button" class="btn-close-modal" onclick="closeLmpModal()">&times;</button>
     </div>
     <div class="modal-body">
       <!-- Update Form -->
       <form id="form-lmp-update" onsubmit="handleLmpUpdate(event)">
-        <div class="form-field" style="margin-bottom:12px;">
-          <label for="input-new-lmp">Enter New / Current LMP Date</label>
-          <div style="display:flex; gap:8px;">
+        <div class="form-row-grid" style="margin-bottom:12px;">
+          <div class="form-field">
+            <label for="input-new-lmp">Current LMP Date (1st Day of Last Menses)</label>
             <input type="date" id="input-new-lmp" class="form-control" required>
-            <button type="submit" class="btn-card-primary" style="white-space:nowrap;">Update LMP</button>
           </div>
-          <small style="color:var(--slate-500); font-size:11px; margin-top:4px; display:block;">
-            Updating LMP automatically recalculates EDD and EGA while permanently preserving all past entries.
+          <div class="form-field">
+            <label for="input-new-pmp">Previous Menstrual Period (PMP Date)</label>
+            <input type="date" id="input-new-pmp" class="form-control" placeholder="1st Day of Preceding Menses">
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <small style="color:var(--slate-500); font-size:11px;">
+            Updating LMP &amp; PMP automatically re-computes EDD, EGA, and cycle regularity while permanently preserving longitudinal history.
           </small>
+          <button type="submit" class="btn-card-primary" style="white-space:nowrap;">Update &amp; Preserve LMP</button>
         </div>
       </form>
 
       <!-- Calculations Preview -->
-      <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:6px; padding:10px 12px; margin-bottom:16px;">
-        <div style="font-weight:700; font-size:12px; color:var(--slate-800); margin-bottom:4px;">Clinical Computations (Naegele's Rule)</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px;">
-          <div>Calculated EDD: <strong id="preview-calc-edd">—</strong></div>
-          <div>Estimated Gestational Age: <strong id="preview-calc-ega">—</strong></div>
+      <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:6px; padding:12px 14px; margin-bottom:16px;">
+        <div style="font-weight:700; font-size:12px; color:var(--slate-800); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.3px;">
+          Clinical Computations (Naegele's Rule &amp; DOH HFDB Formula)
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; font-size:12px;">
+          <div>Calculated EDD: <strong id="preview-calc-edd" style="color:var(--slate-900);">—</strong></div>
+          <div>Estimated Gestational Age: <strong id="preview-calc-ega" style="color:var(--slate-900);">—</strong></div>
+          <div>Cycle Length (PMP to LMP): <strong id="preview-calc-cycle" style="color:var(--slate-900);">—</strong></div>
         </div>
       </div>
 
       <!-- Preserved Historical LMP Entries Table -->
       <h4 style="font-size:12px; font-weight:700; color:var(--slate-800); margin-bottom:8px; text-transform:uppercase;">
-        Preserved Longitudinal LMP Records
+        Preserved Longitudinal Menstrual History (Audit-Ready DOH Record)
       </h4>
       <div class="table-responsive">
         <table class="clinical-table">
@@ -1106,13 +1337,15 @@
             <tr>
               <th>#</th>
               <th>RECORDED LMP</th>
+              <th>PREVIOUS PMP</th>
+              <th>CYCLE INTERVAL</th>
               <th>DATE ENTERED</th>
               <th>ENCOUNTER / NOTES</th>
               <th>STATUS</th>
             </tr>
           </thead>
           <tbody id="tbody-lmp-history">
-            <!-- Dynamically populated -->
+            <!-- Dynamically populated per DOH HFDB dataset standards -->
           </tbody>
         </table>
       </div>
@@ -1129,61 +1362,76 @@
 <!-- ════════════════ JAVASCRIPT APPLICATION CORE ════════════════ -->
 <script>
 /* ─────────────────────────────────────────────────────────────────────────────
-   CLINICAL DATA MODEL & STATE
+   CLINICAL DATA MODEL & STATE (DOH HFDB & POGS COMPLIANT)
    ───────────────────────────────────────────────────────────────────────────── */
 const patientState = {
-  // 1. Pregnancy Records matching UI mockup baseline
+  // 1. Pregnancy Records matching DOH HFDB Medical Records Manual Dataset
   pregnancies: [
     {
       seq: 'P1',
       year: '2021',
-      outcome: 'Live Birth',
-      mode: 'Cesarean Section',
+      outcome: 'Full Term Live Birth',
+      mode: 'Low Segment Cesarean Section (LSCS) — Primary',
       term: 'Term',
-      ga: 'Term',
+      ga: '39 weeks',
       gaWeeks: 39,
       sex: 'Female',
-      weight: '3.1 kg',
-      multiple: 'No',
+      weight: '3.10 kg (3,100 g)',
+      place: 'Tertiary Hospital (CLMMRH / Government)',
+      attendant: 'OB-Gyne Specialist / Physician',
+      maternalComp: 'None / Uncomplicated',
+      fetalOutcome: 'Living & Well (APGAR 9, 10)',
+      multiple: 'No (Singleton)',
       living: 1,
-      remarks: '-'
+      remarks: 'Primary CS due to Cephalopelvic Disproportion (CPD)'
     },
     {
       seq: 'P2',
       year: '2023',
-      outcome: 'Live Birth',
-      mode: 'Normal Vaginal Delivery',
+      outcome: 'Full Term Live Birth',
+      mode: 'Normal Spontaneous Vaginal Delivery (SVD)',
       term: 'Term',
-      ga: 'Term',
+      ga: '38 weeks',
       gaWeeks: 38,
       sex: 'Male',
-      weight: '3.0 kg',
-      multiple: 'No',
+      weight: '3.00 kg (3,000 g)',
+      place: 'Tertiary Hospital (CLMMRH / Government)',
+      attendant: 'Resident Physician / Medical Officer',
+      maternalComp: 'Perineal Laceration (2nd Degree, repaired)',
+      fetalOutcome: 'Living & Well (APGAR 8, 9)',
+      multiple: 'No (Singleton)',
       living: 1,
-      remarks: '-'
+      remarks: 'Successful Vaginal Birth After Cesarean (VBAC)'
     },
     {
       seq: 'P3',
       year: '2025',
-      outcome: 'Abortion / Miscarriage',
-      mode: 'N/A',
-      term: 'N/A',
+      outcome: 'Spontaneous Abortion / Miscarriage',
+      mode: 'Dilatation & Curettage (D&C / Raspa)',
+      term: 'Abortion',
       ga: '10 weeks',
       gaWeeks: 10,
       sex: 'N/A',
       weight: 'N/A',
-      multiple: 'No',
+      place: 'Tertiary Hospital (CLMMRH / Government)',
+      attendant: 'OB-Gyne Specialist / Physician',
+      maternalComp: 'Incomplete abortion with moderate bleeding; well tolerated post-D&C',
+      fetalOutcome: 'Stillbirth / Non-viable',
+      multiple: 'No (Singleton)',
       living: 0,
-      remarks: '-'
+      remarks: 'Histopathology: Products of conception, benign'
     }
   ],
 
-  // 2. Longitudinal LMP History (Current & Prior Entries Preserved)
+  // 2. Longitudinal LMP & PMP History (DOH Preserved Baseline)
   lmpHistory: [
     {
       id: 'lmp-1',
       date: '2026-09-05',
+      pmpDate: '2026-08-08',
+      cycleInterval: '28 days',
       dateFormatted: '09/05/2026',
+      pmpFormatted: '08/08/2026',
       recordedAt: '2026-09-30 08:30',
       encounter: 'OPD Active Encounter',
       isCurrent: true
@@ -1191,7 +1439,10 @@ const patientState = {
     {
       id: 'lmp-2',
       date: '2024-12-10',
+      pmpDate: '2024-11-12',
+      cycleInterval: '28 days',
       dateFormatted: '12/10/2024',
+      pmpFormatted: '11/12/2024',
       recordedAt: '2024-12-15 10:15',
       encounter: 'Previous G3 Workup',
       isCurrent: false
@@ -1199,7 +1450,10 @@ const patientState = {
     {
       id: 'lmp-3',
       date: '2022-08-01',
+      pmpDate: '2022-07-04',
+      cycleInterval: '28 days',
       dateFormatted: '08/01/2022',
+      pmpFormatted: '07/04/2022',
       recordedAt: '2022-08-05 09:00',
       encounter: 'Previous G2 Prenatal Encounter',
       isCurrent: false
@@ -1226,43 +1480,62 @@ const patientState = {
     }
   ],
 
-  // 4. Gynecologic History State
+  // 4. Gynecologic History State (DOH HFDB & POGS CPG Standards)
   gynecologicHistory: {
     menarcheAge: '12',
+    lmpDate: '2026-09-05',
+    pmpDate: '2026-08-08',
     interval: 'Regular (28-30 days)',
     duration: '4',
-    flow: 'Moderate (3-4 pads/day)',
-    dysmenorrhea: 'Mild / Tolerable',
+    flow: 'Moderate (3-4 pads/day, no clots)',
+    dysmenorrhea: 'Mild / Tolerable (No analgesics required)',
+    menopauseStatus: 'Pre-menopausal (Regular ovulatory cycles)',
+    menopauseAge: '',
+    pmb: 'No (Asymptomatic)',
+    climacteric: 'None',
+    coitarche: '20',
+    sexualActivity: 'Sexually Active',
+    infections: 'None reported / Denies history of STIs',
+    infectionTreatment: 'N/A',
     contraceptiveCurrent: 'Combined Oral Contraceptive Pills (COCP)',
     contraceptiveDuration: '18 months',
     contraceptivePast: 'None reported',
-    lastPap: '11/14/2025 — Normal (NILM)',
+    screeningModality: 'Conventional Pap Smear',
+    lastPapDate: '2025-11-14',
+    lastPap: 'Negative for Intraepithelial Lesion or Malignancy (NILM) / Normal',
+    hpvVaccine: 'Completed (Full series — 3 doses)',
     diagnoses: 'Mild Dysmenorrhea, resolved',
-    remarks: 'Patient is compliant with prescribed oral contraceptive regimen; denies abnormal intermenstrual bleeding, postcoital spotting, or foul-smelling vaginal discharge.'
+    surgeries: 'Dilatation & Curettage (D&C / Raspa) — 2025',
+    remarks: 'Patient is compliant with prescribed oral contraceptive regimen; denies abnormal intermenstrual bleeding, postcoital spotting, or foul-smelling vaginal discharge. Pelvic ultrasound reveals normal anteverted uterus, homogenous myometrium, endometrial thickness 5.2 mm, normal bilateral ovaries.'
   }
 };
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   GTPAL CALCULATION ENGINE
+   GTPAL & G-P CALCULATION ENGINE (DOH / POGS NOMENCLATURE)
    ───────────────────────────────────────────────────────────────────────────── */
 function computeGTPAL() {
   const pregs = patientState.pregnancies;
   const G = pregs.length;
-  const T = pregs.filter(p => p.outcome === 'Live Birth' && (p.term === 'Term' || (p.gaWeeks && p.gaWeeks >= 37))).length;
-  const P = pregs.filter(p => p.outcome === 'Live Birth' && (p.term === 'Preterm' || (p.gaWeeks && p.gaWeeks < 37 && p.gaWeeks >= 20))).length;
+  const T = pregs.filter(p => p.outcome.includes('Live Birth') && (p.term === 'Term' || (p.gaWeeks && p.gaWeeks >= 37))).length;
+  const P = pregs.filter(p => p.outcome.includes('Live Birth') && (p.term === 'Preterm' || (p.gaWeeks && p.gaWeeks < 37 && p.gaWeeks >= 20))).length;
   const A = pregs.filter(p => p.outcome.includes('Abortion') || p.outcome.includes('Miscarriage') || p.outcome.includes('Ectopic') || p.outcome.includes('Molar')).length;
   const L = pregs.reduce((sum, p) => sum + (Number(p.living) || 0), 0);
+  const totalPara = T + P;
 
-  return { G, T, P, A, L, scoreText: `G${G} T${T} P${P} A${A} L${L}` };
+  return {
+    G, T, P, A, L, totalPara,
+    displayGP: `G${G}P${totalPara} (${T}-${P}-${A}-${L})`,
+    scoreText: `G${G} T${T} P${P} A${A} L${L}`
+  };
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   OBSTETRIC CALCULATORS: EDD (Naegele's Rule) & EGA
+   OBSTETRIC CALCULATORS: EDD (Naegele's Rule), EGA & CYCLE DURATION
    ───────────────────────────────────────────────────────────────────────────── */
-function computeEDD(lmpDateStr) {
-  if (!lmpDateStr) return { eddStr: '—', eddDisplay: '—', egaStr: '—' };
+function computeEDD(lmpDateStr, pmpDateStr) {
+  if (!lmpDateStr) return { eddStr: '—', eddDisplay: '—', egaStr: '—', cycleDaysStr: '—' };
   const d = new Date(lmpDateStr + 'T00:00:00');
-  if (isNaN(d.getTime())) return { eddStr: '—', eddDisplay: '—', egaStr: '—' };
+  if (isNaN(d.getTime())) return { eddStr: '—', eddDisplay: '—', egaStr: '—', cycleDaysStr: '—' };
 
   // Naegele's rule: LMP + 280 days
   const edd = new Date(d);
@@ -1280,38 +1553,60 @@ function computeEDD(lmpDateStr) {
   const days = diffDays % 7;
   const egaStr = `${weeks} wks ${days} days`;
 
-  return { eddStr: edd.toISOString().slice(0, 10), eddDisplay, egaStr };
+  // Calculate cycle interval if PMP is available
+  let cycleDaysStr = '—';
+  if (pmpDateStr) {
+    const pmpD = new Date(pmpDateStr + 'T00:00:00');
+    if (!isNaN(pmpD.getTime()) && d > pmpD) {
+      const intervalDays = Math.round((d - pmpD) / (1000 * 60 * 60 * 24));
+      cycleDaysStr = `${intervalDays} days`;
+    }
+  }
+
+  return { eddStr: edd.toISOString().slice(0, 10), eddDisplay, egaStr, cycleDaysStr };
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
    TOP SUMMARY CARDS RENDERER
    ───────────────────────────────────────────────────────────────────────────── */
 function renderSummaryCards() {
-  // 1. Obstetric Score
+  // 1. Obstetric Score (DOH / POGS)
   const gtpal = computeGTPAL();
-  document.getElementById('val-obstetric-score').textContent = gtpal.scoreText;
+  document.getElementById('val-obstetric-score').textContent = gtpal.displayGP;
+  const subEl = document.getElementById('val-obstetric-sub');
+  if (subEl) subEl.textContent = `${gtpal.scoreText} • Auto-derived`;
 
-  // 2. Current LMP
+  // 2. Current LMP & PMP
   const currentLmpObj = patientState.lmpHistory.find(l => l.isCurrent) || patientState.lmpHistory[0];
   const lmpVal = currentLmpObj ? currentLmpObj.dateFormatted : '—';
   document.getElementById('val-current-lmp').textContent = lmpVal;
+  const pmpSub = document.getElementById('val-pmp-sub');
+  if (pmpSub) {
+    if (currentLmpObj && currentLmpObj.pmpFormatted) {
+      pmpSub.textContent = `PMP: ${currentLmpObj.pmpFormatted} (${currentLmpObj.cycleInterval || '28d cycle'})`;
+    } else {
+      pmpSub.textContent = 'PMP: Not recorded';
+    }
+  }
 
   // 3. EDD
   if (currentLmpObj && currentLmpObj.date) {
-    const calc = computeEDD(currentLmpObj.date);
+    const calc = computeEDD(currentLmpObj.date, currentLmpObj.pmpDate);
     document.getElementById('val-edd').textContent = calc.eddDisplay;
-    document.getElementById('val-edd-sub').textContent = 'When applicable';
+    const eddSub = document.getElementById('val-edd-sub');
+    if (eddSub) eddSub.textContent = `EGA: ${calc.egaStr} (Naegele)`;
   } else {
     document.getElementById('val-edd').textContent = '—';
-    document.getElementById('val-edd-sub').textContent = 'No LMP recorded';
+    const eddSub = document.getElementById('val-edd-sub');
+    if (eddSub) eddSub.textContent = 'No active LMP';
   }
 
   // 4. Pregnancy Records Count
-  document.getElementById('val-pregnancy-count').textContent = patientState.pregnancies.length;
+  document.getElementById('val-pregnancy-count').textContent = `${patientState.pregnancies.length} Records`;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   PREGNANCY HISTORY TABLE RENDERER
+   PREGNANCY HISTORY TABLE RENDERER (DOH HFDB COMPLIANT COLUMNS)
    ───────────────────────────────────────────────────────────────────────────── */
 function renderPregnancyTable() {
   const tbody = document.getElementById('tbody-pregnancies');
@@ -1326,14 +1621,18 @@ function renderPregnancyTable() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="col-num">${escapeHtml(p.seq || 'P' + (index + 1))}</td>
-      <td>${escapeHtml(p.year || '—')}</td>
-      <td><strong>${escapeHtml(p.outcome)}</strong></td>
+      <td style="white-space:nowrap; font-weight:600;">${escapeHtml(p.year || '—')}</td>
+      <td><strong style="color:var(--slate-900);">${escapeHtml(p.outcome)}</strong></td>
       <td>${escapeHtml(p.mode || 'N/A')}</td>
-      <td>${escapeHtml(p.ga || '—')}</td>
-      <td>${escapeHtml(p.sex || 'N/A')}</td>
-      <td>${escapeHtml(p.weight || 'N/A')}</td>
-      <td>${escapeHtml(p.multiple || 'No')}</td>
-      <td>${escapeHtml(p.remarks || '-')}</td>
+      <td><span style="background:var(--slate-100); padding:2px 6px; border-radius:4px; font-weight:600;">${escapeHtml(p.ga || '—')}</span></td>
+      <td style="white-space:nowrap;">${escapeHtml(p.sex || 'N/A')} • ${escapeHtml(p.weight || 'N/A')}</td>
+      <td style="font-size:12px; color:var(--slate-700);">${escapeHtml(p.place || 'Hospital')}</td>
+      <td style="font-size:12px; color:var(--slate-700);">${escapeHtml(p.attendant || 'Attending Physician')}</td>
+      <td style="font-size:11.5px; max-width:240px;">
+        <div><strong>Maternal:</strong> ${escapeHtml(p.maternalComp || 'None')}</div>
+        <div><strong>Fetal:</strong> ${escapeHtml(p.fetalOutcome || 'Living & Well')}</div>
+        ${p.remarks && p.remarks !== '-' ? `<div style="color:var(--slate-500); font-style:italic;">Notes: ${escapeHtml(p.remarks)}</div>` : ''}
+      </td>
       <td class="cell-action">
         <button type="button" class="btn-table-sm" onclick="openEditPregModal(${index})">Edit</button>
         <button type="button" class="btn-table-sm btn-table-danger" onclick="archivePregnancy(${index})">Archive</button>
@@ -1394,7 +1693,7 @@ function renderLongitudinalTimeline() {
       title: `Pregnancy ${p.seq}: ${p.outcome}`,
       dateStr: p.year,
       sortDate: new Date(p.year.length === 4 ? `${p.year}-01-01` : p.year).getTime() || 0,
-      body: `Delivery: ${p.mode} • GA: ${p.ga} • Sex: ${p.sex} • Birth Weight: ${p.weight} • Living: ${p.living} • Remarks: ${p.remarks}`
+      body: `Delivery: ${p.mode} • GA: ${p.ga} • Infant: ${p.sex}, ${p.weight} • Place: ${p.place || 'Hospital'} • Attendant: ${p.attendant || 'Physician'} • Complications: ${p.maternalComp || 'None'} / ${p.fetalOutcome || 'Living & Well'}${p.remarks && p.remarks !== '-' ? ' • ' + p.remarks : ''}`
     });
   });
 
@@ -1402,10 +1701,10 @@ function renderLongitudinalTimeline() {
   patientState.lmpHistory.forEach(l => {
     events.push({
       category: 'lmp',
-      title: `${l.isCurrent ? 'Current' : 'Historical'} LMP Record: ${l.dateFormatted}`,
+      title: `${l.isCurrent ? 'Current' : 'Historical'} LMP Record: ${l.dateFormatted}${l.pmpFormatted ? ' (PMP: ' + l.pmpFormatted + ')' : ''}`,
       dateStr: l.dateFormatted,
       sortDate: new Date(l.date).getTime() || 0,
-      body: `Recorded during ${l.encounter} (Audit Timestamp: ${l.recordedAt})`
+      body: `Recorded during ${l.encounter} • Cycle interval: ${l.cycleInterval || 'Regular'} (Audit Timestamp: ${l.recordedAt})`
     });
   });
 
@@ -1425,10 +1724,10 @@ function renderLongitudinalTimeline() {
   if (gh && gh.remarks) {
     events.push({
       category: 'gyne',
-      title: `Gynecologic Evaluation & Menstrual Profile`,
+      title: `Gynecologic Evaluation & Menstrual Profile (DOH HFDB)`,
       dateStr: '2026-09-30',
       sortDate: new Date('2026-09-30').getTime(),
-      body: `Menarche: ${gh.menarcheAge} yrs • Cycle: ${gh.interval} • Contraceptive: ${gh.contraceptiveCurrent} (${gh.contraceptiveDuration}) • Last Pap: ${gh.lastPap} • Notes: ${gh.remarks}`
+      body: `Menarche: ${gh.menarcheAge} yrs • Cycle: ${gh.interval} • Contraceptive: ${gh.contraceptiveCurrent} (${gh.contraceptiveDuration}) • Cervical Screening: ${gh.lastPap} • Surgeries: ${gh.surgeries} • Notes: ${gh.remarks}`
     });
   }
 
@@ -1467,21 +1766,25 @@ function filterTimeline(category, pillEl) {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   PREGNANCY MODAL HANDLERS
+   PREGNANCY MODAL HANDLERS (DOH HFDB DATASETS)
    ───────────────────────────────────────────────────────────────────────────── */
 function openAddPregModal() {
-  document.getElementById('modal-pregnancy-title').textContent = 'Add Pregnancy Record';
+  document.getElementById('modal-pregnancy-title').textContent = 'Add Pregnancy Record (DOH HFDB Standard)';
   document.getElementById('preg-index').value = '-1';
   document.getElementById('preg-sequence').value = 'P' + (patientState.pregnancies.length + 1);
   document.getElementById('preg-year').value = new Date().getFullYear();
-  document.getElementById('preg-outcome').value = 'Live Birth';
-  document.getElementById('preg-mode').value = 'Normal Vaginal Delivery';
+  document.getElementById('preg-outcome').value = 'Full Term Live Birth';
+  document.getElementById('preg-mode').value = 'Normal Spontaneous Vaginal Delivery (SVD)';
   document.getElementById('preg-term').value = 'Term';
-  document.getElementById('preg-ga').value = 'Term';
+  document.getElementById('preg-ga').value = '39 weeks';
+  document.getElementById('preg-place').value = 'Tertiary Hospital (CLMMRH / Government)';
+  document.getElementById('preg-attendant').value = 'OB-Gyne Specialist / Physician';
   document.getElementById('preg-sex').value = 'Female';
-  document.getElementById('preg-weight').value = '3.0 kg';
-  document.getElementById('preg-multiple').value = 'No';
+  document.getElementById('preg-weight').value = '3.00 kg (3,000 g)';
+  document.getElementById('preg-multiple').value = 'No (Singleton)';
   document.getElementById('preg-living').value = '1';
+  document.getElementById('preg-maternal-comp').value = 'None / Uncomplicated';
+  document.getElementById('preg-fetal-outcome').value = 'Living & Well (APGAR 9, 10)';
   document.getElementById('preg-remarks').value = '-';
   document.getElementById('modal-pregnancy').classList.add('open');
 }
@@ -1497,10 +1800,14 @@ function openEditPregModal(index) {
   document.getElementById('preg-mode').value = p.mode;
   document.getElementById('preg-term').value = p.term;
   document.getElementById('preg-ga').value = p.ga;
+  document.getElementById('preg-place').value = p.place || 'Tertiary Hospital (CLMMRH / Government)';
+  document.getElementById('preg-attendant').value = p.attendant || 'OB-Gyne Specialist / Physician';
   document.getElementById('preg-sex').value = p.sex;
   document.getElementById('preg-weight').value = p.weight;
   document.getElementById('preg-multiple').value = p.multiple;
   document.getElementById('preg-living').value = p.living;
+  document.getElementById('preg-maternal-comp').value = p.maternalComp || 'None / Uncomplicated';
+  document.getElementById('preg-fetal-outcome').value = p.fetalOutcome || 'Living & Well (APGAR 9, 10)';
   document.getElementById('preg-remarks').value = p.remarks;
   document.getElementById('modal-pregnancy').classList.add('open');
 }
@@ -1515,15 +1822,21 @@ function handleOutcomeChange(outcome) {
   const weightInput = document.getElementById('preg-weight');
   const livingInput = document.getElementById('preg-living');
   const termSelect = document.getElementById('preg-term');
+  const placeSelect = document.getElementById('preg-place');
+  const attendantSelect = document.getElementById('preg-attendant');
+  const maternalComp = document.getElementById('preg-maternal-comp');
+  const fetalOutcome = document.getElementById('preg-fetal-outcome');
 
   if (outcome.includes('Abortion') || outcome.includes('Miscarriage') || outcome.includes('Ectopic') || outcome.includes('Molar')) {
-    modeSelect.value = 'N/A';
-    sexSelect.value = 'N/A';
-    weightInput.value = 'N/A';
-    livingInput.value = '0';
-    termSelect.value = 'N/A';
-  } else if (outcome === 'Stillbirth') {
-    livingInput.value = '0';
+    if (modeSelect) modeSelect.value = outcome.includes('Ectopic') ? 'Laparotomy / Salpingectomy (Ectopic)' : 'Dilatation & Curettage (D&C / Raspa)';
+    if (sexSelect) sexSelect.value = 'N/A';
+    if (weightInput) weightInput.value = 'N/A';
+    if (livingInput) livingInput.value = '0';
+    if (termSelect) termSelect.value = 'Abortion';
+    if (fetalOutcome) fetalOutcome.value = 'Stillbirth / Non-viable';
+  } else if (outcome.includes('Stillbirth') || outcome.includes('IUFD')) {
+    if (livingInput) livingInput.value = '0';
+    if (fetalOutcome) fetalOutcome.value = 'Stillbirth / Non-viable';
   }
 }
 
@@ -1546,8 +1859,12 @@ function handlePregnancySubmit(event) {
     gaWeeks: gaWeeks,
     sex: document.getElementById('preg-sex').value,
     weight: document.getElementById('preg-weight').value.trim() || 'N/A',
+    place: document.getElementById('preg-place').value,
+    attendant: document.getElementById('preg-attendant').value,
     multiple: document.getElementById('preg-multiple').value,
     living: parseInt(document.getElementById('preg-living').value, 10) || 0,
+    maternalComp: document.getElementById('preg-maternal-comp').value,
+    fetalOutcome: document.getElementById('preg-fetal-outcome').value,
     remarks: document.getElementById('preg-remarks').value.trim() || '-'
   };
 
@@ -1578,15 +1895,17 @@ function archivePregnancy(index) {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   LMP MANAGEMENT & PRESERVATION MODAL
+   LMP & PMP MANAGEMENT & PRESERVATION MODAL (DOH HFDB)
    ───────────────────────────────────────────────────────────────────────────── */
 function openLmpModal() {
   const currentLmp = patientState.lmpHistory.find(l => l.isCurrent);
-  if (currentLmp && currentLmp.date) {
-    document.getElementById('input-new-lmp').value = currentLmp.date;
-    const calc = computeEDD(currentLmp.date);
+  if (currentLmp) {
+    if (currentLmp.date) document.getElementById('input-new-lmp').value = currentLmp.date;
+    if (currentLmp.pmpDate) document.getElementById('input-new-pmp').value = currentLmp.pmpDate;
+    const calc = computeEDD(currentLmp.date, currentLmp.pmpDate);
     document.getElementById('preview-calc-edd').textContent = calc.eddDisplay;
     document.getElementById('preview-calc-ega').textContent = calc.egaStr;
+    document.getElementById('preview-calc-cycle').textContent = calc.cycleDaysStr;
   }
   renderLmpHistoryTable();
   document.getElementById('modal-lmp').classList.add('open');
@@ -1596,15 +1915,22 @@ function closeLmpModal() {
   document.getElementById('modal-lmp').classList.remove('open');
 }
 
-document.getElementById('input-new-lmp').addEventListener('input', function() {
-  const calc = computeEDD(this.value);
+function updateModalPreview() {
+  const lmpVal = document.getElementById('input-new-lmp').value;
+  const pmpVal = document.getElementById('input-new-pmp').value;
+  const calc = computeEDD(lmpVal, pmpVal);
   document.getElementById('preview-calc-edd').textContent = calc.eddDisplay;
   document.getElementById('preview-calc-ega').textContent = calc.egaStr;
-});
+  document.getElementById('preview-calc-cycle').textContent = calc.cycleDaysStr;
+}
+
+document.getElementById('input-new-lmp').addEventListener('input', updateModalPreview);
+document.getElementById('input-new-pmp').addEventListener('input', updateModalPreview);
 
 function handleLmpUpdate(event) {
   event.preventDefault();
   const newDate = document.getElementById('input-new-lmp').value;
+  const newPmp = document.getElementById('input-new-pmp').value;
   if (!newDate) return;
 
   // Mark all previous LMPs as not current (PRESERVING them in history!)
@@ -1612,6 +1938,19 @@ function handleLmpUpdate(event) {
 
   const parts = newDate.split('-');
   const formatted = `${parts[1]}/${parts[2]}/${parts[0]}`;
+  let pmpFormatted = '—';
+  let cycleInterval = 'Regular';
+  if (newPmp) {
+    const pParts = newPmp.split('-');
+    pmpFormatted = `${pParts[1]}/${pParts[2]}/${pParts[0]}`;
+    const d1 = new Date(newDate + 'T00:00:00');
+    const d2 = new Date(newPmp + 'T00:00:00');
+    if (!isNaN(d1) && !isNaN(d2) && d1 > d2) {
+      const days = Math.round((d1 - d2) / (1000 * 60 * 60 * 24));
+      cycleInterval = `${days} days`;
+    }
+  }
+
   const now = new Date();
   const stamp = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
 
@@ -1619,16 +1958,25 @@ function handleLmpUpdate(event) {
   patientState.lmpHistory.unshift({
     id: 'lmp-' + Date.now(),
     date: newDate,
+    pmpDate: newPmp || '',
+    cycleInterval: cycleInterval,
     dateFormatted: formatted,
+    pmpFormatted: pmpFormatted,
     recordedAt: stamp,
     encounter: 'OPD Active Encounter',
     isCurrent: true
   });
 
+  // Sync Gynecologic tab views
+  const lmpView = document.getElementById('gyne-lmp-view');
+  if (lmpView) lmpView.value = formatted;
+  const pmpView = document.getElementById('gyne-pmp-view');
+  if (pmpView) pmpView.value = pmpFormatted;
+
   renderLmpHistoryTable();
   renderSummaryCards();
   renderLongitudinalTimeline();
-  showToast('LMP updated and prior entries preserved.');
+  showToast('LMP & PMP updated and prior entries preserved.');
 }
 
 function renderLmpHistoryTable() {
@@ -1640,6 +1988,8 @@ function renderLmpHistoryTable() {
     tr.innerHTML = `
       <td class="col-num">${index + 1}</td>
       <td><strong>${escapeHtml(l.dateFormatted)}</strong></td>
+      <td>${escapeHtml(l.pmpFormatted || '—')}</td>
+      <td>${escapeHtml(l.cycleInterval || 'Regular')}</td>
       <td style="color:var(--slate-500); font-size:11.5px;">${escapeHtml(l.recordedAt)}</td>
       <td>${escapeHtml(l.encounter)}</td>
       <td>
@@ -1723,8 +2073,15 @@ function initProcDateTime() {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   GYNECOLOGIC HISTORY FORM HANDLER
+   GYNECOLOGIC HISTORY FORM HANDLER & FIELD TOGGLES
    ───────────────────────────────────────────────────────────────────────────── */
+function toggleMenopauseFields(status) {
+  const wrap = document.getElementById('wrap-menopause-age');
+  if (wrap) {
+    wrap.style.display = (status.includes('Post-menopausal') || status.includes('Surgical')) ? 'flex' : 'none';
+  }
+}
+
 function saveGyneHistory(event) {
   event.preventDefault();
   patientState.gynecologicHistory = {
@@ -1733,15 +2090,60 @@ function saveGyneHistory(event) {
     duration: document.getElementById('gyne-duration').value.trim(),
     flow: document.getElementById('gyne-flow').value,
     dysmenorrhea: document.getElementById('gyne-dysmenorrhea').value,
+    menopauseStatus: document.getElementById('gyne-menopause-status').value,
+    menopauseAge: document.getElementById('gyne-menopause-age').value.trim(),
+    pmb: document.getElementById('gyne-pmb').value,
+    climacteric: document.getElementById('gyne-climacteric').value,
+    coitarche: document.getElementById('gyne-coitarche').value.trim(),
+    sexualActivity: document.getElementById('gyne-sexual-activity').value,
+    infections: document.getElementById('gyne-infections').value,
+    infectionTreatment: document.getElementById('gyne-infection-treatment').value.trim(),
     contraceptiveCurrent: document.getElementById('gyne-contraceptive-current').value,
     contraceptiveDuration: document.getElementById('gyne-contraceptive-duration').value.trim(),
     contraceptivePast: document.getElementById('gyne-contraceptive-past').value.trim(),
-    lastPap: document.getElementById('gyne-last-pap').value.trim(),
+    screeningModality: document.getElementById('gyne-screening-modality').value,
+    lastPapDate: document.getElementById('gyne-last-pap-date').value,
+    lastPap: document.getElementById('gyne-last-pap').value,
+    hpvVaccine: document.getElementById('gyne-hpv-vaccine').value,
     diagnoses: document.getElementById('gyne-diagnoses').value.trim(),
+    surgeries: document.getElementById('gyne-surgeries').value,
     remarks: document.getElementById('gyne-remarks').value.trim()
   };
   renderLongitudinalTimeline();
-  showToast('Gynecologic history saved.');
+  showToast('Gynecologic history saved per DOH HFDB standards.');
+}
+
+function populateGyneForm() {
+  const gh = patientState.gynecologicHistory;
+  if (!gh) return;
+  const setVal = (id, v) => {
+    const el = document.getElementById(id);
+    if (el && v !== undefined) el.value = v;
+  };
+  setVal('gyne-menarche', gh.menarcheAge);
+  setVal('gyne-interval', gh.interval);
+  setVal('gyne-duration', gh.duration);
+  setVal('gyne-flow', gh.flow);
+  setVal('gyne-dysmenorrhea', gh.dysmenorrhea);
+  setVal('gyne-menopause-status', gh.menopauseStatus);
+  setVal('gyne-menopause-age', gh.menopauseAge);
+  setVal('gyne-pmb', gh.pmb);
+  setVal('gyne-climacteric', gh.climacteric);
+  setVal('gyne-coitarche', gh.coitarche);
+  setVal('gyne-sexual-activity', gh.sexualActivity);
+  setVal('gyne-infections', gh.infections);
+  setVal('gyne-infection-treatment', gh.infectionTreatment);
+  setVal('gyne-contraceptive-current', gh.contraceptiveCurrent);
+  setVal('gyne-contraceptive-duration', gh.contraceptiveDuration);
+  setVal('gyne-contraceptive-past', gh.contraceptivePast);
+  setVal('gyne-screening-modality', gh.screeningModality);
+  setVal('gyne-last-pap-date', gh.lastPapDate);
+  setVal('gyne-last-pap', gh.lastPap);
+  setVal('gyne-hpv-vaccine', gh.hpvVaccine);
+  setVal('gyne-diagnoses', gh.diagnoses);
+  setVal('gyne-surgeries', gh.surgeries);
+  setVal('gyne-remarks', gh.remarks);
+  toggleMenopauseFields(gh.menopauseStatus || '');
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -1806,6 +2208,24 @@ function escapeHtml(str) {
   }[m]));
 }
 
+// Window bindings for inline attributes
+window.openAddPregModal = openAddPregModal;
+window.openEditPregModal = openEditPregModal;
+window.closePregnancyModal = closePregnancyModal;
+window.handlePregnancySubmit = handlePregnancySubmit;
+window.handleOutcomeChange = handleOutcomeChange;
+window.archivePregnancy = archivePregnancy;
+window.openLmpModal = openLmpModal;
+window.closeLmpModal = closeLmpModal;
+window.handleLmpUpdate = handleLmpUpdate;
+window.toggleCustomProcedure = toggleCustomProcedure;
+window.saveProcedure = saveProcedure;
+window.removeProcedure = removeProcedure;
+window.saveGyneHistory = saveGyneHistory;
+window.filterTimeline = filterTimeline;
+window.toggleMenopauseFields = toggleMenopauseFields;
+window.acceptDeptCase = acceptDeptCase;
+
 /* ─────────────────────────────────────────────────────────────────────────────
    APPLICATION INITIALIZATION
    ───────────────────────────────────────────────────────────────────────────── */
@@ -1813,6 +2233,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderSummaryCards();
   renderPregnancyTable();
   renderProceduresTable();
+  populateGyneForm();
   renderLongitudinalTimeline();
   initProcDateTime();
 });
@@ -1820,3 +2241,4 @@ window.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
