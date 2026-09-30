@@ -245,20 +245,30 @@ async def scan_single_target(browser_ws, file_url):
     return errors
 
 async def run_scan():
-    print(f"Launching Chromium from: {CHROME_PATH}")
+    import tempfile
+    tmp_profile = tempfile.mkdtemp()
     proc = subprocess.Popen([
         CHROME_PATH,
         "--headless=new",
         "--remote-debugging-port=9222",
         "--no-sandbox",
-        "--disable-gpu"
+        "--disable-gpu",
+        f"--user-data-dir={tmp_profile}"
     ])
-    await asyncio.sleep(1.0)
 
     try:
-        with urllib.request.urlopen("http://127.0.0.1:9222/json/version") as r:
-            version_data = json.loads(r.read().decode())
-            browser_ws = version_data["webSocketDebuggerUrl"]
+        version_data = None
+        for _ in range(15):
+            await asyncio.sleep(0.5)
+            try:
+                with urllib.request.urlopen("http://127.0.0.1:9222/json/version") as r:
+                    version_data = json.loads(r.read().decode())
+                    break
+            except Exception:
+                pass
+        if not version_data:
+            raise RuntimeError("Failed to connect to headless browser CDP")
+        browser_ws = version_data["webSocketDebuggerUrl"]
 
         html_files = sorted(glob.glob(os.path.join(WORKSPACE_DIR, "*.html")))
         test_urls = []
