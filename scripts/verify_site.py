@@ -249,6 +249,44 @@ async def scan_single_target(browser_ws, file_url):
                     }
                 }
 
+                // Test Neonate Clinical Module workspace integration
+                const neoBtn = document.getElementById('btn-open-neonate-module');
+                if (neoBtn) {
+                    neoBtn.click();
+                    const neoDashlet = document.getElementById('dashlet-neonate');
+                    if (!neoDashlet) return 'Neonate dashlet element not found';
+                    const inbornSel = document.getElementById('neo_inborn');
+                    const outbornSel = document.getElementById('neo_outborn');
+                    const readmitChk = document.getElementById('neo_readmission');
+                    if (inbornSel && outbornSel && readmitChk) {
+                        inbornSel.value = 'singleton-in hospital';
+                        inbornSel.dispatchEvent(new Event('change'));
+                        if (outbornSel.value !== '' || readmitChk.checked) return 'Inborn selection did not clear outborn/readmission';
+                        outbornSel.value = 'singleton-outside hospital';
+                        outbornSel.dispatchEvent(new Event('change'));
+                        if (inbornSel.value !== '' || readmitChk.checked) return 'Outborn selection did not clear inborn/readmission';
+                        readmitChk.checked = true;
+                        readmitChk.dispatchEvent(new Event('change'));
+                        if (inbornSel.value !== '' || outbornSel.value !== '') return 'Readmission check did not clear inborn/outborn';
+                        inbornSel.value = 'singleton-in hospital';
+                        inbornSel.dispatchEvent(new Event('change'));
+                    }
+                    // Test Ballard calculations
+                    if (typeof window.recalcBallard === 'function') {
+                        window.recalcBallard();
+                        const bTotal = document.getElementById('ballard-total-score');
+                        if (!bTotal || !bTotal.textContent.trim()) return 'Ballard total score element empty or missing';
+                    }
+                    // Test Growth Chart Zoom Modal
+                    if (typeof window.openZoomModal === 'function') {
+                        window.openZoomModal('img/neonate/lubchenco_chart.png');
+                        const zoomModal = document.getElementById('neonate-chart-modal') || document.getElementById('chartModal');
+                        if (!zoomModal || !zoomModal.classList.contains('open')) return 'Neonate zoom modal failed to open';
+                        window.closeZoomModal();
+                        if (zoomModal.classList.contains('open')) return 'Neonate zoom modal failed to close';
+                    }
+                }
+
                 return 'OK';
             })()
             """
@@ -309,7 +347,7 @@ async def run_scan():
             fname = os.path.basename(hf)
             file_url = f"file:///{hf.replace(os.sep, '/')}"
             test_urls.append((fname, file_url))
-            if fname in ("dashboard.html", "doctors_order_patient.html", "opd_record_patient.html"):
+            if fname in ("dashboard.html", "doctors_order_patient.html", "opd_record_patient.html", "Neonate_Clinical_Module.html"):
                 test_urls.append((f"{fname}?patient=patient_op_juan", f"{file_url}?patient=patient_op_juan"))
                 test_urls.append((f"{fname}?patient=patient_new_blank_1790299677880", f"{file_url}?patient=patient_new_blank_1790299677880"))
 

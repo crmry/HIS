@@ -50,7 +50,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 51,
+        seedVersion: 52,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -89,6 +89,124 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           pe_other: '',
           other_forms: [],
           other_forms_notes: '',
+          neonate: {
+            classification: { inborn: 'singleton-in hospital', outborn: '', readmission: false, birthLocation: 'Delivery Room' },
+            maternal: {
+              motherName: 'DEL ROSARIO, JOAN BAUTISTA',
+              motherAddress: 'Brgy. Bata, Bacolod City, Negros Occidental',
+              motherAge: 32,
+              motherBloodType: 'O+',
+              status: 'Married',
+              edc: '2026-09-28',
+              lmp: '2025-12-21',
+              aogWeeks: '38 4/7',
+              gravida: 3,
+              para: 2,
+              presentation: 'Cephalic',
+              position: 'LOA',
+              classification: 'Normal',
+              deliveryType: 'NSD',
+              deliveryTime: '08:30',
+              bow: 'Ruptured',
+              rupturedTime: '06:15',
+              stage1: '8 hours',
+              stage2: '25 mins',
+              csIndication: '',
+              complications: 'Uncomplicated prenatal course. Complete maternal immunizations.',
+              steroids: { dose1: '', dose2: '', dose3: '', dose4: '' }
+            },
+            maternalRiskFactors: { selected: ['Vaccination'], othersText: '' },
+            apgar: {
+              scores: {
+                m1: { hr: '2', rr: '1', tone: '1', reflex: '2', color: '1' },
+                m5: { hr: '2', rr: '2', tone: '2', reflex: '2', color: '1' },
+                m10: { hr: '2', rr: '2', tone: '2', reflex: '2', color: '2' }
+              },
+              exceeding: ''
+            },
+            measurements: {
+              weight: '3.15',
+              headCirc: '34.0',
+              length: '49.5',
+              chestCirc: '33.0',
+              abdCirc: '31.5',
+              temp: '36.7',
+              cardiacRate: '138',
+              respRate: '46',
+              babyBloodType: 'O+',
+              cordCondition: 'Intact, 3 vessels (2 arteries, 1 vein), no omphalocele'
+            },
+            einc: {
+              status: 'Complete',
+              timeStart: '08:30',
+              timeEnd: '10:00',
+              interventions: ['Thorough Drying', 'Skin to skin', 'Properly timed cord clamping', 'Non-separation of newborn and mother for breastfeeding'],
+              reason: '',
+              provider: 'Dr. Maria Santos, Pediatrician / Staff Midwife'
+            },
+            ballard: {
+              scores: {
+                posture: '3', square_window: '3', arm_recoil: '3', popliteal_angle: '3', scarf_sign: '3', heel_to_ear: '3',
+                skin: '3', lanugo: '3', plantar_surface: '3', breast: '3', eye_ear: '3', genitals_male: '3', genitals_female: '3'
+              }
+            },
+            physicalExam: {
+              general: 'Active, vigorous cry, pinkish body and extremities, good suck effort',
+              color: 'Pink, well-perfused, no central cyanosis',
+              head: 'Normocephalic, fontanelles soft and flat, sutures patent',
+              eent: 'Red reflex positive bilaterally, patent nares, intact palate',
+              neck: 'Supple, no masses or webbing',
+              heart: 'Normal rate and rhythm, distinct S1/S2, no audible murmurs',
+              chestLungs: 'Clear breath sounds bilaterally, symmetric chest expansion, no retractions',
+              abdomen: 'Soft, non-distended, normoactive bowel sounds, cord stump clean',
+              genitalia: 'Female: Labia majora covers clitoris and minora completely',
+              anus: 'Patent anus, passed meconium within 6 hours',
+              skin: 'Smooth, warm, fair skin elasticity, minimal vernix caseosa',
+              extremities: 'Grossly normal, symmetrical 10 fingers/toes, full passive range of motion',
+              otherFindings: 'Barlow/Ortolani negative. Grasp and Moro reflexes fully elicited.',
+              sex: 'Female',
+              nicuReason: '',
+              nicuOthers: ''
+            },
+            aftercare: {
+              vitk: { date: '2026-09-26', remarks: '1 mg Phytomenadione IM right anterolateral thigh' },
+              eye: { date: '2026-09-26', remarks: 'Erythromycin 0.5% ophthalmic ointment both eyes' },
+              bcg: { date: '2026-09-26', remarks: 'BCG 0.05 mL ID right deltoid given' },
+              hepab: { date: '2026-09-26', remarks: 'Hepatitis B vaccine 0.5 mL IM left anterolateral thigh' },
+              hbig: { date: '', remarks: '' },
+              nurse: 'E. Cruz, RN / Dr. M. Santos'
+            },
+            screening: {
+              ror: { date: '2026-09-26', findings: '+/normal', abnormal: '', refDate: '' },
+              rop: { applicable: 'No', schedule: '', init: { date: '', findings: '', remarks: '' }, second: { date: '', findings: '', remarks: '' }, third: { date: '', findings: '', remarks: '' } },
+              enbs: { date: '2026-09-27', remarks: 'Done in CL', sticker: 'NBS-2026-0926-8812', repeatReason: '', repeatSched: '', others: '' },
+              hearing: { date: '2026-09-27', remarks: 'Pass', repeatDate: '', findings: 'OAE bilateral pass', outside: 'No' },
+              cranialUtz: { applicable: 'No', date: '', findings: '', remarks: '' },
+              cchd: {
+                date: '2026-09-27', remarks: 'Pass', retestDone: '',
+                init: { hand: '98', foot: '99', diff: '1' },
+                retest: { hand: '', foot: '', diff: '' },
+                notDone: '', others: '', screener: 'R. Alcantara, RN'
+              }
+            },
+            diagnosis: {
+              biliClass: 'None', biliOther: '', biliLevel: '',
+              respStatus: 'Normal', respSupport: '',
+              sepsisStatus: 'None', sepsisCulture: '',
+              asphyxia: 'No', congenital: 'None'
+            },
+            kmc: {
+              enrollDate: '2026-09-26',
+              dischargeKmc: 'Continuous (KMC ward or >20 hours)',
+              dischargeStatus: 'Discharged',
+              feedMode: 'Direct Breastfeeding',
+              feedType: 'Exclusive Breastmilk',
+              donorMilk: 'No',
+              surfactant: 'Not Applicable',
+              weightDischarge: '3.20',
+              futility: ''
+            }
+          },
           vs_bp: '', vs_hr: '', vs_rr: '', vs_temp: '', vs_spo2: '', vs_weight: '', vs_height: '', vs_date_time: '',
           vital_signs: [],
           admitting_diagnosis: '',
@@ -364,6 +482,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           case_no: 'NEW-2026-0001',
           case_type: 'New Patient',
           hx_allergy: '',
+          neonate: null,
           encounters: [],
           orders: { plans: [], diet: [], iv: [], medications: [], special: [], procedures: [], clinicalRequests: { laboratory: [], radiology: [], respiratory: [], heart: [], eeg: [] }, prescriptions: { items: [] } },
           referrals: []
@@ -394,7 +513,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 51) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 52) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});

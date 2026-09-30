@@ -928,7 +928,346 @@
         grid-template-columns: 1fr;
       }
     }
-  </style>
+  
+    /* ══════════════════════════════════════════════════════════════════════
+       SEGHIS+ NEONATE CLINICAL MODULE — SCOPED STYLES
+       ══════════════════════════════════════════════════════════════════════ */
+    .neo-summary-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .neo-summary-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 9px 11px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 68px;
+    }
+    .neo-summary-card-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.4px;
+      margin-bottom: 3px;
+    }
+    .neo-summary-card-value {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+    .neo-summary-card-footer {
+      font-size: 10.5px;
+      color: #64748b;
+      margin-top: 3px;
+    }
+
+    .neo-workspace-tabs {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      border-bottom: 2px solid #1b4d3e;
+      padding-bottom: 0;
+      margin-bottom: 14px;
+      overflow-x: auto;
+    }
+    .neo-workspace-tab {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-bottom: none;
+      border-radius: 5px 5px 0 0;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .neo-workspace-tab:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .neo-workspace-tab.active {
+      background: #1b4d3e;
+      border-color: #1b4d3e;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .neo-tab-panel {
+      display: none;
+    }
+    .neo-tab-panel.active {
+      display: block;
+    }
+
+    .neo-section-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+    }
+    .neo-section-card-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #1b4d3e;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .neo-section-subtitle {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #334155;
+      margin: 10px 0 5px 0;
+    }
+
+    .neo-form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .neo-form-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .neo-form-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .neo-form-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .neo-col-span-2 { grid-column: span 2; }
+    .neo-col-span-3 { grid-column: span 3; }
+    .neo-col-span-4 { grid-column: span 4; }
+
+    .neo-form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .neo-form-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 3px;
+    }
+    .neo-form-label .req {
+      color: #dc2626;
+    }
+    .neo-form-input, .neo-form-select, .neo-form-textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 12px;
+      color: #0f172a;
+      background: #ffffff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    .neo-form-textarea {
+      min-height: 54px;
+      resize: vertical;
+    }
+    .neo-form-input:focus, .neo-form-select:focus, .neo-form-textarea:focus {
+      outline: none;
+      border-color: #1b4d3e;
+      box-shadow: 0 0 0 2px rgba(27, 77, 62, 0.15);
+    }
+    .neo-form-input[disabled], .neo-form-select[disabled], .neo-form-textarea[disabled] {
+      background: #f1f5f9;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    .neo-checkbox-label, .neo-radio-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #334155;
+      cursor: pointer;
+      user-select: none;
+    }
+    .neo-checkbox-label input, .neo-radio-label input {
+      margin: 0;
+    }
+    .neo-risk-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      padding: 8px 12px;
+    }
+
+    .neo-table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      background: #ffffff;
+      margin-bottom: 10px;
+    }
+    table.neo-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      text-align: left;
+    }
+    table.neo-table th, table.neo-table td {
+      padding: 7px 8px;
+      border: 1px solid #cbd5e1;
+      vertical-align: middle;
+    }
+    table.neo-table thead th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 700;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    table.neo-table tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .neo-ballard-table {
+      min-width: 960px;
+      table-layout: fixed;
+    }
+    .neo-ballard-table th.crit-col {
+      width: 140px;
+      background: #f1f5f9;
+      font-weight: 700;
+    }
+    .neo-ballard-table th.score-col {
+      width: 82px;
+      text-align: center;
+    }
+    .neo-ballard-table td.ref-cell {
+      text-align: center;
+      padding: 5px 3px;
+      background: #ffffff;
+      font-size: 10.5px;
+      line-height: 1.25;
+      vertical-align: middle;
+    }
+    .neo-ballard-table td.ref-cell.img-cell {
+      height: 92px;
+    }
+    .neo-ballard-table td.ref-cell.img-cell img {
+      max-width: 92px;
+      max-height: 76px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+    .neo-ballard-table td.score-select-cell {
+      text-align: center;
+      background: #f4fbf8;
+    }
+    .neo-ballard-table td.score-select-cell select {
+      width: 66px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .neo-ballard-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .neo-chart-card {
+      text-align: center;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 14px;
+      margin-top: 10px;
+    }
+    .neo-chart-card img {
+      max-width: 100%;
+      max-height: 800px;
+      object-fit: contain;
+      cursor: zoom-in;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+    }
+
+    .neo-modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      z-index: 10000;
+      padding: 20px;
+      overflow: auto;
+      align-items: center;
+      justify-content: center;
+    }
+    .neo-modal-backdrop.open {
+      display: flex;
+    }
+    .neo-modal-backdrop img {
+      max-width: 95vw;
+      max-height: 90vh;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 6px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    .neo-modal-close {
+      position: fixed;
+      top: 14px;
+      right: 18px;
+      background: #ffffff;
+      color: #0f172a;
+      border: none;
+      border-radius: 9999px;
+      width: 36px;
+      height: 36px;
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .neo-toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #1e293b;
+      color: #ffffff;
+      padding: 9px 15px;
+      border-radius: 5px;
+      font-size: 12.5px;
+      font-weight: 600;
+      display: none;
+      z-index: 10001;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 992px) {
+      .neo-summary-cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .neo-form-grid-3, .neo-form-grid-4, .neo-form-grid-5 { grid-template-columns: repeat(2, 1fr); }
+      .neo-risk-grid { grid-template-columns: repeat(2, 1fr); }
+      .neo-ballard-summary-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .neo-summary-cards-grid { grid-template-columns: 1fr; }
+      .neo-form-grid-2, .neo-form-grid-3, .neo-form-grid-4, .neo-form-grid-5 { grid-template-columns: 1fr; }
+      .neo-risk-grid { grid-template-columns: 1fr; }
+      .neo-ballard-summary-grid { grid-template-columns: 1fr; }
+    }
+</style>
 </head>
 
 <body>
@@ -2361,6 +2700,7 @@
           </div>
           <div class="bootstrap-widget-content" id="dashlet-other-forms">
             <div class="other-form-list">
+              <label><button type="button" class="btn btn-small btn-primary" id="btn-open-neonate-module" onclick="openNeonateWorkspace()"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
               <label><button type="button" class="btn btn-small">Pediatric Growth Chart</button></label>
               <label><button type="button" class="btn btn-small">Dental Form</button></label>
               <label><button type="button" class="btn btn-small">Ophthalmology Form</button></label>
@@ -2372,6 +2712,1438 @@
         </div>
       </div>
     </div>
+
+    
+        <!-- ═══ SEGHIS+ NEONATE CLINICAL RECORD (STRUCTURED SPECIALTY WORKSPACE) ═══ -->
+        <div class="row-fluid" id="row-neonate-module">
+          <div class="span12">
+            <div class="dashlet" id="dashlet-neonate">
+              <div class="bootstrap-widget-header">
+                <div class="pull-right" style="margin-top:-3px; display:inline-flex; gap:6px; align-items:center;">
+                  <span class="badge badge-success" id="badge-neonate-status">Active Module</span>
+                  <a href="Neonate_Clinical_Module.html" target="_blank" class="btn btn-mini" title="Open Standalone Module View"><i class="icon-external-link"></i> Full View</a>
+                  <button type="button" class="btn btn-mini" onclick="toggleNeonateCollapse()" id="btn-neonate-collapse" title="Collapse / Expand"><i class="icon-chevron-up" id="icon-neonate-collapse"></i></button>
+                </div>
+                <h3>SEGHIS+ Neonate Clinical Record</h3>
+              </div>
+              <div class="bootstrap-widget-content" id="dashlet-neonate-content" style="padding:16px; background:#fff;">
+                <!-- TOP SUMMARY CARDS (5 CARDS) -->
+      <section class="summary-cards-grid" aria-label="Neonate Clinical Highlights">
+        <article class="summary-card">
+          <div class="summary-card-title">Patient Type</div>
+          <div class="summary-card-value" id="sum-type">—</div>
+          <div class="summary-card-footer" id="sum-location">Location: —</div>
+        </article>
+        <article class="summary-card">
+          <div class="summary-card-title">Maternal &amp; Delivery</div>
+          <div class="summary-card-value" id="sum-delivery">—</div>
+          <div class="summary-card-footer" id="sum-maternal-class">Class: —</div>
+        </article>
+        <article class="summary-card">
+          <div class="summary-card-title">Birth Measurements</div>
+          <div class="summary-card-value" id="sum-weight">—</div>
+          <div class="summary-card-footer" id="sum-vitals">HR: — | RR: —</div>
+        </article>
+        <article class="summary-card">
+          <div class="summary-card-title">APGAR Scores</div>
+          <div class="summary-card-value" id="sum-apgar">—</div>
+          <div class="summary-card-footer">1 min / 5 min / 10 min</div>
+        </article>
+        <article class="summary-card">
+          <div class="summary-card-title">Ballard Gestation</div>
+          <div class="summary-card-value" id="sum-maturity">—</div>
+          <div class="summary-card-footer" id="sum-weeks">Maturity: —</div>
+        </article>
+      </section>
+
+      <!-- SUB-TABS NAVIGATION (7 TABS) -->
+      <nav class="workspace-tabs" role="tablist">
+        <button type="button" class="workspace-tab active" data-tab="tab-maternal" role="tab"><i class="icon-user"></i> Patient &amp; Maternal</button>
+        <button type="button" class="workspace-tab" data-tab="tab-delivery" role="tab"><i class="icon-time"></i> Delivery / APGAR / EINC</button>
+        <button type="button" class="workspace-tab" data-tab="tab-ballard" role="tab"><i class="icon-bar-chart"></i> Ballard Score</button>
+        <button type="button" class="workspace-tab" data-tab="tab-exam" role="tab"><i class="icon-stethoscope"></i> Physical Exam &amp; Aftercare</button>
+        <button type="button" class="workspace-tab" data-tab="tab-screening" role="tab"><i class="icon-eye-open"></i> Screening</button>
+        <button type="button" class="workspace-tab" data-tab="tab-diagnosis" role="tab"><i class="icon-medkit"></i> Diagnosis &amp; KMC</button>
+        <button type="button" class="workspace-tab" data-tab="tab-charts" role="tab"><i class="icon-picture"></i> Growth Charts</button>
+      </nav>
+
+      <!-- TAB PANELS -->
+      <form id="neonate-clinical-form" autocomplete="off" onsubmit="event.preventDefault(); saveNeonateRecord();">
+
+        <!-- TAB 1: PATIENT & MATERNAL -->
+        <div class="tab-panel active" id="tab-maternal" role="tabpanel">
+          
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-info-sign"></i> Patient / Neonate Classification</div>
+            <div class="form-grid-3" style="margin-bottom:12px;">
+              <div class="form-group">
+                <label class="form-label" for="neo_inborn">Inborn Subtype</label>
+                <select class="form-select" id="neo_inborn" name="neo_inborn">
+                  <option value="">Select Inborn</option>
+                  <option value="singleton-in hospital">singleton-in hospital</option>
+                  <option value="twin-in hospital">twin-in hospital</option>
+                  <option value="multiple-in hospital">multiple-in hospital</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_outborn">Outborn Subtype</label>
+                <select class="form-select" id="neo_outborn" name="neo_outborn">
+                  <option value="">Select Outborn</option>
+                  <option value="singleton-outside hospital">singleton-outside hospital</option>
+                  <option value="twin-outside hospital ">twin-outside hospital </option>
+                </select>
+              </div>
+              <div class="form-group" style="justify-content:center;">
+                <label class="form-label">Readmission</label>
+                <label class="checkbox-label" style="height:35px; border:1px solid var(--border-color); border-radius:4px; padding:0 10px; background:#fff;">
+                  <input type="checkbox" id="neo_readmission" name="neo_readmission"> Readmission (up to 28 days)
+                </label>
+              </div>
+            </div>
+
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label" for="neo_birth_location">Birth Location</label>
+                <select class="form-select" id="neo_birth_location" name="neo_birth_location">
+                  <option value="">Select Location</option>
+                  <option value="Emergency Room">Emergency Room</option>
+                  <option value="Operating Room">Operating Room</option>
+                  <option value="Delivery Room">Delivery Room</option>
+                  <option value="Non Institutional">Non Institutional</option>
+                </select>
+              </div>
+              <div class="form-group col-span-2">
+                <label class="form-label">Patient Master Context (from HIS)</label>
+                <input class="form-input" id="neo_patient_demographics_display" readonly style="background:var(--slate-100); font-weight:600;" value="DEL ROSARIO, JOAN B. • HRN: 0000001890 • Encounter: OP-2026-0926-0042">
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-female"></i> Maternal Data</div>
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label" for="neo_mother_name">Mother's Name</label>
+                <input class="form-input" type="text" id="neo_mother_name" name="neo_mother_name" placeholder="Surname, First Name Middle Name">
+              </div>
+              <div class="form-group col-span-2">
+                <label class="form-label" for="neo_mother_address">Mother's Address</label>
+                <input class="form-input" type="text" id="neo_mother_address" name="neo_mother_address">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_mother_age">Mother's Age</label>
+                <input class="form-input" type="number" id="neo_mother_age" name="neo_mother_age" min="0" placeholder="Years">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_mother_blood_type">Mother's Blood Type</label>
+                <select class="form-select" id="neo_mother_blood_type" name="neo_mother_blood_type">
+                  <option value="">Select Blood Type</option>
+                  <option value="A+">A+</option><option value="B+">B+</option><option value="AB+">AB+</option><option value="O+">O+</option>
+                  <option value="A-">A-</option><option value="B-">B-</option><option value="AB-">AB-</option><option value="O-">O-</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_mother_status">Status</label>
+                <input class="form-input" type="text" id="neo_mother_status" name="neo_mother_status" placeholder="Marital/Clinical status">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_edc">EDC</label>
+                <input class="form-input" type="date" id="neo_edc" name="neo_edc">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_lmp">LMP</label>
+                <input class="form-input" type="date" id="neo_lmp" name="neo_lmp">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_aog_weeks">AOG (weeks)</label>
+                <input class="form-input" type="text" id="neo_aog_weeks" name="neo_aog_weeks" placeholder="e.g. 38 2/7">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_gravida">Gravida</label>
+                <input class="form-input" type="number" id="neo_gravida" name="neo_gravida" min="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_para">Para</label>
+                <input class="form-input" type="number" id="neo_para" name="neo_para" min="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_presentation">Presentation</label>
+                <select class="form-select" id="neo_presentation" name="neo_presentation">
+                  <option value="">Select</option>
+                  <option value="Cephalic">Cephalic</option>
+                  <option value="Breech">Breech</option>
+                  <option value="Transverse">Transverse</option>
+                  <option value="Face">Face</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_position">Position</label>
+                <input class="form-input" type="text" id="neo_position" name="neo_position" placeholder="e.g. LOA, ROA">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_maternal_class">Classification</label>
+                <select class="form-select" id="neo_maternal_class" name="neo_maternal_class">
+                  <option value="">Select</option>
+                  <option value="Normal">Normal</option>
+                  <option value="High Risk">High Risk</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_delivery_type">Type of Delivery</label>
+                <select class="form-select" id="neo_delivery_type" name="neo_delivery_type">
+                  <option value="">Select</option>
+                  <option value="NSD">NSD</option>
+                  <option value="VBAC">VBAC</option>
+                  <option value="Breech">Breech</option>
+                  <option value="Forceps">Forceps</option>
+                  <option value="Vacuum">Vacuum</option>
+                  <option value="CS">CS</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_delivery_time">Time of Delivery</label>
+                <input class="form-input" type="time" id="neo_delivery_time" name="neo_delivery_time">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_bow">BOW (Bag of Water)</label>
+                <select class="form-select" id="neo_bow" name="neo_bow">
+                  <option value="">Select</option>
+                  <option value="Intact">Intact</option>
+                  <option value="Ruptured">Ruptured</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_ruptured_time">Ruptured Time</label>
+                <input class="form-input" type="time" id="neo_ruptured_time" name="neo_ruptured_time" disabled>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_stage1">1st Stage</label>
+                <input class="form-input" type="text" id="neo_stage1" name="neo_stage1" placeholder="Duration">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_stage2">2nd Stage</label>
+                <input class="form-input" type="text" id="neo_stage2" name="neo_stage2" placeholder="Duration">
+              </div>
+              <div class="form-group col-span-2">
+                <label class="form-label" for="neo_cs_indication">CS Indication</label>
+                <input class="form-input" type="text" id="neo_cs_indication" name="neo_cs_indication" placeholder="Indication for Cesarean Section" disabled>
+              </div>
+              <div class="form-group col-span-3">
+                <label class="form-label" for="neo_complications">Complications of Pregnancy</label>
+                <textarea class="form-textarea" id="neo_complications" name="neo_complications"></textarea>
+              </div>
+            </div>
+
+            <div class="section-subtitle">Antenatal Steroid Doses Given (Dates Administered)</div>
+            <div class="form-grid-4">
+              <div class="form-group">
+                <label class="form-label" for="neo_steroid_dose1">Dose 1 Date Given</label>
+                <input class="form-input" type="date" id="neo_steroid_dose1" name="neo_steroid_dose1">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_steroid_dose2">Dose 2 Date Given</label>
+                <input class="form-input" type="date" id="neo_steroid_dose2" name="neo_steroid_dose2">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_steroid_dose3">Dose 3 Date Given</label>
+                <input class="form-input" type="date" id="neo_steroid_dose3" name="neo_steroid_dose3">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_steroid_dose4">Dose 4 Date Given</label>
+                <input class="form-input" type="date" id="neo_steroid_dose4" name="neo_steroid_dose4">
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-warning-sign"></i> Maternal Risk Factors (Check Applicable)</div>
+            <div class="risk-grid" id="neo-risk-factors-grid">
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Age of Conception"> Age of Conception</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Gestational Diabetes"> Gestational Diabetes</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Alcohol intake"> Alcohol intake</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Obesity"> Obesity</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Polyhy dramnios"> Polyhydramnios</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Illicit Drug Use"> Illicit Drug Use</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Diabetis Mellitus"> Diabetes Mellitus</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Febrile illness"> Febrile illness</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Fertility Drug Intake"> Fertility Drug Intake</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Urinary Tract Infection"> Urinary Tract Infection</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Psychoactive agents"> Psychoactive agents</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Bronchodilators"> Bronchodilators</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Rubella"> Rubella</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Antibiotics"> Antibiotics</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="NSAIDS"> NSAIDS</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Vaccination"> Vaccination</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Smoking"> Smoking</label>
+              <label class="checkbox-label"><input type="checkbox" name="neo_risk" value="Others" id="neo_risk_others_chk"> Others</label>
+            </div>
+            <div class="form-group" style="margin-top:10px; display:none;" id="neo_risk_others_wrap">
+              <label class="form-label" for="neo_risk_others_text">Specify Other Maternal Risk Factors</label>
+              <input class="form-input" type="text" id="neo_risk_others_text" name="neo_risk_others_text">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 2: DELIVERY / APGAR / EINC & MEASUREMENTS -->
+        <div class="tab-panel" id="tab-delivery" role="tabpanel">
+
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-th"></i> APGAR SCORE</div>
+            <div style="font-size:11.5px; color:var(--slate-500); margin-bottom:8px;">
+              Scoring values (0, 1, 2) adhere strictly to standard clinical resuscitation protocols. Totals calculate automatically for each interval.
+            </div>
+            <div class="table-responsive">
+              <table class="neo-table" id="apgar-score-table">
+                <thead>
+                  <tr>
+                    <th>Sign</th>
+                    <th>Score 0</th>
+                    <th>Score 1</th>
+                    <th>Score 2</th>
+                    <th style="width:90px; text-align:center;">1 min</th>
+                    <th style="width:90px; text-align:center;">5 min</th>
+                    <th style="width:90px; text-align:center;">10 min</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Heart Rate</strong></td>
+                    <td>Absent</td>
+                    <td>&lt;100 beats/min</td>
+                    <td>&gt;100 beats/min</td>
+                    <td><select class="form-select apgar-sel apgar-m1" data-sign="hr"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                    <td><select class="form-select apgar-sel apgar-m5" data-sign="hr"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                    <td><select class="form-select apgar-sel apgar-m10" data-sign="hr"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Respiratory Rate</strong></td>
+                    <td>Absent</td>
+                    <td>Slow, Irregular</td>
+                    <td>Good Cry</td>
+                    <td><select class="form-select apgar-sel apgar-m1" data-sign="rr"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                    <td><select class="form-select apgar-sel apgar-m5" data-sign="rr"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                    <td><select class="form-select apgar-sel apgar-m10" data-sign="rr"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Muscle Tone</strong></td>
+                    <td>Limp</td>
+                    <td>Some Flexion</td>
+                    <td>Active Motion</td>
+                    <td><select class="form-select apgar-sel apgar-m1" data-sign="tone"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                    <td><select class="form-select apgar-sel apgar-m5" data-sign="tone"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                    <td><select class="form-select apgar-sel apgar-m10" data-sign="tone"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Reflex Irritability</strong></td>
+                    <td>No Response</td>
+                    <td>Grimace</td>
+                    <td>Vigorous Cry</td>
+                    <td><select class="form-select apgar-sel apgar-m1" data-sign="reflex"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                    <td><select class="form-select apgar-sel apgar-m5" data-sign="reflex"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                    <td><select class="form-select apgar-sel apgar-m10" data-sign="reflex"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Skin Color</strong></td>
+                    <td>Pale</td>
+                    <td>Body pink, extremities blue</td>
+                    <td>Pink</td>
+                    <td><select class="form-select apgar-sel apgar-m1" data-sign="color"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                    <td><select class="form-select apgar-sel apgar-m5" data-sign="color"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                    <td><select class="form-select apgar-sel apgar-m10" data-sign="color"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></td>
+                  </tr>
+                  <tr style="background:var(--slate-50); font-weight:700;">
+                    <td colspan="4" style="text-align:right;">TOTAL APGAR SCORE:</td>
+                    <td id="apgar-total-m1" style="text-align:center; font-size:14px; color:var(--med-green);">—</td>
+                    <td id="apgar-total-m5" style="text-align:center; font-size:14px; color:var(--med-green);">—</td>
+                    <td id="apgar-total-m10" style="text-align:center; font-size:14px; color:var(--med-green);">—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="form-group" style="margin-top:8px;">
+              <label class="form-label" for="neo_apgar_exceeding">If exceeding more than 10 min</label>
+              <input class="form-input" type="text" id="neo_apgar_exceeding" name="neo_apgar_exceeding" placeholder="Document further resuscitation status / APGAR score at 15m, 20m">
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-heart"></i> Newborn Physiological Measurements</div>
+            <div class="form-grid-5">
+              <div class="form-group">
+                <label class="form-label" for="neo_weight">Weight (kg) <span class="req">*</span></label>
+                <input class="form-input" type="number" step="0.01" min="0" id="neo_weight" name="neo_weight" placeholder="e.g. 3.10">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_head_circ">Head Circ. (cm)</label>
+                <input class="form-input" type="number" step="0.1" min="0" id="neo_head_circ" name="neo_head_circ" placeholder="HC">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_length">Length (cm)</label>
+                <input class="form-input" type="number" step="0.1" min="0" id="neo_length" name="neo_length" placeholder="Length">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_chest_circ">Chest Circ. (cm)</label>
+                <input class="form-input" type="number" step="0.1" min="0" id="neo_chest_circ" name="neo_chest_circ" placeholder="CC">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_abd_circ">Abdominal Circ. (cm)</label>
+                <input class="form-input" type="number" step="0.1" min="0" id="neo_abd_circ" name="neo_abd_circ" placeholder="AC">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_temp">Temperature (&deg;C)</label>
+                <input class="form-input" type="number" step="0.1" min="0" id="neo_temp" name="neo_temp" placeholder="36.5 - 37.5">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_cardiac_rate">Cardiac Rate (/min)</label>
+                <input class="form-input" type="number" min="0" id="neo_cardiac_rate" name="neo_cardiac_rate" placeholder="BPM">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_resp_rate">Respiratory Rate (/min)</label>
+                <input class="form-input" type="number" min="0" id="neo_resp_rate" name="neo_resp_rate" placeholder="Cycles/min">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_baby_blood_type">Baby's Blood Type</label>
+                <select class="form-select" id="neo_baby_blood_type" name="neo_baby_blood_type">
+                  <option value="">Select Blood Type</option>
+                  <option value="A+">A+</option><option value="B+">B+</option><option value="AB+">AB+</option><option value="O+">O+</option>
+                  <option value="A-">A-</option><option value="B-">B-</option><option value="AB-">AB-</option><option value="O-">O-</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_cord_condition">Condition of the Cord</label>
+                <input class="form-input" type="text" id="neo_cord_condition" name="neo_cord_condition" placeholder="Normal, 3 vessels, etc.">
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-ambulance"></i> Essential Intrapartum Newborn Care (EINC)</div>
+            <div class="form-grid-3" style="margin-bottom:12px;">
+              <div class="form-group" style="justify-content:center;">
+                <label class="form-label">EINC Status</label>
+                <div style="display:flex; gap:16px; align-items:center; height:35px;">
+                  <label class="radio-label"><input type="radio" name="neo_einc_status" value="Complete"> Complete</label>
+                  <label class="radio-label"><input type="radio" name="neo_einc_status" value="Incomplete"> Incomplete</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_einc_time_start">Time Started</label>
+                <input class="form-input" type="time" id="neo_einc_time_start" name="neo_einc_time_start">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_einc_time_end">Time Ended</label>
+                <input class="form-input" type="time" id="neo_einc_time_end" name="neo_einc_time_end">
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Core EINC Interventions Performed</label>
+                <div style="display:flex; flex-direction:column; gap:6px; background:var(--slate-50); padding:10px 12px; border:1px solid var(--border-color); border-radius:4px;">
+                  <label class="checkbox-label"><input type="checkbox" name="neo_einc_int" value="Thorough Drying"> Thorough Drying</label>
+                  <label class="checkbox-label"><input type="checkbox" name="neo_einc_int" value="Skin to skin"> Early skin-to-skin contact</label>
+                  <label class="checkbox-label"><input type="checkbox" name="neo_einc_int" value="Properly timed cord clamping"> Properly timed cord clamping</label>
+                  <label class="checkbox-label"><input type="checkbox" name="neo_einc_int" value="Non-separation of newborn and mother for breastfeeding"> Non-separation of newborn and mother for breastfeeding</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_einc_reason">Reason for Incomplete EINC</label>
+                <textarea class="form-textarea" id="neo_einc_reason" name="neo_einc_reason" placeholder="Required if EINC was incomplete" disabled style="min-height:92px;"></textarea>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top:12px;">
+              <label class="form-label" for="neo_einc_provider">Printed Name of OR/DR/MIDWIFE/NURSE</label>
+              <input class="form-input" type="text" id="neo_einc_provider" name="neo_einc_provider">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 3: BALLARD SCORE -->
+        <div class="tab-panel" id="tab-ballard" role="tabpanel">
+
+          <div class="section-card">
+            <div class="section-card-title">
+              <span><i class="icon-bar-chart"></i> New Ballard Score &mdash; Gestational Age Assessment</span>
+              <span style="font-size:11px; font-weight:normal; color:var(--slate-500); margin-left:auto;">
+                Images are visual references. Enter numeric score (-1 to 5) in the Score column.
+              </span>
+            </div>
+
+            <div class="section-subtitle">A. Neuromuscular Maturity (6 Criteria)</div>
+            <div class="table-responsive">
+              <table class="neo-table ballard-table" id="ballard-neuro-table">
+                <thead>
+                  <tr>
+                    <th class="crit-col">Criterion</th>
+                    <th class="score-col">-1</th>
+                    <th class="score-col">0</th>
+                    <th class="score-col">1</th>
+                    <th class="score-col">2</th>
+                    <th class="score-col">3</th>
+                    <th class="score-col">4</th>
+                    <th class="score-col">5</th>
+                    <th style="width:90px; text-align:center;">Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Posture (0 to 4) -->
+                  <tr>
+                    <td class="crit-col"><strong>Posture</strong></td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_posture_0.png" alt="Posture 0"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_posture_1.png" alt="Posture 1"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_posture_2.png" alt="Posture 2"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_posture_3.png" alt="Posture 3"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_posture_4.png" alt="Posture 4"></td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="score-select-cell">
+                      <select class="form-select neo-ballard-score neo-neuro-score" data-key="posture">
+                        <option value="">Select</option>
+                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!-- Square Window (-1 to 4) -->
+                  <tr>
+                    <td class="crit-col"><strong>Square Window (wrist)</strong></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_square_window_-1.png" alt="Square Window -1"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_square_window_0.png" alt="Square Window 0"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_square_window_1.png" alt="Square Window 1"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_square_window_2.png" alt="Square Window 2"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_square_window_3.png" alt="Square Window 3"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_square_window_4.png" alt="Square Window 4"></td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="score-select-cell">
+                      <select class="form-select neo-ballard-score neo-neuro-score" data-key="square_window">
+                        <option value="">Select</option>
+                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!-- Arm Recoil (0 to 4) -->
+                  <tr>
+                    <td class="crit-col"><strong>Arm Recoil</strong></td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_arm_recoil_0.png" alt="Arm Recoil 0"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_arm_recoil_1.png" alt="Arm Recoil 1"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_arm_recoil_2.png" alt="Arm Recoil 2"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_arm_recoil_3.png" alt="Arm Recoil 3"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_arm_recoil_4.png" alt="Arm Recoil 4"></td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="score-select-cell">
+                      <select class="form-select neo-ballard-score neo-neuro-score" data-key="arm_recoil">
+                        <option value="">Select</option>
+                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!-- Popliteal Angle (-1 to 5) -->
+                  <tr>
+                    <td class="crit-col"><strong>Popliteal Angle</strong></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_-1.png" alt="Popliteal Angle -1"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_0.png" alt="Popliteal Angle 0"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_1.png" alt="Popliteal Angle 1"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_2.png" alt="Popliteal Angle 2"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_3.png" alt="Popliteal Angle 3"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_4.png" alt="Popliteal Angle 4"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_5.png" alt="Popliteal Angle 5"></td>
+                    <td class="score-select-cell">
+                      <select class="form-select neo-ballard-score neo-neuro-score" data-key="popliteal_angle">
+                        <option value="">Select</option>
+                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!-- Scarf Sign (-1 to 4) -->
+                  <tr>
+                    <td class="crit-col"><strong>Scarf Sign</strong></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_scarf_sign_-1.png" alt="Scarf Sign -1"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_scarf_sign_0.png" alt="Scarf Sign 0"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_scarf_sign_1.png" alt="Scarf Sign 1"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_scarf_sign_2.png" alt="Scarf Sign 2"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_scarf_sign_3.png" alt="Scarf Sign 3"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_scarf_sign_4.png" alt="Scarf Sign 4"></td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="score-select-cell">
+                      <select class="form-select neo-ballard-score neo-neuro-score" data-key="scarf_sign">
+                        <option value="">Select</option>
+                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!-- Heel to Ear (-1 to 4) -->
+                  <tr>
+                    <td class="crit-col"><strong>Heel to Ear</strong></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_heel_to_ear_-1.png" alt="Heel to Ear -1"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_heel_to_ear_0.png" alt="Heel to Ear 0"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_heel_to_ear_1.png" alt="Heel to Ear 1"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_heel_to_ear_2.png" alt="Heel to Ear 2"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_heel_to_ear_3.png" alt="Heel to Ear 3"></td>
+                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_heel_to_ear_4.png" alt="Heel to Ear 4"></td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="score-select-cell">
+                      <select class="form-select neo-ballard-score neo-neuro-score" data-key="heel_to_ear">
+                        <option value="">Select</option>
+                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="section-subtitle" style="margin-top:16px;">B. Physical Maturity (7 Criteria)</div>
+            <div class="table-responsive">
+              <table class="neo-table ballard-table" id="ballard-physical-table">
+                <thead>
+                  <tr>
+                    <th class="crit-col">Criterion</th>
+                    <th class="score-col">-1</th>
+                    <th class="score-col">0</th>
+                    <th class="score-col">1</th>
+                    <th class="score-col">2</th>
+                    <th class="score-col">3</th>
+                    <th class="score-col">4</th>
+                    <th class="score-col">5</th>
+                    <th style="width:90px; text-align:center;">Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Skin -->
+                  <tr>
+                    <td class="crit-col"><strong>Skin</strong></td>
+                    <td class="ref-cell">Sticky, friable, transparent</td>
+                    <td class="ref-cell">Gelatinous, red, translucent</td>
+                    <td class="ref-cell">Smooth pink, visible veins</td>
+                    <td class="ref-cell">Superficial peeling/rash, few veins</td>
+                    <td class="ref-cell">Cracking, pale areas, rare veins</td>
+                    <td class="ref-cell">Parchment, deep cracking, no vessels</td>
+                    <td class="ref-cell">Leathery, cracked, wrinkled</td>
+                    <td class="score-select-cell">
+                      <select class="form-select neo-ballard-score neo-physical-score" data-key="skin">
+                        <option value="">Select</option>
+                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!-- Lanugo -->
+                  <tr>
+                    <td class="crit-col"><strong>Lanugo</strong></td>
+                    <td class="ref-cell">None</td>
+                    <td class="ref-cell">Sparse</td>
+                    <td class="ref-cell">Abundant</td>
+                    <td class="ref-cell">Thinning</td>
+                    <td class="ref-cell">Bald areas</td>
+                    <td class="ref-cell">Mostly bald</td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="score-select-cell">
+                      <select class="form-select neo-ballard-score neo-physical-score" data-key="lanugo">
+                        <option value="">Select</option>
+                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!-- Plantar Surface -->
+                  <tr>
+                    <td class="crit-col"><strong>Plantar Surface</strong></td>
+                    <td class="ref-cell">Heel-toe 40-50mm: -1<br>(&lt;40mm: -2*)</td>
+                    <td class="ref-cell">&gt;50mm, no crease</td>
+                    <td class="ref-cell">Faint red marks</td>
+                    <td class="ref-cell">Anterior transverse crease only</td>
+                    <td class="ref-cell">Creases anterior 2/3</td>
+                    <td class="ref-cell">Creases over entire sole</td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="score-select-cell">
+                      <!-- Source workbook contains -2 descriptors in selected Ballard criteria, but the current validation list does not expose -2. Do not modify without clinical approval. -->
+                      <select class="form-select neo-ballard-score neo-physical-score" data-key="plantar_surface">
+                        <option value="">Select</option>
+                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!-- Breast -->
+                  <tr>
+                    <td class="crit-col"><strong>Breast</strong></td>
+                    <td class="ref-cell">Imperceptible</td>
+                    <td class="ref-cell">Barely perceptible</td>
+                    <td class="ref-cell">Flat areola, no bud</td>
+                    <td class="ref-cell">Stippled areola, 1-2mm bud</td>
+                    <td class="ref-cell">Raised areola, 3-4mm bud</td>
+                    <td class="ref-cell">Full areola, 5-10mm bud</td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="score-select-cell">
+                      <select class="form-select neo-ballard-score neo-physical-score" data-key="breast">
+                        <option value="">Select</option>
+                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!-- Eye / Ear -->
+                  <tr>
+                    <td class="crit-col"><strong>Eye / Ear</strong></td>
+                    <td class="ref-cell">Lids fused (loosely: -1; tightly: -2*)</td>
+                    <td class="ref-cell">Lids open; pinna flat; stays folded</td>
+                    <td class="ref-cell">Slightly curved pinna; soft; slow recoil</td>
+                    <td class="ref-cell">Well-curved pinna; soft but ready recoil</td>
+                    <td class="ref-cell">Formed &amp; firm; instant recoil</td>
+                    <td class="ref-cell">Thick cartilage; ear stiff</td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="score-select-cell">
+                      <!-- Source workbook contains -2 descriptors in selected Ballard criteria, but the current validation list does not expose -2. Do not modify without clinical approval. -->
+                      <select class="form-select neo-ballard-score neo-physical-score" data-key="eye_ear">
+                        <option value="">Select</option>
+                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!-- Genitals (male) -->
+                  <tr>
+                    <td class="crit-col"><strong>Genitals (male)</strong></td>
+                    <td class="ref-cell">Scrotum flat, smooth</td>
+                    <td class="ref-cell">Scrotum empty, faint rugae</td>
+                    <td class="ref-cell">Testes in upper canal, rare rugae</td>
+                    <td class="ref-cell">Testes descending, few rugae</td>
+                    <td class="ref-cell">Testes down, good rugae</td>
+                    <td class="ref-cell">Testes pendulous, deep rugae</td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="score-select-cell">
+                      <select class="form-select neo-ballard-score neo-physical-score" data-key="genitals_male">
+                        <option value="">Select</option>
+                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!-- Genitals (female) -->
+                  <tr>
+                    <td class="crit-col"><strong>Genitals (female)</strong></td>
+                    <td class="ref-cell">Clitoris prominent &amp; labia flat</td>
+                    <td class="ref-cell">Prominent clitoris &amp; small labia minora</td>
+                    <td class="ref-cell">Prominent clitoris &amp; enlarging minora</td>
+                    <td class="ref-cell">Majora &amp; minora equally prominent</td>
+                    <td class="ref-cell">Majora large, minora small</td>
+                    <td class="ref-cell">Majora cover clitoris &amp; minora</td>
+                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="score-select-cell">
+                      <select class="form-select neo-ballard-score neo-physical-score" data-key="genitals_female">
+                        <option value="">Select</option>
+                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Ballard Scoring Results -->
+            <div class="ballard-summary-grid">
+              <div class="summary-card">
+                <div class="summary-card-title">Neuro Subtotal</div>
+                <div class="summary-card-value" id="ballard-neuro-subtotal">—</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-card-title">Physical Subtotal</div>
+                <div class="summary-card-value" id="ballard-physical-subtotal">—</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-card-title">Total Ballard Score</div>
+                <div class="summary-card-value" id="ballard-total-score">—</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-card-title">Completed Items</div>
+                <div class="summary-card-value" id="ballard-completed-count">0 / 13</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-card-title">Ballard Weeks</div>
+                <div class="summary-card-value" id="ballard-weeks-display" style="color:var(--med-green);">—</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-card-title">Maturity Class</div>
+                <div class="summary-card-value" id="ballard-maturity-display" style="color:var(--med-green); font-size:13px;">—</div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div style="font-size:11.5px; color:var(--slate-500);">
+                <i class="icon-info-sign"></i> Incomplete Ballard data is flagged as Partial. Gestational age and maturity classification are only finalized when all 13 criteria are scored.
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button type="button" class="btn-secondary" onclick="openGrowthChartModal('lub')"><i class="icon-picture"></i> Lubchenco Chart</button>
+                <button type="button" class="btn-secondary" onclick="openGrowthChartModal('boy')"><i class="icon-picture"></i> Boy Fenton Chart</button>
+                <button type="button" class="btn-secondary" onclick="openGrowthChartModal('girl')"><i class="icon-picture"></i> Girl Fenton Chart</button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- TAB 4: PHYSICAL EXAM & AFTERCARE -->
+        <div class="tab-panel" id="tab-exam" role="tabpanel">
+
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-stethoscope"></i> Structured Physical Examination</div>
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label" for="neo_pe_general">General Survey</label>
+                <textarea class="form-textarea" id="neo_pe_general" name="neo_pe_general"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_pe_color">Color</label>
+                <textarea class="form-textarea" id="neo_pe_color" name="neo_pe_color"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_pe_head">HEAD</label>
+                <textarea class="form-textarea" id="neo_pe_head" name="neo_pe_head"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_pe_eent">EENT</label>
+                <textarea class="form-textarea" id="neo_pe_eent" name="neo_pe_eent"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_pe_neck">Neck</label>
+                <textarea class="form-textarea" id="neo_pe_neck" name="neo_pe_neck"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_pe_heart">Heart</label>
+                <textarea class="form-textarea" id="neo_pe_heart" name="neo_pe_heart"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_pe_chest_lungs">Chest and Lungs</label>
+                <textarea class="form-textarea" id="neo_pe_chest_lungs" name="neo_pe_chest_lungs"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_pe_abdomen">Abdomen</label>
+                <textarea class="form-textarea" id="neo_pe_abdomen" name="neo_pe_abdomen"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_pe_genitalia">Genitalia</label>
+                <textarea class="form-textarea" id="neo_pe_genitalia" name="neo_pe_genitalia"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_pe_anus">Anus</label>
+                <textarea class="form-textarea" id="neo_pe_anus" name="neo_pe_anus"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_pe_skin">Skin</label>
+                <textarea class="form-textarea" id="neo_pe_skin" name="neo_pe_skin"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_pe_extremities">Extremities</label>
+                <textarea class="form-textarea" id="neo_pe_extremities" name="neo_pe_extremities"></textarea>
+              </div>
+              <div class="form-group col-span-3">
+                <label class="form-label" for="neo_pe_other_findings">Other Findings</label>
+                <textarea class="form-textarea" id="neo_pe_other_findings" name="neo_pe_other_findings"></textarea>
+              </div>
+            </div>
+
+            <div class="form-grid-3" style="margin-top:12px;">
+              <div class="form-group">
+                <label class="form-label" for="neo_sex">Sex</label>
+                <select class="form-select" id="neo_sex" name="neo_sex">
+                  <option value="">Select</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="undetermined">undetermined</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_nicu_reason">Reason for Admission to NICU</label>
+                <select class="form-select" id="neo_nicu_reason" name="neo_nicu_reason">
+                  <option value="">Select Reason</option>
+                  <option value="Prematurity">Prematurity</option>
+                  <option value="Pneuminiia">Pneuminiia</option>
+                  <option value="Sepsis">Sepsis</option>
+                  <option value="Congenital Anomaly">Congenital Anomaly</option>
+                  <option value="Asphyxia">Asphyxia</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_nicu_others">Others</label>
+                <input class="form-input" type="text" id="neo_nicu_others" name="neo_nicu_others">
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-medkit"></i> Newborn Aftercare Administration</div>
+            <div class="table-responsive">
+              <table class="neo-table" id="aftercare-table">
+                <thead>
+                  <tr>
+                    <th style="width:260px;">Intervention</th>
+                    <th style="width:160px;">Date Administered</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Vitamin K Administration</strong></td>
+                    <td><input class="form-input" type="date" id="neo_aftercare_vitk_date" name="neo_aftercare_vitk_date"></td>
+                    <td><input class="form-input" type="text" id="neo_aftercare_vitk_remarks" name="neo_aftercare_vitk_remarks" placeholder="Dose / route / site"></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Eye Prophylaxis</strong></td>
+                    <td><input class="form-input" type="date" id="neo_aftercare_eye_date" name="neo_aftercare_eye_date"></td>
+                    <td><input class="form-input" type="text" id="neo_aftercare_eye_remarks" name="neo_aftercare_eye_remarks" placeholder="Erythromycin ointment OU"></td>
+                  </tr>
+                  <tr>
+                    <td><strong>BCG Immunization</strong></td>
+                    <td><input class="form-input" type="date" id="neo_aftercare_bcg_date" name="neo_aftercare_bcg_date"></td>
+                    <td><input class="form-input" type="text" id="neo_aftercare_bcg_remarks" name="neo_aftercare_bcg_remarks" placeholder="Right deltoid ID"></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Hepatitis B Immunization</strong></td>
+                    <td><input class="form-input" type="date" id="neo_aftercare_hepab_date" name="neo_aftercare_hepab_date"></td>
+                    <td><input class="form-input" type="text" id="neo_aftercare_hepab_remarks" name="neo_aftercare_hepab_remarks" placeholder="Anterolateral thigh IM"></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Hep B Immune globulin</strong></td>
+                    <td><input class="form-input" type="date" id="neo_aftercare_hbig_date" name="neo_aftercare_hbig_date"></td>
+                    <td><input class="form-input" type="text" id="neo_aftercare_hbig_remarks" name="neo_aftercare_hbig_remarks" placeholder="If indicated for HBsAg (+) mother"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="form-group" style="margin-top:8px;">
+              <label class="form-label" for="neo_aftercare_nurse">Printed Name of DR / RN</label>
+              <input class="form-input" type="text" id="neo_aftercare_nurse" name="neo_aftercare_nurse">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 5: SCREENING -->
+        <div class="tab-panel" id="tab-screening" role="tabpanel">
+
+          <!-- Red Orange Reflex -->
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-eye-open"></i> A. Red Orange Reflex Screening</div>
+            <div class="form-grid-4">
+              <div class="form-group">
+                <label class="form-label" for="neo_ror_date">Date Done</label>
+                <input class="form-input" type="date" id="neo_ror_date" name="neo_ror_date">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_ror_findings">Findings</label>
+                <select class="form-select" id="neo_ror_findings" name="neo_ror_findings">
+                  <option value="">Select</option>
+                  <option value="+/normal">+/normal</option>
+                  <option value="-/abnormal">-/abnormal</option>
+                  <option value="Not Done">Not Done</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_ror_abnormal">If abnormal: Findings</label>
+                <input class="form-input" type="text" id="neo_ror_abnormal" name="neo_ror_abnormal" disabled>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_ror_ref_date">Date Referred</label>
+                <input class="form-input" type="date" id="neo_ror_ref_date" name="neo_ror_ref_date" disabled>
+              </div>
+            </div>
+          </div>
+
+          <!-- Retinopathy of Prematurity -->
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-eye-close"></i> B. Retinopathy of Prematurity (ROP)</div>
+            <div class="form-grid-2" style="margin-bottom:10px;">
+              <div class="form-group">
+                <label class="form-label" for="neo_rop_applicable">Applicable</label>
+                <select class="form-select" id="neo_rop_applicable" name="neo_rop_applicable">
+                  <option value="">Select</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                  <option value="Not Done">Not Done</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_rop_schedule">OPD ROP Schedule</label>
+                <input class="form-input" type="date" id="neo_rop_schedule" name="neo_rop_schedule">
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="neo-table" id="rop-exam-table">
+                <thead>
+                  <tr>
+                    <th style="width:120px;">Exam</th>
+                    <th style="width:160px;">Date Done</th>
+                    <th style="width:240px;">Findings</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Initial</strong></td>
+                    <td><input class="form-input" type="date" id="neo_rop_init_date" name="neo_rop_init_date"></td>
+                    <td>
+                      <select class="form-select" id="neo_rop_init_findings" name="neo_rop_init_findings">
+                        <option value="">Select</option>
+                        <option value="Negative">Negative</option>
+                        <option value="Immature Retina">Immature Retina</option>
+                        <option value="Pre-Plus Stage 1">Pre-Plus Stage 1</option>
+                        <option value="Pre-Plus Stage 2">Pre-Plus Stage 2</option>
+                        <option value="Pre-Plus Stage 3">Pre-Plus Stage 3</option>
+                        <option value="Pre-Plus Stage 4">Pre-Plus Stage 4</option>
+                        <option value="Pre-Plus Stage 5">Pre-Plus Stage 5</option>
+                        <option value="Not Done">Not Done</option>
+                      </select>
+                    </td>
+                    <td><input class="form-input" type="text" id="neo_rop_init_remarks" name="neo_rop_init_remarks"></td>
+                  </tr>
+                  <tr>
+                    <td><strong>2nd</strong></td>
+                    <td><input class="form-input" type="date" id="neo_rop_2nd_date" name="neo_rop_2nd_date"></td>
+                    <td>
+                      <select class="form-select" id="neo_rop_2nd_findings" name="neo_rop_2nd_findings">
+                        <option value="">Select</option>
+                        <option value="Negative">Negative</option>
+                        <option value="Immature Retina">Immature Retina</option>
+                        <option value="Pre-Plus Stage 1">Pre-Plus Stage 1</option>
+                        <option value="Pre-Plus Stage 2">Pre-Plus Stage 2</option>
+                        <option value="Pre-Plus Stage 3">Pre-Plus Stage 3</option>
+                        <option value="Pre-Plus Stage 4">Pre-Plus Stage 4</option>
+                        <option value="Pre-Plus Stage 5">Pre-Plus Stage 5</option>
+                        <option value="Not Done">Not Done</option>
+                      </select>
+                    </td>
+                    <td><input class="form-input" type="text" id="neo_rop_2nd_remarks" name="neo_rop_2nd_remarks"></td>
+                  </tr>
+                  <tr>
+                    <td><strong>3rd</strong></td>
+                    <td><input class="form-input" type="date" id="neo_rop_3rd_date" name="neo_rop_3rd_date"></td>
+                    <td>
+                      <select class="form-select" id="neo_rop_3rd_findings" name="neo_rop_3rd_findings">
+                        <option value="">Select</option>
+                        <option value="Negative">Negative</option>
+                        <option value="Immature Retina">Immature Retina</option>
+                        <option value="Pre-Plus Stage 1">Pre-Plus Stage 1</option>
+                        <option value="Pre-Plus Stage 2">Pre-Plus Stage 2</option>
+                        <option value="Pre-Plus Stage 3">Pre-Plus Stage 3</option>
+                        <option value="Pre-Plus Stage 4">Pre-Plus Stage 4</option>
+                        <option value="Pre-Plus Stage 5">Pre-Plus Stage 5</option>
+                        <option value="Not Done">Not Done</option>
+                      </select>
+                    </td>
+                    <td><input class="form-input" type="text" id="neo_rop_3rd_remarks" name="neo_rop_3rd_remarks"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Newborn Metabolic Screening -->
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-tint"></i> C. Expanded Newborn Metabolic Screening (ENBS)</div>
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label" for="neo_enbs_date">Date Done</label>
+                <input class="form-input" type="date" id="neo_enbs_date" name="neo_enbs_date">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_enbs_remarks">Remarks</label>
+                <select class="form-select" id="neo_enbs_remarks" name="neo_enbs_remarks">
+                  <option value="">Select</option>
+                  <option value="Done in CL">Done in CL</option>
+                  <option value="Done Outside">Done Outside</option>
+                  <option value="Not Done">Not Done</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_enbs_sticker">Sticker #</label>
+                <input class="form-input" type="text" id="neo_enbs_sticker" name="neo_enbs_sticker" placeholder="Filter card barcode / sticker">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_enbs_repeat_reason">Reason for Repeat ENBS</label>
+                <select class="form-select" id="neo_enbs_repeat_reason" name="neo_enbs_repeat_reason">
+                  <option value="">Select Reason</option>
+                  <option value="Blood Trasnfusion">Blood Trasnfusion</option>
+                  <option value="Prematurity">Prematurity</option>
+                  <option value="NPO">NPO</option>
+                  <option value="ENBS Finding">ENBS Finding</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_enbs_repeat_sched">Repeat ENBS Schedule</label>
+                <input class="form-input" type="date" id="neo_enbs_repeat_sched" name="neo_enbs_repeat_sched">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_enbs_others">Others</label>
+                <input class="form-input" type="text" id="neo_enbs_others" name="neo_enbs_others">
+              </div>
+            </div>
+          </div>
+
+          <!-- Newborn Hearing Screening -->
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-headphones"></i> D. Newborn Hearing Screening</div>
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label" for="neo_hearing_date">Date Done</label>
+                <input class="form-input" type="date" id="neo_hearing_date" name="neo_hearing_date">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_hearing_remarks">Remarks</label>
+                <select class="form-select" id="neo_hearing_remarks" name="neo_hearing_remarks">
+                  <option value="">Select</option>
+                  <option value="Pass">Pass</option>
+                  <option value="Fail">Fail</option>
+                  <option value="Not Done">Not Done</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_hearing_repeat_date">If Failed &rarr; Repeat Date</label>
+                <input class="form-input" type="date" id="neo_hearing_repeat_date" name="neo_hearing_repeat_date" disabled>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_hearing_findings">Findings</label>
+                <input class="form-input" type="text" id="neo_hearing_findings" name="neo_hearing_findings">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_hearing_outside">If Done Outside</label>
+                <select class="form-select" id="neo_hearing_outside" name="neo_hearing_outside">
+                  <option value="">Select</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cranial UTZ -->
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-hospital"></i> E. Cranial Ultrasound (UTZ)</div>
+            <div class="form-grid-4">
+              <div class="form-group">
+                <label class="form-label" for="neo_cranial_applicable">Applicable</label>
+                <select class="form-select" id="neo_cranial_applicable" name="neo_cranial_applicable">
+                  <option value="">Select</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                  <option value="Not Done">Not Done</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_cranial_date">Date Done</label>
+                <input class="form-input" type="date" id="neo_cranial_date" name="neo_cranial_date">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_cranial_findings">Findings</label>
+                <select class="form-select" id="neo_cranial_findings" name="neo_cranial_findings">
+                  <option value="">Select</option>
+                  <option value="Normal">Normal</option>
+                  <option value="Hydrocephalus">Hydrocephalus</option>
+                  <option value="GMH-IVH Stage 1">GMH-IVH Stage 1</option>
+                  <option value="GMH-IVH Stage 2">GMH-IVH Stage 2</option>
+                  <option value="GMH-IVH Stage 3">GMH-IVH Stage 3</option>
+                  <option value="GMH-IVH Stage 4">GMH-IVH Stage 4</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_cranial_remarks">Remarks</label>
+                <input class="form-input" type="text" id="neo_cranial_remarks" name="neo_cranial_remarks">
+              </div>
+            </div>
+          </div>
+
+          <!-- Critical Congenital Heart Disease (CCHD) -->
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-heart"></i> F. Critical Congenital Heart Disease (CCHD) Screening</div>
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label" for="neo_cchd_date">Date Done</label>
+                <input class="form-input" type="date" id="neo_cchd_date" name="neo_cchd_date">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_cchd_remarks">Remarks</label>
+                <select class="form-select" id="neo_cchd_remarks" name="neo_cchd_remarks">
+                  <option value="">Select</option>
+                  <option value="Pass">Pass</option>
+                  <option value="Retest">Retest</option>
+                  <option value="Refer">Refer</option>
+                  <option value="Not Done">Not Done</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_cchd_retest_done">If Retest Done</label>
+                <select class="form-select" id="neo_cchd_retest_done" name="neo_cchd_retest_done" disabled>
+                  <option value="">Select</option>
+                  <option value="Pass">Pass</option>
+                  <option value="Refer">Refer</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="section-subtitle">Pulse Oximetry Readings</div>
+            <div class="form-grid-2">
+              <div style="background:var(--slate-50); border:1px solid var(--border-color); border-radius:4px; padding:10px 12px;">
+                <strong>Initial Reading:</strong>
+                <div class="form-grid-3" style="margin-top:6px;">
+                  <div class="form-group">
+                    <label class="form-label" for="neo_cchd_init_hand">Right Hand (%)</label>
+                    <input class="form-input" type="number" min="0" max="100" id="neo_cchd_init_hand" name="neo_cchd_init_hand" placeholder="%">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="neo_cchd_init_foot">Foot (%)</label>
+                    <input class="form-input" type="number" min="0" max="100" id="neo_cchd_init_foot" name="neo_cchd_init_foot" placeholder="%">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="neo_cchd_init_diff">Difference (%)</label>
+                    <input class="form-input" type="number" id="neo_cchd_init_diff" name="neo_cchd_init_diff" readonly style="background:var(--slate-100);">
+                  </div>
+                </div>
+              </div>
+              <div style="background:var(--slate-50); border:1px solid var(--border-color); border-radius:4px; padding:10px 12px;">
+                <strong>Retest Reading:</strong>
+                <div class="form-grid-3" style="margin-top:6px;">
+                  <div class="form-group">
+                    <label class="form-label" for="neo_cchd_retest_hand">Right Hand (%)</label>
+                    <input class="form-input" type="number" min="0" max="100" id="neo_cchd_retest_hand" name="neo_cchd_retest_hand" placeholder="%" disabled>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="neo_cchd_retest_foot">Foot (%)</label>
+                    <input class="form-input" type="number" min="0" max="100" id="neo_cchd_retest_foot" name="neo_cchd_retest_foot" placeholder="%" disabled>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="neo_cchd_retest_diff">Difference (%)</label>
+                    <input class="form-input" type="number" id="neo_cchd_retest_diff" name="neo_cchd_retest_diff" readonly style="background:var(--slate-100);">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-grid-3" style="margin-top:10px;">
+              <div class="form-group col-span-2">
+                <label class="form-label" for="neo_cchd_not_done">Reasons for Screening Not Done</label>
+                <input class="form-input" type="text" id="neo_cchd_not_done" name="neo_cchd_not_done">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_cchd_others">Others</label>
+                <input class="form-input" type="text" id="neo_cchd_others" name="neo_cchd_others">
+              </div>
+              <div class="form-group col-span-3">
+                <label class="form-label" for="neo_cchd_screener">Printed Name of Screener</label>
+                <input class="form-input" type="text" id="neo_cchd_screener" name="neo_cchd_screener">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 6: DIAGNOSIS & KANGAROO MOTHER CARE -->
+        <div class="tab-panel" id="tab-diagnosis" role="tabpanel">
+
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-stethoscope"></i> Neonatal Diagnosis</div>
+            <div class="form-grid-3">
+              <!-- Hyperbilirubinemia -->
+              <div class="form-group">
+                <label class="form-label" for="neo_dx_bili_class">Hyperbilirubinemia Classification</label>
+                <select class="form-select" id="neo_dx_bili_class" name="neo_dx_bili_class">
+                  <option value="">Select</option>
+                  <option value="None">None</option>
+                  <option value="Physiologic">Physiologic</option>
+                  <option value="Breastfeeding">Breastfeeding</option>
+                  <option value="ABO incompatibility">ABO incompatibility</option>
+                  <option value="Prematurity">Prematurity</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_dx_bili_other">Hyperbilirubinemia Other Causes</label>
+                <input class="form-input" type="text" id="neo_dx_bili_other" name="neo_dx_bili_other">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_dx_bili_level">Bilirubin Level (mg/dl)</label>
+                <input class="form-input" type="number" step="0.01" min="0" id="neo_dx_bili_level" name="neo_dx_bili_level" placeholder="mg/dl">
+              </div>
+
+              <!-- Respiratory -->
+              <div class="form-group">
+                <label class="form-label" for="neo_dx_resp_status">Respiratory Diagnosis/Status</label>
+                <select class="form-select" id="neo_dx_resp_status" name="neo_dx_resp_status">
+                  <option value="">Select</option>
+                  <option value="Normal">Normal</option>
+                  <option value="Transient Tachypnea">Transient Tachypnea</option>
+                  <option value="Respiratory Distress">Respiratory Distress</option>
+                  <option value="Pneumonia">Pneumonia</option>
+                </select>
+              </div>
+              <div class="form-group col-span-2">
+                <label class="form-label" for="neo_dx_resp_support">Respiratory Support</label>
+                <select class="form-select" id="neo_dx_resp_support" name="neo_dx_resp_support">
+                  <option value="">Select Support Mode</option>
+                  <option value="IPPV">IPPV</option>
+                  <option value="NIPPV">NIPPV</option>
+                  <option value="Nasal CPAP">Nasal CPAP</option>
+                  <option value="Nasal High Flow">Nasal High Flow</option>
+                  <option value="Face Mask">Face Mask</option>
+                  <option value="Nasal Cannula">Nasal Cannula</option>
+                  <option value="Blow by oxygen">Blow by oxygen</option>
+                </select>
+              </div>
+
+              <!-- Sepsis -->
+              <div class="form-group">
+                <label class="form-label" for="neo_dx_sepsis_status">Sepsis Status/Type</label>
+                <select class="form-select" id="neo_dx_sepsis_status" name="neo_dx_sepsis_status">
+                  <option value="">Select</option>
+                  <option value="None">None</option>
+                  <option value="Clinical Sepsis">Clinical Sepsis</option>
+                  <option value="Culture Proven">Culture Proven</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_dx_sepsis_culture">Culture Result</label>
+                <input class="form-input" type="text" id="neo_dx_sepsis_culture" name="neo_dx_sepsis_culture" placeholder="Organism / sensitivity">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_dx_asphyxia">Asphyxia</label>
+                <select class="form-select" id="neo_dx_asphyxia" name="neo_dx_asphyxia">
+                  <option value="">Select</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+
+              <!-- Congenital Disease -->
+              <div class="form-group col-span-3">
+                <label class="form-label" for="neo_dx_congenital">Congenital Disease</label>
+                <input class="form-input" type="text" id="neo_dx_congenital" name="neo_dx_congenital" placeholder="Specify congenital anomaly or syndrome">
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-user-md"></i> Kangaroo Mother Care (KMC) &amp; Discharge Nutrition</div>
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label" for="neo_kmc_enroll_date">Enrollment Date</label>
+                <input class="form-input" type="date" id="neo_kmc_enroll_date" name="neo_kmc_enroll_date">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_kmc_discharge">KMC at Time of Discharge</label>
+                <select class="form-select" id="neo_kmc_discharge" name="neo_kmc_discharge">
+                  <option value="">Select</option>
+                  <option value="Intermittent (<20 hours)">Intermittent (&lt;20 hours)</option>
+                  <option value="Continuous (KMC ward or >20 hours)">Continuous (KMC ward or &gt;20 hours)</option>
+                  <option value="Not Enrolled">Not Enrolled</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_kmc_status">Status on Discharge</label>
+                <select class="form-select" id="neo_kmc_status" name="neo_kmc_status">
+                  <option value="">Select</option>
+                  <option value="Discharged">Discharged</option>
+                  <option value="Expired">Expired</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_kmc_feed_mode">Mode of Feeding</label>
+                <select class="form-select" id="neo_kmc_feed_mode" name="neo_kmc_feed_mode">
+                  <option value="">Select Mode</option>
+                  <option value="Direct Breastfeeding">Direct Breastfeeding</option>
+                  <option value="OGT">OGT</option>
+                  <option value="Cup/Dropper">Cup/Dropper</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_kmc_feed_type">Type of Feeding on Discharge</label>
+                <select class="form-select" id="neo_kmc_feed_type" name="neo_kmc_feed_type">
+                  <option value="">Select Type</option>
+                  <option value="Exclusive Breastmilk">Exclusive Breastmilk</option>
+                  <option value="Mixed Feeding">Mixed Feeding</option>
+                  <option value="Formula Feeding ">Formula Feeding </option>
+                  <option value="None (Baby Died).">None (Baby Died).</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_kmc_donor_milk">Use of Donor Human Milk</label>
+                <select class="form-select" id="neo_kmc_donor_milk" name="neo_kmc_donor_milk">
+                  <option value="">Select</option>
+                  <option value="No">No</option>
+                  <option value="Pasteurized Human Milk">Pasteurized Human Milk</option>
+                  <option value="Not Pasteurized Human Milk">Not Pasteurized Human Milk</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_kmc_surfactant">Surfactant</label>
+                <select class="form-select" id="neo_kmc_surfactant" name="neo_kmc_surfactant">
+                  <option value="">Select</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                  <option value="Not Applicable">Not Applicable</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_kmc_weight_discharge">Weight on Discharge (kg)</label>
+                <input class="form-input" type="number" step="0.01" min="0" id="neo_kmc_weight_discharge" name="neo_kmc_weight_discharge" placeholder="kg">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="neo_kmc_futility">Medical Futility Data</label>
+                <select class="form-select" id="neo_kmc_futility" name="neo_kmc_futility">
+                  <option value="">Select</option>
+                  <option value="DNR / DNI">DNR / DNI</option>
+                  <option value="Neurologic">Neurologic</option>
+                  <option value="Respiratory failure refractory to high ventilator settings">Respiratory failure refractory to high ventilator settings</option>
+                  <option value="Severe Acidosis">Severe Acidosis</option>
+                  <option value="Shock">Shock</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 7: GROWTH CHARTS -->
+        <div class="tab-panel" id="tab-charts" role="tabpanel">
+          <div class="section-card">
+            <div class="section-card-title"><i class="icon-picture"></i> Neonatal Clinical Growth Charts (High-Resolution Visual Reference)</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+              <div style="display:inline-flex; gap:6px;">
+                <button type="button" class="btn-secondary active" id="btn-chart-lub" onclick="switchGrowthChart('lub')">Lubchenco Chart</button>
+                <button type="button" class="btn-secondary" id="btn-chart-boy" onclick="switchGrowthChart('boy')">Boy Fenton Chart</button>
+                <button type="button" class="btn-secondary" id="btn-chart-girl" onclick="switchGrowthChart('girl')">Girl Fenton Chart</button>
+              </div>
+              <div style="font-size:11.5px; color:var(--slate-500);">
+                Click on any chart to enlarge/zoom in full-screen modal viewer.
+              </div>
+            </div>
+
+            <!-- Lubchenco Chart -->
+            <div class="chart-card" id="panel-chart-lub">
+              <h3 style="font-size:13px; margin-bottom:8px; color:var(--slate-900);">Lubchenco Intrauterine Growth Chart (Weeks vs Weight/Length/Head Circumference)</h3>
+              <img src="img/neonate/lubchenco_chart.png" alt="Lubchenco Growth Chart" onclick="openZoomModal(this.src)" title="Click to zoom chart">
+            </div>
+
+            <!-- Boy Fenton Chart -->
+            <div class="chart-card" id="panel-chart-boy" style="display:none;">
+              <h3 style="font-size:13px; margin-bottom:8px; color:var(--slate-900);">Fenton Growth Chart for Preterm Infants (Boys — 22 to 50 Weeks Gestational Age)</h3>
+              <img src="img/neonate/boy_fenton_chart.png" alt="Boy Fenton Growth Chart" onclick="openZoomModal(this.src)" title="Click to zoom chart">
+            </div>
+
+            <!-- Female Fenton Chart -->
+            <div class="chart-card" id="panel-chart-girl" style="display:none;">
+              <h3 style="font-size:13px; margin-bottom:8px; color:var(--slate-900);">Fenton Growth Chart for Preterm Infants (Girls — 22 to 50 Weeks Gestational Age)</h3>
+              <img src="img/neonate/female_fenton_chart.png" alt="Female Fenton Growth Chart" onclick="openZoomModal(this.src)" title="Click to zoom chart">
+            </div>
+          </div>
+        </div>
+
+        <!-- WORKSPACE FOOTER ACTIONS -->
+        <div class="action-bar">
+          <button type="button" class="btn-secondary" onclick="resetNeonateForm()"><i class="icon-refresh"></i> Reset Form</button>
+          <button type="button" class="btn-secondary" onclick="saveNeonateDraft()"><i class="icon-save"></i> Save Draft</button>
+          <button type="submit" class="btn-primary" id="btn-save-neonate-record"><i class="icon-ok icon-white"></i> Save Neonate Record</button>
+        </div>
+
+      </form>
+              </div>
+            </div>
+          </div>
+        </div>
 
     <!-- Footer Encounter Actions -->
     <div class="row-fluid" id="dashboard-actions" style="margin-bottom:30px;">
@@ -3868,6 +5640,13 @@
         <button type="button" id="floating-req-close-btn" onclick="collapseFloatingRequisitionToolkit(event)" title="Collapse (Esc)" style="background:none; border:none; color:#64748b; font-size:16px; line-height:1; cursor:pointer; padding:0 2px; font-weight:700;">✕</button>
       </div>
       <div class="floating-req-items">
+        <button type="button" class="floating-req-item-btn" data-station="neonate" id="floating-btn-neonate" onclick="openNeonateWorkspace()" title="Open Neonate Clinical Record">
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">Neonate Clinical Record</div>
+            <div class="floating-req-item-sub">Ballard, APGAR, EINC &amp; Growth Charts</div>
+          </div>
+          <div class="floating-req-item-action">Open</div>
+        </button>
         <button type="button" class="floating-req-item-btn" id="floating-btn-rx" onclick="openRxWriterFromToolkit(event)" data-station="rx" title="Open Rx Writer / Prescriptions">
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">Rx Writer</div>
@@ -3891,8 +5670,27 @@
     </div>
   </aside>
 
-  <script src="js/data/patient_seeds.js?v=20260930_02"></script>
+  <script src="js/data/patient_seeds.js?v=20261001_01"></script>
   <script>
+  var SCORE_TO_WEEKS_MAP = {
+    "-10": 20, "-9": 21, "-8": 21, "-7": 21, "-6": 21, "-5": 22, "-4": 23, "-3": 23, "-2": 23, "-1": 23,
+    "0": 24, "1": 25, "2": 25, "3": 25, "4": 25, "5": 26, "6": 27, "7": 27, "8": 27, "9": 27,
+    "10": 28, "11": 29, "12": 29, "13": 29, "14": 29, "15": 30, "16": 31, "17": 31, "18": 31, "19": 31,
+    "20": 32, "21": 33, "22": 33, "23": 33, "24": 33, "25": 34, "26": 35, "27": 35, "28": 35, "29": 35,
+    "30": 36, "31": 37, "32": 37, "33": 37, "34": 37, "35": 38, "36": 39, "37": 39, "38": 39, "39": 39,
+    "40": 40, "41": 41, "42": 41, "43": 41, "44": 41, "45": 42, "46": 43, "47": 43, "48": 43, "49": 43, "50": 44
+  };
+
+  var WEEKS_TO_MATURITY_MAP = {
+    "20": "Exteremely Preterm", "21": "Exteremely Preterm", "22": "Exteremely Preterm", "23": "Exteremely Preterm",
+    "24": "Exteremely Preterm", "25": "Exteremely Preterm", "26": "Exteremely Preterm", "27": "Exteremely Preterm",
+    "28": "Very Pretem", "29": "Very Pretem", "30": "Very Pretem", "31": "Very Pretem",
+    "32": "Moderate Preterm", "33": "Moderate Preterm", "34": "Late Preterm", "35": "Late Preterm", "36": "Late Preterm",
+    "37": "Early Term", "38": "Early Term", "39": "Full Term", "40": "Full Term",
+    "41": "Late Term", "42": "Post Term", "43": "Post Term", "44": "Post Term", "45": "Post Term",
+    "46": "Post Term", "47": "Post Term", "48": "Post Term", "49": "Post Term", "50": "Post Term"
+  };
+
     /* ═══════════════════════════════════════════
        DOCTOR'S MODULE DASHBOARD — LOGIC
        ═══════════════════════════════════════════ */
@@ -10969,6 +12767,9 @@
         if (typeof initObGyneModule === 'function') {
           initObGyneModule(record.id);
         }
+        if (typeof initNeonateModule === 'function') {
+          initNeonateModule(record.id);
+        }
 
 
       } finally {
@@ -11361,6 +13162,10 @@
 
       /* Structured / non-standard sections */
       data.orders = collectOrders();
+
+      if (typeof collectNeonateData === 'function') {
+        data.neonate = collectNeonateData();
+      }
 
       data.doctorOrderSummary =
         renderOrderSummary();
@@ -12590,6 +14395,9 @@
       }
 
       saveObStateForPatient();
+      if (typeof saveNeonateStateForPatient === 'function') {
+        saveNeonateStateForPatient();
+      }
       closePregnancyModal();
       renderPregnancyTable();
       renderSummaryCards();
@@ -12976,8 +14784,980 @@
     initObGyneListeners();
     initObGyneModule(activePatientId);
 
+    /* ══════════════════════════════════════════════════════════════════════
+       SEGHIS+ NEONATE CLINICAL RECORD — JAVASCRIPT CONTROLLER
+       ══════════════════════════════════════════════════════════════════════ */
+    var SCORE_TO_WEEKS_MAP = {
+      "-10": 20, "-9": 21, "-8": 21, "-7": 21, "-6": 21, "-5": 22, "-4": 23, "-3": 23, "-2": 23, "-1": 23,
+      "0": 24, "1": 25, "2": 25, "3": 25, "4": 25, "5": 26, "6": 27, "7": 27, "8": 27, "9": 27,
+      "10": 28, "11": 29, "12": 29, "13": 29, "14": 29, "15": 30, "16": 31, "17": 31, "18": 31, "19": 31,
+      "20": 32, "21": 33, "22": 33, "23": 33, "24": 33, "25": 34, "26": 35, "27": 35, "28": 35, "29": 35,
+      "30": 36, "31": 37, "32": 37, "33": 37, "34": 37, "35": 38, "36": 39, "37": 39, "38": 39, "39": 39,
+      "40": 40, "41": 41, "42": 41, "43": 41, "44": 41, "45": 42, "46": 43, "47": 43, "48": 43, "49": 43, "50": 44
+    };
+
+    var WEEKS_TO_MATURITY_MAP = {
+      "20": "Exteremely Preterm", "21": "Exteremely Preterm", "22": "Exteremely Preterm", "23": "Exteremely Preterm",
+      "24": "Exteremely Preterm", "25": "Exteremely Preterm", "26": "Exteremely Preterm", "27": "Exteremely Preterm",
+      "28": "Very Pretem", "29": "Very Pretem", "30": "Very Pretem", "31": "Very Pretem",
+      "32": "Moderate Preterm", "33": "Moderate Preterm", "34": "Late Preterm", "35": "Late Preterm", "36": "Late Preterm",
+      "37": "Early Term", "38": "Early Term", "39": "Full Term", "40": "Full Term",
+      "41": "Late Term", "42": "Post Term", "43": "Post Term", "44": "Post Term", "45": "Post Term",
+      "46": "Post Term", "47": "Post Term", "48": "Post Term", "49": "Post Term", "50": "Post Term"
+    };
+
+    var neonatePatientState = null;
+
+    function showNeonateToast(msg) {
+      var t = document.getElementById('neoDashboardToast') || document.getElementById('neoToast');
+      if (!t) return;
+      t.textContent = msg || 'Neonate record saved successfully.';
+      t.style.display = 'block';
+      setTimeout(function () { t.style.display = 'none'; }, 2200);
+    }
+
+    function toggleNeonateCollapse() {
+      var content = document.getElementById('dashlet-neonate-content');
+      var icon = document.getElementById('icon-neonate-collapse');
+      if (!content) return;
+      var isCollapsed = content.style.display === 'none';
+      content.style.display = isCollapsed ? 'block' : 'none';
+      if (icon) {
+        icon.className = isCollapsed ? 'icon-chevron-up' : 'icon-chevron-down';
+      }
+    }
+
+    function openNeonateWorkspace(targetTab) {
+      var content = document.getElementById('dashlet-neonate-content');
+      var icon = document.getElementById('icon-neonate-collapse');
+      if (content && content.style.display === 'none') {
+        content.style.display = 'block';
+        if (icon) icon.className = 'icon-chevron-up';
+      }
+      if (targetTab) {
+        var tabBtn = document.querySelector('.workspace-tab[data-tab="' + targetTab + '"]');
+        if (tabBtn) tabBtn.click();
+      }
+      var dashlet = document.getElementById('dashlet-neonate');
+      if (dashlet && typeof dashlet.scrollIntoView === 'function') {
+        dashlet.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function switchGrowthChart(which) {
+      document.querySelectorAll('#btn-chart-lub, #btn-chart-boy, #btn-chart-girl').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('#panel-chart-lub, #panel-chart-boy, #panel-chart-girl').forEach(function (p) { p.style.display = 'none'; });
+      var btn = document.getElementById('btn-chart-' + which);
+      var panel = document.getElementById('panel-chart-' + which);
+      if (btn) btn.classList.add('active');
+      if (panel) panel.style.display = 'block';
+    }
+
+    function openGrowthChartModal(which) {
+      var tabBtn = document.querySelector('.workspace-tab[data-tab="tab-charts"]');
+      if (tabBtn) tabBtn.click();
+      switchGrowthChart(which);
+    }
+
+    function openZoomModal(src) {
+      var modal = document.getElementById('neonate-chart-modal') || document.getElementById('chartModal');
+      var img = document.getElementById('neonateZoomedChartImg') || document.getElementById('zoomedChartImg');
+      if (!modal || !img) return;
+      img.src = src;
+      modal.classList.add('open');
+    }
+
+    function closeZoomModal(e) {
+      if (e) e.stopPropagation();
+      var modal = document.getElementById('neonate-chart-modal') || document.getElementById('chartModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function calcApgarScore(selector, totalId) {
+      var selects = document.querySelectorAll(selector);
+      var sum = 0, count = 0;
+      selects.forEach(function (s) {
+        if (s.value !== '') {
+          sum += parseInt(s.value, 10);
+          count++;
+        }
+      });
+      var el = document.getElementById(totalId);
+      if (!el) return null;
+      if (count === 5) {
+        el.textContent = sum;
+        el.style.color = '#1b4d3e';
+        return sum;
+      } else if (count > 0) {
+        el.textContent = sum + ' (partial)';
+        el.style.color = '#d97706';
+        return sum;
+      } else {
+        el.textContent = '—';
+        el.style.color = '#64748b';
+        return null;
+      }
+    }
+
+    function updateAllApgar() {
+      var m1 = calcApgarScore('.apgar-m1', 'apgar-total-m1');
+      var m5 = calcApgarScore('.apgar-m5', 'apgar-total-m5');
+      var m10 = calcApgarScore('.apgar-m10', 'apgar-total-m10');
+      var sumEl = document.getElementById('sum-apgar');
+      if (sumEl) {
+        var s1 = m1 !== null ? m1 : '—';
+        var s5 = m5 !== null ? m5 : '—';
+        var s10 = m10 !== null ? m10 : '—';
+        sumEl.textContent = s1 + ' / ' + s5 + ' / ' + s10;
+      }
+    }
+
+    function recalcBallard() {
+      var neuroSelects = Array.prototype.slice.call(document.querySelectorAll('.neo-neuro-score'));
+      var physicalSelects = Array.prototype.slice.call(document.querySelectorAll('.neo-physical-score'));
+      var allSelects = Array.prototype.slice.call(document.querySelectorAll('.neo-ballard-score'));
+
+      var scoredCount = allSelects.filter(function (s) { return s.value !== ''; }).length;
+      var countEl = document.getElementById('ballard-completed-count');
+      if (countEl) countEl.textContent = scoredCount + ' / ' + allSelects.length;
+
+      var neuroComplete = neuroSelects.filter(function (s) { return s.value !== ''; });
+      var physicalComplete = physicalSelects.filter(function (s) { return s.value !== ''; });
+
+      var neuroSum = neuroComplete.reduce(function (acc, s) { return acc + parseInt(s.value, 10); }, 0);
+      var physicalSum = physicalComplete.reduce(function (acc, s) { return acc + parseInt(s.value, 10); }, 0);
+
+      var nSub = document.getElementById('ballard-neuro-subtotal');
+      if (nSub) nSub.textContent = neuroComplete.length === neuroSelects.length ? neuroSum : (neuroComplete.length ? neuroSum + ' (partial)' : '—');
+
+      var pSub = document.getElementById('ballard-physical-subtotal');
+      if (pSub) pSub.textContent = physicalComplete.length === physicalSelects.length ? physicalSum : (physicalComplete.length ? physicalSum + ' (partial)' : '—');
+
+      var totalEl = document.getElementById('ballard-total-score');
+      var weeksEl = document.getElementById('ballard-weeks-display');
+      var maturityEl = document.getElementById('ballard-maturity-display');
+      var sumMaturityEl = document.getElementById('sum-maturity');
+      var sumWeeksEl = document.getElementById('sum-weeks');
+
+      if (scoredCount === allSelects.length) {
+        var total = neuroSum + physicalSum;
+        if (totalEl) totalEl.textContent = total;
+        var weeks = SCORE_TO_WEEKS_MAP[String(total)];
+        if (weeks !== undefined) {
+          var mat = WEEKS_TO_MATURITY_MAP[String(weeks)] || 'Unknown';
+          if (weeksEl) weeksEl.textContent = weeks + ' weeks';
+          if (maturityEl) maturityEl.textContent = mat;
+          if (sumMaturityEl) sumMaturityEl.textContent = weeks + ' wks • ' + mat;
+          if (sumWeeksEl) sumWeeksEl.textContent = 'Maturity: ' + mat;
+        } else {
+          if (weeksEl) weeksEl.textContent = 'Invalid Score';
+          if (maturityEl) maturityEl.textContent = 'Invalid Score';
+          if (sumMaturityEl) sumMaturityEl.textContent = 'Invalid';
+        }
+      } else {
+        var partialTotal = neuroSum + physicalSum;
+        if (totalEl) totalEl.textContent = scoredCount > 0 ? partialTotal + ' (partial)' : '—';
+        if (weeksEl) weeksEl.textContent = '— (Incomplete: ' + scoredCount + '/13)';
+        if (maturityEl) maturityEl.textContent = '—';
+        if (sumMaturityEl) sumMaturityEl.textContent = scoredCount > 0 ? partialTotal + ' pts (partial)' : '—';
+        if (sumWeeksEl) sumWeeksEl.textContent = 'Maturity: Incomplete (' + scoredCount + '/13)';
+      }
+    }
+
+    function calcPulseOxDiff(handId, footId, diffId) {
+      var handEl = document.getElementById(handId);
+      var footEl = document.getElementById(footId);
+      var diffEl = document.getElementById(diffId);
+      if (!handEl || !footEl || !diffEl) return;
+      var hand = parseFloat(handEl.value);
+      var foot = parseFloat(footEl.value);
+      if (!isNaN(hand) && !isNaN(foot)) {
+        diffEl.value = Math.abs(hand - foot);
+      } else {
+        diffEl.value = '';
+      }
+    }
+
+    function updateSummaryHighlights() {
+      var inbornSel = document.getElementById('neo_inborn');
+      var outbornSel = document.getElementById('neo_outborn');
+      var readmitChk = document.getElementById('neo_readmission');
+      var locSel = document.getElementById('neo_birth_location');
+      var delSel = document.getElementById('neo_delivery_type');
+      var matClassSel = document.getElementById('neo_maternal_class');
+      var wtInput = document.getElementById('neo_weight');
+      var hrInput = document.getElementById('neo_cardiac_rate');
+      var rrInput = document.getElementById('neo_resp_rate');
+
+      var typeEl = document.getElementById('sum-type');
+      var locEl = document.getElementById('sum-location');
+      if (typeEl && readmitChk && inbornSel && outbornSel) {
+        if (readmitChk.checked) {
+          typeEl.textContent = 'Readmission (≤28d)';
+        } else if (inbornSel.value) {
+          typeEl.textContent = 'Inborn (' + inbornSel.value + ')';
+        } else if (outbornSel.value) {
+          typeEl.textContent = 'Outborn (' + outbornSel.value.trim() + ')';
+        } else {
+          typeEl.textContent = '—';
+        }
+      }
+      if (locEl && locSel) {
+        locEl.textContent = locSel.value ? 'Location: ' + locSel.value : 'Location: —';
+      }
+
+      var delVal = (delSel && delSel.value) || '—';
+      var matClass = (matClassSel && matClassSel.value) || '—';
+      var delEl = document.getElementById('sum-delivery');
+      var matEl = document.getElementById('sum-maternal-class');
+      if (delEl) delEl.textContent = delVal;
+      if (matEl) matEl.textContent = 'Class: ' + matClass;
+
+      var wtEl = document.getElementById('sum-weight');
+      var vitEl = document.getElementById('sum-vitals');
+      if (wtEl && wtInput) wtEl.textContent = wtInput.value ? wtInput.value + ' kg' : '—';
+      if (vitEl && hrInput && rrInput) {
+        var hr = hrInput.value || '—';
+        var rr = rrInput.value || '—';
+        vitEl.textContent = 'HR: ' + hr + ' | RR: ' + rr;
+      }
+    }
+
+    function collectNeonateData() {
+      var inbornSel = document.getElementById('neo_inborn');
+      var outbornSel = document.getElementById('neo_outborn');
+      var readmitChk = document.getElementById('neo_readmission');
+      var delSel = document.getElementById('neo_delivery_type');
+      var bowSel = document.getElementById('neo_bow');
+      var ropAppSel = document.getElementById('neo_rop_applicable');
+      var rorFindSel = document.getElementById('neo_ror_findings');
+      var hearingSel = document.getElementById('neo_hearing_remarks');
+      var cchdSel = document.getElementById('neo_cchd_remarks');
+
+      var risks = Array.prototype.slice.call(document.querySelectorAll('input[name="neo_risk"]:checked')).map(function (cb) { return cb.value; });
+      var eincInts = Array.prototype.slice.call(document.querySelectorAll('input[name="neo_einc_int"]:checked')).map(function (cb) { return cb.value; });
+      var eincRadio = document.querySelector('input[name="neo_einc_status"]:checked');
+
+      var ballardScores = {};
+      document.querySelectorAll('.neo-ballard-score').forEach(function (s) {
+        ballardScores[s.getAttribute('data-key')] = s.value;
+      });
+
+      var apgarData = { m1: {}, m5: {}, m10: {} };
+      ['hr', 'rr', 'tone', 'reflex', 'color'].forEach(function (sign) {
+        var s1 = document.querySelector('.apgar-m1[data-sign="' + sign + '"]');
+        var s5 = document.querySelector('.apgar-m5[data-sign="' + sign + '"]');
+        var s10 = document.querySelector('.apgar-m10[data-sign="' + sign + '"]');
+        if (s1) apgarData.m1[sign] = s1.value;
+        if (s5) apgarData.m5[sign] = s5.value;
+        if (s10) apgarData.m10[sign] = s10.value;
+      });
+
+      var gVal = function (id) { var el = document.getElementById(id); return el ? el.value : ''; };
+
+      return {
+        patientId: activePatientId || 'default',
+        updatedAt: new Date().toISOString(),
+        classification: {
+          inborn: inbornSel ? inbornSel.value : '',
+          outborn: outbornSel ? outbornSel.value : '',
+          readmission: readmitChk ? readmitChk.checked : false,
+          birthLocation: gVal('neo_birth_location')
+        },
+        maternal: {
+          motherName: gVal('neo_mother_name'),
+          motherAddress: gVal('neo_mother_address'),
+          motherAge: gVal('neo_mother_age'),
+          motherBloodType: gVal('neo_mother_blood_type'),
+          status: gVal('neo_mother_status'),
+          edc: gVal('neo_edc'),
+          lmp: gVal('neo_lmp'),
+          aogWeeks: gVal('neo_aog_weeks'),
+          gravida: gVal('neo_gravida'),
+          para: gVal('neo_para'),
+          presentation: gVal('neo_presentation'),
+          position: gVal('neo_position'),
+          classification: gVal('neo_maternal_class'),
+          deliveryType: delSel ? delSel.value : '',
+          deliveryTime: gVal('neo_delivery_time'),
+          bow: bowSel ? bowSel.value : '',
+          rupturedTime: gVal('neo_ruptured_time'),
+          stage1: gVal('neo_stage1'),
+          stage2: gVal('neo_stage2'),
+          csIndication: gVal('neo_cs_indication'),
+          complications: gVal('neo_complications'),
+          steroids: {
+            dose1: gVal('neo_steroid_dose1'),
+            dose2: gVal('neo_steroid_dose2'),
+            dose3: gVal('neo_steroid_dose3'),
+            dose4: gVal('neo_steroid_dose4')
+          }
+        },
+        maternalRiskFactors: {
+          selected: risks,
+          othersText: gVal('neo_risk_others_text')
+        },
+        apgar: {
+          scores: apgarData,
+          exceeding: gVal('neo_apgar_exceeding')
+        },
+        measurements: {
+          weight: gVal('neo_weight'),
+          headCirc: gVal('neo_head_circ'),
+          length: gVal('neo_length'),
+          chestCirc: gVal('neo_chest_circ'),
+          abdCirc: gVal('neo_abd_circ'),
+          temp: gVal('neo_temp'),
+          cardiacRate: gVal('neo_cardiac_rate'),
+          respRate: gVal('neo_resp_rate'),
+          babyBloodType: gVal('neo_baby_blood_type'),
+          cordCondition: gVal('neo_cord_condition')
+        },
+        einc: {
+          status: eincRadio ? eincRadio.value : '',
+          timeStart: gVal('neo_einc_time_start'),
+          timeEnd: gVal('neo_einc_time_end'),
+          interventions: eincInts,
+          reason: gVal('neo_einc_reason'),
+          provider: gVal('neo_einc_provider')
+        },
+        ballard: {
+          scores: ballardScores,
+          neuroSubtotal: (document.getElementById('ballard-neuro-subtotal') || {}).textContent || '',
+          physicalSubtotal: (document.getElementById('ballard-physical-subtotal') || {}).textContent || '',
+          totalScore: (document.getElementById('ballard-total-score') || {}).textContent || '',
+          weeks: (document.getElementById('ballard-weeks-display') || {}).textContent || '',
+          maturity: (document.getElementById('ballard-maturity-display') || {}).textContent || ''
+        },
+        physicalExam: {
+          general: gVal('neo_pe_general'),
+          color: gVal('neo_pe_color'),
+          head: gVal('neo_pe_head'),
+          eent: gVal('neo_pe_eent'),
+          neck: gVal('neo_pe_neck'),
+          heart: gVal('neo_pe_heart'),
+          chestLungs: gVal('neo_pe_chest_lungs'),
+          abdomen: gVal('neo_pe_abdomen'),
+          genitalia: gVal('neo_pe_genitalia'),
+          anus: gVal('neo_pe_anus'),
+          skin: gVal('neo_pe_skin'),
+          extremities: gVal('neo_pe_extremities'),
+          otherFindings: gVal('neo_pe_other_findings'),
+          sex: gVal('neo_sex'),
+          nicuReason: gVal('neo_nicu_reason'),
+          nicuOthers: gVal('neo_nicu_others')
+        },
+        aftercare: {
+          vitk: { date: gVal('neo_aftercare_vitk_date'), remarks: gVal('neo_aftercare_vitk_remarks') },
+          eye: { date: gVal('neo_aftercare_eye_date'), remarks: gVal('neo_aftercare_eye_remarks') },
+          bcg: { date: gVal('neo_aftercare_bcg_date'), remarks: gVal('neo_aftercare_bcg_remarks') },
+          hepab: { date: gVal('neo_aftercare_hepab_date'), remarks: gVal('neo_aftercare_hepab_remarks') },
+          hbig: { date: gVal('neo_aftercare_hbig_date'), remarks: gVal('neo_aftercare_hbig_remarks') },
+          nurse: gVal('neo_aftercare_nurse')
+        },
+        screening: {
+          ror: {
+            date: gVal('neo_ror_date'),
+            findings: rorFindSel ? rorFindSel.value : '',
+            abnormal: gVal('neo_ror_abnormal'),
+            refDate: gVal('neo_ror_ref_date')
+          },
+          rop: {
+            applicable: ropAppSel ? ropAppSel.value : '',
+            schedule: gVal('neo_rop_schedule'),
+            init: { date: gVal('neo_rop_init_date'), findings: gVal('neo_rop_init_findings'), remarks: gVal('neo_rop_init_remarks') },
+            second: { date: gVal('neo_rop_2nd_date'), findings: gVal('neo_rop_2nd_findings'), remarks: gVal('neo_rop_2nd_remarks') },
+            third: { date: gVal('neo_rop_3rd_date'), findings: gVal('neo_rop_3rd_findings'), remarks: gVal('neo_rop_3rd_remarks') }
+          },
+          enbs: {
+            date: gVal('neo_enbs_date'),
+            remarks: gVal('neo_enbs_remarks'),
+            sticker: gVal('neo_enbs_sticker'),
+            repeatReason: gVal('neo_enbs_repeat_reason'),
+            repeatSched: gVal('neo_enbs_repeat_sched'),
+            others: gVal('neo_enbs_others')
+          },
+          hearing: {
+            date: gVal('neo_hearing_date'),
+            remarks: hearingSel ? hearingSel.value : '',
+            repeatDate: gVal('neo_hearing_repeat_date'),
+            findings: gVal('neo_hearing_findings'),
+            outside: gVal('neo_hearing_outside')
+          },
+          cranialUtz: {
+            applicable: gVal('neo_cranial_applicable'),
+            date: gVal('neo_cranial_date'),
+            findings: gVal('neo_cranial_findings'),
+            remarks: gVal('neo_cranial_remarks')
+          },
+          cchd: {
+            date: gVal('neo_cchd_date'),
+            remarks: cchdSel ? cchdSel.value : '',
+            retestDone: gVal('neo_cchd_retest_done'),
+            init: { hand: gVal('neo_cchd_init_hand'), foot: gVal('neo_cchd_init_foot'), diff: gVal('neo_cchd_init_diff') },
+            retest: { hand: gVal('neo_cchd_retest_hand'), foot: gVal('neo_cchd_retest_foot'), diff: gVal('neo_cchd_retest_diff') },
+            notDone: gVal('neo_cchd_not_done'),
+            others: gVal('neo_cchd_others'),
+            screener: gVal('neo_cchd_screener')
+          }
+        },
+        diagnosis: {
+          biliClass: gVal('neo_dx_bili_class'),
+          biliOther: gVal('neo_dx_bili_other'),
+          biliLevel: gVal('neo_dx_bili_level'),
+          respStatus: gVal('neo_dx_resp_status'),
+          respSupport: gVal('neo_dx_resp_support'),
+          sepsisStatus: gVal('neo_dx_sepsis_status'),
+          sepsisCulture: gVal('neo_dx_sepsis_culture'),
+          asphyxia: gVal('neo_dx_asphyxia'),
+          congenital: gVal('neo_dx_congenital')
+        },
+        kmc: {
+          enrollDate: gVal('neo_kmc_enroll_date'),
+          dischargeKmc: gVal('neo_kmc_discharge'),
+          dischargeStatus: gVal('neo_kmc_status'),
+          feedMode: gVal('neo_kmc_feed_mode'),
+          feedType: gVal('neo_kmc_feed_type'),
+          donorMilk: gVal('neo_kmc_donor_milk'),
+          surfactant: gVal('neo_kmc_surfactant'),
+          weightDischarge: gVal('neo_kmc_weight_discharge'),
+          futility: gVal('neo_kmc_futility')
+        }
+      };
+    }
+
+    function populateNeonateData(data) {
+      if (!data) return;
+      var inbornSel = document.getElementById('neo_inborn');
+      var outbornSel = document.getElementById('neo_outborn');
+      var readmitChk = document.getElementById('neo_readmission');
+      var delSel = document.getElementById('neo_delivery_type');
+      var bowSel = document.getElementById('neo_bow');
+      var ropAppSel = document.getElementById('neo_rop_applicable');
+      var rorFindSel = document.getElementById('neo_ror_findings');
+      var hearingSel = document.getElementById('neo_hearing_remarks');
+      var cchdSel = document.getElementById('neo_cchd_remarks');
+
+      var setVal = function (id, v) { var el = document.getElementById(id); if (el) el.value = v === undefined || v === null ? '' : v; };
+
+      var c = data.classification || {};
+      if (readmitChk && inbornSel && outbornSel) {
+        if (c.readmission) {
+          readmitChk.checked = true;
+          inbornSel.value = '';
+          outbornSel.value = '';
+        } else if (c.inborn) {
+          inbornSel.value = c.inborn;
+          outbornSel.value = '';
+          readmitChk.checked = false;
+        } else if (c.outborn) {
+          outbornSel.value = c.outborn;
+          inbornSel.value = '';
+          readmitChk.checked = false;
+        } else {
+          readmitChk.checked = false;
+          inbornSel.value = '';
+          outbornSel.value = '';
+        }
+      }
+      setVal('neo_birth_location', c.birthLocation);
+
+      var m = data.maternal || {};
+      setVal('neo_mother_name', m.motherName);
+      setVal('neo_mother_address', m.motherAddress);
+      setVal('neo_mother_age', m.motherAge);
+      setVal('neo_mother_blood_type', m.motherBloodType);
+      setVal('neo_mother_status', m.status);
+      setVal('neo_edc', m.edc);
+      setVal('neo_lmp', m.lmp);
+      setVal('neo_aog_weeks', m.aogWeeks);
+      setVal('neo_gravida', m.gravida);
+      setVal('neo_para', m.para);
+      setVal('neo_presentation', m.presentation);
+      setVal('neo_position', m.position);
+      setVal('neo_maternal_class', m.classification);
+      if (delSel) delSel.value = m.deliveryType || '';
+      setVal('neo_delivery_time', m.deliveryTime);
+      if (bowSel) bowSel.value = m.bow || '';
+      setVal('neo_ruptured_time', m.rupturedTime);
+      var rupEl = document.getElementById('neo_ruptured_time');
+      if (rupEl) rupEl.disabled = m.bow !== 'Ruptured';
+      setVal('neo_stage1', m.stage1);
+      setVal('neo_stage2', m.stage2);
+      setVal('neo_cs_indication', m.csIndication);
+      var csEl = document.getElementById('neo_cs_indication');
+      if (csEl) csEl.disabled = m.deliveryType !== 'CS';
+      setVal('neo_complications', m.complications);
+
+      var st = m.steroids || {};
+      setVal('neo_steroid_dose1', st.dose1);
+      setVal('neo_steroid_dose2', st.dose2);
+      setVal('neo_steroid_dose3', st.dose3);
+      setVal('neo_steroid_dose4', st.dose4);
+
+      var rf = data.maternalRiskFactors || {};
+      var selRisks = rf.selected || [];
+      document.querySelectorAll('input[name="neo_risk"]').forEach(function (cb) {
+        cb.checked = selRisks.indexOf(cb.value) !== -1;
+      });
+      var othersChk = document.getElementById('neo_risk_others_chk');
+      var othersWrap = document.getElementById('neo_risk_others_wrap');
+      if (othersWrap && othersChk) othersWrap.style.display = othersChk.checked ? 'block' : 'none';
+      setVal('neo_risk_others_text', rf.othersText);
+
+      // APGAR
+      var apgar = (data.apgar && data.apgar.scores) || {};
+      ['hr', 'rr', 'tone', 'reflex', 'color'].forEach(function (sign) {
+        var s1 = document.querySelector('.apgar-m1[data-sign="' + sign + '"]');
+        var s5 = document.querySelector('.apgar-m5[data-sign="' + sign + '"]');
+        var s10 = document.querySelector('.apgar-m10[data-sign="' + sign + '"]');
+        if (s1 && apgar.m1 && apgar.m1[sign] !== undefined) s1.value = apgar.m1[sign];
+        if (s5 && apgar.m5 && apgar.m5[sign] !== undefined) s5.value = apgar.m5[sign];
+        if (s10 && apgar.m10 && apgar.m10[sign] !== undefined) s10.value = apgar.m10[sign];
+      });
+      if (data.apgar) setVal('neo_apgar_exceeding', data.apgar.exceeding);
+      updateAllApgar();
+
+      // Measurements
+      var meas = data.measurements || {};
+      setVal('neo_weight', meas.weight);
+      setVal('neo_head_circ', meas.headCirc);
+      setVal('neo_length', meas.length);
+      setVal('neo_chest_circ', meas.chestCirc);
+      setVal('neo_abd_circ', meas.abdCirc);
+      setVal('neo_temp', meas.temp);
+      setVal('neo_cardiac_rate', meas.cardiacRate);
+      setVal('neo_resp_rate', meas.respRate);
+      setVal('neo_baby_blood_type', meas.babyBloodType);
+      setVal('neo_cord_condition', meas.cordCondition);
+
+      // EINC
+      var e = data.einc || {};
+      if (e.status) {
+        var r = document.querySelector('input[name="neo_einc_status"][value="' + e.status + '"]');
+        if (r) r.checked = true;
+        var rEl = document.getElementById('neo_einc_reason');
+        if (rEl) rEl.disabled = e.status !== 'Incomplete';
+      }
+      setVal('neo_einc_time_start', e.timeStart);
+      setVal('neo_einc_time_end', e.timeEnd);
+      var ints = e.interventions || [];
+      document.querySelectorAll('input[name="neo_einc_int"]').forEach(function (cb) {
+        cb.checked = ints.indexOf(cb.value) !== -1;
+      });
+      setVal('neo_einc_reason', e.reason);
+      setVal('neo_einc_provider', e.provider);
+
+      // Ballard Scores
+      var bScores = (data.ballard && data.ballard.scores) || {};
+      document.querySelectorAll('.neo-ballard-score').forEach(function (s) {
+        var k = s.getAttribute('data-key');
+        if (bScores[k] !== undefined) s.value = bScores[k];
+      });
+      recalcBallard();
+
+      // Physical Exam
+      var pe = data.physicalExam || {};
+      setVal('neo_pe_general', pe.general);
+      setVal('neo_pe_color', pe.color);
+      setVal('neo_pe_head', pe.head);
+      setVal('neo_pe_eent', pe.eent);
+      setVal('neo_pe_neck', pe.neck);
+      setVal('neo_pe_heart', pe.heart);
+      setVal('neo_pe_chest_lungs', pe.chestLungs);
+      setVal('neo_pe_abdomen', pe.abdomen);
+      setVal('neo_pe_genitalia', pe.genitalia);
+      setVal('neo_pe_anus', pe.anus);
+      setVal('neo_pe_skin', pe.skin);
+      setVal('neo_pe_extremities', pe.extremities);
+      setVal('neo_pe_other_findings', pe.otherFindings);
+      setVal('neo_sex', pe.sex);
+      setVal('neo_nicu_reason', pe.nicuReason);
+      setVal('neo_nicu_others', pe.nicuOthers);
+
+      // Aftercare
+      var ac = data.aftercare || {};
+      if (ac.vitk) { setVal('neo_aftercare_vitk_date', ac.vitk.date); setVal('neo_aftercare_vitk_remarks', ac.vitk.remarks); }
+      if (ac.eye) { setVal('neo_aftercare_eye_date', ac.eye.date); setVal('neo_aftercare_eye_remarks', ac.eye.remarks); }
+      if (ac.bcg) { setVal('neo_aftercare_bcg_date', ac.bcg.date); setVal('neo_aftercare_bcg_remarks', ac.bcg.remarks); }
+      if (ac.hepab) { setVal('neo_aftercare_hepab_date', ac.hepab.date); setVal('neo_aftercare_hepab_remarks', ac.hepab.remarks); }
+      if (ac.hbig) { setVal('neo_aftercare_hbig_date', ac.hbig.date); setVal('neo_aftercare_hbig_remarks', ac.hbig.remarks); }
+      setVal('neo_aftercare_nurse', ac.nurse);
+
+      // Screening
+      var sc = data.screening || {};
+      if (sc.ror) {
+        setVal('neo_ror_date', sc.ror.date);
+        if (rorFindSel) rorFindSel.value = sc.ror.findings || '';
+        var isAbn = sc.ror.findings === '-/abnormal';
+        setVal('neo_ror_abnormal', sc.ror.abnormal);
+        var abEl = document.getElementById('neo_ror_abnormal'); if (abEl) abEl.disabled = !isAbn;
+        setVal('neo_ror_ref_date', sc.ror.refDate);
+        var refEl = document.getElementById('neo_ror_ref_date'); if (refEl) refEl.disabled = !isAbn;
+      }
+      if (sc.rop) {
+        if (ropAppSel) ropAppSel.value = sc.rop.applicable || '';
+        setVal('neo_rop_schedule', sc.rop.schedule);
+        var isNo = sc.rop.applicable === 'No';
+        if (sc.rop.init) { setVal('neo_rop_init_date', sc.rop.init.date); setVal('neo_rop_init_findings', sc.rop.init.findings); setVal('neo_rop_init_remarks', sc.rop.init.remarks); }
+        if (sc.rop.second) { setVal('neo_rop_2nd_date', sc.rop.second.date); setVal('neo_rop_2nd_findings', sc.rop.second.findings); setVal('neo_rop_2nd_remarks', sc.rop.second.remarks); }
+        if (sc.rop.third) { setVal('neo_rop_3rd_date', sc.rop.third.date); setVal('neo_rop_3rd_findings', sc.rop.third.findings); setVal('neo_rop_3rd_remarks', sc.rop.third.remarks); }
+        document.querySelectorAll('#rop-exam-table input, #rop-exam-table select, #neo_rop_schedule').forEach(function (el) { el.disabled = isNo; });
+      }
+      if (sc.enbs) {
+        setVal('neo_enbs_date', sc.enbs.date);
+        setVal('neo_enbs_remarks', sc.enbs.remarks);
+        setVal('neo_enbs_sticker', sc.enbs.sticker);
+        setVal('neo_enbs_repeat_reason', sc.enbs.repeatReason);
+        setVal('neo_enbs_repeat_sched', sc.enbs.repeatSched);
+        setVal('neo_enbs_others', sc.enbs.others);
+      }
+      if (sc.hearing) {
+        setVal('neo_hearing_date', sc.hearing.date);
+        if (hearingSel) hearingSel.value = sc.hearing.remarks || '';
+        var isFail = sc.hearing.remarks === 'Fail';
+        setVal('neo_hearing_repeat_date', sc.hearing.repeatDate);
+        var repEl = document.getElementById('neo_hearing_repeat_date'); if (repEl) repEl.disabled = !isFail;
+        setVal('neo_hearing_findings', sc.hearing.findings);
+        setVal('neo_hearing_outside', sc.hearing.outside);
+      }
+      if (sc.cranialUtz) {
+        setVal('neo_cranial_applicable', sc.cranialUtz.applicable);
+        setVal('neo_cranial_date', sc.cranialUtz.date);
+        setVal('neo_cranial_findings', sc.cranialUtz.findings);
+        setVal('neo_cranial_remarks', sc.cranialUtz.remarks);
+      }
+      if (sc.cchd) {
+        setVal('neo_cchd_date', sc.cchd.date);
+        if (cchdSel) cchdSel.value = sc.cchd.remarks || '';
+        var isRet = sc.cchd.remarks === 'Retest';
+        setVal('neo_cchd_retest_done', sc.cchd.retestDone);
+        var retEl = document.getElementById('neo_cchd_retest_done'); if (retEl) retEl.disabled = !isRet;
+        if (sc.cchd.init) {
+          setVal('neo_cchd_init_hand', sc.cchd.init.hand);
+          setVal('neo_cchd_init_foot', sc.cchd.init.foot);
+          setVal('neo_cchd_init_diff', sc.cchd.init.diff);
+        }
+        if (sc.cchd.retest) {
+          setVal('neo_cchd_retest_hand', sc.cchd.retest.hand);
+          setVal('neo_cchd_retest_foot', sc.cchd.retest.foot);
+          setVal('neo_cchd_retest_diff', sc.cchd.retest.diff);
+        }
+        var hRet = document.getElementById('neo_cchd_retest_hand'); if (hRet) hRet.disabled = !isRet;
+        var fRet = document.getElementById('neo_cchd_retest_foot'); if (fRet) fRet.disabled = !isRet;
+        setVal('neo_cchd_not_done', sc.cchd.notDone);
+        setVal('neo_cchd_others', sc.cchd.others);
+        setVal('neo_cchd_screener', sc.cchd.screener);
+      }
+
+      // Diagnosis
+      var dx = data.diagnosis || {};
+      setVal('neo_dx_bili_class', dx.biliClass);
+      setVal('neo_dx_bili_other', dx.biliOther);
+      setVal('neo_dx_bili_level', dx.biliLevel);
+      setVal('neo_dx_resp_status', dx.respStatus);
+      setVal('neo_dx_resp_support', dx.respSupport);
+      setVal('neo_dx_sepsis_status', dx.sepsisStatus);
+      setVal('neo_dx_sepsis_culture', dx.sepsisCulture);
+      setVal('neo_dx_asphyxia', dx.asphyxia);
+      setVal('neo_dx_congenital', dx.congenital);
+
+      // KMC
+      var kmc = data.kmc || {};
+      setVal('neo_kmc_enroll_date', kmc.enrollDate);
+      setVal('neo_kmc_discharge', kmc.dischargeKmc);
+      setVal('neo_kmc_status', kmc.dischargeStatus);
+      setVal('neo_kmc_feed_mode', kmc.feedMode);
+      setVal('neo_kmc_feed_type', kmc.feedType);
+      setVal('neo_kmc_donor_milk', kmc.donorMilk);
+      setVal('neo_kmc_surfactant', kmc.surfactant);
+      setVal('neo_kmc_weight_discharge', kmc.weightDischarge);
+      setVal('neo_kmc_futility', kmc.futility);
+
+      updateSummaryHighlights();
+    }
+
+    function saveNeonateRecord() {
+      var payload = collectNeonateData();
+      var currentId = activePatientId || 'default';
+      try {
+        localStorage.setItem('HIS_NEONATE_' + currentId, JSON.stringify(payload));
+        if (typeof getPatients === 'function' && typeof savePatients === 'function') {
+          var records = getPatients();
+          var idx = records.findIndex(function (r) { return r.id === currentId; });
+          if (idx >= 0) {
+            records[idx].data = records[idx].data || {};
+            records[idx].data.neonate = payload;
+            savePatients(records);
+          }
+        }
+        showNeonateToast('Neonate record saved & synced with HIS patient registry.');
+      } catch (e) {
+        console.error('Error saving neonate record', e);
+        showNeonateToast('Error saving record to browser storage.');
+      }
+    }
+
+    function saveNeonateDraft() {
+      var payload = collectNeonateData();
+      try {
+        localStorage.setItem('seghis_neonate_draft', JSON.stringify(payload));
+        showNeonateToast('Draft saved in local workspace cache.');
+      } catch (e) {
+        showNeonateToast('Draft save failed.');
+      }
+    }
+
+    function resetNeonateForm() {
+      if (confirm('Are you sure you want to reset all clinical fields in this form?')) {
+        var form = document.getElementById('neonate-clinical-form');
+        if (form) form.reset();
+        document.querySelectorAll('.neo-ballard-score').forEach(function (s) { s.value = ''; });
+        document.querySelectorAll('.apgar-sel').forEach(function (s) { s.value = ''; });
+        updateAllApgar();
+        recalcBallard();
+        updateSummaryHighlights();
+      }
+    }
+
+    function loadNeonateStateForPatient(pid) {
+      var currentId = pid || activePatientId || 'default';
+      try {
+        var stored = localStorage.getItem('HIS_NEONATE_' + currentId);
+        if (stored) {
+          var parsed = JSON.parse(stored);
+          if (parsed && (parsed.classification || parsed.maternal || parsed.ballard)) {
+            return parsed;
+          }
+        }
+      } catch (e) {
+        console.warn('Error reading stored Neonate state', e);
+      }
+      return null;
+    }
+
+    function saveNeonateStateForPatient() {
+      var payload = collectNeonateData();
+      var currentId = activePatientId || 'default';
+      try {
+        localStorage.setItem('HIS_NEONATE_' + currentId, JSON.stringify(payload));
+      } catch (e) {
+        console.warn('Error persisting Neonate state', e);
+      }
+    }
+
+    function initNeonateModule(patientId) {
+      var pid = patientId || activePatientId || 'default';
+      var state = loadNeonateStateForPatient(pid);
+      if (!state) {
+        var pData = currentPatientData();
+        if (pData && pData.neonate) {
+          state = pData.neonate;
+        }
+      }
+      if (state) {
+        populateNeonateData(state);
+      } else {
+        // Reset or clear form for patients without neonate records
+        var form = document.getElementById('neonate-clinical-form');
+        if (form) form.reset();
+        document.querySelectorAll('.neo-ballard-score').forEach(function (s) { s.value = ''; });
+        document.querySelectorAll('.apgar-sel').forEach(function (s) { s.value = ''; });
+        updateAllApgar();
+        recalcBallard();
+        updateSummaryHighlights();
+      }
+    }
+
+    function initNeonateListeners() {
+      // Tab switcher
+      document.querySelectorAll('#dashlet-neonate .workspace-tab').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('#dashlet-neonate .workspace-tab').forEach(function (b) { b.classList.remove('active'); });
+          document.querySelectorAll('#dashlet-neonate .tab-panel').forEach(function (p) { p.classList.remove('active'); });
+          btn.classList.add('active');
+          var panel = document.getElementById(btn.getAttribute('data-tab'));
+          if (panel) panel.classList.add('active');
+        });
+      });
+
+      // Mutual exclusion
+      var inbornSel = document.getElementById('neo_inborn');
+      var outbornSel = document.getElementById('neo_outborn');
+      var readmitChk = document.getElementById('neo_readmission');
+
+      if (inbornSel) inbornSel.addEventListener('change', function () {
+        if (inbornSel.value) {
+          if (outbornSel) outbornSel.value = '';
+          if (readmitChk) readmitChk.checked = false;
+        }
+        updateSummaryHighlights();
+      });
+
+      if (outbornSel) outbornSel.addEventListener('change', function () {
+        if (outbornSel.value) {
+          if (inbornSel) inbornSel.value = '';
+          if (readmitChk) readmitChk.checked = false;
+        }
+        updateSummaryHighlights();
+      });
+
+      if (readmitChk) readmitChk.addEventListener('change', function () {
+        if (readmitChk.checked) {
+          if (inbornSel) inbornSel.value = '';
+          if (outbornSel) outbornSel.value = '';
+        }
+        updateSummaryHighlights();
+      });
+
+      var locSel = document.getElementById('neo_birth_location');
+      if (locSel) locSel.addEventListener('change', updateSummaryHighlights);
+
+      var bowSel = document.getElementById('neo_bow');
+      var rupInput = document.getElementById('neo_ruptured_time');
+      if (bowSel && rupInput) bowSel.addEventListener('change', function () {
+        var isRup = bowSel.value === 'Ruptured';
+        rupInput.disabled = !isRup;
+        if (!isRup) rupInput.value = '';
+      });
+
+      var delSel = document.getElementById('neo_delivery_type');
+      var csInput = document.getElementById('neo_cs_indication');
+      if (delSel && csInput) delSel.addEventListener('change', function () {
+        var isCS = delSel.value === 'CS';
+        csInput.disabled = !isCS;
+        if (!isCS) csInput.value = '';
+        updateSummaryHighlights();
+      });
+
+      var matClassSel = document.getElementById('neo_maternal_class');
+      if (matClassSel) matClassSel.addEventListener('change', updateSummaryHighlights);
+
+      var riskOthersChk = document.getElementById('neo_risk_others_chk');
+      var riskOthersWrap = document.getElementById('neo_risk_others_wrap');
+      if (riskOthersChk && riskOthersWrap) riskOthersChk.addEventListener('change', function () {
+        riskOthersWrap.style.display = riskOthersChk.checked ? 'block' : 'none';
+        if (!riskOthersChk.checked) {
+          var t = document.getElementById('neo_risk_others_text');
+          if (t) t.value = '';
+        }
+      });
+
+      document.querySelectorAll('.apgar-sel').forEach(function (s) {
+        s.addEventListener('change', updateAllApgar);
+      });
+
+      ['neo_weight', 'neo_cardiac_rate', 'neo_resp_rate'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('input', updateSummaryHighlights);
+      });
+
+      document.querySelectorAll('input[name="neo_einc_status"]').forEach(function (r) {
+        r.addEventListener('change', function () {
+          var rEl = document.getElementById('neo_einc_reason');
+          if (rEl) {
+            rEl.disabled = r.value !== 'Incomplete';
+            if (r.value === 'Incomplete') rEl.focus();
+            else rEl.value = '';
+          }
+        });
+      });
+
+      document.querySelectorAll('.neo-ballard-score').forEach(function (s) {
+        s.addEventListener('change', recalcBallard);
+      });
+
+      var rorFindSel = document.getElementById('neo_ror_findings');
+      if (rorFindSel) rorFindSel.addEventListener('change', function () {
+        var isAbn = rorFindSel.value === '-/abnormal';
+        var abEl = document.getElementById('neo_ror_abnormal');
+        var refEl = document.getElementById('neo_ror_ref_date');
+        if (abEl) { abEl.disabled = !isAbn; if (!isAbn) abEl.value = ''; }
+        if (refEl) { refEl.disabled = !isAbn; if (!isAbn) refEl.value = ''; }
+      });
+
+      var ropAppSel = document.getElementById('neo_rop_applicable');
+      if (ropAppSel) ropAppSel.addEventListener('change', function () {
+        var isNo = ropAppSel.value === 'No';
+        document.querySelectorAll('#rop-exam-table input, #rop-exam-table select, #neo_rop_schedule').forEach(function (el) {
+          el.disabled = isNo;
+          if (isNo && el.tagName === 'SELECT') el.value = '';
+          else if (isNo) el.value = '';
+        });
+      });
+
+      var hearingSel = document.getElementById('neo_hearing_remarks');
+      if (hearingSel) hearingSel.addEventListener('change', function () {
+        var isFail = hearingSel.value === 'Fail';
+        var repEl = document.getElementById('neo_hearing_repeat_date');
+        if (repEl) { repEl.disabled = !isFail; if (!isFail) repEl.value = ''; }
+      });
+
+      var cchdSel = document.getElementById('neo_cchd_remarks');
+      if (cchdSel) cchdSel.addEventListener('change', function () {
+        var isRet = cchdSel.value === 'Retest';
+        var retDoneEl = document.getElementById('neo_cchd_retest_done');
+        var retHEl = document.getElementById('neo_cchd_retest_hand');
+        var retFEl = document.getElementById('neo_cchd_retest_foot');
+        if (retDoneEl) { retDoneEl.disabled = !isRet; if (!isRet) retDoneEl.value = ''; }
+        if (retHEl) { retHEl.disabled = !isRet; if (!isRet) retHEl.value = ''; }
+        if (retFEl) { retFEl.disabled = !isRet; if (!isRet) retFEl.value = ''; }
+        if (!isRet) {
+          var diffEl = document.getElementById('neo_cchd_retest_diff');
+          if (diffEl) diffEl.value = '';
+        }
+      });
+
+      var hInit = document.getElementById('neo_cchd_init_hand');
+      var fInit = document.getElementById('neo_cchd_init_foot');
+      if (hInit) hInit.addEventListener('input', function () { calcPulseOxDiff('neo_cchd_init_hand', 'neo_cchd_init_foot', 'neo_cchd_init_diff'); });
+      if (fInit) fInit.addEventListener('input', function () { calcPulseOxDiff('neo_cchd_init_hand', 'neo_cchd_init_foot', 'neo_cchd_init_diff'); });
+
+      var hRet = document.getElementById('neo_cchd_retest_hand');
+      var fRet = document.getElementById('neo_cchd_retest_foot');
+      if (hRet) hRet.addEventListener('input', function () { calcPulseOxDiff('neo_cchd_retest_hand', 'neo_cchd_retest_foot', 'neo_cchd_retest_diff'); });
+      if (fRet) fRet.addEventListener('input', function () { calcPulseOxDiff('neo_cchd_retest_hand', 'neo_cchd_retest_foot', 'neo_cchd_retest_diff'); });
+    }
+
+    // Explicit Window Bindings per AGENTS.md Invariant
+    window.openNeonateWorkspace = openNeonateWorkspace;
+    window.toggleNeonateCollapse = toggleNeonateCollapse;
+    window.switchGrowthChart = switchGrowthChart;
+    window.openGrowthChartModal = openGrowthChartModal;
+    window.openZoomModal = openZoomModal;
+    window.closeZoomModal = closeZoomModal;
+    window.recalcBallard = recalcBallard;
+    window.updateAllApgar = updateAllApgar;
+    window.updateSummaryHighlights = updateSummaryHighlights;
+    window.collectNeonateData = collectNeonateData;
+    window.populateNeonateData = populateNeonateData;
+    window.saveNeonateRecord = saveNeonateRecord;
+    window.saveNeonateDraft = saveNeonateDraft;
+    window.resetNeonateForm = resetNeonateForm;
+    window.showNeonateToast = showNeonateToast;
+    window.initNeonateModule = initNeonateModule;
+    window.initNeonateListeners = initNeonateListeners;
+    window.loadNeonateStateForPatient = loadNeonateStateForPatient;
+    window.saveNeonateStateForPatient = saveNeonateStateForPatient;
+
+      if (typeof initNeonateModule === 'function') {
+        initNeonateModule(activePatientId);
+      }
+      if (typeof initNeonateListeners === 'function') {
+        initNeonateListeners();
+      }
+
+
   </script>
 
-  </body>
+  
+<!-- ════════════════ NEONATE GROWTH CHART MODAL ════════════════ -->
+<div class="neo-modal-backdrop" id="neonate-chart-modal" onclick="closeZoomModal(event)">
+  <button type="button" class="neo-modal-close" onclick="closeZoomModal(event)">&times;</button>
+  <img id="neonateZoomedChartImg" src="" alt="Enlarged Neonatal Growth Chart">
+</div>
+<div class="neo-toast" id="neoDashboardToast">Neonate record saved successfully.</div>
+
+</body>
 
 </html>
