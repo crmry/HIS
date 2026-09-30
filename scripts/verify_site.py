@@ -307,6 +307,12 @@ async def scan_single_target(browser_ws, file_url):
                         window.closeZoomModal();
                         if (zoomModal.classList.contains('open')) return 'Neonate zoom modal failed to close';
                     }
+                    // Test VLOOKUP Details Toggle
+                    const vlookupDetails = document.querySelector('#hx-neo .neo-vlookup-details');
+                    if (vlookupDetails) {
+                        vlookupDetails.open = true;
+                        vlookupDetails.open = false;
+                    }
                 }
 
                 return 'OK';
