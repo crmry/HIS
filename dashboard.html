@@ -2044,6 +2044,9 @@
                         </div>
                         <div style="display:flex; align-items:center; gap:8px;">
                           <span class="badge badge-info" id="ob-view-status-badge">Historical Continuity Active</span>
+                          <button type="button" class="btn btn-mini btn-info" id="btn-draft-obgyn-hx" onclick="saveObGyneDraft()" title="Save current OB-Gyne clinical state as draft">
+                            <i class="icon-save"></i> Save Draft
+                          </button>
                           <a id="btn-launch-obgyn-module" href="OB_Gyne_Clinical_Module.html" target="_blank" class="btn btn-mini btn-primary" title="Open dedicated module to encode or update OB-Gyne records">
                             <i class="icon-external-link"></i> Encode in OB-Gyne Module
                           </a>
@@ -2166,6 +2169,9 @@
                         </div>
                         <div style="display:flex; align-items:center; gap:8px;">
                           <span class="badge badge-success" id="neo-view-status-badge">Recorded History</span>
+                          <button type="button" class="btn btn-mini btn-info" id="btn-draft-neo-hx" onclick="saveNeonateDraft()" title="Save current Neonatal clinical state as draft">
+                            <i class="icon-save"></i> Save Draft
+                          </button>
                           <a id="btn-launch-neonate-module" href="Neonate_Clinical_Module.html" target="_blank" class="btn btn-mini btn-primary" title="Open dedicated module to encode or update neonatal records">
                             <i class="icon-external-link"></i> Encode in Neonatal Module
                           </a>
@@ -2893,17 +2899,80 @@
     </div>
 
 
-    <!-- ROW 10: Specialize Forms -->
+    <!-- ROW 10: Specialized Clinical Forms & Modules -->
     <div class="row-fluid">
       <div class="span12">
-        <div class="dashlet">
+        <div class="dashlet" id="dashlet-specialized-forms">
           <div class="bootstrap-widget-header">
-            <h3>Specialized Clinical Forms</h3>
+            <h3>Specialized Clinical Forms &amp; Modules</h3>
           </div>
           <div class="bootstrap-widget-content" id="dashlet-other-forms">
+            
+            <!-- Primary Clinical Decision Modules (OB-Gyne & Neonatal) -->
+            <div class="specialized-modules-grid">
+              
+              <!-- OB-Gyne Clinical Module Card -->
+              <div class="spec-module-card obgyne-card" id="spec-module-card-obgyne">
+                <div class="spec-module-header">
+                  <div>
+                    <div class="spec-module-title" style="color:#15803d;">
+                      <i class="icon-female"></i> Obstetric &amp; Gynecologic (OB-Gyne) Module
+                    </div>
+                    <div class="spec-module-desc">
+                      Parity (GTPAL) &bull; Menstrual History &bull; Delivery Outcomes &bull; Procedures
+                    </div>
+                  </div>
+                  <span class="badge badge-info" id="spec-ob-status-badge">Historical Continuity Active</span>
+                </div>
+                <div class="spec-module-actions">
+                  <button type="button" class="btn btn-small btn-primary" id="btn-spec-ob-encode" onclick="openObGyneWorkspace('encode')" title="Launch dedicated module to encode or update OB-Gyne records">
+                    <i class="icon-edit"></i> Encode / Edit
+                  </button>
+                  <button type="button" class="btn btn-small" id="btn-spec-ob-view" onclick="openObGyneWorkspace('view')" title="View clinical summary in Medical History">
+                    <i class="icon-eye-open"></i> View Summary
+                  </button>
+                  <button type="button" class="btn btn-small btn-info" id="btn-spec-ob-draft" onclick="saveObGyneDraft()" title="Save current uncommitted module state as draft">
+                    <i class="icon-save"></i> Save as Draft
+                  </button>
+                </div>
+              </div>
+
+              <!-- Neonate Clinical Module Card -->
+              <div class="spec-module-card neonate-card" id="spec-module-card-neonate">
+                <div class="spec-module-header">
+                  <div>
+                    <div class="spec-module-title" style="color:#1b4d3e;">
+                      <i class="icon-stethoscope"></i> Neonate Clinical Module
+                    </div>
+                    <div class="spec-module-desc">
+                      Ballard Score &bull; APGAR Resuscitation &bull; EINC Protocol &bull; Measurements
+                    </div>
+                  </div>
+                  <span class="badge badge-success" id="spec-neo-status-badge">Recorded History</span>
+                </div>
+                <div class="spec-module-actions">
+                  <button type="button" class="btn btn-small btn-primary" id="btn-spec-neo-encode" onclick="openNeonateWorkspace('encode')" title="Launch dedicated module to encode or update neonatal records">
+                    <i class="icon-edit"></i> Encode / Edit
+                  </button>
+                  <button type="button" class="btn btn-small" id="btn-spec-neo-view" onclick="openNeonateWorkspace('view')" title="View neonatal summary in Medical History">
+                    <i class="icon-eye-open"></i> View Summary
+                  </button>
+                  <button type="button" class="btn btn-small btn-info" id="btn-spec-neo-draft" onclick="saveNeonateDraft()" title="Save current uncommitted module state as draft">
+                    <i class="icon-save"></i> Save as Draft
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Specialized Forms Strip -->
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:#64748b; letter-spacing:0.4px; margin-bottom:6px;">
+              Clinical Forms &amp; Specialty Sheets
+            </div>
             <div class="other-form-list">
-              <label><button type="button" class="btn btn-small btn-primary" id="btn-open-neonate-module" onclick="openNeonateWorkspace()"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
-              <label><button type="button" class="btn btn-small">Pediatric Growth Chart</button></label>
+              <label><button type="button" class="btn btn-small btn-success" id="btn-open-obgyne-module" onclick="openModuleActionModal('obgyne')"><i class="icon-female"></i> OB-Gyne Module</button></label>
+              <label><button type="button" class="btn btn-small btn-primary" id="btn-open-neonate-module" onclick="openModuleActionModal('neonate')"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
+              <label><button type="button" class="btn btn-small" id="btn-open-growth-chart" onclick="openGrowthChartModal(event)">Pediatric Growth Chart</button></label>
               <label><button type="button" class="btn btn-small">Dental Form</button></label>
               <label><button type="button" class="btn btn-small">Ophthalmology Form</button></label>
               <label><button type="button" class="btn btn-small">Trauma Sheet</button></label>
@@ -2926,6 +2995,53 @@
     </form>
     </div>
   </main>
+
+<!-- Specialized Clinical Module Action Modal -->
+<div class="seg-modal-backdrop" id="clinical-module-action-modal" role="dialog" aria-modal="true" aria-labelledby="mod-modal-title" style="display:none; z-index:1070;" onclick="handleModuleModalBackdropClick(event)">
+  <div class="seg-modal" style="max-width:540px;">
+    <div class="seg-modal-title" id="mod-modal-title-bar" style="background:#1b4d3e; color:#ffffff; display:flex; justify-content:space-between; align-items:center;">
+      <span id="mod-modal-title"><i class="icon-stethoscope"></i> Clinical Specialty Module</span>
+      <button type="button" class="seg-modal-close" id="close-mod-modal" onclick="closeModuleActionModal()" aria-label="Close" style="color:#ffffff;">&times;</button>
+    </div>
+    <div class="seg-modal-body" style="padding:16px;">
+      <!-- Patient Context Banner -->
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px 12px; margin-bottom:14px; font-size:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <div><strong id="mod-modal-patient-name">PATIENT NAME</strong></div>
+          <span class="badge" id="mod-modal-status-badge">Status</span>
+        </div>
+        <div style="color:#64748b; font-size:11px;">
+          HRN: <span id="mod-modal-hrn">0000000000</span> &bull; Case: <span id="mod-modal-encounter">OP-2026-0000</span> &bull; Service: <span id="mod-modal-service">Clinical Service</span>
+        </div>
+      </div>
+
+      <div style="font-size:12px; color:#475569; margin-bottom:12px;" id="mod-modal-desc">
+        Select a clinical workflow action for this patient encounter:
+      </div>
+
+      <!-- Action Choice Buttons -->
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button type="button" class="btn btn-primary" id="mod-modal-btn-encode" onclick="executeModuleModalAction('encode')" style="text-align:left; padding:10px 14px;">
+          <div style="font-weight:700; font-size:13px;"><i class="icon-edit"></i> Encode / Edit Clinical Module</div>
+          <div style="font-size:11px; opacity:0.85; margin-top:2px;">Launch full structured clinical workspace to encode, update, or modify findings.</div>
+        </button>
+
+        <button type="button" class="btn" id="mod-modal-btn-view" onclick="executeModuleModalAction('view')" style="text-align:left; padding:10px 14px;">
+          <div style="font-weight:700; font-size:13px; color:#0369a1;"><i class="icon-eye-open"></i> View Clinical Summary &amp; History</div>
+          <div style="font-size:11px; color:#64748b; margin-top:2px;">Review recorded history, parity scores, APGAR breakdown, and longitudinal data.</div>
+        </button>
+
+        <button type="button" class="btn btn-info" id="mod-modal-btn-draft" onclick="executeModuleModalAction('draft')" style="text-align:left; padding:10px 14px;">
+          <div style="font-weight:700; font-size:13px;"><i class="icon-save"></i> Save Module State as Draft</div>
+          <div style="font-size:11px; opacity:0.85; margin-top:2px;">Persist current uncommitted documentation as a local encounter draft.</div>
+        </button>
+      </div>
+    </div>
+    <div class="seg-modal-footer" style="padding:10px 16px; background:#f8fafc; border-top:1px solid #e2e8f0; text-align:right;">
+      <button type="button" class="btn btn-small" id="mod-modal-close-btn" onclick="closeModuleActionModal()">Dismiss</button>
+    </div>
+  </div>
+</div>
 
 <div class="seg-modal-backdrop" id="clinical-request-modal" role="dialog" aria-modal="true"
     aria-labelledby="clinical-request-title">
@@ -4411,7 +4527,14 @@
         <button type="button" id="floating-req-close-btn" onclick="collapseFloatingRequisitionToolkit(event)" title="Collapse (Esc)" style="background:none; border:none; color:#64748b; font-size:16px; line-height:1; cursor:pointer; padding:0 2px; font-weight:700;">✕</button>
       </div>
       <div class="floating-req-items">
-        <button type="button" class="floating-req-item-btn" data-station="neonate" id="floating-btn-neonate" onclick="openNeonateWorkspace()" title="Open Neonate Clinical Record">
+        <button type="button" class="floating-req-item-btn" data-station="obgyne" id="floating-btn-obgyne" onclick="openObGyneWorkspace('encode')" title="Open OB-Gyne Clinical Module">
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">OB-Gyne Clinical Record</div>
+            <div class="floating-req-item-sub">Parity (GTPAL), Menstrual &amp; Delivery Outcomes</div>
+          </div>
+          <div class="floating-req-item-action">Open</div>
+        </button>
+        <button type="button" class="floating-req-item-btn" data-station="neonate" id="floating-btn-neonate" onclick="openNeonateWorkspace('encode')" title="Open Neonate Clinical Record">
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">Neonate Clinical Record</div>
             <div class="floating-req-item-sub">Ballard, APGAR, EINC &amp; Growth Charts</div>
@@ -12976,6 +13099,17 @@
         btnOb.href = 'OB_Gyne_Clinical_Module.html?patient=' + encodeURIComponent(pid);
       }
 
+      var draft = safeParse(localStorage.getItem('seghis_obgyne_draft_' + pid), null);
+      var specBadge = document.getElementById('spec-ob-status-badge');
+      var viewBadge = document.getElementById('ob-view-status-badge');
+      if (draft && draft.savedAt) {
+        if (specBadge) { specBadge.textContent = 'Draft Saved (' + draft.savedAt + ')'; specBadge.className = 'badge badge-warning'; }
+        if (viewBadge) { viewBadge.textContent = 'Draft Saved (' + draft.savedAt + ')'; viewBadge.className = 'badge badge-warning'; }
+      } else {
+        if (specBadge) { specBadge.textContent = 'Historical Continuity Active'; specBadge.className = 'badge badge-info'; }
+        if (viewBadge) { viewBadge.textContent = 'Historical Continuity Active'; viewBadge.className = 'badge badge-info'; }
+      }
+
       renderSummaryCards();
       renderPregnancyTable();
       renderProceduresTable();
@@ -13244,6 +13378,17 @@
         btnNeo.href = 'Neonate_Clinical_Module.html?patient=' + encodeURIComponent(pid);
       }
 
+      var draft = safeParse(localStorage.getItem('seghis_neonate_draft_' + pid), null);
+      var specBadge = document.getElementById('spec-neo-status-badge');
+      var viewBadge = document.getElementById('neo-view-status-badge');
+      if (draft && draft.savedAt) {
+        if (specBadge) { specBadge.textContent = 'Draft Saved (' + draft.savedAt + ')'; specBadge.className = 'badge badge-warning'; }
+        if (viewBadge) { viewBadge.textContent = 'Draft Saved (' + draft.savedAt + ')'; viewBadge.className = 'badge badge-warning'; }
+      } else {
+        if (specBadge) { specBadge.textContent = 'Recorded History'; specBadge.className = 'badge badge-success'; }
+        if (viewBadge) { viewBadge.textContent = 'Recorded History'; viewBadge.className = 'badge badge-success'; }
+      }
+
       var state = loadNeonateStateForPatient(pid);
       if (!state) {
         var pData = typeof currentPatientData === 'function' ? currentPatientData() : null;
@@ -13267,6 +13412,233 @@
       }
     }
 
+    /* ─────────────────────────────────────────────────────────────
+       SPECIALIZED CLINICAL MODULES: OB-GYNE & NEONATAL CONTROLLERS
+       ───────────────────────────────────────────────────────────── */
+    var currentActiveModuleKey = 'obgyne';
+
+    function showHospitalToast(msg, bg) {
+      var toast = document.getElementById('neoDashboardToast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.style.background = bg || '#1e293b';
+      toast.style.display = 'block';
+      toast.style.opacity = '1';
+      clearTimeout(window._toastTimeout);
+      window._toastTimeout = setTimeout(function () {
+        toast.style.display = 'none';
+      }, 3200);
+    }
+
+    function openObGyneWorkspace(mode) {
+      var pid = activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : 'seed_patient');
+      if (mode === 'view') {
+        viewObGyneHistory();
+      } else if (mode === 'draft') {
+        saveObGyneDraft(pid);
+      } else {
+        // Encode / Edit mode (default)
+        var url = 'OB_Gyne_Clinical_Module.html?patient=' + encodeURIComponent(pid);
+        window.open(url, '_blank');
+      }
+    }
+
+    function openNeonateWorkspace(mode) {
+      var pid = activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : 'seed_patient');
+      if (mode === 'view') {
+        viewNeonateHistory();
+      } else if (mode === 'draft') {
+        saveNeonateDraft(pid);
+      } else {
+        // Encode / Edit mode (default)
+        var url = 'Neonate_Clinical_Module.html?patient=' + encodeURIComponent(pid);
+        window.open(url, '_blank');
+      }
+    }
+
+    function viewObGyneHistory() {
+      var tabLink = document.querySelector('a[href="#hx-gyn"]');
+      if (tabLink) {
+        if (window.jQuery && window.jQuery(tabLink).tab) {
+          window.jQuery(tabLink).tab('show');
+        } else {
+          tabLink.click();
+        }
+      }
+      var container = document.getElementById('hx-gyn');
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        container.style.transition = 'box-shadow 0.3s ease';
+        container.style.boxShadow = '0 0 0 3px #15803d';
+        setTimeout(function () { container.style.boxShadow = ''; }, 1800);
+      }
+    }
+
+    function viewNeonateHistory() {
+      var tabLink = document.querySelector('a[href="#hx-neo"]');
+      if (tabLink) {
+        if (window.jQuery && window.jQuery(tabLink).tab) {
+          window.jQuery(tabLink).tab('show');
+        } else {
+          tabLink.click();
+        }
+      }
+      var container = document.getElementById('hx-neo');
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        container.style.transition = 'box-shadow 0.3s ease';
+        container.style.boxShadow = '0 0 0 3px #1b4d3e';
+        setTimeout(function () { container.style.boxShadow = ''; }, 1800);
+      }
+    }
+
+    function saveObGyneDraft(patientId) {
+      var pid = patientId || activePatientId || 'seed_patient';
+      var pData = typeof currentPatientData === 'function' ? currentPatientData() : null;
+      var pName = pData ? ((pData.last_name || '') + ', ' + (pData.first_name || '')) : 'Patient';
+      var now = new Date();
+      var timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      var draft = {
+        patientId: pid,
+        patientName: pName,
+        timestamp: now.toISOString(),
+        savedAt: timeStr,
+        status: 'draft',
+        data: window.obPatientState || null
+      };
+      localStorage.setItem('seghis_obgyne_draft_' + pid, JSON.stringify(draft));
+
+      // Update status badges
+      var specBadge = document.getElementById('spec-ob-status-badge');
+      if (specBadge) {
+        specBadge.textContent = 'Draft Saved (' + timeStr + ')';
+        specBadge.className = 'badge badge-warning';
+      }
+      var viewBadge = document.getElementById('ob-view-status-badge');
+      if (viewBadge) {
+        viewBadge.textContent = 'Draft Saved (' + timeStr + ')';
+        viewBadge.className = 'badge badge-warning';
+      }
+
+      showHospitalToast('OB-Gyne Clinical Module draft saved for ' + pName + ' at ' + timeStr + '.', '#15803d');
+    }
+
+    function saveNeonateDraft(patientId) {
+      var pid = patientId || activePatientId || 'seed_patient';
+      var pData = typeof currentPatientData === 'function' ? currentPatientData() : null;
+      var pName = pData ? ((pData.last_name || '') + ', ' + (pData.first_name || '')) : 'Patient';
+      var now = new Date();
+      var timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      var draft = {
+        patientId: pid,
+        patientName: pName,
+        timestamp: now.toISOString(),
+        savedAt: timeStr,
+        status: 'draft',
+        data: window.currentNeonateState || (typeof collectNeonateData === 'function' ? collectNeonateData() : null)
+      };
+      localStorage.setItem('seghis_neonate_draft_' + pid, JSON.stringify(draft));
+
+      // Update status badges
+      var specBadge = document.getElementById('spec-neo-status-badge');
+      if (specBadge) {
+        specBadge.textContent = 'Draft Saved (' + timeStr + ')';
+        specBadge.className = 'badge badge-warning';
+      }
+      var viewBadge = document.getElementById('neo-view-status-badge');
+      if (viewBadge) {
+        viewBadge.textContent = 'Draft Saved (' + timeStr + ')';
+        viewBadge.className = 'badge badge-warning';
+      }
+
+      showHospitalToast('Neonate Clinical Module draft saved for ' + pName + ' at ' + timeStr + '.', '#1b4d3e');
+    }
+
+    function openModuleActionModal(moduleKey) {
+      currentActiveModuleKey = moduleKey || 'obgyne';
+      var modal = document.getElementById('clinical-module-action-modal');
+      if (!modal) return;
+
+      var pData = typeof currentPatientData === 'function' ? currentPatientData() : null;
+      var pid = activePatientId || 'seed_patient';
+      var nameEl = document.getElementById('mod-modal-patient-name');
+      var hrnEl = document.getElementById('mod-modal-hrn');
+      var encEl = document.getElementById('mod-modal-encounter');
+      var srvEl = document.getElementById('mod-modal-service');
+      var titleEl = document.getElementById('mod-modal-title');
+      var titleBar = document.getElementById('mod-modal-title-bar');
+      var statusBadge = document.getElementById('mod-modal-status-badge');
+
+      if (pData) {
+        if (nameEl) nameEl.textContent = (pData.last_name + ', ' + pData.first_name + ' ' + (pData.middle_name || '')).trim();
+        if (hrnEl) hrnEl.textContent = pData.hrn || pid;
+        if (encEl) encEl.textContent = pData.encounter_no || 'OP-2026-0926-0042';
+        if (srvEl) srvEl.textContent = pData.service || (moduleKey === 'obgyne' ? 'OB-Gyne OPD' : 'Pediatrics / Neonatology');
+      }
+
+      if (moduleKey === 'obgyne') {
+        if (titleEl) titleEl.innerHTML = '<i class="icon-female"></i> Obstetric &amp; Gynecologic (OB-Gyne) Module';
+        if (titleBar) titleBar.style.background = '#15803d';
+        var draft = safeParse(localStorage.getItem('seghis_obgyne_draft_' + pid), null);
+        if (statusBadge) {
+          if (draft && draft.savedAt) {
+            statusBadge.textContent = 'Draft Saved (' + draft.savedAt + ')';
+            statusBadge.className = 'badge badge-warning';
+          } else {
+            statusBadge.textContent = 'Historical Continuity Active';
+            statusBadge.className = 'badge badge-info';
+          }
+        }
+      } else {
+        if (titleEl) titleEl.innerHTML = '<i class="icon-stethoscope"></i> Neonate Clinical Decision Module';
+        if (titleBar) titleBar.style.background = '#1b4d3e';
+        var draft = safeParse(localStorage.getItem('seghis_neonate_draft_' + pid), null);
+        if (statusBadge) {
+          if (draft && draft.savedAt) {
+            statusBadge.textContent = 'Draft Saved (' + draft.savedAt + ')';
+            statusBadge.className = 'badge badge-warning';
+          } else {
+            statusBadge.textContent = 'Recorded History';
+            statusBadge.className = 'badge badge-success';
+          }
+        }
+      }
+
+      modal.style.display = 'flex';
+      modal.classList.add('open');
+      document.body.classList.add('modal-lock');
+    }
+
+    function closeModuleActionModal() {
+      var modal = document.getElementById('clinical-module-action-modal');
+      if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('open');
+      }
+      document.body.classList.remove('modal-lock');
+    }
+
+    function handleModuleModalBackdropClick(event) {
+      if (event && event.target && event.target.id === 'clinical-module-action-modal') {
+        closeModuleActionModal();
+      }
+    }
+
+    function executeModuleModalAction(action) {
+      closeModuleActionModal();
+      if (currentActiveModuleKey === 'obgyne') {
+        openObGyneWorkspace(action);
+      } else {
+        openNeonateWorkspace(action);
+      }
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeModuleActionModal();
+      }
+    });
+
     // Window bindings & stubs
     window.openGrowthChartModal = openGrowthChartModal;
     window.openWorkbookChart = openGrowthChartModal;
@@ -13275,15 +13647,25 @@
     window.initNeonateModule = initNeonateModule;
     window.populateNeonateData = populateNeonateData;
     window.loadNeonateStateForPatient = loadNeonateStateForPatient;
+    window.openObGyneWorkspace = openObGyneWorkspace;
+    window.openNeonateWorkspace = openNeonateWorkspace;
+    window.viewObGyneHistory = viewObGyneHistory;
+    window.viewNeonateHistory = viewNeonateHistory;
+    window.saveObGyneDraft = saveObGyneDraft;
+    window.saveNeonateDraft = saveNeonateDraft;
+    window.openModuleActionModal = openModuleActionModal;
+    window.closeModuleActionModal = closeModuleActionModal;
+    window.handleModuleModalBackdropClick = handleModuleModalBackdropClick;
+    window.executeModuleModalAction = executeModuleModalAction;
+    window.showHospitalToast = showHospitalToast;
     window.ballardCellClick = function () {};
     window.recalcBallard = function () {};
     window.updateAllApgar = function () {};
     window.updateSummaryHighlights = function () {};
     window.collectNeonateData = function () { return {}; };
     window.saveNeonateRecord = function () {};
-    window.saveNeonateDraft = function () {};
     window.resetNeonateForm = function () {};
-    window.showNeonateToast = function () {};
+    window.showNeonateToast = showHospitalToast;
     window.initNeonateListeners = function () {};
 
     // Run initialization

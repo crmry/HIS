@@ -579,8 +579,16 @@
       <div class="patient-meta-pill">Address: <strong id="banner-address">Brgy. Mansilingan, Bacolod City</strong></div>
       <div class="patient-meta-pill">Service: <strong>Pediatrics / Neonatology</strong></div>
     </div>
-    <div class="patient-encounter-badge" id="banner-encounter-badge">
-      Encounter: <span id="banner-encounter-no">OP-2026-0926-0042</span> • Active
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div class="patient-encounter-badge" id="banner-encounter-badge">
+        Encounter: <span id="banner-encounter-no">OP-2026-0926-0042</span> &bull; Active
+      </div>
+      <a href="dashboard.html" id="btn-neo-back-dash" style="text-decoration:none; padding:4px 10px; font-size:12px; font-weight:600; background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; border-radius:4px; display:inline-flex; align-items:center; gap:4px;">
+        <i class="icon-arrow-left"></i> Dashboard
+      </a>
+      <button type="button" id="btn-neo-header-save-draft" onclick="saveNeonateDraft()" style="padding:4px 10px; font-size:12px; font-weight:600; background:#0284c7; color:#ffffff; border:1px solid #0284c7; border-radius:4px; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+        <i class="icon-save"></i> Save Draft
+      </button>
     </div>
   </header>
 
@@ -2898,9 +2906,19 @@ function saveNeonateRecord() {
 
 function saveNeonateDraft() {
   const payload = collectNeonateData();
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   try {
+    const draft = {
+      patientId: currentPatientId,
+      timestamp: now.toISOString(),
+      savedAt: timeStr,
+      status: 'draft',
+      payload: payload
+    };
+    localStorage.setItem('seghis_neonate_draft_' + currentPatientId, JSON.stringify(draft));
     localStorage.setItem('seghis_neonate_draft', JSON.stringify(payload));
-    showNeonateToast('Draft saved in local workspace cache.');
+    showNeonateToast('Neonatal draft saved successfully at ' + timeStr + '.');
   } catch (e) {
     showNeonateToast('Draft save failed.');
   }
@@ -2945,11 +2963,21 @@ function initNeonateWorkspace() {
     document.getElementById('banner-address').textContent = d.address || 'Bacolod City';
     document.getElementById('banner-encounter-no').textContent = d.encounter_no || 'OP-2026-0926-0042';
 
-    // Hydrate neonate data if available
+    const backBtn = document.getElementById('btn-neo-back-dash');
+    if (backBtn) backBtn.href = 'dashboard.html?patient=' + encodeURIComponent(currentPatientId);
+
+    // Hydrate neonate data if available (first check patient-specific draft, then saved state)
     let neoData = null;
     try {
-      const stored = localStorage.getItem('HIS_NEONATE_' + currentPatientId);
-      if (stored) neoData = JSON.parse(stored);
+      const draftStr = localStorage.getItem('seghis_neonate_draft_' + currentPatientId);
+      if (draftStr) {
+        const draft = JSON.parse(draftStr);
+        if (draft && draft.payload) neoData = draft.payload;
+      }
+      if (!neoData) {
+        const stored = localStorage.getItem('HIS_NEONATE_' + currentPatientId);
+        if (stored) neoData = JSON.parse(stored);
+      }
       else if (d.neonate) neoData = d.neonate;
     } catch (e) {}
 

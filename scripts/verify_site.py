@@ -235,12 +235,54 @@ async def scan_single_target(browser_ws, file_url):
                     }
                 }
 
+                // Test Specialized Clinical Decision Modules controls in Specialized Clinical Forms
+                const specObViewBtn = document.getElementById('btn-spec-ob-view');
+                if (specObViewBtn) {
+                    specObViewBtn.click();
+                    const obPane = document.getElementById('hx-gyn');
+                    if (!obPane || !obPane.classList.contains('active')) return 'OB view button did not activate #hx-gyn tab';
+                }
+                const specNeoViewBtn = document.getElementById('btn-spec-neo-view');
+                if (specNeoViewBtn) {
+                    specNeoViewBtn.click();
+                    const neoPane = document.getElementById('hx-neo');
+                    if (!neoPane || !neoPane.classList.contains('active')) return 'Neonate view button did not activate #hx-neo tab';
+                }
+                const specObDraftBtn = document.getElementById('btn-spec-ob-draft');
+                if (specObDraftBtn) {
+                    specObDraftBtn.click();
+                    const obBadge = document.getElementById('spec-ob-status-badge');
+                    if (!obBadge || !obBadge.textContent.includes('Draft Saved')) return 'OB Save Draft button failed to update status badge';
+                }
+                const specNeoDraftBtn = document.getElementById('btn-spec-neo-draft');
+                if (specNeoDraftBtn) {
+                    specNeoDraftBtn.click();
+                    const neoBadge = document.getElementById('spec-neo-status-badge');
+                    if (!neoBadge || !neoBadge.textContent.includes('Draft Saved')) return 'Neonate Save Draft button failed to update status badge';
+                }
+                const openModBtn = document.getElementById('btn-open-obgyne-module');
+                if (openModBtn) {
+                    openModBtn.click();
+                    const modModal = document.getElementById('clinical-module-action-modal');
+                    if (!modModal || window.getComputedStyle(modModal).display === 'none') return 'Clinical module action modal failed to open';
+                    const closeModBtn = document.getElementById('close-mod-modal');
+                    if (closeModBtn) closeModBtn.click();
+                    if (window.getComputedStyle(modModal).display !== 'none' && modModal.classList.contains('open')) return 'Clinical module action modal failed to close';
+                }
+                const floatingObBtn = document.getElementById('floating-btn-obgyne');
+                if (!floatingObBtn) return 'floating-btn-obgyne not found in requisition pad';
+
                 // Test Obstetric & Gynecologic standalone workspace encoder (on OB_Gyne_Clinical_Module.html)
-                const obRoot = document.getElementById('ob-workspace-card');
-                if (obRoot) {
-                    const scoreEl = document.getElementById('ob-val-obstetric-score');
+                const obRoot = document.getElementById('ob-workspace-card') || document.querySelector('.workspace-card');
+                if (obRoot && window.location.href.includes('OB_Gyne_Clinical_Module.html')) {
+                    const scoreEl = document.getElementById('val-obstetric-score') || document.getElementById('ob-val-obstetric-score');
                     if (!scoreEl || !scoreEl.textContent.trim()) return 'OB standalone score element empty or missing';
                     
+                    const obDraftBtn = document.getElementById('btn-ob-header-save-draft');
+                    if (obDraftBtn) obDraftBtn.click();
+                    const obBackBtn = document.getElementById('btn-ob-back-dashboard');
+                    if (!obBackBtn || !obBackBtn.getAttribute('href').includes('dashboard.html')) return 'OB back to dashboard link invalid';
+
                     // Test Add Pregnancy Modal open & close
                     if (typeof window.openAddPregModal === 'function') {
                         window.openAddPregModal();
@@ -275,8 +317,13 @@ async def scan_single_target(browser_ws, file_url):
                 }
 
                 // Test Neonate Clinical Module standalone encoder (on Neonate_Clinical_Module.html)
-                const neoDashlet = document.getElementById('neo-workspace-card');
+                const neoDashlet = document.getElementById('neo-workspace-card') || (window.location.href.includes('Neonate_Clinical_Module.html') ? document.querySelector('.workspace-card') : null);
                 if (neoDashlet) {
+                    const neoDraftBtn = document.getElementById('btn-neo-header-save-draft');
+                    if (neoDraftBtn) neoDraftBtn.click();
+                    const neoBackBtn = document.getElementById('btn-neo-back-dash');
+                    if (neoBackBtn && !neoBackBtn.getAttribute('href').includes('dashboard.html')) return 'Neonate back to dashboard link invalid';
+
                     const inbornSel = document.getElementById('neo_inborn');
                     const outbornSel = document.getElementById('neo_outborn');
                     const readmitChk = document.getElementById('neo_readmission');

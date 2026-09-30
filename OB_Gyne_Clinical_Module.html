@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OB-Gyne Clinical Module — Structured Workspace</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
 <style>
   :root {
     --med-green: #1e7e34;
@@ -623,14 +624,22 @@
   <!-- Hospital Patient Demographic Bar -->
   <header class="patient-banner">
     <div class="patient-info-left">
-      <div class="patient-name">DEL ROSARIO, JOAN B.</div>
-      <div class="patient-meta-pill">HRN: <strong>0000001890</strong></div>
-      <div class="patient-meta-pill">Age: <strong>48 / Female</strong></div>
-      <div class="patient-meta-pill">Civil Status: <strong>Married</strong></div>
+      <div class="patient-name" id="banner-patient-name">DEL ROSARIO, JOAN B.</div>
+      <div class="patient-meta-pill">HRN: <strong id="banner-hrn">0000001890</strong></div>
+      <div class="patient-meta-pill">Age: <strong id="banner-age">48 / Female</strong></div>
+      <div class="patient-meta-pill">Civil Status: <strong id="banner-civil">Married</strong></div>
       <div class="patient-meta-pill">Service: <strong>OB-Gyne OPD</strong></div>
     </div>
-    <div class="patient-encounter-badge">
-      Encounter: OPD • Active Consultation
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div class="patient-encounter-badge" id="banner-encounter-badge">
+        Encounter: <span id="banner-encounter-no">OPD</span> &bull; Active Consultation
+      </div>
+      <a href="dashboard.html" id="btn-ob-back-dashboard" style="text-decoration:none; padding:4px 10px; font-size:12px; font-weight:600; background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; border-radius:4px; display:inline-flex; align-items:center; gap:4px;">
+        <i class="icon-arrow-left"></i> Dashboard
+      </a>
+      <button type="button" id="btn-ob-header-save-draft" onclick="saveGyneDraft()" style="padding:4px 10px; font-size:12px; font-weight:600; background:#0284c7; color:#ffffff; border:1px solid #0284c7; border-radius:4px; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+        <i class="icon-save"></i> Save as Draft
+      </button>
     </div>
   </header>
 
@@ -1359,7 +1368,8 @@
 <!-- Interactive Toast Container -->
 <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
-<!-- ════════════════ JAVASCRIPT APPLICATION CORE ════════════════ -->
+<!-- Scripts -->
+<script src="js/data/patient_seeds.js"></script>
 <script>
 /* ─────────────────────────────────────────────────────────────────────────────
    CLINICAL DATA MODEL & STATE (DOH HFDB & POGS COMPLIANT)
@@ -2226,10 +2236,78 @@ window.filterTimeline = filterTimeline;
 window.toggleMenopauseFields = toggleMenopauseFields;
 window.acceptDeptCase = acceptDeptCase;
 
+let currentPatientId = 'patient_op_juan';
+
+function initObGyneWorkspace() {
+  const params = new URLSearchParams(window.location.search);
+  const pid = params.get('patient') || currentPatientId;
+  currentPatientId = pid;
+
+  if (typeof ensureSeedPatient === 'function') {
+    ensureSeedPatient();
+  }
+
+  let patient = null;
+  if (typeof getPatients === 'function') {
+    const list = getPatients();
+    patient = list.find(p => p.id === pid) || list[0];
+  }
+
+  if (patient) {
+    currentPatientId = patient.id;
+    const d = patient.data || {};
+    const name = `${d.last_name || ''}, ${d.first_name || ''} ${d.middle_name || ''}`.trim();
+    const nameEl = document.getElementById('banner-patient-name');
+    if (nameEl) nameEl.textContent = name || 'DEL ROSARIO, JOAN B.';
+    const hrnEl = document.getElementById('banner-hrn');
+    if (hrnEl) hrnEl.textContent = d.hrn || '0000001890';
+    const ageEl = document.getElementById('banner-age');
+    if (ageEl) ageEl.textContent = (d.age || '48') + ' / ' + (d.gender || 'Female');
+    const encEl = document.getElementById('banner-encounter-no');
+    if (encEl) encEl.textContent = d.encounter_no || 'OPD';
+    const backBtn = document.getElementById('btn-ob-back-dashboard');
+    if (backBtn) backBtn.href = 'dashboard.html?patient=' + encodeURIComponent(currentPatientId);
+  }
+
+  // Restore draft if available
+  try {
+    const draftStr = localStorage.getItem('seghis_obgyne_draft_' + currentPatientId);
+    if (draftStr) {
+      const draft = JSON.parse(draftStr);
+      if (draft && draft.data) {
+        if (draft.data.pregnancies) patientState.pregnancies = draft.data.pregnancies;
+        if (draft.data.lmpHistory) patientState.lmpHistory = draft.data.lmpHistory;
+        if (draft.data.procedures) patientState.procedures = draft.data.procedures;
+        if (draft.data.gynecologicHistory) patientState.gynecologicHistory = draft.data.gynecologicHistory;
+      }
+    }
+  } catch (e) {
+    console.warn('Could not restore OB draft', e);
+  }
+}
+
+function saveGyneDraft() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const draft = {
+    patientId: currentPatientId,
+    timestamp: now.toISOString(),
+    savedAt: timeStr,
+    status: 'draft',
+    data: patientState
+  };
+  localStorage.setItem('seghis_obgyne_draft_' + currentPatientId, JSON.stringify(draft));
+  showToast('OB-Gyne draft saved successfully at ' + timeStr + '.');
+}
+
+window.initObGyneWorkspace = initObGyneWorkspace;
+window.saveGyneDraft = saveGyneDraft;
+
 /* ─────────────────────────────────────────────────────────────────────────────
    APPLICATION INITIALIZATION
    ───────────────────────────────────────────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', () => {
+  initObGyneWorkspace();
   renderSummaryCards();
   renderPregnancyTable();
   renderProceduresTable();
