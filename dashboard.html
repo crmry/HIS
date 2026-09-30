@@ -467,6 +467,467 @@
         padding: 12px 14px !important;
       }
     }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       OBSTETRIC & GYNECOLOGIC HISTORY — STRUCTURED WORKSPACE STYLES
+       ══════════════════════════════════════════════════════════════════════ */
+    .ob-workspace-container {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+      margin: 8px 0 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .ob-workspace-container * {
+      box-sizing: border-box;
+    }
+    .ob-workspace-header {
+      background: #1e7e34;
+      color: #ffffff;
+      padding: 10px 18px;
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ob-workspace-body {
+      padding: 16px 18px 20px;
+    }
+    .ob-summary-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .ob-summary-card {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 102px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+    .ob-summary-card-title {
+      font-size: 12px;
+      color: #475569;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .ob-summary-card-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.2px;
+      line-height: 1.25;
+      margin: 4px 0 8px;
+    }
+    .ob-summary-card-footer {
+      display: flex;
+      align-items: center;
+      font-size: 11px;
+      color: #64748b;
+    }
+    .ob-btn-card-action {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #1e293b;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .ob-btn-card-action:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    .ob-btn-card-primary {
+      background: #1967d2;
+      border: 1px solid #1967d2;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .ob-btn-card-primary:hover {
+      background: #1558b0;
+    }
+    .ob-workspace-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+    .ob-workspace-tab {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #334155;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .ob-workspace-tab:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+    .ob-workspace-tab.active {
+      background: #ffffff;
+      border: 1.5px solid #111827;
+      color: #111827;
+      font-weight: 700;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    .ob-tab-panel {
+      display: none;
+    }
+    .ob-tab-panel.active {
+      display: block;
+    }
+    .ob-table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      background: #ffffff;
+    }
+    table.ob-clinical-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+      margin-bottom: 0;
+    }
+    table.ob-clinical-table thead th {
+      background: #ffffff;
+      color: #64748b;
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      white-space: nowrap;
+    }
+    table.ob-clinical-table tbody td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+      vertical-align: middle;
+    }
+    table.ob-clinical-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    table.ob-clinical-table tbody tr:hover {
+      background: #fbfcfe;
+    }
+    .ob-col-num {
+      font-weight: 700;
+      color: #334155;
+      width: 38px;
+    }
+    .ob-cell-action {
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+    .ob-btn-table-sm {
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+    }
+    .ob-btn-table-sm:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    .ob-btn-table-danger {
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+    .ob-btn-table-danger:hover {
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+    .ob-section-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      background: #ffffff;
+    }
+    .ob-section-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .ob-section-card-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: #0f172a;
+    }
+    .ob-form-row-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .ob-form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .ob-form-field label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 2px;
+    }
+    .ob-form-control {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 5px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: #1e293b;
+      box-sizing: border-box;
+      background: #ffffff;
+    }
+    .ob-form-control:focus {
+      outline: none;
+      border-color: #1967d2;
+      box-shadow: 0 0 0 2px rgba(25, 103, 210, 0.15);
+    }
+    /* Timeline styles */
+    .ob-timeline-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .ob-filter-pill {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 9999px;
+      padding: 4px 12px;
+      font-size: 11.5px;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .ob-filter-pill:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+    .ob-filter-pill.active {
+      background: #0f172a;
+      color: #ffffff;
+      border-color: #0f172a;
+      font-weight: 600;
+    }
+    .ob-timeline-container {
+      position: relative;
+      padding-left: 20px;
+      margin-top: 14px;
+    }
+    .ob-timeline-container::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 4px;
+      bottom: 4px;
+      width: 2px;
+      background: #e2e8f0;
+    }
+    .ob-timeline-item {
+      position: relative;
+      margin-bottom: 16px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-left: 3px solid #1967d2;
+      border-radius: 6px;
+      padding: 10px 14px;
+    }
+    .ob-timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -18px;
+      top: 14px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #1967d2;
+      border: 2px solid #ffffff;
+    }
+    .ob-timeline-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .ob-timeline-item-type {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #1967d2;
+    }
+    .ob-timeline-item-date {
+      font-size: 11px;
+      color: #64748b;
+    }
+    .ob-timeline-item-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 2px;
+    }
+    .ob-timeline-item-body {
+      font-size: 11.5px;
+      color: #475569;
+      line-height: 1.45;
+    }
+    /* Modals */
+    .ob-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1070;
+      padding: 16px;
+    }
+    .ob-modal-overlay.open {
+      display: flex;
+    }
+    .ob-modal-dialog {
+      background: #ffffff;
+      border-radius: 8px;
+      max-width: 640px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      border: 1px solid #d1d5db;
+    }
+    .ob-modal-header {
+      padding: 12px 18px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      border-radius: 8px 8px 0 0;
+    }
+    .ob-modal-header h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+      line-height: normal;
+    }
+    .ob-btn-close-modal {
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      color: #64748b;
+      cursor: pointer;
+      line-height: 1;
+      padding: 2px 6px;
+    }
+    .ob-btn-close-modal:hover {
+      color: #0f172a;
+    }
+    .ob-modal-body {
+      padding: 16px 18px;
+    }
+    .ob-modal-footer {
+      padding: 12px 18px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      background: #f8fafc;
+      border-radius: 0 0 8px 8px;
+    }
+    .ob-toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 2100;
+    }
+    .ob-toast-msg {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 9px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: obFadeIn 0.2s ease;
+    }
+    .ob-toast-msg.success {
+      background: #0f5132;
+      border-left: 4px solid #20c997;
+    }
+    .ob-toast-msg.error {
+      background: #842029;
+      border-left: 4px solid #ea868f;
+    }
+    @keyframes obFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 960px) {
+      .ob-summary-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .ob-summary-cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -857,7 +1318,285 @@
                     <div id="hx-social-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-gyn">
-                    <p class="muted">Table OB HX — See suggested interface</p>
+                    <!-- OBSTETRIC & GYNECOLOGIC HISTORY — STRUCTURED WORKSPACE -->
+                    <div class="ob-workspace-container" id="ob-workspace-card">
+                      <!-- Workspace Header strictly matching UI mockup -->
+                      <div class="ob-workspace-header">
+                        OBSTETRIC &amp; GYNECOLOGIC HISTORY — STRUCTURED WORKSPACE
+                      </div>
+
+                      <div class="ob-workspace-body">
+                        <!-- TOP SUMMARY CARDS (4 CARDS) -->
+                        <div class="ob-summary-cards-grid" aria-label="OB-Gyne Clinical Highlights">
+                          <!-- Card 1: Obstetric Score (GTPAL) -->
+                          <div class="ob-summary-card" id="card-obstetric-score">
+                            <div>
+                              <div class="ob-summary-card-title">Obstetric Score</div>
+                              <div class="ob-summary-card-value" id="ob-val-obstetric-score">G3 T2 P0 A1 L2</div>
+                            </div>
+                            <div class="ob-summary-card-footer">Auto-derived</div>
+                          </div>
+
+                          <!-- Card 2: Current LMP -->
+                          <div class="ob-summary-card" id="card-current-lmp">
+                            <div>
+                              <div class="ob-summary-card-title">Current LMP</div>
+                              <div class="ob-summary-card-value" id="ob-val-current-lmp">09/05/2026</div>
+                            </div>
+                            <div class="ob-summary-card-footer">
+                              <button type="button" class="ob-btn-card-action" onclick="openLmpModal()">Update / History</button>
+                            </div>
+                          </div>
+
+                          <!-- Card 3: Estimated Date of Delivery -->
+                          <div class="ob-summary-card" id="card-edd">
+                            <div>
+                              <div class="ob-summary-card-title">Estimated Date of Delivery</div>
+                              <div class="ob-summary-card-value" id="ob-val-edd">06/12/2027</div>
+                            </div>
+                            <div class="ob-summary-card-footer" id="ob-val-edd-sub">When applicable</div>
+                          </div>
+
+                          <!-- Card 4: Pregnancy Records -->
+                          <div class="ob-summary-card" id="card-pregnancy-records">
+                            <div>
+                              <div class="ob-summary-card-title">Pregnancy Records</div>
+                              <div class="ob-summary-card-value" id="ob-val-pregnancy-count">3</div>
+                            </div>
+                            <div class="ob-summary-card-footer">
+                              <button type="button" class="ob-btn-card-primary" onclick="openAddPregModal()">+ Add Pregnancy</button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- MAIN TABS (4 TABS) -->
+                        <div class="ob-workspace-tabs" role="tablist">
+                          <button type="button" class="ob-workspace-tab active" role="tab" data-ob-target="ob-tab-pregnancy">Pregnancy History</button>
+                          <button type="button" class="ob-workspace-tab" role="tab" data-ob-target="ob-tab-gynecologic">Gynecologic History</button>
+                          <button type="button" class="ob-workspace-tab" role="tab" data-ob-target="ob-tab-procedures">OB-Gyne Procedures</button>
+                          <button type="button" class="ob-workspace-tab" role="tab" data-ob-target="ob-tab-longitudinal">Longitudinal History</button>
+                        </div>
+
+                        <!-- TAB 1: PREGNANCY HISTORY (Default Active) -->
+                        <div class="ob-tab-panel active" id="ob-tab-pregnancy" role="tabpanel">
+                          <div class="ob-table-responsive">
+                            <table class="ob-clinical-table" id="table-pregnancies">
+                              <thead>
+                                <tr>
+                                  <th class="ob-col-num">#</th>
+                                  <th>YEAR/DATE</th>
+                                  <th>OUTCOME</th>
+                                  <th>MODE OF DELIVERY</th>
+                                  <th>GA</th>
+                                  <th>SEX</th>
+                                  <th>BIRTH WEIGHT</th>
+                                  <th>MULTIPLE</th>
+                                  <th>COMPLICATIONS / REMARKS</th>
+                                  <th style="text-align:right;">ACTIONS</th>
+                                </tr>
+                              </thead>
+                              <tbody id="tbody-pregnancies">
+                                <!-- Dynamically rendered -->
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        <!-- TAB 2: GYNECOLOGIC HISTORY -->
+                        <div class="ob-tab-panel" id="ob-tab-gynecologic" role="tabpanel">
+                          <form id="form-gyne" onsubmit="saveGyneHistory(event)">
+                            <!-- Menstrual History -->
+                            <div class="ob-section-card">
+                              <div class="ob-section-card-header">
+                                <span class="ob-section-card-title">Menstrual Cycle &amp; Bleeding Profile</span>
+                                <button type="button" class="ob-btn-card-action" onclick="openLmpModal()">Manage LMP History</button>
+                              </div>
+                              <div class="ob-form-row-grid">
+                                <div class="ob-form-field">
+                                  <label for="gyne-menarche">Age of Menarche (Years)</label>
+                                  <input type="number" id="gyne-menarche" class="ob-form-control" placeholder="e.g. 12" min="8" max="25" value="12">
+                                </div>
+                                <div class="ob-form-field">
+                                  <label for="gyne-interval">Cycle Interval / Regularity</label>
+                                  <select id="gyne-interval" class="ob-form-control">
+                                    <option value="Regular (28-30 days)" selected>Regular (28-30 days)</option>
+                                    <option value="Irregular">Irregular</option>
+                                    <option value="Oligomenorrhea (>35 days)">Oligomenorrhea (&gt;35 days)</option>
+                                    <option value="Polymenorrhea (<21 days)">Polymenorrhea (&lt;21 days)</option>
+                                    <option value="Amenorrhea">Amenorrhea</option>
+                                  </select>
+                                </div>
+                                <div class="ob-form-field">
+                                  <label for="gyne-duration">Bleeding Duration (Days)</label>
+                                  <input type="number" id="gyne-duration" class="ob-form-control" placeholder="e.g. 4-5" min="1" max="15" value="4">
+                                </div>
+                                <div class="ob-form-field">
+                                  <label for="gyne-flow">Flow Intensity &amp; Pads/Day</label>
+                                  <select id="gyne-flow" class="ob-form-control">
+                                    <option value="Moderate (3-4 pads/day)" selected>Moderate (3-4 pads/day)</option>
+                                    <option value="Scanty (1-2 pads/day)">Scanty (1-2 pads/day)</option>
+                                    <option value="Heavy / Menorrhagia (>5 pads/day)">Heavy / Menorrhagia (&gt;5 pads/day)</option>
+                                  </select>
+                                </div>
+                                <div class="ob-form-field">
+                                  <label for="gyne-dysmenorrhea">Dysmenorrhea / Pelvic Pain</label>
+                                  <select id="gyne-dysmenorrhea" class="ob-form-control">
+                                    <option value="Mild / Tolerable" selected>Mild / Tolerable</option>
+                                    <option value="None">None</option>
+                                    <option value="Moderate (Requires Analgesics)">Moderate (Requires Analgesics)</option>
+                                    <option value="Severe / Incapacitating">Severe / Incapacitating</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Contraception & Family Planning -->
+                            <div class="ob-section-card">
+                              <div class="ob-section-card-header">
+                                <span class="ob-section-card-title">Contraceptive History &amp; Sexual Health</span>
+                              </div>
+                              <div class="ob-form-row-grid">
+                                <div class="ob-form-field">
+                                  <label for="gyne-contraceptive-current">Current Contraception Method</label>
+                                  <select id="gyne-contraceptive-current" class="ob-form-control">
+                                    <option value="None / Natural Family Planning">None / Natural Family Planning</option>
+                                    <option value="Combined Oral Contraceptive Pills (COCP)" selected>Combined Oral Contraceptive Pills (COCP)</option>
+                                    <option value="Progestin-Only Injectable (DMPA)">Progestin-Only Injectable (DMPA)</option>
+                                    <option value="Intrauterine Device (IUD)">Intrauterine Device (IUD)</option>
+                                    <option value="Subdermal Implant">Subdermal Implant</option>
+                                    <option value="Barrier (Condoms)">Barrier (Condoms)</option>
+                                    <option value="Bilateral Tubal Ligation (BTL)">Bilateral Tubal Ligation (BTL)</option>
+                                  </select>
+                                </div>
+                                <div class="ob-form-field">
+                                  <label for="gyne-contraceptive-duration">Duration of Use</label>
+                                  <input type="text" id="gyne-contraceptive-duration" class="ob-form-control" placeholder="e.g. 1 year" value="18 months">
+                                </div>
+                                <div class="ob-form-field">
+                                  <label for="gyne-contraceptive-past">Previous Methods &amp; Complications</label>
+                                  <input type="text" id="gyne-contraceptive-past" class="ob-form-control" placeholder="e.g. None or Nausea with previous pills" value="None reported">
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Cervical & Pelvic Findings / Previous Diagnoses -->
+                            <div class="ob-section-card">
+                              <div class="ob-section-card-header">
+                                <span class="ob-section-card-title">Gynecologic Findings, Screenings &amp; Diagnoses</span>
+                              </div>
+                              <div class="ob-form-row-grid">
+                                <div class="ob-form-field">
+                                  <label for="gyne-last-pap">Last Pap Smear Date &amp; Result</label>
+                                  <input type="text" id="gyne-last-pap" class="ob-form-control" placeholder="e.g. 11/2025 — Negative for Intraepithelial Lesion (NILM)" value="11/14/2025 — Normal (NILM)">
+                                </div>
+                                <div class="ob-form-field">
+                                  <label for="gyne-diagnoses">Previous Gynecologic Diagnoses</label>
+                                  <input type="text" id="gyne-diagnoses" class="ob-form-control" placeholder="e.g. Dysfunctional Uterine Bleeding, Cervicitis, PCOS" value="Mild Dysmenorrhea, resolved">
+                                </div>
+                              </div>
+                              <div class="ob-form-field" style="margin-top:10px;">
+                                <label for="gyne-remarks">Clinical Remarks / Gynecologic Notes</label>
+                                <textarea id="gyne-remarks" rows="3" class="ob-form-control" placeholder="Enter clinical remarks or relevant pelvic ultrasound findings...">Patient is compliant with prescribed oral contraceptive regimen; denies abnormal intermenstrual bleeding, postcoital spotting, or foul-smelling vaginal discharge.</textarea>
+                              </div>
+                              <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+                                <button type="submit" class="ob-btn-card-primary">Save Gynecologic Record</button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+
+                        <!-- TAB 3: OB-GYNE PROCEDURES -->
+                        <div class="ob-tab-panel" id="ob-tab-procedures" role="tabpanel">
+                          <div class="ob-section-card">
+                            <div class="ob-section-card-header">
+                              <span class="ob-section-card-title">Record Specialty Procedure / Clinical Action</span>
+                            </div>
+                            <form id="form-procedure" onsubmit="saveProcedure(event)">
+                              <div class="ob-form-row-grid">
+                                <div class="ob-form-field">
+                                  <label for="proc-select">Procedure / Action</label>
+                                  <select id="proc-select" class="ob-form-control" onchange="toggleCustomProcedure(this.value)">
+                                    <option value="Capillary Blood Glucose (CBG)">Capillary Blood Glucose (CBG)</option>
+                                    <option value="Internal Examination">Internal Examination</option>
+                                    <option value="Fetal Heart Beat / Fetal Heart Rate Assessment">Fetal Heart Beat / Fetal Heart Rate Assessment</option>
+                                    <option value="Fetal Hemoglobin">Fetal Hemoglobin</option>
+                                    <option value="Non-Stress Test (NST)">Non-Stress Test (NST)</option>
+                                    <option value="Benzathine Penicillin Administration">Benzathine Penicillin Administration</option>
+                                    <option value="Pap Smear">Pap Smear</option>
+                                    <option value="Removal of Suture">Removal of Suture</option>
+                                    <option value="Other / Custom Procedure">Other / Custom Procedure (Free Text)</option>
+                                  </select>
+                                </div>
+                                <div class="ob-form-field" id="wrap-custom-proc" style="display:none;">
+                                  <label for="proc-custom-name">Specify Custom Procedure</label>
+                                  <input type="text" id="proc-custom-name" class="ob-form-control" placeholder="Enter custom procedure name...">
+                                </div>
+                                <div class="ob-form-field">
+                                  <label for="proc-datetime">Date &amp; Time</label>
+                                  <input type="datetime-local" id="proc-datetime" class="ob-form-control" required>
+                                </div>
+                                <div class="ob-form-field">
+                                  <label for="proc-provider">Physician / Healthcare Provider</label>
+                                  <input type="text" id="proc-provider" class="ob-form-control" value="Dr. Maria Santos, MD (PRC #0091245)">
+                                </div>
+                              </div>
+                              <div class="ob-form-row-grid">
+                                <div class="ob-form-field">
+                                  <label for="proc-findings">Findings / Clinical Result</label>
+                                  <textarea id="proc-findings" rows="2" class="ob-form-control" placeholder="Document specific clinical observations, measurements, or laboratory readings..." required></textarea>
+                                </div>
+                                <div class="ob-form-field">
+                                  <label for="proc-remarks">Remarks / Clinical Orders</label>
+                                  <textarea id="proc-remarks" rows="2" class="ob-form-control" placeholder="Enter post-procedure instructions, patient tolerance, or follow-up plans..."></textarea>
+                                </div>
+                              </div>
+                              <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+                                <button type="submit" class="ob-btn-card-primary">Record Procedure</button>
+                              </div>
+                            </form>
+                          </div>
+
+                          <div class="ob-table-responsive">
+                            <table class="ob-clinical-table" id="table-procedures">
+                              <thead>
+                                <tr>
+                                  <th>DATE &amp; TIME</th>
+                                  <th>PROCEDURE / ACTION</th>
+                                  <th>FINDINGS / RESULT</th>
+                                  <th>REMARKS</th>
+                                  <th>PHYSICIAN / PROVIDER</th>
+                                  <th style="text-align:right;">ACTIONS</th>
+                                </tr>
+                              </thead>
+                              <tbody id="tbody-procedures">
+                                <!-- Dynamically rendered -->
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        <!-- TAB 4: LONGITUDINAL HISTORY -->
+                        <div class="ob-tab-panel" id="ob-tab-longitudinal" role="tabpanel">
+                          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+                            <div class="ob-timeline-filter-bar">
+                              <button type="button" class="ob-filter-pill active" onclick="filterTimeline('all', this)">All Events</button>
+                              <button type="button" class="ob-filter-pill" onclick="filterTimeline('pregnancy', this)">Pregnancies</button>
+                              <button type="button" class="ob-filter-pill" onclick="filterTimeline('lmp', this)">LMP Records</button>
+                              <button type="button" class="ob-filter-pill" onclick="filterTimeline('procedure', this)">Procedures</button>
+                              <button type="button" class="ob-filter-pill" onclick="filterTimeline('gyne', this)">Gynecologic Notes</button>
+                            </div>
+                            <div style="font-size:11.5px; color:#64748b;">
+                              Historical continuity active across all encounters
+                            </div>
+                          </div>
+
+                          <div class="ob-timeline-container" id="ob-timeline-container">
+                            <!-- Dynamically populated chronological entries -->
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
                   </div>
                   <div class="tab-pane" id="hx-neo">
                     <p class="muted">Neonatal — See suggested interface</p>
@@ -2230,7 +2969,165 @@
     </div>
   </div>
 
+  <!-- ════════════════ OB-GYNE CLINICAL MODALS ════════════════ -->
 
+  <!-- Modal 1: Add / Edit Pregnancy Record -->
+  <div class="ob-modal-overlay" id="modal-pregnancy" role="dialog" aria-modal="true" aria-labelledby="modal-pregnancy-title">
+    <div class="ob-modal-dialog">
+      <div class="ob-modal-header">
+        <h3 id="modal-pregnancy-title">Add Pregnancy Record</h3>
+        <button type="button" class="ob-btn-close-modal" onclick="closePregnancyModal()">&times;</button>
+      </div>
+      <form id="form-pregnancy" onsubmit="handlePregnancySubmit(event)">
+        <div class="ob-modal-body">
+          <input type="hidden" id="preg-index" value="-1">
+          <div class="ob-form-row-grid">
+            <div class="ob-form-field">
+              <label for="preg-sequence">Pregnancy Number / Sequence</label>
+              <input type="text" id="preg-sequence" class="ob-form-control" placeholder="e.g. P1, P2" required>
+            </div>
+            <div class="ob-form-field">
+              <label for="preg-year">Year / Date</label>
+              <input type="text" id="preg-year" class="ob-form-control" placeholder="e.g. 2023 or 2023-04-15" required>
+            </div>
+          </div>
+          <div class="ob-form-row-grid">
+            <div class="ob-form-field">
+              <label for="preg-outcome">Pregnancy Outcome</label>
+              <select id="preg-outcome" class="ob-form-control" onchange="handleOutcomeChange(this.value)" required>
+                <option value="Live Birth">Live Birth</option>
+                <option value="Abortion / Miscarriage">Abortion / Miscarriage</option>
+                <option value="Stillbirth">Stillbirth</option>
+                <option value="Ectopic Pregnancy">Ectopic Pregnancy</option>
+                <option value="Molar Pregnancy">Molar Pregnancy</option>
+                <option value="Current Pregnancy">Current Pregnancy</option>
+              </select>
+            </div>
+            <div class="ob-form-field">
+              <label for="preg-mode">Mode of Delivery</label>
+              <select id="preg-mode" class="ob-form-control">
+                <option value="Normal Vaginal Delivery">Normal Vaginal Delivery</option>
+                <option value="Cesarean Section">Cesarean Section</option>
+                <option value="Assisted Vaginal Delivery">Assisted Vaginal Delivery</option>
+                <option value="N/A">N/A</option>
+              </select>
+            </div>
+          </div>
+          <div class="ob-form-row-grid">
+            <div class="ob-form-field">
+              <label for="preg-term">Term Status</label>
+              <select id="preg-term" class="ob-form-control">
+                <option value="Term">Term (37+ weeks)</option>
+                <option value="Preterm">Preterm (&lt;37 weeks)</option>
+                <option value="N/A">N/A</option>
+              </select>
+            </div>
+            <div class="ob-form-field">
+              <label for="preg-ga">Gestational Age (GA)</label>
+              <input type="text" id="preg-ga" class="ob-form-control" placeholder="e.g. 39 weeks or 10 weeks" required>
+            </div>
+          </div>
+          <div class="ob-form-row-grid">
+            <div class="ob-form-field">
+              <label for="preg-sex">Baby Sex</label>
+              <select id="preg-sex" class="ob-form-control">
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Indeterminate">Indeterminate</option>
+                <option value="N/A">N/A</option>
+              </select>
+            </div>
+            <div class="ob-form-field">
+              <label for="preg-weight">Birth Weight</label>
+              <input type="text" id="preg-weight" class="ob-form-control" placeholder="e.g. 3.1 kg or N/A">
+            </div>
+            <div class="ob-form-field">
+              <label for="preg-multiple">Multiple Pregnancy</label>
+              <select id="preg-multiple" class="ob-form-control">
+                <option value="No">No (Singleton)</option>
+                <option value="Twins">Twins</option>
+                <option value="Triplets">Triplets</option>
+                <option value="Other">Other Multiple</option>
+              </select>
+            </div>
+            <div class="ob-form-field">
+              <label for="preg-living">Living Children (from this pregnancy)</label>
+              <input type="number" id="preg-living" class="ob-form-control" min="0" max="5" value="1" required>
+            </div>
+          </div>
+          <div class="ob-form-field" style="margin-top:10px;">
+            <label for="preg-remarks">Complications / Remarks</label>
+            <textarea id="preg-remarks" rows="2" class="ob-form-control" placeholder="Specify any maternal, fetal, or delivery complications or notes..."></textarea>
+          </div>
+        </div>
+        <div class="ob-modal-footer">
+          <button type="button" class="ob-btn-card-action" onclick="closePregnancyModal()">Cancel</button>
+          <button type="submit" class="ob-btn-card-primary" id="btn-save-preg">Save Pregnancy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: LMP Update & Longitudinal History Modal -->
+  <div class="ob-modal-overlay" id="modal-lmp" role="dialog" aria-modal="true" aria-labelledby="modal-lmp-title">
+    <div class="ob-modal-dialog">
+      <div class="ob-modal-header">
+        <h3 id="modal-lmp-title">Last Menstrual Period (LMP) Management</h3>
+        <button type="button" class="ob-btn-close-modal" onclick="closeLmpModal()">&times;</button>
+      </div>
+      <div class="ob-modal-body">
+        <!-- Update Form -->
+        <form id="form-lmp-update" onsubmit="handleLmpUpdate(event)">
+          <div class="ob-form-field" style="margin-bottom:12px;">
+            <label for="input-new-lmp">Enter New / Current LMP Date</label>
+            <div style="display:flex; gap:8px;">
+              <input type="date" id="input-new-lmp" class="ob-form-control" required>
+              <button type="submit" class="ob-btn-card-primary" style="white-space:nowrap;">Update LMP</button>
+            </div>
+            <small style="color:#64748b; font-size:11px; margin-top:4px; display:block;">
+              Updating LMP automatically recalculates EDD and EGA while permanently preserving all past entries.
+            </small>
+          </div>
+        </form>
+
+        <!-- Calculations Preview -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px 12px; margin-bottom:16px;">
+          <div style="font-weight:700; font-size:12px; color:#1e293b; margin-bottom:4px;">Clinical Computations (Naegele's Rule)</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px;">
+            <div>Calculated EDD: <strong id="preview-calc-edd">—</strong></div>
+            <div>Estimated Gestational Age: <strong id="preview-calc-ega">—</strong></div>
+          </div>
+        </div>
+
+        <!-- Preserved Historical LMP Entries Table -->
+        <h4 style="font-size:12px; font-weight:700; color:#1e293b; margin-bottom:8px; text-transform:uppercase;">
+          Preserved Longitudinal LMP Record History
+        </h4>
+        <div class="ob-table-responsive">
+          <table class="ob-clinical-table">
+            <thead>
+              <tr>
+                <th class="ob-col-num">#</th>
+                <th>LMP DATE</th>
+                <th>RECORDED TIMESTAMP</th>
+                <th>ENCOUNTER CONTEXT</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-lmp-history">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="ob-modal-footer">
+        <button type="button" class="ob-btn-card-action" onclick="closeLmpModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Toast Container -->
+  <div class="ob-toast-container" id="ob-toast-container" aria-live="polite"></div>
 
   <datalist id="rx-drug-catalog">
     <option value="Amoxicillin 500 mg capsule"></option>
@@ -9835,6 +10732,9 @@
 
 
         renderOrderSummary();
+        if (typeof initObGyneModule === 'function') {
+          initObGyneModule(record.id);
+        }
 
 
       } finally {
@@ -10866,6 +11766,785 @@
     if (typeof renderViewableResults === 'function') {
       renderViewableResults();
     }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // OBSTETRIC & GYNECOLOGIC HISTORY — STRUCTURED CLINICAL WORKSPACE
+    // ══════════════════════════════════════════════════════════════════════
+    var obPatientState = null;
+    var obActiveTimelineFilter = 'all';
+
+    function getDefaultObState(pid) {
+      var isBlank = pid && (pid.indexOf('blank') !== -1 || pid.indexOf('new') !== -1);
+      if (isBlank) {
+        return {
+          pregnancies: [],
+          lmpHistory: [],
+          procedures: [],
+          gynecologicHistory: {
+            menarcheAge: '',
+            interval: 'Regular (28-30 days)',
+            duration: '',
+            flow: 'Moderate (3-4 pads/day)',
+            dysmenorrhea: 'None',
+            contraceptiveCurrent: 'None / Natural Family Planning',
+            contraceptiveDuration: '',
+            contraceptivePast: '',
+            lastPap: '',
+            diagnoses: '',
+            remarks: ''
+          }
+        };
+      }
+      return {
+        pregnancies: [
+          {
+            seq: 'P1',
+            year: '2021',
+            outcome: 'Live Birth',
+            mode: 'Cesarean Section',
+            term: 'Term',
+            ga: 'Term',
+            gaWeeks: 39,
+            sex: 'Female',
+            weight: '3.1 kg',
+            multiple: 'No',
+            living: 1,
+            remarks: '-'
+          },
+          {
+            seq: 'P2',
+            year: '2023',
+            outcome: 'Live Birth',
+            mode: 'Normal Vaginal Delivery',
+            term: 'Term',
+            ga: 'Term',
+            gaWeeks: 38,
+            sex: 'Male',
+            weight: '3.0 kg',
+            multiple: 'No',
+            living: 1,
+            remarks: '-'
+          },
+          {
+            seq: 'P3',
+            year: '2025',
+            outcome: 'Abortion / Miscarriage',
+            mode: 'N/A',
+            term: 'N/A',
+            ga: '10 weeks',
+            gaWeeks: 10,
+            sex: 'N/A',
+            weight: 'N/A',
+            multiple: 'No',
+            living: 0,
+            remarks: '-'
+          }
+        ],
+        lmpHistory: [
+          {
+            id: 'lmp-1',
+            date: '2026-09-05',
+            dateFormatted: '09/05/2026',
+            recordedAt: '2026-09-30 08:30',
+            encounter: 'OPD Active Encounter',
+            isCurrent: true
+          },
+          {
+            id: 'lmp-2',
+            date: '2024-12-10',
+            dateFormatted: '12/10/2024',
+            recordedAt: '2024-12-15 10:15',
+            encounter: 'Previous G3 Workup',
+            isCurrent: false
+          },
+          {
+            id: 'lmp-3',
+            date: '2022-08-01',
+            dateFormatted: '08/01/2022',
+            recordedAt: '2022-08-05 09:00',
+            encounter: 'Previous G2 Prenatal Encounter',
+            isCurrent: false
+          }
+        ],
+        procedures: [
+          {
+            id: 'proc-1',
+            name: 'Internal Examination',
+            datetime: '2026-09-30T09:15',
+            findings: 'Cervix closed, thick, firm, posterior. No active vaginal bleeding, no pooling of amniotic fluid.',
+            remarks: 'Pelvic structures within normal physiological limits.',
+            provider: 'Dr. Maria Santos, MD (PRC #0091245)'
+          },
+          {
+            id: 'proc-2',
+            name: 'Pap Smear',
+            datetime: '2025-11-14T10:00',
+            findings: 'Adequate sample. Negative for intraepithelial lesion or malignancy (NILM).',
+            remarks: 'Advised annual routine screening surveillance.',
+            provider: 'Dr. Paolo Cruz, MD (PRC #0078451)'
+          }
+        ],
+        gynecologicHistory: {
+          menarcheAge: '12',
+          interval: 'Regular (28-30 days)',
+          duration: '4',
+          flow: 'Moderate (3-4 pads/day)',
+          dysmenorrhea: 'Mild / Tolerable',
+          contraceptiveCurrent: 'Combined Oral Contraceptive Pills (COCP)',
+          contraceptiveDuration: '18 months',
+          contraceptivePast: 'None reported',
+          lastPap: '11/14/2025 — Normal (NILM)',
+          diagnoses: 'Mild Dysmenorrhea, resolved',
+          remarks: 'Patient is compliant with prescribed oral contraceptive regimen; denies abnormal intermenstrual bleeding, postcoital spotting, or foul-smelling vaginal discharge.'
+        }
+      };
+    }
+
+    function loadObStateForPatient(pid) {
+      var currentId = pid || activePatientId || 'default';
+      try {
+        var raw = localStorage.getItem('HIS_OB_GYNE_' + currentId);
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (parsed && parsed.pregnancies && parsed.lmpHistory) {
+            return parsed;
+          }
+        }
+      } catch (e) {
+        console.warn('Error reading stored OB-Gyne state', e);
+      }
+      return getDefaultObState(currentId);
+    }
+
+    function saveObStateForPatient() {
+      if (!obPatientState) return;
+      var currentId = activePatientId || 'default';
+      try {
+        localStorage.setItem('HIS_OB_GYNE_' + currentId, JSON.stringify(obPatientState));
+      } catch (e) {
+        console.warn('Error persisting OB-Gyne state', e);
+      }
+    }
+
+    function computeGTPAL() {
+      if (!obPatientState || !obPatientState.pregnancies) {
+        return { G: 0, T: 0, P: 0, A: 0, L: 0, scoreText: 'G0 T0 P0 A0 L0' };
+      }
+      var pregs = obPatientState.pregnancies;
+      var G = pregs.length;
+      var T = pregs.filter(function (p) {
+        return p.outcome === 'Live Birth' && (p.term === 'Term' || (p.gaWeeks && p.gaWeeks >= 37));
+      }).length;
+      var P = pregs.filter(function (p) {
+        return p.outcome === 'Live Birth' && (p.term === 'Preterm' || (p.gaWeeks && p.gaWeeks < 37 && p.gaWeeks >= 20));
+      }).length;
+      var A = pregs.filter(function (p) {
+        return p.outcome.indexOf('Abortion') !== -1 || p.outcome.indexOf('Miscarriage') !== -1 || p.outcome.indexOf('Ectopic') !== -1 || p.outcome.indexOf('Molar') !== -1;
+      }).length;
+      var L = pregs.reduce(function (sum, p) {
+        return sum + (Number(p.living) || 0);
+      }, 0);
+      return { G: G, T: T, P: P, A: A, L: L, scoreText: 'G' + G + ' T' + T + ' P' + P + ' A' + A + ' L' + L };
+    }
+
+    function computeEDD(lmpDateStr) {
+      if (!lmpDateStr) return { eddStr: '—', eddDisplay: '—', egaStr: '—' };
+      var d = new Date(lmpDateStr + 'T00:00:00');
+      if (isNaN(d.getTime())) return { eddStr: '—', eddDisplay: '—', egaStr: '—' };
+      var edd = new Date(d);
+      edd.setDate(edd.getDate() + 280);
+      var mm = String(edd.getMonth() + 1).padStart(2, '0');
+      var dd = String(edd.getDate()).padStart(2, '0');
+      var yyyy = edd.getFullYear();
+      var eddDisplay = mm + '/' + dd + '/' + yyyy;
+      var today = new Date();
+      var diffDays = Math.max(0, Math.floor((today - d) / (1000 * 60 * 60 * 24)));
+      var weeks = Math.floor(diffDays / 7);
+      var days = diffDays % 7;
+      var egaStr = weeks + ' wks ' + days + ' days';
+      return { eddStr: edd.toISOString().slice(0, 10), eddDisplay: eddDisplay, egaStr: egaStr };
+    }
+
+    function renderSummaryCards() {
+      if (!obPatientState) return;
+      var gtpal = computeGTPAL();
+      var scoreEl = document.getElementById('ob-val-obstetric-score');
+      if (scoreEl) scoreEl.textContent = gtpal.scoreText;
+
+      var currentLmpObj = null;
+      if (obPatientState.lmpHistory && obPatientState.lmpHistory.length) {
+        currentLmpObj = obPatientState.lmpHistory.find(function (l) { return l.isCurrent; }) || obPatientState.lmpHistory[0];
+      }
+      var lmpVal = currentLmpObj ? currentLmpObj.dateFormatted : '—';
+      var lmpEl = document.getElementById('ob-val-current-lmp');
+      if (lmpEl) lmpEl.textContent = lmpVal;
+
+      var eddEl = document.getElementById('ob-val-edd');
+      var eddSubEl = document.getElementById('ob-val-edd-sub');
+      if (currentLmpObj && currentLmpObj.date) {
+        var calc = computeEDD(currentLmpObj.date);
+        if (eddEl) eddEl.textContent = calc.eddDisplay;
+        if (eddSubEl) eddSubEl.textContent = 'When applicable';
+      } else {
+        if (eddEl) eddEl.textContent = '—';
+        if (eddSubEl) eddSubEl.textContent = 'No LMP recorded';
+      }
+
+      var pregCountEl = document.getElementById('ob-val-pregnancy-count');
+      if (pregCountEl) pregCountEl.textContent = obPatientState.pregnancies ? obPatientState.pregnancies.length : 0;
+    }
+
+    function renderPregnancyTable() {
+      var tbody = document.getElementById('tbody-pregnancies');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      if (!obPatientState || !obPatientState.pregnancies || !obPatientState.pregnancies.length) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:#64748b; padding:20px;">No pregnancy records recorded. Click "+ Add Pregnancy" above to create an entry.</td></tr>';
+        return;
+      }
+      obPatientState.pregnancies.forEach(function (p, index) {
+        var tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td class="ob-col-num">' + escapeObHtml(p.seq || 'P' + (index + 1)) + '</td>' +
+          '<td>' + escapeObHtml(p.year || '—') + '</td>' +
+          '<td><strong>' + escapeObHtml(p.outcome) + '</strong></td>' +
+          '<td>' + escapeObHtml(p.mode || 'N/A') + '</td>' +
+          '<td>' + escapeObHtml(p.ga || '—') + '</td>' +
+          '<td>' + escapeObHtml(p.sex || 'N/A') + '</td>' +
+          '<td>' + escapeObHtml(p.weight || 'N/A') + '</td>' +
+          '<td>' + escapeObHtml(p.multiple || 'No') + '</td>' +
+          '<td>' + escapeObHtml(p.remarks || '-') + '</td>' +
+          '<td class="ob-cell-action">' +
+          '<button type="button" class="ob-btn-table-sm" onclick="openEditPregModal(' + index + ')">Edit</button>' +
+          '<button type="button" class="ob-btn-table-sm ob-btn-table-danger" onclick="archivePregnancy(' + index + ')">Archive</button>' +
+          '</td>';
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderProceduresTable() {
+      var tbody = document.getElementById('tbody-procedures');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      if (!obPatientState || !obPatientState.procedures || !obPatientState.procedures.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#64748b; padding:20px;">No specialty procedures documented for this patient.</td></tr>';
+        return;
+      }
+      obPatientState.procedures.forEach(function (proc, index) {
+        var dt = new Date(proc.datetime);
+        var dateFormatted = isNaN(dt.getTime()) ? proc.datetime : dt.toLocaleString('en-US', {
+          month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit'
+        });
+        var tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td style="white-space:nowrap; font-weight:600;">' + escapeObHtml(dateFormatted) + '</td>' +
+          '<td><strong style="color:#1967d2;">' + escapeObHtml(proc.name) + '</strong></td>' +
+          '<td style="max-width:280px;">' + escapeObHtml(proc.findings) + '</td>' +
+          '<td style="color:#475569;">' + escapeObHtml(proc.remarks || '—') + '</td>' +
+          '<td style="font-size:11.5px; color:#334155;">' + escapeObHtml(proc.provider) + '</td>' +
+          '<td style="text-align:right;">' +
+          '<button type="button" class="ob-btn-table-sm ob-btn-table-danger" onclick="removeProcedure(' + index + ')">Remove</button>' +
+          '</td>';
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderLongitudinalTimeline() {
+      var container = document.getElementById('ob-timeline-container');
+      if (!container || !obPatientState) return;
+      container.innerHTML = '';
+      var events = [];
+
+      if (obPatientState.pregnancies) {
+        obPatientState.pregnancies.forEach(function (p) {
+          events.push({
+            category: 'pregnancy',
+            title: 'Pregnancy ' + p.seq + ': ' + p.outcome,
+            dateStr: p.year,
+            sortDate: new Date(p.year.length === 4 ? p.year + '-01-01' : p.year).getTime() || 0,
+            body: 'Delivery: ' + p.mode + ' • GA: ' + p.ga + ' • Sex: ' + p.sex + ' • Birth Weight: ' + p.weight + ' • Living: ' + p.living + ' • Remarks: ' + p.remarks
+          });
+        });
+      }
+
+      if (obPatientState.lmpHistory) {
+        obPatientState.lmpHistory.forEach(function (l) {
+          events.push({
+            category: 'lmp',
+            title: (l.isCurrent ? 'Current' : 'Historical') + ' LMP Record: ' + l.dateFormatted,
+            dateStr: l.dateFormatted,
+            sortDate: new Date(l.date).getTime() || 0,
+            body: 'Recorded during ' + l.encounter + ' (Audit Timestamp: ' + l.recordedAt + ')'
+          });
+        });
+      }
+
+      if (obPatientState.procedures) {
+        obPatientState.procedures.forEach(function (proc) {
+          events.push({
+            category: 'procedure',
+            title: 'OB-Gyne Procedure: ' + proc.name,
+            dateStr: proc.datetime ? proc.datetime.slice(0, 10) : '—',
+            sortDate: new Date(proc.datetime).getTime() || 0,
+            body: 'Findings: ' + proc.findings + ' | Remarks: ' + proc.remarks + ' (' + proc.provider + ')'
+          });
+        });
+      }
+
+      var gh = obPatientState.gynecologicHistory;
+      if (gh && gh.remarks) {
+        events.push({
+          category: 'gyne',
+          title: 'Gynecologic Evaluation & Menstrual Profile',
+          dateStr: '2026-09-30',
+          sortDate: new Date('2026-09-30').getTime(),
+          body: 'Menarche: ' + gh.menarcheAge + ' yrs • Cycle: ' + gh.interval + ' • Contraceptive: ' + gh.contraceptiveCurrent + ' (' + gh.contraceptiveDuration + ') • Last Pap: ' + gh.lastPap + ' • Notes: ' + gh.remarks
+        });
+      }
+
+      events.sort(function (a, b) { return b.sortDate - a.sortDate; });
+      var filtered = obActiveTimelineFilter === 'all'
+        ? events
+        : events.filter(function (e) { return e.category === obActiveTimelineFilter; });
+
+      if (!filtered.length) {
+        container.innerHTML = '<div style="text-align:center; color:#64748b; padding:20px;">No timeline records match the selected category.</div>';
+        return;
+      }
+
+      filtered.forEach(function (ev) {
+        var item = document.createElement('div');
+        item.className = 'ob-timeline-item';
+        item.innerHTML =
+          '<div class="ob-timeline-item-header">' +
+          '<span class="ob-timeline-item-type">' + escapeObHtml(ev.category) + '</span>' +
+          '<span class="ob-timeline-item-date">' + escapeObHtml(ev.dateStr) + '</span>' +
+          '</div>' +
+          '<div class="ob-timeline-item-title">' + escapeObHtml(ev.title) + '</div>' +
+          '<div class="ob-timeline-item-body">' + escapeObHtml(ev.body) + '</div>';
+        container.appendChild(item);
+      });
+    }
+
+    function filterTimeline(category, pillEl) {
+      obActiveTimelineFilter = category;
+      document.querySelectorAll('.ob-filter-pill').forEach(function (el) { el.classList.remove('active'); });
+      if (pillEl) pillEl.classList.add('active');
+      renderLongitudinalTimeline();
+    }
+
+    function openAddPregModal() {
+      var titleEl = document.getElementById('modal-pregnancy-title');
+      if (titleEl) titleEl.textContent = 'Add Pregnancy Record';
+      var idxEl = document.getElementById('preg-index');
+      if (idxEl) idxEl.value = '-1';
+      var seqEl = document.getElementById('preg-sequence');
+      if (seqEl) seqEl.value = 'P' + ((obPatientState && obPatientState.pregnancies ? obPatientState.pregnancies.length : 0) + 1);
+      var yearEl = document.getElementById('preg-year');
+      if (yearEl) yearEl.value = new Date().getFullYear();
+      var outEl = document.getElementById('preg-outcome');
+      if (outEl) outEl.value = 'Live Birth';
+      var modeEl = document.getElementById('preg-mode');
+      if (modeEl) modeEl.value = 'Normal Vaginal Delivery';
+      var termEl = document.getElementById('preg-term');
+      if (termEl) termEl.value = 'Term';
+      var gaEl = document.getElementById('preg-ga');
+      if (gaEl) gaEl.value = 'Term';
+      var sexEl = document.getElementById('preg-sex');
+      if (sexEl) sexEl.value = 'Female';
+      var wtEl = document.getElementById('preg-weight');
+      if (wtEl) wtEl.value = '3.0 kg';
+      var multEl = document.getElementById('preg-multiple');
+      if (multEl) multEl.value = 'No';
+      var livEl = document.getElementById('preg-living');
+      if (livEl) livEl.value = '1';
+      var remEl = document.getElementById('preg-remarks');
+      if (remEl) remEl.value = '-';
+      var modal = document.getElementById('modal-pregnancy');
+      if (modal) modal.classList.add('open');
+    }
+
+    function openEditPregModal(index) {
+      if (!obPatientState || !obPatientState.pregnancies || !obPatientState.pregnancies[index]) return;
+      var p = obPatientState.pregnancies[index];
+      var titleEl = document.getElementById('modal-pregnancy-title');
+      if (titleEl) titleEl.textContent = 'Edit Pregnancy Record (' + p.seq + ')';
+      document.getElementById('preg-index').value = index;
+      document.getElementById('preg-sequence').value = p.seq;
+      document.getElementById('preg-year').value = p.year;
+      document.getElementById('preg-outcome').value = p.outcome;
+      document.getElementById('preg-mode').value = p.mode;
+      document.getElementById('preg-term').value = p.term;
+      document.getElementById('preg-ga').value = p.ga;
+      document.getElementById('preg-sex').value = p.sex;
+      document.getElementById('preg-weight').value = p.weight;
+      document.getElementById('preg-multiple').value = p.multiple;
+      document.getElementById('preg-living').value = p.living;
+      document.getElementById('preg-remarks').value = p.remarks;
+      var modal = document.getElementById('modal-pregnancy');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closePregnancyModal() {
+      var modal = document.getElementById('modal-pregnancy');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function handleOutcomeChange(outcome) {
+      var modeSelect = document.getElementById('preg-mode');
+      var sexSelect = document.getElementById('preg-sex');
+      var weightInput = document.getElementById('preg-weight');
+      var livingInput = document.getElementById('preg-living');
+      var termSelect = document.getElementById('preg-term');
+
+      if (outcome.indexOf('Abortion') !== -1 || outcome.indexOf('Miscarriage') !== -1 || outcome.indexOf('Ectopic') !== -1 || outcome.indexOf('Molar') !== -1) {
+        if (modeSelect) modeSelect.value = 'N/A';
+        if (sexSelect) sexSelect.value = 'N/A';
+        if (weightInput) weightInput.value = 'N/A';
+        if (livingInput) livingInput.value = '0';
+        if (termSelect) termSelect.value = 'N/A';
+      } else if (outcome === 'Stillbirth') {
+        if (livingInput) livingInput.value = '0';
+      }
+    }
+
+    function handlePregnancySubmit(event) {
+      if (event && event.preventDefault) event.preventDefault();
+      var index = parseInt(document.getElementById('preg-index').value, 10);
+      var gaVal = document.getElementById('preg-ga').value.trim();
+      var gaWeeks = null;
+      var match = gaVal.match(/(\d+)\s*(?:weeks?|wks?)/i);
+      if (match) gaWeeks = parseInt(match[1], 10);
+      if (gaVal.toLowerCase() === 'term') gaWeeks = 39;
+
+      var record = {
+        seq: document.getElementById('preg-sequence').value.trim() || ('P' + (obPatientState.pregnancies.length + 1)),
+        year: document.getElementById('preg-year').value.trim() || '—',
+        outcome: document.getElementById('preg-outcome').value,
+        mode: document.getElementById('preg-mode').value,
+        term: document.getElementById('preg-term').value,
+        ga: gaVal || '—',
+        gaWeeks: gaWeeks,
+        sex: document.getElementById('preg-sex').value,
+        weight: document.getElementById('preg-weight').value.trim() || 'N/A',
+        multiple: document.getElementById('preg-multiple').value,
+        living: parseInt(document.getElementById('preg-living').value, 10) || 0,
+        remarks: document.getElementById('preg-remarks').value.trim() || '-'
+      };
+
+      if (index >= 0) {
+        obPatientState.pregnancies[index] = record;
+        showObToast('Pregnancy record updated successfully.');
+      } else {
+        obPatientState.pregnancies.push(record);
+        showObToast('New pregnancy record added.');
+      }
+
+      saveObStateForPatient();
+      closePregnancyModal();
+      renderPregnancyTable();
+      renderSummaryCards();
+      renderLongitudinalTimeline();
+    }
+
+    function archivePregnancy(index) {
+      if (!obPatientState || !obPatientState.pregnancies || !obPatientState.pregnancies[index]) return;
+      var p = obPatientState.pregnancies[index];
+      if (confirm('Archive pregnancy record ' + p.seq + ' (' + p.year + ' • ' + p.outcome + ')? This will update the auto-derived GTPAL score.')) {
+        obPatientState.pregnancies.splice(index, 1);
+        saveObStateForPatient();
+        renderPregnancyTable();
+        renderSummaryCards();
+        renderLongitudinalTimeline();
+        showObToast('Pregnancy record ' + p.seq + ' archived.');
+      }
+    }
+
+    function openLmpModal() {
+      if (!obPatientState) return;
+      var currentLmp = obPatientState.lmpHistory ? obPatientState.lmpHistory.find(function (l) { return l.isCurrent; }) : null;
+      if (currentLmp && currentLmp.date) {
+        var inputEl = document.getElementById('input-new-lmp');
+        if (inputEl) inputEl.value = currentLmp.date;
+        var calc = computeEDD(currentLmp.date);
+        var previewEdd = document.getElementById('preview-calc-edd');
+        var previewEga = document.getElementById('preview-calc-ega');
+        if (previewEdd) previewEdd.textContent = calc.eddDisplay;
+        if (previewEga) previewEga.textContent = calc.egaStr;
+      }
+      renderLmpHistoryTable();
+      var modal = document.getElementById('modal-lmp');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeLmpModal() {
+      var modal = document.getElementById('modal-lmp');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function handleLmpUpdate(event) {
+      if (event && event.preventDefault) event.preventDefault();
+      var inputEl = document.getElementById('input-new-lmp');
+      if (!inputEl) return;
+      var newDate = inputEl.value;
+      if (!newDate) return;
+
+      if (!obPatientState.lmpHistory) obPatientState.lmpHistory = [];
+      obPatientState.lmpHistory.forEach(function (l) { l.isCurrent = false; });
+
+      var parts = newDate.split('-');
+      var formatted = parts[1] + '/' + parts[2] + '/' + parts[0];
+      var now = new Date();
+      var stamp = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+
+      obPatientState.lmpHistory.unshift({
+        id: 'lmp-' + Date.now(),
+        date: newDate,
+        dateFormatted: formatted,
+        recordedAt: stamp,
+        encounter: 'OPD Active Encounter',
+        isCurrent: true
+      });
+
+      saveObStateForPatient();
+      renderLmpHistoryTable();
+      renderSummaryCards();
+      renderLongitudinalTimeline();
+      showObToast('LMP updated and prior entries preserved.');
+    }
+
+    function renderLmpHistoryTable() {
+      var tbody = document.getElementById('tbody-lmp-history');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      if (!obPatientState || !obPatientState.lmpHistory) return;
+      obPatientState.lmpHistory.forEach(function (l, index) {
+        var tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td class="ob-col-num">' + (index + 1) + '</td>' +
+          '<td><strong>' + escapeObHtml(l.dateFormatted) + '</strong></td>' +
+          '<td style="color:#64748b; font-size:11.5px;">' + escapeObHtml(l.recordedAt) + '</td>' +
+          '<td>' + escapeObHtml(l.encounter) + '</td>' +
+          '<td>' +
+          (l.isCurrent
+            ? '<span style="color:#16a34a; font-weight:700; background:#dcfce7; padding:2px 6px; border-radius:3px; font-size:10.5px;">CURRENT</span>'
+            : '<span style="color:#64748b; font-weight:500; font-size:10.5px;">HISTORICAL</span>') +
+          '</td>';
+        tbody.appendChild(tr);
+      });
+    }
+
+    function toggleCustomProcedure(procName) {
+      var wrap = document.getElementById('wrap-custom-proc');
+      var input = document.getElementById('proc-custom-name');
+      if (!wrap || !input) return;
+      if (procName === 'Other / Custom Procedure') {
+        wrap.style.display = 'block';
+        input.required = true;
+        input.focus();
+      } else {
+        wrap.style.display = 'none';
+        input.required = false;
+      }
+    }
+
+    function saveProcedure(event) {
+      if (event && event.preventDefault) event.preventDefault();
+      var selectVal = document.getElementById('proc-select').value;
+      var finalName = selectVal;
+      if (selectVal === 'Other / Custom Procedure') {
+        var custom = document.getElementById('proc-custom-name').value.trim();
+        if (!custom) {
+          showObToast('Please enter the custom procedure name.', 'error');
+          return;
+        }
+        finalName = custom;
+      }
+
+      var newProc = {
+        id: 'proc-' + Date.now(),
+        name: finalName,
+        datetime: document.getElementById('proc-datetime').value,
+        findings: document.getElementById('proc-findings').value.trim(),
+        remarks: document.getElementById('proc-remarks').value.trim() || '—',
+        provider: document.getElementById('proc-provider').value.trim() || 'Attending Physician'
+      };
+
+      if (!obPatientState.procedures) obPatientState.procedures = [];
+      obPatientState.procedures.unshift(newProc);
+      saveObStateForPatient();
+      renderProceduresTable();
+      renderLongitudinalTimeline();
+
+      // Reset Form
+      document.getElementById('proc-findings').value = '';
+      document.getElementById('proc-remarks').value = '';
+      document.getElementById('proc-custom-name').value = '';
+      document.getElementById('proc-select').value = 'Capillary Blood Glucose (CBG)';
+      toggleCustomProcedure('Capillary Blood Glucose (CBG)');
+      initProcDateTime();
+
+      showObToast('OB-Gyne procedure recorded successfully.');
+    }
+
+    function removeProcedure(index) {
+      if (!obPatientState || !obPatientState.procedures || !obPatientState.procedures[index]) return;
+      var p = obPatientState.procedures[index];
+      if (confirm('Remove procedure record "' + p.name + '"?')) {
+        obPatientState.procedures.splice(index, 1);
+        saveObStateForPatient();
+        renderProceduresTable();
+        renderLongitudinalTimeline();
+        showObToast('Procedure removed.');
+      }
+    }
+
+    function initProcDateTime() {
+      var el = document.getElementById('proc-datetime');
+      if (!el) return;
+      var now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      el.value = now.toISOString().slice(0, 16);
+    }
+
+    function saveGyneHistory(event) {
+      if (event && event.preventDefault) event.preventDefault();
+      if (!obPatientState) return;
+      obPatientState.gynecologicHistory = {
+        menarcheAge: document.getElementById('gyne-menarche').value.trim(),
+        interval: document.getElementById('gyne-interval').value,
+        duration: document.getElementById('gyne-duration').value.trim(),
+        flow: document.getElementById('gyne-flow').value,
+        dysmenorrhea: document.getElementById('gyne-dysmenorrhea').value,
+        contraceptiveCurrent: document.getElementById('gyne-contraceptive-current').value,
+        contraceptiveDuration: document.getElementById('gyne-contraceptive-duration').value.trim(),
+        contraceptivePast: document.getElementById('gyne-contraceptive-past').value.trim(),
+        lastPap: document.getElementById('gyne-last-pap').value.trim(),
+        diagnoses: document.getElementById('gyne-diagnoses').value.trim(),
+        remarks: document.getElementById('gyne-remarks').value.trim()
+      };
+      saveObStateForPatient();
+      renderLongitudinalTimeline();
+      showObToast('Gynecologic history saved.');
+    }
+
+    function populateGyneForm() {
+      if (!obPatientState || !obPatientState.gynecologicHistory) return;
+      var gh = obPatientState.gynecologicHistory;
+      var setVal = function (id, v) {
+        var el = document.getElementById(id);
+        if (el && v !== undefined) el.value = v;
+      };
+      setVal('gyne-menarche', gh.menarcheAge);
+      setVal('gyne-interval', gh.interval || 'Regular (28-30 days)');
+      setVal('gyne-duration', gh.duration);
+      setVal('gyne-flow', gh.flow || 'Moderate (3-4 pads/day)');
+      setVal('gyne-dysmenorrhea', gh.dysmenorrhea || 'None');
+      setVal('gyne-contraceptive-current', gh.contraceptiveCurrent || 'None / Natural Family Planning');
+      setVal('gyne-contraceptive-duration', gh.contraceptiveDuration);
+      setVal('gyne-contraceptive-past', gh.contraceptivePast);
+      setVal('gyne-last-pap', gh.lastPap);
+      setVal('gyne-diagnoses', gh.diagnoses);
+      setVal('gyne-remarks', gh.remarks);
+    }
+
+    function showObToast(message, type) {
+      var container = document.getElementById('ob-toast-container');
+      if (!container) return;
+      var toast = document.createElement('div');
+      toast.className = 'ob-toast-msg ' + (type || 'success');
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(function () {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s ease';
+        setTimeout(function () { toast.remove(); }, 300);
+      }, 2800);
+    }
+
+    function escapeObHtml(str) {
+      return String(str === undefined || str === null ? '' : str).replace(/[&<>"']/g, function (m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+      });
+    }
+
+    function initObGyneModule(patientId) {
+      obPatientState = loadObStateForPatient(patientId);
+      renderSummaryCards();
+      renderPregnancyTable();
+      renderProceduresTable();
+      populateGyneForm();
+      renderLongitudinalTimeline();
+      initProcDateTime();
+    }
+
+    // Attach Tab Switcher & Modal Listeners for OB-Gyne
+    function initObGyneListeners() {
+      document.querySelectorAll('.ob-workspace-tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          document.querySelectorAll('.ob-workspace-tab').forEach(function (t) { t.classList.remove('active'); });
+          document.querySelectorAll('.ob-tab-panel').forEach(function (p) { p.classList.remove('active'); });
+          this.classList.add('active');
+          var targetId = this.getAttribute('data-ob-target');
+          var targetPanel = document.getElementById(targetId);
+          if (targetPanel) targetPanel.classList.add('active');
+        });
+      });
+
+      var lmpInput = document.getElementById('input-new-lmp');
+      if (lmpInput) {
+        lmpInput.addEventListener('input', function () {
+          var calc = computeEDD(this.value);
+          var previewEdd = document.getElementById('preview-calc-edd');
+          var previewEga = document.getElementById('preview-calc-ega');
+          if (previewEdd) previewEdd.textContent = calc.eddDisplay;
+          if (previewEga) previewEga.textContent = calc.egaStr;
+        });
+      }
+
+      // Outside click dismissals
+      var modalPreg = document.getElementById('modal-pregnancy');
+      if (modalPreg) {
+        modalPreg.addEventListener('click', function (e) {
+          if (e.target === modalPreg) closePregnancyModal();
+        });
+      }
+      var modalLmp = document.getElementById('modal-lmp');
+      if (modalLmp) {
+        modalLmp.addEventListener('click', function (e) {
+          if (e.target === modalLmp) closeLmpModal();
+        });
+      }
+
+      // Escape key dismissal
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          closePregnancyModal();
+          closeLmpModal();
+        }
+      });
+    }
+
+    // Window bindings for inline handlers
+    window.openAddPregModal = openAddPregModal;
+    window.openEditPregModal = openEditPregModal;
+    window.closePregnancyModal = closePregnancyModal;
+    window.handlePregnancySubmit = handlePregnancySubmit;
+    window.handleOutcomeChange = handleOutcomeChange;
+    window.archivePregnancy = archivePregnancy;
+    window.openLmpModal = openLmpModal;
+    window.closeLmpModal = closeLmpModal;
+    window.handleLmpUpdate = handleLmpUpdate;
+    window.toggleCustomProcedure = toggleCustomProcedure;
+    window.saveProcedure = saveProcedure;
+    window.removeProcedure = removeProcedure;
+    window.saveGyneHistory = saveGyneHistory;
+    window.filterTimeline = filterTimeline;
+    window.initObGyneModule = initObGyneModule;
+
+    // Run initialization
+    initObGyneListeners();
+    initObGyneModule(activePatientId);
 
   </script>
 

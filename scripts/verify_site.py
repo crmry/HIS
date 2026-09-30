@@ -216,6 +216,34 @@ async def scan_single_target(browser_ws, file_url):
                     sizeInput.onchange();
                 }
 
+                // Test Obstetric & Gynecologic History structured workspace integration
+                const obTabLink = document.querySelector('a[href="#hx-gyn"]');
+                if (obTabLink) {
+                    obTabLink.click();
+                    const obRoot = document.getElementById('ob-workspace-card');
+                    if (!obRoot) return 'OB workspace root element not found';
+                    const scoreEl = document.getElementById('ob-val-obstetric-score');
+                    if (!scoreEl || !scoreEl.textContent.trim()) return 'OB score element empty or missing';
+                    
+                    // Test Add Pregnancy Modal open & close
+                    if (typeof window.openAddPregModal === 'function') {
+                        window.openAddPregModal();
+                        const pModal = document.getElementById('modal-pregnancy');
+                        if (!pModal || !pModal.classList.contains('open')) return 'Pregnancy modal failed to open';
+                        window.closePregnancyModal();
+                        if (pModal.classList.contains('open')) return 'Pregnancy modal failed to close';
+                    }
+
+                    // Test LMP Modal open & close
+                    if (typeof window.openLmpModal === 'function') {
+                        window.openLmpModal();
+                        const lmpModal = document.getElementById('modal-lmp');
+                        if (!lmpModal || !lmpModal.classList.contains('open')) return 'LMP modal failed to open';
+                        window.closeLmpModal();
+                        if (lmpModal.classList.contains('open')) return 'LMP modal failed to close';
+                    }
+                }
+
                 return 'OK';
             })()
             """
