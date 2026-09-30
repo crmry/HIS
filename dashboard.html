@@ -10239,6 +10239,10 @@
       if (curEncForSave && !isInitialEncounter(curEncForSave, curEncSaveIdx, data.encounters)) {
         curEncForSave.progress_notes = data.progress_notes || '';
       }
+      if (curEncForSave && data.final_diagnosis) {
+        curEncForSave.final_diagnosis = data.final_diagnosis;
+        curEncForSave.diagnosis = data.final_diagnosis;
+      }
 
       data.referrals =
         referrals.map(function (referral) {
@@ -10780,6 +10784,7 @@
       currEnc.is_current = false;
       currEnc.diagnosis = finalDx;
       currEnc.final_diagnosis = finalDx;
+      records[recIdx].data.final_diagnosis = finalDx;
       currEnc.disposition = disp;
       currEnc.follow_up = { date: fuDate, clinic: fuClinic, reason: fuReason };
       if (!currEnc.prescriptions && typeof collectRxWriter === 'function') {

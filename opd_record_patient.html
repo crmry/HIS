@@ -271,8 +271,7 @@ Physical Examination: General Survey: Conscious, coherent, ambulatory. HEENT: An
       <!-- Diagnosis -->
       <section class="mb-3 px-1">
         <div class="font-bold text-[11px] mb-0.5">DIAGNOSIS:</div>
-        <div class="text-[11px] font-bold" id="opd-diagnosis">M17.11 - Unilateral Primary Osteoarthritis, Right Knee, mild</div>
-        <div class="text-[9.5px] text-gray-800" id="opd-secondary-diagnosis">Initial Clinical Impression: Right knee joint aching pain on walking and climbing stairs x 2 months</div>
+        <div class="text-[11px] font-bold" id="opd-diagnosis"></div>
       </section>
 
       <!-- Services -->
@@ -567,23 +566,41 @@ Physical Examination: General Survey: Conscious, coherent, ambulatory. HEENT: An
         var nLicEl = document.getElementById('opd-nurse-lic');
         if (nLicEl) nLicEl.textContent = data.triage_nurse_lic || '0078214';
 
-        // 5. Diagnosis
-        var primaryDx = initialEnc.diagnosis || (initialEnc.clinical_record && initialEnc.clinical_record.final_diagnosis) || data.final_diagnosis || data.admitting_diagnosis || 'M17.11 - Unilateral Primary Osteoarthritis, Right Knee, mild';
-        var dxEl = document.getElementById('opd-diagnosis');
-        if (dxEl) dxEl.textContent = primaryDx;
+        // 5. Diagnosis - Exclusively display Final Diagnosis entered by the physician
+        function cleanDiagnosisText(dxStr) {
+          if (!dxStr) return '';
+          var s = String(dxStr);
+          s = s.replace(/\s*[\(\[]\s*(?:ICD(?:-?10)?(?:\s*:\s*|\s+))?[A-Z][0-9]{1,2}(?:\.[0-9A-Z]{1,4})?(?:\s*,\s*[A-Z0-9\.\s]+)*[\)\]]/gi, '');
+          s = s.replace(/\s*[\(\[]\s*ICD[^\)\]]+[\)\]]/gi, '');
+          s = s.replace(/^[A-Z][0-9]{1,2}(?:\.[0-9A-Z]{1,4})?\s*-\s*/gi, '');
+          return s.trim();
+        }
 
-        var secondaryParts = [];
-        if (data.admitting_diagnosis && data.admitting_diagnosis !== primaryDx) {
-          secondaryParts.push('Admitting Diagnosis: ' + data.admitting_diagnosis);
+        var curEnc = encounters.find(function (e) { return e.is_current || e.isCurrent; });
+        var finalDx = '';
+
+        // Priority 1: Current active encounter's final diagnosis entered/saved by the physician
+        if (curEnc) {
+          finalDx = (curEnc.final_diagnosis || (curEnc.clinical_record && curEnc.clinical_record.final_diagnosis) || '').trim();
         }
-        if (data.other_diagnosis) {
-          secondaryParts.push('Other Diagnosis: ' + data.other_diagnosis);
+        // Priority 2: Patient record level final diagnosis
+        if (!finalDx && data.final_diagnosis) {
+          finalDx = String(data.final_diagnosis).trim();
         }
-        if (!secondaryParts.length && initialEnc.clinical_record && initialEnc.clinical_record.chief_complaint) {
-          secondaryParts.push('Initial Clinical Impression: ' + initialEnc.clinical_record.chief_complaint);
+        // Priority 3: Target encounter's explicit final diagnosis
+        if (!finalDx && initialEnc) {
+          finalDx = (initialEnc.final_diagnosis || (initialEnc.clinical_record && initialEnc.clinical_record.final_diagnosis) || '').trim();
         }
-        var secDxEl = document.getElementById('opd-secondary-diagnosis');
-        if (secDxEl) secDxEl.textContent = secondaryParts.join(' | ');
+        // Priority 4: Clean encounter diagnosis without ICD code prefix
+        if (!finalDx && curEnc && curEnc.diagnosis) {
+          finalDx = cleanDiagnosisText(curEnc.diagnosis);
+        }
+        if (!finalDx && initialEnc && initialEnc.diagnosis) {
+          finalDx = cleanDiagnosisText(initialEnc.diagnosis);
+        }
+
+        var dxEl = document.getElementById('opd-diagnosis');
+        if (dxEl) dxEl.textContent = finalDx || '—';
 
         // Consultation Time
         var timeIn = initialEnc.time || '02:30 PM';
