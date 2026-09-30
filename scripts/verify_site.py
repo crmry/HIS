@@ -122,8 +122,13 @@ async def scan_single_target(browser_ws, file_url):
         # Interactive component smoke tests for dashboard/updated pages
         if any(p in file_url for p in ("dashboard.html",)):
             smoke_js = """
-            (() => {
-                const toolkit = document.getElementById('floating-req-toolkit');
+            (async () => {
+                let toolkit = document.getElementById('floating-req-toolkit');
+                const t0 = Date.now();
+                while (!toolkit && Date.now() - t0 < 3000) {
+                    await new Promise(r => setTimeout(r, 50));
+                    toolkit = document.getElementById('floating-req-toolkit');
+                }
                 if (!toolkit) return 'No toolkit element found';
                 const handle = document.getElementById('floating-req-handle');
                 if (!handle) return 'No handle found';
@@ -247,9 +252,9 @@ async def scan_single_target(browser_ws, file_url):
                 return 'OK';
             })()
             """
-            eval_id = await send("Runtime.evaluate", {"expression": smoke_js, "returnByValue": True})
+            eval_id = await send("Runtime.evaluate", {"expression": smoke_js, "returnByValue": True, "awaitPromise": True})
             t0 = time.time()
-            while time.time() - t0 < 1.0:
+            while time.time() - t0 < 4.0:
                 try:
                     raw = await asyncio.wait_for(p_ws.recv(), timeout=0.2)
                     msg = json.loads(raw)

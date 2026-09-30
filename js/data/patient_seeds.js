@@ -50,7 +50,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 50,
+        seedVersion: 51,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -59,10 +59,10 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           phic_member_category: 'Direct Contributor - Employed (Private)',
           attending_physician: { name: 'Miguel Santos, MD', prc_no: '0094821', s2_no: 'S2-094821-2026' },
           last_name: 'DEL ROSARIO',
-          first_name: 'JUAN',
+          first_name: 'JOAN',
           middle_name: 'BAUTISTA',
           birthdate: '1978-03-22',
-          gender: 'Male',
+          gender: 'Female',
           address: 'Brgy. Bata, Bacolod City, Negros Occidental',
           ward_room: 'OPD - Room 104',
           ward_area: 'General Medicine',
@@ -146,7 +146,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               ],
               clinical_record: {
                 chief_complaint: 'Semi-annual comprehensive outpatient review and lab orders',
-                history: 'Patient is a 48-year-old male presenting for scheduled semi-annual review. Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea. Compliant with Metformin 500 mg BID and Losartan 50 mg OD. Home BP ranges 130-138/80-86 mmHg.\n\nPhysical Examination: General: Alert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis pulses palpable.',
+                history: 'Patient is a 48-year-old female presenting for scheduled semi-annual review. Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea. Compliant with Metformin 500 mg BID and Losartan 50 mg OD. Home BP ranges 130-138/80-86 mmHg.\n\nPhysical Examination: General: Alert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis pulses palpable.',
                 final_diagnosis: 'Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension'
               },
               prescriptions: [
@@ -246,7 +246,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               },
               clinical_record: {
                 chief_complaint: 'Follow-up right knee pain and mobility assessment',
-                history: 'Patient is a 47-year-old male with diagnosed mild primary osteoarthritis of the right knee returning for scheduled 3-month orthopedic follow-up. Demonstrates good symptom improvement on physical therapy and home quadriceps rehabilitation.',
+                history: 'Patient is a 47-year-old female with diagnosed mild primary osteoarthritis of the right knee returning for scheduled 3-month orthopedic follow-up. Demonstrates good symptom improvement on physical therapy and home quadriceps rehabilitation.',
                 final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, clinically stable'
               },
               progress_notes: 'Outpatient Follow-up (Orthopedics). Right knee joint review.\nSubjective: Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises. No morning joint stiffness > 30 minutes, no joint locking or giving way.\nObjective: Gait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.\nAssessment: Unilateral Primary Osteoarthritis, Right Knee (M17.11), clinically improved with low disease activity.\nPlan: Shift Celecoxib to strictly PRN for pain flare-ups. Continue low-impact physical exercise (swimming, cycling, walking on flat ground). Avoid deep squats and kneeling. Return for annual orthopedic surveillance or if joint swelling occurs.',
@@ -292,7 +292,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               },
               clinical_record: {
                 chief_complaint: 'Right knee joint aching pain on walking and climbing stairs x 2 months',
-                history: 'Patient is a 47-year-old male presenting with a 2-month history of right knee pain without prior trauma. Denies knee locking, giving way, or redness. Digital knee radiograph confirms mild primary osteoarthritis.',
+                history: 'Patient is a 47-year-old female presenting with a 2-month history of right knee pain without prior trauma. Denies knee locking, giving way, or redness. Digital knee radiograph confirms mild primary osteoarthritis.',
                 final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, Grade II'
               },
               progress_notes: '',
@@ -394,7 +394,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 50) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 51) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});

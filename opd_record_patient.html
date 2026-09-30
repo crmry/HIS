@@ -188,7 +188,7 @@
       <section class="border border-gray-700 mb-3 text-[10.5px]">
         <div class="grid grid-cols-3 border-b border-gray-700 text-center font-bold text-[11.5px]">
           <div class="px-2 py-0.5 border-r border-gray-700" id="opd-surname">DEL ROSARIO</div>
-          <div class="px-2 py-0.5 border-r border-gray-700" id="opd-first-name">JUAN</div>
+          <div class="px-2 py-0.5 border-r border-gray-700" id="opd-first-name">JOAN</div>
           <div class="px-2 py-0.5" id="opd-middle-name">BAUTISTA</div>
         </div>
         <div class="grid grid-cols-3 border-b border-gray-700 text-center text-[9px] font-semibold text-gray-700">
@@ -197,12 +197,12 @@
           <div class="px-2 py-0.5">MIDDLE NAME</div>
         </div>
         <div class="grid grid-cols-1 border-b border-gray-700">
-          <div class="px-2 py-0.5"><span class="font-bold">ADDRESS:,</span> <span id="opd-address">Brgy. Bata, Bacolod City, Negros Occidental</span>)</div>
+          <div class="px-2 py-0.5"><span class="font-bold">ADDRESS:</span> <span id="opd-address">Brgy. Bata, Bacolod City, Negros Occidental</span></div>
         </div>
         <div class="grid grid-cols-12 border-b border-gray-700">
           <div class="col-span-3 px-2 py-0.5"><span class="font-bold">BIRTHDATE:</span> <span id="opd-birthdate">04/12/1978</span></div>
           <div class="col-span-2 px-2 py-0.5"><span class="font-bold">AGE:</span> <span id="opd-age">48</span></div>
-          <div class="col-span-2 px-2 py-0.5"><span class="font-bold">SEX:</span> <span id="opd-sex">M</span></div>
+          <div class="col-span-2 px-2 py-0.5"><span class="font-bold">SEX:</span> <span id="opd-sex">F</span></div>
           <div class="col-span-2 px-2 py-0.5"><span class="font-bold">STATUS:</span> <span id="opd-civil-status">Married</span></div>
           <div class="col-span-3 px-2 py-0.5"><span class="font-bold">NATIONALITY:</span> <span id="opd-nationality">Filipino</span></div>
         </div>
@@ -431,7 +431,7 @@ Physical Examination: General Survey: Conscious, coherent, ambulatory. HEENT: An
         if (surEl) surEl.textContent = surname || 'DEL ROSARIO';
 
         var fnEl = document.getElementById('opd-first-name');
-        if (fnEl) fnEl.textContent = firstName || 'JUAN';
+        if (fnEl) fnEl.textContent = firstName || 'JOAN';
 
         var mnEl = document.getElementById('opd-middle-name');
         if (mnEl) mnEl.textContent = middleName || 'BAUTISTA';
@@ -443,7 +443,7 @@ Physical Examination: General Survey: Conscious, coherent, ambulatory. HEENT: An
         if (addrEl) addrEl.textContent = data.address || 'Brgy. Bata, Bacolod City, Negros Occidental';
 
         var age = data.age || calculateAge(data.birthdate) || '48';
-        var sex = (data.gender || data.sex || 'M').charAt(0).toUpperCase();
+        var sex = (data.gender || data.sex || 'F').charAt(0).toUpperCase();
 
         var ageEl = document.getElementById('opd-age');
         if (ageEl) ageEl.textContent = age;

@@ -42,7 +42,7 @@ A web-based clinical dashboard and hospital information system designed for atte
 ### 4. Patient Registration & Records (`forms_localstorage.html`, `patients.html`)
 - Complete patient registration form storing data in `localStorage`.
 - Comprehensive patient search, filter, and quick launch to the Physician Dashboard.
-- Configured with standardized clinical patient records (`Juan Bautista Del Rosario`) for immediate clinical workflow review.
+- Configured with standardized clinical patient records (`Joan Bautista Del Rosario`) for immediate clinical workflow review.
 
 ---
 
