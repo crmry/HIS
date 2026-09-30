@@ -221,14 +221,25 @@ async def scan_single_target(browser_ws, file_url):
                     sizeInput.onchange();
                 }
 
-                // Test Obstetric & Gynecologic History structured workspace integration
+                // Test Obstetric & Gynecologic History viewable summary in Medical History
                 const obTabLink = document.querySelector('a[href="#hx-gyn"]');
                 if (obTabLink) {
                     obTabLink.click();
-                    const obRoot = document.getElementById('ob-workspace-card');
-                    if (!obRoot) return 'OB workspace root element not found';
+                    const obViewContainer = document.getElementById('ob-view-container');
+                    if (!obViewContainer) return 'OB view container not found in #hx-gyn';
+                    const scoreEl = document.getElementById('ob-view-score-main');
+                    if (!scoreEl || !scoreEl.textContent.trim()) return 'OB view score element empty or missing';
+                    const launchBtn = document.getElementById('btn-launch-obgyn-module');
+                    if (!launchBtn || !launchBtn.getAttribute('href').includes('OB_Gyne_Clinical_Module.html')) {
+                        return 'OB module launcher button missing or invalid in #hx-gyn';
+                    }
+                }
+
+                // Test Obstetric & Gynecologic standalone workspace encoder (on OB_Gyne_Clinical_Module.html)
+                const obRoot = document.getElementById('ob-workspace-card');
+                if (obRoot) {
                     const scoreEl = document.getElementById('ob-val-obstetric-score');
-                    if (!scoreEl || !scoreEl.textContent.trim()) return 'OB score element empty or missing';
+                    if (!scoreEl || !scoreEl.textContent.trim()) return 'OB standalone score element empty or missing';
                     
                     // Test Add Pregnancy Modal open & close
                     if (typeof window.openAddPregModal === 'function') {
@@ -249,15 +260,23 @@ async def scan_single_target(browser_ws, file_url):
                     }
                 }
 
-                // Test Neonate Clinical Module workspace integration (now inside Medical History #hx-neo tab)
-                const neoBtn = document.getElementById('btn-open-neonate-module');
-                if (neoBtn) {
-                    // Activate the Medical History Neonatal History tab first
-                    const neoTabLink = document.querySelector('a[href="#hx-neo"]');
-                    if (neoTabLink) neoTabLink.click();
-                    neoBtn.click();
-                    const neoDashlet = document.getElementById('neo-workspace-card');
-                    if (!neoDashlet) return 'Neonate workspace card (neo-workspace-card) element not found in #hx-neo';
+                // Test Neonate viewable summary in Medical History (#hx-neo tab in dashboard.html)
+                const neoTabLink = document.querySelector('a[href="#hx-neo"]');
+                if (neoTabLink) {
+                    neoTabLink.click();
+                    const neoViewContainer = document.getElementById('neo-view-container');
+                    if (!neoViewContainer) return 'Neonate view container not found in #hx-neo';
+                    const sumType = document.getElementById('neo-view-sum-type');
+                    if (!sumType || !sumType.textContent.trim()) return 'Neonate classification element empty or missing in #hx-neo';
+                    const neoLaunchBtn = document.getElementById('btn-launch-neonate-module');
+                    if (!neoLaunchBtn || !neoLaunchBtn.getAttribute('href').includes('Neonate_Clinical_Module.html')) {
+                        return 'Neonate module launcher button missing or invalid in #hx-neo';
+                    }
+                }
+
+                // Test Neonate Clinical Module standalone encoder (on Neonate_Clinical_Module.html)
+                const neoDashlet = document.getElementById('neo-workspace-card');
+                if (neoDashlet) {
                     const inbornSel = document.getElementById('neo_inborn');
                     const outbornSel = document.getElementById('neo_outborn');
                     const readmitChk = document.getElementById('neo_readmission');
@@ -276,7 +295,7 @@ async def scan_single_target(browser_ws, file_url):
                     }
                     // Test Ballard click-to-select: click a ref-cell and verify hidden input updates and toggles
                     if (typeof window.ballardCellClick === 'function') {
-                        const firstRefCell = document.querySelector('#hx-neo .ballard-ref-cell[data-score-val]');
+                        const firstRefCell = document.querySelector('.ballard-ref-cell[data-score-val]');
                         if (firstRefCell) {
                             window.ballardCellClick(firstRefCell);
                             const row = firstRefCell.closest('tr');
@@ -308,7 +327,7 @@ async def scan_single_target(browser_ws, file_url):
                         if (zoomModal.classList.contains('open')) return 'Neonate zoom modal failed to close';
                     }
                     // Test VLOOKUP Details Toggle
-                    const vlookupDetails = document.querySelector('#hx-neo .neo-vlookup-details');
+                    const vlookupDetails = document.querySelector('.neo-vlookup-details');
                     if (vlookupDetails) {
                         vlookupDetails.open = true;
                         vlookupDetails.open = false;

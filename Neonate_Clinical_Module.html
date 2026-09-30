@@ -511,6 +511,59 @@
     .risk-grid { grid-template-columns: 1fr; }
     .ballard-summary-grid { grid-template-columns: 1fr; }
   }
+
+    /* ── Ballard Click-to-Select UX ──────────────────────────────────────────── */
+    .ballard-ref-cell {
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
+      position: relative;
+    }
+    .ballard-ref-cell:hover {
+      background: #f0fdf4;
+      outline: 2px solid #86efac;
+      outline-offset: -2px;
+    }
+    .ballard-ref-cell.ballard-selected {
+      background: #dcfce7 !important;
+      outline: 2.5px solid #16a34a !important;
+      outline-offset: -2px;
+    }
+    .ballard-ref-cell.ballard-selected img {
+      filter: drop-shadow(0 0 3px #16a34a88);
+    }
+    .ballard-score-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 28px;
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1e293b;
+      padding: 0 8px;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .ballard-score-badge.scored {
+      background: #dcfce7;
+      border-color: #16a34a;
+      color: #15803d;
+    }
+    .ballard-na,
+    td.ref-cell:not(.ballard-ref-cell) {
+      cursor: default !important;
+      background: #f8fafc;
+      color: #94a3b8;
+      text-align: center;
+    }
+    .ballard-na:hover,
+    td.ref-cell:not(.ballard-ref-cell):hover {
+      background: #f8fafc !important;
+      outline: none !important;
+    }
+
 </style>
 </head>
 <body>
@@ -982,7 +1035,7 @@
             <div class="section-card-title">
               <span><i class="icon-bar-chart"></i> New Ballard Score &mdash; Gestational Age Assessment</span>
               <span style="font-size:11px; font-weight:normal; color:var(--slate-500); margin-left:auto;">
-                Images are visual references. Enter numeric score (-1 to 5) in the Score column.
+                Click any reference cell in the row to select and record the score. Selected cells are highlighted green.
               </span>
             </div>
 
@@ -1006,103 +1059,91 @@
                   <!-- Posture (0 to 4) -->
                   <tr>
                     <td class="crit-col"><strong>Posture</strong></td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_posture_0.png" alt="Posture 0"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_posture_1.png" alt="Posture 1"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_posture_2.png" alt="Posture 2"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_posture_3.png" alt="Posture 3"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_posture_4.png" alt="Posture 4"></td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_posture_0.png" alt="Posture 0"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_posture_1.png" alt="Posture 1"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_posture_2.png" alt="Posture 2"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_posture_3.png" alt="Posture 3"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_posture_4.png" alt="Posture 4"></td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
                     <td class="score-select-cell">
-                      <select class="form-select neo-ballard-score neo-neuro-score" data-key="posture">
-                        <option value="">Select</option>
-                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-neuro-score" data-key="posture" id="ballard-input-posture">
+                      <span class="ballard-score-badge" id="ballard-badge-posture">&#8212;</span>
                     </td>
                   </tr>
                   <!-- Square Window (-1 to 4) -->
                   <tr>
                     <td class="crit-col"><strong>Square Window (wrist)</strong></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_square_window_-1.png" alt="Square Window -1"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_square_window_0.png" alt="Square Window 0"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_square_window_1.png" alt="Square Window 1"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_square_window_2.png" alt="Square Window 2"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_square_window_3.png" alt="Square Window 3"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_square_window_4.png" alt="Square Window 4"></td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="-1" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_square_window_-1.png" alt="Square Window -1"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_square_window_0.png" alt="Square Window 0"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_square_window_1.png" alt="Square Window 1"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_square_window_2.png" alt="Square Window 2"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_square_window_3.png" alt="Square Window 3"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_square_window_4.png" alt="Square Window 4"></td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
                     <td class="score-select-cell">
-                      <select class="form-select neo-ballard-score neo-neuro-score" data-key="square_window">
-                        <option value="">Select</option>
-                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-neuro-score" data-key="square_window" id="ballard-input-square_window">
+                      <span class="ballard-score-badge" id="ballard-badge-square_window">&#8212;</span>
                     </td>
                   </tr>
                   <!-- Arm Recoil (0 to 4) -->
                   <tr>
                     <td class="crit-col"><strong>Arm Recoil</strong></td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_arm_recoil_0.png" alt="Arm Recoil 0"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_arm_recoil_1.png" alt="Arm Recoil 1"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_arm_recoil_2.png" alt="Arm Recoil 2"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_arm_recoil_3.png" alt="Arm Recoil 3"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_arm_recoil_4.png" alt="Arm Recoil 4"></td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_arm_recoil_0.png" alt="Arm Recoil 0"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_arm_recoil_1.png" alt="Arm Recoil 1"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_arm_recoil_2.png" alt="Arm Recoil 2"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_arm_recoil_3.png" alt="Arm Recoil 3"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_arm_recoil_4.png" alt="Arm Recoil 4"></td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
                     <td class="score-select-cell">
-                      <select class="form-select neo-ballard-score neo-neuro-score" data-key="arm_recoil">
-                        <option value="">Select</option>
-                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-neuro-score" data-key="arm_recoil" id="ballard-input-arm_recoil">
+                      <span class="ballard-score-badge" id="ballard-badge-arm_recoil">&#8212;</span>
                     </td>
                   </tr>
                   <!-- Popliteal Angle (-1 to 5) -->
                   <tr>
                     <td class="crit-col"><strong>Popliteal Angle</strong></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_-1.png" alt="Popliteal Angle -1"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_0.png" alt="Popliteal Angle 0"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_1.png" alt="Popliteal Angle 1"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_2.png" alt="Popliteal Angle 2"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_3.png" alt="Popliteal Angle 3"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_4.png" alt="Popliteal Angle 4"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_popliteal_angle_5.png" alt="Popliteal Angle 5"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="-1" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_popliteal_angle_-1.png" alt="Popliteal Angle -1"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_popliteal_angle_0.png" alt="Popliteal Angle 0"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_popliteal_angle_1.png" alt="Popliteal Angle 1"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_popliteal_angle_2.png" alt="Popliteal Angle 2"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_popliteal_angle_3.png" alt="Popliteal Angle 3"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_popliteal_angle_4.png" alt="Popliteal Angle 4"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="5" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_popliteal_angle_5.png" alt="Popliteal Angle 5"></td>
                     <td class="score-select-cell">
-                      <select class="form-select neo-ballard-score neo-neuro-score" data-key="popliteal_angle">
-                        <option value="">Select</option>
-                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-neuro-score" data-key="popliteal_angle" id="ballard-input-popliteal_angle">
+                      <span class="ballard-score-badge" id="ballard-badge-popliteal_angle">&#8212;</span>
                     </td>
                   </tr>
                   <!-- Scarf Sign (-1 to 4) -->
                   <tr>
                     <td class="crit-col"><strong>Scarf Sign</strong></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_scarf_sign_-1.png" alt="Scarf Sign -1"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_scarf_sign_0.png" alt="Scarf Sign 0"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_scarf_sign_1.png" alt="Scarf Sign 1"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_scarf_sign_2.png" alt="Scarf Sign 2"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_scarf_sign_3.png" alt="Scarf Sign 3"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_scarf_sign_4.png" alt="Scarf Sign 4"></td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="-1" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_scarf_sign_-1.png" alt="Scarf Sign -1"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_scarf_sign_0.png" alt="Scarf Sign 0"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_scarf_sign_1.png" alt="Scarf Sign 1"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_scarf_sign_2.png" alt="Scarf Sign 2"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_scarf_sign_3.png" alt="Scarf Sign 3"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_scarf_sign_4.png" alt="Scarf Sign 4"></td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
                     <td class="score-select-cell">
-                      <select class="form-select neo-ballard-score neo-neuro-score" data-key="scarf_sign">
-                        <option value="">Select</option>
-                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-neuro-score" data-key="scarf_sign" id="ballard-input-scarf_sign">
+                      <span class="ballard-score-badge" id="ballard-badge-scarf_sign">&#8212;</span>
                     </td>
                   </tr>
                   <!-- Heel to Ear (-1 to 4) -->
                   <tr>
                     <td class="crit-col"><strong>Heel to Ear</strong></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_heel_to_ear_-1.png" alt="Heel to Ear -1"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_heel_to_ear_0.png" alt="Heel to Ear 0"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_heel_to_ear_1.png" alt="Heel to Ear 1"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_heel_to_ear_2.png" alt="Heel to Ear 2"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_heel_to_ear_3.png" alt="Heel to Ear 3"></td>
-                    <td class="ref-cell img-cell"><img src="img/neonate/ballard_heel_to_ear_4.png" alt="Heel to Ear 4"></td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="-1" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_heel_to_ear_-1.png" alt="Heel to Ear -1"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_heel_to_ear_0.png" alt="Heel to Ear 0"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_heel_to_ear_1.png" alt="Heel to Ear 1"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_heel_to_ear_2.png" alt="Heel to Ear 2"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_heel_to_ear_3.png" alt="Heel to Ear 3"></td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)"><img src="img/neonate/ballard_heel_to_ear_4.png" alt="Heel to Ear 4"></td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
                     <td class="score-select-cell">
-                      <select class="form-select neo-ballard-score neo-neuro-score" data-key="heel_to_ear">
-                        <option value="">Select</option>
-                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-neuro-score" data-key="heel_to_ear" id="ballard-input-heel_to_ear">
+                      <span class="ballard-score-badge" id="ballard-badge-heel_to_ear">&#8212;</span>
                     </td>
                   </tr>
                 </tbody>
@@ -1126,125 +1167,109 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Skin -->
+                  <!-- Skin (-1 to 5) -->
                   <tr>
                     <td class="crit-col"><strong>Skin</strong></td>
-                    <td class="ref-cell">Sticky, friable, transparent</td>
-                    <td class="ref-cell">Gelatinous, red, translucent</td>
-                    <td class="ref-cell">Smooth pink, visible veins</td>
-                    <td class="ref-cell">Superficial peeling/rash, few veins</td>
-                    <td class="ref-cell">Cracking, pale areas, rare veins</td>
-                    <td class="ref-cell">Parchment, deep cracking, no vessels</td>
-                    <td class="ref-cell">Leathery, cracked, wrinkled</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="-1" onclick="ballardCellClick(this)">Sticky, friable, transparent</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)">Gelatinous, red, translucent</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)">Smooth pink, visible veins</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)">Superficial peeling/rash, few veins</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)">Cracking, pale areas, rare veins</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)">Parchment, deep cracking, no vessels</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="5" onclick="ballardCellClick(this)">Leathery, cracked, wrinkled</td>
                     <td class="score-select-cell">
-                      <select class="form-select neo-ballard-score neo-physical-score" data-key="skin">
-                        <option value="">Select</option>
-                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-physical-score" data-key="skin" id="ballard-input-skin">
+                      <span class="ballard-score-badge" id="ballard-badge-skin">&#8212;</span>
                     </td>
                   </tr>
-                  <!-- Lanugo -->
+                  <!-- Lanugo (-1 to 4) -->
                   <tr>
                     <td class="crit-col"><strong>Lanugo</strong></td>
-                    <td class="ref-cell">None</td>
-                    <td class="ref-cell">Sparse</td>
-                    <td class="ref-cell">Abundant</td>
-                    <td class="ref-cell">Thinning</td>
-                    <td class="ref-cell">Bald areas</td>
-                    <td class="ref-cell">Mostly bald</td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="-1" onclick="ballardCellClick(this)">None</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)">Sparse</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)">Abundant</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)">Thinning</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)">Bald areas</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)">Mostly bald</td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
                     <td class="score-select-cell">
-                      <select class="form-select neo-ballard-score neo-physical-score" data-key="lanugo">
-                        <option value="">Select</option>
-                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-physical-score" data-key="lanugo" id="ballard-input-lanugo">
+                      <span class="ballard-score-badge" id="ballard-badge-lanugo">&#8212;</span>
                     </td>
                   </tr>
-                  <!-- Plantar Surface -->
+                  <!-- Plantar Surface (-1 to 4) -->
                   <tr>
                     <td class="crit-col"><strong>Plantar Surface</strong></td>
-                    <td class="ref-cell">Heel-toe 40-50mm: -1<br>(&lt;40mm: -2*)</td>
-                    <td class="ref-cell">&gt;50mm, no crease</td>
-                    <td class="ref-cell">Faint red marks</td>
-                    <td class="ref-cell">Anterior transverse crease only</td>
-                    <td class="ref-cell">Creases anterior 2/3</td>
-                    <td class="ref-cell">Creases over entire sole</td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="-1" onclick="ballardCellClick(this)">Heel-toe 40-50mm: -1<br>(&lt;40mm: -2*)</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)">&gt;50mm, no crease</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)">Faint red marks</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)">Anterior transverse crease only</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)">Creases anterior 2/3</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)">Creases over entire sole</td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
                     <td class="score-select-cell">
-                      <!-- Source workbook contains -2 descriptors in selected Ballard criteria, but the current validation list does not expose -2. Do not modify without clinical approval. -->
-                      <select class="form-select neo-ballard-score neo-physical-score" data-key="plantar_surface">
-                        <option value="">Select</option>
-                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-physical-score" data-key="plantar_surface" id="ballard-input-plantar_surface">
+                      <span class="ballard-score-badge" id="ballard-badge-plantar_surface">&#8212;</span>
                     </td>
                   </tr>
-                  <!-- Breast -->
+                  <!-- Breast (-1 to 4) -->
                   <tr>
                     <td class="crit-col"><strong>Breast</strong></td>
-                    <td class="ref-cell">Imperceptible</td>
-                    <td class="ref-cell">Barely perceptible</td>
-                    <td class="ref-cell">Flat areola, no bud</td>
-                    <td class="ref-cell">Stippled areola, 1-2mm bud</td>
-                    <td class="ref-cell">Raised areola, 3-4mm bud</td>
-                    <td class="ref-cell">Full areola, 5-10mm bud</td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="-1" onclick="ballardCellClick(this)">Imperceptible</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)">Barely perceptible</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)">Flat areola, no bud</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)">Stippled areola, 1-2mm bud</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)">Raised areola, 3-4mm bud</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)">Full areola, 5-10mm bud</td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
                     <td class="score-select-cell">
-                      <select class="form-select neo-ballard-score neo-physical-score" data-key="breast">
-                        <option value="">Select</option>
-                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-physical-score" data-key="breast" id="ballard-input-breast">
+                      <span class="ballard-score-badge" id="ballard-badge-breast">&#8212;</span>
                     </td>
                   </tr>
-                  <!-- Eye / Ear -->
+                  <!-- Eye / Ear (-1 to 4) -->
                   <tr>
                     <td class="crit-col"><strong>Eye / Ear</strong></td>
-                    <td class="ref-cell">Lids fused (loosely: -1; tightly: -2*)</td>
-                    <td class="ref-cell">Lids open; pinna flat; stays folded</td>
-                    <td class="ref-cell">Slightly curved pinna; soft; slow recoil</td>
-                    <td class="ref-cell">Well-curved pinna; soft but ready recoil</td>
-                    <td class="ref-cell">Formed &amp; firm; instant recoil</td>
-                    <td class="ref-cell">Thick cartilage; ear stiff</td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="-1" onclick="ballardCellClick(this)">Lids fused (loosely: -1; tightly: -2*)</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)">Lids open; pinna flat; stays folded</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)">Slightly curved pinna; soft; slow recoil</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)">Well-curved pinna; soft but ready recoil</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)">Formed &amp; firm; instant recoil</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)">Thick cartilage; ear stiff</td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
                     <td class="score-select-cell">
-                      <!-- Source workbook contains -2 descriptors in selected Ballard criteria, but the current validation list does not expose -2. Do not modify without clinical approval. -->
-                      <select class="form-select neo-ballard-score neo-physical-score" data-key="eye_ear">
-                        <option value="">Select</option>
-                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-physical-score" data-key="eye_ear" id="ballard-input-eye_ear">
+                      <span class="ballard-score-badge" id="ballard-badge-eye_ear">&#8212;</span>
                     </td>
                   </tr>
-                  <!-- Genitals (male) -->
+                  <!-- Genitals (male) (-1 to 4) -->
                   <tr>
                     <td class="crit-col"><strong>Genitals (male)</strong></td>
-                    <td class="ref-cell">Scrotum flat, smooth</td>
-                    <td class="ref-cell">Scrotum empty, faint rugae</td>
-                    <td class="ref-cell">Testes in upper canal, rare rugae</td>
-                    <td class="ref-cell">Testes descending, few rugae</td>
-                    <td class="ref-cell">Testes down, good rugae</td>
-                    <td class="ref-cell">Testes pendulous, deep rugae</td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="-1" onclick="ballardCellClick(this)">Scrotum flat, smooth</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)">Scrotum empty, faint rugae</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)">Testes in upper canal, rare rugae</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)">Testes descending, few rugae</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)">Testes down, good rugae</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)">Testes pendulous, deep rugae</td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
                     <td class="score-select-cell">
-                      <select class="form-select neo-ballard-score neo-physical-score" data-key="genitals_male">
-                        <option value="">Select</option>
-                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-physical-score" data-key="genitals_male" id="ballard-input-genitals_male">
+                      <span class="ballard-score-badge" id="ballard-badge-genitals_male">&#8212;</span>
                     </td>
                   </tr>
-                  <!-- Genitals (female) -->
+                  <!-- Genitals (female) (-1 to 4) -->
                   <tr>
                     <td class="crit-col"><strong>Genitals (female)</strong></td>
-                    <td class="ref-cell">Clitoris prominent &amp; labia flat</td>
-                    <td class="ref-cell">Prominent clitoris &amp; small labia minora</td>
-                    <td class="ref-cell">Prominent clitoris &amp; enlarging minora</td>
-                    <td class="ref-cell">Majora &amp; minora equally prominent</td>
-                    <td class="ref-cell">Majora large, minora small</td>
-                    <td class="ref-cell">Majora cover clitoris &amp; minora</td>
-                    <td class="ref-cell" style="color:var(--slate-400);">—</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="-1" onclick="ballardCellClick(this)">Clitoris prominent &amp; labia flat</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="0" onclick="ballardCellClick(this)">Prominent clitoris &amp; small labia minora</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="1" onclick="ballardCellClick(this)">Prominent clitoris &amp; enlarging minora</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="2" onclick="ballardCellClick(this)">Majora &amp; minora equally prominent</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="3" onclick="ballardCellClick(this)">Majora large, minora small</td>
+                    <td class="ref-cell ballard-ref-cell" data-score-val="4" onclick="ballardCellClick(this)">Majora cover clitoris &amp; minora</td>
+                    <td class="ref-cell ballard-na" style="color:var(--slate-400); text-align:center;">&mdash;</td>
                     <td class="score-select-cell">
-                      <select class="form-select neo-ballard-score neo-physical-score" data-key="genitals_female">
-                        <option value="">Select</option>
-                        <option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-                      </select>
+                      <input type="hidden" class="neo-ballard-score neo-physical-score" data-key="genitals_female" id="ballard-input-genitals_female">
+                      <span class="ballard-score-badge" id="ballard-badge-genitals_female">&#8212;</span>
                     </td>
                   </tr>
                 </tbody>
@@ -1289,6 +1314,45 @@
                 <button type="button" class="btn-secondary" onclick="openGrowthChartModal('girl')"><i class="icon-picture"></i> Girl Fenton Chart</button>
               </div>
             </div>
+
+            <!-- Workbook VLOOKUP Reference Tables (Collapsible) -->
+            <details class="neo-vlookup-details" style="margin-top:16px; border:1px solid var(--slate-200); border-radius:8px; padding:10px 14px; background:#f8fafc;">
+              <summary style="cursor:pointer; font-weight:700; color:var(--med-green); font-size:12.5px; user-select:none;">
+                <i class="icon-table"></i> View Workbook VLOOKUP Reference Tables (Score &rarr; Weeks &amp; Weeks &rarr; Maturity)
+              </summary>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:12px;">
+                <div>
+                  <div style="font-weight:700; font-size:12px; margin-bottom:6px; color:var(--slate-700);">Table 1: Total Score &rarr; Gestational Age (Weeks)</div>
+                  <div style="max-height:280px; overflow-y:auto; border:1px solid var(--slate-200); border-radius:6px; background:#fff;">
+                    <table class="neo-table" style="font-size:11.5px; margin:0;">
+                      <thead><tr><th style="padding:4px 8px; width:50%;">Score</th><th style="padding:4px 8px; width:50%;">Weeks</th></tr></thead>
+                      <tbody>
+                        <tr><td>-10</td><td>20</td></tr><tr><td>-9</td><td>21</td></tr><tr><td>-8</td><td>21</td></tr><tr><td>-7</td><td>21</td></tr><tr><td>-6</td><td>21</td></tr><tr><td>-5</td><td>22</td></tr><tr><td>-4</td><td>23</td></tr><tr><td>-3</td><td>23</td></tr><tr><td>-2</td><td>23</td></tr><tr><td>-1</td><td>23</td></tr><tr><td>0</td><td>24</td></tr><tr><td>1</td><td>25</td></tr><tr><td>2</td><td>25</td></tr><tr><td>3</td><td>25</td></tr><tr><td>4</td><td>25</td></tr><tr><td>5</td><td>26</td></tr><tr><td>6</td><td>27</td></tr><tr><td>7</td><td>27</td></tr><tr><td>8</td><td>27</td></tr><tr><td>9</td><td>27</td></tr><tr><td>10</td><td>28</td></tr><tr><td>11</td><td>29</td></tr><tr><td>12</td><td>29</td></tr><tr><td>13</td><td>29</td></tr><tr><td>14</td><td>29</td></tr><tr><td>15</td><td>30</td></tr><tr><td>16</td><td>31</td></tr><tr><td>17</td><td>31</td></tr><tr><td>18</td><td>31</td></tr><tr><td>19</td><td>31</td></tr><tr><td>20</td><td>32</td></tr><tr><td>21</td><td>33</td></tr><tr><td>22</td><td>33</td></tr><tr><td>23</td><td>33</td></tr><tr><td>24</td><td>33</td></tr><tr><td>25</td><td>34</td></tr><tr><td>26</td><td>35</td></tr><tr><td>27</td><td>35</td></tr><tr><td>28</td><td>35</td></tr><tr><td>29</td><td>35</td></tr><tr><td>30</td><td>36</td></tr><tr><td>31</td><td>37</td></tr><tr><td>32</td><td>37</td></tr><tr><td>33</td><td>37</td></tr><tr><td>34</td><td>37</td></tr><tr><td>35</td><td>38</td></tr><tr><td>36</td><td>39</td></tr><tr><td>37</td><td>39</td></tr><tr><td>38</td><td>39</td></tr><tr><td>39</td><td>39</td></tr><tr><td>40</td><td>40</td></tr><tr><td>41</td><td>41</td></tr><tr><td>42</td><td>41</td></tr><tr><td>43</td><td>41</td></tr><tr><td>44</td><td>41</td></tr><tr><td>45</td><td>42</td></tr><tr><td>46</td><td>43</td></tr><tr><td>47</td><td>43</td></tr><tr><td>48</td><td>43</td></tr><tr><td>49</td><td>43</td></tr><tr><td>50</td><td>44</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-weight:700; font-size:12px; margin-bottom:6px; color:var(--slate-700);">Table 2: Gestational Age &rarr; Maturity Classification</div>
+                  <div style="max-height:280px; overflow-y:auto; border:1px solid var(--slate-200); border-radius:6px; background:#fff;">
+                    <table class="neo-table" style="font-size:11.5px; margin:0;">
+                      <thead><tr><th style="padding:4px 8px; width:40%;">Weeks</th><th style="padding:4px 8px; width:60%;">Maturity</th></tr></thead>
+                      <tbody>
+                        <tr><td>20&ndash;27</td><td>Exteremely Preterm</td></tr>
+                        <tr><td>28&ndash;31</td><td>Very Pretem</td></tr>
+                        <tr><td>32&ndash;33</td><td>Moderate Preterm</td></tr>
+                        <tr><td>34&ndash;36</td><td>Late Preterm</td></tr>
+                        <tr><td>37&ndash;38</td><td>Early Term</td></tr>
+                        <tr><td>39&ndash;40</td><td>Full Term</td></tr>
+                        <tr><td>41</td><td>Late Term</td></tr>
+                        <tr><td>42&ndash;50</td><td>Post Term</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </details>
+
 
           </div>
 
@@ -2195,6 +2259,63 @@ document.querySelectorAll('.neo-ballard-score').forEach(s => {
   s.addEventListener('change', recalcBallard);
 });
 
+function ballardCellClick(cell) {
+  const row = cell.closest('tr');
+  if (!row) return;
+  const input = row.querySelector('input.neo-ballard-score');
+  const badge = row.querySelector('.ballard-score-badge');
+  const val = cell.getAttribute('data-score-val');
+  const wasSelected = cell.classList.contains('ballard-selected');
+
+  row.querySelectorAll('.ballard-ref-cell').forEach(c => {
+    c.classList.remove('ballard-selected');
+  });
+
+  if (wasSelected) {
+    if (input) input.value = '';
+    if (badge) {
+      badge.innerHTML = '&#8212;';
+      badge.classList.remove('scored');
+    }
+  } else {
+    cell.classList.add('ballard-selected');
+    if (input) input.value = val;
+    if (badge) {
+      badge.textContent = val;
+      badge.classList.add('scored');
+    }
+  }
+  recalcBallard();
+}
+window.ballardCellClick = ballardCellClick;
+
+function restoreBallardSelections() {
+  document.querySelectorAll('input.neo-ballard-score').forEach(inp => {
+    const val = inp.value;
+    const row = inp.closest('tr');
+    if (!row) return;
+    row.querySelectorAll('.ballard-ref-cell').forEach(c => {
+      c.classList.remove('ballard-selected');
+    });
+    const badge = row.querySelector('.ballard-score-badge');
+    if (val !== '' && val !== null && val !== undefined) {
+      const target = row.querySelector('.ballard-ref-cell[data-score-val="' + val + '"]');
+      if (target) target.classList.add('ballard-selected');
+      if (badge) {
+        badge.textContent = val;
+        badge.classList.add('scored');
+      }
+    } else {
+      if (badge) {
+        badge.innerHTML = '&#8212;';
+        badge.classList.remove('scored');
+      }
+    }
+  });
+}
+window.restoreBallardSelections = restoreBallardSelections;
+window.recalcBallard = recalcBallard;
+
 // Screening Conditionals
 const rorFindingsSel = document.getElementById('neo_ror_findings');
 rorFindingsSel.addEventListener('change', () => {
@@ -2617,7 +2738,8 @@ function populateNeonateData(data) {
       s.value = bScores[s.dataset.key];
     }
   });
-  recalcBallard();
+  restoreBallardSelections();
+      recalcBallard();
 
   // Physical Exam
   const pe = data.physicalExam || {};
