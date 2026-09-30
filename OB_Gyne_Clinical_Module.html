@@ -650,10 +650,10 @@
         <!-- Card 1: Obstetric Score (GTPAL & G-P) -->
         <article class="summary-card" id="card-obstetric-score">
           <div>
-            <div class="summary-card-title">Obstetric Score (DOH / POGS)</div>
+            <div class="summary-card-title">Obstetric Score</div>
             <div class="summary-card-value" id="val-obstetric-score">G3P2 (2-0-1-2)</div>
           </div>
-          <div class="summary-card-footer" id="val-obstetric-sub">G3 T2 P0 A1 L2 • Auto-derived</div>
+          <div class="summary-card-footer" id="val-obstetric-sub">Full GTPAL: G3 T2 P0 A1 L2</div>
         </article>
 
         <!-- Card 2: Current LMP & PMP -->
@@ -1574,7 +1574,7 @@ function renderSummaryCards() {
   const gtpal = computeGTPAL();
   document.getElementById('val-obstetric-score').textContent = gtpal.displayGP;
   const subEl = document.getElementById('val-obstetric-sub');
-  if (subEl) subEl.textContent = `${gtpal.scoreText} • Auto-derived`;
+  if (subEl) subEl.textContent = `Full GTPAL: ${gtpal.scoreText}`;
 
   // 2. Current LMP & PMP
   const currentLmpObj = patientState.lmpHistory.find(l => l.isCurrent) || patientState.lmpHistory[0];
