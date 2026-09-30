@@ -1292,8 +1292,289 @@
       .neo-summary-cards-grid { grid-template-columns: 1fr; }
       .neo-form-grid-2, .neo-form-grid-3, .neo-form-grid-4, .neo-form-grid-5 { grid-template-columns: 1fr; }
       .neo-risk-grid { grid-template-columns: 1fr; }
-      .neo-ballard-summary-grid { grid-template-columns: 1fr; }
     }
+
+    /* ── #hx-neo SCOPED ALIASES ───────────────────────────────────────────────
+       The workspace HTML uses bare class names (summary-cards-grid, workspace-tab,
+       tab-panel, form-grid-*, section-card, etc.) matching the standalone module.
+       These aliases resolve them to the same visual styles as the neo- prefixed
+       rules above, scoped strictly to the #hx-neo pane to avoid collisions.
+       ──────────────────────────────────────────────────────────────────────── */
+
+    /* Summary KPI Cards */
+    #hx-neo .summary-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    #hx-neo .summary-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 9px 11px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 68px;
+    }
+    #hx-neo .summary-card-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 0.4px;
+      margin-bottom: 4px;
+    }
+    #hx-neo .summary-card-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.3;
+      margin: 2px 0 4px;
+    }
+    #hx-neo .summary-card-footer {
+      font-size: 10.5px;
+      color: #64748b;
+      line-height: 1.4;
+    }
+    #hx-neo .summary-card-footer span {
+      display: inline-block;
+    }
+
+    /* Sub-Tab Navigation */
+    #hx-neo .workspace-tabs {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 14px;
+      padding-bottom: 0;
+    }
+    #hx-neo .workspace-tab {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      padding: 6px 13px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    #hx-neo .workspace-tab:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+    #hx-neo .workspace-tab.active {
+      background: #1e7e34;
+      color: #ffffff;
+      border-color: #1e7e34;
+    }
+
+    /* Tab Panels */
+    #hx-neo .tab-panel {
+      display: none;
+    }
+    #hx-neo .tab-panel.active {
+      display: block;
+    }
+
+    /* Section Cards */
+    #hx-neo .section-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      border-left: 3px solid #1e7e34;
+    }
+    #hx-neo .section-card-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #1e293b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #hx-neo .section-subtitle {
+      font-size: 11px;
+      font-weight: 600;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin: 10px 0 6px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    /* Form Grids */
+    #hx-neo .form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 14px; }
+    #hx-neo .form-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 14px; }
+    #hx-neo .form-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 14px; }
+    #hx-neo .form-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px 14px; }
+    #hx-neo .col-span-2 { grid-column: span 2; }
+    #hx-neo .col-span-3 { grid-column: span 3; }
+    #hx-neo .col-span-4 { grid-column: span 4; }
+
+    /* Form Controls */
+    #hx-neo .form-group { display: flex; flex-direction: column; gap: 3px; }
+    #hx-neo .form-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #374151;
+    }
+    #hx-neo .form-label .req { color: #dc2626; margin-left: 2px; }
+    #hx-neo .form-input,
+    #hx-neo .form-select,
+    #hx-neo .form-textarea {
+      width: 100%;
+      padding: 5px 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      font-size: 12.5px;
+      color: #1e293b;
+      background: #ffffff;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    #hx-neo .form-textarea { resize: vertical; min-height: 56px; }
+    #hx-neo .form-input:focus,
+    #hx-neo .form-select:focus,
+    #hx-neo .form-textarea:focus {
+      outline: none;
+      border-color: #1e7e34;
+      box-shadow: 0 0 0 2px rgba(30, 126, 52, 0.12);
+    }
+    #hx-neo .form-input[disabled],
+    #hx-neo .form-select[disabled],
+    #hx-neo .form-textarea[disabled] {
+      background: #f1f5f9;
+      color: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    /* Checkbox / Radio Labels */
+    #hx-neo .checkbox-label,
+    #hx-neo .radio-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      color: #374151;
+      cursor: pointer;
+    }
+    #hx-neo .checkbox-label input,
+    #hx-neo .radio-label input { cursor: pointer; }
+
+    /* Risk Grid */
+    #hx-neo .risk-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px 10px;
+    }
+
+    /* Ballard Table */
+    #hx-neo .table-responsive { overflow-x: auto; }
+    #hx-neo .ballard-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+    }
+    #hx-neo .ballard-table th,
+    #hx-neo .ballard-table td {
+      border: 1px solid #e2e8f0;
+      padding: 5px 7px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    #hx-neo .ballard-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: #374151;
+      font-size: 11px;
+    }
+    #hx-neo .ballard-table th.crit-col { text-align: left; min-width: 130px; }
+    #hx-neo .ballard-table th.score-col { min-width: 70px; }
+    #hx-neo .ballard-table td.ref-cell { background: #fafbfc; padding: 3px; }
+    #hx-neo .ballard-table td.img-cell img { max-width: 56px; max-height: 44px; object-fit: contain; }
+    #hx-neo .ballard-table td.score-select-cell { min-width: 70px; }
+    #hx-neo .ballard-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    /* APGAR */
+    #hx-neo .apgar-sel { width: 100%; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 3px 5px; }
+
+    /* Chart Cards */
+    #hx-neo .chart-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    #hx-neo .chart-card img { width: 100%; display: block; cursor: zoom-in; }
+
+    /* Action Bar */
+    #hx-neo .action-bar {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      padding: 12px 0 4px;
+      border-top: 1px solid #e2e8f0;
+      margin-top: 12px;
+    }
+    #hx-neo .btn-primary {
+      background: #1e7e34;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    #hx-neo .btn-secondary {
+      background: #f1f5f9;
+      color: #374151;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Responsive overrides */
+    @media (max-width: 992px) {
+      #hx-neo .summary-cards-grid { grid-template-columns: repeat(2, 1fr); }
+      #hx-neo .form-grid-3, #hx-neo .form-grid-4, #hx-neo .form-grid-5 { grid-template-columns: repeat(2, 1fr); }
+      #hx-neo .risk-grid { grid-template-columns: repeat(2, 1fr); }
+      #hx-neo .ballard-summary-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      #hx-neo .summary-cards-grid { grid-template-columns: 1fr; }
+      #hx-neo .form-grid-2, #hx-neo .form-grid-3, #hx-neo .form-grid-4, #hx-neo .form-grid-5 { grid-template-columns: 1fr; }
+      #hx-neo .risk-grid { grid-column: 1fr; }
+    }
+
 </style>
 </head>
 
