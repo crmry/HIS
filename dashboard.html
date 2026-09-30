@@ -932,6 +932,33 @@
     /* ══════════════════════════════════════════════════════════════════════
        SEGHIS+ NEONATE CLINICAL MODULE — SCOPED STYLES
        ══════════════════════════════════════════════════════════════════════ */
+    .neo-workspace-container {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+      margin: 8px 0 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .neo-workspace-container * {
+      box-sizing: border-box;
+    }
+    .neo-workspace-header {
+      background: #1e7e34;
+      color: #ffffff;
+      padding: 10px 18px;
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .neo-workspace-body {
+      padding: 16px 18px 20px;
+    }
     .neo-summary-cards-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -2091,643 +2118,17 @@
                     </div>
                   </div>
                   <div class="tab-pane" id="hx-neo">
-                    <p class="muted">Neonatal — See suggested interface</p>
-                  </div>
-                  <div class="tab-pane" id="hx-allergy">
-                    <textarea id="hx_allergy" name="hx_allergy" rows="4" class="input-block-level"
-                      placeholder="Document drug allergies, food allergies, environmental allergies, reaction manifestations, and severity (e.g., Penicillin — Anaphylaxis; Seafood — Urticaria; or No Known Allergies / NKDA)..."></textarea>
-                    <div id="hx-allergy-timeline" class="encounter-hx-timeline"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Progress Notes (Subjective, Objective, Assessment) - Positioned below Medical History and above Review of Systems -->
-        <div class="row-fluid" id="row-progress-notes" style="display:none;">
-          <div class="span12" id="progress-notes-col">
-            <div class="dashlet" id="dashlet-progress-notes">
-              <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
-                <h3>Progress Notes (Subjective, Objective, Assessment)</h3>
-              </div>
-              <div class="bootstrap-widget-content" id="dashlet-progress-notes-content" style="padding:12px 14px;">
-                <textarea id="progress_notes" name="progress_notes" rows="6" class="input-block-level"
-                  style="width:100%; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size:12.5px; line-height:1.5; resize:vertical; padding:8px 10px;"
-                  placeholder="Enter clinical progress notes (Subjective interval history and complaints, Objective physical &amp; diagnostic findings, Assessment / clinical impression)..."></textarea>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Review of Systems -->
-        <div class="row-fluid">
-          <div class="span12">
-            <div class="dashlet">
-              <div class="bootstrap-widget-header">
-                <h3>Pertinent Signs and Symptoms (Review of Systems)</h3>
-              </div>
-              <div class="bootstrap-widget-content" id="dashlet-review-of-systems">
-                <div class="ros-alphabetical-grid">
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Abdominal pain"> Abdominal
-                    cramp/pain</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Altered mental sensorium"> Altered
-                    mental sensorium</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Anorexia"> Anorexia</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Bleeding gums"> Bleeding gums</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Blurring of vision "> Blurring of
-                    vision</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Body weakness "> Body weakness</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Chest pain/discomfort "> Chest
-                    pain/discomfort</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Constipation"> Constipation</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Cough"> Cough</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Diarrhea"> Diarrhea</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Dizziness "> Dizziness</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Dysphagia"> Dysphagia</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Dyspnea"> Dyspnea</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Dysuria "> Dysuria</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Epistaxis "> Epistaxis</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Fever"> Fever</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Frequency of urination"> Frequency of
-                    urination</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Headache "> Headache</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Hematemesis"> Hematemesis</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Hematuria"> Hematuria</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Hemoptysis"> Hemoptysis</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Irritability"> Irritability</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Jaundice "> Jaundice</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Lower extremity edema"> Lower extremity
-                    edema</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Myalgia"> Myalgia</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Orthopnea"> Orthopnea</label>
-                  <label id="ros-pain-label" class="ros-pain-label"><input type="checkbox" name="pertinent_signs[]" value="Pain" id="sign-pain-check"> <span class="ros-pain-title">Pain,</span><span class="ros-pain-placeholder" id="pain_site_placeholder"> _________________ (site)</span><input type="text" id="pain_site_input" name="pain_site" placeholder="Name site..." class="ros-pain-input" style="display:none;" autocomplete="off" aria-label="Pain site"><span class="ros-pain-suffix" id="pain_site_suffix" style="display:none;">(site)</span></label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Palpitations"> Palpitations</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Seizures"> Seizures</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Skin rashes"> Skin rashes</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Stool"> Stool (bloody/black
-                    tarry/mucoid)</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Sweating"> Sweating</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Urgency"> Urgency</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Vomiting"> Vomiting</label>
-                  <label><input type="checkbox" name="pertinent_signs[]" value="Weight loss"> Weight loss</label>
-                  <label id="ros-others-label"><input type="checkbox" name="pertinent_signs[]" value="Others" id="sign-others-check"> Others</label>
-                </div>
-
-                <textarea id="pertinent_signs_information" name="pertinent_signs_information" rows="3"
-                  class="input-block-level"
-                  style="display:none;"
-                  placeholder="Document other review of systems findings, symptoms, onset, severity, and relevant information..."></textarea>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Physical Examination -->
-        <div class="row-fluid">
-          <div class="span12">
-            <div class="dashlet">
-              <div class="bootstrap-widget-header">
-                <h3>Physical Examination</h3>
-              </div>
-              <div class="bootstrap-widget-content" id="dashlet-physical-exam">
-                <div class="pe-reference">
-
-                  <!-- GENERAL SURVEY -->
-                  <div class="pe-ref-section">
-                    <div class="pe-ref-title">General Survey</div>
-                    <div class="pe-ref-options">
-                      <label>
-                        <input type="radio" name="pe_general_survey" value="Awake and Alert">
-                        Awake and Alert
-                      </label>
-
-                      <label>
-                        <input type="radio" name="pe_general_survey" value="Altered Sensorium">
-                        Altered Sensorium
-                      </label>
-                    </div>
-                  </div>
-
-
-                  <!-- HEENT -->
-                  <div class="pe-ref-section">
-                    <div class="pe-ref-title">HEENT</div>
-
-                    <div class="pe-ref-options">
-                      <label><input type="checkbox" name="pe_heent[]" value="Essentially Normal"> Essentially
-                        Normal</label>
-                      <label><input type="checkbox" name="pe_heent[]" value="Abnormal pupillary reaction"> Abnormal
-                        pupillary reaction</label>
-
-                      <label><input type="checkbox" name="pe_heent[]" value="Cervical lymphadenopathy"> Cervical
-                        lymphadenopathy</label>
-                      <label><input type="checkbox" name="pe_heent[]" value="Dry mucous membrane"> Dry mucous
-                        membrane</label>
-
-                      <label><input type="checkbox" name="pe_heent[]" value="Icteric sclerae"> Icteric sclerae</label>
-                      <label><input type="checkbox" name="pe_heent[]" value="Pale conjunctivae"> Pale
-                        conjunctivae</label>
-
-                      <label><input type="checkbox" name="pe_heent[]" value="Sunken eyeballs"> Sunken eyeballs</label>
-                      <label><input type="checkbox" name="pe_heent[]" value="Sunken fontanelle"> Sunken
-                        fontanelle</label>
-                    </div>
-
-                    <div class="pe-ref-other">
-                      <label>Others:</label>
-                      <textarea name="pe_heent_other" rows="3"
-                        placeholder="Enter other HEENT examination..."></textarea>
-                    </div>
-                  </div>
-
-
-                  <!-- SKIN / EXTREMITIES -->
-                  <div class="pe-ref-section">
-                    <div class="pe-ref-title">SKIN/EXTREMITIES</div>
-
-                    <div class="pe-ref-options">
-                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Essentially normal"> Essentially
-                        normal</label>
-                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Weak pulses"> Weak
-                        pulses</label>
-
-                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Clubbing"> Clubbing</label>
-                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Cold clammy"> Cold
-                        clammy</label>
-
-                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Cyanosis/mottled skin">
-                        Cyanosis/mottled skin</label>
-                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Edema/swelling">
-                        Edema/swelling</label>
-
-                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Decreased mobility"> Decreased
-                        mobility</label>
-                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Pale nailbeds"> Pale
-                        nailbeds</label>
-
-                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Poor skin turgor"> Poor skin
-                        turgor</label>
-                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Rashes/Petechiae">
-                        Rashes/Petechiae</label>
-                    </div>
-
-                    <div class="pe-ref-other">
-                      <label>Others:</label>
-                      <textarea name="pe_skin_extremities_other" rows="3"
-                        placeholder="Enter other skin/extremities examination..."></textarea>
-                    </div>
-                  </div>
-
-
-                  <!-- CHEST / LUNGS -->
-                  <div class="pe-ref-section">
-                    <div class="pe-ref-title">Chest/Lungs</div>
-
-                    <div class="pe-ref-options">
-                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Essentially normal"> Essentially
-                        normal</label>
-                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Asymmetrical chest expansion">
-                        Asymmetrical chest expansion</label>
-
-                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Decreased breath sounds"> Decreased
-                        breath sounds</label>
-                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Wheezes"> Wheezes</label>
-
-                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Lumps over breast(s)"> Lumps over
-                        breast(s)</label>
-                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Retractions"> Retractions</label>
-
-                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Crackles/rales">
-                        Crackles/rales</label>
-                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Enlarged Axillary Lymph Nodes">
-                        Enlarged Axillary Lymph Nodes</label>
-                    </div>
-
-                    <div class="pe-ref-other">
-                      <label>Others:</label>
-                      <textarea name="pe_chest_lungs_other" rows="3"
-                        placeholder="Enter other chest/lungs examination..."></textarea>
-                    </div>
-                  </div>
-
-
-                  <!-- CVS -->
-                  <div class="pe-ref-section">
-                    <div class="pe-ref-title">CVS</div>
-
-                    <div class="pe-ref-options">
-                      <label><input type="checkbox" name="pe_cvs[]" value="Essentially normal"> Essentially
-                        normal</label>
-                      <label><input type="checkbox" name="pe_cvs[]" value="Displaced apex beat"> Displaced apex
-                        beat</label>
-
-                      <label><input type="checkbox" name="pe_cvs[]" value="Irregular rhythm"> Irregular rhythm</label>
-                      <label><input type="checkbox" name="pe_cvs[]" value="Muffled heart sounds"> Muffled heart
-                        sounds</label>
-
-                      <label><input type="checkbox" name="pe_cvs[]" value="Pericardial bulge"> Pericardial bulge</label>
-                      <label><input type="checkbox" name="pe_cvs[]" value="Murmur"> Murmur</label>
-
-                      <label><input type="checkbox" name="pe_cvs[]" value="Heaves/trills"> Heaves/trills</label>
-                    </div>
-
-                    <div class="pe-ref-other">
-                      <label>Others:</label>
-                      <textarea name="pe_cvs_other" rows="3" placeholder="Enter other CVS examination..."></textarea>
-                    </div>
-                  </div>
-
-
-                  <!-- ABDOMEN -->
-                  <div class="pe-ref-section">
-                    <div class="pe-ref-title">ABDOMEN</div>
-
-                    <div class="pe-ref-options">
-                      <label><input type="checkbox" name="pe_abdomen[]" value="Essentially normal"> Essentially
-                        normal</label>
-                      <label><input type="checkbox" name="pe_abdomen[]" value="Abdominal rigidity"> Abdominal
-                        rigidity</label>
-
-                      <label><input type="checkbox" name="pe_abdomen[]" value="Abdominal tenderness"> Abdominal
-                        tenderness</label>
-                      <label><input type="checkbox" name="pe_abdomen[]" value="Uterine contraction"> Uterine
-                        contraction</label>
-
-                      <label><input type="checkbox" name="pe_abdomen[]" value="Tympanitic/dull abdomen"> Tympanitic/dull
-                        abdomen</label>
-                      <label><input type="checkbox" name="pe_abdomen[]" value="Palpable mass(es)"> Palpable
-                        mass(es)</label>
-
-                      <label><input type="checkbox" name="pe_abdomen[]" value="Hyperactive bowel sounds"> Hyperactive
-                        bowel sounds</label>
-                    </div>
-
-                    <div class="pe-ref-other">
-                      <label>Others:</label>
-                      <textarea name="pe_abdomen_other" rows="3"
-                        placeholder="Enter other abdomen examination..."></textarea>
-                    </div>
-                  </div>
-
-
-                  <!-- NEURO -->
-                  <div class="pe-ref-section">
-                    <div class="pe-ref-title">NEURO-EXAM</div>
-
-                    <div class="pe-ref-options">
-                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Essentially normal"> Essentially
-                        normal</label>
-                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Abnormal gait"> Abnormal gait</label>
-
-                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Abnormal position sense"> Abnormal
-                        position sense</label>
-                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Abnormal sensation"> Abnormal
-                        sensation</label>
-
-                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Poor coordination"> Poor
-                        coordination</label>
-                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Poor muscle tone/strength"> Poor
-                        muscle tone/strength</label>
-
-                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Poor/altered memory"> Poor/altered
-                        memory</label>
-                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Abnormal reflex(es)"> Abnormal
-                        reflex(es)</label>
-                    </div>
-
-                    <div class="pe-ref-other">
-                      <label>Others:</label>
-                      <textarea name="pe_neuro_exam_other" rows="3"
-                        placeholder="Enter other neuro-exam examination..."></textarea>
-                    </div>
-                  </div>
-
-
-                  <!-- RECTAL -->
-                  <div class="pe-ref-section">
-                    <div class="pe-ref-title">RECTAL</div>
-
-                    <div class="pe-ref-options">
-                      <label><input type="checkbox" name="pe_rectal[]" value="Essentially normal"> Essentially
-                        normal</label>
-                      <label><input type="checkbox" name="pe_rectal[]" value="Enlarged Prostate"> Enlarged
-                        Prostate</label>
-
-                      <label><input type="checkbox" name="pe_rectal[]" value="Mass"> Mass</label>
-                      <label><input type="checkbox" name="pe_rectal[]" value="Hemorrhoids"> Hemorrhoids</label>
-
-                      <label><input type="checkbox" name="pe_rectal[]" value="Pus"> Pus</label>
-                    </div>
-
-                    <div class="pe-ref-other">
-                      <label>Others:</label>
-                      <textarea name="pe_rectal_other" rows="3"
-                        placeholder="Enter other rectal examination..."></textarea>
-                    </div>
-                  </div>
-
-
-                  <!-- GU -->
-                  <div class="pe-ref-section">
-                    <div class="pe-ref-title">GU (IE)</div>
-
-                    <div class="pe-ref-options">
-                      <label><input type="checkbox" name="pe_gu_ie[]" value="Essentially normal"> Essentially
-                        normal</label>
-                      <label><input type="checkbox" name="pe_gu_ie[]" value="Blood stained in exam finger"> Blood
-                        stained in exam finger</label>
-
-                      <label><input type="checkbox" name="pe_gu_ie[]" value="Cervical dilatation"> Cervical
-                        dilatation</label>
-                      <label><input type="checkbox" name="pe_gu_ie[]" value="Presence of abnormal discharge"> Presence
-                        of abnormal discharge</label>
-                    </div>
-
-                    <div class="pe-ref-other">
-                      <label>Others:</label>
-                      <textarea name="pe_gu_ie_other" rows="3"
-                        placeholder="Enter other GU (IE) examination..."></textarea>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </div>
-    </div>
-
-    <!-- ROW 3.5: Diagnostic Examination Results (DOH Viewable Results) -->
-    <div class="row-fluid" id="row-viewable-results">
-      <div class="span12" id="viewable-results-col">
-        <div class="dashlet" id="dashlet-viewable-results">
-          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <h3>Examination Result</h3>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span id="viewable-results-count-badge" class="badge badge-info" style="font-size:11px; padding:2px 8px; background:#0e3d59; color:#fff; font-weight:600;">0 Results</span>
-              <button type="button" class="btn btn-mini" id="btn-refresh-viewable-results" title="Refresh Diagnostic Results"><i class="icon-refresh"></i> Refresh</button>
-            </div>
-          </div>
-          <div class="bootstrap-widget-content" id="dashlet-results-content" style="padding:12px 14px;">
-            <div class="viewable-results-nav" id="viewable-results-tabs">
-              <button type="button" class="btn btn-small active result-filter-btn" data-result-cat="all">All Results <span class="badge" id="cat-badge-all" style="font-size:10px; margin-left:3px; background:#4a5568;">0</span></button>
-              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="laboratory">Laboratory <span class="badge" id="cat-badge-laboratory" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
-              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="radiology">Radiology / Imaging (DDIRS) <span class="badge" id="cat-badge-radiology" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
-              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="heart">Heart Station <span class="badge" id="cat-badge-heart" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
-              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="pulmonary">Pulmonary Station <span class="badge" id="cat-badge-pulmonary" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
-              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="neuro">EEG / Neuro <span class="badge" id="cat-badge-neuro" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
-            </div>
-
-            <div class="table-responsive-wrap" style="overflow-x:auto;">
-              <table class="table table-bordered table-striped table-hover order-card-table viewable-results-table">
-                <thead>
-                  <tr>
-                    <th style="width:140px;">Date &amp; Time</th>
-                    <th style="width:160px;">Department</th>
-                    <th>Diagnostic Examination / Procedure</th>
-                    <th style="width:90px; text-align:center;">Priority</th>
-                    <th style="width:130px; text-align:center;">Status</th>
-                    <th style="width:70px; text-align:center;">Result</th>
-                  </tr>
-                </thead>
-                <tbody id="viewable-results-list">
-                  <tr><td colspan="6" style="text-align:center; padding:18px 12px; color:#718096; font-size:12px;">Loading diagnostic results...</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ROW 4: Initial Diagnosis -->
-    <div class="row-fluid" id="row-admitting-dx">
-      <div class="span12" id="admitting-dx-col">
-        <div class="dashlet">
-          <div class="bootstrap-widget-header">
-            <h3>Initial Diagnosis</h3>
-          </div>
-          <div class="bootstrap-widget-content" id="dashlet-diagnosis">
-            <textarea id="admitting_dx" name="admitting_diagnosis" rows="4" class="input-block-level"
-              placeholder="Enter initial diagnosis..."></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ROW 5: Final Diagnosis (Positioned directly BELOW Admitting Diagnosis, displayed ONLY for Historical Encounters) -->
-    <div class="row-fluid" id="row-final-dx" style="display:none;">
-      <div class="span12" id="final-dx-col">
-        <div class="dashlet" id="dashlet-final-diagnosis">
-          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <h3>Final Diagnosis</h3>
-            <span id="final-dx-status-badge" style="display:none; font-size:11px; padding:2px 8px; border-radius:3px; background:#065f46; color:#a7f3d0; font-weight:600; text-transform:uppercase;">Signed / Finalized</span>
-          </div>
-          <div class="bootstrap-widget-content">
-            <textarea id="final_dx" name="final_diagnosis" rows="4" class="input-block-level"
-              placeholder="Final Diagnosis is encoded when concluding consultation via End Patient Care..." readonly disabled></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- ROW 6: Doctor's Orders -->
-    <div class="row-fluid" id="row-physician-orders">
-      <div class="span12">
-        <div class="dashlet">
-          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <h3>Physician's Orders (Plans)</h3>
-            <div>
-              <button type="button" class="btn btn-mini" id="expand-all-orders" style="margin-right:4px;">Expand All</button>
-              <button type="button" class="btn btn-mini" id="collapse-all-orders">Collapse All</button>
-            </div>
-          </div>
-          <div class="bootstrap-widget-content">
-            <div id="orders-body"></div>
-            <div class="orders-savebar">
-              <span id="orders-save-status" role="status" aria-live="polite"></span>
-              <button type="button" class="btn btn-success btn-small" id="save-orders-btn">Save and Preview Physician's
-                Order</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-</div>
-
-    <!-- ROW 8: Disposition (Hidden during active consultation; displayed only for historical encounter inspection) -->
-    <div class="row-fluid" id="row-disposition" style="display:none;">
-      <div class="span12 care-disposition">
-        <div class="dashlet">
-          <div class="bootstrap-widget-header">
-            <h3>Disposition</h3>
-          </div>
-          <div class="bootstrap-widget-content" id="dashlet-disposition">
-            <div id="disposition-radios" class="disposition-radios-grid">
-              <label class="radio"><input type="radio" name="disposition" value="Treated and Discharged"> Treated and Discharged</label>
-              <label class="radio"><input type="radio" name="disposition" value="Admitted"> Admitted</label>
-              <label class="radio"><input type="radio" name="disposition" value="Discharge Against Medical Advice (DAMA) / Refused Admission"> Discharge Against Medical Advice (DAMA) / Refused Admission</label>
-              <label class="radio"><input type="radio" name="disposition" value="Unattended / Did Not Answer Call"> Unattended / Did Not Answer Call</label>
-              <label class="radio"><input type="radio" name="disposition" value="Transferred to Emergency Room (ER)"> Transferred to Emergency Room (ER)</label>
-              <label class="radio"><input type="radio" name="disposition" value="Transferred / Referred to Another Facility"> Transferred / Referred to Another Facility</label>
-              <label class="radio"><input type="radio" name="disposition" value="Rescheduled"> Rescheduled</label>
-              <label class="radio"><input type="radio" name="disposition" value="Transferred to Minor OR"> Transferred to Minor OR</label>
-              <label class="radio"><input type="radio" name="disposition" value="Others"> Others (specify below)</label>
-            </div>
-            <div class="disposition-other-wrapper" id="disposition-other-wrapper">
-              <label>Please specify:</label>
-              <input type="text" id="disposition_other_text" name="disposition_other_text" class="input-block-level"
-                placeholder="Enter disposition details...">
-            </div>
-            <div style="margin-top:10px; text-align:right;">
-              <button type="button" class="btn btn-success btn-small" id="save-disposition-btn">Save Disposition</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ROW 9: Follow-up (Hidden during active consultation; displayed only for historical encounter inspection) -->
-    <div class="row-fluid" id="row-followup" style="display:none;">
-      <div class="span12 care-followup">
-        <div class="dashlet">
-          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <h3>Follow-up</h3>
-            <span id="followup-locked-badge" style="display:none; font-size:11px; padding:2px 8px; border-radius:3px; background:#065f46; color:#a7f3d0; font-weight:600; text-transform:uppercase;">Locked (Historical)</span>
-          </div>
-          <div class="bootstrap-widget-content" id="dashlet-followup">
-            <p style="font-weight:600; margin-bottom:6px;">Follow-up needed?</p>
-            <label class="radio inline"><input type="radio" name="follow_up_needed" value="Yes"> Yes</label>
-            <label class="radio inline"><input type="radio" name="follow_up_needed" value="No"> No</label>
-            <div class="follow-up-fields" id="follow-up-fields" style="margin-top:12px;">
-              <div class="row-fluid">
-                <div class="span4">
-                  <label>Follow-up date</label>
-                  <input type="date" id="follow_up_date" name="follow_up_date" class="input-block-level" style="box-sizing:border-box;">
-                </div>
-                <div class="span8">
-                  <label>Reason for follow-up</label>
-                  <textarea id="follow_up_reason" name="follow_up_reason" rows="3" class="input-block-level"
-                    placeholder="Enter reason for follow-up..." style="box-sizing:border-box;"></textarea>
-                </div>
-              </div>
-            </div>
-            <div style="margin-top:10px; text-align:right;">
-              <button type="button" class="btn btn-success btn-small" id="save-followup-btn">Save Follow-up</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ROW 10: Referral / Co-Manage -->
-    <div class="row-fluid">
-      <div class="span12 care-referral">
-        <div class="dashlet">
-          <div class="bootstrap-widget-header">
-            <h3>Referral / Co-Manage</h3>
-          </div>
-          <div class="bootstrap-widget-content" id="dashlet-referral">
-            <div class="referral-table-wrap">
-              <table class="table table-bordered table-condensed referral-table"
-                aria-label="Referral and co-manage history">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Department</th>
-                    <th>Reason for Referral</th>
-                    <th>Primary Physician</th>
-                    <th>Co-Managing Physician</th>
-                    <th>Receiving Physician</th>
-                  </tr>
-                </thead>
-                <tbody id="referral-rows"><tr class="referral-empty"><td colspan="6">No records found...</td></tr></tbody>
-              </table>
-            </div>
-            <div class="referral-fields">
-              <label for="referral-doctor">Refer to Physician</label>
-              <select id="referral-doctor">
-                <option value="">-Select a Physician-</option>
-                <option>Dr. Andrea Reyes</option>
-                <option>Dr. Miguel Santos</option>
-                <option>Dr. Liza Garcia</option>
-                <option>Dr. Paolo Cruz</option>
-              </select>
-              <label for="referral-department">Department</label>
-              <select id="referral-department">
-                <option value="">-Select a Department-</option>
-                <option value="EMERGENCY MEDICINE">EMERGENCY MEDICINE</option>
-                <option value="PATHOLOGY">PATHOLOGY</option>
-                <option value="DDIRS">DDIRS</option>
-                <option value="ORTHOPAEDICS">ORTHOPAEDICS</option>
-                <option value="OPHTHALMOLOGY">OPHTHALMOLOGY</option>
-                <option value="SURGERY">SURGERY</option>
-                <option value="PUBLIC HEALTH UNIT">PUBLIC HEALTH UNIT</option>
-                <option value="ENT-HNS">ENT-HNS</option>
-                <option value="ANESTHESIA">ANESTHESIA</option>
-                <option value="GENERAL MEDICINE">GENERAL MEDICINE</option>
-                <option value="PEDIATRICS">PEDIATRICS</option>
-                <option value="OBSTETRICS AND GYNECOLOGY">OBSTETRICS AND GYNECOLOGY</option>
-                <option value="FAMILY AND COMMUNITY MEDICINE">FAMILY AND COMMUNITY MEDICINE</option>
-                <option value="DEPARTMENT OF UROLOGY">DEPARTMENT OF UROLOGY</option>
-                <option value="THE CARDIOVASCULAR SURGERY AND INTERVENTION UNIT">THE CARDIOVASCULAR SURGERY AND INTERVENTION UNIT</option>
-              </select>
-              <label for="referral-reason">Reason for Referral</label>
-              <textarea id="referral-reason" rows="5"
-                placeholder="Enter the reason for referral or co-management..."></textarea>
-            </div>
-            <div id="referral-readonly-msg" style="display:none; margin-top:8px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; font-size:12px; color:#64748b; font-style:italic;">
-              <i class="icon-lock"></i> Referrals are finalized and signed for this encounter. New referrals must be ordered on the current or next encounter.
-            </div>
-            <div style="margin-top:8px; text-align:right;">
-              <span id="referral-save-status" role="status" aria-live="polite"></span>
-              <button type="button" class="btn btn-success btn-small" id="save-referral-btn">Save Referral</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- ROW 10: Specialize Forms -->
-    <div class="row-fluid">
-      <div class="span12">
-        <div class="dashlet">
-          <div class="bootstrap-widget-header">
-            <h3>Specialized Clinical Forms</h3>
-          </div>
-          <div class="bootstrap-widget-content" id="dashlet-other-forms">
-            <div class="other-form-list">
-              <label><button type="button" class="btn btn-small btn-primary" id="btn-open-neonate-module" onclick="openNeonateWorkspace()"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
-              <label><button type="button" class="btn btn-small">Pediatric Growth Chart</button></label>
-              <label><button type="button" class="btn btn-small">Dental Form</button></label>
-              <label><button type="button" class="btn btn-small">Ophthalmology Form</button></label>
-              <label><button type="button" class="btn btn-small">Trauma Sheet</button></label>
-              <label><button type="button" class="btn btn-small">Operative Technique</button></label>
-              <label><button type="button" class="btn btn-small">Surgical Memorandum</button></label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    
-        <!-- ═══ SEGHIS+ NEONATE CLINICAL RECORD (STRUCTURED SPECIALTY WORKSPACE) ═══ -->
-        <div class="row-fluid" id="row-neonate-module">
-          <div class="span12">
-            <div class="dashlet" id="dashlet-neonate">
-              <div class="bootstrap-widget-header">
-                <div class="pull-right" style="margin-top:-3px; display:inline-flex; gap:6px; align-items:center;">
-                  <span class="badge badge-success" id="badge-neonate-status">Active Module</span>
-                  <a href="Neonate_Clinical_Module.html" target="_blank" class="btn btn-mini" title="Open Standalone Module View"><i class="icon-external-link"></i> Full View</a>
-                  <button type="button" class="btn btn-mini" onclick="toggleNeonateCollapse()" id="btn-neonate-collapse" title="Collapse / Expand"><i class="icon-chevron-up" id="icon-neonate-collapse"></i></button>
-                </div>
-                <h3>SEGHIS+ Neonate Clinical Record</h3>
-              </div>
-              <div class="bootstrap-widget-content" id="dashlet-neonate-content" style="padding:16px; background:#fff;">
-                <!-- TOP SUMMARY CARDS (5 CARDS) -->
+                    <!-- SEGHIS+ NEONATE CLINICAL RECORD -- STRUCTURED WORKSPACE -->
+                    <div class="neo-workspace-container" id="neo-workspace-card">
+                      <div class="neo-workspace-header">
+                        NEONATAL HISTORY — SEGHIS+ CLINICAL WORKSPACE
+                        <div style="margin-left:auto; display:inline-flex; gap:6px; align-items:center; float:right; margin-top:-2px;">
+                          <span class="badge badge-success" id="badge-neonate-status">Active Module</span>
+                          <a href="Neonate_Clinical_Module.html" target="_blank" class="btn btn-mini" title="Open Standalone Module"><i class="icon-external-link"></i> Full View</a>
+                        </div>
+                      </div>
+                      <div class="neo-workspace-body" id="neo-workspace-body">
+<!-- TOP SUMMARY CARDS (5 CARDS) -->
       <section class="summary-cards-grid" aria-label="Neonate Clinical Highlights">
         <article class="summary-card">
           <div class="summary-card-title">Patient Type</div>
@@ -2740,7 +2141,7 @@
           <div class="summary-card-footer" id="sum-maternal-class">Class: —</div>
         </article>
         <article class="summary-card">
-          <div class="summary-card-title">Birth Measurements</div>
+          <div class="summary-card-title">Birth Weight &amp; Measurements</div>
           <div class="summary-card-value" id="sum-weight">—</div>
           <div class="summary-card-footer" id="sum-vitals">HR: — | RR: —</div>
         </article>
@@ -3937,7 +3338,7 @@
         <div class="tab-panel" id="tab-diagnosis" role="tabpanel">
 
           <div class="section-card">
-            <div class="section-card-title"><i class="icon-stethoscope"></i> Neonatal Diagnosis</div>
+            <div class="section-card-title"><i class="icon-stethoscope"></i> Neonatal Diagnosis <span style="font-size:11px; font-weight:400; color:#64748b; margin-left:8px;">(ICD-10 Classification)</span></div>
             <div class="form-grid-3">
               <!-- Hyperbilirubinemia -->
               <div class="form-group">
@@ -4140,12 +3541,631 @@
         </div>
 
       </form>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="hx-allergy">
+                    <textarea id="hx_allergy" name="hx_allergy" rows="4" class="input-block-level"
+                      placeholder="Document drug allergies, food allergies, environmental allergies, reaction manifestations, and severity (e.g., Penicillin — Anaphylaxis; Seafood — Urticaria; or No Known Allergies / NKDA)..."></textarea>
+                    <div id="hx-allergy-timeline" class="encounter-hx-timeline"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-    <!-- Footer Encounter Actions -->
+        <!-- Progress Notes (Subjective, Objective, Assessment) - Positioned below Medical History and above Review of Systems -->
+        <div class="row-fluid" id="row-progress-notes" style="display:none;">
+          <div class="span12" id="progress-notes-col">
+            <div class="dashlet" id="dashlet-progress-notes">
+              <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>Progress Notes (Subjective, Objective, Assessment)</h3>
+              </div>
+              <div class="bootstrap-widget-content" id="dashlet-progress-notes-content" style="padding:12px 14px;">
+                <textarea id="progress_notes" name="progress_notes" rows="6" class="input-block-level"
+                  style="width:100%; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size:12.5px; line-height:1.5; resize:vertical; padding:8px 10px;"
+                  placeholder="Enter clinical progress notes (Subjective interval history and complaints, Objective physical &amp; diagnostic findings, Assessment / clinical impression)..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review of Systems -->
+        <div class="row-fluid">
+          <div class="span12">
+            <div class="dashlet">
+              <div class="bootstrap-widget-header">
+                <h3>Pertinent Signs and Symptoms (Review of Systems)</h3>
+              </div>
+              <div class="bootstrap-widget-content" id="dashlet-review-of-systems">
+                <div class="ros-alphabetical-grid">
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Abdominal pain"> Abdominal
+                    cramp/pain</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Altered mental sensorium"> Altered
+                    mental sensorium</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Anorexia"> Anorexia</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Bleeding gums"> Bleeding gums</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Blurring of vision "> Blurring of
+                    vision</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Body weakness "> Body weakness</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Chest pain/discomfort "> Chest
+                    pain/discomfort</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Constipation"> Constipation</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Cough"> Cough</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Diarrhea"> Diarrhea</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Dizziness "> Dizziness</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Dysphagia"> Dysphagia</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Dyspnea"> Dyspnea</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Dysuria "> Dysuria</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Epistaxis "> Epistaxis</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Fever"> Fever</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Frequency of urination"> Frequency of
+                    urination</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Headache "> Headache</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Hematemesis"> Hematemesis</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Hematuria"> Hematuria</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Hemoptysis"> Hemoptysis</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Irritability"> Irritability</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Jaundice "> Jaundice</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Lower extremity edema"> Lower extremity
+                    edema</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Myalgia"> Myalgia</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Orthopnea"> Orthopnea</label>
+                  <label id="ros-pain-label" class="ros-pain-label"><input type="checkbox" name="pertinent_signs[]" value="Pain" id="sign-pain-check"> <span class="ros-pain-title">Pain,</span><span class="ros-pain-placeholder" id="pain_site_placeholder"> _________________ (site)</span><input type="text" id="pain_site_input" name="pain_site" placeholder="Name site..." class="ros-pain-input" style="display:none;" autocomplete="off" aria-label="Pain site"><span class="ros-pain-suffix" id="pain_site_suffix" style="display:none;">(site)</span></label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Palpitations"> Palpitations</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Seizures"> Seizures</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Skin rashes"> Skin rashes</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Stool"> Stool (bloody/black
+                    tarry/mucoid)</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Sweating"> Sweating</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Urgency"> Urgency</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Vomiting"> Vomiting</label>
+                  <label><input type="checkbox" name="pertinent_signs[]" value="Weight loss"> Weight loss</label>
+                  <label id="ros-others-label"><input type="checkbox" name="pertinent_signs[]" value="Others" id="sign-others-check"> Others</label>
+                </div>
+
+                <textarea id="pertinent_signs_information" name="pertinent_signs_information" rows="3"
+                  class="input-block-level"
+                  style="display:none;"
+                  placeholder="Document other review of systems findings, symptoms, onset, severity, and relevant information..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Physical Examination -->
+        <div class="row-fluid">
+          <div class="span12">
+            <div class="dashlet">
+              <div class="bootstrap-widget-header">
+                <h3>Physical Examination</h3>
+              </div>
+              <div class="bootstrap-widget-content" id="dashlet-physical-exam">
+                <div class="pe-reference">
+
+                  <!-- GENERAL SURVEY -->
+                  <div class="pe-ref-section">
+                    <div class="pe-ref-title">General Survey</div>
+                    <div class="pe-ref-options">
+                      <label>
+                        <input type="radio" name="pe_general_survey" value="Awake and Alert">
+                        Awake and Alert
+                      </label>
+
+                      <label>
+                        <input type="radio" name="pe_general_survey" value="Altered Sensorium">
+                        Altered Sensorium
+                      </label>
+                    </div>
+                  </div>
+
+
+                  <!-- HEENT -->
+                  <div class="pe-ref-section">
+                    <div class="pe-ref-title">HEENT</div>
+
+                    <div class="pe-ref-options">
+                      <label><input type="checkbox" name="pe_heent[]" value="Essentially Normal"> Essentially
+                        Normal</label>
+                      <label><input type="checkbox" name="pe_heent[]" value="Abnormal pupillary reaction"> Abnormal
+                        pupillary reaction</label>
+
+                      <label><input type="checkbox" name="pe_heent[]" value="Cervical lymphadenopathy"> Cervical
+                        lymphadenopathy</label>
+                      <label><input type="checkbox" name="pe_heent[]" value="Dry mucous membrane"> Dry mucous
+                        membrane</label>
+
+                      <label><input type="checkbox" name="pe_heent[]" value="Icteric sclerae"> Icteric sclerae</label>
+                      <label><input type="checkbox" name="pe_heent[]" value="Pale conjunctivae"> Pale
+                        conjunctivae</label>
+
+                      <label><input type="checkbox" name="pe_heent[]" value="Sunken eyeballs"> Sunken eyeballs</label>
+                      <label><input type="checkbox" name="pe_heent[]" value="Sunken fontanelle"> Sunken
+                        fontanelle</label>
+                    </div>
+
+                    <div class="pe-ref-other">
+                      <label>Others:</label>
+                      <textarea name="pe_heent_other" rows="3"
+                        placeholder="Enter other HEENT examination..."></textarea>
+                    </div>
+                  </div>
+
+
+                  <!-- SKIN / EXTREMITIES -->
+                  <div class="pe-ref-section">
+                    <div class="pe-ref-title">SKIN/EXTREMITIES</div>
+
+                    <div class="pe-ref-options">
+                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Essentially normal"> Essentially
+                        normal</label>
+                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Weak pulses"> Weak
+                        pulses</label>
+
+                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Clubbing"> Clubbing</label>
+                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Cold clammy"> Cold
+                        clammy</label>
+
+                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Cyanosis/mottled skin">
+                        Cyanosis/mottled skin</label>
+                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Edema/swelling">
+                        Edema/swelling</label>
+
+                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Decreased mobility"> Decreased
+                        mobility</label>
+                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Pale nailbeds"> Pale
+                        nailbeds</label>
+
+                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Poor skin turgor"> Poor skin
+                        turgor</label>
+                      <label><input type="checkbox" name="pe_skin_extremities[]" value="Rashes/Petechiae">
+                        Rashes/Petechiae</label>
+                    </div>
+
+                    <div class="pe-ref-other">
+                      <label>Others:</label>
+                      <textarea name="pe_skin_extremities_other" rows="3"
+                        placeholder="Enter other skin/extremities examination..."></textarea>
+                    </div>
+                  </div>
+
+
+                  <!-- CHEST / LUNGS -->
+                  <div class="pe-ref-section">
+                    <div class="pe-ref-title">Chest/Lungs</div>
+
+                    <div class="pe-ref-options">
+                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Essentially normal"> Essentially
+                        normal</label>
+                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Asymmetrical chest expansion">
+                        Asymmetrical chest expansion</label>
+
+                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Decreased breath sounds"> Decreased
+                        breath sounds</label>
+                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Wheezes"> Wheezes</label>
+
+                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Lumps over breast(s)"> Lumps over
+                        breast(s)</label>
+                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Retractions"> Retractions</label>
+
+                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Crackles/rales">
+                        Crackles/rales</label>
+                      <label><input type="checkbox" name="pe_chest_lungs[]" value="Enlarged Axillary Lymph Nodes">
+                        Enlarged Axillary Lymph Nodes</label>
+                    </div>
+
+                    <div class="pe-ref-other">
+                      <label>Others:</label>
+                      <textarea name="pe_chest_lungs_other" rows="3"
+                        placeholder="Enter other chest/lungs examination..."></textarea>
+                    </div>
+                  </div>
+
+
+                  <!-- CVS -->
+                  <div class="pe-ref-section">
+                    <div class="pe-ref-title">CVS</div>
+
+                    <div class="pe-ref-options">
+                      <label><input type="checkbox" name="pe_cvs[]" value="Essentially normal"> Essentially
+                        normal</label>
+                      <label><input type="checkbox" name="pe_cvs[]" value="Displaced apex beat"> Displaced apex
+                        beat</label>
+
+                      <label><input type="checkbox" name="pe_cvs[]" value="Irregular rhythm"> Irregular rhythm</label>
+                      <label><input type="checkbox" name="pe_cvs[]" value="Muffled heart sounds"> Muffled heart
+                        sounds</label>
+
+                      <label><input type="checkbox" name="pe_cvs[]" value="Pericardial bulge"> Pericardial bulge</label>
+                      <label><input type="checkbox" name="pe_cvs[]" value="Murmur"> Murmur</label>
+
+                      <label><input type="checkbox" name="pe_cvs[]" value="Heaves/trills"> Heaves/trills</label>
+                    </div>
+
+                    <div class="pe-ref-other">
+                      <label>Others:</label>
+                      <textarea name="pe_cvs_other" rows="3" placeholder="Enter other CVS examination..."></textarea>
+                    </div>
+                  </div>
+
+
+                  <!-- ABDOMEN -->
+                  <div class="pe-ref-section">
+                    <div class="pe-ref-title">ABDOMEN</div>
+
+                    <div class="pe-ref-options">
+                      <label><input type="checkbox" name="pe_abdomen[]" value="Essentially normal"> Essentially
+                        normal</label>
+                      <label><input type="checkbox" name="pe_abdomen[]" value="Abdominal rigidity"> Abdominal
+                        rigidity</label>
+
+                      <label><input type="checkbox" name="pe_abdomen[]" value="Abdominal tenderness"> Abdominal
+                        tenderness</label>
+                      <label><input type="checkbox" name="pe_abdomen[]" value="Uterine contraction"> Uterine
+                        contraction</label>
+
+                      <label><input type="checkbox" name="pe_abdomen[]" value="Tympanitic/dull abdomen"> Tympanitic/dull
+                        abdomen</label>
+                      <label><input type="checkbox" name="pe_abdomen[]" value="Palpable mass(es)"> Palpable
+                        mass(es)</label>
+
+                      <label><input type="checkbox" name="pe_abdomen[]" value="Hyperactive bowel sounds"> Hyperactive
+                        bowel sounds</label>
+                    </div>
+
+                    <div class="pe-ref-other">
+                      <label>Others:</label>
+                      <textarea name="pe_abdomen_other" rows="3"
+                        placeholder="Enter other abdomen examination..."></textarea>
+                    </div>
+                  </div>
+
+
+                  <!-- NEURO -->
+                  <div class="pe-ref-section">
+                    <div class="pe-ref-title">NEURO-EXAM</div>
+
+                    <div class="pe-ref-options">
+                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Essentially normal"> Essentially
+                        normal</label>
+                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Abnormal gait"> Abnormal gait</label>
+
+                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Abnormal position sense"> Abnormal
+                        position sense</label>
+                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Abnormal sensation"> Abnormal
+                        sensation</label>
+
+                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Poor coordination"> Poor
+                        coordination</label>
+                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Poor muscle tone/strength"> Poor
+                        muscle tone/strength</label>
+
+                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Poor/altered memory"> Poor/altered
+                        memory</label>
+                      <label><input type="checkbox" name="pe_neuro_exam[]" value="Abnormal reflex(es)"> Abnormal
+                        reflex(es)</label>
+                    </div>
+
+                    <div class="pe-ref-other">
+                      <label>Others:</label>
+                      <textarea name="pe_neuro_exam_other" rows="3"
+                        placeholder="Enter other neuro-exam examination..."></textarea>
+                    </div>
+                  </div>
+
+
+                  <!-- RECTAL -->
+                  <div class="pe-ref-section">
+                    <div class="pe-ref-title">RECTAL</div>
+
+                    <div class="pe-ref-options">
+                      <label><input type="checkbox" name="pe_rectal[]" value="Essentially normal"> Essentially
+                        normal</label>
+                      <label><input type="checkbox" name="pe_rectal[]" value="Enlarged Prostate"> Enlarged
+                        Prostate</label>
+
+                      <label><input type="checkbox" name="pe_rectal[]" value="Mass"> Mass</label>
+                      <label><input type="checkbox" name="pe_rectal[]" value="Hemorrhoids"> Hemorrhoids</label>
+
+                      <label><input type="checkbox" name="pe_rectal[]" value="Pus"> Pus</label>
+                    </div>
+
+                    <div class="pe-ref-other">
+                      <label>Others:</label>
+                      <textarea name="pe_rectal_other" rows="3"
+                        placeholder="Enter other rectal examination..."></textarea>
+                    </div>
+                  </div>
+
+
+                  <!-- GU -->
+                  <div class="pe-ref-section">
+                    <div class="pe-ref-title">GU (IE)</div>
+
+                    <div class="pe-ref-options">
+                      <label><input type="checkbox" name="pe_gu_ie[]" value="Essentially normal"> Essentially
+                        normal</label>
+                      <label><input type="checkbox" name="pe_gu_ie[]" value="Blood stained in exam finger"> Blood
+                        stained in exam finger</label>
+
+                      <label><input type="checkbox" name="pe_gu_ie[]" value="Cervical dilatation"> Cervical
+                        dilatation</label>
+                      <label><input type="checkbox" name="pe_gu_ie[]" value="Presence of abnormal discharge"> Presence
+                        of abnormal discharge</label>
+                    </div>
+
+                    <div class="pe-ref-other">
+                      <label>Others:</label>
+                      <textarea name="pe_gu_ie_other" rows="3"
+                        placeholder="Enter other GU (IE) examination..."></textarea>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+
+    <!-- ROW 3.5: Diagnostic Examination Results (DOH Viewable Results) -->
+    <div class="row-fluid" id="row-viewable-results">
+      <div class="span12" id="viewable-results-col">
+        <div class="dashlet" id="dashlet-viewable-results">
+          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>Examination Result</h3>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="viewable-results-count-badge" class="badge badge-info" style="font-size:11px; padding:2px 8px; background:#0e3d59; color:#fff; font-weight:600;">0 Results</span>
+              <button type="button" class="btn btn-mini" id="btn-refresh-viewable-results" title="Refresh Diagnostic Results"><i class="icon-refresh"></i> Refresh</button>
+            </div>
+          </div>
+          <div class="bootstrap-widget-content" id="dashlet-results-content" style="padding:12px 14px;">
+            <div class="viewable-results-nav" id="viewable-results-tabs">
+              <button type="button" class="btn btn-small active result-filter-btn" data-result-cat="all">All Results <span class="badge" id="cat-badge-all" style="font-size:10px; margin-left:3px; background:#4a5568;">0</span></button>
+              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="laboratory">Laboratory <span class="badge" id="cat-badge-laboratory" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
+              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="radiology">Radiology / Imaging (DDIRS) <span class="badge" id="cat-badge-radiology" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
+              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="heart">Heart Station <span class="badge" id="cat-badge-heart" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
+              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="pulmonary">Pulmonary Station <span class="badge" id="cat-badge-pulmonary" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
+              <button type="button" class="btn btn-small result-filter-btn" data-result-cat="neuro">EEG / Neuro <span class="badge" id="cat-badge-neuro" style="font-size:10px; margin-left:3px; background:#2b6cb0;">0</span></button>
+            </div>
+
+            <div class="table-responsive-wrap" style="overflow-x:auto;">
+              <table class="table table-bordered table-striped table-hover order-card-table viewable-results-table">
+                <thead>
+                  <tr>
+                    <th style="width:140px;">Date &amp; Time</th>
+                    <th style="width:160px;">Department</th>
+                    <th>Diagnostic Examination / Procedure</th>
+                    <th style="width:90px; text-align:center;">Priority</th>
+                    <th style="width:130px; text-align:center;">Status</th>
+                    <th style="width:70px; text-align:center;">Result</th>
+                  </tr>
+                </thead>
+                <tbody id="viewable-results-list">
+                  <tr><td colspan="6" style="text-align:center; padding:18px 12px; color:#718096; font-size:12px;">Loading diagnostic results...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 4: Initial Diagnosis -->
+    <div class="row-fluid" id="row-admitting-dx">
+      <div class="span12" id="admitting-dx-col">
+        <div class="dashlet">
+          <div class="bootstrap-widget-header">
+            <h3>Initial Diagnosis</h3>
+          </div>
+          <div class="bootstrap-widget-content" id="dashlet-diagnosis">
+            <textarea id="admitting_dx" name="admitting_diagnosis" rows="4" class="input-block-level"
+              placeholder="Enter initial diagnosis..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 5: Final Diagnosis (Positioned directly BELOW Admitting Diagnosis, displayed ONLY for Historical Encounters) -->
+    <div class="row-fluid" id="row-final-dx" style="display:none;">
+      <div class="span12" id="final-dx-col">
+        <div class="dashlet" id="dashlet-final-diagnosis">
+          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>Final Diagnosis</h3>
+            <span id="final-dx-status-badge" style="display:none; font-size:11px; padding:2px 8px; border-radius:3px; background:#065f46; color:#a7f3d0; font-weight:600; text-transform:uppercase;">Signed / Finalized</span>
+          </div>
+          <div class="bootstrap-widget-content">
+            <textarea id="final_dx" name="final_diagnosis" rows="4" class="input-block-level"
+              placeholder="Final Diagnosis is encoded when concluding consultation via End Patient Care..." readonly disabled></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ROW 6: Doctor's Orders -->
+    <div class="row-fluid" id="row-physician-orders">
+      <div class="span12">
+        <div class="dashlet">
+          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>Physician's Orders (Plans)</h3>
+            <div>
+              <button type="button" class="btn btn-mini" id="expand-all-orders" style="margin-right:4px;">Expand All</button>
+              <button type="button" class="btn btn-mini" id="collapse-all-orders">Collapse All</button>
+            </div>
+          </div>
+          <div class="bootstrap-widget-content">
+            <div id="orders-body"></div>
+            <div class="orders-savebar">
+              <span id="orders-save-status" role="status" aria-live="polite"></span>
+              <button type="button" class="btn btn-success btn-small" id="save-orders-btn">Save and Preview Physician's
+                Order</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</div>
+
+    <!-- ROW 8: Disposition (Hidden during active consultation; displayed only for historical encounter inspection) -->
+    <div class="row-fluid" id="row-disposition" style="display:none;">
+      <div class="span12 care-disposition">
+        <div class="dashlet">
+          <div class="bootstrap-widget-header">
+            <h3>Disposition</h3>
+          </div>
+          <div class="bootstrap-widget-content" id="dashlet-disposition">
+            <div id="disposition-radios" class="disposition-radios-grid">
+              <label class="radio"><input type="radio" name="disposition" value="Treated and Discharged"> Treated and Discharged</label>
+              <label class="radio"><input type="radio" name="disposition" value="Admitted"> Admitted</label>
+              <label class="radio"><input type="radio" name="disposition" value="Discharge Against Medical Advice (DAMA) / Refused Admission"> Discharge Against Medical Advice (DAMA) / Refused Admission</label>
+              <label class="radio"><input type="radio" name="disposition" value="Unattended / Did Not Answer Call"> Unattended / Did Not Answer Call</label>
+              <label class="radio"><input type="radio" name="disposition" value="Transferred to Emergency Room (ER)"> Transferred to Emergency Room (ER)</label>
+              <label class="radio"><input type="radio" name="disposition" value="Transferred / Referred to Another Facility"> Transferred / Referred to Another Facility</label>
+              <label class="radio"><input type="radio" name="disposition" value="Rescheduled"> Rescheduled</label>
+              <label class="radio"><input type="radio" name="disposition" value="Transferred to Minor OR"> Transferred to Minor OR</label>
+              <label class="radio"><input type="radio" name="disposition" value="Others"> Others (specify below)</label>
+            </div>
+            <div class="disposition-other-wrapper" id="disposition-other-wrapper">
+              <label>Please specify:</label>
+              <input type="text" id="disposition_other_text" name="disposition_other_text" class="input-block-level"
+                placeholder="Enter disposition details...">
+            </div>
+            <div style="margin-top:10px; text-align:right;">
+              <button type="button" class="btn btn-success btn-small" id="save-disposition-btn">Save Disposition</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 9: Follow-up (Hidden during active consultation; displayed only for historical encounter inspection) -->
+    <div class="row-fluid" id="row-followup" style="display:none;">
+      <div class="span12 care-followup">
+        <div class="dashlet">
+          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>Follow-up</h3>
+            <span id="followup-locked-badge" style="display:none; font-size:11px; padding:2px 8px; border-radius:3px; background:#065f46; color:#a7f3d0; font-weight:600; text-transform:uppercase;">Locked (Historical)</span>
+          </div>
+          <div class="bootstrap-widget-content" id="dashlet-followup">
+            <p style="font-weight:600; margin-bottom:6px;">Follow-up needed?</p>
+            <label class="radio inline"><input type="radio" name="follow_up_needed" value="Yes"> Yes</label>
+            <label class="radio inline"><input type="radio" name="follow_up_needed" value="No"> No</label>
+            <div class="follow-up-fields" id="follow-up-fields" style="margin-top:12px;">
+              <div class="row-fluid">
+                <div class="span4">
+                  <label>Follow-up date</label>
+                  <input type="date" id="follow_up_date" name="follow_up_date" class="input-block-level" style="box-sizing:border-box;">
+                </div>
+                <div class="span8">
+                  <label>Reason for follow-up</label>
+                  <textarea id="follow_up_reason" name="follow_up_reason" rows="3" class="input-block-level"
+                    placeholder="Enter reason for follow-up..." style="box-sizing:border-box;"></textarea>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:10px; text-align:right;">
+              <button type="button" class="btn btn-success btn-small" id="save-followup-btn">Save Follow-up</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 10: Referral / Co-Manage -->
+    <div class="row-fluid">
+      <div class="span12 care-referral">
+        <div class="dashlet">
+          <div class="bootstrap-widget-header">
+            <h3>Referral / Co-Manage</h3>
+          </div>
+          <div class="bootstrap-widget-content" id="dashlet-referral">
+            <div class="referral-table-wrap">
+              <table class="table table-bordered table-condensed referral-table"
+                aria-label="Referral and co-manage history">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Department</th>
+                    <th>Reason for Referral</th>
+                    <th>Primary Physician</th>
+                    <th>Co-Managing Physician</th>
+                    <th>Receiving Physician</th>
+                  </tr>
+                </thead>
+                <tbody id="referral-rows"><tr class="referral-empty"><td colspan="6">No records found...</td></tr></tbody>
+              </table>
+            </div>
+            <div class="referral-fields">
+              <label for="referral-doctor">Refer to Physician</label>
+              <select id="referral-doctor">
+                <option value="">-Select a Physician-</option>
+                <option>Dr. Andrea Reyes</option>
+                <option>Dr. Miguel Santos</option>
+                <option>Dr. Liza Garcia</option>
+                <option>Dr. Paolo Cruz</option>
+              </select>
+              <label for="referral-department">Department</label>
+              <select id="referral-department">
+                <option value="">-Select a Department-</option>
+                <option value="EMERGENCY MEDICINE">EMERGENCY MEDICINE</option>
+                <option value="PATHOLOGY">PATHOLOGY</option>
+                <option value="DDIRS">DDIRS</option>
+                <option value="ORTHOPAEDICS">ORTHOPAEDICS</option>
+                <option value="OPHTHALMOLOGY">OPHTHALMOLOGY</option>
+                <option value="SURGERY">SURGERY</option>
+                <option value="PUBLIC HEALTH UNIT">PUBLIC HEALTH UNIT</option>
+                <option value="ENT-HNS">ENT-HNS</option>
+                <option value="ANESTHESIA">ANESTHESIA</option>
+                <option value="GENERAL MEDICINE">GENERAL MEDICINE</option>
+                <option value="PEDIATRICS">PEDIATRICS</option>
+                <option value="OBSTETRICS AND GYNECOLOGY">OBSTETRICS AND GYNECOLOGY</option>
+                <option value="FAMILY AND COMMUNITY MEDICINE">FAMILY AND COMMUNITY MEDICINE</option>
+                <option value="DEPARTMENT OF UROLOGY">DEPARTMENT OF UROLOGY</option>
+                <option value="THE CARDIOVASCULAR SURGERY AND INTERVENTION UNIT">THE CARDIOVASCULAR SURGERY AND INTERVENTION UNIT</option>
+              </select>
+              <label for="referral-reason">Reason for Referral</label>
+              <textarea id="referral-reason" rows="5"
+                placeholder="Enter the reason for referral or co-management..."></textarea>
+            </div>
+            <div id="referral-readonly-msg" style="display:none; margin-top:8px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; font-size:12px; color:#64748b; font-style:italic;">
+              <i class="icon-lock"></i> Referrals are finalized and signed for this encounter. New referrals must be ordered on the current or next encounter.
+            </div>
+            <div style="margin-top:8px; text-align:right;">
+              <span id="referral-save-status" role="status" aria-live="polite"></span>
+              <button type="button" class="btn btn-success btn-small" id="save-referral-btn">Save Referral</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ROW 10: Specialize Forms -->
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="dashlet">
+          <div class="bootstrap-widget-header">
+            <h3>Specialized Clinical Forms</h3>
+          </div>
+          <div class="bootstrap-widget-content" id="dashlet-other-forms">
+            <div class="other-form-list">
+              <label><button type="button" class="btn btn-small btn-primary" id="btn-open-neonate-module" onclick="openNeonateWorkspace()"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
+              <label><button type="button" class="btn btn-small">Pediatric Growth Chart</button></label>
+              <label><button type="button" class="btn btn-small">Dental Form</button></label>
+              <label><button type="button" class="btn btn-small">Ophthalmology Form</button></label>
+              <label><button type="button" class="btn btn-small">Trauma Sheet</button></label>
+              <label><button type="button" class="btn btn-small">Operative Technique</button></label>
+              <label><button type="button" class="btn btn-small">Surgical Memorandum</button></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+        <!-- Footer Encounter Actions -->
     <div class="row-fluid" id="dashboard-actions" style="margin-bottom:30px;">
       <div class="span12" style="text-align:right;">
         <button type="button" class="btn btn-danger btn-large btn-conclude-care-trigger" style="font-weight:700; box-shadow:0 2px 8px rgba(185,28,28,0.3); padding:10px 24px; font-size:14px;"><i class="icon-flag icon-white"></i> End Patient Care &amp; Conclude Consultation</button>
@@ -14817,7 +14837,7 @@
     }
 
     function toggleNeonateCollapse() {
-      var content = document.getElementById('dashlet-neonate-content');
+      var content = document.getElementById('neo-workspace-body');
       var icon = document.getElementById('icon-neonate-collapse');
       if (!content) return;
       var isCollapsed = content.style.display === 'none';
@@ -14828,19 +14848,24 @@
     }
 
     function openNeonateWorkspace(targetTab) {
-      var content = document.getElementById('dashlet-neonate-content');
+      // Ensure Medical History Neonatal History tab is active
+      var neoTabLink = document.querySelector('a[href="#hx-neo"]');
+      if (neoTabLink) neoTabLink.click();
+      var content = document.getElementById('neo-workspace-body');
       var icon = document.getElementById('icon-neonate-collapse');
       if (content && content.style.display === 'none') {
         content.style.display = 'block';
         if (icon) icon.className = 'icon-chevron-up';
       }
       if (targetTab) {
-        var tabBtn = document.querySelector('.workspace-tab[data-tab="' + targetTab + '"]');
+        var tabBtn = document.querySelector('#hx-neo .workspace-tab[data-tab="' + targetTab + '"]');
         if (tabBtn) tabBtn.click();
       }
-      var dashlet = document.getElementById('dashlet-neonate');
+      var dashlet = document.getElementById('neo-workspace-card');
       if (dashlet && typeof dashlet.scrollIntoView === 'function') {
-        dashlet.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(function () {
+          dashlet.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 120);
       }
     }
 
@@ -15571,10 +15596,10 @@
 
     function initNeonateListeners() {
       // Tab switcher
-      document.querySelectorAll('#dashlet-neonate .workspace-tab').forEach(function (btn) {
+      document.querySelectorAll('#hx-neo .workspace-tab').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          document.querySelectorAll('#dashlet-neonate .workspace-tab').forEach(function (b) { b.classList.remove('active'); });
-          document.querySelectorAll('#dashlet-neonate .tab-panel').forEach(function (p) { p.classList.remove('active'); });
+          document.querySelectorAll('#hx-neo .workspace-tab').forEach(function (b) { b.classList.remove('active'); });
+          document.querySelectorAll('#hx-neo .tab-panel').forEach(function (p) { p.classList.remove('active'); });
           btn.classList.add('active');
           var panel = document.getElementById(btn.getAttribute('data-tab'));
           if (panel) panel.classList.add('active');

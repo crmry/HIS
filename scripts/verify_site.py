@@ -249,12 +249,15 @@ async def scan_single_target(browser_ws, file_url):
                     }
                 }
 
-                // Test Neonate Clinical Module workspace integration
+                // Test Neonate Clinical Module workspace integration (now inside Medical History #hx-neo tab)
                 const neoBtn = document.getElementById('btn-open-neonate-module');
                 if (neoBtn) {
+                    // Activate the Medical History Neonatal History tab first
+                    const neoTabLink = document.querySelector('a[href="#hx-neo"]');
+                    if (neoTabLink) neoTabLink.click();
                     neoBtn.click();
-                    const neoDashlet = document.getElementById('dashlet-neonate');
-                    if (!neoDashlet) return 'Neonate dashlet element not found';
+                    const neoDashlet = document.getElementById('neo-workspace-card');
+                    if (!neoDashlet) return 'Neonate workspace card (neo-workspace-card) element not found in #hx-neo';
                     const inbornSel = document.getElementById('neo_inborn');
                     const outbornSel = document.getElementById('neo_outborn');
                     const readmitChk = document.getElementById('neo_readmission');
