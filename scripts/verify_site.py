@@ -274,7 +274,19 @@ async def scan_single_target(browser_ws, file_url):
                         inbornSel.value = 'singleton-in hospital';
                         inbornSel.dispatchEvent(new Event('change'));
                     }
-                    // Test Ballard calculations
+                    // Test Ballard click-to-select: click a ref-cell and verify hidden input updates
+                    if (typeof window.ballardCellClick === 'function') {
+                        const firstRefCell = document.querySelector('#hx-neo .ballard-ref-cell[data-score-val]');
+                        if (firstRefCell) {
+                            window.ballardCellClick(firstRefCell);
+                            const row = firstRefCell.closest('tr');
+                            const hiddenInput = row ? row.querySelector('input.neo-ballard-score') : null;
+                            if (hiddenInput && hiddenInput.value !== firstRefCell.getAttribute('data-score-val')) {
+                                return 'Ballard click-to-select did not update hidden input value';
+                            }
+                        }
+                    }
+                    // Test Ballard total score calculation
                     if (typeof window.recalcBallard === 'function') {
                         window.recalcBallard();
                         const bTotal = document.getElementById('ballard-total-score');
