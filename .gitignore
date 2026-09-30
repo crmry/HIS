@@ -4,3 +4,5 @@ tmp/
 scratch/
 *.pptx
 *.ppt
+*.docx
+*.doc
