@@ -274,7 +274,7 @@ async def scan_single_target(browser_ws, file_url):
                         inbornSel.value = 'singleton-in hospital';
                         inbornSel.dispatchEvent(new Event('change'));
                     }
-                    // Test Ballard click-to-select: click a ref-cell and verify hidden input updates
+                    // Test Ballard click-to-select: click a ref-cell and verify hidden input updates and toggles
                     if (typeof window.ballardCellClick === 'function') {
                         const firstRefCell = document.querySelector('#hx-neo .ballard-ref-cell[data-score-val]');
                         if (firstRefCell) {
@@ -284,6 +284,13 @@ async def scan_single_target(browser_ws, file_url):
                             if (hiddenInput && hiddenInput.value !== firstRefCell.getAttribute('data-score-val')) {
                                 return 'Ballard click-to-select did not update hidden input value';
                             }
+                            // Test toggle deselect on repeat click
+                            window.ballardCellClick(firstRefCell);
+                            if (hiddenInput && hiddenInput.value !== '') {
+                                return 'Ballard repeat click did not clear hidden input value';
+                            }
+                            // Re-select for subsequent tests
+                            window.ballardCellClick(firstRefCell);
                         }
                     }
                     // Test Ballard total score calculation
