@@ -71,55 +71,9 @@
       color: #0f172a;
     }
 
-    .top-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 18px;
-      background: #0f172a;
-      color: #ffffff;
-      font-size: 12px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-top {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      border-radius: 4px;
-      font-size: 11.5px;
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-      border: 1px solid #334155;
-      background: #1e293b;
-      color: #ffffff;
-      transition: background 0.15s;
-    }
-
-    .btn-top:hover {
-      background: #334155;
-      color: #ffffff;
-      text-decoration: none;
-    }
-
-    .btn-top-primary {
-      background: #0f4c81;
-      border-color: #0f4c81;
-    }
-
-    .btn-top-primary:hover {
-      background: #0a365c;
-    }
-
     @media print {
       body {
         background: #ffffff;
-      }
-
-      .top-actions {
-        display: none !important;
       }
 
       .sheet {
@@ -134,26 +88,6 @@
 </head>
 
 <body>
-
-  <!-- Screen Top Navigation & Actions Bar -->
-  <div class="top-actions">
-    <div style="display:flex; align-items:center; gap:12px;">
-      <a href="dashboard.html" class="btn-top" id="btn-back-dashboard">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-        Back to Dashboard
-      </a>
-      <span style="font-weight: 600; letter-spacing: 0.2px;">
-        CLMMRH Form OPD.F.014 &bull; Hospital Form II (Face Sheet)
-      </span>
-    </div>
-    <div style="display:flex; gap:10px; align-items:center;">
-      <select id="opd-patient-select" style="background:#1e293b; color:#fff; border:1px solid #475569; border-radius:4px; padding:4px 8px; font-size:11.5px;"></select>
-      <button type="button" class="btn-top btn-top-primary" onclick="window.print()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-        Print Face Sheet
-      </button>
-    </div>
-  </div>
 
   <!-- A4 Physical Record Sheet -->
   <main class="sheet text-[10px] leading-tight">
