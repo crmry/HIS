@@ -2940,75 +2940,13 @@
       <div class="span12">
         <div class="dashlet" id="dashlet-specialized-forms">
           <div class="bootstrap-widget-header">
-            <h3>Specialized Clinical Forms &amp; Modules</h3>
+            <h3>Specialized Clinical Forms</h3>
           </div>
           <div class="bootstrap-widget-content" id="dashlet-other-forms">
-            
-            <!-- Primary Clinical Decision Modules (OB-Gyne & Neonatal) -->
-            <div class="specialized-modules-grid">
-              
-              <!-- OB-Gyne Clinical Module Card -->
-              <div class="spec-module-card obgyne-card" id="spec-module-card-obgyne">
-                <div class="spec-module-header">
-                  <div>
-                    <div class="spec-module-title" style="color:#15803d;">
-                      <i class="icon-female"></i> Obstetric &amp; Gynecologic (OB-Gyne) Module
-                    </div>
-                    <div class="spec-module-desc">
-                      Parity (GTPAL) &bull; Menstrual History &bull; Delivery Outcomes &bull; Procedures
-                    </div>
-                  </div>
-                  <span class="badge badge-info" id="spec-ob-status-badge">Historical Continuity Active</span>
-                </div>
-                <div class="spec-module-actions">
-                  <button type="button" class="btn btn-small btn-primary" id="btn-spec-ob-encode" onclick="openObGyneWorkspace('encode')" title="Launch dedicated module to encode or update OB-Gyne records">
-                    <i class="icon-edit"></i> Encode / Edit
-                  </button>
-                  <button type="button" class="btn btn-small" id="btn-spec-ob-view" onclick="openObGyneWorkspace('view')" title="View clinical summary in Medical History">
-                    <i class="icon-eye-open"></i> View Summary
-                  </button>
-                  <button type="button" class="btn btn-small btn-info" id="btn-spec-ob-draft" onclick="saveObGyneDraft()" title="Save current uncommitted module state as draft">
-                    <i class="icon-save"></i> Save as Draft
-                  </button>
-                </div>
-              </div>
-
-              <!-- Neonate Clinical Module Card -->
-              <div class="spec-module-card neonate-card" id="spec-module-card-neonate">
-                <div class="spec-module-header">
-                  <div>
-                    <div class="spec-module-title" style="color:#1b4d3e;">
-                      <i class="icon-stethoscope"></i> Neonate Clinical Module
-                    </div>
-                    <div class="spec-module-desc">
-                      Ballard Score &bull; APGAR Resuscitation &bull; EINC Protocol &bull; Measurements
-                    </div>
-                  </div>
-                  <span class="badge badge-success" id="spec-neo-status-badge">Recorded History</span>
-                </div>
-                <div class="spec-module-actions">
-                  <button type="button" class="btn btn-small btn-primary" id="btn-spec-neo-encode" onclick="openNeonateWorkspace('encode')" title="Launch dedicated module to encode or update neonatal records">
-                    <i class="icon-edit"></i> Encode / Edit
-                  </button>
-                  <button type="button" class="btn btn-small" id="btn-spec-neo-view" onclick="openNeonateWorkspace('view')" title="View neonatal summary in Medical History">
-                    <i class="icon-eye-open"></i> View Summary
-                  </button>
-                  <button type="button" class="btn btn-small btn-info" id="btn-spec-neo-draft" onclick="saveNeonateDraft()" title="Save current uncommitted module state as draft">
-                    <i class="icon-save"></i> Save as Draft
-                  </button>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Specialized Forms Strip -->
-            <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:#64748b; letter-spacing:0.4px; margin-bottom:6px;">
-              Clinical Forms &amp; Specialty Sheets
-            </div>
             <div class="other-form-list">
               <label><button type="button" class="btn btn-small btn-success" id="btn-open-obgyne-module" onclick="openModuleActionModal('obgyne')"><i class="icon-female"></i> OB-Gyne Module</button></label>
               <label><button type="button" class="btn btn-small btn-primary" id="btn-open-neonate-module" onclick="openModuleActionModal('neonate')"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
-              <label><button type="button" class="btn btn-small" id="btn-open-growth-chart" onclick="openGrowthChartModal(event)">Pediatric Growth Chart</button></label>
+              <label><button type="button" class="btn btn-small" id="btn-open-growth-chart" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> Pediatric Growth Chart</button></label>
               <label><button type="button" class="btn btn-small">Dental Form</button></label>
               <label><button type="button" class="btn btn-small">Ophthalmology Form</button></label>
               <label><button type="button" class="btn btn-small">Trauma Sheet</button></label>

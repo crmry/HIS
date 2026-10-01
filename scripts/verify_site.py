@@ -233,30 +233,16 @@ async def scan_single_target(browser_ws, file_url):
                     if (!obBadge) return 'OB view status badge missing in #hx-gyn';
                 }
 
-                // Test Specialized Clinical Decision Modules controls in Specialized Clinical Forms
-                const specObViewBtn = document.getElementById('btn-spec-ob-view');
-                if (specObViewBtn) {
-                    specObViewBtn.click();
-                    const obPane = document.getElementById('hx-gyn');
-                    if (!obPane || !obPane.classList.contains('active')) return 'OB view button did not activate #hx-gyn tab';
-                }
-                const specNeoViewBtn = document.getElementById('btn-spec-neo-view');
-                if (specNeoViewBtn) {
-                    specNeoViewBtn.click();
-                    const neoPane = document.getElementById('hx-neo');
-                    if (!neoPane || !neoPane.classList.contains('active')) return 'Neonate view button did not activate #hx-neo tab';
-                }
-                const specObDraftBtn = document.getElementById('btn-spec-ob-draft');
-                if (specObDraftBtn) {
-                    specObDraftBtn.click();
-                    const obBadge = document.getElementById('spec-ob-status-badge');
-                    if (!obBadge || !obBadge.textContent.includes('Draft Saved')) return 'OB Save Draft button failed to update status badge';
-                }
-                const specNeoDraftBtn = document.getElementById('btn-spec-neo-draft');
-                if (specNeoDraftBtn) {
-                    specNeoDraftBtn.click();
-                    const neoBadge = document.getElementById('spec-neo-status-badge');
-                    if (!neoBadge || !neoBadge.textContent.includes('Draft Saved')) return 'Neonate Save Draft button failed to update status badge';
+                // Test Specialized Clinical Forms unified launcher list
+                if (window.location.href.includes('dashboard.html')) {
+                    const dashletForms = document.getElementById('dashlet-specialized-forms');
+                    if (!dashletForms) return 'dashlet-specialized-forms not found';
+                    const obModBtn = document.getElementById('btn-open-obgyne-module');
+                    const neoModBtn = document.getElementById('btn-open-neonate-module');
+                    const growthBtn = document.getElementById('btn-open-growth-chart');
+                    if (!obModBtn) return 'btn-open-obgyne-module missing in specialized forms';
+                    if (!neoModBtn) return 'btn-open-neonate-module missing in specialized forms';
+                    if (!growthBtn) return 'btn-open-growth-chart missing in specialized forms';
                 }
                 const openModBtn = document.getElementById('btn-open-obgyne-module');
                 if (openModBtn) {
