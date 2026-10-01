@@ -361,13 +361,38 @@
     <section data-step data-title="Progress Notes" class="hidden p-6">
       <div class="border border-black">
         <div class="bg-black px-3 py-1.5 text-base font-medium text-white">
-          Progress Notes (Subjective/Objective/Assessment)
+          Progress Notes (Subjective, Objective, Assessment)
         </div>
-        <div>
-          <label for="progress_notes" class="sr-only">Progress Notes (Subjective/Objective/Assessment)</label>
-          <textarea id="progress_notes" name="progress_notes" rows="6"
-                    placeholder="Free Text"
-                    class="block w-full resize-y border-0 bg-white px-3 py-2 text-base text-gray-900 placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-600"></textarea>
+        <div class="space-y-4 p-4">
+          <!-- Hidden aggregate textarea for backward compatibility -->
+          <textarea id="progress_notes" name="progress_notes" class="hidden"></textarea>
+
+          <div>
+            <label for="progress_notes_subjective" class="block text-sm font-semibold text-gray-900">
+              Subjective findings: <span class="text-xs font-normal italic text-gray-600">(This will be reflected in Doctors' Order/ Progress Notes and CF4 Part III, 1. HPI)</span>
+            </label>
+            <textarea id="progress_notes_subjective" name="progress_notes_subjective" rows="3"
+                      placeholder="Interval history, complaints, and patient-reported changes"
+                      class="mt-1 block w-full resize-y border border-gray-400 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-600"></textarea>
+          </div>
+
+          <div>
+            <label for="progress_notes_objective" class="block text-sm font-semibold text-gray-900">
+              Objective findings: <span class="text-xs font-normal italic text-gray-600">(This will be reflected in Doctors' Order/ Progress Notes)</span>
+            </label>
+            <textarea id="progress_notes_objective" name="progress_notes_objective" rows="3"
+                      placeholder="Physical examination findings, bedside vitals observations, and diagnostic/lab results"
+                      class="mt-1 block w-full resize-y border border-gray-400 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-600"></textarea>
+          </div>
+
+          <div>
+            <label for="progress_notes_assessment" class="block text-sm font-semibold text-gray-900">
+              Assessment: <span class="text-xs font-normal italic text-gray-600">(This will be reflected in Doctors' Order/ Progress Notes)</span>
+            </label>
+            <textarea id="progress_notes_assessment" name="progress_notes_assessment" rows="3"
+                      placeholder="Clinical impression, diagnostic reasoning, interval condition, and disease trajectory"
+                      class="mt-1 block w-full resize-y border border-gray-400 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-600"></textarea>
+          </div>
         </div>
       </div>
     </section>
@@ -886,6 +911,22 @@
 
   buildOrders();
   renderDoctorOrderSummary();
+
+  function syncFormsProgressNotes() {
+    const s = document.getElementById('progress_notes_subjective')?.value.trim() || '';
+    const o = document.getElementById('progress_notes_objective')?.value.trim() || '';
+    const a = document.getElementById('progress_notes_assessment')?.value.trim() || '';
+    const parts = [];
+    if (s) parts.push('Subjective: ' + s);
+    if (o) parts.push('Objective: ' + o);
+    if (a) parts.push('Assessment: ' + a);
+    const agg = document.getElementById('progress_notes');
+    if (agg) agg.value = parts.join('\n\n');
+  }
+  ['progress_notes_subjective', 'progress_notes_objective', 'progress_notes_assessment'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', syncFormsProgressNotes);
+    document.getElementById(id)?.addEventListener('change', syncFormsProgressNotes);
+  });
 
   // Final payload
   function rowsOf(tbody) {

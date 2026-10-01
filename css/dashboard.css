@@ -1051,6 +1051,63 @@
     #dashlet-progress-notes {
       margin-bottom: 20px;
     }
+    .dashlet-progress-notes-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .progress-note-box {
+      margin-bottom: 0;
+    }
+    .progress-note-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: flex-start;
+      gap: 4px 8px;
+      margin-bottom: 4px;
+      cursor: pointer;
+    }
+    .progress-note-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1e293b;
+      letter-spacing: -0.01em;
+    }
+    .progress-note-destinations {
+      font-size: 11px;
+      font-weight: 500;
+      color: #64748b;
+      font-style: italic;
+    }
+    .progress-note-input {
+      min-height: 70px;
+      width: 100%;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 12.5px;
+      line-height: 1.5;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      background-color: #ffffff;
+      color: #0f172a;
+      resize: vertical;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .progress-note-input:focus {
+      border-color: #2e7d32;
+      box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.18);
+      outline: none;
+    }
+    .progress-note-input[disabled],
+    .progress-note-input[readonly] {
+      background-color: #f8fafc;
+      color: #334155;
+      cursor: not-allowed;
+      border-color: #e2e8f0;
+      box-shadow: none;
+    }
     #progress_notes {
       min-height: 130px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;

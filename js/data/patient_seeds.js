@@ -211,6 +211,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           vital_signs: [],
           admitting_diagnosis: '',
           final_diagnosis: '', // Blank for current active consultation; finalized on historical encounters
+          progress_notes_subjective: '',
+          progress_notes_objective: '',
+          progress_notes_assessment: '',
           progress_notes: '',
           encounters: [
             {
@@ -228,6 +231,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               vital_signs: [],
               cbgs: [],
               medications: [],
+              progress_notes_subjective: '',
+              progress_notes_objective: '',
+              progress_notes_assessment: '',
               progress_notes: '',
               orders: [],
               clinical_record: {
@@ -279,6 +285,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 heart: [],
                 eeg: []
               },
+              progress_notes_subjective: 'Outpatient Follow-up (General Medicine). Semi-annual comprehensive review.',
+              progress_notes_objective: 'Blood pressure mildly elevated at 134/84 mmHg. Fasting blood sugar 132 mg/dL, HbA1c 7.2%.\nWeight: 70 kg, BMI: 24.8. Physical examination unremarkable.',
+              progress_notes_assessment: 'Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension.\nPlan: Add Empagliflozin 10 mg OD for cardioprotective glycemic control. Continue Metformin and Losartan. Dietary counseling.',
               progress_notes: 'Outpatient Follow-up (General Medicine). Semi-annual comprehensive review.\nBlood pressure mildly elevated at 134/84 mmHg. Fasting blood sugar 132 mg/dL, HbA1c 7.2%.\nWeight: 70 kg, BMI: 24.8. Physical examination unremarkable.\nDiagnosis: Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension.\nPlan: Add Empagliflozin 10 mg OD for cardioprotective glycemic control. Continue Metformin and Losartan. Dietary counseling.',
               orders: [
                 { text: 'Start Empagliflozin 10 mg tablet once daily in the morning.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:15 AM nurse' },
@@ -324,6 +333,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 heart: [],
                 eeg: []
               },
+              progress_notes_subjective: 'Initial Outpatient Consultation (General Medicine). Patient transferred maintenance care to CLMMRH OPD.\nReviewed previous clinic records.',
+              progress_notes_objective: 'Vital signs: BP 128/80 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C.',
+              progress_notes_assessment: 'Type 2 Diabetes Mellitus; Essential Hypertension Stage 1.\nPlan: Continue Metformin 500 mg BID and Losartan 50 mg OD. Baseline labs ordered.',
               progress_notes: 'Initial Outpatient Consultation (General Medicine). Patient transferred maintenance care to CLMMRH OPD.\nReviewed previous clinic records. Vital signs: BP 128/80 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C.\nDiagnosis: Type 2 Diabetes Mellitus; Essential Hypertension Stage 1.\nPlan: Continue Metformin 500 mg BID and Losartan 50 mg OD. Baseline labs ordered.',
               orders: [
                 { text: 'Register in CLMMRH Chronic Disease Management OPD Program.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['C'], timeSignature: 'C - 9:00 AM nurse' },
@@ -367,6 +379,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 history: 'Patient is a 47-year-old female with diagnosed mild primary osteoarthritis of the right knee returning for scheduled 3-month orthopedic follow-up. Demonstrates good symptom improvement on physical therapy and home quadriceps rehabilitation.',
                 final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, clinically stable'
               },
+              progress_notes_subjective: 'Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises. No morning joint stiffness > 30 minutes, no joint locking or giving way.',
+              progress_notes_objective: 'Gait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.',
+              progress_notes_assessment: 'Unilateral Primary Osteoarthritis, Right Knee (M17.11), clinically improved with low disease activity.\nPlan: Shift Celecoxib to strictly PRN for pain flare-ups. Continue low-impact physical exercise (swimming, cycling, walking on flat ground). Avoid deep squats and kneeling. Return for annual orthopedic surveillance or if joint swelling occurs.',
               progress_notes: 'Outpatient Follow-up (Orthopedics). Right knee joint review.\nSubjective: Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises. No morning joint stiffness > 30 minutes, no joint locking or giving way.\nObjective: Gait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.\nAssessment: Unilateral Primary Osteoarthritis, Right Knee (M17.11), clinically improved with low disease activity.\nPlan: Shift Celecoxib to strictly PRN for pain flare-ups. Continue low-impact physical exercise (swimming, cycling, walking on flat ground). Avoid deep squats and kneeling. Return for annual orthopedic surveillance or if joint swelling occurs.',
               orders: [
                 { text: 'Shift Celecoxib 200 mg capsule to strictly PRN for right knee pain flare-ups.', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:35 AM nurse' },

@@ -272,6 +272,43 @@ async def scan_single_target(browser_ws, file_url):
                 const floatingObBtn = document.getElementById('floating-btn-obgyne');
                 if (!floatingObBtn) return 'floating-btn-obgyne not found in requisition pad';
 
+                // Test separated Progress Notes (Subjective, Objective, Assessment)
+                if (window.location.href.includes('dashboard.html')) {
+                    const pnSubj = document.getElementById('progress_notes_subjective');
+                    const pnObj = document.getElementById('progress_notes_objective');
+                    const pnAss = document.getElementById('progress_notes_assessment');
+                    const pnAgg = document.getElementById('progress_notes');
+                    if (!pnSubj || !pnObj || !pnAss || !pnAgg) {
+                        return 'Separated progress notes fields (Subjective, Objective, Assessment, or aggregate) missing in dashboard.html';
+                    }
+                    if (typeof window.parseStructuredProgressNotes !== 'function') {
+                        return 'parseStructuredProgressNotes not defined on window in dashboard.html';
+                    }
+                    const parsedSample = window.parseStructuredProgressNotes('Subjective: Interval fever\n\nObjective: Temp 38.5 C\n\nAssessment: CAP moderate risk');
+                    if (parsedSample.subjective !== 'Interval fever' || parsedSample.objective !== 'Temp 38.5 C' || parsedSample.assessment !== 'CAP moderate risk') {
+                        return 'parseStructuredProgressNotes failed structured sample test';
+                    }
+                    if (typeof window.getEncounterProgressNotes !== 'function') {
+                        return 'getEncounterProgressNotes not defined on window in dashboard.html';
+                    }
+                }
+
+                if (window.location.href.includes('doctors_order_patient.html')) {
+                    if (typeof window.getEncounterProgressNotes !== 'function') {
+                        return 'getEncounterProgressNotes not defined on window in doctors_order_patient.html';
+                    }
+                }
+
+                if (window.location.href.includes('forms_localstorage.html')) {
+                    const fSubj = document.getElementById('progress_notes_subjective');
+                    const fObj = document.getElementById('progress_notes_objective');
+                    const fAss = document.getElementById('progress_notes_assessment');
+                    const fAgg = document.getElementById('progress_notes');
+                    if (!fSubj || !fObj || !fAss || !fAgg) {
+                        return 'forms_localstorage.html separated progress notes inputs missing';
+                    }
+                }
+
                 // Test Obstetric & Gynecologic standalone workspace encoder (on OB_Gyne_Clinical_Module.html)
                 const obRoot = document.getElementById('ob-workspace-card') || document.querySelector('.workspace-card');
                 if (obRoot && window.location.href.includes('OB_Gyne_Clinical_Module.html')) {

@@ -858,8 +858,19 @@
         }
 
         function buildProgressNotes(data) {
+            const s = String(data?.progress_notes_subjective || "").trim();
+            const o = String(data?.progress_notes_objective || "").trim();
+            const a = String(data?.progress_notes_assessment || "").trim();
+            if (s || o || a) {
+                const parts = [];
+                if (s) parts.push(`Subjective: ${s}`);
+                if (o) parts.push(`Objective: ${o}`);
+                if (a) parts.push(`Assessment: ${a}`);
+                return parts.join("\n");
+            }
+
             if (String(data?.progress_notes || "").trim()) {
-                return cleanProgressNotesText(data.progress_notes);
+                return String(data.progress_notes).trim();
             }
 
             const lines = [];
@@ -923,8 +934,18 @@
         }
 
         function buildEncounterProgressNote(enc, primaryData) {
+            const s = String(enc?.progress_notes_subjective || "").trim();
+            const o = String(enc?.progress_notes_objective || "").trim();
+            const a = String(enc?.progress_notes_assessment || "").trim();
+            if (s || o || a) {
+                const parts = [];
+                if (s) parts.push(`Subjective: ${s}`);
+                if (o) parts.push(`Objective: ${o}`);
+                if (a) parts.push(`Assessment: ${a}`);
+                return parts.join("\n");
+            }
             if (enc?.progress_notes) {
-                return cleanProgressNotesText(enc.progress_notes);
+                return String(enc.progress_notes).trim();
             }
             const rec = enc?.clinical_record || {};
             const lines = [];
@@ -1385,9 +1406,35 @@
             if (!rawText) return [];
             return String(rawText)
                 .split("\n")
-                .map(line => cleanProgressNotesText(line))
+                .map(line => String(line || "").trim())
                 .filter(Boolean);
         }
+
+        window.getEncounterProgressNotes = function (enc) {
+            if (!enc) return { subjective: "", objective: "", assessment: "", combined: "" };
+            const s = String(enc.progress_notes_subjective || "").trim();
+            const o = String(enc.progress_notes_objective || "").trim();
+            const a = String(enc.progress_notes_assessment || "").trim();
+            if (s || o || a) {
+                const parts = [];
+                if (s) parts.push(`Subjective: ${s}`);
+                if (o) parts.push(`Objective: ${o}`);
+                if (a) parts.push(`Assessment: ${a}`);
+                return {
+                    subjective: s,
+                    objective: o,
+                    assessment: a,
+                    combined: parts.join("\n\n")
+                };
+            }
+            const raw = String(enc.progress_notes || "").trim();
+            return {
+                subjective: raw,
+                objective: "",
+                assessment: "",
+                combined: raw
+            };
+        };
 
         function getChronologicalEncounterBlocks(data, record, targetEncounterDate) {
             const encounters = Array.isArray(data?.encounters) ? [...data.encounters] : [];

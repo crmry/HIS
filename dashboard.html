@@ -2319,10 +2319,41 @@
               <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
                 <h3>Progress Notes (Subjective, Objective, Assessment)</h3>
               </div>
-              <div class="bootstrap-widget-content" id="dashlet-progress-notes-content" style="padding:12px 14px;">
-                <textarea id="progress_notes" name="progress_notes" rows="6" class="input-block-level"
-                  style="width:100%; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size:12.5px; line-height:1.5; resize:vertical; padding:8px 10px;"
-                  placeholder="Enter clinical progress notes (Subjective interval history and complaints, Objective physical &amp; diagnostic findings, Assessment / clinical impression)..."></textarea>
+              <div class="bootstrap-widget-content" id="dashlet-progress-notes-content" style="padding:14px 16px;">
+                <!-- Hidden aggregate textarea for backward compatibility and automated form serialization -->
+                <textarea id="progress_notes" name="progress_notes" style="display:none;"></textarea>
+
+                <div class="dashlet-progress-notes-container">
+                  <!-- Subjective Findings -->
+                  <div class="progress-note-box">
+                    <label class="progress-note-header" for="progress_notes_subjective">
+                      <span class="progress-note-title">Subjective findings:</span>
+                      <span class="progress-note-destinations">(This will be reflected in Doctors' Order/ Progress Notes and CF4 Part III, 1. HPI)</span>
+                    </label>
+                    <textarea id="progress_notes_subjective" name="progress_notes_subjective" rows="3" class="input-block-level progress-note-input"
+                      placeholder="Document interval history, complaints, symptoms, and patient-reported changes..."></textarea>
+                  </div>
+
+                  <!-- Objective Findings -->
+                  <div class="progress-note-box">
+                    <label class="progress-note-header" for="progress_notes_objective">
+                      <span class="progress-note-title">Objective findings:</span>
+                      <span class="progress-note-destinations">(This will be reflected in Doctors' Order/ Progress Notes)</span>
+                    </label>
+                    <textarea id="progress_notes_objective" name="progress_notes_objective" rows="3" class="input-block-level progress-note-input"
+                      placeholder="Document physical examination findings, bedside vital signs observations, and diagnostic/lab results..."></textarea>
+                  </div>
+
+                  <!-- Assessment -->
+                  <div class="progress-note-box">
+                    <label class="progress-note-header" for="progress_notes_assessment">
+                      <span class="progress-note-title">Assessment:</span>
+                      <span class="progress-note-destinations">(This will be reflected in Doctors' Order/ Progress Notes)</span>
+                    </label>
+                    <textarea id="progress_notes_assessment" name="progress_notes_assessment" rows="3" class="input-block-level progress-note-input"
+                      placeholder="Document clinical impression, diagnostic reasoning, interval condition (e.g., resolving / stable / deteriorating), and disease trajectory..."></textarea>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -5686,6 +5717,119 @@
       return s.trim();
     }
 
+    function parseStructuredProgressNotes(source) {
+      if (!source) return { subjective: '', objective: '', assessment: '', combined: '' };
+
+      var s = source.progress_notes_subjective !== undefined ? String(source.progress_notes_subjective || '').trim() : null;
+      var o = source.progress_notes_objective !== undefined ? String(source.progress_notes_objective || '').trim() : null;
+      var a = source.progress_notes_assessment !== undefined ? String(source.progress_notes_assessment || '').trim() : null;
+
+      if (s !== null || o !== null || a !== null) {
+        s = s || '';
+        o = o || '';
+        a = a || '';
+        var parts = [];
+        if (s) parts.push('Subjective: ' + s);
+        if (o) parts.push('Objective: ' + o);
+        if (a) parts.push('Assessment: ' + a);
+        var comb = parts.join('\n\n');
+        return {
+          subjective: s,
+          objective: o,
+          assessment: a,
+          combined: comb || String(source.progress_notes || '').trim()
+        };
+      }
+
+      var raw = typeof source === 'string' ? source : (source.progress_notes || '');
+      raw = String(raw).trim();
+      if (!raw) return { subjective: '', objective: '', assessment: '', combined: '' };
+
+      // Structured SOAP headers matching
+      var subjMatch = raw.match(/(?:^|\n)\s*(?:Subjective|S)\s*[:>]\s*([\s\S]*?)(?=(?:\n\s*(?:Objective|O|Assessment|A|Plan|P)\s*[:>]|$))/i);
+      var objMatch  = raw.match(/(?:^|\n)\s*(?:Objective|O)\s*[:>]\s*([\s\S]*?)(?=(?:\n\s*(?:Assessment|A|Plan|P)\s*[:>]|$))/i);
+      var assMatch  = raw.match(/(?:^|\n)\s*(?:Assessment|A)\s*[:>]\s*([\s\S]*?)(?=(?:\n\s*(?:Plan|P)\s*[:>]|$))/i);
+
+      if (subjMatch || objMatch || assMatch) {
+        var subVal = subjMatch ? subjMatch[1].trim() : '';
+        var objVal = objMatch ? objMatch[1].trim() : '';
+        var assVal = assMatch ? assMatch[1].trim() : '';
+
+        var preMatch = raw.match(/^([\s\S]*?)(?=(?:\n\s*(?:Subjective|S|Objective|O|Assessment|A)\s*[:>]))/i);
+        if (preMatch && preMatch[1].trim()) {
+          var headerText = preMatch[1].trim();
+          if (subVal && !subVal.startsWith(headerText)) {
+            subVal = headerText + '\n' + subVal;
+          } else if (!subVal) {
+            subVal = headerText;
+          }
+        }
+
+        return {
+          subjective: subVal,
+          objective: objVal,
+          assessment: assVal,
+          combined: raw
+        };
+      }
+
+      // Hospital narrative heuristic
+      var lines = raw.split('\n');
+      var sLines = [];
+      var oLines = [];
+      var aLines = [];
+      var curSec = 's';
+
+      for (var li = 0; li < lines.length; li++) {
+        var lineText = lines[li];
+        var trimmed = lineText.trim();
+        if (/^(Vital signs|VS|BP|HR|RR|Temp|PE|Physical exam|Chest|Heart|Abdomen|Extremities|Neuro|Skin|HEENT|Laboratory|Diagnostics|Labs)\s*[:]/i.test(trimmed)) {
+          curSec = 'o';
+        } else if (/^(Diagnosis|Assessment|Impression|Dx|Rx|Plan)\s*[:]/i.test(trimmed)) {
+          curSec = 'a';
+        }
+
+        if (curSec === 's') sLines.push(lineText);
+        else if (curSec === 'o') oLines.push(lineText);
+        else if (curSec === 'a') aLines.push(lineText);
+      }
+
+      if (oLines.length > 0 || aLines.length > 0) {
+        return {
+          subjective: sLines.join('\n').trim(),
+          objective: oLines.join('\n').trim(),
+          assessment: aLines.join('\n').trim(),
+          combined: raw
+        };
+      }
+
+      return {
+        subjective: raw,
+        objective: '',
+        assessment: '',
+        combined: raw
+      };
+    }
+
+    function syncProgressNotesAggregate() {
+      var s = (document.getElementById('progress_notes_subjective') ? document.getElementById('progress_notes_subjective').value : '').trim();
+      var o = (document.getElementById('progress_notes_objective') ? document.getElementById('progress_notes_objective').value : '').trim();
+      var a = (document.getElementById('progress_notes_assessment') ? document.getElementById('progress_notes_assessment').value : '').trim();
+      var parts = [];
+      if (s) parts.push('Subjective: ' + s);
+      if (o) parts.push('Objective: ' + o);
+      if (a) parts.push('Assessment: ' + a);
+      var combined = parts.join('\n\n');
+      var agg = document.getElementById('progress_notes');
+      if (agg) agg.value = combined;
+      return combined;
+    }
+
+    window.parseStructuredProgressNotes = parseStructuredProgressNotes;
+    window.getEncounterProgressNotes = function(enc) {
+      return parseStructuredProgressNotes(enc);
+    };
+
     function addEncounterRow(data, index, allEncounters) {
       if (typeof index !== 'number') {
         index = encRows ? encRows.children.length : 0;
@@ -6706,30 +6850,39 @@
         ccEl.value = cc;
       }
 
+      var parsedNotes = parseStructuredProgressNotes(enc);
       var hxEl = document.getElementById('hx_present');
       if (hxEl) {
-        var hx = (enc.clinical_record && enc.clinical_record.history) || enc.hx_present || enc.progress_notes || '';
+        var hx = (enc.clinical_record && enc.clinical_record.history) || enc.hx_present || parsedNotes.subjective || parsedNotes.combined || '';
         hxEl.value = hx;
       }
 
       var progRow = document.getElementById('row-progress-notes');
+      var progSubj = document.getElementById('progress_notes_subjective');
+      var progObj = document.getElementById('progress_notes_objective');
+      var progAss = document.getElementById('progress_notes_assessment');
       var progEl = document.getElementById('progress_notes');
       var isInitial = isInitialEncounter(enc, index, loadedEncounters);
 
       if (isInitial) {
         if (progRow) progRow.style.display = 'none';
-        if (progEl) {
-          progEl.value = '';
-          progEl.readOnly = true;
-          progEl.disabled = true;
-        }
+        [progSubj, progObj, progAss, progEl].forEach(function (el) {
+          if (!el) return;
+          el.value = '';
+          el.readOnly = true;
+          el.disabled = true;
+        });
       } else {
         if (progRow) progRow.style.display = 'block';
-        if (progEl) {
-          progEl.value = enc.progress_notes || '';
-          progEl.readOnly = true;
-          progEl.disabled = true;
-        }
+        if (progSubj) progSubj.value = parsedNotes.subjective;
+        if (progObj) progObj.value = parsedNotes.objective;
+        if (progAss) progAss.value = parsedNotes.assessment;
+        if (progEl) progEl.value = parsedNotes.combined;
+        [progSubj, progObj, progAss, progEl].forEach(function (el) {
+          if (!el) return;
+          el.readOnly = true;
+          el.disabled = true;
+        });
       }
 
       // 3. Diagnoses - Return Final Diagnosis in its rightful space ONLY for historical encounters
@@ -6925,22 +7078,31 @@
       var curEncIdx = curEnc ? loadedEncounters.indexOf(curEnc) : -1;
       var curIsInitial = !curEnc || isInitialEncounter(curEnc, curEncIdx, loadedEncounters) || (curRec && curRec.id === BLANK_PATIENT_ID);
       var progRow = document.getElementById('row-progress-notes');
+      var progSubj = document.getElementById('progress_notes_subjective');
+      var progObj = document.getElementById('progress_notes_objective');
+      var progAss = document.getElementById('progress_notes_assessment');
       var progEl = document.getElementById('progress_notes');
       if (curIsInitial) {
         if (progRow) progRow.style.display = 'none';
-        if (progEl) {
-          progEl.value = '';
-          progEl.readOnly = false;
-          progEl.disabled = false;
-        }
+        [progSubj, progObj, progAss, progEl].forEach(function (el) {
+          if (!el) return;
+          el.value = '';
+          el.readOnly = false;
+          el.disabled = false;
+        });
       } else {
-        var pn = (curRec && curRec.data && curRec.data.progress_notes) || (curEnc && curEnc.progress_notes) || '';
+        var activeSource = (curRec && curRec.data) || curEnc || {};
+        var parsedNotes = parseStructuredProgressNotes(activeSource);
         if (progRow) progRow.style.display = 'block';
-        if (progEl) {
-          progEl.value = pn;
-          progEl.readOnly = false;
-          progEl.disabled = false;
-        }
+        if (progSubj) progSubj.value = parsedNotes.subjective;
+        if (progObj) progObj.value = parsedNotes.objective;
+        if (progAss) progAss.value = parsedNotes.assessment;
+        if (progEl) progEl.value = parsedNotes.combined;
+        [progSubj, progObj, progAss, progEl].forEach(function (el) {
+          if (!el) return;
+          el.readOnly = false;
+          el.disabled = false;
+        });
       }
 
       var finalEl = document.getElementById('final_dx');
@@ -11527,22 +11689,30 @@
         var curIsInitial = !curEnc || isInitialEncounter(curEnc, curEncIdx, originalData.encounters) || record.id === BLANK_PATIENT_ID;
 
         var progRow = document.getElementById('row-progress-notes');
+        var progSubj = document.getElementById('progress_notes_subjective');
+        var progObj = document.getElementById('progress_notes_objective');
+        var progAss = document.getElementById('progress_notes_assessment');
         var progNotesEl = document.getElementById('progress_notes');
         if (curIsInitial) {
           if (progRow) progRow.style.display = 'none';
-          if (progNotesEl) {
-            progNotesEl.value = '';
-            progNotesEl.readOnly = false;
-            progNotesEl.disabled = false;
-          }
+          [progSubj, progObj, progAss, progNotesEl].forEach(function (el) {
+            if (!el) return;
+            el.value = '';
+            el.readOnly = false;
+            el.disabled = false;
+          });
         } else {
-          var pn = data.progress_notes || (record.data && record.data.progress_notes) || (curEnc && curEnc.progress_notes) || '';
+          var parsedNotes = parseStructuredProgressNotes(curEnc || data || (record && record.data) || {});
           if (progRow) progRow.style.display = 'block';
-          if (progNotesEl) {
-            progNotesEl.value = pn;
-            progNotesEl.readOnly = false;
-            progNotesEl.disabled = false;
-          }
+          if (progSubj) progSubj.value = parsedNotes.subjective;
+          if (progObj) progObj.value = parsedNotes.objective;
+          if (progAss) progAss.value = parsedNotes.assessment;
+          if (progNotesEl) progNotesEl.value = parsedNotes.combined;
+          [progSubj, progObj, progAss, progNotesEl].forEach(function (el) {
+            if (!el) return;
+            el.readOnly = false;
+            el.disabled = false;
+          });
         }
 
 
@@ -12069,8 +12239,21 @@
 
       var curEncForSave = Array.isArray(data.encounters) ? (data.encounters.find(function (e) { return e.is_current || e.isCurrent; }) || data.encounters[0]) : null;
       var curEncSaveIdx = curEncForSave ? data.encounters.indexOf(curEncForSave) : -1;
+      var sVal = (document.getElementById('progress_notes_subjective') ? document.getElementById('progress_notes_subjective').value : '').trim();
+      var oVal = (document.getElementById('progress_notes_objective') ? document.getElementById('progress_notes_objective').value : '').trim();
+      var aVal = (document.getElementById('progress_notes_assessment') ? document.getElementById('progress_notes_assessment').value : '').trim();
+
+      data.progress_notes_subjective = sVal;
+      data.progress_notes_objective = oVal;
+      data.progress_notes_assessment = aVal;
+      var combinedPN = syncProgressNotesAggregate();
+      data.progress_notes = combinedPN;
+
       if (curEncForSave && !isInitialEncounter(curEncForSave, curEncSaveIdx, data.encounters)) {
-        curEncForSave.progress_notes = data.progress_notes || '';
+        curEncForSave.progress_notes_subjective = sVal;
+        curEncForSave.progress_notes_objective = oVal;
+        curEncForSave.progress_notes_assessment = aVal;
+        curEncForSave.progress_notes = combinedPN;
       }
       if (curEncForSave && data.final_diagnosis) {
         curEncForSave.final_diagnosis = data.final_diagnosis;
@@ -12381,8 +12564,10 @@
 
         var progRow = document.getElementById('row-progress-notes');
         if (progRow) progRow.style.display = 'none';
-        var progNotesEl = document.getElementById('progress_notes');
-        if (progNotesEl) progNotesEl.value = '';
+        ['progress_notes_subjective', 'progress_notes_objective', 'progress_notes_assessment', 'progress_notes'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.value = '';
+        });
 
         syncPainSiteUI(false, '');
         syncRosOthersUI(false, '');
@@ -12400,6 +12585,16 @@
     // ── Auto-load from URL ──
     var urlParams = new URLSearchParams(window.location.search);
     var urlPatientId = urlParams.get('patient');
+
+    function initProgressNotesSync() {
+      ['progress_notes_subjective', 'progress_notes_objective', 'progress_notes_assessment'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', syncProgressNotesAggregate);
+          el.addEventListener('change', syncProgressNotesAggregate);
+        }
+      });
+    }
 
     // ── Init ──
     function updateClock() {
@@ -12425,6 +12620,7 @@
       }
       initDashboardLayout();
       initDashletCollapse();
+      initProgressNotesSync();
       renderOrderSummary();
     }
 
