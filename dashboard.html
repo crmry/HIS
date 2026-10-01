@@ -1243,36 +1243,54 @@
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(15, 23, 42, 0.85);
       z-index: 10000;
-      padding: 20px;
+      padding: 16px;
       overflow: auto;
       align-items: center;
       justify-content: center;
+      box-sizing: border-box;
     }
     .neo-modal-backdrop.open {
       display: flex;
     }
+    .neo-modal-dialog {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      max-width: 96vw;
+      max-height: 94vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-sizing: border-box;
+      border: 1px solid #334155;
+    }
     .neo-modal-backdrop img {
-      max-width: 95vw;
-      max-height: 90vh;
+      max-width: 100%;
+      max-height: 80vh;
       object-fit: contain;
       background: #ffffff;
-      border-radius: 6px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     }
     .neo-modal-close {
-      position: fixed;
-      top: 14px;
-      right: 18px;
-      background: #ffffff;
-      color: #0f172a;
+      background: #334155;
+      color: #ffffff;
       border: none;
-      border-radius: 9999px;
-      width: 36px;
-      height: 36px;
-      font-size: 20px;
-      font-weight: 700;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-size: 16px;
+      line-height: 28px;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      transition: background 0.15s ease;
+    }
+    .neo-modal-close:hover {
+      background: #ef4444;
+      color: #ffffff;
     }
 
     .neo-toast {
@@ -2263,10 +2281,9 @@
                             <div><span style="color:#64748b;">Maturity Classification:</span> <strong id="neo-view-ballard-mat" style="color:#1b4d3e;">—</strong></div>
                             <div><span style="color:#64748b;">Completed Items:</span> <strong id="neo-view-ballard-items">—</strong></div>
                           </div>
-                          <div style="border-top:1px solid #f1f5f9; padding-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
-                            <button type="button" class="btn btn-mini" onclick="openGrowthChartModal('lub')"><i class="icon-picture"></i> Lubchenco Chart</button>
-                            <button type="button" class="btn btn-mini" onclick="openGrowthChartModal('boy')"><i class="icon-picture"></i> Boy Fenton Chart</button>
-                            <button type="button" class="btn btn-mini" onclick="openGrowthChartModal('girl')"><i class="icon-picture"></i> Girl Fenton Chart</button>
+                          <div style="border-top:1px solid #f1f5f9; padding-top:10px; display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+                            <button type="button" class="btn btn-mini" id="btn-chart-lub" onclick="openGrowthChartModal('lub')"><i class="icon-picture"></i> Lubchenco Chart</button>
+                            <button type="button" class="btn btn-mini btn-info" id="btn-chart-fenton" onclick="openGrowthChartModal('fenton')" title="View Fenton Growth Chart (Patient Gender Baseline)"><i class="icon-picture"></i> <span id="btn-chart-fenton-label">Fenton Growth Chart (Baseline)</span></button>
                           </div>
                         </div>
 
@@ -4038,6 +4055,33 @@
     </div>
   </div>
 
+  <!-- ════════════════ NEONATE GROWTH CHART MODAL ════════════════ -->
+  <div class="neo-modal-backdrop" id="neonate-chart-modal" role="dialog" aria-modal="true" aria-labelledby="neo-modal-chart-title" onclick="handleZoomModalBackdropClick(event)">
+    <div class="neo-modal-dialog" style="max-width:96vw; max-height:94vh; display:flex; flex-direction:column; background:#ffffff; border-radius:8px; box-shadow:0 20px 40px rgba(0,0,0,0.6); overflow:hidden; position:relative;" onclick="event.stopPropagation()">
+      <!-- Modal Header Bar -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 16px; background:#0f172a; color:#ffffff; border-bottom:1px solid #334155; gap:12px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <span id="neo-modal-chart-title" style="font-size:13.5px; font-weight:700; color:#f8fafc; letter-spacing:0.2px;">Fenton Preterm Growth Chart</span>
+          <span id="neo-modal-baseline-badge" class="badge badge-success" style="font-size:10.5px; padding:2px 8px; border-radius:10px; font-weight:600;">Patient Baseline</span>
+        </div>
+        <!-- Switcher Controls -->
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div class="btn-group" id="neo-chart-switcher-group">
+            <button type="button" class="btn btn-mini" id="modal-btn-lub" onclick="switchZoomChart('lub')">Lubchenco</button>
+            <button type="button" class="btn btn-mini" id="modal-btn-boy" onclick="switchZoomChart('boy')">Boy (Male)</button>
+            <button type="button" class="btn btn-mini" id="modal-btn-girl" onclick="switchZoomChart('girl')">Girl (Female)</button>
+          </div>
+          <button type="button" class="neo-modal-close" onclick="closeZoomModal(event)" title="Close viewer" style="position:static; width:28px; height:28px; font-size:16px; line-height:28px; display:inline-flex; align-items:center; justify-content:center; background:#334155; color:#ffffff; border:none; border-radius:50%; cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <!-- Modal Image Body -->
+      <div style="flex:1; overflow:auto; display:flex; align-items:center; justify-content:center; padding:12px; background:#f1f5f9; min-height:300px;">
+        <img id="neonateZoomedChartImg" src="img/neonate/female_fenton_chart.png" alt="Enlarged Neonatal Growth Chart" style="max-width:100%; max-height:82vh; object-fit:contain; border-radius:4px; box-shadow:0 4px 12px rgba(0,0,0,0.15); background:#ffffff;">
+      </div>
+    </div>
+  </div>
+  <div class="neo-toast" id="neoDashboardToast">Neonate record saved successfully.</div>
+
   <!-- Interactive Toast Container -->
   <div class="ob-toast-container" id="ob-toast-container" aria-live="polite"></div>
 
@@ -4714,6 +4758,9 @@
       var orderLink = document.getElementById('topbar-orders-link');
       if (orderLink) {
         orderLink.href = (record && record.id) ? 'doctors_order_patient.html?patient=' + encodeURIComponent(record.id) : 'doctors_order_patient.html';
+      }
+      if (typeof updateGrowthChartButtons === 'function') {
+        updateGrowthChartButtons((record && record.id) || activePatientId);
       }
     }
 
@@ -13376,13 +13423,134 @@
       });
     }
 
-    function openGrowthChartModal(which) {
-      var chartMap = {
-        lub: 'img/neonate/lubchenco_chart.png',
-        boy: 'img/neonate/fenton_boys_chart.png',
-        girl: 'img/neonate/fenton_girls_chart.png'
+    function getActivePatientGender(patientId) {
+      var pid = patientId || activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : 'seed_patient');
+      
+      // 1. Check neonate state in localStorage
+      try {
+        var stored = localStorage.getItem('HIS_NEONATE_' + pid);
+        if (stored) {
+          var neoState = JSON.parse(stored);
+          if (neoState) {
+            var nSex = (neoState.physicalExam && neoState.physicalExam.sex) ||
+                       (neoState.measurements && neoState.measurements.sex) ||
+                       neoState.sex;
+            if (nSex) {
+              var ns = String(nSex).trim().toLowerCase();
+              if (ns.startsWith('m') || ns === 'boy') return 'boy';
+              if (ns.startsWith('f') || ns === 'girl') return 'girl';
+            }
+          }
+        }
+      } catch (e) {}
+
+      // 2. Check active patient record in window
+      if (window.currentPatientRecord && window.currentPatientRecord.data) {
+        var g = window.currentPatientRecord.data.gender || window.currentPatientRecord.data.sex || '';
+        var sg = String(g).trim().toLowerCase();
+        if (sg.startsWith('m') || sg === 'boy') return 'boy';
+        if (sg.startsWith('f') || sg === 'girl') return 'girl';
+      }
+
+      // 3. Check banner-sex element text
+      var bannerSex = document.getElementById('banner-sex');
+      if (bannerSex && bannerSex.textContent) {
+        var bt = bannerSex.textContent.trim().toUpperCase();
+        if (bt === 'M' || bt === 'MALE' || bt === 'BOY') return 'boy';
+        if (bt === 'F' || bt === 'FEMALE' || bt === 'GIRL') return 'girl';
+      }
+
+      // 4. Check getActivePatientData
+      try {
+        var pData = (typeof getActivePatientData === 'function' ? getActivePatientData() : null);
+        if (pData && (pData.gender || pData.sex)) {
+          var pg = String(pData.gender || pData.sex).trim().toLowerCase();
+          if (pg.startsWith('m') || pg === 'boy') return 'boy';
+          if (pg.startsWith('f') || pg === 'girl') return 'girl';
+        }
+      } catch (e) {}
+
+      return 'girl'; // Baseline fallback (matches default seed patient)
+    }
+
+    function updateGrowthChartButtons(pid) {
+      var gender = getActivePatientGender(pid);
+      var fentonBtnLabel = document.getElementById('btn-chart-fenton-label');
+      if (fentonBtnLabel) {
+        if (gender === 'boy') {
+          fentonBtnLabel.textContent = 'Fenton Growth Chart (Male Baseline)';
+        } else {
+          fentonBtnLabel.textContent = 'Fenton Growth Chart (Female Baseline)';
+        }
+      }
+    }
+
+    function switchZoomChart(which) {
+      var baselineGender = getActivePatientGender();
+      var chartKey = which;
+      if (!chartKey || chartKey === 'fenton') {
+        chartKey = baselineGender;
+      }
+
+      var chartInfoMap = {
+        lub: {
+          src: 'img/neonate/lubchenco_chart.png',
+          title: 'Lubchenco Intrauterine Growth Chart (24 to 42 Weeks)',
+          badgeText: 'Intrauterine Baseline',
+          badgeClass: 'badge badge-info'
+        },
+        boy: {
+          src: 'img/neonate/boy_fenton_chart.png',
+          title: 'Fenton Growth Chart for Preterm Infants (Boys — 22 to 50 Weeks)',
+          badgeText: baselineGender === 'boy' ? 'Patient Baseline: Male' : 'Reference: Male (Boys)',
+          badgeClass: baselineGender === 'boy' ? 'badge badge-success' : 'badge'
+        },
+        girl: {
+          src: 'img/neonate/female_fenton_chart.png',
+          title: 'Fenton Growth Chart for Preterm Infants (Girls — 22 to 50 Weeks)',
+          badgeText: baselineGender === 'girl' ? 'Patient Baseline: Female' : 'Reference: Female (Girls)',
+          badgeClass: baselineGender === 'girl' ? 'badge badge-success' : 'badge'
+        }
       };
-      openZoomModal(chartMap[which] || 'img/neonate/lubchenco_chart.png');
+
+      var info = chartInfoMap[chartKey] || chartInfoMap['lub'];
+      var img = document.getElementById('neonateZoomedChartImg');
+      if (img) {
+        img.src = info.src;
+        img.alt = info.title;
+      }
+
+      var titleEl = document.getElementById('neo-modal-chart-title');
+      if (titleEl) titleEl.textContent = info.title;
+
+      var badgeEl = document.getElementById('neo-modal-baseline-badge');
+      if (badgeEl) {
+        badgeEl.textContent = info.badgeText;
+        badgeEl.className = info.badgeClass;
+      }
+
+      var btnLub = document.getElementById('modal-btn-lub');
+      var btnBoy = document.getElementById('modal-btn-boy');
+      var btnGirl = document.getElementById('modal-btn-girl');
+      if (btnLub) btnLub.className = chartKey === 'lub' ? 'btn btn-mini btn-primary' : 'btn btn-mini';
+      if (btnBoy) btnBoy.className = chartKey === 'boy' ? 'btn btn-mini btn-primary' : 'btn btn-mini';
+      if (btnGirl) btnGirl.className = chartKey === 'girl' ? 'btn btn-mini btn-primary' : 'btn btn-mini';
+    }
+
+    function openGrowthChartModal(which) {
+      if (which && typeof which === 'object') {
+        which = 'fenton';
+      }
+      var targetChart = which;
+      if (!targetChart || targetChart === 'fenton') {
+        targetChart = getActivePatientGender();
+      }
+      switchZoomChart(targetChart);
+      var modal = document.getElementById('neonate-chart-modal');
+      if (modal) {
+        modal.classList.add('open');
+        document.body.classList.add('modal-lock');
+      }
     }
 
     function openZoomModal(src) {
@@ -13391,13 +13559,35 @@
       if (!modal || !img) return;
       img.src = src;
       modal.classList.add('open');
+      document.body.classList.add('modal-lock');
     }
 
     function closeZoomModal(e) {
-      if (e) e.stopPropagation();
+      if (e && e.stopPropagation) e.stopPropagation();
       var modal = document.getElementById('neonate-chart-modal') || document.getElementById('chartModal');
-      if (modal) modal.classList.remove('open');
+      if (modal) {
+        modal.classList.remove('open');
+        document.body.classList.remove('modal-lock');
+      }
     }
+
+    function handleZoomModalBackdropClick(e) {
+      if (e.target && e.target.id === 'neonate-chart-modal') {
+        closeZoomModal(e);
+      }
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeZoomModal();
+    });
+
+    window.openGrowthChartModal = openGrowthChartModal;
+    window.openZoomModal = openZoomModal;
+    window.closeZoomModal = closeZoomModal;
+    window.handleZoomModalBackdropClick = handleZoomModalBackdropClick;
+    window.switchZoomChart = switchZoomChart;
+    window.getActivePatientGender = getActivePatientGender;
+    window.updateGrowthChartButtons = updateGrowthChartButtons;
 
     function loadNeonateStateForPatient(pid) {
       var currentId = pid || activePatientId || 'default';
@@ -13593,6 +13783,9 @@
           aftercare: { vitk: { date: '2026-09-26' }, eye: { date: '2026-09-26' }, bcg: { date: '2026-09-26' }, hepab: { date: '2026-09-26' } },
           einc: { status: 'Complete', interventions: ['Immediate drying', 'Skin-to-skin contact', 'Delayed cord clamping', 'Non-separation'] }
         });
+      }
+      if (typeof updateGrowthChartButtons === 'function') {
+        updateGrowthChartButtons(pid);
       }
     }
 
@@ -13856,13 +14049,6 @@
     initNeonateModule(activePatientId);
 
   </script>
-<!-- ════════════════ NEONATE GROWTH CHART MODAL ════════════════ -->
-<div class="neo-modal-backdrop" id="neonate-chart-modal" onclick="closeZoomModal(event)">
-  <button type="button" class="neo-modal-close" onclick="closeZoomModal(event)">&times;</button>
-  <img id="neonateZoomedChartImg" src="" alt="Enlarged Neonatal Growth Chart">
-</div>
-<div class="neo-toast" id="neoDashboardToast">Neonate record saved successfully.</div>
-
 </body>
 
 </html>

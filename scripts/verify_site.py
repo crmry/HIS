@@ -349,6 +349,37 @@ async def scan_single_target(browser_ws, file_url):
                     if (!neoBadge) return 'Neonate view status badge missing in #hx-neo';
                 }
 
+                // Test Neonate Growth Chart Modal with Patient Gender Baseline
+                if (window.location.href.includes('dashboard.html')) {
+                    const fentonBtn = document.getElementById('btn-chart-fenton');
+                    const neoModal = document.getElementById('neonate-chart-modal');
+                    const neoImg = document.getElementById('neonateZoomedChartImg');
+                    if (fentonBtn && neoModal && neoImg) {
+                        fentonBtn.click();
+                        if (!neoModal.classList.contains('open')) return 'Neonate growth chart modal failed to open on clicking btn-chart-fenton';
+                        if (!neoImg.src.includes('female_fenton_chart.png') && !neoImg.src.includes('boy_fenton_chart.png')) {
+                            return 'Neonate growth chart image src invalid: ' + neoImg.src;
+                        }
+                        const neoModalClose = neoModal.querySelector('.neo-modal-close');
+                        if (!neoModalClose) return 'Neonate growth chart modal close button not found';
+                        neoModalClose.click();
+                        if (neoModal.classList.contains('open')) return 'Neonate growth chart modal failed to close via close button';
+                    }
+                }
+
+                // Test Fenton baseline button on Neonate_Clinical_Module.html
+                if (window.location.href.includes('Neonate_Clinical_Module.html')) {
+                    const neoFentonBtn = document.getElementById('btn-neo-chart-fenton');
+                    const fentonLabel = document.getElementById('btn-neo-chart-fenton-label');
+                    if (neoFentonBtn && fentonLabel) {
+                        neoFentonBtn.click();
+                        const tabCharts = document.getElementById('tab-charts');
+                        if (!tabCharts || window.getComputedStyle(tabCharts).display === 'none') {
+                            return 'Clicking btn-neo-chart-fenton did not switch to tab-charts';
+                        }
+                    }
+                }
+
                 // Test Neonate Clinical Module standalone encoder (on Neonate_Clinical_Module.html)
                 const neoDashlet = document.getElementById('neo-workspace-card') || (window.location.href.includes('Neonate_Clinical_Module.html') ? document.querySelector('.workspace-card') : null);
                 if (neoDashlet) {

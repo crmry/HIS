@@ -1318,8 +1318,7 @@
               </div>
               <div style="display:flex; gap:6px;">
                 <button type="button" class="btn-secondary" onclick="openGrowthChartModal('lub')"><i class="icon-picture"></i> Lubchenco Chart</button>
-                <button type="button" class="btn-secondary" onclick="openGrowthChartModal('boy')"><i class="icon-picture"></i> Boy Fenton Chart</button>
-                <button type="button" class="btn-secondary" onclick="openGrowthChartModal('girl')"><i class="icon-picture"></i> Girl Fenton Chart</button>
+                <button type="button" class="btn-secondary" id="btn-neo-chart-fenton" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> <span id="btn-neo-chart-fenton-label">Fenton Growth Chart (Baseline)</span></button>
               </div>
             </div>
 
@@ -2385,12 +2384,46 @@ document.getElementById('neo_cchd_init_foot').addEventListener('input', () => ca
 document.getElementById('neo_cchd_retest_hand').addEventListener('input', () => calcPulseOxDiff('neo_cchd_retest_hand', 'neo_cchd_retest_foot', 'neo_cchd_retest_diff'));
 document.getElementById('neo_cchd_retest_foot').addEventListener('input', () => calcPulseOxDiff('neo_cchd_retest_hand', 'neo_cchd_retest_foot', 'neo_cchd_retest_diff'));
 
+// Gender Baseline Detection & Growth Chart Helpers
+function getNeonatePatientGender() {
+  const sexSel = document.getElementById('neo_sex');
+  if (sexSel && sexSel.value) {
+    const val = sexSel.value.toLowerCase();
+    if (val.startsWith('m') || val === 'boy') return 'boy';
+    if (val.startsWith('f') || val === 'girl') return 'girl';
+  }
+  const bannerSex = document.getElementById('banner-sex') || document.getElementById('patient-sex');
+  if (bannerSex && bannerSex.textContent) {
+    const val = bannerSex.textContent.trim().toUpperCase();
+    if (val === 'M' || val === 'MALE' || val === 'BOY') return 'boy';
+    if (val === 'F' || val === 'FEMALE' || val === 'GIRL') return 'girl';
+  }
+  return 'girl';
+}
+
+function updateNeonateGrowthChartButtons() {
+  const gender = getNeonatePatientGender();
+  const lbl = document.getElementById('btn-neo-chart-fenton-label');
+  if (lbl) {
+    lbl.textContent = gender === 'boy' ? 'Fenton Growth Chart (Male Baseline)' : 'Fenton Growth Chart (Female Baseline)';
+  }
+}
+
+const neoSexEl = document.getElementById('neo_sex');
+if (neoSexEl) {
+  neoSexEl.addEventListener('change', updateNeonateGrowthChartButtons);
+}
+
 // Growth Chart Tab Switcher & Zoom
 function switchGrowthChart(which) {
+  let target = which;
+  if (!target || target === 'fenton') {
+    target = getNeonatePatientGender();
+  }
   document.querySelectorAll('#btn-chart-lub, #btn-chart-boy, #btn-chart-girl').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('#panel-chart-lub, #panel-chart-boy, #panel-chart-girl').forEach(p => p.style.display = 'none');
-  const btn = document.getElementById('btn-chart-' + which);
-  const panel = document.getElementById('panel-chart-' + which);
+  const btn = document.getElementById('btn-chart-' + target);
+  const panel = document.getElementById('panel-chart-' + target);
   if (btn) btn.classList.add('active');
   if (panel) panel.style.display = 'block';
 }
@@ -2398,7 +2431,11 @@ function switchGrowthChart(which) {
 function openGrowthChartModal(which) {
   const tabBtn = document.querySelector('.workspace-tab[data-tab="tab-charts"]');
   if (tabBtn) tabBtn.click();
-  switchGrowthChart(which);
+  let target = which;
+  if (!target || target === 'fenton') {
+    target = getNeonatePatientGender();
+  }
+  switchGrowthChart(target);
 }
 
 function openZoomModal(src) {
@@ -2880,6 +2917,7 @@ function populateNeonateData(data) {
   document.getElementById('neo_kmc_futility').value = kmc.futility || '';
 
   updateSummaryHighlights();
+  updateNeonateGrowthChartButtons();
 }
 
 function saveNeonateRecord() {
@@ -3108,6 +3146,7 @@ function initNeonateWorkspace() {
       }
     }
   }
+  updateNeonateGrowthChartButtons();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
