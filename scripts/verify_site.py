@@ -229,10 +229,8 @@ async def scan_single_target(browser_ws, file_url):
                     if (!obViewContainer) return 'OB view container not found in #hx-gyn';
                     const scoreEl = document.getElementById('ob-view-score-main');
                     if (!scoreEl || !scoreEl.textContent.trim()) return 'OB view score element empty or missing';
-                    const launchBtn = document.getElementById('btn-launch-obgyn-module');
-                    if (!launchBtn || !launchBtn.getAttribute('href').includes('OB_Gyne_Clinical_Module.html')) {
-                        return 'OB module launcher button missing or invalid in #hx-gyn';
-                    }
+                    const obBadge = document.getElementById('ob-view-status-badge');
+                    if (!obBadge) return 'OB view status badge missing in #hx-gyn';
                 }
 
                 // Test Specialized Clinical Decision Modules controls in Specialized Clinical Forms
@@ -347,10 +345,8 @@ async def scan_single_target(browser_ws, file_url):
                     if (!neoViewContainer) return 'Neonate view container not found in #hx-neo';
                     const sumType = document.getElementById('neo-view-sum-type');
                     if (!sumType || !sumType.textContent.trim()) return 'Neonate classification element empty or missing in #hx-neo';
-                    const neoLaunchBtn = document.getElementById('btn-launch-neonate-module');
-                    if (!neoLaunchBtn || !neoLaunchBtn.getAttribute('href').includes('Neonate_Clinical_Module.html')) {
-                        return 'Neonate module launcher button missing or invalid in #hx-neo';
-                    }
+                    const neoBadge = document.getElementById('neo-view-status-badge');
+                    if (!neoBadge) return 'Neonate view status badge missing in #hx-neo';
                 }
 
                 // Test Neonate Clinical Module standalone encoder (on Neonate_Clinical_Module.html)

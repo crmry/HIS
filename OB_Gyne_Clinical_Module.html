@@ -740,7 +740,7 @@
           <!-- 1. Menstrual Cycle & Bleeding Profile -->
           <div class="section-card">
             <div class="section-card-header">
-              <span class="section-card-title">1. Menstrual Cycle &amp; Bleeding Profile (DOH HFDB Standard)</span>
+              <span class="section-card-title">1. Menstrual Cycle &amp; Bleeding Profile</span>
               <button type="button" class="btn-card-action" onclick="openLmpModal()">Manage LMP / PMP History</button>
             </div>
             <div class="form-row-grid">
@@ -799,7 +799,7 @@
           <!-- 2. Menopause & Climacteric Profile -->
           <div class="section-card">
             <div class="section-card-header">
-              <span class="section-card-title">2. Menopause &amp; Climacteric Profile (DOH HFDB Morbidity Standard)</span>
+              <span class="section-card-title">2. Menopause &amp; Climacteric Profile</span>
             </div>
             <div class="form-row-grid">
               <div class="form-field">
@@ -837,7 +837,7 @@
           <!-- 3. Coitarche, Sexual History & Pelvic Infections -->
           <div class="section-card">
             <div class="section-card-header">
-              <span class="section-card-title">3. Coitarche, Sexual History &amp; Pelvic Infections (DOH Standard)</span>
+              <span class="section-card-title">3. Coitarche, Sexual History &amp; Pelvic Infections</span>
             </div>
             <div class="form-row-grid">
               <div class="form-field">
@@ -877,7 +877,7 @@
           <!-- 4. Contraceptive History & Family Planning -->
           <div class="section-card">
             <div class="section-card-header">
-              <span class="section-card-title">4. Contraceptive History &amp; Family Planning (DOH Method Taxonomy)</span>
+              <span class="section-card-title">4. Contraceptive History &amp; Family Planning</span>
             </div>
             <div class="form-row-grid">
               <div class="form-field">
@@ -909,7 +909,7 @@
           <!-- 5. Cervical Cancer Screening & HPV Status -->
           <div class="section-card">
             <div class="section-card-header">
-              <span class="section-card-title">5. Cervical Cancer Screening &amp; HPV Status (Bethesda System / DOH)</span>
+              <span class="section-card-title">5. Cervical Cancer Screening &amp; HPV Status</span>
             </div>
             <div class="form-row-grid">
               <div class="form-field">
@@ -1129,11 +1129,11 @@
 
 <!-- ════════════════ MODALS ════════════════ -->
 
-<!-- Modal 1: Add / Edit Pregnancy Record (DOH HFDB Dataset) -->
+<!-- Modal 1: Add / Edit Pregnancy Record -->
 <div class="modal-overlay" id="modal-pregnancy">
   <div class="modal-dialog" style="max-width:740px;">
     <div class="modal-header">
-      <h3 id="modal-pregnancy-title">Add Pregnancy Record (DOH HFDB Standard)</h3>
+      <h3 id="modal-pregnancy-title">Add Pregnancy Record</h3>
       <button type="button" class="btn-close-modal" onclick="closePregnancyModal()">&times;</button>
     </div>
     <form id="form-pregnancy" onsubmit="handlePregnancySubmit(event)">
@@ -1151,7 +1151,7 @@
         </div>
         <div class="form-row-grid">
           <div class="form-field">
-            <label for="preg-outcome">Pregnancy Outcome (DOH HFDB Category)</label>
+            <label for="preg-outcome">Pregnancy Outcome</label>
             <select id="preg-outcome" class="form-control" onchange="handleOutcomeChange(this.value)" required>
               <option value="Full Term Live Birth">Full Term Live Birth</option>
               <option value="Preterm Live Birth">Preterm Live Birth</option>
@@ -1196,7 +1196,7 @@
         </div>
         <div class="form-row-grid">
           <div class="form-field">
-            <label for="preg-place">Place of Delivery (DOH HFDB Facility Standard)</label>
+            <label for="preg-place">Place of Delivery</label>
             <select id="preg-place" class="form-control">
               <option value="Tertiary Hospital (CLMMRH / Government)" selected>Tertiary Hospital (CLMMRH / Government)</option>
               <option value="LGU / District Hospital">LGU / District Hospital</option>
@@ -1208,7 +1208,7 @@
             </select>
           </div>
           <div class="form-field">
-            <label for="preg-attendant">Attendant at Birth (DOH Quality Indicator)</label>
+            <label for="preg-attendant">Attendant at Birth</label>
             <select id="preg-attendant" class="form-control">
               <option value="OB-Gyne Specialist / Physician" selected>OB-Gyne Specialist / Physician</option>
               <option value="Resident Physician / Medical Officer">Resident Physician / Medical Officer</option>
@@ -1251,7 +1251,7 @@
         </div>
         <div class="form-row-grid">
           <div class="form-field">
-            <label for="preg-maternal-comp">Maternal / Intrapartum Complications (DOH HFDB Morbidity)</label>
+            <label for="preg-maternal-comp">Maternal / Intrapartum Complications</label>
             <select id="preg-maternal-comp" class="form-control">
               <option value="None / Uncomplicated" selected>None / Uncomplicated</option>
               <option value="Gestational Hypertension">Gestational Hypertension</option>
@@ -1269,7 +1269,7 @@
             </select>
           </div>
           <div class="form-field">
-            <label for="preg-fetal-outcome">Fetal / Neonatal Condition (DOH HFDB Standard)</label>
+            <label for="preg-fetal-outcome">Fetal / Neonatal Condition</label>
             <select id="preg-fetal-outcome" class="form-control">
               <option value="Living &amp; Well (APGAR 9, 10)" selected>Living &amp; Well (APGAR 9, 10)</option>
               <option value="Living &amp; Well">Living &amp; Well</option>
@@ -1296,11 +1296,11 @@
   </div>
 </div>
 
-<!-- Modal 2: LMP & PMP Management & Longitudinal History Modal (DOH Standard) -->
+<!-- Modal 2: LMP & PMP Management & Longitudinal History Modal -->
 <div class="modal-overlay" id="modal-lmp">
   <div class="modal-dialog" style="max-width:720px;">
     <div class="modal-header">
-      <h3>Last Menstrual Period (LMP) &amp; PMP Management (DOH HFDB Standard)</h3>
+      <h3>Last Menstrual Period (LMP) &amp; PMP Management</h3>
       <button type="button" class="btn-close-modal" onclick="closeLmpModal()">&times;</button>
     </div>
     <div class="modal-body">
@@ -1327,7 +1327,7 @@
       <!-- Calculations Preview -->
       <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:6px; padding:12px 14px; margin-bottom:16px;">
         <div style="font-weight:700; font-size:12px; color:var(--slate-800); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.3px;">
-          Clinical Computations (Naegele's Rule &amp; DOH HFDB Formula)
+          Clinical Computations (Naegele's Rule)
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; font-size:12px;">
           <div>Calculated EDD: <strong id="preview-calc-edd" style="color:var(--slate-900);">—</strong></div>
@@ -1338,7 +1338,7 @@
 
       <!-- Preserved Historical LMP Entries Table -->
       <h4 style="font-size:12px; font-weight:700; color:var(--slate-800); margin-bottom:8px; text-transform:uppercase;">
-        Preserved Longitudinal Menstrual History (Audit-Ready DOH Record)
+        Preserved Longitudinal Menstrual History (Audit-Ready Record)
       </h4>
       <div class="table-responsive">
         <table class="clinical-table">
@@ -1734,7 +1734,7 @@ function renderLongitudinalTimeline() {
   if (gh && gh.remarks) {
     events.push({
       category: 'gyne',
-      title: `Gynecologic Evaluation & Menstrual Profile (DOH HFDB)`,
+      title: `Gynecologic Evaluation & Menstrual Profile`,
       dateStr: '2026-09-30',
       sortDate: new Date('2026-09-30').getTime(),
       body: `Menarche: ${gh.menarcheAge} yrs • Cycle: ${gh.interval} • Contraceptive: ${gh.contraceptiveCurrent} (${gh.contraceptiveDuration}) • Cervical Screening: ${gh.lastPap} • Surgeries: ${gh.surgeries} • Notes: ${gh.remarks}`
@@ -1779,7 +1779,7 @@ function filterTimeline(category, pillEl) {
    PREGNANCY MODAL HANDLERS (DOH HFDB DATASETS)
    ───────────────────────────────────────────────────────────────────────────── */
 function openAddPregModal() {
-  document.getElementById('modal-pregnancy-title').textContent = 'Add Pregnancy Record (DOH HFDB Standard)';
+  document.getElementById('modal-pregnancy-title').textContent = 'Add Pregnancy Record';
   document.getElementById('preg-index').value = '-1';
   document.getElementById('preg-sequence').value = 'P' + (patientState.pregnancies.length + 1);
   document.getElementById('preg-year').value = new Date().getFullYear();
@@ -2120,7 +2120,7 @@ function saveGyneHistory(event) {
     remarks: document.getElementById('gyne-remarks').value.trim()
   };
   renderLongitudinalTimeline();
-  showToast('Gynecologic history saved per DOH HFDB standards.');
+  showToast('Gynecologic history saved successfully.');
 }
 
 function populateGyneForm() {
