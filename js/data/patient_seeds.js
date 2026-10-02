@@ -50,7 +50,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 55,
+        seedVersion: 56,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -270,7 +270,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               ],
               clinical_record: {
                 chief_complaint: 'Semi-annual comprehensive outpatient review and lab orders',
-                history: 'Patient is a 48-year-old female presenting for scheduled semi-annual review. Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea. Compliant with Metformin 500 mg BID and Losartan 50 mg OD. Home BP ranges 130-138/80-86 mmHg.\n\nPhysical Examination: General: Alert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis pulses palpable.',
+                history: 'Patient is a 48-year-old female presenting for scheduled semi-annual review. Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea. Compliant with Metformin 500 mg BID and Losartan 50 mg OD. Home BP ranges 130-138/80-86 mmHg.',
                 final_diagnosis: 'Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension'
               },
               prescriptions: [
@@ -540,7 +540,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 55) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 56) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});

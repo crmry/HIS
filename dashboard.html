@@ -5644,6 +5644,24 @@
       return s.trim();
     }
 
+    function cleanHpiText(text) {
+      if (!text) return '';
+      var s = String(text).trim();
+      // Strip any embedded Physical Examination block (whether after newlines or inline)
+      s = s.replace(/(?:\r?\n|\s)*(?:Physical Examination|Physical Exam|PE)\s*[:][\s\S]*$/i, '');
+      // Strip any embedded Vital Signs block
+      s = s.replace(/(?:\r?\n|\s)*(?:Vital Signs|Vitals|VS)\s*[:][\s\S]*$/i, '');
+      // Strip any embedded Review of Systems block if separated
+      s = s.replace(/(?:\r?\n|\s)*(?:Review of Systems|ROS|Pertinent Signs and Symptoms)\s*[:][\s\S]*$/i, '');
+      // Strip any embedded Diagnosis / Impression block
+      s = s.replace(/(?:\r?\n|\s)*(?:Final Diagnosis|Admitting Diagnosis|Diagnosis|Assessment|Impression|Dx)\s*[:][\s\S]*$/i, '');
+      // Strip any embedded Plan / Orders block
+      s = s.replace(/(?:\r?\n|\s)*(?:Plan|Doctor's Orders|Orders|Rx)\s*[:][\s\S]*$/i, '');
+      // Strip leading S> / S: / Subjective: / HPI: / (HPI) prefixes
+      s = s.replace(/^(?:S>|S:|\(HPI\)|\bHPI\b:?|Subjective:?)\s*/i, '');
+      return s.trim();
+    }
+
     function parseStructuredProgressNotes(source) {
       if (!source) return { subjective: '', objective: '', assessment: '', combined: '' };
 
@@ -6071,26 +6089,24 @@
       if (pContainer) {
         var hpiHtml = '';
         prevEncounters.forEach(function (enc) {
-          var medHx = (enc.clinical_record && enc.clinical_record.history) ||
-                      enc.hx_present ||
-                      enc.patient_record ||
-                      (enc.clinical_record && enc.clinical_record.chief_complaint) ||
-                      enc.chief_complaint || '';
-          var progNotes = enc.progress_notes || '';
+          var rawHpi = (enc.clinical_record && enc.clinical_record.history) ||
+                       enc.hx_present ||
+                       enc.progress_notes_subjective ||
+                       enc.progress_notes ||
+                       enc.patient_record ||
+                       (enc.clinical_record && enc.clinical_record.chief_complaint) ||
+                       enc.chief_complaint || '';
 
-          if (!medHx.trim() && !progNotes.trim()) return;
+          // Focus exclusively on History of Present Illness narrative:
+          // Strip any embedded Physical Examination, Vital Signs, ROS, or Assessment/Plan
+          var hpi = cleanHpiText(rawHpi);
+          if (!hpi) return;
 
           var rawType = ((enc.registry || enc.type) || 'OP').trim().toUpperCase();
           var typeClass = rawType === 'ER' ? 'type-er' : (rawType === 'IP' ? 'type-ip' : 'type-op');
           var srv = enc.service || (rawType === 'IP' ? 'Inpatient Medicine' : (rawType === 'ER' ? 'Emergency Medicine' : 'General Medicine'));
           var dDisplay = formatHdrDate(enc.date);
           var timeStr = enc.time ? ' &bull; ' + esc(enc.time) : '';
-
-          var medHxPara = medHx ? '<div style="margin-bottom:6px;">' + esc(cleanDiagnosis(medHx)) + '</div>' : '';
-          var progNotesPara = '';
-          if (progNotes && progNotes.trim() !== medHx.trim()) {
-            progNotesPara = '<div style="border-top:1px dashed #cbd5e1; padding-top:6px; margin-top:6px; white-space:pre-line;">' + esc(cleanDiagnosis(progNotes)) + '</div>';
-          }
 
           hpiHtml +=
             '<div class="encounter-hx-card" data-registry="' + esc(rawType) + '" style="border:1px solid #e2e8f0; border-left:3px solid ' + (rawType === 'ER' ? '#c62828' : (rawType === 'IP' ? '#1565c0' : '#2e7d32')) + '; border-radius:4px; padding:8px 12px; margin-top:8px; background:#f8fafc;">' +
@@ -6106,8 +6122,7 @@
             '    </div>' +
             '  </div>' +
             '  <div class="encounter-hx-body" style="font-size:12px; color:#1e293b; line-height:1.55; border-top:1px solid #f1f5f9; padding-top:6px; margin-top:4px;">' +
-                 medHxPara +
-                 progNotesPara +
+            '    <div style="line-height:1.55;">' + esc(cleanDiagnosis(hpi)) + '</div>' +
             '  </div>' +
             '</div>';
         });
@@ -6781,7 +6796,7 @@
       var hxEl = document.getElementById('hx_present');
       if (hxEl) {
         var hx = (enc.clinical_record && enc.clinical_record.history) || enc.hx_present || parsedNotes.subjective || parsedNotes.combined || '';
-        hxEl.value = hx;
+        hxEl.value = cleanHpiText(hx);
       }
 
       var progRow = document.getElementById('row-progress-notes');
