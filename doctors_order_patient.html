@@ -852,118 +852,110 @@
         function cleanProgressNotesText(text) {
             if (!text) return "";
             return String(text)
-                .replace(/^(S>|O>|A>|P>|S:|O:|A:|P:)\s*/gmi, "")
-                .replace(/^(Subjective|Objective|Assessment|Plan):\s*/gmi, "")
+                .split("\n")
+                .filter(line => {
+                    const l = line.trim();
+                    if (/^(Chief complaint|Admitting diagnosis|Final diagnosis|Diagnosis):\s*/i.test(l)) return false;
+                    return true;
+                })
+                .map(line => {
+                    return line
+                        .replace(/^(S>|O>|A>|P>|S:|O:|A:|P:)\s*/gmi, "")
+                        .replace(/^(Subjective|Objective|Assessment|Plan):\s*/gmi, "")
+                        .replace(/^(History of Present Illness|HPI|Pertinent Signs and Symptoms|Pertinent Signs|Review of Systems|ROS|Physical Examination|PE):\s*/gmi, "")
+                        .trim();
+                })
+                .join("\n")
                 .trim();
         }
 
         function buildProgressNotes(data) {
-            const s = String(data?.progress_notes_subjective || "").trim();
-            const o = String(data?.progress_notes_objective || "").trim();
-            const a = String(data?.progress_notes_assessment || "").trim();
-            if (s || o || a) {
-                const parts = [];
-                if (s) parts.push(`Subjective: ${s}`);
-                if (o) parts.push(`Objective: ${o}`);
-                if (a) parts.push(`Assessment: ${a}`);
-                return parts.join("\n");
+            if (!data) return "";
+            const categories = [];
+
+            // Category 1: History of Present Illness (HPI)
+            const hpi = String(data.hx_present || data.clinical_record?.history || data.clinical_record?.hx_present || "").trim();
+            if (hpi) {
+                categories.push(cleanProgressNotesText(hpi));
             }
 
-            if (String(data?.progress_notes || "").trim()) {
-                return String(data.progress_notes).trim();
+            // Category 2: Pertinent Signs and Symptoms (Review of Systems)
+            const signs = Array.isArray(data.pertinent_signs) ? data.pertinent_signs.filter(Boolean) : [];
+            const signsInfo = String(data.pertinent_signs_information || data.ros_others || "").trim();
+            const rosParts = [];
+            if (signs.length) rosParts.push(signs.join(", "));
+            if (signsInfo && !signs.includes(signsInfo)) rosParts.push(signsInfo);
+            const ros = rosParts.join(" — ");
+            if (ros) {
+                categories.push(cleanProgressNotesText(ros));
             }
 
-            const lines = [];
+            // Category 3: Physical Examination
+            const peList = [
+                ["General survey", data.pe_general],
+                ["HEENT", data.pe_heent],
+                ["Chest/Lungs", data.pe_chest_lungs],
+                ["Cardiovascular", data.pe_cardiovascular],
+                ["Abdomen", data.pe_abdomen],
+                ["Extremities", data.pe_extremities],
+                ["Neurologic", data.pe_neurologic],
+                ["Skin", data.pe_skin],
+                ["Other PE", data.pe_other]
+            ].filter(([, val]) => String(val || "").trim());
 
-            if (data?.chief_complaint) {
-                lines.push(`Chief complaint: ${cleanProgressNotesText(data.chief_complaint)}`);
-            }
-            if (data?.hx_present) {
-                lines.push(`Present illness: ${cleanProgressNotesText(data.hx_present)}`);
-            }
-            if (data?.hx_past) {
-                lines.push(`Past medical history: ${cleanProgressNotesText(data.hx_past)}`);
-            }
-            if (Array.isArray(data?.pertinent_signs) && data.pertinent_signs.length) {
-                lines.push(`Pertinent signs: ${data.pertinent_signs.join(", ")}`);
-            }
-            if (data?.pertinent_signs_information) {
-                lines.push(`Pertinent information: ${cleanProgressNotesText(data.pertinent_signs_information)}`);
-            }
-
-            const vitals = [];
-            if (data?.vs_bp) vitals.push(`BP ${data.vs_bp} mmHg`);
-            if (data?.vs_hr) vitals.push(`HR ${data.vs_hr} bpm`);
-            if (data?.vs_rr) vitals.push(`RR ${data.vs_rr}/min`);
-            if (data?.vs_temp) vitals.push(`Temp ${data.vs_temp} °C`);
-            if (data?.vs_spo2) vitals.push(`SpO₂ ${data.vs_spo2}%`);
-            if (data?.vs_weight) vitals.push(`Weight ${data.vs_weight} kg`);
-            if (data?.vs_height) vitals.push(`Height ${data.vs_height} cm`);
-
-            if (vitals.length) lines.push(`Vital signs: ${vitals.join(", ")}`);
-
-            const physicalExam = [
-                ["General survey", data?.pe_general], ["HEENT", data?.pe_heent],
-                ["Chest/Lungs", data?.pe_chest_lungs], ["Cardiovascular", data?.pe_cardiovascular],
-                ["Abdomen", data?.pe_abdomen], ["Extremities", data?.pe_extremities],
-                ["Neurologic", data?.pe_neurologic], ["Skin", data?.pe_skin], ["Other PE", data?.pe_other]
-            ].filter(([, value]) => String(value || "").trim());
-            physicalExam.forEach(([label, value]) => lines.push(`${label}: ${cleanProgressNotesText(value)}`));
-
-            const examResults = [
-                ["Laboratory", data?.exam_laboratory],
-                ["Diagnostics", data?.exam_diagnostics],
-                ["Heart Station", data?.exam_heart_station],
-                ["EEG", data?.exam_eeg],
-                ["Pulmonology", data?.exam_pulmonology]
-            ].filter(([, value]) => String(value || "").trim());
-            examResults.forEach(([label, value]) => lines.push(`${label}: ${cleanProgressNotesText(value)}`));
-
-            if (data?.admitting_diagnosis) {
-                lines.push(`Admitting diagnosis: ${cleanProgressNotesText(data.admitting_diagnosis)}`);
-            }
-            if (data?.final_diagnosis) {
-                lines.push(`Diagnosis: ${cleanProgressNotesText(data.final_diagnosis)}`);
-            } else if (data?.initial_diagnosis) {
-                lines.push(`Diagnosis: ${cleanProgressNotesText(data.initial_diagnosis)}`);
-            } else if (data?.diagnosis) {
-                lines.push(`Diagnosis: ${cleanProgressNotesText(data.diagnosis)}`);
+            if (peList.length) {
+                categories.push(peList.map(([label, val]) => `${label}: ${cleanProgressNotesText(val)}`).join("\n"));
+            } else if (data.physical_exam) {
+                categories.push(cleanProgressNotesText(data.physical_exam));
             }
 
-            return lines.join("\n");
+            // Other pertinent information (Chief complaint, Past medical history, Vitals, Labs, Diagnoses) are strictly disregarded.
+            return categories.join("\n\n");
         }
 
         function buildEncounterProgressNote(enc, primaryData) {
-            const s = String(enc?.progress_notes_subjective || "").trim();
-            const o = String(enc?.progress_notes_objective || "").trim();
-            const a = String(enc?.progress_notes_assessment || "").trim();
-            if (s || o || a) {
-                const parts = [];
-                if (s) parts.push(`Subjective: ${s}`);
-                if (o) parts.push(`Objective: ${o}`);
-                if (a) parts.push(`Assessment: ${a}`);
-                return parts.join("\n");
+            if (!enc) return "";
+
+            // For current/active encounter, merge enc with primaryData so active chart inputs (HPI, ROS, PE) are reflected
+            const merged = (enc.is_current || enc.isCurrent)
+                ? Object.assign({}, primaryData || {}, enc)
+                : enc;
+
+            // Check structured fields on encounter / merged record first
+            const encNotes = buildProgressNotes(merged);
+            if (encNotes) return encNotes;
+
+            if (enc.progress_notes) {
+                return cleanProgressNotesText(enc.progress_notes);
             }
-            if (enc?.progress_notes) {
-                return String(enc.progress_notes).trim();
+
+            const rec = enc.clinical_record || {};
+            const categories = [];
+
+            // Category 1: HPI
+            const hpi = String(enc.hx_present || rec.history || rec.hx_present || "").trim();
+            if (hpi) {
+                categories.push(cleanProgressNotesText(hpi));
             }
-            const rec = enc?.clinical_record || {};
-            const lines = [];
-            if (rec.chief_complaint) {
-                lines.push(cleanProgressNotesText(rec.chief_complaint));
+
+            // Category 2: ROS
+            const signs = Array.isArray(enc.pertinent_signs) ? enc.pertinent_signs.filter(Boolean) : [];
+            const signsInfo = String(enc.pertinent_signs_information || enc.ros_others || "").trim();
+            const rosParts = [];
+            if (signs.length) rosParts.push(signs.join(", "));
+            if (signsInfo && !signs.includes(signsInfo)) rosParts.push(signsInfo);
+            const ros = rosParts.join(" — ");
+            if (ros) {
+                categories.push(cleanProgressNotesText(ros));
             }
-            if (rec.history) {
-                const histSummary = String(rec.history).split('\n')[0].trim();
-                if (histSummary && histSummary !== rec.chief_complaint) {
-                    lines.push(cleanProgressNotesText(histSummary));
-                }
+
+            // Category 3: Physical Examination
+            if (enc.physical_exam) {
+                categories.push(cleanProgressNotesText(enc.physical_exam));
             }
-            if (enc?.diagnosis) {
-                lines.push(`Diagnosis: ${cleanProgressNotesText(enc.diagnosis)}`);
-            } else if (rec.final_diagnosis) {
-                lines.push(`Diagnosis: ${cleanProgressNotesText(rec.final_diagnosis)}`);
-            }
-            return lines.length ? lines.join("\n") : (enc?.patient_record || "");
+
+            // Chief complaint, Vitals, Labs, and Diagnoses are strictly disregarded.
+            return categories.join("\n\n");
         }
 
         function firstOrderDateTime(data, record) {
@@ -1404,10 +1396,22 @@
 
         function extractProgressNoteLines(rawText) {
             if (!rawText) return [];
-            return String(rawText)
-                .split("\n")
-                .map(line => String(line || "").trim())
+            // Split into distinct category blocks by double newlines or multiple newlines
+            const blocks = String(rawText)
+                .split(/\n{2,}/)
+                .map(b => String(b || "").trim())
                 .filter(Boolean);
+
+            const lines = [];
+            blocks.forEach((block, idx) => {
+                if (idx > 0) {
+                    lines.push(""); // space / gap row per category
+                }
+                const subLines = block.split("\n").map(l => l.trim()).filter(Boolean);
+                subLines.forEach(l => lines.push(l));
+            });
+
+            return lines;
         }
 
         window.getEncounterProgressNotes = function (enc) {

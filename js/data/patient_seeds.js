@@ -50,7 +50,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 52,
+        seedVersion: 53,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -69,23 +69,23 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           case_no: 'OP-2026-0926-0042',
           encounter_no: 'OP-2026-0926-0042',
           case_type: 'OP Patient',
-          chief_complaint: '',
-          hx_present: '',
+          chief_complaint: 'Routine follow-up for chronic disease management',
+          hx_present: 'Patient presents for scheduled outpatient surveillance of Type 2 Diabetes Mellitus and Essential Hypertension. Compliant with prescribed oral maintenance therapy. Reports stable energy levels without polyuria, polydipsia, blurred vision, or interval chest discomfort.',
           hx_surgical: 'No previous surgical procedures.',
           hx_past: 'Type 2 Diabetes Mellitus diagnosed 2020; Essential Hypertension Stage 1 diagnosed 2020. No previous hospitalizations.',
           hx_family: 'Mother with Type 2 Diabetes Mellitus; Father with Hypertension.',
           hx_social: 'Non-smoker, non-alcoholic beverage drinker. Works as an office clerk.',
           hx_allergy: 'No known food or drug allergies (NKFDA).',
-          pertinent_signs: [],
-          pertinent_signs_information: '',
-          pe_general: '',
-          pe_heent: '',
-          pe_chest_lungs: '',
-          pe_cardiovascular: '',
-          pe_abdomen: '',
-          pe_extremities: '',
-          pe_neurologic: '',
-          pe_skin: '',
+          pertinent_signs: ['Fatigue'],
+          pertinent_signs_information: 'Occasional mild afternoon fatigue; denies dizziness, palpitations, or pedal swelling.',
+          pe_general: 'Conscious, coherent, ambulatory, in no acute cardiopulmonary distress.',
+          pe_heent: 'Anicteric sclerae, pink palpebral conjunctivae, moist oral mucosa, no tonsillopharyngeal congestion.',
+          pe_chest_lungs: 'Symmetric chest expansion, clear breath sounds bilaterally, no crackles or wheezes.',
+          pe_cardiovascular: 'Adynamic precordium, normal rate, regular rhythm, distinct S1/S2, no murmurs or gallops.',
+          pe_abdomen: 'Flat, soft, non-tender, no organomegaly, normoactive bowel sounds.',
+          pe_extremities: 'Warm extremities, brisk capillary refill (< 2 seconds), pulses full and equal, no pretibial edema.',
+          pe_neurologic: 'Grossly intact neurological examination, cranial nerves II-XII intact, no motor or sensory deficits.',
+          pe_skin: 'Warm, smooth, normal turgor, no rashes, petechiae, or non-healing ulcers.',
           pe_other: '',
           other_forms: [],
           other_forms_notes: '',
@@ -237,8 +237,8 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               progress_notes: '',
               orders: [],
               clinical_record: {
-                chief_complaint: '',
-                history: '',
+                chief_complaint: 'Routine follow-up for chronic disease management',
+                history: 'Patient presents for scheduled outpatient surveillance of Type 2 Diabetes Mellitus and Essential Hypertension. Compliant with prescribed oral maintenance therapy. Reports stable energy levels without polyuria, polydipsia, blurred vision, or interval chest discomfort.',
                 final_diagnosis: ''
               },
               examinations: []
@@ -285,10 +285,10 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 heart: [],
                 eeg: []
               },
-              progress_notes_subjective: 'Outpatient Follow-up (General Medicine). Semi-annual comprehensive review.',
-              progress_notes_objective: 'Blood pressure mildly elevated at 134/84 mmHg. Fasting blood sugar 132 mg/dL, HbA1c 7.2%.\nWeight: 70 kg, BMI: 24.8. Physical examination unremarkable.',
-              progress_notes_assessment: 'Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension.\nPlan: Add Empagliflozin 10 mg OD for cardioprotective glycemic control. Continue Metformin and Losartan. Dietary counseling.',
-              progress_notes: 'Outpatient Follow-up (General Medicine). Semi-annual comprehensive review.\nBlood pressure mildly elevated at 134/84 mmHg. Fasting blood sugar 132 mg/dL, HbA1c 7.2%.\nWeight: 70 kg, BMI: 24.8. Physical examination unremarkable.\nDiagnosis: Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension.\nPlan: Add Empagliflozin 10 mg OD for cardioprotective glycemic control. Continue Metformin and Losartan. Dietary counseling.',
+              progress_notes_subjective: 'Patient is a 48-year-old female presenting for scheduled semi-annual review. Compliant with Metformin 500 mg BID and Losartan 50 mg OD.',
+              progress_notes_objective: 'Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea.\n\nAlert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis pulses palpable.',
+              progress_notes_assessment: '',
+              progress_notes: 'Patient is a 48-year-old female presenting for scheduled semi-annual review. Compliant with Metformin 500 mg BID and Losartan 50 mg OD.\n\nReports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea.\n\nAlert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis pulses palpable.',
               orders: [
                 { text: 'Start Empagliflozin 10 mg tablet once daily in the morning.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:15 AM nurse' },
                 { text: 'Continue Metformin 500 mg tablet twice daily with meals.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:18 AM nurse' },
@@ -333,10 +333,10 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 heart: [],
                 eeg: []
               },
-              progress_notes_subjective: 'Initial Outpatient Consultation (General Medicine). Patient transferred maintenance care to CLMMRH OPD.\nReviewed previous clinic records.',
-              progress_notes_objective: 'Vital signs: BP 128/80 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C.',
-              progress_notes_assessment: 'Type 2 Diabetes Mellitus; Essential Hypertension Stage 1.\nPlan: Continue Metformin 500 mg BID and Losartan 50 mg OD. Baseline labs ordered.',
-              progress_notes: 'Initial Outpatient Consultation (General Medicine). Patient transferred maintenance care to CLMMRH OPD.\nReviewed previous clinic records. Vital signs: BP 128/80 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C.\nDiagnosis: Type 2 Diabetes Mellitus; Essential Hypertension Stage 1.\nPlan: Continue Metformin 500 mg BID and Losartan 50 mg OD. Baseline labs ordered.',
+              progress_notes_subjective: 'Known diabetic and hypertensive for 6 years, transferring routine management to CLMMRH Outpatient Service. Compliant with oral maintenance therapy.',
+              progress_notes_objective: 'Denies acute complaints, polyuria, polydipsia, blurring of vision, chest discomfort, or dizziness.\n\nConscious, coherent, ambulatory, non-toxic. HEENT: Anicteric sclerae, pink conjunctivae. Chest/Lungs: Clear breath sounds. Heart: Regular rate and rhythm. Extremities: No pedal edema.',
+              progress_notes_assessment: '',
+              progress_notes: 'Known diabetic and hypertensive for 6 years, transferring routine management to CLMMRH Outpatient Service. Compliant with oral maintenance therapy.\n\nDenies acute complaints, polyuria, polydipsia, blurring of vision, chest discomfort, or dizziness.\n\nConscious, coherent, ambulatory, non-toxic. HEENT: Anicteric sclerae, pink conjunctivae. Chest/Lungs: Clear breath sounds. Heart: Regular rate and rhythm. Extremities: No pedal edema.',
               orders: [
                 { text: 'Register in CLMMRH Chronic Disease Management OPD Program.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['C'], timeSignature: 'C - 9:00 AM nurse' },
                 { text: 'CBC, FBS, HbA1c, BUN, Creatinine, Lipid Profile, Urinalysis.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['R'], timeSignature: 'R - 9:05 AM physician' },
@@ -379,10 +379,10 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 history: 'Patient is a 47-year-old female with diagnosed mild primary osteoarthritis of the right knee returning for scheduled 3-month orthopedic follow-up. Demonstrates good symptom improvement on physical therapy and home quadriceps rehabilitation.',
                 final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, clinically stable'
               },
-              progress_notes_subjective: 'Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises. No morning joint stiffness > 30 minutes, no joint locking or giving way.',
-              progress_notes_objective: 'Gait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.',
-              progress_notes_assessment: 'Unilateral Primary Osteoarthritis, Right Knee (M17.11), clinically improved with low disease activity.\nPlan: Shift Celecoxib to strictly PRN for pain flare-ups. Continue low-impact physical exercise (swimming, cycling, walking on flat ground). Avoid deep squats and kneeling. Return for annual orthopedic surveillance or if joint swelling occurs.',
-              progress_notes: 'Outpatient Follow-up (Orthopedics). Right knee joint review.\nSubjective: Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises. No morning joint stiffness > 30 minutes, no joint locking or giving way.\nObjective: Gait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.\nAssessment: Unilateral Primary Osteoarthritis, Right Knee (M17.11), clinically improved with low disease activity.\nPlan: Shift Celecoxib to strictly PRN for pain flare-ups. Continue low-impact physical exercise (swimming, cycling, walking on flat ground). Avoid deep squats and kneeling. Return for annual orthopedic surveillance or if joint swelling occurs.',
+              progress_notes_subjective: 'Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises.',
+              progress_notes_objective: 'No morning joint stiffness > 30 minutes, no joint locking, giving way, swelling, or redness.\n\nGait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.',
+              progress_notes_assessment: '',
+              progress_notes: 'Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises.\n\nNo morning joint stiffness > 30 minutes, no joint locking, giving way, swelling, or redness.\n\nGait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.',
               orders: [
                 { text: 'Shift Celecoxib 200 mg capsule to strictly PRN for right knee pain flare-ups.', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:35 AM nurse' },
                 { text: 'Continue home quadriceps and hamstring isometric strengthening exercise program.', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:40 AM nurse' },
@@ -425,10 +425,10 @@ if (typeof window !== 'undefined' && window.addEventListener) {
               },
               clinical_record: {
                 chief_complaint: 'Right knee joint aching pain on walking and climbing stairs x 2 months',
-                history: 'Patient is a 47-year-old female presenting with a 2-month history of right knee pain without prior trauma. Denies knee locking, giving way, or redness. Digital knee radiograph confirms mild primary osteoarthritis.',
+                history: 'Patient is a 47-year-old female presenting with a 2-month history of progressive right knee pain on walking and climbing stairs without prior trauma.',
                 final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, Grade II'
               },
-              progress_notes: '',
+              progress_notes: 'Patient is a 47-year-old female presenting with a 2-month history of progressive right knee pain on walking and climbing stairs without prior trauma.\n\nDenies knee locking, giving way, joint instability, morning stiffness, or joint erythema.\n\nRight knee: Mild medial joint line tenderness and crepitus on passive flexion. No joint effusion, local warmth, or erythema. Active range of motion 0° to 125°. Ligamentous testing negative.',
               orders: [
                 { text: 'Digital Knee Radiograph (AP and Lateral Weight-Bearing Views) completed: Mild medial joint space narrowing.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:45 PM nurse' },
                 { text: 'Celecoxib 200 mg capsule once daily after meals for 14 days.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:50 PM nurse' },
@@ -528,7 +528,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 52) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 53) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
