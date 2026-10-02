@@ -50,7 +50,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 53,
+        seedVersion: 54,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -286,9 +286,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 eeg: []
               },
               progress_notes_subjective: 'Patient is a 48-year-old female presenting for scheduled semi-annual review. Compliant with Metformin 500 mg BID and Losartan 50 mg OD.',
-              progress_notes_objective: 'Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea.\n\nAlert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis pulses palpable.',
+              progress_notes_objective: '',
               progress_notes_assessment: '',
-              progress_notes: 'Patient is a 48-year-old female presenting for scheduled semi-annual review. Compliant with Metformin 500 mg BID and Losartan 50 mg OD.\n\nReports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea.\n\nAlert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis pulses palpable.',
+              progress_notes: 'Patient is a 48-year-old female presenting for scheduled semi-annual review. Compliant with Metformin 500 mg BID and Losartan 50 mg OD.',
               orders: [
                 { text: 'Start Empagliflozin 10 mg tablet once daily in the morning.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:15 AM nurse' },
                 { text: 'Continue Metformin 500 mg tablet twice daily with meals.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:18 AM nurse' },
@@ -334,9 +334,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 eeg: []
               },
               progress_notes_subjective: 'Known diabetic and hypertensive for 6 years, transferring routine management to CLMMRH Outpatient Service. Compliant with oral maintenance therapy.',
-              progress_notes_objective: 'Denies acute complaints, polyuria, polydipsia, blurring of vision, chest discomfort, or dizziness.\n\nConscious, coherent, ambulatory, non-toxic. HEENT: Anicteric sclerae, pink conjunctivae. Chest/Lungs: Clear breath sounds. Heart: Regular rate and rhythm. Extremities: No pedal edema.',
+              progress_notes_objective: '',
               progress_notes_assessment: '',
-              progress_notes: 'Known diabetic and hypertensive for 6 years, transferring routine management to CLMMRH Outpatient Service. Compliant with oral maintenance therapy.\n\nDenies acute complaints, polyuria, polydipsia, blurring of vision, chest discomfort, or dizziness.\n\nConscious, coherent, ambulatory, non-toxic. HEENT: Anicteric sclerae, pink conjunctivae. Chest/Lungs: Clear breath sounds. Heart: Regular rate and rhythm. Extremities: No pedal edema.',
+              progress_notes: 'Known diabetic and hypertensive for 6 years, transferring routine management to CLMMRH Outpatient Service. Compliant with oral maintenance therapy.',
               orders: [
                 { text: 'Register in CLMMRH Chronic Disease Management OPD Program.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['C'], timeSignature: 'C - 9:00 AM nurse' },
                 { text: 'CBC, FBS, HbA1c, BUN, Creatinine, Lipid Profile, Urinalysis.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['R'], timeSignature: 'R - 9:05 AM physician' },
@@ -380,9 +380,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, clinically stable'
               },
               progress_notes_subjective: 'Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises.',
-              progress_notes_objective: 'No morning joint stiffness > 30 minutes, no joint locking, giving way, swelling, or redness.\n\nGait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.',
+              progress_notes_objective: '',
               progress_notes_assessment: '',
-              progress_notes: 'Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises.\n\nNo morning joint stiffness > 30 minutes, no joint locking, giving way, swelling, or redness.\n\nGait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.',
+              progress_notes: 'Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises.',
               orders: [
                 { text: 'Shift Celecoxib 200 mg capsule to strictly PRN for right knee pain flare-ups.', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:35 AM nurse' },
                 { text: 'Continue home quadriceps and hamstring isometric strengthening exercise program.', dateTime: '2025-12-05T11:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:40 AM nurse' },
@@ -428,7 +428,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 history: 'Patient is a 47-year-old female presenting with a 2-month history of progressive right knee pain on walking and climbing stairs without prior trauma.',
                 final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, Grade II'
               },
-              progress_notes: 'Patient is a 47-year-old female presenting with a 2-month history of progressive right knee pain on walking and climbing stairs without prior trauma.\n\nDenies knee locking, giving way, joint instability, morning stiffness, or joint erythema.\n\nRight knee: Mild medial joint line tenderness and crepitus on passive flexion. No joint effusion, local warmth, or erythema. Active range of motion 0° to 125°. Ligamentous testing negative.',
+              progress_notes: 'Patient is a 47-year-old female presenting with a 2-month history of progressive right knee pain on walking and climbing stairs without prior trauma.',
               orders: [
                 { text: 'Digital Knee Radiograph (AP and Lateral Weight-Bearing Views) completed: Mild medial joint space narrowing.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:45 PM nurse' },
                 { text: 'Celecoxib 200 mg capsule once daily after meals for 14 days.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:50 PM nurse' },
@@ -528,7 +528,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 53) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 54) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
