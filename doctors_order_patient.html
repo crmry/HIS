@@ -1591,17 +1591,10 @@
             const isOP = Boolean(data?.case_type === "OP Patient" || data?.case_type === "Outpatient" || encounters.some(e => (e.is_current || e.isCurrent) && e.registry === "OP"));
             const blocks = [];
             let primaryAssigned = false;
-            let opdCounter = 0;
 
             encounters.forEach((enc) => {
                 const encDate = String(enc?.date || "").trim();
                 const encTime = parseEncounterDateTime(enc);
-
-                // Track OPD counter regardless of whether we stop at targetTime
-                const isOpEnc = enc.registry === "OP" || (isOP && enc.registry !== "ER" && enc.registry !== "IP");
-                if (isOpEnc) {
-                    opdCounter++;
-                }
 
                 // Cumulative timeline: Only show encounters that occurred on or before the inspected encounter date/time.
                 // Future encounters (relative to the inspected encounter) must not appear.
@@ -1721,14 +1714,6 @@
                     dt = formatDateTime(firstOrderDateTime(data, record));
                 }
 
-                let encounterOrdinal = "";
-                if (isOpEnc && opdCounter > 0) {
-                    const ordNumber = opdCounter === 1 ? "1st" : opdCounter === 2 ? "2nd" : opdCounter === 3 ? "3rd" : `${opdCounter}th`;
-                    encounterOrdinal = `(${ordNumber} OPD Encounter)`;
-                }
-
-                const displayDt = encounterOrdinal ? `${encounterOrdinal}\n${dt}` : dt;
-
                 // Build Progress Notes lines for this encounter (Row 1: HPI, Row 2: Vitals/ROS/PE, Row 3: Initial Diagnosis)
                 const noteLines = buildEncounterProgressNoteLines(enc, data);
 
@@ -1743,7 +1728,7 @@
                     blocks.push({
                         date: enc.date || "",
                         time: enc.time || "",
-                        dateTime: displayDt,
+                        dateTime: dt,
                         rawDt: dt,
                         isCurrent: Boolean(enc?.is_current || enc?.isCurrent),
                         noteLines,
