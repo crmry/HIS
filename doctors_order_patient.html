@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHYSICIAN'S ORDERS / PROGRESS NOTES NURSES' COMPLIANCE SHEET</title>
+    <title>DOCTOR'S ORDER / PROGRESS NOTES NURSES' COMPLIANCE SHEET</title>
     <style>
         :root {
             --ink: #111;
@@ -219,6 +219,7 @@
             font-weight: 600;
             color: #111;
             line-height: 1.35;
+            white-space: pre-wrap;
         }
 
         table.orders tbody td[rowspan] {
@@ -324,6 +325,15 @@
             text-align: center;
         }
 
+        .enc-sig-tag {
+            font-size: 7.5pt;
+            font-weight: 700;
+            color: #1e3a8a;
+            letter-spacing: 1px;
+            margin-bottom: -2px;
+            text-transform: uppercase;
+        }
+
         .enc-sig-cursive {
             font-family: 'Brush Script MT', 'Segoe Script', 'Caveat', 'Dancing Script', cursive;
             font-size: 15pt;
@@ -351,9 +361,29 @@
         }
 
         .enc-sig-lic {
-            font-size: 8.5pt;
+            font-size: 8pt;
             color: #444;
             font-family: "Times New Roman", serif;
+        }
+
+        .enc-sig-supervision {
+            font-size: 6.8pt;
+            color: #64748b;
+            font-style: italic;
+            line-height: 1.25;
+            margin-top: 3px;
+            max-width: 270px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .enc-sig-process-note {
+            font-size: 7.5pt;
+            color: #64748b;
+            font-style: italic;
+            line-height: 1.3;
+            padding: 6px 4px;
+            text-align: left;
         }
 
         .toolbar {
@@ -871,28 +901,188 @@
 
         function buildProgressNotes(data) {
             if (!data) return "";
-            // Only HPI (History of Present Illness) is reflected in Progress Notes
             const hpi = String(data.hx_present || data.clinical_record?.history || data.clinical_record?.hx_present || "").trim();
             const firstPara = hpi.split(/\n{2,}/)[0].trim();
             return cleanProgressNotesText(firstPara);
         }
 
+        function buildEncounterProgressNoteLines(enc, primaryData) {
+            if (!enc && !primaryData) return ["", "", ""];
+
+            // Row 1: History of Present Illness (HPI)
+            const hpiRaw = String(
+                enc?.hx_present ||
+                enc?.clinical_record?.history ||
+                enc?.clinical_record?.hx_present ||
+                enc?.progress_notes_subjective ||
+                enc?.progress_notes ||
+                primaryData?.hx_present ||
+                primaryData?.clinical_record?.history ||
+                ""
+            ).trim();
+            const hpi = cleanProgressNotesText(hpiRaw.split(/\n{2,}/)[0]);
+
+            // Row 2: (Vital sign, Sign & Symptoms, PE)
+            const parts = [];
+            const vitalsList = Array.isArray(enc?.vital_signs) && enc.vital_signs.length ? enc.vital_signs :
+                              (Array.isArray(primaryData?.vital_signs) && (enc?.is_current || enc?.isCurrent) ? primaryData.vital_signs : []);
+            const vs = vitalsList[0];
+            if (vs) {
+                const vsItems = [];
+                if (vs.bp) vsItems.push(`BP ${vs.bp}`);
+                if (vs.hr) vsItems.push(`HR ${vs.hr}`);
+                if (vs.rr) vsItems.push(`RR ${vs.rr}`);
+                if (vs.temp) vsItems.push(`Temp ${vs.temp}°C`);
+                if (vs.wt || vs.weight) vsItems.push(`Wt ${vs.wt || vs.weight} kg`);
+                if (vs.spo2 || vs.o2) vsItems.push(`SpO2 ${vs.spo2 || vs.o2}%`);
+                if (vsItems.length) parts.push(`Vitals: ${vsItems.join(", ")}`);
+            }
+
+            let rosText = "";
+            if (Array.isArray(enc?.pertinent_signs) && enc.pertinent_signs.length) {
+                rosText = enc.pertinent_signs.filter(Boolean).join(", ");
+            }
+            const rosInfo = String(enc?.pertinent_signs_information || enc?.ros_others || "").trim();
+            if (rosInfo) {
+                rosText = rosText ? `${rosText} — ${rosInfo}` : rosInfo;
+            }
+            if (!rosText && (enc?.is_current || enc?.isCurrent)) {
+                if (Array.isArray(primaryData?.pertinent_signs) && primaryData.pertinent_signs.length) {
+                    rosText = primaryData.pertinent_signs.filter(Boolean).join(", ");
+                }
+                const pRosInfo = String(primaryData?.pertinent_signs_information || primaryData?.ros_others || "").trim();
+                if (pRosInfo) {
+                    rosText = rosText ? `${rosText} — ${pRosInfo}` : pRosInfo;
+                }
+            }
+            if (rosText) {
+                parts.push(`ROS: ${cleanProgressNotesText(rosText)}`);
+            }
+
+            let peText = String(enc?.physical_exam || "").trim();
+            if (!peText && (enc?.is_current || enc?.isCurrent)) {
+                const peList = [
+                    ["General", primaryData?.pe_general],
+                    ["HEENT", primaryData?.pe_heent],
+                    ["Chest/Lungs", primaryData?.pe_chest_lungs],
+                    ["Cardio", primaryData?.pe_cardiovascular],
+                    ["Abdomen", primaryData?.pe_abdomen],
+                    ["Extremities", primaryData?.pe_extremities],
+                    ["Neuro", primaryData?.pe_neurologic]
+                ].filter(([, val]) => String(val || "").trim());
+                if (peList.length) {
+                    peText = peList.map(([lbl, val]) => `${lbl}: ${cleanProgressNotesText(val)}`).join("; ");
+                }
+            }
+            if (peText) {
+                parts.push(`PE: ${cleanProgressNotesText(peText)}`);
+            }
+
+            const row2 = parts.join("\n");
+
+            // Row 3: (Initial Diagnosis)
+            const diag = String(
+                enc?.diagnosis ||
+                enc?.clinical_record?.final_diagnosis ||
+                enc?.clinical_record?.admitting_diagnosis ||
+                primaryData?.admitting_diagnosis ||
+                primaryData?.final_diagnosis ||
+                ""
+            ).trim();
+            const row3 = diag ? `Initial Diagnosis: ${cleanProgressNotesText(diag)}` : "";
+
+            return [hpi, row2, row3];
+        }
+
         function buildEncounterProgressNote(enc, primaryData) {
-            if (!enc) return "";
-            const rec = enc.clinical_record || {};
-            // Only HPI (History of Present Illness) is reflected in Progress Notes
-            const hpi = String(enc.hx_present || rec.history || rec.hx_present || enc.progress_notes || "").trim();
-            if (hpi) {
-                const firstPara = hpi.split(/\n{2,}/)[0].trim();
-                return cleanProgressNotesText(firstPara);
-            }
+            const lines = buildEncounterProgressNoteLines(enc, primaryData);
+            return lines.filter(Boolean).join("\n\n");
+        }
 
-            // If active encounter, fall back to active patient record data
-            if (enc.is_current || enc.isCurrent) {
-                return buildProgressNotes(primaryData);
-            }
+        const CATEGORY_PRIORITY = {
+            "Plan": 1,
+            "Diet": 2,
+            "IV": 3,
+            "Labs": 4,
+            "Diagnostics": 5,
+            "Meds": 6,
+            "Special Order": 7,
+            "Procedures": 8
+        };
 
-            return "";
+        function detectOrderCategory(orderText) {
+            const t = String(orderText || "").trim();
+            for (const cat of Object.keys(CATEGORY_PRIORITY)) {
+                if (new RegExp(`^${cat}s?:`, "i").test(t)) {
+                    return { category: cat, body: t.replace(new RegExp(`^${cat}s?:\\s*`, "i"), "").trim() };
+                }
+            }
+            if (/^rx:\s*/i.test(t)) return { category: "Meds", body: t.replace(/^rx:\s*/i, "").trim() };
+            if (/^radiology\s*request:\s*/i.test(t)) return { category: "Diagnostics", body: t.replace(/^radiology\s*request:\s*/i, "").trim() };
+            if (/^laboratory\s*request:\s*/i.test(t)) return { category: "Labs", body: t.replace(/^laboratory\s*request:\s*/i, "").trim() };
+            if (/^cardiology\s*request:\s*/i.test(t)) return { category: "Diagnostics", body: t.replace(/^cardiology\s*request:\s*/i, "").trim() };
+            if (/^pulmonary\s*request:\s*/i.test(t)) return { category: "Diagnostics", body: t.replace(/^pulmonary\s*request:\s*/i, "").trim() };
+
+            if (/^(follow[- ]up|register\s*in|admit|transfer|discharge|disposition|return\s*for\s*review)/i.test(t)) {
+                return { category: "Plan", body: t };
+            }
+            if (/^(reinforce.*meal|meal\s*plan|diet|npo|low\s*salt|diabetic\s*diet|diabetic\s*meal|soft\s*diet|regular\s*diet)/i.test(t)) {
+                return { category: "Diet", body: t };
+            }
+            if (/\b(ivf|plr|pnss|d5|intravenous|iv\s*infusion|cc\/hr|gtts\/min)\b/i.test(t)) {
+                return { category: "IV", body: t };
+            }
+            if (/\b(refer\s*to\s*physical|physical\s*therapy|\brehab\b|rehabilitation|home.*exercise|quadriceps.*exercise|hamstring|surgery|dressing|suture|biopsy)\b/i.test(t)) {
+                return { category: "Procedures", body: t };
+            }
+            if (/\b(counseling|weight\s*management|precautions|special\s*order|monitoring|vital\s*signs\s*q|intake\s*and\s*output)\b/i.test(t)) {
+                return { category: "Special Order", body: t };
+            }
+            if (/\b(radiology|x-ray|radiograph|ultrasound|ct\s*scan|mri|ecg|echocardiogram|diagnostic)\b/i.test(t)) {
+                return { category: "Diagnostics", body: t };
+            }
+            if (/\b(cbc|fbs|hba1c|bun|creatinine|lipid|urinalysis|blood\s*sugar|electrolytes)\b/i.test(t)) {
+                return { category: "Labs", body: t };
+            }
+            if (/\b(tablet|capsule|\bmg\b|mcg|syrup|\bod\b|\bbid\b|\btid\b|\bqid\b|\bprn\b|start\s+|continue\s+|shift\s+|paracetamol|celecoxib|metformin|losartan|empagliflozin|aspirin|insulin|medication)\b/i.test(t)) {
+                return { category: "Meds", body: t };
+            }
+            if (/\b(follow[- ]up|register|plan)\b/i.test(t)) {
+                return { category: "Plan", body: t };
+            }
+            return { category: "Plan", body: t };
+        }
+
+        function categorizeAndSortOrders(rawOrders, defaultDt) {
+            if (!Array.isArray(rawOrders)) return [];
+            const result = [];
+            rawOrders.forEach(item => {
+                const rawText = typeof item === "string" ? item : (item?.text || "");
+                if (!rawText.trim()) return;
+                const { category, body } = detectOrderCategory(rawText);
+                const isReq = category === "Labs" || category === "Diagnostics";
+                const cared = (Array.isArray(item.cared) && item.cared.length) ? item.cared : (isReq ? ["R"] : ["C"]);
+
+                // Format RN compliance signature
+                let timeSig = item.timeSignature || "";
+                const dt = item.dateTime ? formatDateTime(item.dateTime) : (defaultDt || "");
+                if (!timeSig || /nurse|RN|prescribed|requested/i.test(timeSig)) {
+                    timeSig = `Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n${dt}`;
+                }
+
+                result.push({
+                    category,
+                    text: `${category}: ${body}`,
+                    dateTime: item.dateTime || "",
+                    cared,
+                    timeSignature: timeSig,
+                    priority: CATEGORY_PRIORITY[category] || 99
+                });
+            });
+
+            // Sort strictly by category priority: Plan -> Diet -> IV -> Labs -> Diagnostics -> Meds -> Special Order -> Procedures
+            result.sort((a, b) => a.priority - b.priority);
+            return result;
         }
 
         function firstOrderDateTime(data, record) {
@@ -1002,14 +1192,14 @@
             return '<thead><tr>' +
                 '<th>DATE<br>TIME</th>' +
                 '<th>PROGRESS NOTES</th>' +
-                '<th>PHYSICIAN\'S ORDER</th>' +
+                '<th>DOCTOR\'S ORDER</th>' +
                 '<th>C</th><th>A</th><th>R</th><th>E</th><th>D</th>' +
                 '<th>TIME<br>SIGNATURE</th>' +
                 '</tr></thead>';
         }
 
         function ordersTableFooter() {
-            return '<div class="footer">Physician\'s Orders Form<br>CLMMRH-MRS.F.032<br>Issued: 2/5/14<br>Issue No. 001</div>';
+            return '<div class="footer">Doctor\'s Orders Form<br>CLMMRH-MRS.F.032<br>Issued: 2/5/14<br>Issue .No. 001</div>';
         }
 
         function buildOrderRowHtml(item, rowIdx, isFirst, span, subIdx, totalSpan) {
@@ -1063,7 +1253,7 @@
             // Build a single blank A4 page for initial state (no patient loaded)
             var inner = '<p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>';
             inner += '<p class="hospital-address">Lacson - Burgos Streets, Bacolod City</p>';
-            inner += '<h1 class="form-title">PHYSICIAN\'S ORDERS / PROGRESS NOTES<br>NURSES\'  COMPLIANCE SHEET</h1>';
+            inner += '<h1 class="form-title">DOCTOR\'S ORDER / PROGRESS NOTES<br>NURSES\'  COMPLIANCE SHEET</h1>';
             inner += '<p class="form-subtitle">(Authenticate all Orders)</p>';
             inner += '<div class="patient-grid">';
             inner += '<div class="field"><label>Name of Patient</label><span class="field-val"></span></div>';
@@ -1076,23 +1266,16 @@
             inner += '<div class="field admit"><label>Admission Date</label><span class="field-val"></span></div>';
             inner += '</div></div>';
             inner += '<p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>';
-            inner += '<div class="page-orders-body"><table class="orders"><colgroup><col class="date"><col class="notes"><col class="order"><col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="sign"></colgroup><thead><tr><th>DATE<br>TIME</th><th>PROGRESS NOTES</th><th>PHYSICIAN\'S ORDER</th><th>C</th><th>A</th><th>R</th><th>E</th><th>D</th><th>TIME<br>SIGNATURE</th></tr></thead><tbody>';
+            inner += '<div class="page-orders-body"><table class="orders"><colgroup><col class="date"><col class="notes"><col class="order"><col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="sign"></colgroup><thead><tr><th>DATE<br>TIME</th><th>PROGRESS NOTES</th><th>DOCTOR\'S ORDER</th><th>C</th><th>A</th><th>R</th><th>E</th><th>D</th><th>TIME<br>SIGNATURE</th></tr></thead><tbody>';
             for (var k = 1; k <= 18; k++) { inner += buildBlankRowHtml(k); }
             inner += '</tbody></table></div>';
-            inner += '<div class="footer">Physician\'s Orders Form<br>CLMMRH-MRS.F.032<br>Issued: 2/5/14<br>Issue No. 001</div>';
+            inner += '<div class="footer">Doctor\'s Orders Form<br>CLMMRH-MRS.F.032<br>Issued: 2/5/14<br>Issue .No. 001</div>';
             return '<div class="page" aria-label="Compliance sheet">' + inner + '</div>';
         }
 
         // Estimate row height in pixels for pagination.
-        // A typical order row is ~38px (2 textarea rows + padding).
-        // Multiline progress notes add more; we add 16px per extra newline.
-        function buildSignatureRowHtml(physician, license, isContinuation, nextPage) {
-            // Physician authentication stamp row — rendered between encounter blocks or at page continuation breaks.
-            // Cols 1-2 (DATE/TIME + PROGRESS NOTES, colspan=2): dashed separator line.
-            // Col 3 (PHYSICIAN'S ORDER, colspan=1): physician digital signature, name, and PRC license stamp.
-            // Cols 4-9 (C+A+R+E+D + TIME/SIGNATURE, colspan=6): dashed separator line (nurses module).
+        function buildSignatureRowHtml(physician, license, isContinuation, nextPage, isLastEncounter, encDate) {
             var rawName = physician ? String(physician).trim() : '';
-            // If name has both 'Dr.' and ', MD', drop 'Dr.' so it formats cleanly as 'Name, MD'
             if (/^Dr\.?\s+/i.test(rawName) && /,\s*M\.?D\.?/i.test(rawName)) {
                 rawName = rawName.replace(/^Dr\.?\s+/i, '');
             }
@@ -1102,14 +1285,22 @@
             var contNotice = isContinuation
                 ? '<div class="enc-sig-cont" style="font-size:7pt; color:#475569; font-style:italic; margin-top:2px;">(Orders continued on Page ' + (nextPage || 'next') + ')</div>'
                 : '';
+            var dateDisplay = encDate ? formatDate(encDate) : '';
+            var processNote = isLastEncounter
+                ? '<div class="enc-sig-process-note">(Esig is required as proof of the end of process for this particular sheet)</div>'
+                : '';
+
             return '<tr class="enc-sig-row' + (isContinuation ? ' enc-sig-row-cont' : '') + '">' +
-                '<td colspan="2" class="enc-sig-spacer"><hr class="enc-sig-divider"></td>' +
+                '<td class="cell-datetime enc-sig-spacer"></td>' +
+                '<td class="cell-notes enc-sig-spacer">' + processNote + '</td>' +
                 '<td class="enc-sig-stamp">' +
                 '<div class="enc-sig-block">' +
+                '<div class="enc-sig-tag">ESIG</div>' +
                 '<div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
                 '<div class="enc-sig-line-draw">________________________________</div>' +
                 '<div class="enc-sig-name">' + physName + '</div>' +
-                '<div class="enc-sig-lic">PRC Lic. No.: ' + licText + '</div>' +
+                '<div class="enc-sig-lic">PRC Lic. No.: ' + licText + (dateDisplay ? ' &bull; ' + escapeHtml(dateDisplay) : '') + '</div>' +
+                '<div class="enc-sig-supervision">(The required number of physician’s changes based on the scenario where supervision, validation, or authorization by another physician is required.)</div>' +
                 contNotice +
                 '</div>' +
                 '</td>' +
@@ -1119,7 +1310,7 @@
 
         function estimateRowHeight(item) {
             if (!item) return 35;
-            if (item.isSigRow) return item.isContinuationSig ? 60 : 55; // signature stamp row
+            if (item.isSigRow) return item.isContinuationSig ? 70 : 80; // signature stamp row
             return 35; // Each table row is fixed height 9.2mm (~35px) in hospital compliance form
         }
 
@@ -1132,7 +1323,7 @@
             var PAGE_BUDGET = 720;
             var ROW_HEIGHT = 35;
             var MIN_BLANK_ROWS = 3;
-            var SIG_HEIGHT = 60;
+            var SIG_HEIGHT = 80;
 
             var pages = [];
             var i = 0;
@@ -1173,30 +1364,33 @@
                             usedHeight -= estimateRowHeight(popped.item);
                         }
 
-                        // Determine the physician and PRC license for this encounter
-                        var physician = (lastPageItem && lastPageItem.physician) || "";
-                        var prc_license = (lastPageItem && lastPageItem.prc_license) || "";
-                        if (!physician) {
-                            for (var k = i; k < flatRows.length; k++) {
-                                if (flatRows[k].encId === lastPageItem.encId && flatRows[k].isSigRow) {
-                                    physician = flatRows[k].physician || "";
-                                    prc_license = flatRows[k].prc_license || "";
-                                    break;
+                        var currentLast = pageRows.length ? pageRows[pageRows.length - 1].item : null;
+                        if (currentLast && !currentLast.isSigRow) {
+                            // Determine the physician and PRC license for this encounter
+                            var physician = currentLast.physician || "";
+                            var prc_license = currentLast.prc_license || "";
+                            if (!physician) {
+                                for (var k = i; k < flatRows.length; k++) {
+                                    if (flatRows[k].encId === currentLast.encId && flatRows[k].isSigRow) {
+                                        physician = flatRows[k].physician || "";
+                                        prc_license = flatRows[k].prc_license || "";
+                                        break;
+                                    }
                                 }
                             }
-                        }
 
-                        pageRows.push({
-                            item: {
-                                isSigRow: true,
-                                isContinuationSig: true,
-                                nextPage: pageNum + 2,
-                                physician: physician,
-                                prc_license: prc_license
-                            },
-                            rowIdx: globalRowIdx++
-                        });
-                        usedHeight += SIG_HEIGHT;
+                            pageRows.push({
+                                item: {
+                                    isSigRow: true,
+                                    isContinuationSig: true,
+                                    nextPage: pageNum + 2,
+                                    physician: physician,
+                                    prc_license: prc_license
+                                },
+                                rowIdx: globalRowIdx++
+                            });
+                            usedHeight += SIG_HEIGHT;
+                        }
                     }
                 }
 
@@ -1247,7 +1441,7 @@
                 // Standard full official hospital header across all pages
                 inner += '<p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>';
                 inner += '<p class="hospital-address">Lacson - Burgos Streets, Bacolod City</p>';
-                inner += '<h1 class="form-title">PHYSICIAN\'S ORDERS / PROGRESS NOTES<br>NURSES\'  COMPLIANCE SHEET</h1>';
+                inner += '<h1 class="form-title">DOCTOR\'S ORDER / PROGRESS NOTES<br>NURSES\'  COMPLIANCE SHEET</h1>';
                 inner += '<p class="form-subtitle">(Authenticate all Orders)</p>';
                 inner += '<div class="patient-grid">';
                 inner += '<div class="field"><label>Name of Patient</label><span class="field-val">' + escapeHtml(nameVal) + '</span></div>';
@@ -1263,7 +1457,7 @@
                 inner += '<p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>';
 
                 inner += '<div class="page-orders-body">';
-                inner += '<table class="orders" aria-label="Physician orders page ' + (pgIdx + 1) + '">';
+                inner += '<table class="orders" aria-label="Doctor orders page ' + (pgIdx + 1) + '">';
                 inner += ordersTableColgroup();
                 inner += ordersTableHead();
                 inner += '<tbody>';
@@ -1280,7 +1474,7 @@
                     }
                     if (pr.item.isSigRow) {
                         // Physician authentication stamp (standard between encounters or page continuation break)
-                        inner += buildSignatureRowHtml(pr.item.physician, pr.item.prc_license, pr.item.isContinuationSig, pr.item.nextPage);
+                        inner += buildSignatureRowHtml(pr.item.physician, pr.item.prc_license, pr.item.isContinuationSig, pr.item.nextPage, pr.item.isLastEncounter, pr.item.encDate);
                         r++;
                         continue;
                     }
@@ -1397,10 +1591,17 @@
             const isOP = Boolean(data?.case_type === "OP Patient" || data?.case_type === "Outpatient" || encounters.some(e => (e.is_current || e.isCurrent) && e.registry === "OP"));
             const blocks = [];
             let primaryAssigned = false;
+            let opdCounter = 0;
 
             encounters.forEach((enc) => {
                 const encDate = String(enc?.date || "").trim();
                 const encTime = parseEncounterDateTime(enc);
+
+                // Track OPD counter regardless of whether we stop at targetTime
+                const isOpEnc = enc.registry === "OP" || (isOP && enc.registry !== "ER" && enc.registry !== "IP");
+                if (isOpEnc) {
+                    opdCounter++;
+                }
 
                 // Cumulative timeline: Only show encounters that occurred on or before the inspected encounter date/time.
                 // Future encounters (relative to the inspected encounter) must not appear.
@@ -1508,42 +1709,45 @@
                     primaryAssigned = true;
                 }
 
-                // Determine progress notes for this encounter (strictly History of Present Illness only)
-                let noteText = "";
-                if (enc?.progress_notes) {
-                    const firstPara = String(enc.progress_notes).split(/\n{2,}/)[0].trim();
-                    noteText = cleanProgressNotesText(firstPara);
+                let dt = "";
+                const encTimeMs = parseEncounterDateTime(enc);
+                if (encTimeMs) {
+                    dt = formatDateTime(encTimeMs);
+                } else if (enc.date) {
+                    dt = formatDate(enc.date) + (enc.time ? " " + enc.time : "");
+                } else if (orders[0]?.dateTime) {
+                    dt = formatDateTime(orders[0].dateTime);
                 } else if (isAdmission) {
-                    noteText = buildProgressNotes(data);
-                } else {
-                    noteText = buildEncounterProgressNote(enc, data);
+                    dt = formatDateTime(firstOrderDateTime(data, record));
                 }
 
-                const noteLines = extractProgressNoteLines(noteText);
-                const hasOrders = orders.length > 0;
-                const hasNotes = noteLines.length > 0;
+                let encounterOrdinal = "";
+                if (isOpEnc && opdCounter > 0) {
+                    const ordNumber = opdCounter === 1 ? "1st" : opdCounter === 2 ? "2nd" : opdCounter === 3 ? "3rd" : `${opdCounter}th`;
+                    encounterOrdinal = `(${ordNumber} OPD Encounter)`;
+                }
+
+                const displayDt = encounterOrdinal ? `${encounterOrdinal}\n${dt}` : dt;
+
+                // Build Progress Notes lines for this encounter (Row 1: HPI, Row 2: Vitals/ROS/PE, Row 3: Initial Diagnosis)
+                const noteLines = buildEncounterProgressNoteLines(enc, data);
+
+                // Categorize and sort orders strictly into the 8 clinical categories per OPD v2 template specification
+                const categorizedOrders = categorizeAndSortOrders(orders, dt);
+
+                const hasOrders = categorizedOrders.length > 0;
+                const hasNotes = noteLines.some(Boolean);
 
                 // Support clinical notes with or without orders (DOH compliant)
                 if (hasOrders || hasNotes || isAdmission) {
-                    let dt = "";
-                    const encTimeMs = parseEncounterDateTime(enc);
-                    if (encTimeMs) {
-                        dt = formatDateTime(encTimeMs);
-                    } else if (enc.date) {
-                        dt = formatDate(enc.date) + (enc.time ? " " + enc.time : "");
-                    } else if (orders[0]?.dateTime) {
-                        dt = formatDateTime(orders[0].dateTime);
-                    } else if (isAdmission) {
-                        dt = formatDateTime(firstOrderDateTime(data, record));
-                    }
-
                     blocks.push({
                         date: enc.date || "",
                         time: enc.time || "",
-                        dateTime: dt,
+                        dateTime: displayDt,
+                        rawDt: dt,
                         isCurrent: Boolean(enc?.is_current || enc?.isCurrent),
                         noteLines,
-                        orders,
+                        orders: categorizedOrders,
                         physician: enc.physician || data.physician || "",
                         prc_license: enc.prc_license || data.prc_license || ""
                     });
@@ -1557,15 +1761,19 @@
                 const targetBlock = blocks.find(b => b.isCurrent && (!b.orders || b.orders.length === 0))
                     || blocks.find(b => (!b.orders || b.orders.length === 0));
                 if (targetBlock) {
-                    targetBlock.orders = primaryOrders;
+                    targetBlock.orders = categorizeAndSortOrders(primaryOrders, targetBlock.rawDt || targetBlock.dateTime);
                 } else if (!blocks.some(b => b.orders && b.orders.length > 0)) {
                     if (blocks.length > 0) {
-                        blocks[blocks.length - 1].orders = primaryOrders;
+                        blocks[blocks.length - 1].orders = categorizeAndSortOrders(primaryOrders, blocks[blocks.length - 1].rawDt || blocks[blocks.length - 1].dateTime);
                     } else {
+                        const fallbackDt = formatDateTime(firstOrderDateTime(data, record));
                         blocks.push({
-                            dateTime: formatDateTime(firstOrderDateTime(data, record)),
-                            noteLines: extractProgressNoteLines(buildProgressNotes(data)),
-                            orders: primaryOrders
+                            dateTime: fallbackDt,
+                            rawDt: fallbackDt,
+                            noteLines: buildEncounterProgressNoteLines(null, data),
+                            orders: categorizeAndSortOrders(primaryOrders, fallbackDt),
+                            physician: data.physician || "",
+                            prc_license: data.prc_license || ""
                         });
                     }
                 }
@@ -1573,8 +1781,11 @@
 
             return blocks.length ? blocks : [{
                 dateTime: formatDateTime(firstOrderDateTime(data, record)),
-                noteLines: extractProgressNoteLines(buildProgressNotes(data)),
-                orders: primaryOrders
+                rawDt: formatDateTime(firstOrderDateTime(data, record)),
+                noteLines: buildEncounterProgressNoteLines(null, data),
+                orders: categorizeAndSortOrders(primaryOrders, formatDateTime(firstOrderDateTime(data, record))),
+                physician: data.physician || "",
+                prc_license: data.prc_license || ""
             }];
         }
 
@@ -1616,22 +1827,14 @@
             // stamp row (isSigRow) after every encounter block.
             const flatRows = [];
             blocks.forEach((block, blockIdx) => {
-                const blockRowCount = Math.max(1, block.orders.length, block.noteLines.length);
+                const blockRowCount = Math.max(3, block.orders.length, block.noteLines.length);
                 for (let i = 0; i < blockRowCount; i++) {
                     const order = block.orders[i] || null;
                     const noteLine = block.noteLines[i] || "";
 
-                    let dt = block.dateTime || "";
-                    if (order?.dateTime) {
-                        const formattedOrderDt = formatDateTime(order.dateTime);
-                        if (formattedOrderDt) {
-                            dt = formattedOrderDt;
-                        }
-                    }
-
                     flatRows.push({
                         encId: blockIdx,
-                        dateTime: dt,
+                        dateTime: block.dateTime,
                         noteLine: noteLine,
                         orderText: order?.text || "",
                         cared: Array.isArray(order?.cared) ? order.cared : [],
@@ -1646,7 +1849,8 @@
                     isSigRow: true,
                     physician: block.physician || "",
                     prc_license: block.prc_license || "",
-                    encDate: block.dateTime || block.date || ""
+                    encDate: block.date || "",
+                    isLastEncounter: blockIdx === blocks.length - 1
                 });
             });
 

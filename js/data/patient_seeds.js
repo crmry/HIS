@@ -50,7 +50,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 54,
+        seedVersion: 55,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -285,6 +285,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 heart: [],
                 eeg: []
               },
+              pertinent_signs: ['Fatigue'],
+              pertinent_signs_information: 'Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea.',
+              physical_exam: 'Alert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis pulses palpable.',
               progress_notes_subjective: 'Patient is a 48-year-old female presenting for scheduled semi-annual review. Compliant with Metformin 500 mg BID and Losartan 50 mg OD.',
               progress_notes_objective: '',
               progress_notes_assessment: '',
@@ -333,6 +336,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 heart: [],
                 eeg: []
               },
+              pertinent_signs: ['No acute complaints'],
+              pertinent_signs_information: 'Denies acute complaints, polyuria, polydipsia, blurring of vision, chest discomfort, or dizziness.',
+              physical_exam: 'Conscious, coherent, ambulatory, non-toxic. HEENT: Anicteric sclerae, pink conjunctivae. Chest/Lungs: Clear breath sounds. Heart: Regular rate and rhythm. Extremities: No pedal edema.',
               progress_notes_subjective: 'Known diabetic and hypertensive for 6 years, transferring routine management to CLMMRH Outpatient Service. Compliant with oral maintenance therapy.',
               progress_notes_objective: '',
               progress_notes_assessment: '',
@@ -374,6 +380,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 heart: [],
                 eeg: []
               },
+              pertinent_signs: ['Resolving right knee pain (2/10)'],
+              pertinent_signs_information: 'No morning joint stiffness > 30 minutes, no joint locking, giving way, swelling, or redness.',
+              physical_exam: 'Gait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.',
               clinical_record: {
                 chief_complaint: 'Follow-up right knee pain and mobility assessment',
                 history: 'Patient is a 47-year-old female with diagnosed mild primary osteoarthritis of the right knee returning for scheduled 3-month orthopedic follow-up. Demonstrates good symptom improvement on physical therapy and home quadriceps rehabilitation.',
@@ -423,6 +432,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 heart: [],
                 eeg: []
               },
+              pertinent_signs: ['Right knee pain on walking', 'Crepitus'],
+              pertinent_signs_information: 'Denies knee locking, giving way, joint instability, morning stiffness, or joint erythema.',
+              physical_exam: 'Right knee: Mild medial joint line tenderness and crepitus on passive flexion. No joint effusion, local warmth, or erythema. Active ROM 0° to 125°. Ligamentous testing negative.',
               clinical_record: {
                 chief_complaint: 'Right knee joint aching pain on walking and climbing stairs x 2 months',
                 history: 'Patient is a 47-year-old female presenting with a 2-month history of progressive right knee pain on walking and climbing stairs without prior trauma.',
@@ -528,7 +540,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 54) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 55) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
