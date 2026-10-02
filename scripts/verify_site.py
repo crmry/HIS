@@ -256,14 +256,12 @@ async def scan_single_target(browser_ws, file_url):
                 const floatingObBtn = document.getElementById('floating-btn-obgyne');
                 if (!floatingObBtn) return 'floating-btn-obgyne not found in requisition pad';
 
-                // Test separated Progress Notes (Subjective, Objective, Assessment)
+                // Verify Progress Notes dashlet has been completely removed from Physician Dashboard
                 if (window.location.href.includes('dashboard.html')) {
-                    const pnSubj = document.getElementById('progress_notes_subjective');
-                    const pnObj = document.getElementById('progress_notes_objective');
-                    const pnAss = document.getElementById('progress_notes_assessment');
-                    const pnAgg = document.getElementById('progress_notes');
-                    if (!pnSubj || !pnObj || !pnAss || !pnAgg) {
-                        return 'Separated progress notes fields (Subjective, Objective, Assessment, or aggregate) missing in dashboard.html';
+                    const pnRow = document.getElementById('row-progress-notes');
+                    const pnDashlet = document.getElementById('dashlet-progress-notes');
+                    if (pnRow || pnDashlet) {
+                        return 'Progress Notes dashlet should be completely removed from dashboard.html';
                     }
                     if (typeof window.parseStructuredProgressNotes !== 'function') {
                         return 'parseStructuredProgressNotes not defined on window in dashboard.html';

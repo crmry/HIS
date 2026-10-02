@@ -2317,52 +2317,6 @@
           </div>
         </div>
 
-        <!-- Progress Notes (Subjective, Objective, Assessment) - Positioned below Medical History and above Review of Systems -->
-        <div class="row-fluid" id="row-progress-notes" style="display:none;">
-          <div class="span12" id="progress-notes-col">
-            <div class="dashlet" id="dashlet-progress-notes">
-              <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
-                <h3>Progress Notes (Subjective, Objective, Assessment)</h3>
-              </div>
-              <div class="bootstrap-widget-content" id="dashlet-progress-notes-content" style="padding:14px 16px;">
-                <!-- Hidden aggregate textarea for backward compatibility and automated form serialization -->
-                <textarea id="progress_notes" name="progress_notes" style="display:none;"></textarea>
-
-                <div class="dashlet-progress-notes-container">
-                  <!-- Subjective Findings -->
-                  <div class="progress-note-box">
-                    <label class="progress-note-header" for="progress_notes_subjective">
-                      <span class="progress-note-title">Subjective findings:</span>
-                      <span class="progress-note-destinations">(This will be reflected in Doctors' Order/ Progress Notes and CF4 Part III, 1. HPI)</span>
-                    </label>
-                    <textarea id="progress_notes_subjective" name="progress_notes_subjective" rows="3" class="input-block-level progress-note-input"
-                      placeholder="Document interval history, complaints, symptoms, and patient-reported changes..."></textarea>
-                  </div>
-
-                  <!-- Objective Findings -->
-                  <div class="progress-note-box">
-                    <label class="progress-note-header" for="progress_notes_objective">
-                      <span class="progress-note-title">Objective findings:</span>
-                      <span class="progress-note-destinations">(This will be reflected in Doctors' Order/ Progress Notes)</span>
-                    </label>
-                    <textarea id="progress_notes_objective" name="progress_notes_objective" rows="3" class="input-block-level progress-note-input"
-                      placeholder="Document physical examination findings, bedside vital signs observations, and diagnostic/lab results..."></textarea>
-                  </div>
-
-                  <!-- Assessment -->
-                  <div class="progress-note-box">
-                    <label class="progress-note-header" for="progress_notes_assessment">
-                      <span class="progress-note-title">Assessment:</span>
-                      <span class="progress-note-destinations">(This will be reflected in Doctors' Order/ Progress Notes)</span>
-                    </label>
-                    <textarea id="progress_notes_assessment" name="progress_notes_assessment" rows="3" class="input-block-level progress-note-input"
-                      placeholder="Document clinical impression, diagnostic reasoning, interval condition (e.g., resolving / stable / deteriorating), and disease trajectory..."></textarea>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!-- Review of Systems -->
         <div class="row-fluid">
@@ -12212,21 +12166,26 @@
 
       var curEncForSave = Array.isArray(data.encounters) ? (data.encounters.find(function (e) { return e.is_current || e.isCurrent; }) || data.encounters[0]) : null;
       var curEncSaveIdx = curEncForSave ? data.encounters.indexOf(curEncForSave) : -1;
-      var sVal = (document.getElementById('progress_notes_subjective') ? document.getElementById('progress_notes_subjective').value : '').trim();
-      var oVal = (document.getElementById('progress_notes_objective') ? document.getElementById('progress_notes_objective').value : '').trim();
-      var aVal = (document.getElementById('progress_notes_assessment') ? document.getElementById('progress_notes_assessment').value : '').trim();
+      var pnSubjEl = document.getElementById('progress_notes_subjective');
+      var pnObjEl = document.getElementById('progress_notes_objective');
+      var pnAssEl = document.getElementById('progress_notes_assessment');
+      if (pnSubjEl || pnObjEl || pnAssEl) {
+        var sVal = (pnSubjEl ? pnSubjEl.value : '').trim();
+        var oVal = (pnObjEl ? pnObjEl.value : '').trim();
+        var aVal = (pnAssEl ? pnAssEl.value : '').trim();
 
-      data.progress_notes_subjective = sVal;
-      data.progress_notes_objective = oVal;
-      data.progress_notes_assessment = aVal;
-      var combinedPN = syncProgressNotesAggregate();
-      data.progress_notes = combinedPN;
+        data.progress_notes_subjective = sVal;
+        data.progress_notes_objective = oVal;
+        data.progress_notes_assessment = aVal;
+        var combinedPN = syncProgressNotesAggregate();
+        data.progress_notes = combinedPN;
 
-      if (curEncForSave && !isInitialEncounter(curEncForSave, curEncSaveIdx, data.encounters)) {
-        curEncForSave.progress_notes_subjective = sVal;
-        curEncForSave.progress_notes_objective = oVal;
-        curEncForSave.progress_notes_assessment = aVal;
-        curEncForSave.progress_notes = combinedPN;
+        if (curEncForSave && !isInitialEncounter(curEncForSave, curEncSaveIdx, data.encounters)) {
+          curEncForSave.progress_notes_subjective = sVal;
+          curEncForSave.progress_notes_objective = oVal;
+          curEncForSave.progress_notes_assessment = aVal;
+          curEncForSave.progress_notes = combinedPN;
+        }
       }
       if (curEncForSave && data.final_diagnosis) {
         curEncForSave.final_diagnosis = data.final_diagnosis;
