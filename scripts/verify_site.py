@@ -146,22 +146,37 @@ async def scan_single_target(browser_ws, file_url):
                 rxCloseBtn.click();
                 if (window.getComputedStyle(rxModal).display !== 'none' || rxModal.classList.contains('open')) return 'Rx writer modal failed to close via close button';
 
-                // Test Examination Request modal & close button
-                const examBtn = document.getElementById('floating-btn-exam') || document.getElementById('floating-btn-lab');
-                if (!examBtn) return 'Button floating-btn-exam not found';
-                examBtn.click();
-                const clModal = document.getElementById('clinical-request-modal');
-                if (!clModal || window.getComputedStyle(clModal).display === 'none') return 'Clinical request modal failed to open';
-                const clCloseBtn = document.getElementById('close-request-modal');
-                if (!clCloseBtn) return 'Close button close-request-modal not found';
-                clCloseBtn.click();
-                if (window.getComputedStyle(clModal).display !== 'none' || clModal.classList.contains('open')) return 'Clinical modal failed to close via close button';
+                // Test Examination Result modal & close button
+                const resBtn = document.getElementById('floating-btn-results') || document.getElementById('floating-btn-exam');
+                if (!resBtn) return 'Button floating-btn-results not found in hovering toolkit';
+                resBtn.click();
+                const resModal = document.getElementById('viewable-results-modal');
+                if (!resModal || window.getComputedStyle(resModal).display === 'none') return 'Examination result modal failed to open';
+                const resCloseBtn = document.getElementById('close-viewable-results-modal');
+                if (!resCloseBtn) return 'Close button close-viewable-results-modal not found';
+                resCloseBtn.click();
+                if (window.getComputedStyle(resModal).display !== 'none' || resModal.classList.contains('open')) return 'Examination result modal failed to close via close button';
 
-                // Test Escape key dismissal
-                examBtn.click();
-                if (window.getComputedStyle(clModal).display === 'none') return 'Clinical modal failed to reopen';
+                // Test Escape key dismissal on Examination Result modal
+                resBtn.click();
+                if (window.getComputedStyle(resModal).display === 'none') return 'Examination result modal failed to reopen';
                 document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-                if (window.getComputedStyle(clModal).display !== 'none' || clModal.classList.contains('open')) return 'Clinical modal failed to close via Escape key';
+                if (window.getComputedStyle(resModal).display !== 'none' || resModal.classList.contains('open')) return 'Examination result modal failed to close via Escape key';
+
+                // Test CPOE Clinical Request modal via Doctor\'s Orders section
+                const cpoeReqBtn = document.getElementById('open-request-modal');
+                if (cpoeReqBtn) {
+                    cpoeReqBtn.click();
+                    const clModal = document.getElementById('clinical-request-modal');
+                    if (!clModal || window.getComputedStyle(clModal).display === 'none') return 'Clinical request modal failed to open from CPOE';
+                    const clCloseBtn = document.getElementById('close-request-modal');
+                    if (clCloseBtn) clCloseBtn.click();
+                    if (window.getComputedStyle(clModal).display !== 'none' || clModal.classList.contains('open')) return 'Clinical modal failed to close via close button';
+                }
+
+                // Verify Examination Result dashlet was transferred from main dashboard body
+                const mainResultRow = document.getElementById('row-viewable-results');
+                if (mainResultRow) return 'row-viewable-results should be transferred from main dashboard body';
 
                 // Test pin toggle
                 const pinBtn = document.getElementById('floating-req-pin-btn');
