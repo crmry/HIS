@@ -306,6 +306,24 @@ async def scan_single_target(browser_ws, file_url):
                     }
                 }
 
+                if (window.location.href.includes('doctors_order_er_admission.html')) {
+                    const btnEr = document.getElementById('btn-view-er');
+                    const btnAdm = document.getElementById('btn-view-admission');
+                    const btnTmpl = document.getElementById('btn-view-template');
+                    const btnAll = document.getElementById('btn-view-all');
+                    if (!btnEr || !btnAdm || !btnTmpl || !btnAll) {
+                        return 'doctors_order_er_admission.html view buttons missing';
+                    }
+                    btnAdm.click();
+                    if (window.currentViewMode() !== 'admission') return 'Failed to switch to admission view';
+                    btnTmpl.click();
+                    if (window.currentViewMode() !== 'template') return 'Failed to switch to template view';
+                    btnAll.click();
+                    if (window.currentViewMode() !== 'all') return 'Failed to switch to all sheets view';
+                    btnEr.click();
+                    if (window.currentViewMode() !== 'er') return 'Failed to switch back to er view';
+                }
+
                 // Test Obstetric & Gynecologic standalone workspace encoder (on OB_Gyne_Clinical_Module.html)
                 const obRoot = document.getElementById('ob-workspace-card') || document.querySelector('.workspace-card');
                 if (obRoot && window.location.href.includes('OB_Gyne_Clinical_Module.html')) {
@@ -504,7 +522,7 @@ async def run_scan():
             fname = os.path.basename(hf)
             file_url = f"file:///{hf.replace(os.sep, '/')}"
             test_urls.append((fname, file_url))
-            if fname in ("dashboard.html", "doctors_order_patient.html", "opd_record_patient.html", "Neonate_Clinical_Module.html"):
+            if fname in ("dashboard.html", "doctors_order_patient.html", "opd_record_patient.html", "Neonate_Clinical_Module.html", "doctors_order_er_admission.html"):
                 test_urls.append((f"{fname}?patient=patient_op_juan", f"{file_url}?patient=patient_op_juan"))
                 test_urls.append((f"{fname}?patient=patient_new_blank_1790299677880", f"{file_url}?patient=patient_new_blank_1790299677880"))
 

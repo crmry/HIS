@@ -1671,7 +1671,8 @@
   <nav class="seg-topbar" aria-label="Dashboard navigation">
     <a href="dashboard.html" class="active">Physician Dashboard</a>
     <a href="patients.html">Patient List</a>
-    <a href="doctors_order_patient.html" id="topbar-orders-link">Order &amp; Compliance Sheet</a>
+    <a href="doctors_order_patient.html" id="topbar-orders-link" title="Outpatient (OPD) Doctor's Orders">OPD Orders</a>
+    <a href="doctors_order_er_admission.html" id="topbar-er-orders-link" title="ER &amp; Inpatient Admission Doctor's Orders">ER &amp; Admission Orders</a>
     <a href="forms_localstorage.html">Register Patient</a>
     <span class="seg-right"><span id="seg-clock">10:56:01</span><button type="button" class="btn btn-mini btn-danger seg-end btn-conclude-care-trigger" style="margin-left:8px; vertical-align:baseline; font-weight:700; border:none; cursor:pointer;" title="Conclude consultation, encode Final Diagnosis, Disposition, Follow-up and Requisitions"><i class="icon-flag icon-white"></i> End Patient Care</button><button type="button" id="btn-lock-session" class="btn btn-mini btn-inverse" style="margin-left:8px; vertical-align:baseline;" title="Lock session"><i class="icon-lock icon-white"></i> Lock</button></span>
   </nav>
@@ -4672,6 +4673,10 @@
       var orderLink = document.getElementById('topbar-orders-link');
       if (orderLink) {
         orderLink.href = (record && record.id) ? 'doctors_order_patient.html?patient=' + encodeURIComponent(record.id) : 'doctors_order_patient.html';
+      }
+      var erOrderLink = document.getElementById('topbar-er-orders-link');
+      if (erOrderLink) {
+        erOrderLink.href = (record && record.id) ? 'doctors_order_er_admission.html?patient=' + encodeURIComponent(record.id) : 'doctors_order_er_admission.html';
       }
       if (typeof updateGrowthChartButtons === 'function') {
         updateGrowthChartButtons((record && record.id) || activePatientId);
@@ -12621,6 +12626,8 @@
 
         var orderLink = document.getElementById('topbar-orders-link');
         if (orderLink) orderLink.href = 'doctors_order_patient.html';
+        var erOrderLink = document.getElementById('topbar-er-orders-link');
+        if (erOrderLink) erOrderLink.href = 'doctors_order_er_admission.html';
 
         renderOrderSummary();
         renderClinicalMonitoring(null);

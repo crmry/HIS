@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOCTOR'S ORDER/PROGRESS NOTES NURSES' COMPLIANCE SHEET (ER &amp; ADMISSION)</title>
+    <style>
+        :root {
+            --ink: #111111;
+            --line: #000000;
+            --page: #ffffff;
+            --border-light: #e2e8f0;
+            --accent-green: #1b4d3e;
+            --accent-blue: #0284c7;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #d8d8d8;
+            color: var(--ink);
+            font-family: Arial, Helvetica, sans-serif;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* ── Action Toolbar ── */
+        .toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #20272c;
+            border-bottom: 1px solid #111;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #f8fafc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+        }
+
+        .toolbar a,
+        .toolbar button,
+        .toolbar select {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            padding: 6px 12px;
+            border: 1px solid #4a5568;
+            border-radius: 3px;
+            background: #2d3748;
+            color: #f8fafc;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            line-height: 1.4;
+        }
+
+        .toolbar a:hover,
+        .toolbar button:hover {
+            background: #4a5568;
+            color: #ffffff;
+        }
+
+        .toolbar a.btn-dashboard {
+            background: #1b4d3e;
+            border-color: #2e7d32;
+            font-weight: 700;
+        }
+
+        .toolbar a.btn-dashboard:hover {
+            background: #236551;
+        }
+
+        .toolbar a.btn-opd {
+            background: #0e3d59;
+            border-color: #0284c7;
+            font-weight: 600;
+        }
+
+        .toolbar a.btn-opd:hover {
+            background: #14557b;
+        }
+
+        .toolbar .view-group {
+            display: inline-flex;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #4a5568;
+            margin: 0 4px;
+        }
+
+        .toolbar .view-group button {
+            border: none;
+            border-radius: 0;
+            border-right: 1px solid #4a5568;
+            padding: 6px 12px;
+            font-weight: 600;
+            background: #2d3748;
+            color: #cbd5e1;
+        }
+
+        .toolbar .view-group button:last-child {
+            border-right: none;
+        }
+
+        .toolbar .view-group button.active {
+            background: #0284c7 !important;
+            color: #ffffff !important;
+        }
+
+        .toolbar button.btn-print {
+            background: #2563eb;
+            border-color: #1d4ed8;
+            font-weight: 700;
+        }
+
+        .toolbar button.btn-print:hover {
+            background: #1d4ed8;
+        }
+
+        .toolbar select {
+            background: #1a202c;
+            border-color: #4a5568;
+            color: #f8fafc;
+            min-width: 200px;
+        }
+
+        /* ── Standard A4 Page Layout ── */
+        .page-container {
+            width: 100%;
+            padding: 18px 0 36px;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto 30px;
+            padding: 12.7mm 12.7mm 12.7mm; /* 0.5 in / 720 dxa matching docx */
+            background: var(--page);
+            box-shadow: 0 3px 18px rgba(0, 0, 0, 0.22);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .page.is-hidden {
+            display: none !important;
+        }
+
+        /* ── Form Header ── */
+        .header-logo-wrap {
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .header-logo-wrap img {
+            max-width: 100%;
+            height: auto;
+            max-height: 48px;
+            display: inline-block;
+        }
+
+        .header-fallback-title {
+            text-align: center;
+            font-size: 11pt;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            margin: 0 0 2px;
+            text-transform: uppercase;
+        }
+
+        .header-fallback-sub {
+            text-align: center;
+            font-size: 9pt;
+            margin: 0 0 6px;
+        }
+
+        .form-titles {
+            text-align: center;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .form-title-main {
+            font-size: 12pt;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0;
+            line-height: 1.25;
+            text-transform: uppercase;
+        }
+
+        .form-title-sub {
+            font-size: 12pt;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 2px 0 0;
+            text-transform: uppercase;
+        }
+
+        .form-title-auth {
+            font-size: 12pt;
+            font-weight: 700;
+            margin: 2px 0 0;
+        }
+
+        .form-behavior-tag {
+            text-align: right;
+            font-size: 12pt;
+            font-weight: 400;
+            margin: 2px 0 6px;
+            color: #222;
+        }
+
+        /* ── Patient Demographics Section ── */
+        .patient-demographics {
+            width: 100%;
+            margin-bottom: 8px;
+            font-size: 10.5pt;
+            line-height: 1.5;
+        }
+
+        .demo-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 4px;
+            width: 100%;
+        }
+
+        .demo-field {
+            display: flex;
+            align-items: baseline;
+            min-width: 0;
+        }
+
+        .demo-field label {
+            white-space: nowrap;
+            margin-right: 4px;
+        }
+
+        .demo-field .field-line {
+            flex: 1;
+            border-bottom: 1px solid var(--line);
+            padding: 0 4px;
+            font-size: 10.5pt;
+            min-height: 17px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .demo-field.name-field { flex: 65; }
+        .demo-field.hrn-field { flex: 35; margin-left: 14px; }
+        .demo-field.addr-field { flex: 65; }
+        .demo-field.room-field { flex: 35; margin-left: 14px; }
+        .demo-field.age-field { flex: 20; }
+        .demo-field.sex-field { flex: 18; margin-left: 12px; }
+        .demo-field.admit-field { flex: 62; margin-left: 12px; }
+
+        /* ── Nurses' Compliance Legend ── */
+        .compliance-legend {
+            font-size: 10.5pt;
+            font-weight: 700;
+            margin: 6px 0 4px;
+            letter-spacing: 0.2px;
+            display: flex;
+            justify-content: flex-start;
+            gap: 16px;
+        }
+
+        /* ── Orders & Compliance Table (9 Columns Matching DOCX) ── */
+        table.orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 9.5pt;
+            margin-top: 2px;
+        }
+
+        table.orders-table th,
+        table.orders-table td {
+            border: 1px solid var(--line);
+            vertical-align: top;
+            padding: 3px 4px;
+            box-sizing: border-box;
+        }
+
+        table.orders-table thead th {
+            text-align: center;
+            font-weight: 700;
+            padding: 4px 2px;
+            background: #ffffff;
+            vertical-align: middle;
+            font-size: 9.5pt;
+            line-height: 1.2;
+        }
+
+        /* Column Widths (matching 1153, 2105, 3795, 236, 329, 237, 269, 269, 1615 dxa) */
+        table.orders-table col.col-datetime   { width: 11.5%; }
+        table.orders-table col.col-notes      { width: 21.0%; }
+        table.orders-table col.col-orders     { width: 37.9%; }
+        table.orders-table col.col-c          { width: 2.4%; }
+        table.orders-table col.col-a          { width: 3.3%; }
+        table.orders-table col.col-r          { width: 2.4%; }
+        table.orders-table col.col-e          { width: 2.7%; }
+        table.orders-table col.col-d          { width: 2.7%; }
+        table.orders-table col.col-signature  { width: 16.1%; }
+
+        table.orders-table tbody td.cell-datetime {
+            text-align: center;
+            vertical-align: top;
+            padding-top: 8px;
+            font-weight: 600;
+            font-size: 9.5pt;
+            line-height: 1.35;
+        }
+
+        table.orders-table tbody td.cell-notes {
+            padding: 4px 6px;
+            line-height: 1.35;
+            font-size: 9pt;
+        }
+
+        table.orders-table tbody td.cell-order {
+            padding: 4px 6px;
+            line-height: 1.35;
+            font-size: 9.5pt;
+        }
+
+        table.orders-table tbody td.cell-mark {
+            text-align: center;
+            vertical-align: middle;
+            padding: 0;
+            font-weight: 700;
+            font-size: 11pt;
+            color: #000;
+        }
+
+        table.orders-table tbody td.cell-sig {
+            padding: 4px 4px;
+            font-size: 8pt;
+            line-height: 1.25;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .category-label {
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 2px;
+        }
+
+        .category-text {
+            color: #111;
+            font-size: 9pt;
+            line-height: 1.3;
+        }
+
+        .template-prompt {
+            color: #555;
+            font-style: italic;
+        }
+
+        /* ── E-Signature Blocks ── */
+        .sig-block {
+            display: block;
+            text-align: center;
+            padding: 2px 0;
+            font-size: 8pt;
+            line-height: 1.2;
+        }
+
+        .sig-esig-label {
+            font-size: 7.5pt;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        .sig-name {
+            font-size: 8.5pt;
+            font-weight: 700;
+            color: #111;
+            margin-top: 1px;
+        }
+
+        .sig-meta {
+            font-size: 7.5pt;
+            color: #333;
+            margin-top: 1px;
+        }
+
+        .sig-script {
+            font-family: 'Brush Script MT', 'Segoe Script', cursive;
+            font-size: 13pt;
+            font-weight: 600;
+            color: #0f2b5c;
+            line-height: 1;
+            margin: 1px 0 -2px;
+        }
+
+        .physician-auth-row td {
+            background: #fafafa;
+        }
+
+        .supervision-note {
+            font-size: 7.5pt;
+            color: #444;
+            text-align: center;
+            line-height: 1.25;
+            padding: 4px 6px;
+        }
+
+        .sheet-end-note {
+            font-size: 7.5pt;
+            color: #444;
+            line-height: 1.25;
+            padding: 4px 6px;
+        }
+
+        /* ── Footer ── */
+        .page-footer {
+            margin-top: auto;
+            padding-top: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 8pt;
+            color: #333;
+            line-height: 1.25;
+        }
+
+        .footer-left {
+            font-size: 8pt;
+            line-height: 1.2;
+        }
+
+        .footer-right {
+            font-size: 8pt;
+            font-weight: 600;
+        }
+
+        /* ── Editable / Interactive Inputs ── */
+        .editable-cell textarea {
+            width: 100%;
+            height: 100%;
+            min-height: 48px;
+            border: none;
+            resize: vertical;
+            outline: none;
+            background: transparent;
+            font: inherit;
+            font-size: 9.5pt;
+            color: inherit;
+            padding: 0;
+            line-height: 1.35;
+        }
+
+        .editable-cell textarea:focus {
+            background: #fffde7;
+        }
+
+        /* ── Print Media Optimization ── */
+        @media print {
+            html, body {
+                background: #ffffff;
+            }
+
+            .toolbar {
+                display: none !important;
+            }
+
+            .page-container {
+                padding: 0;
+            }
+
+            .page {
+                width: 210mm;
+                min-height: 297mm;
+                margin: 0;
+                box-shadow: none;
+                padding: 10mm 10mm 10mm;
+                page-break-after: always;
+                break-after: page;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+    </style>
+    <script src="js/data/patient_seeds.js?v=20261001_01"></script>
+</head>
+<body>
+
+    <!-- ═══ ACTION TOOLBAR ═══ -->
+    <header class="toolbar" id="main-toolbar" role="banner">
+        <a href="dashboard.html" class="btn-dashboard" id="back-dashboard-btn" title="Back to Doctor's Dashboard">← Doctor's Dashboard</a>
+        <a href="doctors_order_patient.html" class="btn-opd" id="link-opd-orders" title="View Outpatient (OPD) Orders">OPD Doctor's Orders</a>
+        <a href="patients.html" title="View Patient Master List">Patient Directory</a>
+
+        <div class="view-group" role="group" aria-label="Order Sheet View Selector">
+            <button type="button" id="btn-view-er" class="active" onclick="switchView('er')" title="View Emergency Room (ER) Encounter Example">ER Example</button>
+            <button type="button" id="btn-view-admission" onclick="switchView('admission')" title="View Inpatient Admission Encounter Example">Admission Example</button>
+            <button type="button" id="btn-view-template" onclick="switchView('template')" title="View Standard CLMMRH Template Layout as Specified in Docx">Template View</button>
+            <button type="button" id="btn-view-all" onclick="switchView('all')" title="View and Print All Order Sheets">All Sheets</button>
+        </div>
+
+        <select id="patient-selector" onchange="onPatientSelect(this.value)" aria-label="Select Clinical Patient Record">
+            <option value="">Select Hospital Patient...</option>
+        </select>
+
+        <button type="button" class="btn-print" id="btn-print" onclick="window.print()" title="Print Standard A4 Order &amp; Compliance Sheet">Print Sheet</button>
+    </header>
+
+    <main class="page-container" id="page-container">
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             SHEET 1: EMERGENCY ROOM (ER) ENCOUNTER ORDER & COMPLIANCE SHEET
+             ══════════════════════════════════════════════════════════════════ -->
+        <article class="page" id="sheet-er" aria-label="Doctor's Orders Sheet - Emergency Department (ER)">
+            <header class="page-header">
+                <div class="header-logo-wrap">
+                    <img src="img/clmmrh_orders_header.png" alt="CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL" onerror="this.style.display='none'; document.getElementById('header-fallback-er').style.display='block';">
+                    <div id="header-fallback-er" style="display:none;">
+                        <h2 class="header-fallback-title">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</h2>
+                        <div class="header-fallback-sub">Lacson St., Bacolod City, Philippines</div>
+                    </div>
+                </div>
+
+                <div class="form-titles">
+                    <h1 class="form-title-main">DOCTOR'S ORDER/PROGRESS NOTES</h1>
+                    <div class="form-title-sub">NURSES' COMPLIANCE SHEET</div>
+                    <div class="form-title-auth">(Authenticate all Orders)</div>
+                </div>
+
+                <div class="form-behavior-tag">(BEHAVIOR FOR ADMISSION AND ER)</div>
+
+                <div class="patient-demographics">
+                    <div class="demo-row">
+                        <div class="demo-field name-field">
+                            <label>Name of Patient</label>
+                            <div class="field-line" id="er-patient-name">DE LA CRUZ, JUAN SANTOS</div>
+                        </div>
+                        <div class="demo-field hrn-field">
+                            <label>Hospital No.</label>
+                            <div class="field-line" id="er-patient-hrn">00-04-92-1</div>
+                        </div>
+                    </div>
+                    <div class="demo-row">
+                        <div class="demo-field addr-field">
+                            <label>Address</label>
+                            <div class="field-line" id="er-patient-address">Brgy. Singcang-Airport, Bacolod City</div>
+                        </div>
+                        <div class="demo-field room-field">
+                            <label>Ward / Room</label>
+                            <div class="field-line" id="er-patient-ward">ER - Acute Care Bed 03</div>
+                        </div>
+                    </div>
+                    <div class="demo-row">
+                        <div class="demo-field age-field">
+                            <label>Age</label>
+                            <div class="field-line" id="er-patient-age">58 y/o</div>
+                        </div>
+                        <div class="demo-field sex-field">
+                            <label>Sex</label>
+                            <div class="field-line" id="er-patient-sex">Male</div>
+                        </div>
+                        <div class="demo-field admit-field">
+                            <label>Admission Date</label>
+                            <div class="field-line" id="er-patient-admit">2026-09-18 08:30 AM</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compliance-legend">
+                    <span>C – CARRIED</span>
+                    <span>A-ADMINISTERED</span>
+                    <span>R-REQUEST MADE</span>
+                    <span>E-ENDORSED</span>
+                    <span>D-Discontinued</span>
+                </div>
+            </header>
+
+            <table class="orders-table" aria-label="ER Doctor's Orders and Nurses' Compliance Table">
+                <colgroup>
+                    <col class="col-datetime">
+                    <col class="col-notes">
+                    <col class="col-orders">
+                    <col class="col-c">
+                    <col class="col-a">
+                    <col class="col-r">
+                    <col class="col-e">
+                    <col class="col-d">
+                    <col class="col-signature">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>DATE<br>TIME</th>
+                        <th>PROGRESS NOTES</th>
+                        <th>DOCTOR'S ORDER</th>
+                        <th>C</th>
+                        <th>A</th>
+                        <th>R</th>
+                        <th>E</th>
+                        <th>D</th>
+                        <th>TIME<br>SIGNATURE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Row 1: Plan & Subjective Findings -->
+                    <tr>
+                        <td rowspan="9" class="cell-datetime">
+                            <div>2026-09-18</div>
+                            <div style="font-weight:700; color:#0e3d59;">08:30 AM</div>
+                            <div style="font-size:7.5pt; color:#475569; margin-top:6px; font-weight:normal;">[EMERGENCY]</div>
+                        </td>
+                        <td class="cell-notes">
+                            <div class="category-label">Subjective Findings:</div>
+                            <div class="category-text">Pt. c/o acute retrosternal chest heaviness (8/10), squeezing in character, radiating to left shoulder and jaw of 2 hours duration, aggravated by exertion, with diaphoresis and nausea. No prior known CAD.</div>
+                        </td>
+                        <td class="cell-order">
+                            <div class="category-label">Plan:</div>
+                            <div class="category-text">Admit to ER Monitoring Unit / Acute Care Bed. Fast-track cardiac evaluation. Continuous cardiac telemetry. Secure informed consent for admission and emergency interventions.</div>
+                        </td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">M. Torres, RN</div>
+                                <div class="sig-meta">08:40 AM | Lic. 0098231</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 2: Diet & Objective Findings -->
+                    <tr>
+                        <td class="cell-notes">
+                            <div class="category-label">Objective Findings:</div>
+                            <div class="category-text">Conscious, diaphoretic, in moderate distress.<br>BP: 160/100 | HR: 98 bpm | RR: 22 cpm | T: 36.8°C | SpO2: 95% room air.<br>Chest: Clear breath sounds, no rales/wheezes.<br>CVS: Normal S1/S2, regular rate, no murmurs.<br>Extremities: Good peripheral pulses, CRT &lt; 2s.</div>
+                        </td>
+                        <td class="cell-order">
+                            <div class="category-label">Diet:</div>
+                            <div class="category-text">NPO temporarily except sips of water with oral medications.</div>
+                        </td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">M. Torres, RN</div>
+                                <div class="sig-meta">08:40 AM | Lic. 0098231</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 3: IV & Assessment -->
+                    <tr>
+                        <td class="cell-notes">
+                            <div class="category-label">Assessment:</div>
+                            <div class="category-text"><strong>Acute Coronary Syndrome: Non-ST Elevation Myocardial Infarction (NSTEMI) / Unstable Angina; Hypertensive Urgency</strong></div>
+                        </td>
+                        <td class="cell-order">
+                            <div class="category-label">IV:</div>
+                            <div class="category-text">Insert peripheral IV line gauge 18 on non-dominant arm. Start IVF: Plain NSS 1 Liter to keep vein open (KVO) at 10-15 gtts/min via microset.</div>
+                        </td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">M. Torres, RN</div>
+                                <div class="sig-meta">08:45 AM | Lic. 0098231</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 4: Labs -->
+                    <tr>
+                        <td class="cell-notes" style="background:#fcfcfc;"></td>
+                        <td class="cell-order">
+                            <div class="category-label">Labs:</div>
+                            <div class="category-text">STAT: High-sensitivity Troponin I, CK-MB. CBC with platelet count, Serum Electrolytes (Na, K, Cl), BUN, Creatinine, Fasting Blood Sugar, Lipid Profile, PT/INR, aPTT.</div>
+                        </td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">M. Torres, RN</div>
+                                <div class="sig-meta">08:42 AM | Lic. 0098231</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 5: Diagnostics -->
+                    <tr>
+                        <td class="cell-notes" style="background:#fcfcfc;"></td>
+                        <td class="cell-order">
+                            <div class="category-label">Diagnostics:</div>
+                            <div class="category-text">STAT: Portable Chest X-Ray (AP view in bed). 12-Lead ECG now and repeat in 4 hours or for recurrent chest pain.</div>
+                        </td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">M. Torres, RN</div>
+                                <div class="sig-meta">08:43 AM | Lic. 0098231</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 6: Meds -->
+                    <tr>
+                        <td class="cell-notes" style="background:#fcfcfc;"></td>
+                        <td class="cell-order">
+                            <div class="category-label">Meds:</div>
+                            <div class="category-text">
+                                1. Chewable Aspirin 300 mg PO STAT now.<br>
+                                2. Clopidogrel 300 mg PO loading dose STAT.<br>
+                                3. Nitroglycerin 0.5 mg SL q5mins PRN for chest pain (max 3 doses, hold if SBP &lt; 100 mmHg).<br>
+                                4. Atorvastatin 80 mg PO STAT at bedtime.<br>
+                                5. Enoxaparin 60 mg (1 mg/kg) SC q12h (first dose now after baseline labs).<br>
+                                6. Metoprolol 25 mg PO BID (hold if HR &lt; 60 bpm or SBP &lt; 100 mmHg).
+                            </div>
+                        </td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">M. Torres, RN</div>
+                                <div class="sig-meta">08:50 AM | Lic. 0098231</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 7: Special Order -->
+                    <tr>
+                        <td class="cell-notes" style="background:#fcfcfc;"></td>
+                        <td class="cell-order">
+                            <div class="category-label">Special Order:</div>
+                            <div class="category-text">
+                                1. Strict bed rest in semi-Fowler's position.<br>
+                                2. Continuous telemetry and pulse oximetry.<br>
+                                3. O2 via nasal cannula at 2-3 LPM to maintain SpO2 ≥ 95%.<br>
+                                4. Strict Intake &amp; Output recording every shift.<br>
+                                5. Refer immediately for recurrent chest pain, arrhythmias, SBP &lt; 90 or &gt; 180, or HR &lt; 50 or &gt; 110.
+                            </div>
+                        </td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">M. Torres, RN</div>
+                                <div class="sig-meta">08:40 AM | Lic. 0098231</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 8: Procedures -->
+                    <tr>
+                        <td class="cell-notes" style="background:#fcfcfc;"></td>
+                        <td class="cell-order">
+                            <div class="category-label">Procedures:</div>
+                            <div class="category-text">
+                                1. 12-lead ECG tracing immediately upon arrival.<br>
+                                2. Cannulate peripheral IV line gauge 18 under aseptic technique.
+                            </div>
+                        </td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">M. Torres, RN</div>
+                                <div class="sig-meta">08:45 AM | Lic. 0098231</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 9: Physician Authentication Stamp -->
+                    <tr class="physician-auth-row">
+                        <td class="cell-notes">
+                            <div class="sheet-end-note">(Esig is required as proof of the end of process for this particular sheet)</div>
+                        </td>
+                        <td class="cell-order" style="text-align:right; padding:6px 12px;">
+                            <div class="sig-block" style="text-align:right;">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-script">Paolo Cruz, MD</div>
+                                <div class="sig-name">Paolo Cruz, MD</div>
+                                <div class="sig-meta">PRC License No.: 0124589 | 2026-09-18 08:35 AM</div>
+                            </div>
+                        </td>
+                        <td colspan="6" style="background:#f8fafc;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="9" class="supervision-note">
+                            (The required number of physician's changes based on the scenario where supervision, validation, or authorization by another physician is required.)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <footer class="page-footer">
+                <div class="footer-left">
+                    <div>Doctor's Orders Form</div>
+                    <div>CLMMRH-MRS.F.032</div>
+                    <div>Issued: 2/5/14</div>
+                    <div>Issue .No. 001</div>
+                </div>
+                <div class="footer-right">
+                    Sheet 1 of 2 (Emergency Department)
+                </div>
+            </footer>
+        </article>
+
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             SHEET 2: INPATIENT ADMISSION ORDER & COMPLIANCE SHEET
+             ══════════════════════════════════════════════════════════════════ -->
+        <article class="page" id="sheet-admission" aria-label="Doctor's Orders Sheet - Inpatient Admission">
+            <header class="page-header">
+                <div class="header-logo-wrap">
+                    <img src="img/clmmrh_orders_header.png" alt="CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL" onerror="this.style.display='none'; document.getElementById('header-fallback-adm').style.display='block';">
+                    <div id="header-fallback-adm" style="display:none;">
+                        <h2 class="header-fallback-title">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</h2>
+                        <div class="header-fallback-sub">Lacson St., Bacolod City, Philippines</div>
+                    </div>
+                </div>
+
+                <div class="form-titles">
+                    <h1 class="form-title-main">DOCTOR'S ORDER/PROGRESS NOTES</h1>
+                    <div class="form-title-sub">NURSES' COMPLIANCE SHEET</div>
+                    <div class="form-title-auth">(Authenticate all Orders)</div>
+                </div>
+
+                <div class="form-behavior-tag">(BEHAVIOR FOR ADMISSION AND ER)</div>
+
+                <div class="patient-demographics">
+                    <div class="demo-row">
+                        <div class="demo-field name-field">
+                            <label>Name of Patient</label>
+                            <div class="field-line" id="adm-patient-name">SANTOS, MARIA CLARA</div>
+                        </div>
+                        <div class="demo-field hrn-field">
+                            <label>Hospital No.</label>
+                            <div class="field-line" id="adm-patient-hrn">00-08-31-4</div>
+                        </div>
+                    </div>
+                    <div class="demo-row">
+                        <div class="demo-field addr-field">
+                            <label>Address</label>
+                            <div class="field-line" id="adm-patient-address">Brgy. Villamonte, Bacolod City</div>
+                        </div>
+                        <div class="demo-field room-field">
+                            <label>Ward / Room</label>
+                            <div class="field-line" id="adm-patient-ward">Medical Ward - Bed 302-A</div>
+                        </div>
+                    </div>
+                    <div class="demo-row">
+                        <div class="demo-field age-field">
+                            <label>Age</label>
+                            <div class="field-line" id="adm-patient-age">42 y/o</div>
+                        </div>
+                        <div class="demo-field sex-field">
+                            <label>Sex</label>
+                            <div class="field-line" id="adm-patient-sex">Female</div>
+                        </div>
+                        <div class="demo-field admit-field">
+                            <label>Admission Date</label>
+                            <div class="field-line" id="adm-patient-admit">2026-09-18 02:00 PM</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compliance-legend">
+                    <span>C – CARRIED</span>
+                    <span>A-ADMINISTERED</span>
+                    <span>R-REQUEST MADE</span>
+                    <span>E-ENDORSED</span>
+                    <span>D-Discontinued</span>
+                </div>
+            </header>
+
+            <table class="orders-table" aria-label="Inpatient Admission Doctor's Orders and Nurses' Compliance Table">
+                <colgroup>
+                    <col class="col-datetime">
+                    <col class="col-notes">
+                    <col class="col-orders">
+                    <col class="col-c">
+                    <col class="col-a">
+                    <col class="col-r">
+                    <col class="col-e">
+                    <col class="col-d">
+                    <col class="col-signature">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>DATE<br>TIME</th>
+                        <th>PROGRESS NOTES</th>
+                        <th>DOCTOR'S ORDER</th>
+                        <th>C</th>
+                        <th>A</th>
+                        <th>R</th>
+                        <th>E</th>
+                        <th>D</th>
+                        <th>TIME<br>SIGNATURE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Row 1: Plan & Subjective Findings -->
+                    <tr>
+                        <td rowspan="9" class="cell-datetime">
+                            <div>2026-09-18</div>
+                            <div style="font-weight:700; color:#1b4d3e;">02:00 PM</div>
+                            <div style="font-size:7.5pt; color:#475569; margin-top:6px; font-weight:normal;">[INPATIENT ADMISSION]</div>
+                        </td>
+                        <td class="cell-notes">
+                            <div class="category-label">Subjective Findings:</div>
+                            <div class="category-text">Transferred from ER to Medical Ward. Pt. reports persistent productive cough with yellowish sputum, intermittent fever (Tmax 38.6°C), right pleuritic chest discomfort, and generalized malaise. No hemoptysis, no shortness of breath at rest.</div>
+                        </td>
+                        <td class="cell-order">
+                            <div class="category-label">Plan:</div>
+                            <div class="category-text">Please admit patient to Medical Ward (Bed 302-A) under Internal Medicine - Pulmonology service. Secure general consent for hospital admission. Vital signs monitoring every 4 hours and record on clinical flowsheet.</div>
+                        </td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">R. Santos, RN</div>
+                                <div class="sig-meta">02:20 PM | Lic. 0142875</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 2: Diet & Objective Findings -->
+                    <tr>
+                        <td class="cell-notes">
+                            <div class="category-label">Objective Findings:</div>
+                            <div class="category-text">Fair, awake, ambulatory with assistance, not in acute distress.<br>BP: 120/80 | HR: 86 bpm | RR: 20 cpm | T: 37.8°C | SpO2: 97% room air.<br>Chest: Symmetric chest expansion, crackles/crepitations noted at right lower lung field, no wheezes.<br>Heart: Distinct S1, S2, adynamic precordium, no murmurs.<br>Abdomen: Soft, non-tender, normoactive bowel sounds.<br>Extremities: No bipedal edema, good capillary refill.</div>
+                        </td>
+                        <td class="cell-order">
+                            <div class="category-label">Diet:</div>
+                            <div class="category-text">Low Salt, Low Fat Diet with high oral fluid intake (Diet As Tolerated - DAT).</div>
+                        </td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">R. Santos, RN</div>
+                                <div class="sig-meta">02:20 PM | Lic. 0142875</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 3: IV & Assessment -->
+                    <tr>
+                        <td class="cell-notes">
+                            <div class="category-label">Assessment:</div>
+                            <div class="category-text"><strong>Community-Acquired Pneumonia, Moderate Risk (CAP-MR); Mild Dehydration, resolved.</strong></div>
+                        </td>
+                        <td class="cell-order">
+                            <div class="category-label">IV:</div>
+                            <div class="category-text">Maintain IVF: D5 0.9 NaCl 1 Liter to run at 30 gtts/min (80 cc/hr) via infusion set.</div>
+                        </td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">R. Santos, RN</div>
+                                <div class="sig-meta">02:30 PM | Lic. 0142875</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 4: Labs -->
+                    <tr>
+                        <td class="cell-notes" style="background:#fcfcfc;"></td>
+                        <td class="cell-order">
+                            <div class="category-label">Labs:</div>
+                            <div class="category-text">
+                                1. Repeat CBC with platelet count in AM.<br>
+                                2. Sputum Gram stain and Culture &amp; Sensitivity testing (early morning specimen).<br>
+                                3. Serum Electrolytes (Na, K, Cl), Serum Creatinine, Blood Uric Acid.
+                            </div>
+                        </td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">R. Santos, RN</div>
+                                <div class="sig-meta">02:25 PM | Lic. 0142875</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 5: Diagnostics -->
+                    <tr>
+                        <td class="cell-notes" style="background:#fcfcfc;"></td>
+                        <td class="cell-order">
+                            <div class="category-label">Diagnostics:</div>
+                            <div class="category-text">Chest X-Ray (PA view) follow-up in 48-72 hours or prior to discharge.</div>
+                        </td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">R. Santos, RN</div>
+                                <div class="sig-meta">02:25 PM | Lic. 0142875</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 6: Meds -->
+                    <tr>
+                        <td class="cell-notes" style="background:#fcfcfc;"></td>
+                        <td class="cell-order">
+                            <div class="category-label">Meds:</div>
+                            <div class="category-text">
+                                1. Ceftriaxone 2 grams IV OD after ANST (-) at 08:00 AM.<br>
+                                2. Azithromycin 500 mg PO OD after meals for 5 days.<br>
+                                3. Paracetamol 500 mg PO/IV q4h PRN for temperature ≥ 38.0 °C.<br>
+                                4. Salbutamol + Ipratropium (Combivent) 1 neb q8h for bronchospasm/dyspnea.<br>
+                                5. Acetylcysteine 600 mg effervescent tablet PO OD dissolved in 1/2 glass water.
+                            </div>
+                        </td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">R. Santos, RN</div>
+                                <div class="sig-meta">02:45 PM | Lic. 0142875</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 7: Special Order -->
+                    <tr>
+                        <td class="cell-notes" style="background:#fcfcfc;"></td>
+                        <td class="cell-order">
+                            <div class="category-label">Special Order:</div>
+                            <div class="category-text">
+                                1. Vital signs every 4 hours; notify physician for Temp ≥ 38.5 °C, RR ≥ 28, HR ≥ 110, or SpO2 &lt; 95%.<br>
+                                2. Encourage productive coughing and chest deep breathing exercises.<br>
+                                3. Strict Intake and Output (I&amp;O) recording every 8-hour shift.<br>
+                                4. Bed rest with bathroom privileges (BRP).
+                            </div>
+                        </td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">R. Santos, RN</div>
+                                <div class="sig-meta">02:20 PM | Lic. 0142875</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 8: Procedures -->
+                    <tr>
+                        <td class="cell-notes" style="background:#fcfcfc;"></td>
+                        <td class="cell-order">
+                            <div class="category-label">Procedures:</div>
+                            <div class="category-text">
+                                1. Perform ANST (After Negative Skin Test) for Ceftriaxone prior to first dose.<br>
+                                2. Maintain peripheral IV line with heparin lock when ambulatory.
+                            </div>
+                        </td>
+                        <td class="cell-mark">✓</td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-mark"></td>
+                        <td class="cell-sig">
+                            <div class="sig-block">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-name">R. Santos, RN</div>
+                                <div class="sig-meta">02:30 PM | Lic. 0142875</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 9: Physician Authentication Stamp -->
+                    <tr class="physician-auth-row">
+                        <td class="cell-notes">
+                            <div class="sheet-end-note">(Esig is required as proof of the end of process for this particular sheet)</div>
+                        </td>
+                        <td class="cell-order" style="text-align:right; padding:6px 12px;">
+                            <div class="sig-block" style="text-align:right;">
+                                <div class="sig-esig-label">ESIG</div>
+                                <div class="sig-script">Paolo Cruz, MD</div>
+                                <div class="sig-name">Paolo Cruz, MD</div>
+                                <div class="sig-meta">PRC License No.: 0124589 | 2026-09-18 02:15 PM</div>
+                            </div>
+                        </td>
+                        <td colspan="6" style="background:#f8fafc;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="9" class="supervision-note">
+                            (The required number of physician's changes based on the scenario where supervision, validation, or authorization by another physician is required.)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <footer class="page-footer">
+                <div class="footer-left">
+                    <div>Doctor's Orders Form</div>
+                    <div>CLMMRH-MRS.F.032</div>
+                    <div>Issued: 2/5/14</div>
+                    <div>Issue .No. 001</div>
+                </div>
+                <div class="footer-right">
+                    Sheet 2 of 2 (Inpatient Admission)
+                </div>
+            </footer>
+        </article>
+
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             SHEET 3: TEMPLATE LAYOUT AS SPECIFIED IN DOCX (CLMMRH-MRS.F.032)
+             ══════════════════════════════════════════════════════════════════ -->
+        <article class="page" id="sheet-template" aria-label="Doctor's Orders Sheet - Template Layout">
+            <header class="page-header">
+                <div class="header-logo-wrap">
+                    <img src="img/clmmrh_orders_header.png" alt="CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL" onerror="this.style.display='none'; document.getElementById('header-fallback-tmpl').style.display='block';">
+                    <div id="header-fallback-tmpl" style="display:none;">
+                        <h2 class="header-fallback-title">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</h2>
+                        <div class="header-fallback-sub">Lacson St., Bacolod City, Philippines</div>
+                    </div>
+                </div>
+
+                <div class="form-titles">
+                    <h1 class="form-title-main">DOCTOR'S ORDER/PROGRESS NOTES</h1>
+                    <div class="form-title-sub">NURSES' COMPLIANCE SHEET</div>
+                    <div class="form-title-auth">(Authenticate all Orders)</div>
+                </div>
+
+                <div class="form-behavior-tag">(BEHAVIOR FOR ADMISSION AND ER)</div>
+
+                <div class="patient-demographics">
+                    <div class="demo-row">
+                        <div class="demo-field name-field">
+                            <label>Name of Patient</label>
+                            <div class="field-line" id="tmpl-patient-name" contenteditable="true">____________________________________________</div>
+                        </div>
+                        <div class="demo-field hrn-field">
+                            <label>Hospital No.</label>
+                            <div class="field-line" id="tmpl-patient-hrn" contenteditable="true">_________________________</div>
+                        </div>
+                    </div>
+                    <div class="demo-row">
+                        <div class="demo-field addr-field">
+                            <label>Address</label>
+                            <div class="field-line" id="tmpl-patient-address" contenteditable="true">___________________________________________________</div>
+                        </div>
+                        <div class="demo-field room-field">
+                            <label>Ward / Room</label>
+                            <div class="field-line" id="tmpl-patient-ward" contenteditable="true">________________________</div>
+                        </div>
+                    </div>
+                    <div class="demo-row">
+                        <div class="demo-field age-field">
+                            <label>Age</label>
+                            <div class="field-line" id="tmpl-patient-age" contenteditable="true">________</div>
+                        </div>
+                        <div class="demo-field sex-field">
+                            <label>Sex</label>
+                            <div class="field-line" id="tmpl-patient-sex" contenteditable="true">________</div>
+                        </div>
+                        <div class="demo-field admit-field">
+                            <label>Admission Date</label>
+                            <div class="field-line" id="tmpl-patient-admit" contenteditable="true">________________________________________________________</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compliance-legend">
+                    <span>C – CARRIED</span>
+                    <span>A-ADMINISTERED</span>
+                    <span>R-REQUEST MADE</span>
+                    <span>E-ENDORSED</span>
+                    <span>D-Discontinued</span>
+                </div>
+            </header>
+
+            <table class="orders-table" aria-label="Standard Template Orders and Compliance Table">
+                <colgroup>
+                    <col class="col-datetime">
+                    <col class="col-notes">
+                    <col class="col-orders">
+                    <col class="col-c">
+                    <col class="col-a">
+                    <col class="col-r">
+                    <col class="col-e">
+                    <col class="col-d">
+                    <col class="col-signature">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>DATE<br>TIME</th>
+                        <th>PROGRESS NOTES</th>
+                        <th>DOCTOR'S ORDER</th>
+                        <th>C</th>
+                        <th>A</th>
+                        <th>R</th>
+                        <th>E</th>
+                        <th>D</th>
+                        <th>TIME<br>SIGNATURE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Entry 1: Standard Docx Specification -->
+                    <tr>
+                        <td rowspan="9" class="cell-datetime template-prompt" contenteditable="true">
+                            (Date and Time)
+                        </td>
+                        <td class="cell-notes template-prompt" contenteditable="true">
+                            (Subjective Findings)
+                        </td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (Plan:  Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-notes template-prompt" contenteditable="true">
+                            (Objective Findings)
+                        </td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (Diet: Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-notes template-prompt" contenteditable="true">
+                            (Assessment)
+                        </td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (IV: Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-notes" contenteditable="true"></td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (Labs: Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-notes" contenteditable="true"></td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (Diagnostics: Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-notes" contenteditable="true"></td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (Meds: Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-notes" contenteditable="true"></td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (Special Order: Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-notes" contenteditable="true"></td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (Procedures: Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr class="physician-auth-row">
+                        <td class="cell-notes" contenteditable="true"></td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            ESIG<br>NAME MI. LAST NAME, MD.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                        <td colspan="6"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="9" class="supervision-note" contenteditable="true">
+                            (The required number of physician's changes based on the scenario where supervision, validation, or authorization by another physician is required.)
+                        </td>
+                    </tr>
+
+                    <!-- Entry 2 / Continuation Prompt -->
+                    <tr>
+                        <td rowspan="7" class="cell-datetime template-prompt" contenteditable="true">
+                            (Date and Time)
+                        </td>
+                        <td class="cell-notes template-prompt" contenteditable="true">
+                            (Subjective Findings)
+                        </td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (Plan:  Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-notes template-prompt" contenteditable="true">
+                            (Objective Findings)
+                        </td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (Diet: Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-notes template-prompt" contenteditable="true">
+                            (Assessment)
+                        </td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (IV: Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-notes" contenteditable="true"></td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (Labs: Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-notes" contenteditable="true"></td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (Diagnostics: Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-notes" contenteditable="true"></td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            (Meds: Cell-up if blank)
+                        </td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-mark" contenteditable="true"></td>
+                        <td class="cell-sig template-prompt" contenteditable="true">
+                            ESIG<br>FNAME MI. LNAME, RN.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                    </tr>
+                    <tr class="physician-auth-row">
+                        <td class="cell-notes template-prompt" contenteditable="true">
+                            (Esig is required as proof of the end of process for this particular sheet)
+                        </td>
+                        <td class="cell-order template-prompt" contenteditable="true">
+                            ESIG<br>NAME MI. LAST NAME, MD.<br>LICENSE NO, DATE &amp; TIME
+                        </td>
+                        <td colspan="6"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <footer class="page-footer">
+                <div class="footer-left">
+                    <div>Doctor's Orders Form</div>
+                    <div>CLMMRH-MRS.F.032</div>
+                    <div>Issued: 2/5/14</div>
+                    <div>Issue .No. 001</div>
+                </div>
+                <div class="footer-right">
+                    Template Specification (CLMMRH-MRS.F.032)
+                </div>
+            </footer>
+        </article>
+
+    </main>
+
+    <script>
+        var STORAGE_KEY = window.STORAGE_KEY || 'clmmrh_patients_v1';
+        var getPatients = window.getPatients || function() {
+            try {
+                var raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    var parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                }
+            } catch (e) {}
+            return window.DEFAULT_PATIENTS || [];
+        };
+
+        var currentViewMode = 'er';
+
+        function switchView(mode) {
+            currentViewMode = mode;
+            var buttons = document.querySelectorAll('.view-group button');
+            buttons.forEach(function(b) { b.classList.remove('active'); });
+
+            var activeBtn = document.getElementById('btn-view-' + mode);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            var sheetEr = document.getElementById('sheet-er');
+            var sheetAdm = document.getElementById('sheet-admission');
+            var sheetTmpl = document.getElementById('sheet-template');
+
+            if (mode === 'er') {
+                if (sheetEr) sheetEr.classList.remove('is-hidden');
+                if (sheetAdm) sheetAdm.classList.add('is-hidden');
+                if (sheetTmpl) sheetTmpl.classList.add('is-hidden');
+            } else if (mode === 'admission') {
+                if (sheetEr) sheetEr.classList.add('is-hidden');
+                if (sheetAdm) sheetAdm.classList.remove('is-hidden');
+                if (sheetTmpl) sheetTmpl.classList.add('is-hidden');
+            } else if (mode === 'template') {
+                if (sheetEr) sheetEr.classList.add('is-hidden');
+                if (sheetAdm) sheetAdm.classList.add('is-hidden');
+                if (sheetTmpl) sheetTmpl.classList.remove('is-hidden');
+            } else if (mode === 'all') {
+                if (sheetEr) sheetEr.classList.remove('is-hidden');
+                if (sheetAdm) sheetAdm.classList.remove('is-hidden');
+                if (sheetTmpl) sheetTmpl.classList.remove('is-hidden');
+            }
+        }
+
+        function populatePatientSelector() {
+            var sel = document.getElementById('patient-selector');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">Select Hospital Patient...</option>';
+            var records = getPatients();
+            records.forEach(function(r) {
+                var p = r.data || {};
+                var name = [p.last_name, p.first_name].filter(Boolean).join(', ');
+                if (!name && p.name) name = p.name;
+                var hrn = p.hrn || p.hospital_number || r.id;
+                var opt = document.createElement('option');
+                opt.value = r.id;
+                opt.textContent = (name || 'Unnamed Patient') + ' (' + hrn + ')';
+                sel.appendChild(opt);
+            });
+        }
+
+        function onPatientSelect(pId) {
+            if (!pId) return;
+            var records = getPatients();
+            var found = records.find(function(r) { return r.id === pId; });
+            if (!found) return;
+            var p = found.data || {};
+            var fullName = [p.last_name, p.first_name, p.middle_name].filter(Boolean).join(', ');
+            var hrn = p.hrn || p.hospital_number || found.id || '—';
+            var addr = p.address || 'Bacolod City, Negros Occidental';
+            var age = p.age || '—';
+            var sex = (p.gender || p.sex || '—').charAt(0).toUpperCase() === 'M' ? 'Male' : ((p.gender || p.sex || '—').charAt(0).toUpperCase() === 'F' ? 'Female' : (p.gender || p.sex || '—'));
+            var admit = p.admission_date || p.admit_date || (p.encounters && p.encounters[0] && (p.encounters[0].date_time || p.encounters[0].date)) || '2026-09-18 08:30 AM';
+            var ward = p.ward_room || p.ward || (p.encounters && p.encounters[0] && p.encounters[0].service) || 'ER - Acute Care Bed 03';
+
+            // Update ER Sheet
+            var erName = document.getElementById('er-patient-name');
+            if (erName) erName.textContent = fullName.toUpperCase() || 'DE LA CRUZ, JUAN SANTOS';
+            var erHrn = document.getElementById('er-patient-hrn');
+            if (erHrn) erHrn.textContent = hrn;
+            var erAddr = document.getElementById('er-patient-address');
+            if (erAddr) erAddr.textContent = addr;
+            var erAge = document.getElementById('er-patient-age');
+            if (erAge) erAge.textContent = (age ? age + ' y/o' : '—');
+            var erSex = document.getElementById('er-patient-sex');
+            if (erSex) erSex.textContent = sex;
+            var erAdmit = document.getElementById('er-patient-admit');
+            if (erAdmit) erAdmit.textContent = admit;
+
+            // Update Admission Sheet
+            var admName = document.getElementById('adm-patient-name');
+            if (admName) admName.textContent = fullName.toUpperCase() || 'SANTOS, MARIA CLARA';
+            var admHrn = document.getElementById('adm-patient-hrn');
+            if (admHrn) admHrn.textContent = hrn;
+            var admAddr = document.getElementById('adm-patient-address');
+            if (admAddr) admAddr.textContent = addr;
+            var admAge = document.getElementById('adm-patient-age');
+            if (admAge) admAge.textContent = (age ? age + ' y/o' : '—');
+            var admSex = document.getElementById('adm-patient-sex');
+            if (admSex) admSex.textContent = sex;
+            var admAdmit = document.getElementById('adm-patient-admit');
+            if (admAdmit) admAdmit.textContent = admit;
+            var admWard = document.getElementById('adm-patient-ward');
+            if (admWard) admWard.textContent = (p.ward_room || 'Medical Ward - Bed 302-A');
+
+            // Update Template Sheet
+            var tmplName = document.getElementById('tmpl-patient-name');
+            if (tmplName) tmplName.textContent = fullName.toUpperCase();
+            var tmplHrn = document.getElementById('tmpl-patient-hrn');
+            if (tmplHrn) tmplHrn.textContent = hrn;
+            var tmplAddr = document.getElementById('tmpl-patient-address');
+            if (tmplAddr) tmplAddr.textContent = addr;
+            var tmplWard = document.getElementById('tmpl-patient-ward');
+            if (tmplWard) tmplWard.textContent = ward;
+            var tmplAge = document.getElementById('tmpl-patient-age');
+            if (tmplAge) tmplAge.textContent = age;
+            var tmplSex = document.getElementById('tmpl-patient-sex');
+            if (tmplSex) tmplSex.textContent = sex;
+            var tmplAdmit = document.getElementById('tmpl-patient-admit');
+            if (tmplAdmit) tmplAdmit.textContent = admit;
+        }
+
+        // Initialize on DOM load
+        document.addEventListener('DOMContentLoaded', function() {
+            populatePatientSelector();
+
+            // Check URL parameters for patient
+            var params = new URLSearchParams(window.location.search);
+            var patientParam = params.get('patient');
+            var viewParam = params.get('view');
+
+            if (patientParam) {
+                var sel = document.getElementById('patient-selector');
+                if (sel) sel.value = patientParam;
+                onPatientSelect(patientParam);
+            }
+
+            if (viewParam && ['er', 'admission', 'template', 'all'].indexOf(viewParam) !== -1) {
+                switchView(viewParam);
+            } else {
+                switchView('er');
+            }
+        });
+
+        // Window scope helpers for automated testing
+        window.switchView = switchView;
+        window.onPatientSelect = onPatientSelect;
+        window.currentViewMode = function() { return currentViewMode; };
+    </script>
+</body>
+</html>
