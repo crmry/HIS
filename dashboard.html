@@ -1752,11 +1752,22 @@
             <div class="dashlet">
               <div class="bootstrap-widget-header">
                 <div class="pull-right" style="margin-top:-3px; display:inline-flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                  <div class="encounter-date-filter-wrap" style="display:inline-flex; align-items:center; gap:4px;">
-                    <label for="encounter-date-filter" style="margin:0; font-size:11px; font-weight:700; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.25); white-space:nowrap;">Date:</label>
-                    <select id="encounter-date-filter" class="input-mini" style="height:23px; line-height:23px; font-size:11px; font-weight:600; padding:1px 6px; margin:0; border-radius:3px; border:1px solid #14532d; background:#fff; color:#0f172a; width:auto; cursor:pointer;" title="Filter encounters by date or period">
-                      <option value="all">All Dates</option>
-                      <option value="current">Current Encounter</option>
+                  <!-- Direct From & To Date Range Inputs -->
+                  <div class="encounter-date-range-wrap" style="display:inline-flex; align-items:center; gap:4px;">
+                    <label for="encounter-date-from" style="margin:0; font-size:11px; font-weight:700; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.25); white-space:nowrap;">From:</label>
+                    <input type="date" id="encounter-date-from" style="height:23px; width:114px; font-size:11px; font-weight:600; padding:1px 4px; margin:0; border-radius:3px; border:1px solid #14532d; background:#fff; color:#0f172a;" title="Filter encounters from date" aria-label="From Date">
+                    
+                    <label for="encounter-date-to" style="margin:0; font-size:11px; font-weight:700; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.25); white-space:nowrap;">To:</label>
+                    <input type="date" id="encounter-date-to" style="height:23px; width:114px; font-size:11px; font-weight:600; padding:1px 4px; margin:0; border-radius:3px; border:1px solid #14532d; background:#fff; color:#0f172a;" title="Filter encounters to date" aria-label="To Date">
+                    
+                    <button type="button" id="btn-clear-date-filter" class="btn btn-mini btn-inverse" style="padding:1px 7px; height:23px; font-size:11px; font-weight:600;" title="Clear date range to show all dates">Reset</button>
+                  </div>
+
+                  <!-- Quick Presets Dropdown -->
+                  <div class="encounter-date-preset-wrap" style="display:inline-flex; align-items:center;">
+                    <select id="encounter-date-filter" class="input-mini" style="height:23px; line-height:23px; font-size:11px; font-weight:600; padding:1px 5px; margin:0; border-radius:3px; border:1px solid #14532d; background:#fff; color:#0f172a; width:auto; cursor:pointer;" title="Quick date range presets">
+                      <option value="all">Preset: All Dates</option>
+                      <option value="current">Current Visit</option>
                       <option value="30d">Past 30 Days</option>
                       <option value="90d">Past 3 Months</option>
                       <option value="6m">Past 6 Months</option>
@@ -1765,16 +1776,14 @@
                         <option value="year-2026">2026</option>
                         <option value="year-2025">2025</option>
                       </optgroup>
-                      <option value="custom">Custom Range...</option>
+                      <option value="custom" style="display:none;">Custom Range</option>
                     </select>
                   </div>
-                  <div id="encounter-custom-date-wrap" style="display:none; align-items:center; gap:4px;">
-                    <input type="date" id="encounter-date-from" style="height:23px; width:112px; font-size:11px; padding:1px 4px; margin:0; border-radius:3px; border:1px solid #14532d; background:#fff; color:#0f172a;" title="From Date" aria-label="Start date for encounter filter">
-                    <span style="font-size:10px; color:#fff; opacity:0.85;">–</span>
-                    <input type="date" id="encounter-date-to" style="height:23px; width:112px; font-size:11px; padding:1px 4px; margin:0; border-radius:3px; border:1px solid #14532d; background:#fff; color:#0f172a;" title="To Date" aria-label="End date for encounter filter">
-                    <button type="button" class="btn btn-mini btn-inverse" id="btn-apply-custom-date" style="padding:1px 7px; font-size:11px; font-weight:600; height:23px;" title="Apply date range">Filter</button>
-                  </div>
+
+                  <!-- Live Count Badge -->
                   <span id="encounter-filter-count-badge" class="badge" style="font-size:10px; font-weight:700; padding:2px 6px; background:rgba(0,0,0,0.3); color:#fff; border-radius:10px; letter-spacing:0.2px;" title="Filtered encounter count">9 visits</span>
+
+                  <!-- Department Filter Buttons -->
                   <div class="btn-group" id="encounter-dept-filter-group">
                     <button type="button" class="btn btn-mini active" data-dept="all" title="Show all encounters">All</button>
                     <button type="button" class="btn btn-mini" data-dept="IP" title="Show InPatient encounters only">IP</button>
@@ -8506,28 +8515,94 @@
       renderEncounters(loadedEncounters, true);
     }
 
-    function setEncounterDateFilter(mode) {
-      activeEncounterDateFilter = mode || 'all';
+    function setEncounterDateRange(fromDate, toDate, presetName) {
+      customEncounterDateFrom = (fromDate || '').trim();
+      customEncounterDateTo = (toDate || '').trim();
+      activeEncounterDateFilter = presetName || ((customEncounterDateFrom || customEncounterDateTo) ? 'custom' : 'all');
       window.activeEncounterDateFilter = activeEncounterDateFilter;
-      var customWrap = document.getElementById('encounter-custom-date-wrap');
-      if (customWrap) {
-        customWrap.style.display = (mode === 'custom') ? 'inline-flex' : 'none';
-      }
-      var dateSel = document.getElementById('encounter-date-filter');
-      if (dateSel && dateSel.value !== activeEncounterDateFilter) {
-        dateSel.value = activeEncounterDateFilter;
+      window.customEncounterDateFrom = customEncounterDateFrom;
+      window.customEncounterDateTo = customEncounterDateTo;
+
+      var fromEl = document.getElementById('encounter-date-from');
+      var toEl = document.getElementById('encounter-date-to');
+      if (fromEl && fromEl.value !== customEncounterDateFrom) fromEl.value = customEncounterDateFrom;
+      if (toEl && toEl.value !== customEncounterDateTo) toEl.value = customEncounterDateTo;
+
+      var presetSel = document.getElementById('encounter-date-filter');
+      if (presetSel && presetSel.value !== activeEncounterDateFilter) {
+        presetSel.value = activeEncounterDateFilter;
       }
       renderEncounters(loadedEncounters, true);
     }
-    window.setEncounterDateFilter = setEncounterDateFilter;
+    window.setEncounterDateRange = setEncounterDateRange;
+
+    function applyDatePreset(preset) {
+      var fromVal = '';
+      var toVal = '';
+
+      if (!preset || preset === 'all') {
+        setEncounterDateRange('', '', 'all');
+        return;
+      }
+
+      var maxEncMs = 0;
+      var latestDateStr = '';
+      (loadedEncounters || []).forEach(function (e) {
+        var ms = parseEncounterDateTime(e);
+        if (ms > maxEncMs) {
+          maxEncMs = ms;
+          latestDateStr = getEncounterDateStr(e);
+        }
+      });
+      var refDate = latestDateStr ? new Date(latestDateStr + 'T00:00:00') : new Date();
+
+      function formatYMD(d) {
+        var year = d.getFullYear();
+        var m = String(d.getMonth() + 1);
+        if (m.length < 2) m = '0' + m;
+        var day = String(d.getDate());
+        if (day.length < 2) day = '0' + day;
+        return year + '-' + m + '-' + day;
+      }
+
+      if (preset === 'current') {
+        var currentEnc = (loadedEncounters || []).find(function (e) { return e && (e.is_current || e.isCurrent); });
+        var curDateStr = currentEnc ? getEncounterDateStr(currentEnc) : latestDateStr;
+        fromVal = curDateStr;
+        toVal = curDateStr;
+      } else if (preset === '30d') {
+        var past30 = new Date(refDate.getTime() - (30 * 86400000));
+        fromVal = formatYMD(past30);
+        toVal = formatYMD(refDate);
+      } else if (preset === '90d') {
+        var past90 = new Date(refDate.getTime() - (90 * 86400000));
+        fromVal = formatYMD(past90);
+        toVal = formatYMD(refDate);
+      } else if (preset === '6m') {
+        var past180 = new Date(refDate.getTime() - (183 * 86400000));
+        fromVal = formatYMD(past180);
+        toVal = formatYMD(refDate);
+      } else if (preset === '1y') {
+        var past1y = new Date(refDate.getTime() - (366 * 86400000));
+        fromVal = formatYMD(past1y);
+        toVal = formatYMD(refDate);
+      } else if (preset.indexOf('year-') === 0) {
+        var yr = preset.replace('year-', '');
+        fromVal = yr + '-01-01';
+        toVal = yr + '-12-31';
+      }
+
+      setEncounterDateRange(fromVal, toVal, preset);
+    }
+    window.applyDatePreset = applyDatePreset;
+    window.setEncounterDateFilter = function (preset) {
+      applyDatePreset(preset);
+    };
 
     function resetEncounterFilters() {
       activeEncounterDeptFilter = 'all';
       window.activeEncounterDeptFilter = 'all';
-      activeEncounterDateFilter = 'all';
-      window.activeEncounterDateFilter = 'all';
-      customEncounterDateFrom = '';
-      customEncounterDateTo = '';
+      setEncounterDateRange('', '', 'all');
       var deptGroup = document.getElementById('encounter-dept-filter-group');
       if (deptGroup) {
         deptGroup.querySelectorAll('button[data-dept]').forEach(function (b) {
@@ -8535,15 +8610,6 @@
           else b.classList.remove('active', 'btn-primary');
         });
       }
-      var dateSel = document.getElementById('encounter-date-filter');
-      if (dateSel) dateSel.value = 'all';
-      var customWrap = document.getElementById('encounter-custom-date-wrap');
-      if (customWrap) customWrap.style.display = 'none';
-      var fromInput = document.getElementById('encounter-date-from');
-      var toInput = document.getElementById('encounter-date-to');
-      if (fromInput) fromInput.value = '';
-      if (toInput) toInput.value = '';
-      renderEncounters(loadedEncounters, true);
     }
     window.resetEncounterFilters = resetEncounterFilters;
 
@@ -8560,34 +8626,30 @@
     var encounterDateFilterEl = document.getElementById('encounter-date-filter');
     if (encounterDateFilterEl) {
       encounterDateFilterEl.addEventListener('change', function () {
-        setEncounterDateFilter(this.value);
+        applyDatePreset(this.value);
       });
     }
 
-    var btnApplyCustomDate = document.getElementById('btn-apply-custom-date');
-    if (btnApplyCustomDate) {
-      btnApplyCustomDate.addEventListener('click', function () {
-        var fromEl = document.getElementById('encounter-date-from');
-        var toEl = document.getElementById('encounter-date-to');
-        customEncounterDateFrom = (fromEl ? fromEl.value : '').trim();
-        customEncounterDateTo = (toEl ? toEl.value : '').trim();
-        renderEncounters(loadedEncounters, true);
+    var btnClearDateFilterEl = document.getElementById('btn-clear-date-filter');
+    if (btnClearDateFilterEl) {
+      btnClearDateFilterEl.addEventListener('click', function () {
+        resetEncounterFilters();
       });
+    }
+
+    function onDateRangeInputChanged() {
+      var fromEl = document.getElementById('encounter-date-from');
+      var toEl = document.getElementById('encounter-date-to');
+      var f = (fromEl ? fromEl.value : '').trim();
+      var t = (toEl ? toEl.value : '').trim();
+      setEncounterDateRange(f, t, (f || t) ? 'custom' : 'all');
     }
 
     ['encounter-date-from', 'encounter-date-to'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) {
-        el.addEventListener('keyup', function (e) {
-          if (e.key === 'Enter' && btnApplyCustomDate) btnApplyCustomDate.click();
-        });
-        el.addEventListener('change', function () {
-          var fromEl = document.getElementById('encounter-date-from');
-          var toEl = document.getElementById('encounter-date-to');
-          customEncounterDateFrom = (fromEl ? fromEl.value : '').trim();
-          customEncounterDateTo = (toEl ? toEl.value : '').trim();
-          renderEncounters(loadedEncounters, true);
-        });
+        el.addEventListener('input', onDateRangeInputChanged);
+        el.addEventListener('change', onDateRangeInputChanged);
       }
     });
 

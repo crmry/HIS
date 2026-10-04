@@ -215,15 +215,35 @@ async def scan_single_target(browser_ws, file_url):
                     if (window.currentHxFilter !== 'ALL') return 'Clicking ALL filter did not update currentHxFilter';
                 }
 
-                // Test Patient Encounter Date Filter Controls
+                // Test Patient Encounter Date Filter Controls & Direct From/To Inputs
                 const encDateSel = document.getElementById('encounter-date-filter');
+                const encDateFrom = document.getElementById('encounter-date-from');
+                const encDateTo = document.getElementById('encounter-date-to');
+                const btnClearDate = document.getElementById('btn-clear-date-filter');
+
+                if (encDateFrom && encDateTo && btnClearDate) {
+                    encDateFrom.value = '2026-09-01';
+                    encDateFrom.dispatchEvent(new Event('change'));
+                    encDateTo.value = '2026-09-26';
+                    encDateTo.dispatchEvent(new Event('change'));
+                    if (window.activeEncounterDateFilter !== 'custom') return 'Direct date range input did not set activeEncounterDateFilter to custom';
+                    if (window.customEncounterDateFrom !== '2026-09-01' || window.customEncounterDateTo !== '2026-09-26') return 'Date range values not stored in window state';
+
+                    btnClearDate.click();
+                    if (encDateFrom.value !== '' || encDateTo.value !== '') return 'Reset button did not clear From/To date inputs';
+                    if (window.activeEncounterDateFilter !== 'all') return 'Reset button did not restore activeEncounterDateFilter to all';
+                }
+
                 if (encDateSel) {
                     encDateSel.value = 'year-2026';
                     encDateSel.dispatchEvent(new Event('change'));
                     if (window.activeEncounterDateFilter !== 'year-2026') return 'Changing encounter date filter did not update activeEncounterDateFilter';
+                    if (encDateFrom && encDateFrom.value !== '2026-01-01') return 'Preset year-2026 did not populate From input';
+                    if (encDateTo && encDateTo.value !== '2026-12-31') return 'Preset year-2026 did not populate To input';
                     encDateSel.value = 'all';
                     encDateSel.dispatchEvent(new Event('change'));
                     if (window.activeEncounterDateFilter !== 'all') return 'Resetting encounter date filter did not restore all';
+                    if (encDateFrom && encDateFrom.value !== '') return 'Resetting encounter date filter did not clear From input';
                 }
 
                 // Test Medical History Accordion Card Toggling (Individual Headers)
