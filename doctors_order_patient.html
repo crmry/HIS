@@ -386,6 +386,70 @@
             text-align: left;
         }
 
+        .enc-sig-role {
+            font-size: 7.5pt;
+            font-weight: 700;
+            color: #1e3a8a;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .enc-sig-dual-wrap {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .enc-cosig-pending-badge {
+            margin-top: 6px;
+            padding: 5px 8px;
+            background: #fffbeb;
+            border: 1px dashed #d97706;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 7.5pt;
+            color: #92400e;
+        }
+
+        .enc-cosig-pending-badge strong {
+            color: #b45309;
+        }
+
+        .btn-approve-sheet-cosig {
+            margin-top: 4px;
+            padding: 3px 8px;
+            font-size: 7pt;
+            background: #1b4d3e;
+            color: #fff;
+            border: 1px solid #133a2e;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-approve-sheet-cosig:hover {
+            background: #14372c;
+        }
+
+        .badge-cosig-approved {
+            font-size: 7pt;
+            color: #15803d;
+            font-weight: 700;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .enc-sig-audit {
+            font-size: 6.5pt;
+            color: #64748b;
+            font-family: monospace;
+            margin-top: 2px;
+        }
+
         .toolbar {
             display: none !important;
             position: sticky;
@@ -1275,7 +1339,7 @@
         }
 
         // Estimate row height in pixels for pagination.
-        function buildSignatureRowHtml(physician, license, isContinuation, nextPage, isLastEncounter, encDate) {
+        function buildSignatureRowHtml(physician, license, isContinuation, nextPage, isLastEncounter, encDate, cosignature, encIndex) {
             var rawName = physician ? String(physician).trim() : '';
             if (/^Dr\.?\s+/i.test(rawName) && /,\s*M\.?D\.?/i.test(rawName)) {
                 rawName = rawName.replace(/^Dr\.?\s+/i, '');
@@ -1291,19 +1355,89 @@
                 ? '<div class="enc-sig-process-note">(Esig is required as proof of the end of process for this particular sheet)</div>'
                 : '';
 
+            var stampHtml = '';
+
+            // Check if Pairing / Co-Signature was selected
+            if (cosignature && cosignature.status && cosignature.status !== 'NONE') {
+                var pDocName = cosignature.doctor_name || cosignature.paired_doctor || 'Dr. Maria Santos';
+                var pDocPrc = cosignature.doctor_prc || cosignature.paired_doctor_prc || '0095512';
+                var pDocSig = pDocName.replace(/^Dr\.\s*/i, '').replace(/,\s*MD$/i, '').trim();
+
+                if (cosignature.status === 'APPROVED' || cosignature.status === 'CO-SIGNED') {
+                    var approvedDateDisplay = cosignature.approved_at ? formatDateTime(cosignature.approved_at) : (dateDisplay || 'Approved');
+                    var auditRef = cosignature.audit_ref || ('COSIG-' + (encIndex != null ? encIndex : '1'));
+
+                    stampHtml =
+                        '<div class="enc-sig-dual-wrap">' +
+                        '  <div class="enc-sig-block">' +
+                        '    <div class="enc-sig-role">Ordered by: Dr. ' + physName + ' [E-Signature]</div>' +
+                        '    <div class="enc-sig-tag">ESIG</div>' +
+                        '    <div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
+                        '    <div class="enc-sig-line-draw">________________________________</div>' +
+                        '    <div class="enc-sig-name">' + physName + '</div>' +
+                        '    <div class="enc-sig-lic">PRC Lic. No.: ' + licText + (dateDisplay ? ' &bull; ' + escapeHtml(dateDisplay) : '') + '</div>' +
+                        '  </div>' +
+                        '  <div class="enc-sig-block" style="border-left:1px dashed #cbd5e1; padding-left:14px;">' +
+                        '    <div class="enc-sig-role" style="color:#15803d;">Co-Signed by: Dr. ' + escapeHtml(pDocName) + ' [E-Signature]</div>' +
+                        '    <div class="enc-sig-tag" style="color:#15803d;">ESIG CO-SIGNATURE</div>' +
+                        '    <div class="enc-sig-cursive" style="color:#14532d;">' + escapeHtml(pDocSig) + '</div>' +
+                        '    <div class="enc-sig-line-draw">________________________________</div>' +
+                        '    <div class="enc-sig-name">' + escapeHtml(pDocName) + '</div>' +
+                        '    <div class="enc-sig-lic">PRC Lic. No.: ' + escapeHtml(pDocPrc) + ' &bull; Co-Signed: ' + escapeHtml(approvedDateDisplay) + '</div>' +
+                        '    <div class="enc-sig-audit">Audit Ref: ' + escapeHtml(auditRef) + '</div>' +
+                        '  </div>' +
+                        '</div>' +
+                        '<div style="text-align:center; margin-top:4px;">' +
+                        '  <span class="badge-cosig-approved">Co-Signature: Approved / Co-Signed</span>' +
+                        '</div>' +
+                        '<div class="enc-sig-supervision" style="margin-top:2px;">(The required number of physician’s changes based on the scenario where supervision, validation, or authorization by another physician is required.)</div>' +
+                        contNotice;
+                } else {
+                    // PENDING Co-Signature:
+                    // Display requesting doctor ESIG + Pending status badge
+                    // Do NOT display the paired doctor's e-signature yet!
+                    var approveBtnHtml = (encIndex != null)
+                        ? '<button type="button" class="btn-approve-sheet-cosig" onclick="approveSheetOrderCoSignature(' + encIndex + ')">Co-Sign / Approve Order</button>'
+                        : '';
+
+                    stampHtml =
+                        '<div class="enc-sig-block">' +
+                        '  <div class="enc-sig-role">Ordered by: Dr. ' + physName + ' [E-Signature]</div>' +
+                        '  <div class="enc-sig-tag">ESIG</div>' +
+                        '  <div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
+                        '  <div class="enc-sig-line-draw">________________________________</div>' +
+                        '  <div class="enc-sig-name">' + physName + '</div>' +
+                        '  <div class="enc-sig-lic">PRC Lic. No.: ' + licText + (dateDisplay ? ' &bull; ' + escapeHtml(dateDisplay) : '') + '</div>' +
+                        '  <div class="enc-cosig-pending-badge">' +
+                        '    <strong>Co-Signature: Pending – Dr. ' + escapeHtml(pDocName) + '</strong>' +
+                        '    <div style="font-size:6.8pt; color:#b45309; margin-top:2px;">Awaiting supervisory authorization &amp; co-signature</div>' +
+                        '    ' + approveBtnHtml +
+                        '  </div>' +
+                        '  <div class="enc-sig-supervision" style="margin-top:3px;">(The required number of physician’s changes based on the scenario where supervision, validation, or authorization by another physician is required.)</div>' +
+                        contNotice +
+                        '</div>';
+                }
+            } else {
+                // Default: NONE was selected (or no pairing)
+                // Requesting doctor ESIG only, no blank co-signature field or unnecessary "Awaiting Approval" status
+                stampHtml =
+                    '<div class="enc-sig-block">' +
+                    '  <div class="enc-sig-role">Ordered by: Dr. ' + physName + ' [E-Signature]</div>' +
+                    '  <div class="enc-sig-tag">ESIG</div>' +
+                    '  <div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
+                    '  <div class="enc-sig-line-draw">________________________________</div>' +
+                    '  <div class="enc-sig-name">' + physName + '</div>' +
+                    '  <div class="enc-sig-lic">PRC Lic. No.: ' + licText + (dateDisplay ? ' &bull; ' + escapeHtml(dateDisplay) : '') + '</div>' +
+                    '  <div class="enc-sig-supervision">(The required number of physician’s changes based on the scenario where supervision, validation, or authorization by another physician is required.)</div>' +
+                    contNotice +
+                    '</div>';
+            }
+
             return '<tr class="enc-sig-row' + (isContinuation ? ' enc-sig-row-cont' : '') + '">' +
                 '<td class="cell-datetime enc-sig-spacer"></td>' +
                 '<td class="cell-notes enc-sig-spacer">' + processNote + '</td>' +
                 '<td class="enc-sig-stamp">' +
-                '<div class="enc-sig-block">' +
-                '<div class="enc-sig-tag">ESIG</div>' +
-                '<div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
-                '<div class="enc-sig-line-draw">________________________________</div>' +
-                '<div class="enc-sig-name">' + physName + '</div>' +
-                '<div class="enc-sig-lic">PRC Lic. No.: ' + licText + (dateDisplay ? ' &bull; ' + escapeHtml(dateDisplay) : '') + '</div>' +
-                '<div class="enc-sig-supervision">(The required number of physician’s changes based on the scenario where supervision, validation, or authorization by another physician is required.)</div>' +
-                contNotice +
-                '</div>' +
+                stampHtml +
                 '</td>' +
                 '<td colspan="6" class="enc-sig-spacer"><hr class="enc-sig-divider"></td>' +
                 '</tr>';
@@ -1311,7 +1445,15 @@
 
         function estimateRowHeight(item) {
             if (!item) return 35;
-            if (item.isSigRow) return item.isContinuationSig ? 70 : 80; // signature stamp row
+            if (item.isSigRow) {
+                if (item.cosignature && (item.cosignature.status === 'APPROVED' || item.cosignature.status === 'CO-SIGNED')) {
+                    return 115;
+                }
+                if (item.cosignature && item.cosignature.status === 'PENDING') {
+                    return 105;
+                }
+                return item.isContinuationSig ? 70 : 80;
+            }
             return 35; // Each table row is fixed height 9.2mm (~35px) in hospital compliance form
         }
 
@@ -1475,7 +1617,7 @@
                     }
                     if (pr.item.isSigRow) {
                         // Physician authentication stamp (standard between encounters or page continuation break)
-                        inner += buildSignatureRowHtml(pr.item.physician, pr.item.prc_license, pr.item.isContinuationSig, pr.item.nextPage, pr.item.isLastEncounter, pr.item.encDate);
+                        inner += buildSignatureRowHtml(pr.item.physician, pr.item.prc_license, pr.item.isContinuationSig, pr.item.nextPage, pr.item.isLastEncounter, pr.item.encDate, pr.item.cosignature, pr.item.encIndex);
                         r++;
                         continue;
                     }
@@ -1593,7 +1735,7 @@
             const blocks = [];
             let primaryAssigned = false;
 
-            encounters.forEach((enc) => {
+            encounters.forEach((enc, encIdx) => {
                 const encDate = String(enc?.date || "").trim();
                 const encTime = parseEncounterDateTime(enc);
 
@@ -1727,6 +1869,7 @@
                 // Support clinical notes with or without orders (DOH compliant)
                 if (hasOrders || hasNotes || isAdmission) {
                     blocks.push({
+                        encIndex: encIdx,
                         date: enc.date || "",
                         time: enc.time || "",
                         dateTime: dt,
@@ -1735,7 +1878,8 @@
                         noteLines,
                         orders: categorizedOrders,
                         physician: enc.physician || data.physician || "",
-                        prc_license: enc.prc_license || data.prc_license || ""
+                        prc_license: enc.prc_license || data.prc_license || "",
+                        cosignature: enc.cosignature || (enc.orders && enc.orders.cosignature) || (data.orders && data.orders.cosignature) || null
                     });
                 }
             });
@@ -1836,7 +1980,9 @@
                     physician: block.physician || "",
                     prc_license: block.prc_license || "",
                     encDate: block.date || "",
-                    isLastEncounter: blockIdx === blocks.length - 1
+                    isLastEncounter: blockIdx === blocks.length - 1,
+                    cosignature: block.cosignature || null,
+                    encIndex: block.encIndex !== undefined ? block.encIndex : blockIdx
                 });
             });
 
@@ -2088,6 +2234,21 @@
                         <textarea id="sheet-enc-custom-orders" rows="3" style="width:100%; box-sizing:border-box; font-size:12px; font-family:Arial, Helvetica, sans-serif; padding:6px; border:1px solid #ccc; border-radius:3px;" placeholder="Wean off nasal cannula oxygen; maintain SpO2 >= 95%&#10;Continue IV Ceftriaxone 2 g OD&#10;Shift Azithromycin to oral 500 mg tablet OD"></textarea>
                     </div>
                 </div>
+                <div style="background:#f0f7fb; border:1px solid #cbe4f4; border-radius:4px; padding:12px 14px; margin-bottom:12px;">
+                    <label style="font-weight:700; font-size:12px; color:#0e3d59; margin-bottom:4px; display:block;">Pairing / Co-Signature Doctor</label>
+                    <div style="font-size:11px; color:#555; margin-bottom:6px;">
+                        Supervisory co-signature authorization (Optional). Default is <strong>NONE</strong>.
+                    </div>
+                    <select id="sheet-enc-cosig-doctor" style="width:100%; box-sizing:border-box; height:32px; font-size:12px; padding:4px 8px; border:1px solid #777; border-radius:3px; background:#fff;">
+                        <option value="NONE" selected>NONE — No Co-Signature Required (Requesting Doctor Only)</option>
+                        <option value="santos_maria">Dr. Maria Santos • Internal Medicine • PRC: 0095512</option>
+                        <option value="cruz_paolo">Dr. Paolo Cruz • Orthopedic Surgery • PRC: 0087654</option>
+                        <option value="reyes_andrea">Dr. Andrea Reyes • Pediatrics • PRC: 0102938</option>
+                        <option value="garcia_liza">Dr. Liza Garcia • Obstetrics &amp; Gynecology • PRC: 0091234</option>
+                        <option value="lim_roberto">Dr. Roberto Lim • Emergency Medicine • PRC: 0076543</option>
+                        <option value="santos_miguel">Dr. Miguel Santos • General Medicine • PRC: 0094821</option>
+                    </select>
+                </div>
             </div>
             <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 6px 6px; display:flex; justify-content:space-between; align-items:center;">
                 <span style="font-size:11px; color:#718096;">Persisted in localStorage &amp; updates sheet immediately</span>
@@ -2174,6 +2335,8 @@
             if (diagInput) {
                 diagInput.value = "";
             }
+            var cosigSelect = document.getElementById("sheet-enc-cosig-doctor");
+            if (cosigSelect) cosigSelect.value = "NONE";
             modal.classList.add("open");
         }
 
@@ -2266,6 +2429,29 @@
                     }
                 }
 
+                var cosigVal = (document.getElementById("sheet-enc-cosig-doctor") ? document.getElementById("sheet-enc-cosig-doctor").value : "NONE");
+                var cosigData = null;
+                if (cosigVal && cosigVal !== "NONE") {
+                    var dir = (typeof window.HOSPITAL_PHYSICIANS_DIRECTORY !== "undefined") ? window.HOSPITAL_PHYSICIANS_DIRECTORY : [];
+                    var matchedDoc = dir.find(function (d) { return d.id === cosigVal; });
+                    if (matchedDoc) {
+                        cosigData = {
+                            status: "PENDING",
+                            paired_doctor_id: matchedDoc.id,
+                            doctor_name: matchedDoc.name,
+                            doctor_title: matchedDoc.title || ("Dr. " + matchedDoc.name),
+                            doctor_specialty: matchedDoc.specialty,
+                            doctor_prc: matchedDoc.prc,
+                            doctor_signature: matchedDoc.signature || (matchedDoc.name + ", MD"),
+                            paired_at: new Date().toISOString(),
+                            paired_by: physician || "Requesting Physician",
+                            approved_at: null,
+                            approved_by: null,
+                            audit_ref: null
+                        };
+                    }
+                }
+
                 var newEncounter = {
                     date: encDate,
                     time: encTime || "08:00 AM",
@@ -2278,7 +2464,8 @@
                     patient_record: "Clinical round observation",
                     results: "Clinically documented",
                     progress_notes: notes,
-                    orders: orders
+                    orders: orders,
+                    cosignature: cosigData
                 };
 
                 var pid = (currentLoadedRecord && currentLoadedRecord.id) || SEED_PATIENT_ID;
@@ -2449,6 +2636,76 @@
                 closeSheetSimModal();
             });
         }
+
+        // ── Co-Signature Authorization & Approval Handler ──
+        function approveSheetOrderCoSignature(encIndex) {
+            var pid = (currentLoadedRecord && currentLoadedRecord.id) || SEED_PATIENT_ID;
+            var records = getPatients();
+            var idx = records.findIndex(function (r) { return r.id === pid; });
+            if (idx < 0) {
+                alert("Patient record not found.");
+                return;
+            }
+
+            var encList = records[idx].data && records[idx].data.encounters;
+            if (!Array.isArray(encList) || !encList[encIndex]) {
+                alert("Target encounter not found.");
+                return;
+            }
+
+            var enc = encList[encIndex];
+            var cosig = enc.cosignature || (enc.orders && enc.orders.cosignature);
+            if (!cosig || cosig.status !== "PENDING") {
+                alert("This order does not have a pending co-signature.");
+                return;
+            }
+
+            var docName = cosig.doctor_title || ("Dr. " + cosig.doctor_name);
+            var confirmMsg = "CO-SIGNATURE AUTHORIZATION CONFIRMATION\n\n" +
+                "Authorize and co-sign this Doctor's Order as:\n" +
+                docName + "\n" +
+                (cosig.doctor_specialty ? cosig.doctor_specialty + "\n" : "") +
+                "PRC Lic. No.: " + cosig.doctor_prc + "\n\n" +
+                "Encounter Date: " + (enc.date || "Today") + "\n" +
+                "Ordering Physician: " + (enc.physician || "Attending Physician") + "\n\n" +
+                "Proceed to authenticate with digital signature?";
+
+            if (typeof window.__bypassConfirm === "undefined") {
+                if (window.confirm && !window.confirm(confirmMsg)) return;
+            }
+
+            var nowIso = new Date().toISOString();
+            var auditCode = "COSIG-" + Date.now().toString(36).toUpperCase();
+
+            cosig.status = "APPROVED";
+            cosig.approved_at = nowIso;
+            cosig.approved_by = cosig.doctor_name;
+            cosig.audit_ref = auditCode;
+
+            enc.cosignature = Object.assign({}, cosig);
+            if (enc.orders && typeof enc.orders === "object" && !Array.isArray(enc.orders)) {
+                enc.orders.cosignature = Object.assign({}, cosig);
+            }
+
+            if (enc.is_current) {
+                if (!records[idx].data.orders) records[idx].data.orders = {};
+                records[idx].data.orders.cosignature = Object.assign({}, cosig);
+            }
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+            currentLoadedRecord = records[idx];
+            loadPatientRecord(records[idx], "current");
+
+            if (loadStatus) {
+                loadStatus.textContent = "Co-signature approved and authenticated by " + docName + " (" + auditCode + ")";
+                window.setTimeout(function () {
+                    if (loadStatus && loadStatus.textContent && loadStatus.textContent.includes("Co-signature approved")) {
+                        loadStatus.textContent = "";
+                    }
+                }, 4000);
+            }
+        }
+        window.approveSheetOrderCoSignature = approveSheetOrderCoSignature;
     </script>
 
 </body>

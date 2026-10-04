@@ -391,11 +391,90 @@ async def scan_single_target(browser_ws, file_url):
                     if (hpiTabLi && hpiTabLi.style.display === 'none') {
                         return 'HPI tab should be restored on OPD';
                     }
+
+                    // Test Doctors' Order Pairing & Co-Signature Workflow
+                    const saveOrdersBtn = document.getElementById('save-orders-btn');
+                    const cosigModal = document.getElementById('modal-order-cosignature');
+                    const cosigSelect = document.getElementById('cosig-doctor-select');
+                    const cosigApprovalModal = document.getElementById('modal-cosig-approval');
+                    const cosigBanner = document.getElementById('orders-cosig-status-banner');
+
+                    if (!saveOrdersBtn || !cosigModal || !cosigSelect || !cosigApprovalModal || !cosigBanner) {
+                        return 'Doctors order co-signature modal or banner elements missing on dashboard.html';
+                    }
+
+                    // Test 1: Clicking Save Orders opens the pairing modal
+                    saveOrdersBtn.click();
+                    if (!cosigModal.classList.contains('open')) {
+                        return 'Clicking save-orders-btn did not open modal-order-cosignature';
+                    }
+
+                    // Test 2: Default selection MUST be NONE
+                    if (cosigSelect.value !== 'NONE') {
+                        return 'Default selection in cosig-doctor-select is not NONE';
+                    }
+
+                    // Test 3: Closing modal without selection
+                    const btnCancelCosig = document.getElementById('btn-cancel-cosig');
+                    if (btnCancelCosig) btnCancelCosig.click();
+                    if (cosigModal.classList.contains('open')) {
+                        return 'Cancel button failed to close modal-order-cosignature';
+                    }
+
+                    // Test 4: Open and select a paired doctor (Dr. Maria Santos)
+                    if (typeof window.openOrderCosignatureModal === 'function') {
+                        window.openOrderCosignatureModal();
+                        cosigSelect.value = 'santos_maria';
+                        cosigSelect.dispatchEvent(new Event('change'));
+                        const btnConfirmSave = document.getElementById('btn-confirm-save-cosig');
+                        if (btnConfirmSave) {
+                            btnConfirmSave.click();
+                        } else if (typeof window.confirmAndSaveOrderWithCosignature === 'function') {
+                            window.confirmAndSaveOrderWithCosignature();
+                        }
+
+                        if (!window.activeOrderCoSignature || window.activeOrderCoSignature.status !== 'PENDING') {
+                            return 'Selecting paired doctor did not set activeOrderCoSignature to PENDING';
+                        }
+                        if (cosigBanner.style.display === 'none') {
+                            return 'Co-signature status banner not displayed for pending co-signature';
+                        }
+                        if (!cosigBanner.textContent.includes('Dr. Maria Santos')) {
+                            return 'Co-signature status banner does not reference paired doctor';
+                        }
+
+                        // Test 5: Authorization and co-signature approval
+                        if (typeof window.openCosigApprovalModal === 'function') {
+                            window.openCosigApprovalModal();
+                            if (!cosigApprovalModal.classList.contains('open')) {
+                                return 'Failed to open co-signature approval modal';
+                            }
+                            if (typeof window.executeCoSignatureApproval === 'function') {
+                                window.executeCoSignatureApproval();
+                                if (window.activeOrderCoSignature.status !== 'APPROVED') {
+                                    return 'executeCoSignatureApproval did not mark status as APPROVED';
+                                }
+                                if (!cosigBanner.textContent.includes('Approved / Co-Signed')) {
+                                    return 'Banner does not display Approved / Co-Signed after approval';
+                                }
+                            }
+                        }
+                    }
                 }
 
                 if (window.location.href.includes('doctors_order_patient.html')) {
                     if (typeof window.getEncounterProgressNotes !== 'function') {
                         return 'getEncounterProgressNotes not defined on window in doctors_order_patient.html';
+                    }
+                    if (typeof window.approveSheetOrderCoSignature !== 'function') {
+                        return 'approveSheetOrderCoSignature not defined on window in doctors_order_patient.html';
+                    }
+                    const sheetCosigSelect = document.getElementById('sheet-enc-cosig-doctor');
+                    if (!sheetCosigSelect) {
+                        return 'sheet-enc-cosig-doctor element missing in doctors_order_patient.html';
+                    }
+                    if (sheetCosigSelect.value !== 'NONE') {
+                        return 'sheet-enc-cosig-doctor default value is not NONE';
                     }
                 }
 

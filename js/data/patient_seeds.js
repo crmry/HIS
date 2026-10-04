@@ -41,6 +41,24 @@ if (typeof window !== 'undefined' && window.addEventListener) {
   });
 }
 
+// Hospital Staff & Physicians Directory for CPOE Pairing / Co-Signature Workflow
+if (typeof window !== 'undefined') {
+  window.HOSPITAL_PHYSICIANS_DIRECTORY = window.HOSPITAL_PHYSICIANS_DIRECTORY || [
+    { id: 'NONE', name: 'NONE', title: 'NONE', specialty: 'No Co-Signature (Standard Single Physician)', prc_no: '', s2_no: '', is_none: true },
+    { id: 'doc-maria-santos', name: 'Maria Santos, MD', title: 'Dr. Maria Santos', specialty: 'Internal Medicine', prc_no: '0095512', s2_no: 'S2-095512-2026' },
+    { id: 'doc-paolo-cruz', name: 'Paolo Cruz, MD', title: 'Dr. Paolo Cruz', specialty: 'Orthopedic Surgery', prc_no: '0087654', s2_no: 'S2-087654-2026' },
+    { id: 'doc-andrea-reyes', name: 'Andrea Reyes, MD', title: 'Dr. Andrea Reyes', specialty: 'Pediatrics', prc_no: '0102938', s2_no: 'S2-0102938-2026' },
+    { id: 'doc-liza-garcia', name: 'Liza Garcia, MD', title: 'Dr. Liza Garcia', specialty: 'Obstetrics and Gynecology', prc_no: '0091234', s2_no: 'S2-0091234-2026' },
+    { id: 'doc-roberto-lim', name: 'Roberto Lim, MD', title: 'Dr. Roberto Lim', specialty: 'Emergency Medicine', prc_no: '0076543', s2_no: 'S2-076543-2026' },
+    { id: 'doc-miguel-santos', name: 'Miguel Santos, MD', title: 'Dr. Miguel Santos', specialty: 'General Medicine', prc_no: '0094821', s2_no: 'S2-094821-2026' }
+  ];
+
+  window.getEligibleCoSigningDoctors = function(excludeDoctorName) {
+    var list = window.HOSPITAL_PHYSICIANS_DIRECTORY || [];
+    return list;
+  };
+}
+
     function seedPatientRecord() {
       return opPatientRecord();
     }
