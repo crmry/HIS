@@ -5856,13 +5856,26 @@
       var pData = currentPatientData();
       var pId = activePatientId || (pData && (pData.id || pData.hrn)) || SEED_PATIENT_ID;
       var encDate = (data && data.date) || '';
-      var encUrl = isInitial
-        ? 'opd_record_patient.html?patient=' + encodeURIComponent(pId) + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '')
-        : 'doctors_order_patient.html?patient=' + encodeURIComponent(pId) + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
-      var encViewTitle = isInitial
-        ? "View Out Patient Department Record (OPD Face Sheet — OPD.F.014)"
-        : "View Physician's Orders / Progress Notes Nurses' Compliance Sheet (CLMMRH-MRS.F.032)";
-      var encStroke = isInitial ? "#0284c7" : "#2e7d32";
+      var encUrl;
+      var encViewTitle;
+      var encStroke;
+      if (typeUpper === 'ER') {
+        encUrl = 'doctors_order_er_admission.html?patient=' + encodeURIComponent(pId) + '&view=er' + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
+        encViewTitle = "View Emergency Department Doctor's Order / Progress Notes Nurses' Compliance Sheet";
+        encStroke = "#c62828";
+      } else if (typeUpper === 'IP') {
+        encUrl = 'doctors_order_er_admission.html?patient=' + encodeURIComponent(pId) + '&view=admission' + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
+        encViewTitle = "View Inpatient Admission Doctor's Order / Progress Notes Nurses' Compliance Sheet";
+        encStroke = "#1565c0";
+      } else if (isInitial) {
+        encUrl = 'opd_record_patient.html?patient=' + encodeURIComponent(pId) + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
+        encViewTitle = "View Out Patient Department Record (OPD Face Sheet — OPD.F.014)";
+        encStroke = "#0284c7";
+      } else {
+        encUrl = 'doctors_order_patient.html?patient=' + encodeURIComponent(pId) + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
+        encViewTitle = "View Physician's Orders / Progress Notes Nurses' Compliance Sheet (CLMMRH-MRS.F.032)";
+        encStroke = "#2e7d32";
+      }
 
       var diagnosisCellHtml = '';
       if (isCurrent) {
@@ -12527,12 +12540,21 @@
               snapshotCreatedAt
             );
 
+          var targetPage = 'doctors_order_patient.html';
           if (activeInspectedEncounterIndex !== null && loadedEncounters[activeInspectedEncounterIndex]) {
-            query += '&encounter=' + encodeURIComponent(loadedEncounters[activeInspectedEncounterIndex].date);
+            var inspectedEnc = loadedEncounters[activeInspectedEncounterIndex];
+            var encReg = ((inspectedEnc.registry || inspectedEnc.type || '').toUpperCase());
+            if (encReg === 'ER') {
+              targetPage = 'doctors_order_er_admission.html';
+              query += '&view=er';
+            } else if (encReg === 'IP') {
+              targetPage = 'doctors_order_er_admission.html';
+              query += '&view=admission';
+            }
+            query += '&encounter=' + encodeURIComponent(inspectedEnc.date);
           }
 
-
-          var targetUrl = 'doctors_order_patient.html' + query;
+          var targetUrl = targetPage + query;
 
 
           var link =

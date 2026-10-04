@@ -50,7 +50,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 56,
+        seedVersion: 57,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -72,7 +72,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
           chief_complaint: 'Routine follow-up for chronic disease management',
           hx_present: 'Patient presents for scheduled outpatient surveillance of Type 2 Diabetes Mellitus and Essential Hypertension. Compliant with prescribed oral maintenance therapy. Reports stable energy levels without polyuria, polydipsia, blurred vision, or interval chest discomfort.',
           hx_surgical: 'No previous surgical procedures.',
-          hx_past: 'Type 2 Diabetes Mellitus diagnosed 2020; Essential Hypertension Stage 1 diagnosed 2020. No previous hospitalizations.',
+          hx_past: 'Type 2 Diabetes Mellitus diagnosed 2020; Essential Hypertension Stage 1 diagnosed 2020; Mild Primary Osteoarthritis, Right Knee diagnosed 2025. Hospitalized at CLMMRH Medical Ward (June 12-14, 2026) for Community-Acquired Pneumonia, moderate risk, resolved with IV antibiotics.',
           hx_family: 'Mother with Type 2 Diabetes Mellitus; Father with Hypertension.',
           hx_social: 'Non-smoker, non-alcoholic beverage drinker. Works as an office clerk.',
           hx_allergy: 'No known food or drug allergies (NKFDA).',
@@ -297,6 +297,130 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 { text: 'Continue Metformin 500 mg tablet twice daily with meals.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:18 AM nurse' },
                 { text: 'Reinforce diabetic meal plan and 30 minutes daily walking.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:25 AM nurse' },
                 { text: 'Follow-up after 3 months with repeat HbA1c and renal panel.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:30 AM nurse' }
+              ]
+            },
+            {
+              date: '2026-06-14',
+              time: '09:00 AM',
+              registry: 'IP',
+              service: 'General Medicine',
+              physician: 'Miguel Santos, MD',
+              prc_license: '0078312',
+              is_current: false,
+              status_tag: 'Discharge Planning',
+              diagnosis: 'J18.9 - Community-Acquired Pneumonia, resolved; I10 - Essential Hypertension, controlled',
+              patient_record: 'Discharge planning and outpatient transition',
+              results: 'Discharged clinically stable',
+              disposition: 'Discharged',
+              follow_up: { date: '2026-06-20', clinic: 'General Medicine', reason: 'Post-discharge 1-week pulmonary and metabolic review.' },
+              vital_signs: [
+                { dateTime: '2026-06-14 09:00 AM', bp: '118/74', hr: '72', rr: '16', temp: '36.5', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
+              ],
+              medications: [
+                { id: 'med-ip-0614-1', name: 'Co-amoxiclav 625 mg tablet', route: 'Oral Three Times Daily (TID)', indication: 'Step-down therapy for pneumonia', started: '2026-06-14T09:00:00+08:00', doses24h: '3 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-ip-0614-2', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-ip-0614-3', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID)', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' }
+              ],
+              clinical_record: {
+                chief_complaint: 'Hospital Day 3 - Discharge Planning',
+                history: 'Hospital Day 3. Patient clinically well, completely afebrile x 48 hours. Lungs clear bilaterally. Tolerating regular diet and oral medications. Vital signs stable.',
+                final_diagnosis: 'Community-Acquired Pneumonia, resolved; Essential Hypertension Stage 1, controlled'
+              },
+              progress_notes: 'Hospital Day 3. Patient clinically well, completely afebrile x 48 hours. Lungs clear.\nVital signs: BP 118/74 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% on room air.\nDiagnosis: Community-Acquired Pneumonia, resolved. Shift to home oral antibiotics.',
+              orders: [
+                { text: 'Discharge patient today. Follow-up at Adult Medicine Outpatient Clinic after 1 week.', dateTime: '2026-06-14T09:00:00+08:00', cared: ['C'], timeSignature: 'C - 9:30 AM nurse' },
+                { text: 'Shift to oral Co-amoxiclav 625 mg tablet TID to complete 7-day course.', dateTime: '2026-06-14T09:00:00+08:00', cared: ['C'], timeSignature: 'C - 9:35 AM nurse' },
+                { text: 'Resume oral Metformin 500 mg tablet BID and Losartan 50 mg tablet OD.', dateTime: '2026-06-14T09:00:00+08:00', cared: ['C'], timeSignature: 'C - 9:40 AM nurse' },
+                { text: 'Discontinue IVF line. Issue discharge clearance.', dateTime: '2026-06-14T09:00:00+08:00', cared: ['C', 'D'], timeSignature: 'C - 9:45 AM nurse\nD - 9:50 AM nurse' }
+              ]
+            },
+            {
+              date: '2026-06-13',
+              time: '04:30 PM',
+              registry: 'IP',
+              service: 'General Medicine',
+              physician: 'Miguel Santos, MD',
+              prc_license: '0078312',
+              is_current: false,
+              status_tag: 'Ward Round (PM)',
+              diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving',
+              patient_record: 'Afternoon progress observation',
+              results: 'Clinically stable',
+              disposition: 'Admitted (Medical Ward - Bed 302-A)',
+              vital_signs: [
+                { dateTime: '2026-06-13 04:30 PM', bp: '118/76', hr: '74', rr: '16', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
+              ],
+              clinical_record: {
+                chief_complaint: 'Hospital Day 2 (PM Rounds)',
+                history: 'Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air. Chest: Clear breath sounds bilaterally, minimal crackles at right base. Tolerating oral intake well.',
+                final_diagnosis: 'Community-Acquired Pneumonia, moderate risk, resolving'
+              },
+              progress_notes: 'Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.',
+              orders: [
+                { text: 'Continue current ward management and vital signs monitoring every 4 hours.', dateTime: '2026-06-13T16:30:00+08:00', cared: ['C'], timeSignature: 'C - 4:45 PM nurse' }
+              ]
+            },
+            {
+              date: '2026-06-13',
+              time: '10:15 AM',
+              registry: 'IP',
+              service: 'General Medicine',
+              physician: 'Miguel Santos, MD',
+              prc_license: '0078312',
+              is_current: false,
+              status_tag: 'Morning Rounds',
+              diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving',
+              patient_record: 'Daily progress review',
+              results: 'Clinically improving',
+              disposition: 'Admitted (Medical Ward - Bed 302-A)',
+              vital_signs: [
+                { dateTime: '2026-06-13 10:15 AM', bp: '120/80', hr: '78', rr: '18', temp: '36.8', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '98', o2: '98' }
+              ],
+              clinical_record: {
+                chief_complaint: 'Hospital Day 2 (Morning Rounds)',
+                history: 'Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved. Afebrile x 24 hours. Lungs: Decreased crackles right lower lung zone, good bilateral air entry.',
+                final_diagnosis: 'Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics'
+              },
+              progress_notes: 'Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics',
+              orders: [
+                { text: 'Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 10:30 AM nurse' },
+                { text: 'Continue IV Ceftriaxone 2 g OD (Day 2 of 7).', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:35 AM nurse\nA - 11:00 AM nurse' },
+                { text: 'Shift Azithromycin to oral 500 mg tablet once daily after meals.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:40 AM nurse\nA - 11:05 AM nurse' },
+                { text: 'Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['R'], timeSignature: 'R - 10:45 AM physician' },
+                { text: 'May ambulate inside room as tolerated. Regular diet.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:00 AM nurse' }
+              ]
+            },
+            {
+              date: '2026-06-12',
+              time: '08:30 AM',
+              registry: 'ER',
+              service: 'Emergency Medicine',
+              physician: 'Roberto Lim, MD',
+              prc_license: '0089241',
+              is_current: false,
+              status_tag: 'Initial Visit (ER)',
+              diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk; I10 - Essential Hypertension Stage 1',
+              patient_record: 'Initial assessment and emergency stabilization',
+              results: 'Admitted to Medical Ward - Bed 302-A',
+              disposition: 'Admitted to Medical Ward',
+              vital_signs: [
+                { dateTime: '2026-06-12 08:30 AM', bp: '138/86', hr: '102', rr: '24', temp: '38.2', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '93', o2: '93' }
+              ],
+              clinical_record: {
+                chief_complaint: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.',
+                history: 'Patient is a 48-year-old female presenting to the Emergency Department with a 3-day history of high-grade fever, productive cough with yellowish sputum, and shortness of breath. Known diabetic and hypertensive. BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93% on room air. Crackles over right lower lung field, tachypneic.',
+                final_diagnosis: 'Community-Acquired Pneumonia, moderate risk; Essential Hypertension Stage 1'
+              },
+              progress_notes: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension',
+              orders: [
+                { text: 'Admit to Medical Ward under General Medicine service.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
+                { text: 'Monitor vital signs every four hours and record intake and output.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:32 PM nurse' },
+                { text: 'Low-salt diet, soft consistency as tolerated.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:35 PM nurse' },
+                { text: 'PNSS 1 L at 80 mL/hour.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['A'], timeSignature: 'A - 12:45 PM nurse' },
+                { text: 'Ceftriaxone 2 g IV once daily after negative skin test.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A', 'E'], timeSignature: 'C - 12:40 PM nurse\nA - 1:00 PM nurse\nE - 1:20 PM nurse' },
+                { text: 'Azithromycin 500 mg tablet once daily.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:42 PM nurse\nA - 1:05 PM nurse' },
+                { text: 'Paracetamol 500 mg tablet every six hours as needed for fever >= 38.0°C.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:45 PM nurse\nA - 1:10 PM nurse' },
+                { text: 'Oxygen at 2 L/minute via nasal cannula; maintain SpO2 at 95% or higher.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:50 PM nurse' }
               ]
             },
             {
@@ -540,7 +664,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 56) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 57) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
