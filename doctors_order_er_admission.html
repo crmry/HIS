@@ -483,9 +483,10 @@
         <a href="patients.html" id="link-patients" title="Open Patient Registry">Patient Directory</a>
 
         <div class="view-group" role="group" aria-label="Sheet View Switcher">
-            <button type="button" id="btn-view-all" class="active" onclick="switchView('all')">All Sheets</button>
-            <button type="button" id="btn-view-er" onclick="switchView('er')">ER Example</button>
-            <button type="button" id="btn-view-admission" onclick="switchView('admission')">Admission Example</button>
+            <button type="button" id="btn-view-all" class="active" onclick="switchView('all')">All Sheets (Full Episode)</button>
+            <button type="button" id="btn-view-er" onclick="switchView('er')">1. ED Arrival (06/12)</button>
+            <button type="button" id="btn-view-admission" onclick="switchView('admission')">2. Inpatient Admission (06/13)</button>
+            <button type="button" id="btn-view-discharge" onclick="switchView('discharge')">3. Inpatient Discharge (06/14)</button>
             <button type="button" id="btn-view-template" onclick="switchView('template')">Blank Template</button>
         </div>
 
@@ -495,6 +496,16 @@
 
         <button type="button" class="btn-print" id="btn-print" onclick="window.print()">Print Sheet</button>
     </header>
+
+    <!-- DOH Clinical Process Flow Banner -->
+    <div class="doh-flow-bar" style="background:#f8fafc; border-bottom:1px solid #cbd5e1; padding:6px 14px; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; font-size:11.5px; color:#334155; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;">
+        <span style="font-weight:700; color:#0f172a; letter-spacing:0.3px;">DOH CLINICAL PROCESS FLOW:</span>
+        <span class="flow-step" style="padding:2px 8px; border-radius:3px; background:#fee2e2; color:#991b1b; font-weight:600; border:1px solid #fecaca;">Step 1: Emergency Department (ED Arrival &amp; Triage)</span>
+        <span style="color:#94a3b8;">&rarr;</span>
+        <span class="flow-step" style="padding:2px 8px; border-radius:3px; background:#dbeafe; color:#1e40af; font-weight:600; border:1px solid #bfdbfe;">Step 2: Inpatient Admission (ED to Admission &amp; Ward Care)</span>
+        <span style="color:#94a3b8;">&rarr;</span>
+        <span class="flow-step" style="padding:2px 8px; border-radius:3px; background:#dcfce7; color:#166534; font-weight:600; border:1px solid #bbf7d0;">Step 3: Inpatient Discharge (Previous Hospitalization &bull; Status: DISCHARGED)</span>
+    </div>
 
     <main class="page-container" id="pages-container">
 
@@ -974,7 +985,226 @@
 
 
         <!-- ══════════════════════════════════════════════════════════════════
-             SHEET 3: CLEAN BLANK HOSPITAL TEMPLATE
+             SHEET 3: EXAMPLE 3 — INPATIENT DISCHARGE (DOH PROCESS FLOW)
+             ══════════════════════════════════════════════════════════════════ -->
+        <article class="page" id="sheet-discharge" aria-label="Doctor's Orders Sheet - Inpatient Discharge">
+            <header class="page-header">
+                <p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>
+                <p class="hospital-address">Lacson - Burgos Streets, Bacolod City</p>
+                <h1 class="form-title">DOCTOR'S ORDER / PROGRESS NOTES<br>NURSES' COMPLIANCE SHEET</h1>
+                <p class="form-subtitle">(Authenticate all Orders)</p>
+
+                <div class="patient-grid">
+                    <div class="field">
+                        <label>Name of Patient</label>
+                        <span class="field-val" id="dis-patient-name">DEL ROSARIO, JOAN BAUTISTA</span>
+                    </div>
+                    <div class="field">
+                        <label>Hospital Number</label>
+                        <span class="field-val" id="dis-patient-hrn">0000001890</span>
+                    </div>
+                    <div class="field">
+                        <label>Address</label>
+                        <span class="field-val" id="dis-patient-address">Brgy. Bata, Bacolod City, Negros Occidental</span>
+                    </div>
+                    <div class="field">
+                        <label>Ward / Room</label>
+                        <span class="field-val" id="dis-patient-ward">Medical Ward - Bed 302-A</span>
+                    </div>
+                    <div class="field span-2 split-row">
+                        <div class="field age">
+                            <label>Age</label>
+                            <span class="field-val" id="dis-patient-age">48</span>
+                        </div>
+                        <div class="field sex">
+                            <label>Sex</label>
+                            <span class="field-val" id="dis-patient-sex">F</span>
+                        </div>
+                        <div class="field admit">
+                            <label>Admission Date</label>
+                            <span class="field-val" id="dis-patient-admit">06/12/2026 08:30 AM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>
+            </header>
+
+            <div class="page-orders-body">
+                <table class="orders" aria-label="Inpatient Discharge Orders Table">
+                    <colgroup>
+                        <col class="date">
+                        <col class="notes">
+                        <col class="order">
+                        <col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="mark">
+                        <col class="sign">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>DATE<br>TIME</th>
+                            <th>PROGRESS NOTES</th>
+                            <th>DOCTOR'S ORDER</th>
+                            <th>C</th><th>A</th><th>R</th><th>E</th><th>D</th>
+                            <th>TIME<br>SIGNATURE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Row 1: Plan (Discharge) -->
+                        <tr>
+                            <td rowspan="7" class="cell-datetime">
+                                <textarea readonly>06/14/2026&#10;09:00 AM</textarea>
+                            </td>
+                            <td class="cell-notes notes-first">
+                                <textarea rows="4">Hospital Day 3 (Discharge Planning). Patient clinically well, completely afebrile x 48 hours. Lungs clear bilaterally. Tolerating oral intake.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Plan: Discharge patient today. Issue discharge clearance and PhilHealth CF4 completion.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:30A</textarea></td>
+                        </tr>
+
+                        <!-- Row 2: Diet -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="3">Vitals: BP 118/74 mmHg, HR 72 bpm, RR 16 cpm, Temp 36.5°C, SpO2 99% on room air.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Diet: Regular diet; encourage adequate oral hydration at home.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:30A</textarea></td>
+                        </tr>
+
+                        <!-- Row 3: Meds (Step-down Oral Antibiotic) -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="3">PE: Alert, ambulatory, in no respiratory distress. Chest: Clear breath sounds bilaterally, no crackles or wheezes.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="3">Meds: Shift to oral Co-amoxiclav 625 mg tablet TID after meals to complete 7-day course.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:35A</textarea></td>
+                        </tr>
+
+                        <!-- Row 4: Meds (Maintenance) -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="3">Final Diagnosis: Community-Acquired Pneumonia, resolved; Essential Hypertension Stage 1, controlled.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="3">Meds: Resume oral Metformin 500 mg tablet BID with meals and Losartan 50 mg tablet OD in morning.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:40A</textarea></td>
+                        </tr>
+
+                        <!-- Row 5: Special Order (Discontinue IVF) -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2">P> Discontinue all invasive lines. Patient cleared for discharge.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Special Order: Discontinue IVF line. Issue discharge clearance and home instructions.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:45A</textarea></td>
+                        </tr>
+
+                        <!-- Row 6: Follow-up -->
+                        <tr>
+                            <td class="cell-notes notes-last">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Follow-up: Follow-up at Adult Medicine Outpatient Clinic on 06/20/2026 (after 1 week).</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:50A</textarea></td>
+                        </tr>
+
+                        <!-- Physician Authentication Row -->
+                        <tr class="enc-sig-row">
+                            <td class="cell-datetime enc-sig-spacer"></td>
+                            <td class="cell-notes enc-sig-spacer">
+                                <div class="enc-sig-process-note">(Esig is required as proof of the end of process for this particular sheet)</div>
+                            </td>
+                            <td class="enc-sig-stamp">
+                                <div class="enc-sig-block">
+                                    <div class="enc-sig-tag">ESIG</div>
+                                    <div class="enc-sig-cursive">M. Santos</div>
+                                    <div class="enc-sig-line-draw">________________________________</div>
+                                    <div class="enc-sig-name">Miguel Santos, MD</div>
+                                    <div class="enc-sig-lic">PRC Lic. No.: 0078312 &bull; 06/14/2026 09:00 AM</div>
+                                    <div class="enc-sig-supervision">(The required number of physician’s changes based on the scenario where supervision, validation, or authorization by another physician is required.)</div>
+                                </div>
+                            </td>
+                            <td colspan="6" class="enc-sig-spacer"></td>
+                        </tr>
+
+                        <!-- Graceful blank fill rows -->
+                        <tr>
+                            <td><textarea rows="2"></textarea></td>
+                            <td><textarea rows="2"></textarea></td>
+                            <td><textarea rows="2"></textarea></td>
+                            <td class="mark"><input type="checkbox" aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><textarea rows="2"></textarea></td>
+                            <td><textarea rows="2"></textarea></td>
+                            <td><textarea rows="2"></textarea></td>
+                            <td class="mark"><input type="checkbox" aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2"></textarea></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <footer class="footer">
+                Doctor's Orders Form<br>
+                CLMMRH-MRS.F.032<br>
+                Issued: 2/5/14<br>
+                Issue .No. 001
+            </footer>
+        </article>
+
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             SHEET 4: CLEAN BLANK HOSPITAL TEMPLATE
              ══════════════════════════════════════════════════════════════════ -->
         <article class="page" id="sheet-template" aria-label="Doctor's Orders Sheet - Blank Hospital Template" style="display:none;">
             <header class="page-header">
@@ -1095,25 +1325,35 @@
 
             var sheetEr = document.getElementById('sheet-er');
             var sheetAdm = document.getElementById('sheet-admission');
+            var sheetDischarge = document.getElementById('sheet-discharge');
             var sheetTmpl = document.getElementById('sheet-template');
 
             if (mode === 'er') {
-                sheetEr.style.display = 'flex';
-                sheetAdm.style.display = 'none';
-                sheetTmpl.style.display = 'none';
+                if (sheetEr) sheetEr.style.display = 'flex';
+                if (sheetAdm) sheetAdm.style.display = 'none';
+                if (sheetDischarge) sheetDischarge.style.display = 'none';
+                if (sheetTmpl) sheetTmpl.style.display = 'none';
             } else if (mode === 'admission') {
-                sheetEr.style.display = 'none';
-                sheetAdm.style.display = 'flex';
-                sheetTmpl.style.display = 'none';
+                if (sheetEr) sheetEr.style.display = 'none';
+                if (sheetAdm) sheetAdm.style.display = 'flex';
+                if (sheetDischarge) sheetDischarge.style.display = 'none';
+                if (sheetTmpl) sheetTmpl.style.display = 'none';
+            } else if (mode === 'discharge') {
+                if (sheetEr) sheetEr.style.display = 'none';
+                if (sheetAdm) sheetAdm.style.display = 'none';
+                if (sheetDischarge) sheetDischarge.style.display = 'flex';
+                if (sheetTmpl) sheetTmpl.style.display = 'none';
             } else if (mode === 'template') {
-                sheetEr.style.display = 'none';
-                sheetAdm.style.display = 'none';
-                sheetTmpl.style.display = 'flex';
+                if (sheetEr) sheetEr.style.display = 'none';
+                if (sheetAdm) sheetAdm.style.display = 'none';
+                if (sheetDischarge) sheetDischarge.style.display = 'none';
+                if (sheetTmpl) sheetTmpl.style.display = 'flex';
             } else {
-                // 'all': Show both realistic clinical examples
-                sheetEr.style.display = 'flex';
-                sheetAdm.style.display = 'flex';
-                sheetTmpl.style.display = 'none';
+                // 'all': Show all 3 realistic clinical sheets representing full DOH episode
+                if (sheetEr) sheetEr.style.display = 'flex';
+                if (sheetAdm) sheetAdm.style.display = 'flex';
+                if (sheetDischarge) sheetDischarge.style.display = 'flex';
+                if (sheetTmpl) sheetTmpl.style.display = 'none';
             }
             setTimeout(resizeAllTextareas, 20);
         }
@@ -1202,7 +1442,7 @@
             var age = d.age || calculateAge(d.birthdate) || '48';
             var sex = (d.gender || d.sex || 'F').toUpperCase().startsWith('F') ? 'F' : 'M';
 
-            ['er', 'adm', 'tmpl'].forEach(function(prefix) {
+            ['er', 'adm', 'dis', 'tmpl'].forEach(function(prefix) {
                 var elName = document.getElementById(prefix + '-patient-name');
                 var elHrn = document.getElementById(prefix + '-patient-hrn');
                 var elAddr = document.getElementById(prefix + '-patient-address');
@@ -1219,12 +1459,13 @@
 
                 if (elWard) {
                     if (prefix === 'er') elWard.textContent = d.er_bed || 'ER - Acute Care Bed 04';
-                    else if (prefix === 'adm') elWard.textContent = d.ward_room || 'Medical Ward - Bed 302-A';
+                    else if (prefix === 'adm' || prefix === 'dis') elWard.textContent = d.ward_room || 'Medical Ward - Bed 302-A';
                     else elWard.textContent = d.ward_room || 'Medical Ward';
                 }
                 if (elAdmit) {
                     if (prefix === 'er') elAdmit.textContent = '06/12/2026 08:30 AM';
                     else if (prefix === 'adm') elAdmit.textContent = '06/12/2026 12:30 PM';
+                    else if (prefix === 'dis') elAdmit.textContent = '06/12/2026 08:30 AM';
                     else elAdmit.textContent = d.admitted_at || d.admission_date || '06/12/2026 08:30 AM';
                 }
             });
@@ -1237,8 +1478,15 @@
             var params = new URLSearchParams(window.location.search);
             var viewParam = params.get('view');
             var patientParam = params.get('patient');
+            var encounterParam = params.get('encounter');
 
-            if (viewParam && ['er', 'admission', 'template', 'all'].includes(viewParam)) {
+            if (!viewParam && encounterParam) {
+                if (encounterParam === '2026-06-12') viewParam = 'er';
+                else if (encounterParam === '2026-06-13') viewParam = 'admission';
+                else if (encounterParam === '2026-06-14') viewParam = 'discharge';
+            }
+
+            if (viewParam && ['er', 'admission', 'discharge', 'template', 'all'].includes(viewParam)) {
                 switchView(viewParam);
             } else {
                 switchView('all');

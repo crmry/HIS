@@ -5893,11 +5893,13 @@
       var encStroke;
       if (typeUpper === 'ER') {
         encUrl = 'doctors_order_er_admission.html?patient=' + encodeURIComponent(pId) + '&view=er' + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
-        encViewTitle = "View Emergency Department Doctor's Order / Progress Notes Nurses' Compliance Sheet";
+        encViewTitle = "View Emergency Department Doctor's Order / Progress Notes Nurses' Compliance Sheet (ED to Admission)";
         encStroke = "#c62828";
       } else if (typeUpper === 'IP') {
-        encUrl = 'doctors_order_er_admission.html?patient=' + encodeURIComponent(pId) + '&view=admission' + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
-        encViewTitle = "View Inpatient Admission Doctor's Order / Progress Notes Nurses' Compliance Sheet";
+        var isDischargeEnc = (encDate === '2026-06-14' || (data && String(data.status_tag || '').toLowerCase().includes('discharge')));
+        var ipView = isDischargeEnc ? 'discharge' : 'admission';
+        encUrl = 'doctors_order_er_admission.html?patient=' + encodeURIComponent(pId) + '&view=' + ipView + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
+        encViewTitle = isDischargeEnc ? "View Inpatient Discharge Doctor's Order / Progress Notes Nurses' Compliance Sheet" : "View Inpatient Admission Doctor's Order / Progress Notes Nurses' Compliance Sheet";
         encStroke = "#1565c0";
       } else if (isInitial) {
         encUrl = 'opd_record_patient.html?patient=' + encodeURIComponent(pId) + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
@@ -5913,7 +5915,28 @@
       if (isCurrent) {
         diagnosisCellHtml = '<span style="color:#64748b; font-style:italic; font-weight:normal; font-size:12px;">— (Consultation In-Progress)</span>';
       } else {
-        diagnosisCellHtml = '<span style="color:#1f2937; font-size:12px; font-weight:500;">' + diagnosisDisplay + '</span>';
+        var rawDisp = (data && data.disposition) || 'Discharged';
+        var dispLower = rawDisp.toLowerCase();
+        var dispLabel = rawDisp;
+        var dispBg = '#f1f5f9';
+        var dispColor = '#475569';
+
+        if (dispLower.includes('discharge')) {
+          dispBg = '#dcfce7';
+          dispColor = '#166534';
+          dispLabel = dispLower.includes('outpatient') ? 'Discharged (OPD)' : 'Discharged';
+        } else if (typeUpper === 'ER' && dispLower.includes('admit')) {
+          dispBg = '#fee2e2';
+          dispColor = '#991b1b';
+          dispLabel = 'ED to Admission';
+        } else if (typeUpper === 'IP' && dispLower.includes('admit')) {
+          dispBg = '#dbeafe';
+          dispColor = '#1e40af';
+          dispLabel = 'Inpatient Care';
+        }
+
+        var dispBadge = '<span class="badge" style="font-size:9.5px; font-weight:600; padding:1px 6px; border-radius:3px; background:' + dispBg + '; color:' + dispColor + '; margin-left:6px; vertical-align:middle; letter-spacing:0.2px;">' + esc(dispLabel) + '</span>';
+        diagnosisCellHtml = '<span style="color:#1f2937; font-size:12px; font-weight:500;">' + diagnosisDisplay + '</span>' + dispBadge;
       }
 
       var dateCellContent = '<div style="display:inline-flex; align-items:center; gap:6px; flex-wrap:nowrap; white-space:nowrap;"><strong style="font-size:12.5px; color:#0f172a;">' + dateDisplay + '</strong>' + currentBadge + '</div>' + timeDisplay;
@@ -12823,7 +12846,8 @@
               query += '&view=er';
             } else if (encReg === 'IP') {
               targetPage = 'doctors_order_er_admission.html';
-              query += '&view=admission';
+              var isDis = (inspectedEnc.date === '2026-06-14' || String(inspectedEnc.status_tag || '').toLowerCase().includes('discharge'));
+              query += '&view=' + (isDis ? 'discharge' : 'admission');
             }
             query += '&encounter=' + encodeURIComponent(inspectedEnc.date);
           }
