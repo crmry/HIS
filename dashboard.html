@@ -1751,7 +1751,30 @@
           <div class="span12">
             <div class="dashlet">
               <div class="bootstrap-widget-header">
-                <div class="pull-right" style="margin-top:-3px; display:inline-flex; gap:6px; align-items:center;">
+                <div class="pull-right" style="margin-top:-3px; display:inline-flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                  <div class="encounter-date-filter-wrap" style="display:inline-flex; align-items:center; gap:4px;">
+                    <label for="encounter-date-filter" style="margin:0; font-size:11px; font-weight:700; color:#fff; text-shadow:0 1px 1px rgba(0,0,0,0.25); white-space:nowrap;">Date:</label>
+                    <select id="encounter-date-filter" class="input-mini" style="height:23px; line-height:23px; font-size:11px; font-weight:600; padding:1px 6px; margin:0; border-radius:3px; border:1px solid #14532d; background:#fff; color:#0f172a; width:auto; cursor:pointer;" title="Filter encounters by date or period">
+                      <option value="all">All Dates</option>
+                      <option value="current">Current Encounter</option>
+                      <option value="30d">Past 30 Days</option>
+                      <option value="90d">Past 3 Months</option>
+                      <option value="6m">Past 6 Months</option>
+                      <option value="1y">Past 1 Year</option>
+                      <optgroup label="Calendar Year" id="encounter-date-years-group">
+                        <option value="year-2026">2026</option>
+                        <option value="year-2025">2025</option>
+                      </optgroup>
+                      <option value="custom">Custom Range...</option>
+                    </select>
+                  </div>
+                  <div id="encounter-custom-date-wrap" style="display:none; align-items:center; gap:4px;">
+                    <input type="date" id="encounter-date-from" style="height:23px; width:112px; font-size:11px; padding:1px 4px; margin:0; border-radius:3px; border:1px solid #14532d; background:#fff; color:#0f172a;" title="From Date" aria-label="Start date for encounter filter">
+                    <span style="font-size:10px; color:#fff; opacity:0.85;">–</span>
+                    <input type="date" id="encounter-date-to" style="height:23px; width:112px; font-size:11px; padding:1px 4px; margin:0; border-radius:3px; border:1px solid #14532d; background:#fff; color:#0f172a;" title="To Date" aria-label="End date for encounter filter">
+                    <button type="button" class="btn btn-mini btn-inverse" id="btn-apply-custom-date" style="padding:1px 7px; font-size:11px; font-weight:600; height:23px;" title="Apply date range">Filter</button>
+                  </div>
+                  <span id="encounter-filter-count-badge" class="badge" style="font-size:10px; font-weight:700; padding:2px 6px; background:rgba(0,0,0,0.3); color:#fff; border-radius:10px; letter-spacing:0.2px;" title="Filtered encounter count">9 visits</span>
                   <div class="btn-group" id="encounter-dept-filter-group">
                     <button type="button" class="btn btn-mini active" data-dept="all" title="Show all encounters">All</button>
                     <button type="button" class="btn btn-mini" data-dept="IP" title="Show InPatient encounters only">IP</button>
@@ -8420,9 +8443,55 @@
     }
 
     var activeEncounterDeptFilter = 'all';
+    window.activeEncounterDeptFilter = 'all';
+    var activeEncounterDateFilter = 'all';
+    window.activeEncounterDateFilter = 'all';
+    var customEncounterDateFrom = '';
+    var customEncounterDateTo = '';
+
+    function getEncounterDateStr(enc) {
+      if (!enc) return '';
+      var d = String(enc.date || (enc.dateTime ? enc.dateTime.slice(0, 10) : '')).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+      if (/^\d{2}\/\d{2}\/\d{4}$/.test(d)) {
+        var parts = d.split('/');
+        return parts[2] + '-' + parts[0] + '-' + parts[1];
+      }
+      return d;
+    }
+
+    function syncEncounterDateYears(encounters) {
+      var group = document.getElementById('encounter-date-years-group');
+      if (!group || !Array.isArray(encounters)) return;
+      var yearsMap = {};
+      encounters.forEach(function (e) {
+        var d = getEncounterDateStr(e);
+        if (d && d.length >= 4) {
+          var y = d.substring(0, 4);
+          if (/^\d{4}$/.test(y)) {
+            yearsMap[y] = (yearsMap[y] || 0) + 1;
+          }
+        }
+      });
+      var sortedYears = Object.keys(yearsMap).sort().reverse();
+      group.innerHTML = '';
+      sortedYears.forEach(function (y) {
+        var opt = document.createElement('option');
+        opt.value = 'year-' + y;
+        opt.textContent = y + ' (' + yearsMap[y] + (yearsMap[y] === 1 ? ' visit' : ' visits') + ')';
+        group.appendChild(opt);
+      });
+      group.style.display = sortedYears.length > 0 ? '' : 'none';
+
+      var dateSel = document.getElementById('encounter-date-filter');
+      if (dateSel && activeEncounterDateFilter) {
+        dateSel.value = activeEncounterDateFilter;
+      }
+    }
 
     function setEncounterDeptFilter(dept) {
       activeEncounterDeptFilter = dept || 'all';
+      window.activeEncounterDeptFilter = activeEncounterDeptFilter;
       var filterGroup = document.getElementById('encounter-dept-filter-group');
       if (filterGroup) {
         var buttons = filterGroup.querySelectorAll('button[data-dept]');
@@ -8437,6 +8506,47 @@
       renderEncounters(loadedEncounters, true);
     }
 
+    function setEncounterDateFilter(mode) {
+      activeEncounterDateFilter = mode || 'all';
+      window.activeEncounterDateFilter = activeEncounterDateFilter;
+      var customWrap = document.getElementById('encounter-custom-date-wrap');
+      if (customWrap) {
+        customWrap.style.display = (mode === 'custom') ? 'inline-flex' : 'none';
+      }
+      var dateSel = document.getElementById('encounter-date-filter');
+      if (dateSel && dateSel.value !== activeEncounterDateFilter) {
+        dateSel.value = activeEncounterDateFilter;
+      }
+      renderEncounters(loadedEncounters, true);
+    }
+    window.setEncounterDateFilter = setEncounterDateFilter;
+
+    function resetEncounterFilters() {
+      activeEncounterDeptFilter = 'all';
+      window.activeEncounterDeptFilter = 'all';
+      activeEncounterDateFilter = 'all';
+      window.activeEncounterDateFilter = 'all';
+      customEncounterDateFrom = '';
+      customEncounterDateTo = '';
+      var deptGroup = document.getElementById('encounter-dept-filter-group');
+      if (deptGroup) {
+        deptGroup.querySelectorAll('button[data-dept]').forEach(function (b) {
+          if (b.dataset.dept === 'all') b.classList.add('active', 'btn-primary');
+          else b.classList.remove('active', 'btn-primary');
+        });
+      }
+      var dateSel = document.getElementById('encounter-date-filter');
+      if (dateSel) dateSel.value = 'all';
+      var customWrap = document.getElementById('encounter-custom-date-wrap');
+      if (customWrap) customWrap.style.display = 'none';
+      var fromInput = document.getElementById('encounter-date-from');
+      var toInput = document.getElementById('encounter-date-to');
+      if (fromInput) fromInput.value = '';
+      if (toInput) toInput.value = '';
+      renderEncounters(loadedEncounters, true);
+    }
+    window.resetEncounterFilters = resetEncounterFilters;
+
     var filterGroupElem = document.getElementById('encounter-dept-filter-group');
     if (filterGroupElem) {
       filterGroupElem.addEventListener('click', function (e) {
@@ -8446,6 +8556,40 @@
         }
       });
     }
+
+    var encounterDateFilterEl = document.getElementById('encounter-date-filter');
+    if (encounterDateFilterEl) {
+      encounterDateFilterEl.addEventListener('change', function () {
+        setEncounterDateFilter(this.value);
+      });
+    }
+
+    var btnApplyCustomDate = document.getElementById('btn-apply-custom-date');
+    if (btnApplyCustomDate) {
+      btnApplyCustomDate.addEventListener('click', function () {
+        var fromEl = document.getElementById('encounter-date-from');
+        var toEl = document.getElementById('encounter-date-to');
+        customEncounterDateFrom = (fromEl ? fromEl.value : '').trim();
+        customEncounterDateTo = (toEl ? toEl.value : '').trim();
+        renderEncounters(loadedEncounters, true);
+      });
+    }
+
+    ['encounter-date-from', 'encounter-date-to'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('keyup', function (e) {
+          if (e.key === 'Enter' && btnApplyCustomDate) btnApplyCustomDate.click();
+        });
+        el.addEventListener('change', function () {
+          var fromEl = document.getElementById('encounter-date-from');
+          var toEl = document.getElementById('encounter-date-to');
+          customEncounterDateFrom = (fromEl ? fromEl.value : '').trim();
+          customEncounterDateTo = (toEl ? toEl.value : '').trim();
+          renderEncounters(loadedEncounters, true);
+        });
+      }
+    });
 
     var thEncounterDate = document.getElementById('th-encounter-date');
     if (thEncounterDate) {
@@ -8510,35 +8654,103 @@
       }
       sortLoadedEncounters();
       updateEncounterSortIndicator();
+      syncEncounterDateYears(loadedEncounters);
       if (!encRows) return;
       encRows.innerHTML = '';
       if (!loadedEncounters || loadedEncounters.length === 0) {
         encRows.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:18px 12px; color:#718096; font-size:12px;">No patient encounters recorded yet.</td></tr>';
+        var badge = document.getElementById('encounter-filter-count-badge');
+        if (badge) {
+          badge.textContent = '0 visits';
+          badge.style.background = 'rgba(0,0,0,0.3)';
+        }
         renderViewableResults();
         return;
       }
 
+      var maxEncMs = 0;
+      loadedEncounters.forEach(function (e) {
+        var ms = parseEncounterDateTime(e);
+        if (ms > maxEncMs) maxEncMs = ms;
+      });
+      var refTime = Math.max(Date.now(), maxEncMs || 0);
+
       var filtered = [];
       loadedEncounters.forEach(function (enc, originalIdx) {
+        // 1. Department / Registry match
         var t = ((enc && (enc.registry || enc.type)) || '').toUpperCase();
-        var match = false;
+        var deptMatch = false;
         if (activeEncounterDeptFilter === 'all') {
-          match = true;
+          deptMatch = true;
         } else if (activeEncounterDeptFilter === 'IP') {
-          match = (t === 'IP');
+          deptMatch = (t === 'IP');
         } else if (activeEncounterDeptFilter === 'OP') {
-          match = (t === 'OP' || t === 'OPD');
+          deptMatch = (t === 'OP' || t === 'OPD');
         } else if (activeEncounterDeptFilter === 'ER') {
-          match = (t === 'ER');
+          deptMatch = (t === 'ER');
         }
-        if (match) {
+        if (!deptMatch) return;
+
+        // 2. Date Filter match
+        var dateMatch = false;
+        var dStr = getEncounterDateStr(enc);
+        var encMs = parseEncounterDateTime(enc);
+
+        if (activeEncounterDateFilter === 'all') {
+          dateMatch = true;
+        } else if (activeEncounterDateFilter === 'current') {
+          dateMatch = Boolean(enc.is_current || enc.isCurrent || (maxEncMs > 0 && encMs === maxEncMs));
+        } else if (activeEncounterDateFilter === '30d') {
+          dateMatch = encMs > 0 && ((refTime - encMs) <= 30 * 86400000 && encMs <= refTime + 86400000);
+        } else if (activeEncounterDateFilter === '90d') {
+          dateMatch = encMs > 0 && ((refTime - encMs) <= 90 * 86400000 && encMs <= refTime + 86400000);
+        } else if (activeEncounterDateFilter === '6m') {
+          dateMatch = encMs > 0 && ((refTime - encMs) <= 183 * 86400000 && encMs <= refTime + 86400000);
+        } else if (activeEncounterDateFilter === '1y') {
+          dateMatch = encMs > 0 && ((refTime - encMs) <= 366 * 86400000 && encMs <= refTime + 86400000);
+        } else if (activeEncounterDateFilter.indexOf('year-') === 0) {
+          var targetYear = activeEncounterDateFilter.replace('year-', '');
+          dateMatch = dStr.indexOf(targetYear) === 0;
+        } else if (activeEncounterDateFilter === 'custom') {
+          var passesFrom = !customEncounterDateFrom || (dStr >= customEncounterDateFrom);
+          var passesTo = !customEncounterDateTo || (dStr <= customEncounterDateTo);
+          dateMatch = (passesFrom && passesTo);
+        }
+
+        if (dateMatch) {
           filtered.push({ enc: enc, originalIdx: originalIdx });
         }
       });
 
+      // Update count badge in header
+      var countBadge = document.getElementById('encounter-filter-count-badge');
+      if (countBadge) {
+        var isFiltered = (activeEncounterDeptFilter !== 'all' || activeEncounterDateFilter !== 'all');
+        if (isFiltered) {
+          countBadge.textContent = filtered.length + ' of ' + loadedEncounters.length + ' visits';
+          countBadge.style.background = '#0284c7';
+        } else {
+          countBadge.textContent = loadedEncounters.length + (loadedEncounters.length === 1 ? ' visit' : ' visits');
+          countBadge.style.background = 'rgba(0,0,0,0.3)';
+        }
+      }
+
       if (filtered.length === 0) {
-        var deptName = activeEncounterDeptFilter === 'IP' ? 'InPatient (IP)' : (activeEncounterDeptFilter === 'OP' ? 'OutPatient (OP)' : 'Emergency Department (ER)');
-        encRows.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:18px 12px; color:#718096; font-size:12px;">No ' + deptName + ' encounters found for this patient.</td></tr>';
+        var deptName = activeEncounterDeptFilter === 'IP' ? 'InPatient (IP)' : (activeEncounterDeptFilter === 'OP' ? 'OutPatient (OP)' : (activeEncounterDeptFilter === 'ER' ? 'Emergency (ER)' : ''));
+        var filterDesc = (deptName ? deptName + ' ' : '') + 'encounters';
+        var dateDesc = '';
+        if (activeEncounterDateFilter === 'current') dateDesc = ' for current consultation';
+        else if (activeEncounterDateFilter === '30d') dateDesc = ' in the past 30 days';
+        else if (activeEncounterDateFilter === '90d') dateDesc = ' in the past 3 months';
+        else if (activeEncounterDateFilter === '6m') dateDesc = ' in the past 6 months';
+        else if (activeEncounterDateFilter === '1y') dateDesc = ' in the past 1 year';
+        else if (activeEncounterDateFilter.indexOf('year-') === 0) dateDesc = ' in year ' + activeEncounterDateFilter.replace('year-', '');
+        else if (activeEncounterDateFilter === 'custom') dateDesc = ' in selected date range';
+
+        encRows.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:18px 12px; color:#64748b; font-size:12px;">' +
+          'No ' + esc(filterDesc) + esc(dateDesc) + ' found. ' +
+          '<button type="button" class="btn btn-mini btn-link" onclick="resetEncounterFilters()" style="padding:0 4px; font-weight:600; text-decoration:underline; vertical-align:baseline;">Show All Encounters</button>' +
+          '</td></tr>';
         renderViewableResults();
         return;
       }

@@ -215,6 +215,17 @@ async def scan_single_target(browser_ws, file_url):
                     if (window.currentHxFilter !== 'ALL') return 'Clicking ALL filter did not update currentHxFilter';
                 }
 
+                // Test Patient Encounter Date Filter Controls
+                const encDateSel = document.getElementById('encounter-date-filter');
+                if (encDateSel) {
+                    encDateSel.value = 'year-2026';
+                    encDateSel.dispatchEvent(new Event('change'));
+                    if (window.activeEncounterDateFilter !== 'year-2026') return 'Changing encounter date filter did not update activeEncounterDateFilter';
+                    encDateSel.value = 'all';
+                    encDateSel.dispatchEvent(new Event('change'));
+                    if (window.activeEncounterDateFilter !== 'all') return 'Resetting encounter date filter did not restore all';
+                }
+
                 // Test Medical History Accordion Card Toggling (Individual Headers)
                 const firstCardHdr = document.querySelector('.encounter-hx-header');
                 if (firstCardHdr) {
