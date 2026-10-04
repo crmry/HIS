@@ -302,12 +302,12 @@ async def scan_single_target(browser_ws, file_url):
                 const floatingObBtn = document.getElementById('floating-btn-obgyne');
                 if (!floatingObBtn) return 'floating-btn-obgyne not found in requisition pad';
 
-                // Verify Progress Notes dashlet has been completely removed from Physician Dashboard
+                // Verify ER and Inpatient Progress Notes (SOA) vs OPD HPI/ROS/PE documentation behavior
                 if (window.location.href.includes('dashboard.html')) {
                     const pnRow = document.getElementById('row-progress-notes');
                     const pnDashlet = document.getElementById('dashlet-progress-notes');
-                    if (pnRow || pnDashlet) {
-                        return 'Progress Notes dashlet should be completely removed from dashboard.html';
+                    if (!pnRow || !pnDashlet) {
+                        return 'Progress Notes dashlet or row missing in dashboard.html';
                     }
                     if (typeof window.parseStructuredProgressNotes !== 'function') {
                         return 'parseStructuredProgressNotes not defined on window in dashboard.html';
@@ -318,6 +318,78 @@ async def scan_single_target(browser_ws, file_url):
                     }
                     if (typeof window.getEncounterProgressNotes !== 'function') {
                         return 'getEncounterProgressNotes not defined on window in dashboard.html';
+                    }
+                    if (typeof window.syncEncounterDocumentationSections !== 'function') {
+                        return 'syncEncounterDocumentationSections not defined on window in dashboard.html';
+                    }
+
+                    // For default/OPD encounter: Progress notes hidden, ROS & PE visible, HPI tab visible
+                    const rosRow = document.getElementById('row-review-of-systems');
+                    const peRow = document.getElementById('row-physical-exam');
+                    const hpiTabLi = document.getElementById('tab-li-hx-present');
+                    if (pnRow.style.display !== 'none') {
+                        return 'Progress Notes row should be hidden on OPD encounters';
+                    }
+                    if (rosRow && rosRow.style.display === 'none') {
+                        return 'Review of Systems should be visible on OPD encounters';
+                    }
+                    if (peRow && peRow.style.display === 'none') {
+                        return 'Physical Exam should be visible on OPD encounters';
+                    }
+                    if (hpiTabLi && hpiTabLi.style.display === 'none') {
+                        return 'HPI tab should be visible on OPD encounters';
+                    }
+
+                    // Test switching to an ER encounter
+                    const erTestEnc = {
+                        registry_type: 'ER',
+                        progress_notes_subjective: 'Acute onset epigastric pain',
+                        progress_notes_objective: 'BP 130/80, tenderness epigastrium',
+                        progress_notes_assessment: 'Acute Gastritis vs Peptic Ulcer Disease'
+                    };
+                    window.syncEncounterDocumentationSections(erTestEnc, true);
+                    if (pnRow.style.display === 'none') {
+                        return 'Progress Notes row should be visible on ER encounters';
+                    }
+                    const sVal = document.getElementById('progress_notes_subjective')?.textContent;
+                    const oVal = document.getElementById('progress_notes_objective')?.textContent;
+                    const aVal = document.getElementById('progress_notes_assessment')?.textContent;
+                    if (!sVal || !sVal.includes('Acute onset epigastric pain')) {
+                        return 'Progress notes subjective not populated correctly for ER encounter';
+                    }
+                    if (!oVal || !oVal.includes('BP 130/80')) {
+                        return 'Progress notes objective not populated correctly for ER encounter';
+                    }
+                    if (!aVal || !aVal.includes('Acute Gastritis')) {
+                        return 'Progress notes assessment not populated correctly for ER encounter';
+                    }
+                    if (rosRow && rosRow.style.display !== 'none') {
+                        return 'Review of Systems should be hidden on ER encounters';
+                    }
+                    if (peRow && peRow.style.display !== 'none') {
+                        return 'Physical Exam should be hidden on ER encounters';
+                    }
+                    if (hpiTabLi && hpiTabLi.style.display !== 'none') {
+                        return 'HPI tab should be hidden on ER encounters';
+                    }
+
+                    // Test restoring back to OPD encounter
+                    const opdTestEnc = {
+                        registry_type: 'OP',
+                        hx_present: 'Routine follow-up'
+                    };
+                    window.syncEncounterDocumentationSections(opdTestEnc, false);
+                    if (pnRow.style.display !== 'none') {
+                        return 'Progress Notes row should be hidden when restored to OPD';
+                    }
+                    if (rosRow && rosRow.style.display === 'none') {
+                        return 'Review of Systems should be restored on OPD';
+                    }
+                    if (peRow && peRow.style.display === 'none') {
+                        return 'Physical Exam should be restored on OPD';
+                    }
+                    if (hpiTabLi && hpiTabLi.style.display === 'none') {
+                        return 'HPI tab should be restored on OPD';
                     }
                 }
 

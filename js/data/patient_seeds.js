@@ -50,7 +50,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 57,
+        seedVersion: 58,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -326,6 +326,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 history: 'Hospital Day 3. Patient clinically well, completely afebrile x 48 hours. Lungs clear bilaterally. Tolerating regular diet and oral medications. Vital signs stable.',
                 final_diagnosis: 'Community-Acquired Pneumonia, resolved; Essential Hypertension Stage 1, controlled'
               },
+              progress_notes_subjective: 'Hospital Day 3. Patient clinically well, completely afebrile x 48 hours. Lungs clear.',
+              progress_notes_objective: 'Vital signs: BP 118/74 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% on room air.',
+              progress_notes_assessment: 'Diagnosis: Community-Acquired Pneumonia, resolved. Shift to home oral antibiotics.',
               progress_notes: 'Hospital Day 3. Patient clinically well, completely afebrile x 48 hours. Lungs clear.\nVital signs: BP 118/74 mmHg, HR 72 bpm, RR 16/min, Temp 36.5 °C, SpO2 99% on room air.\nDiagnosis: Community-Acquired Pneumonia, resolved. Shift to home oral antibiotics.',
               orders: [
                 { text: 'Discharge patient today. Follow-up at Adult Medicine Outpatient Clinic after 1 week.', dateTime: '2026-06-14T09:00:00+08:00', cared: ['C'], timeSignature: 'C - 9:30 AM nurse' },
@@ -355,6 +358,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 history: 'Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air. Chest: Clear breath sounds bilaterally, minimal crackles at right base. Tolerating oral intake well.',
                 final_diagnosis: 'Community-Acquired Pneumonia, moderate risk, resolving'
               },
+              progress_notes_subjective: 'Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air.',
+              progress_notes_objective: 'Vital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.',
+              progress_notes_assessment: 'Diagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.',
               progress_notes: 'Hospital Day 2 (PM Rounds). Resting comfortably in bed, afebrile, breathing easily on room air.\nVital signs: BP 118/76 mmHg, HR 74 bpm, RR 16/min, Temp 36.6 °C, SpO2 99% on room air.\nChest: Clear breath sounds bilaterally, minimal crackles at right base.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving. Stable; continue current management.',
               orders: [
                 { text: 'Continue current ward management and vital signs monitoring every 4 hours.', dateTime: '2026-06-13T16:30:00+08:00', cared: ['C'], timeSignature: 'C - 4:45 PM nurse' }
@@ -381,6 +387,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 history: 'Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved. Afebrile x 24 hours. Lungs: Decreased crackles right lower lung zone, good bilateral air entry.',
                 final_diagnosis: 'Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics'
               },
+              progress_notes_subjective: 'Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved.',
+              progress_notes_objective: 'Vital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.',
+              progress_notes_assessment: 'Diagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics',
               progress_notes: 'Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air\nChest auscultation: Decreased crackles right lower lung zone, good bilateral air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics',
               orders: [
                 { text: 'Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 10:30 AM nurse' },
@@ -411,6 +420,9 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 history: 'Patient is a 48-year-old female presenting to the Emergency Department with a 3-day history of high-grade fever, productive cough with yellowish sputum, and shortness of breath. Known diabetic and hypertensive. BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93% on room air. Crackles over right lower lung field, tachypneic.',
                 final_diagnosis: 'Community-Acquired Pneumonia, moderate risk; Essential Hypertension Stage 1'
               },
+              progress_notes_subjective: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.',
+              progress_notes_objective: 'Vital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.',
+              progress_notes_assessment: 'Diagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension',
               progress_notes: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension',
               orders: [
                 { text: 'Admit to Medical Ward under General Medicine service.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
@@ -664,7 +676,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 57) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 58) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
