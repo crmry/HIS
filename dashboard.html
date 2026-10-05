@@ -1825,10 +1825,10 @@
                 <!-- Nav Tabs for Flowsheet & Physical Chart Records -->
                 <ul class="nav nav-tabs" id="clinical-chart-tabs" style="margin-bottom:12px;">
                   <li class="active"><a href="#chart-tab-vitals" data-toggle="tab"><i class="icon-heart"></i> Vital Signs</a></li>
-                  <li><a href="#chart-tab-ivf" data-toggle="tab"><i class="icon-tint"></i> IV Fluids & Drips <span class="badge badge-info" id="tab-badge-ivf">2 Ongoing</span></a></li>
-                  <li><a href="#chart-tab-transfusion" data-toggle="tab"><i class="icon-plus-sign"></i> Transfusion Records <span class="badge badge-inverse" id="tab-badge-transfusion">1 Unit</span></a></li>
-                  <li><a href="#chart-tab-cbg" data-toggle="tab"><i class="icon-time"></i> CBGs <span class="badge badge-warning" id="tab-badge-cbg">4 logs</span></a></li>
-                  <li><a href="#chart-tab-meds" data-toggle="tab"><i class="icon-medkit"></i> Summary of Medications <span class="badge badge-success" id="tab-badge-meds">5 Active</span></a></li>
+                  <li><a href="#chart-tab-ivf" data-toggle="tab"><i class="icon-tint"></i> IV Fluids & Drips <span class="badge badge-info" id="tab-badge-ivf">0 Ongoing</span></a></li>
+                  <li><a href="#chart-tab-transfusion" data-toggle="tab"><i class="icon-plus-sign"></i> Transfusion Records <span class="badge badge-inverse" id="tab-badge-transfusion">0 Units</span></a></li>
+                  <li><a href="#chart-tab-cbg" data-toggle="tab"><i class="icon-time"></i> CBGs <span class="badge badge-warning" id="tab-badge-cbg">3 logs</span></a></li>
+                  <li><a href="#chart-tab-meds" data-toggle="tab"><i class="icon-medkit"></i> Summary of Medications <span class="badge badge-success" id="tab-badge-meds">3 Active</span></a></li>
                 </ul>
 
                 <!-- Tab Contents -->
@@ -1863,8 +1863,8 @@
                   <div class="tab-pane" id="chart-tab-ivf">
                     <div class="flowsheet-toolbar">
                       <div class="btn-group flowsheet-filter-group" id="ivf-filter-group">
-                        <button type="button" class="btn active" data-filter="all">All Fluids (<span id="count-ivf-all">4</span>)</button>
-                        <button type="button" class="btn" data-filter="ongoing"><i class="icon-play text-success"></i> Ongoing / Active (<span id="count-ivf-ongoing">2</span>)</button>
+                        <button type="button" class="btn active" data-filter="all">All Fluids (<span id="count-ivf-all">2</span>)</button>
+                        <button type="button" class="btn" data-filter="ongoing"><i class="icon-play text-success"></i> Ongoing / Active (<span id="count-ivf-ongoing">0</span>)</button>
                         <button type="button" class="btn" data-filter="consumed"><i class="icon-check"></i> Previously Given (<span id="count-ivf-consumed">2</span>)</button>
                       </div>
                     </div>
@@ -1937,9 +1937,9 @@
                   <div class="tab-pane" id="chart-tab-meds">
                     <div class="flowsheet-toolbar">
                       <div class="btn-group flowsheet-filter-group" id="meds-filter-group">
-                        <button type="button" class="btn active" data-filter="all">All Inpatient Meds (<span id="count-meds-all">5</span>)</button>
+                        <button type="button" class="btn active" data-filter="all">All Prescribed Meds (<span id="count-meds-all">7</span>)</button>
                         <button type="button" class="btn" data-filter="active">Active Scheduled (<span id="count-meds-active">3</span>)</button>
-                        <button type="button" class="btn" data-filter="prn">PRN / As Needed (<span id="count-meds-prn">2</span>)</button>
+                        <button type="button" class="btn" data-filter="prn">PRN / As Needed (<span id="count-meds-prn">1</span>)</button>
                       </div>
                     </div>
                     <table class="table table-bordered table-condensed" id="med-summary-table" style="margin-bottom:0;">
@@ -3217,15 +3217,15 @@
           <div id="fe-sec-vitals" class="fe-section" style="display:none;">
             <div class="row-fluid">
               <div class="span3"><label>Blood Pressure (BP, mmHg):</label><input type="text" id="fe-vs-bp" class="input-block-level" placeholder="120/80"></div>
-              <div class="span3"><label>Heart Rate (HR, bpm):</label><input type="number" id="fe-vs-hr" class="input-block-level" placeholder="78"></div>
+              <div class="span3"><label>Heart Rate (HR, bpm):</label><input type="number" id="fe-vs-hr" class="input-block-level" placeholder="74"></div>
               <div class="span3"><label>Respiratory Rate (RR, /min):</label><input type="number" id="fe-vs-rr" class="input-block-level" placeholder="18"></div>
-              <div class="span3"><label>Temperature (Temp, °C):</label><input type="text" id="fe-vs-temp" class="input-block-level" placeholder="36.8"></div>
+              <div class="span3"><label>Temperature (Temp, °C):</label><input type="text" id="fe-vs-temp" class="input-block-level" placeholder="36.6"></div>
             </div>
             <div class="row-fluid">
-              <div class="span3"><label>Weight (WT, kg):</label><input type="text" id="fe-vs-weight" class="input-block-level" placeholder="61" oninput="autoCalcModalBmi()"></div>
-              <div class="span3"><label>Height (HT, cm):</label><input type="text" id="fe-vs-height" class="input-block-level" placeholder="158" oninput="autoCalcModalBmi()"></div>
+              <div class="span3"><label>Weight (WT, kg):</label><input type="text" id="fe-vs-weight" class="input-block-level" placeholder="70" oninput="autoCalcModalBmi()"></div>
+              <div class="span3"><label>Height (HT, cm):</label><input type="text" id="fe-vs-height" class="input-block-level" placeholder="168" oninput="autoCalcModalBmi()"></div>
               <div class="span3"><label>Body Mass Index (BMI, kg/m²):</label><input type="text" id="fe-vs-bmi" class="input-block-level" placeholder="Auto-calculated" readonly style="background:#f9f9f9;"></div>
-              <div class="span3"><label>Oxygen Saturation (SpO₂, %):</label><input type="number" id="fe-vs-spo2" class="input-block-level" placeholder="98"></div>
+              <div class="span3"><label>Oxygen Saturation (SpO₂, %):</label><input type="number" id="fe-vs-spo2" class="input-block-level" placeholder="99"></div>
             </div>
           </div>
 
@@ -4783,11 +4783,15 @@
     }
 
     var seedVitalSigns = [
-      { dateTime: '2026-09-26T06:00:00+08:00', bp: '120/80', hr: '78', rr: '18', temp: '36.6', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '98', o2: '98' },
-      { dateTime: '2026-09-25T22:00:00+08:00', bp: '118/76', hr: '80', rr: '18', temp: '36.8', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '98', o2: '98' },
-      { dateTime: '2026-09-25T18:00:00+08:00', bp: '122/80', hr: '84', rr: '19', temp: '37.0', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '97', o2: '97' },
-      { dateTime: '2026-09-25T12:00:00+08:00', bp: '110/70', hr: '88', rr: '20', temp: '37.2', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '96', o2: '96' },
-      { dateTime: '2026-09-25T08:00:00+08:00', bp: '104/65', hr: '115', rr: '22', temp: '37.5', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '92', o2: '92' }
+      { dateTime: '2026-09-26T09:30:00+08:00', bp: '120/80', hr: '74', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
+      { dateTime: '2026-06-20T10:00:00+08:00', bp: '134/84', hr: '76', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '98', o2: '98' },
+      { dateTime: '2026-06-14T09:00:00+08:00', bp: '118/74', hr: '72', rr: '16', temp: '36.5', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
+      { dateTime: '2026-06-13T16:30:00+08:00', bp: '118/76', hr: '74', rr: '16', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
+      { dateTime: '2026-06-13T10:15:00+08:00', bp: '120/80', hr: '78', rr: '18', temp: '36.8', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '98', o2: '98' },
+      { dateTime: '2026-06-12T08:30:00+08:00', bp: '138/86', hr: '102', rr: '24', temp: '38.2', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '93', o2: '93' },
+      { dateTime: '2026-03-14T08:45:00+08:00', bp: '128/80', hr: '74', rr: '16', temp: '36.6', wt: '71', ht: '168', weight: '71', height: '168', bmi: '25.2', spo2: '99', o2: '99' },
+      { dateTime: '2025-12-05T11:15:00+08:00', bp: '122/78', hr: '74', rr: '16', temp: '36.5', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
+      { dateTime: '2025-09-18T14:30:00+08:00', bp: '126/80', hr: '78', rr: '18', temp: '36.7', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
     ];
 
     function calculateBMI(weightKg, heightCm) {
@@ -4892,31 +4896,28 @@
 
     var seedChartMonitoring = {
       ivFluids: [
-        { id: 'ivf-1', bottle: 'Bottle #1', solution: 'Plain Normal Saline Solution (PNSS) 1 L', rate: '80 mL/hr', started: '2026-06-12T13:00:00+08:00', ended: '2026-06-12T21:30:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'R. Santos, RN', remarks: 'Peripheral line R cephalic vein' },
-        { id: 'ivf-2', bottle: 'Bottle #2', solution: 'D5 0.3% NaCl 1 L + 20 mEq KCl', rate: '100 mL/hr', started: '2026-06-12T21:30:00+08:00', ended: '2026-06-13T07:30:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'M. Cruz, RN', remarks: 'No infiltration; electrolytes ongoing' },
-        { id: 'ivf-3', bottle: 'Bottle #3', solution: 'Plain Lactated Ringer\'s Solution (PLR) 1 L', rate: '120 mL/hr (30 gtts/min)', started: '2026-09-25T06:00:00+08:00', ended: '', volume: '750 mL infused / 250 mL left', status: 'Ongoing', nurse: 'E. Dela Cruz, RN', remarks: 'Main line active. Hydration adequate.' },
-        { id: 'ivf-4', bottle: 'Drip #1', solution: 'Norepinephrine Drip (4 mg in 100 mL D5W)', rate: '15 mL/hr (0.05 mcg/kg/min)', started: '2026-09-25T08:30:00+08:00', ended: '', volume: '45 mL infused / 55 mL left', status: 'Ongoing', nurse: 'E. Dela Cruz, RN', remarks: 'Infusion pump via central line; MAP ≥ 65 mmHg' }
+        { id: 'ivf-1', bottle: 'Bottle #1', solution: 'Plain Normal Saline Solution (PNSS) 1 L', rate: '80 mL/hr', started: '2026-06-12T13:00:00+08:00', ended: '2026-06-12T21:30:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'R. Santos, RN', remarks: 'Medical Ward admission; peripheral line R cephalic vein' },
+        { id: 'ivf-2', bottle: 'Bottle #2', solution: 'D5 0.3% NaCl 1 L + 20 mEq KCl', rate: '100 mL/hr', started: '2026-06-12T21:30:00+08:00', ended: '2026-06-13T07:30:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'M. Cruz, RN', remarks: 'Line discontinued prior to discharge; oral hydration adequate' }
       ],
-      transfusions: [
-        { id: 'trans-1', serial: 'B26-08914', component: 'Packed Red Blood Cells (PRBC)', bloodType: 'O Rh Positive', volume: '250 mL', expiration: '2026-10-15', started: '2026-09-25T09:00:00+08:00', ended: '2026-09-25T12:00:00+08:00', vitals: 'Pre: 100/60, HR 96, T 37.0°C | Post: 108/68, HR 88, T 37.2°C', reaction: 'None / Uneventful', nurse: 'E. Dela Cruz, RN / Checked: J. Reyes, RN', crossmatch: 'BB-2026-X0412 (Compatible)' }
-      ],
+      transfusions: [],
       cbgs: [
-        { id: 'cbg-1', dateTime: '2026-09-25T06:00:00+08:00', timing: 'Fasting / Pre-Breakfast (AC)', reading: 184, action: '4 Units Regular Insulin SQ (per sliding scale)', notes: 'Target range 110-180 mg/dL', nurse: 'M. Cruz, RN' },
-        { id: 'cbg-2', dateTime: '2026-09-25T11:30:00+08:00', timing: 'Pre-Lunch (AC)', reading: 228, action: '6 Units Regular Insulin SQ (per sliding scale)', notes: 'Elevated post-snack; corrective given', nurse: 'E. Dela Cruz, RN' },
-        { id: 'cbg-3', dateTime: '2026-09-25T17:00:00+08:00', timing: 'Pre-Dinner (AC)', reading: 142, action: 'None required (within target)', notes: 'Controlled glycemic level', nurse: 'E. Dela Cruz, RN' },
-        { id: 'cbg-4', dateTime: '2026-09-26T06:00:00+08:00', timing: 'Fasting / Pre-Breakfast (AC)', reading: 168, action: '4 Units Regular Insulin SQ (per sliding scale)', notes: 'Morning check; patient asymptomatic', nurse: 'J. Valenzuela, RN' }
+        { id: 'cbg-1', dateTime: '2026-06-13T06:30:00+08:00', timing: 'Fasting / Pre-Breakfast (AC)', reading: 128, action: 'Maintain oral maintenance regimen', notes: 'Inpatient ward routine fasting monitoring; within target', nurse: 'M. Cruz, RN' },
+        { id: 'cbg-2', dateTime: '2026-06-20T08:30:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 132, action: 'HbA1c 7.2% — Add Empagliflozin 10 mg OD', notes: 'Post-discharge follow-up; suboptimal control on Metformin monotherapy', nurse: 'Miguel Santos, MD' },
+        { id: 'cbg-3', dateTime: '2026-09-26T08:30:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 124, action: 'Target Met (80-130 mg/dL)', notes: 'Morning fasting check prior to OPD consultation; compliant with Empagliflozin and Metformin', nurse: 'Elena M. Ramos, RN' }
       ],
       medications: [
-        { id: 'med-1', name: 'Ceftriaxone 2 g vial', route: 'IVTT Once Daily (OD)', indication: 'Community-Acquired Pneumonia (Moderate Risk)', started: '2026-06-12T14:00:00+08:00', lastDose: '2026-09-25T08:00:00+08:00', nextDose: '2026-09-26T08:00:00+08:00', doses24h: '1/1 dose', status: 'Active / Ongoing', nurse: 'E. Dela Cruz, RN' },
-        { id: 'med-2', name: 'Omeprazole 40 mg vial', route: 'IVTT Once Daily (OD) 30m AC', indication: 'GI Prophylaxis / Ulcer Prevention', started: '2026-06-12T14:00:00+08:00', lastDose: '2026-09-26T06:00:00+08:00', nextDose: '2026-09-27T06:00:00+08:00', doses24h: '1/1 dose', status: 'Active / Ongoing', nurse: 'J. Valenzuela, RN' },
-        { id: 'med-3', name: 'Furosemide 20 mg/2 mL ampule', route: 'IVTT Twice Daily (BID)', indication: 'Diuresis for mild volume overload', started: '2026-09-25T08:00:00+08:00', lastDose: '2026-09-25T20:00:00+08:00', nextDose: '2026-09-26T08:00:00+08:00', doses24h: '2/2 doses', status: 'Active / Ongoing', nurse: 'M. Cruz, RN' },
-        { id: 'med-4', name: 'Paracetamol 1 g (300 mg/2 mL)', route: 'IVTT Q4H PRN for Temp ≥ 37.8°C', indication: 'Antipyretic for breakthrough fever', started: '2026-06-12T13:00:00+08:00', lastDose: '2026-09-25T12:45:00+08:00', nextDose: 'PRN (Min interval 4h)', doses24h: '2 doses', status: 'Active / PRN', nurse: 'E. Dela Cruz, RN' },
-        { id: 'med-5', name: 'Salbutamol + Ipratropium (Combivent)', route: '1 neb via nebulizer Q8H', indication: 'Bronchodilation for wheezing/dyspnea', started: '2026-06-12T14:00:00+08:00', lastDose: '2026-09-25T22:00:00+08:00', nextDose: '2026-09-26T06:00:00+08:00', doses24h: '3/3 doses', status: 'Active / Ongoing', nurse: 'M. Cruz, RN' }
+        { id: 'med-1', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', lastDose: '2026-09-26T07:00:00+08:00', nextDose: '2026-09-27T07:00:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
+        { id: 'med-2', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:00:00+08:00', nextDose: '2026-09-26T19:00:00+08:00', doses24h: '2 doses', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
+        { id: 'med-3', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:00:00+08:00', nextDose: '2026-09-27T07:00:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
+        { id: 'med-4', name: 'Celecoxib 200 mg capsule', route: 'Oral Once Daily PRN for severe right knee pain', indication: 'Primary Osteoarthritis, Right Knee', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-20T08:00:00+08:00', nextDose: 'PRN (As needed)', doses24h: '0 doses', status: 'Active / PRN', nurse: 'Miguel Santos, MD' },
+        { id: 'med-5', name: 'Co-amoxiclav 625 mg tablet', route: 'Oral Three Times Daily (TID) x 7 days', indication: 'Community-Acquired Pneumonia (step-down)', started: '2026-06-14T09:00:00+08:00', lastDose: '2026-06-21T09:00:00+08:00', nextDose: '—', doses24h: '—', status: 'Completed', nurse: 'Miguel Santos, MD' },
+        { id: 'med-6', name: 'Ceftriaxone 2 g vial', route: 'IVTT Once Daily (OD)', indication: 'Community-Acquired Pneumonia (Moderate Risk)', started: '2026-06-12T14:00:00+08:00', lastDose: '2026-06-14T08:00:00+08:00', nextDose: '—', doses24h: '—', status: 'Completed', nurse: 'Miguel Santos, MD' },
+        { id: 'med-7', name: 'Azithromycin 500 mg tablet', route: 'Oral Once Daily (OD) x 5 days', indication: 'Community-Acquired Pneumonia (Moderate Risk)', started: '2026-06-12T14:00:00+08:00', lastDose: '2026-06-16T14:00:00+08:00', nextDose: '—', doses24h: '—', status: 'Completed', nurse: 'Miguel Santos, MD' }
       ],
       intakeOutput: [
-        { id: 'io-1', shift: '7:00 AM - 3:00 PM (Day)', date: '2026-09-25', inOral: 400, inIvf: 950, inBloodMeds: 350, outUrine: 900, outDrain: 0, outStool: 150, nurse: 'E. Dela Cruz, RN', remarks: 'Good urinary output via foley' },
-        { id: 'io-2', shift: '3:00 PM - 11:00 PM (Evening)', date: '2026-09-25', inOral: 300, inIvf: 600, inBloodMeds: 0, outUrine: 750, outDrain: 0, outStool: 0, nurse: 'M. Cruz, RN', remarks: 'Patient tolerating oral fluids' },
-        { id: 'io-3', shift: '11:00 PM - 7:00 AM (Night)', date: '2026-09-26', inOral: 100, inIvf: 500, inBloodMeds: 0, outUrine: 600, outDrain: 0, outStool: 0, nurse: 'J. Valenzuela, RN', remarks: 'Night shift uneventful' }
+        { id: 'io-1', shift: '3:00 PM - 11:00 PM (Evening)', date: '2026-06-12', inOral: 400, inIvf: 640, inBloodMeds: 100, outUrine: 850, outDrain: 0, outStool: 0, nurse: 'R. Santos, RN', remarks: 'Post-admission hydration on PNSS; good output' },
+        { id: 'io-2', shift: '11:00 PM - 7:00 AM (Night)', date: '2026-06-13', inOral: 150, inIvf: 750, inBloodMeds: 0, outUrine: 700, outDrain: 0, outStool: 0, nurse: 'M. Cruz, RN', remarks: 'Afebrile overnight, slept well, adequate voiding' },
+        { id: 'io-3', shift: '7:00 AM - 3:00 PM (Day)', date: '2026-06-13', inOral: 500, inIvf: 250, inBloodMeds: 50, outUrine: 900, outDrain: 0, outStool: 150, nurse: 'M. Cruz, RN', remarks: 'Tolerating oral diet; IVF weaned' }
       ]
     };
 
@@ -4936,11 +4937,8 @@
       if (store && store[patientId]) {
         return store[patientId];
       }
-      if (patientId === SEED_PATIENT_ID || (!patientId && !store['blank'])) {
+      if (patientId === SEED_PATIENT_ID || patientId === OP_PATIENT_ID || (!patientId && !store['blank'])) {
         return JSON.parse(JSON.stringify(seedChartMonitoring));
-      }
-      if (patientId === OP_PATIENT_ID) {
-        return JSON.parse(JSON.stringify(opChartMonitoring));
       }
       var pRec = (typeof getPatients === 'function' ? getPatients() : []).find(function(r) { return r.id === patientId; });
       var meds = [];

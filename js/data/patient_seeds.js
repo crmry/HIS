@@ -92,7 +92,7 @@ if (typeof window !== 'undefined') {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 62,
+        seedVersion: 63,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -249,13 +249,17 @@ if (typeof window !== 'undefined') {
               futility: ''
             }
           },
-          vs_bp: '120/80', vs_hr: '78', vs_rr: '18', vs_temp: '36.6', vs_spo2: '98', vs_weight: '61', vs_height: '158', vs_date_time: '2026-09-26T06:00:00+08:00',
+          vs_bp: '120/80', vs_hr: '74', vs_rr: '18', vs_temp: '36.6', vs_spo2: '99', vs_weight: '70', vs_height: '168', vs_date_time: '2026-09-26T09:30:00+08:00',
           vital_signs: [
-            { dateTime: '2026-09-26T06:00:00+08:00', bp: '120/80', hr: '78', rr: '18', temp: '36.6', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '98', o2: '98' },
-            { dateTime: '2026-09-25T22:00:00+08:00', bp: '118/76', hr: '80', rr: '18', temp: '36.8', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '98', o2: '98' },
-            { dateTime: '2026-09-25T18:00:00+08:00', bp: '122/80', hr: '84', rr: '19', temp: '37.0', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '97', o2: '97' },
-            { dateTime: '2026-09-25T12:00:00+08:00', bp: '110/70', hr: '88', rr: '20', temp: '37.2', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '96', o2: '96' },
-            { dateTime: '2026-09-25T08:00:00+08:00', bp: '104/65', hr: '115', rr: '22', temp: '37.5', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '92', o2: '92' }
+            { dateTime: '2026-09-26T09:30:00+08:00', bp: '120/80', hr: '74', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
+            { dateTime: '2026-06-20T10:00:00+08:00', bp: '134/84', hr: '76', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '98', o2: '98' },
+            { dateTime: '2026-06-14T09:00:00+08:00', bp: '118/74', hr: '72', rr: '16', temp: '36.5', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
+            { dateTime: '2026-06-13T16:30:00+08:00', bp: '118/76', hr: '74', rr: '16', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
+            { dateTime: '2026-06-13T10:15:00+08:00', bp: '120/80', hr: '78', rr: '18', temp: '36.8', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '98', o2: '98' },
+            { dateTime: '2026-06-12T08:30:00+08:00', bp: '138/86', hr: '102', rr: '24', temp: '38.2', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '93', o2: '93' },
+            { dateTime: '2026-03-14T08:45:00+08:00', bp: '128/80', hr: '74', rr: '16', temp: '36.6', wt: '71', ht: '168', weight: '71', height: '168', bmi: '25.2', spo2: '99', o2: '99' },
+            { dateTime: '2025-12-05T11:15:00+08:00', bp: '122/78', hr: '74', rr: '16', temp: '36.5', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
+            { dateTime: '2025-09-18T14:30:00+08:00', bp: '126/80', hr: '78', rr: '18', temp: '36.7', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
           ],
           admitting_diagnosis: '',
           final_diagnosis: '', // Blank for current active consultation; finalized on historical encounters
@@ -277,14 +281,16 @@ if (typeof window !== 'undefined') {
               patient_record: '',
               results: '',
               vital_signs: [
-                { dateTime: '2026-09-26T06:00:00+08:00', bp: '120/80', hr: '78', rr: '18', temp: '36.6', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '98', o2: '98' },
-                { dateTime: '2026-09-25T22:00:00+08:00', bp: '118/76', hr: '80', rr: '18', temp: '36.8', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '98', o2: '98' },
-                { dateTime: '2026-09-25T18:00:00+08:00', bp: '122/80', hr: '84', rr: '19', temp: '37.0', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '97', o2: '97' },
-                { dateTime: '2026-09-25T12:00:00+08:00', bp: '110/70', hr: '88', rr: '20', temp: '37.2', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '96', o2: '96' },
-                { dateTime: '2026-09-25T08:00:00+08:00', bp: '104/65', hr: '115', rr: '22', temp: '37.5', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '92', o2: '92' }
+                { dateTime: '2026-09-26T09:30:00+08:00', bp: '120/80', hr: '74', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
               ],
-              cbgs: [],
-              medications: [],
+              cbgs: [
+                { dateTime: '2026-09-26T08:30:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 124, action: 'Target Met (80-130 mg/dL)', notes: 'Morning fasting check prior to OPD consultation; compliant with Empagliflozin 10 mg OD and Metformin 500 mg BID', nurse: 'Elena M. Ramos, RN' }
+              ],
+              medications: [
+                { id: 'med-op-0926-1', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-op-0926-2', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-op-0926-3', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' }
+              ],
               progress_notes_subjective: '',
               progress_notes_objective: '',
               progress_notes_assessment: '',
@@ -728,12 +734,14 @@ if (typeof window !== 'undefined') {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 62) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 63) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
-          if (store && store[OP_PATIENT_ID]) {
+          if (store) {
             delete store[OP_PATIENT_ID];
+            delete store[SEED_PATIENT_ID];
+            delete store['patient_op_juan'];
             localStorage.setItem('clmmrh_chart_monitoring_data_v1', JSON.stringify(store));
           }
         } catch (e) {}
