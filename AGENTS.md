@@ -76,3 +76,9 @@
     - Strictly purge and ban conversational AI markers, prompts, assistant meta-commentary, or artificial demo qualifiers (e.g., "per user request", "STATIC PROTOTYPE ONLY", "mock datasets", "Zero Orders Demo", "(Seed — Previous Patient)", "(Sample — Outpatient Only, OPD)", "(Example — New Patient, Blank)").
     - Replace all descriptive tags with authentic hospital designations (e.g., "(Inpatient — Medical Ward)", "(Outpatient — Adult Medicine OPD)", "(New Patient — Blank Chart)", "Clinical Pathways & Protocols").
     - Ensure all refactorings and hygiene enhancements preserve strict backwards compatibility, zero console exceptions, zero regression in clinical flows, and 100% compliance with automated verification gates.
+
+## Fast Architectural Navigation & Zero-Waste Token Execution
+- **Mandatory Skill Utilization (`his-expert`)**: Whenever inspecting, modifying, debugging, or refactoring `dashboard.html` or clinical order modules, the agent MUST activate and reference the `.agents/skills/his-expert/` skill and its references (`dashboard_section_map.md`, `component_dictionary.md`, `fast_patch_runbooks.md`).
+- **Zero-Waste Token Rule**: Never perform broad exploratory reads or multi-hundred-line sweeps of `dashboard.html`. Always locate line boundaries via the Section Map and target edits with precision.
+- **Cross-Device Memory Invariant**: Because `.agents/skills/his-expert/` is tracked in the repository, any device running Antigravity inherits full architectural memory upon checking out the repository.
+
