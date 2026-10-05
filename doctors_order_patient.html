@@ -1316,7 +1316,7 @@
         }
 
         // Estimate row height in pixels for pagination.
-        function buildSignatureRowHtml(physician, license, isContinuation, nextPage, isLastEncounter, encDate, cosignature, encIndex) {
+        function buildSignatureRowHtml(physician, license, isContinuation, nextPage, isLastEncounter, encDate, cosignature, encIndex, isCurrent) {
             var rawName = physician ? String(physician).trim() : '';
             if (/^Dr\.?\s+/i.test(rawName) && /,\s*M\.?D\.?/i.test(rawName)) {
                 rawName = rawName.replace(/^Dr\.?\s+/i, '');
@@ -1333,10 +1333,13 @@
             var stampHtml = '';
 
             // Check if Pairing / Co-Signature was selected
-            if (cosignature && cosignature.status && cosignature.status !== 'NONE') {
-                var pDocName = cosignature.doctor_name || cosignature.paired_doctor || 'Dr. Maria Santos';
+            var hasCosigRequested = Boolean(cosignature && cosignature.status && cosignature.status !== 'NONE' && (cosignature.doctor_name || cosignature.paired_doctor));
+
+            if (hasCosigRequested) {
+                var rawDocName = cosignature.doctor_name || cosignature.paired_doctor || '';
+                var pDocName = rawDocName.replace(/^Dr\.?\s*/i, '');
                 var pDocPrc = cosignature.doctor_prc || cosignature.paired_doctor_prc || '0095512';
-                var pDocSig = pDocName.replace(/^Dr\.\s*/i, '').replace(/,\s*MD$/i, '').trim();
+                var pDocSig = pDocName.replace(/,\s*MD$/i, '').trim();
 
                 if (cosignature.status === 'APPROVED' || cosignature.status === 'CO-SIGNED') {
                     var approvedDateDisplay = cosignature.approved_at ? formatDateTime(cosignature.approved_at) : (dateDisplay || 'Approved');
@@ -1364,10 +1367,9 @@
                         '  <span class="badge-cosig-approved">Co-Signature: Approved / Co-Signed</span>' +
                         '</div>' +
                         contNotice;
-                } else {
+                } else if (cosignature.status === 'PENDING' && isCurrent) {
                     // PENDING Co-Signature:
-                    // Display requesting doctor signature + Pending status badge
-                    // Do NOT display the paired doctor's e-signature yet!
+                    // MUST appear strictly on the CURRENT doctor's order where a co-sign was requested!
                     var approveBtnHtml = (encIndex != null)
                         ? '<button type="button" class="btn-approve-sheet-cosig" onclick="approveSheetOrderCoSignature(' + encIndex + ')">Co-Sign / Approve Order</button>'
                         : '';
@@ -1386,10 +1388,20 @@
                         '  </div>' +
                         contNotice +
                         '</div>';
+                } else {
+                    // Historical encounter or non-pending: standard single physician signature
+                    stampHtml =
+                        '<div class="enc-sig-block">' +
+                        '  <div class="enc-sig-role">Ordered by: Dr. ' + physName + ' [E-Signature]</div>' +
+                        '  <div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
+                        '  <div class="enc-sig-line-draw">________________________________</div>' +
+                        '  <div class="enc-sig-name">' + physName + '</div>' +
+                        '  <div class="enc-sig-lic">PRC Lic. No.: ' + licText + (dateDisplay ? ' &bull; ' + escapeHtml(dateDisplay) : '') + '</div>' +
+                        contNotice +
+                        '</div>';
                 }
             } else {
-                // Default: NONE was selected (or no pairing)
-                // Requesting doctor signature only, no blank co-signature field or unnecessary "Awaiting Approval" status
+                // Default: NONE was selected (or no pairing requested). Standard single physician signature only.
                 stampHtml =
                     '<div class="enc-sig-block">' +
                     '  <div class="enc-sig-role">Ordered by: Dr. ' + physName + ' [E-Signature]</div>' +
@@ -1417,7 +1429,7 @@
                 if (item.cosignature && (item.cosignature.status === 'APPROVED' || item.cosignature.status === 'CO-SIGNED')) {
                     return 115;
                 }
-                if (item.cosignature && item.cosignature.status === 'PENDING') {
+                if (item.isCurrent && item.cosignature && item.cosignature.status === 'PENDING') {
                     return 105;
                 }
                 return item.isContinuationSig ? 70 : 80;
@@ -1585,7 +1597,7 @@
                     }
                     if (pr.item.isSigRow) {
                         // Physician authentication stamp (standard between encounters or page continuation break)
-                        inner += buildSignatureRowHtml(pr.item.physician, pr.item.prc_license, pr.item.isContinuationSig, pr.item.nextPage, pr.item.isLastEncounter, pr.item.encDate, pr.item.cosignature, pr.item.encIndex);
+                        inner += buildSignatureRowHtml(pr.item.physician, pr.item.prc_license, pr.item.isContinuationSig, pr.item.nextPage, pr.item.isLastEncounter, pr.item.encDate, pr.item.cosignature, pr.item.encIndex, pr.item.isCurrent);
                         r++;
                         continue;
                     }
@@ -1853,18 +1865,33 @@
 
                 // Support clinical notes with or without orders (DOH compliant)
                 if (hasOrders || hasNotes || isAdmission) {
+                    const isCurrent = Boolean(enc?.is_current || enc?.isCurrent);
+                    var blockCosig = null;
+                    if (isCurrent) {
+                        blockCosig = enc.cosignature || (enc.orders && enc.orders.cosignature) || (data.orders && data.orders.cosignature) || null;
+                    } else {
+                        // Historical encounter: ONLY has cosignature if specifically recorded and approved on this encounter
+                        var hCosig = enc.cosignature || (enc.orders && enc.orders.cosignature) || null;
+                        if (hCosig && (hCosig.status === 'APPROVED' || hCosig.status === 'CO-SIGNED')) {
+                            blockCosig = hCosig;
+                        }
+                    }
+                    if (blockCosig && (!blockCosig.status || blockCosig.status === 'NONE' || (!blockCosig.doctor_name && !blockCosig.paired_doctor))) {
+                        blockCosig = null;
+                    }
+
                     blocks.push({
                         encIndex: encIdx,
                         date: enc.date || "",
                         time: enc.time || "",
                         dateTime: dt,
                         rawDt: dt,
-                        isCurrent: Boolean(enc?.is_current || enc?.isCurrent),
+                        isCurrent: isCurrent,
                         noteLines,
                         orders: categorizedOrders,
                         physician: enc.physician || data.physician || "",
                         prc_license: enc.prc_license || data.prc_license || "",
-                        cosignature: enc.cosignature || (enc.orders && enc.orders.cosignature) || (data.orders && data.orders.cosignature) || null
+                        cosignature: blockCosig
                     });
                 }
             });
@@ -1882,13 +1909,17 @@
                         blocks[blocks.length - 1].orders = categorizeAndSortOrders(primaryOrders, blocks[blocks.length - 1].rawDt || blocks[blocks.length - 1].dateTime);
                     } else {
                         const fallbackDt = formatDateTime(firstOrderDateTime(data, record));
+                        var fbCosig = (data.orders && data.orders.cosignature && data.orders.cosignature.status !== 'NONE') ? data.orders.cosignature : null;
+                        if (fbCosig && (!fbCosig.doctor_name && !fbCosig.paired_doctor)) fbCosig = null;
                         blocks.push({
                             dateTime: fallbackDt,
                             rawDt: fallbackDt,
+                            isCurrent: true,
                             noteLines: buildEncounterProgressNoteLines(null, data),
                             orders: categorizeAndSortOrders(primaryOrders, fallbackDt),
                             physician: data.physician || "",
-                            prc_license: data.prc_license || ""
+                            prc_license: data.prc_license || "",
+                            cosignature: fbCosig
                         });
                     }
                 }
@@ -1966,6 +1997,7 @@
                     prc_license: block.prc_license || "",
                     encDate: block.date || "",
                     isLastEncounter: blockIdx === blocks.length - 1,
+                    isCurrent: Boolean(block.isCurrent),
                     cosignature: block.cosignature || null,
                     encIndex: block.encIndex !== undefined ? block.encIndex : blockIdx
                 });
@@ -2465,7 +2497,11 @@
                 var idx = records.findIndex(function (r) { return r.id === pid; });
                 if (idx >= 0) {
                     if (!Array.isArray(records[idx].data.encounters)) records[idx].data.encounters = [];
+                    // Ensure previous encounters are marked is_current: false
+                    records[idx].data.encounters.forEach(function(e) { e.is_current = false; });
                     records[idx].data.encounters.unshift(newEncounter);
+                    if (!records[idx].data.orders) records[idx].data.orders = {};
+                    records[idx].data.orders.cosignature = cosigData;
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
                     currentLoadedRecord = records[idx];
                     loadPatientRecord(records[idx], "current");
@@ -2660,7 +2696,7 @@
             }
 
             var enc = encList[encIndex];
-            var cosig = enc.cosignature || (enc.orders && enc.orders.cosignature);
+            var cosig = enc.cosignature || (enc.orders && enc.orders.cosignature) || (enc.is_current ? (records[idx].data.orders && records[idx].data.orders.cosignature) : null);
             if (!cosig || cosig.status !== "PENDING") {
                 alert("This order does not have a pending co-signature.");
                 return;
