@@ -491,16 +491,13 @@ async def scan_single_target(browser_ws, file_url):
                 if (window.location.href.includes('doctors_order_er_admission.html')) {
                     const btnEr = document.getElementById('btn-view-er');
                     const btnAdm = document.getElementById('btn-view-admission');
-                    const btnDis = document.getElementById('btn-view-discharge');
                     const btnTmpl = document.getElementById('btn-view-template');
                     const btnAll = document.getElementById('btn-view-all');
-                    if (!btnEr || !btnAdm || !btnDis || !btnTmpl || !btnAll) {
+                    if (!btnEr || !btnAdm || !btnTmpl || !btnAll) {
                         return 'doctors_order_er_admission.html view buttons missing';
                     }
                     btnAdm.click();
                     if (window.currentViewMode() !== 'admission') return 'Failed to switch to admission view';
-                    btnDis.click();
-                    if (window.currentViewMode() !== 'discharge') return 'Failed to switch to discharge view';
                     btnTmpl.click();
                     if (window.currentViewMode() !== 'template') return 'Failed to switch to template view';
                     btnAll.click();

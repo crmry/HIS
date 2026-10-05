@@ -6147,10 +6147,8 @@
         encViewTitle = "View Emergency Department Doctor's Order / Progress Notes Nurses' Compliance Sheet (ED to Admission)";
         encStroke = "#c62828";
       } else if (typeUpper === 'IP') {
-        var isDischargeEnc = (encDate === '2026-06-14' || (data && String(data.status_tag || '').toLowerCase().includes('discharge')));
-        var ipView = isDischargeEnc ? 'discharge' : 'admission';
-        encUrl = 'doctors_order_er_admission.html?patient=' + encodeURIComponent(pId) + '&view=' + ipView + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
-        encViewTitle = isDischargeEnc ? "View Inpatient Discharge Doctor's Order / Progress Notes Nurses' Compliance Sheet" : "View Inpatient Admission Doctor's Order / Progress Notes Nurses' Compliance Sheet";
+        encUrl = 'doctors_order_er_admission.html?patient=' + encodeURIComponent(pId) + '&view=admission' + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
+        encViewTitle = "View Inpatient Admission Doctor's Order / Progress Notes Nurses' Compliance Sheet";
         encStroke = "#1565c0";
       } else if (isInitial) {
         encUrl = 'opd_record_patient.html?patient=' + encodeURIComponent(pId) + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
@@ -13316,8 +13314,7 @@
               query += '&view=er';
             } else if (encReg === 'IP') {
               targetPage = 'doctors_order_er_admission.html';
-              var isDis = (inspectedEnc.date === '2026-06-14' || String(inspectedEnc.status_tag || '').toLowerCase().includes('discharge'));
-              query += '&view=' + (isDis ? 'discharge' : 'admission');
+              query += '&view=admission';
             }
             query += '&encounter=' + encodeURIComponent(inspectedEnc.date);
           }
