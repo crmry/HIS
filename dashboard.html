@@ -4783,7 +4783,11 @@
     }
 
     var seedVitalSigns = [
-      { dateTime: '2026-09-25T12:30:00+08:00', bp: '104/65', hr: '115', rr: '22', temp: '37.5', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '92', o2: '92' }
+      { dateTime: '2026-09-26T06:00:00+08:00', bp: '120/80', hr: '78', rr: '18', temp: '36.6', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '98', o2: '98' },
+      { dateTime: '2026-09-25T22:00:00+08:00', bp: '118/76', hr: '80', rr: '18', temp: '36.8', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '98', o2: '98' },
+      { dateTime: '2026-09-25T18:00:00+08:00', bp: '122/80', hr: '84', rr: '19', temp: '37.0', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '97', o2: '97' },
+      { dateTime: '2026-09-25T12:00:00+08:00', bp: '110/70', hr: '88', rr: '20', temp: '37.2', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '96', o2: '96' },
+      { dateTime: '2026-09-25T08:00:00+08:00', bp: '104/65', hr: '115', rr: '22', temp: '37.5', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '92', o2: '92' }
     ];
 
     function calculateBMI(weightKg, heightCm) {
@@ -4820,9 +4824,9 @@
       var data = record && record.data ? record.data : {};
       var rows;
 
-      if (Array.isArray(data.vital_signs)) {
+      if (Array.isArray(data.vital_signs) && data.vital_signs.length > 0) {
         rows = data.vital_signs;
-      } else if (record && record.id === SEED_PATIENT_ID) {
+      } else if (record && (record.id === SEED_PATIENT_ID || record.id === (window.OP_PATIENT_ID || 'patient_op_juan'))) {
         rows = seedVitalSigns;
       } else {
         var hasVitalValue = [
@@ -4845,7 +4849,12 @@
           bmi: calculateBMI(data.vs_weight, data.vs_height),
           spo2: data.vs_spo2,
           o2: data.vs_spo2
-        }] : [];
+        }] : ((record && record.id !== (window.BLANK_PATIENT_ID || 'patient_new_blank_1790299677880')) ? seedVitalSigns : []);
+      }
+
+      if (!rows || rows.length === 0) {
+        body.innerHTML = '<tr><td colspan="9" class="muted text-center" style="padding:15px;">No vital signs recorded for this patient.</td></tr>';
+        return;
       }
 
       body.innerHTML = rows.map(function (row) {

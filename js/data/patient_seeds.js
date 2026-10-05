@@ -92,7 +92,7 @@ if (typeof window !== 'undefined') {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 61,
+        seedVersion: 62,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -249,8 +249,14 @@ if (typeof window !== 'undefined') {
               futility: ''
             }
           },
-          vs_bp: '', vs_hr: '', vs_rr: '', vs_temp: '', vs_spo2: '', vs_weight: '', vs_height: '', vs_date_time: '',
-          vital_signs: [],
+          vs_bp: '120/80', vs_hr: '78', vs_rr: '18', vs_temp: '36.6', vs_spo2: '98', vs_weight: '61', vs_height: '158', vs_date_time: '2026-09-26T06:00:00+08:00',
+          vital_signs: [
+            { dateTime: '2026-09-26T06:00:00+08:00', bp: '120/80', hr: '78', rr: '18', temp: '36.6', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '98', o2: '98' },
+            { dateTime: '2026-09-25T22:00:00+08:00', bp: '118/76', hr: '80', rr: '18', temp: '36.8', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '98', o2: '98' },
+            { dateTime: '2026-09-25T18:00:00+08:00', bp: '122/80', hr: '84', rr: '19', temp: '37.0', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '97', o2: '97' },
+            { dateTime: '2026-09-25T12:00:00+08:00', bp: '110/70', hr: '88', rr: '20', temp: '37.2', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '96', o2: '96' },
+            { dateTime: '2026-09-25T08:00:00+08:00', bp: '104/65', hr: '115', rr: '22', temp: '37.5', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '92', o2: '92' }
+          ],
           admitting_diagnosis: '',
           final_diagnosis: '', // Blank for current active consultation; finalized on historical encounters
           progress_notes_subjective: '',
@@ -270,7 +276,13 @@ if (typeof window !== 'undefined') {
               diagnosis: '',
               patient_record: '',
               results: '',
-              vital_signs: [],
+              vital_signs: [
+                { dateTime: '2026-09-26T06:00:00+08:00', bp: '120/80', hr: '78', rr: '18', temp: '36.6', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '98', o2: '98' },
+                { dateTime: '2026-09-25T22:00:00+08:00', bp: '118/76', hr: '80', rr: '18', temp: '36.8', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '98', o2: '98' },
+                { dateTime: '2026-09-25T18:00:00+08:00', bp: '122/80', hr: '84', rr: '19', temp: '37.0', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '97', o2: '97' },
+                { dateTime: '2026-09-25T12:00:00+08:00', bp: '110/70', hr: '88', rr: '20', temp: '37.2', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '96', o2: '96' },
+                { dateTime: '2026-09-25T08:00:00+08:00', bp: '104/65', hr: '115', rr: '22', temp: '37.5', wt: '61', ht: '158', weight: '61', height: '158', bmi: '24.4', spo2: '92', o2: '92' }
+              ],
               cbgs: [],
               medications: [],
               progress_notes_subjective: '',
@@ -716,7 +728,7 @@ if (typeof window !== 'undefined') {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 61) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 62) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
