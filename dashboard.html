@@ -1825,10 +1825,8 @@
                 <!-- Nav Tabs for Flowsheet & Physical Chart Records -->
                 <ul class="nav nav-tabs" id="clinical-chart-tabs" style="margin-bottom:12px;">
                   <li class="active"><a href="#chart-tab-vitals" data-toggle="tab"><i class="icon-heart"></i> Vital Signs</a></li>
-                  <li><a href="#chart-tab-ivf" data-toggle="tab"><i class="icon-tint"></i> IV Fluids & Drips <span class="badge badge-info" id="tab-badge-ivf">0 Ongoing</span></a></li>
-                  <li><a href="#chart-tab-transfusion" data-toggle="tab"><i class="icon-plus-sign"></i> Transfusion Records <span class="badge badge-inverse" id="tab-badge-transfusion">0 Units</span></a></li>
-                  <li><a href="#chart-tab-cbg" data-toggle="tab"><i class="icon-time"></i> CBGs <span class="badge badge-warning" id="tab-badge-cbg">3 logs</span></a></li>
-                  <li><a href="#chart-tab-meds" data-toggle="tab"><i class="icon-medkit"></i> Summary of Medications <span class="badge badge-success" id="tab-badge-meds">3 Active</span></a></li>
+                  <li><a href="#chart-tab-cbg" data-toggle="tab"><i class="icon-time"></i> CBGs <span class="badge badge-warning" id="tab-badge-cbg">2 logs</span></a></li>
+                  <li><a href="#chart-tab-meds" data-toggle="tab"><i class="icon-medkit"></i> Summary of Medications <span class="badge badge-success" id="tab-badge-meds">4 Active</span></a></li>
                 </ul>
 
                 <!-- Tab Contents -->
@@ -1838,7 +1836,7 @@
                   <div class="tab-pane active" id="chart-tab-vitals">
                     <div class="flowsheet-toolbar">
                       <div class="muted" style="font-size:11px;">
-                        <i class="icon-info-sign"></i> Vital Signs Monitoring Record (Bedside Flowsheet / Graphic Sheet).
+                        <i class="icon-info-sign"></i> Vital Signs Monitoring Record (Outpatient Consultation & Follow-up History).
                       </div>
                     </div>
                     <table class="table table-bordered table-condensed vitals-grid" id="vitals-table" style="margin-bottom:0;">
@@ -1859,59 +1857,7 @@
                     </table>
                   </div>
 
-                  <!-- TAB 2: IV FLUIDS & DRIPS -->
-                  <div class="tab-pane" id="chart-tab-ivf">
-                    <div class="flowsheet-toolbar">
-                      <div class="btn-group flowsheet-filter-group" id="ivf-filter-group">
-                        <button type="button" class="btn active" data-filter="all">All Fluids (<span id="count-ivf-all">2</span>)</button>
-                        <button type="button" class="btn" data-filter="ongoing"><i class="icon-play text-success"></i> Ongoing / Active (<span id="count-ivf-ongoing">0</span>)</button>
-                        <button type="button" class="btn" data-filter="consumed"><i class="icon-check"></i> Previously Given (<span id="count-ivf-consumed">2</span>)</button>
-                      </div>
-                    </div>
-                    <table class="table table-bordered table-condensed" id="ivf-table" style="margin-bottom:0;">
-                      <thead>
-                        <tr style="background:#f9f9f9;">
-                          <th style="width:80px;">Line / Bottle</th>
-                          <th>Solution & Additives / Incorporations</th>
-                          <th style="width:130px;">Infusion Rate</th>
-                          <th style="width:140px;">Date/Time Started</th>
-                          <th style="width:140px;">Date/Time Ended</th>
-                          <th style="width:130px;">Volume Status</th>
-                          <th style="width:100px;">Status</th>
-                          <th style="width:140px;">Nurse / Staff</th>
-                        </tr>
-                      </thead>
-                      <tbody id="ivf-rows"></tbody>
-                    </table>
-                  </div>
-
-                  <!-- TAB 3: TRANSFUSION RECORDS -->
-                  <div class="tab-pane" id="chart-tab-transfusion">
-                    <div class="flowsheet-toolbar">
-                      <div class="muted" style="font-size:11px;">
-                        <i class="icon-tint text-error"></i> Official blood and blood component bedside transfusion tracking.
-                      </div>
-                    </div>
-                    <table class="table table-bordered table-condensed" id="transfusion-table" style="margin-bottom:0;">
-                      <thead>
-                        <tr style="background:#f9f9f9;">
-                          <th style="width:125px;">Unit Serial #</th>
-                          <th style="width:140px;">Blood Component</th>
-                          <th style="width:95px;">Blood Type</th>
-                          <th style="width:85px;">Volume</th>
-                          <th style="width:115px;">Expiration Date</th>
-                          <th style="width:135px;">Started</th>
-                          <th style="width:135px;">Ended</th>
-                          <th>Vitals (Pre / Post Transfusion)</th>
-                          <th style="width:140px;">Adverse Reaction</th>
-                          <th style="width:150px;">Administered / Verified</th>
-                        </tr>
-                      </thead>
-                      <tbody id="transfusion-rows"></tbody>
-                    </table>
-                  </div>
-
-                  <!-- TAB 4: CBGS -->
+                  <!-- TAB 2: CBGS -->
                   <div class="tab-pane" id="chart-tab-cbg">
                     <div class="flowsheet-toolbar">
                       <div class="muted" style="font-size:11px;">
@@ -1933,11 +1879,11 @@
                     </table>
                   </div>
 
-                  <!-- TAB 5: SUMMARY OF MEDICATIONS (MAR) -->
+                  <!-- TAB 3: SUMMARY OF MEDICATIONS (MAR) -->
                   <div class="tab-pane" id="chart-tab-meds">
                     <div class="flowsheet-toolbar">
                       <div class="btn-group flowsheet-filter-group" id="meds-filter-group">
-                        <button type="button" class="btn active" data-filter="all">All Prescribed Meds (<span id="count-meds-all">7</span>)</button>
+                        <button type="button" class="btn active" data-filter="all">All Prescribed Meds (<span id="count-meds-all">4</span>)</button>
                         <button type="button" class="btn" data-filter="active">Active Scheduled (<span id="count-meds-active">3</span>)</button>
                         <button type="button" class="btn" data-filter="prn">PRN / As Needed (<span id="count-meds-prn">1</span>)</button>
                       </div>
@@ -4785,10 +4731,6 @@
     var seedVitalSigns = [
       { dateTime: '2026-09-26T09:30:00+08:00', bp: '120/80', hr: '74', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
       { dateTime: '2026-06-20T10:00:00+08:00', bp: '134/84', hr: '76', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '98', o2: '98' },
-      { dateTime: '2026-06-14T09:00:00+08:00', bp: '118/74', hr: '72', rr: '16', temp: '36.5', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
-      { dateTime: '2026-06-13T16:30:00+08:00', bp: '118/76', hr: '74', rr: '16', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
-      { dateTime: '2026-06-13T10:15:00+08:00', bp: '120/80', hr: '78', rr: '18', temp: '36.8', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '98', o2: '98' },
-      { dateTime: '2026-06-12T08:30:00+08:00', bp: '138/86', hr: '102', rr: '24', temp: '38.2', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '93', o2: '93' },
       { dateTime: '2026-03-14T08:45:00+08:00', bp: '128/80', hr: '74', rr: '16', temp: '36.6', wt: '71', ht: '168', weight: '71', height: '168', bmi: '25.2', spo2: '99', o2: '99' },
       { dateTime: '2025-12-05T11:15:00+08:00', bp: '122/78', hr: '74', rr: '16', temp: '36.5', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
       { dateTime: '2025-09-18T14:30:00+08:00', bp: '126/80', hr: '78', rr: '18', temp: '36.7', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
@@ -4895,30 +4837,19 @@
     var activeMedsFilter = 'all';
 
     var seedChartMonitoring = {
-      ivFluids: [
-        { id: 'ivf-1', bottle: 'Bottle #1', solution: 'Plain Normal Saline Solution (PNSS) 1 L', rate: '80 mL/hr', started: '2026-06-12T13:00:00+08:00', ended: '2026-06-12T21:30:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'R. Santos, RN', remarks: 'Medical Ward admission; peripheral line R cephalic vein' },
-        { id: 'ivf-2', bottle: 'Bottle #2', solution: 'D5 0.3% NaCl 1 L + 20 mEq KCl', rate: '100 mL/hr', started: '2026-06-12T21:30:00+08:00', ended: '2026-06-13T07:30:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'M. Cruz, RN', remarks: 'Line discontinued prior to discharge; oral hydration adequate' }
-      ],
+      ivFluids: [],
       transfusions: [],
       cbgs: [
-        { id: 'cbg-1', dateTime: '2026-06-13T06:30:00+08:00', timing: 'Fasting / Pre-Breakfast (AC)', reading: 128, action: 'Maintain oral maintenance regimen', notes: 'Inpatient ward routine fasting monitoring; within target', nurse: 'M. Cruz, RN' },
-        { id: 'cbg-2', dateTime: '2026-06-20T08:30:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 132, action: 'HbA1c 7.2% — Add Empagliflozin 10 mg OD', notes: 'Post-discharge follow-up; suboptimal control on Metformin monotherapy', nurse: 'Miguel Santos, MD' },
-        { id: 'cbg-3', dateTime: '2026-09-26T08:30:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 124, action: 'Target Met (80-130 mg/dL)', notes: 'Morning fasting check prior to OPD consultation; compliant with Empagliflozin and Metformin', nurse: 'Elena M. Ramos, RN' }
+        { id: 'cbg-1', dateTime: '2026-06-20T08:30:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 132, action: 'HbA1c 7.2% — Add Empagliflozin 10 mg OD', notes: 'Post-discharge follow-up; suboptimal control on Metformin monotherapy', nurse: 'Miguel Santos, MD' },
+        { id: 'cbg-2', dateTime: '2026-09-26T08:30:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 124, action: 'Target Met (80-130 mg/dL)', notes: 'Morning fasting check prior to OPD consultation; compliant with Empagliflozin and Metformin', nurse: 'Elena M. Ramos, RN' }
       ],
       medications: [
         { id: 'med-1', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', lastDose: '2026-09-26T07:00:00+08:00', nextDose: '2026-09-27T07:00:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
         { id: 'med-2', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:00:00+08:00', nextDose: '2026-09-26T19:00:00+08:00', doses24h: '2 doses', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
         { id: 'med-3', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:00:00+08:00', nextDose: '2026-09-27T07:00:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
-        { id: 'med-4', name: 'Celecoxib 200 mg capsule', route: 'Oral Once Daily PRN for severe right knee pain', indication: 'Primary Osteoarthritis, Right Knee', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-20T08:00:00+08:00', nextDose: 'PRN (As needed)', doses24h: '0 doses', status: 'Active / PRN', nurse: 'Miguel Santos, MD' },
-        { id: 'med-5', name: 'Co-amoxiclav 625 mg tablet', route: 'Oral Three Times Daily (TID) x 7 days', indication: 'Community-Acquired Pneumonia (step-down)', started: '2026-06-14T09:00:00+08:00', lastDose: '2026-06-21T09:00:00+08:00', nextDose: '—', doses24h: '—', status: 'Completed', nurse: 'Miguel Santos, MD' },
-        { id: 'med-6', name: 'Ceftriaxone 2 g vial', route: 'IVTT Once Daily (OD)', indication: 'Community-Acquired Pneumonia (Moderate Risk)', started: '2026-06-12T14:00:00+08:00', lastDose: '2026-06-14T08:00:00+08:00', nextDose: '—', doses24h: '—', status: 'Completed', nurse: 'Miguel Santos, MD' },
-        { id: 'med-7', name: 'Azithromycin 500 mg tablet', route: 'Oral Once Daily (OD) x 5 days', indication: 'Community-Acquired Pneumonia (Moderate Risk)', started: '2026-06-12T14:00:00+08:00', lastDose: '2026-06-16T14:00:00+08:00', nextDose: '—', doses24h: '—', status: 'Completed', nurse: 'Miguel Santos, MD' }
+        { id: 'med-4', name: 'Celecoxib 200 mg capsule', route: 'Oral Once Daily PRN for severe right knee pain', indication: 'Primary Osteoarthritis, Right Knee', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-20T08:00:00+08:00', nextDose: 'PRN (As needed)', doses24h: '0 doses', status: 'Active / PRN', nurse: 'Miguel Santos, MD' }
       ],
-      intakeOutput: [
-        { id: 'io-1', shift: '3:00 PM - 11:00 PM (Evening)', date: '2026-06-12', inOral: 400, inIvf: 640, inBloodMeds: 100, outUrine: 850, outDrain: 0, outStool: 0, nurse: 'R. Santos, RN', remarks: 'Post-admission hydration on PNSS; good output' },
-        { id: 'io-2', shift: '11:00 PM - 7:00 AM (Night)', date: '2026-06-13', inOral: 150, inIvf: 750, inBloodMeds: 0, outUrine: 700, outDrain: 0, outStool: 0, nurse: 'M. Cruz, RN', remarks: 'Afebrile overnight, slept well, adequate voiding' },
-        { id: 'io-3', shift: '7:00 AM - 3:00 PM (Day)', date: '2026-06-13', inOral: 500, inIvf: 250, inBloodMeds: 50, outUrine: 900, outDrain: 0, outStool: 150, nurse: 'M. Cruz, RN', remarks: 'Tolerating oral diet; IVF weaned' }
-      ]
+      intakeOutput: []
     };
 
     function getChartMonitoringStore() {
