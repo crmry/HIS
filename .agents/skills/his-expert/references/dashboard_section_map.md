@@ -37,7 +37,6 @@ Every modal is declared in markup before the main `<script>` tags:
 | `#clinical-request-modal` | `2984` – `3073` | CPOE diagnostic order selector (Laboratory, Radiology/DDIRS, ECG, Pulmonary). |
 | `#clinical-request-print-modal` | `3074` – `3094` | Diagnostic request order slip print preview dialog. |
 | `#modal-order-cosignature` | `3095` – `3139` | Physician order pairing & co-signature requisition modal. |
-| `#modal-cosig-approval` | `3140` – `3168` | Senior attending physician order co-signature verification dialog. |
 | `#rx-writer-modal` | `3169` – `3183` | Pop-out Prescription & Outpatient Rx Writer dialog. |
 | `#rx-print-modal` | `3184` – `3202` | Prescription pad official DOH/PhilHealth print preview dialog. |
 | `#flowsheet-entry-modal` | `3173` – `3360` | Bedside 24-hour vital signs, IVF, transfusion, CBG, and medication logging dialog. |

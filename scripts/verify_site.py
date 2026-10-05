@@ -443,11 +443,9 @@ async def scan_single_target(browser_ws, file_url):
                     const saveOrdersBtn = document.getElementById('save-orders-btn');
                     const cosigModal = document.getElementById('modal-order-cosignature');
                     const cosigSelect = document.getElementById('cosig-doctor-select');
-                    const cosigApprovalModal = document.getElementById('modal-cosig-approval');
-                    const cosigBanner = document.getElementById('orders-cosig-status-banner');
 
-                    if (!saveOrdersBtn || !cosigModal || !cosigSelect || !cosigApprovalModal || !cosigBanner) {
-                        return 'Doctors order co-signature modal or banner elements missing on dashboard.html';
+                    if (!saveOrdersBtn || !cosigModal || !cosigSelect) {
+                        return 'Doctors order co-signature modal elements missing on dashboard.html';
                     }
 
                     // Test 1: Clicking Save Orders opens the pairing modal
@@ -506,28 +504,10 @@ async def scan_single_target(browser_ws, file_url):
                         if (!window.activeOrderCoSignature || window.activeOrderCoSignature.status !== 'PENDING') {
                             return 'Selecting paired doctor did not set activeOrderCoSignature to PENDING';
                         }
-                        if (cosigBanner.style.display === 'none') {
-                            return 'Co-signature status banner not displayed for pending co-signature';
-                        }
-                        if (!cosigBanner.textContent.includes('Dr. Maria Santos')) {
-                            return 'Co-signature status banner does not reference paired doctor';
-                        }
-
-                        // Test 5: Authorization and co-signature approval
-                        if (typeof window.openCosigApprovalModal === 'function') {
-                            window.openCosigApprovalModal();
-                            if (!cosigApprovalModal.classList.contains('open')) {
-                                return 'Failed to open co-signature approval modal';
-                            }
-                            if (typeof window.executeCoSignatureApproval === 'function') {
-                                window.executeCoSignatureApproval();
-                                if (window.activeOrderCoSignature.status !== 'APPROVED') {
-                                    return 'executeCoSignatureApproval did not mark status as APPROVED';
-                                }
-                                if (!cosigBanner.textContent.includes('Approved / Co-Signed')) {
-                                    return 'Banner does not display Approved / Co-Signed after approval';
-                                }
-                            }
+                        // Verify co-signature status banner is NOT rendered on dashboard (handled in doctor orders)
+                        const cosigBanner = document.getElementById('orders-cosig-status-banner');
+                        if (cosigBanner && window.getComputedStyle(cosigBanner).display !== 'none' && cosigBanner.innerHTML.trim() !== '') {
+                            return 'Co-signature status banner should not be displayed on dashboard';
                         }
                     }
                 }

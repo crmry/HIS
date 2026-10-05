@@ -2759,7 +2759,6 @@
           </div>
           <div class="bootstrap-widget-content">
             <div id="orders-body"></div>
-            <div id="orders-cosig-status-banner" style="display:none; margin: 10px 0;"></div>
             <div class="orders-savebar">
               <span id="orders-save-status" role="status" aria-live="polite"></span>
               <button type="button" class="btn btn-success btn-small" id="save-orders-btn">Save and Preview Physician's
@@ -3070,35 +3069,6 @@
           <button type="button" class="btn" id="btn-cancel-cosig" onclick="closeOrderCosignatureModal(event)">Cancel</button>
           <button type="button" class="btn btn-primary" id="btn-confirm-save-cosig" onclick="confirmAndSaveOrderWithCosignature()">Confirm &amp; Save Order</button>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ PAIRING / CO-SIGNATURE APPROVAL CONFIRMATION MODAL ═══ -->
-  <div class="seg-modal-backdrop" id="modal-cosig-approval" role="dialog" aria-modal="true" aria-labelledby="cosig-approval-heading">
-    <div class="seg-modal" style="min-width: 520px; max-width: 600px; margin: 40px auto; border: 1px solid #16a34a; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
-      <div class="seg-modal-title" id="cosig-approval-heading" style="background: linear-gradient(135deg, #16a34a, #15803d); color: #fff; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center;">
-        <span style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700;">
-          Physician Co-Signature Authorization &amp; Approval
-        </span>
-        <button type="button" class="seg-modal-close" id="close-cosig-approval-modal" onclick="closeCosigApprovalModal(event)" title="Close (Esc)" style="background:none; border:none; color:#fff; font-size:18px; cursor:pointer;">✕</button>
-      </div>
-      <div class="seg-modal-body" style="padding: 16px 20px; background: #ffffff;">
-        <p style="font-size: 12px; color: #334155; margin-top: 0; line-height: 1.5;">
-          You are authorizing and co-signing the Doctors' Orders as the designated paired physician:
-        </p>
-        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; padding: 10px 14px; margin-bottom: 12px;">
-          <div style="font-size: 12px; font-weight: 700; color: #166534;" id="cosig-approval-doctor-name">Dr. Maria Santos, MD</div>
-          <div style="font-size: 11px; color: #15803d;" id="cosig-approval-doctor-details">Internal Medicine &bull; PRC Lic. No.: 0095512</div>
-          <div style="font-size: 11px; color: #475569; margin-top: 6px;" id="cosig-approval-patient-context">Patient: Del Rosario, Carmela Bautista &bull; Case No: OP-2026-0926-0042</div>
-        </div>
-        <p style="font-size: 11px; color: #64748b; margin-bottom: 0;">
-          Upon confirmation, your electronic signature (ESIG) will be officially stamped alongside the ordering physician's e-signature, and the audit trail will record your approval timestamp and credentials.
-        </p>
-      </div>
-      <div style="padding: 12px 18px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 8px;">
-        <button type="button" class="btn" id="btn-cancel-cosig-approval" onclick="closeCosigApprovalModal(event)">Cancel</button>
-        <button type="button" class="btn btn-success" id="btn-confirm-cosig-approval" onclick="executeCoSignatureApproval()">Authorize &amp; Co-Sign Order</button>
       </div>
     </div>
   </div>
@@ -11865,38 +11835,11 @@
     window.activeOrderCoSignature = window.activeOrderCoSignature || null;
 
     function updateCosigStatusBanner(cosig) {
+      // Co-signature review and authorization appear on the official Doctor's Order sheet (doctors_order_patient.html)
       var banner = document.getElementById('orders-cosig-status-banner');
-      if (!banner) return;
-      if (!cosig || cosig.status === 'NONE') {
+      if (banner) {
         banner.style.display = 'none';
         banner.innerHTML = '';
-        return;
-      }
-      banner.style.display = 'block';
-      if (cosig.status === 'PENDING') {
-        var docName = cosig.doctor_title || (cosig.doctor_name ? ('Dr. ' + cosig.doctor_name.replace(/,\s*MD$/i, '')) : '') || cosig.paired_doctor || 'Supervising Physician';
-        var docSpec = cosig.doctor_specialty ? ' (' + cosig.doctor_specialty + ')' : '';
-        var reqDoc = cosig.requesting_doctor || 'Ordering Physician';
-        banner.innerHTML =
-          '<div style="background:#fffbeb; border:1px solid #fde68a; border-left:4px solid #f59e0b; border-radius:4px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">' +
-            '<div>' +
-              '<div style="color:#b45309; font-weight:700; font-size:12px;">Co-Signature: Pending &ndash; ' + esc(docName) + esc(docSpec) + '</div>' +
-              '<div style="font-size:11px; color:#78350f; margin-top:2px;">Original Requesting Physician: ' + esc(reqDoc) + ' &bull; Awaiting supervisory review &amp; co-signature</div>' +
-            '</div>' +
-            '<button type="button" class="btn btn-mini btn-warning" id="btn-approve-cosig" onclick="openCosigApprovalModal(event)" style="font-weight:700; padding:4px 10px; cursor:pointer;">Co-Sign / Approve Order</button>' +
-          '</div>';
-      } else if (cosig.status === 'APPROVED' || cosig.status === 'CO-SIGNED') {
-        var docName = cosig.doctor_title || (cosig.doctor_name ? ('Dr. ' + cosig.doctor_name.replace(/,\s*MD$/i, '')) : '') || cosig.paired_doctor || 'Co-Signing Physician';
-        var aprDate = cosig.approved_at ? formatDateTime(cosig.approved_at) : 'Approved';
-        var auditRef = cosig.audit_ref || 'COSIG-RECORD';
-        banner.innerHTML =
-          '<div style="background:#f0fdf4; border:1px solid #bbf7d0; border-left:4px solid #16a34a; border-radius:4px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">' +
-            '<div>' +
-              '<div style="color:#15803d; font-weight:700; font-size:12px;">Co-Signature: Approved / Co-Signed &ndash; ' + esc(docName) + '</div>' +
-              '<div style="font-size:11px; color:#166534; margin-top:2px;">Co-Signed on ' + esc(aprDate) + ' &bull; Audit Ref: ' + esc(auditRef) + '</div>' +
-            '</div>' +
-            '<span class="badge badge-success" style="font-size:10px; padding:3px 8px;">Approved / Co-Signed</span>' +
-          '</div>';
       }
     }
     window.updateCosigStatusBanner = updateCosigStatusBanner;
@@ -12293,76 +12236,10 @@
     }
     window.executeSaveOrdersWithActiveCoSignature = executeSaveOrdersWithActiveCoSignature;
 
-    // Co-Signature Approval Modal Controls
-    function openCosigApprovalModal(e) {
-      if (e && e.preventDefault) e.preventDefault();
-      var modal = document.getElementById('modal-cosig-approval');
-      if (!modal) return;
-      var cosig = window.activeOrderCoSignature;
-      var nameEl = document.getElementById('cosig-approval-doctor-name');
-      var detEl = document.getElementById('cosig-approval-doctor-details');
-      var pContextEl = document.getElementById('cosig-approval-patient-context');
-
-      if (cosig) {
-        if (nameEl) nameEl.textContent = (cosig.doctor_title || cosig.doctor_name || 'Dr. Maria Santos');
-        if (detEl) detEl.textContent = (cosig.doctor_specialty || 'Supervising Physician') + ' • PRC Lic. No.: ' + (cosig.doctor_prc || '0095512');
-      }
-      var curRec = (typeof getPatients === 'function' ? getPatients() : []).find(function(r){ return r.id === activePatientId; });
-      if (curRec && curRec.data && pContextEl) {
-        var pName = (curRec.data.last_name || '') + ', ' + (curRec.data.first_name || '');
-        pContextEl.textContent = 'Patient: ' + pName + ' • Case No: ' + (curRec.data.encounter_no || curRec.data.case_no || 'OP-2026-0926-0042');
-      }
-
-      modal.classList.add('open');
-      document.body.classList.add('modal-lock');
-    }
-    window.openCosigApprovalModal = openCosigApprovalModal;
-
-    function closeCosigApprovalModal(e) {
-      if (e && e.preventDefault) e.preventDefault();
-      var modal = document.getElementById('modal-cosig-approval');
-      if (modal) modal.classList.remove('open');
-      document.body.classList.remove('modal-lock');
-    }
-    window.closeCosigApprovalModal = closeCosigApprovalModal;
-
-    function executeCoSignatureApproval() {
-      if (!window.activeOrderCoSignature) {
-        closeCosigApprovalModal();
-        return;
-      }
-      window.activeOrderCoSignature.status = 'APPROVED';
-      window.activeOrderCoSignature.approved_at = new Date().toISOString();
-      window.activeOrderCoSignature.approved_by = window.activeOrderCoSignature.doctor_name;
-      window.activeOrderCoSignature.audit_ref = 'COSIG-' + Date.now().toString(36).toUpperCase();
-
-      // Persist into patient record
-      if (activePatientId) {
-        var records = getPatients();
-        var idx = records.findIndex(function(r) { return r.id === activePatientId; });
-        if (idx >= 0) {
-          if (!records[idx].data.orders) records[idx].data.orders = {};
-          records[idx].data.orders.cosignature = Object.assign({}, window.activeOrderCoSignature);
-          if (Array.isArray(records[idx].data.encounters)) {
-            var curEnc = records[idx].data.encounters.find(function(e) { return e.is_current || e.isCurrent; }) || records[idx].data.encounters[0];
-            if (curEnc) {
-              curEnc.cosignature = Object.assign({}, window.activeOrderCoSignature);
-            }
-          }
-          savePatients(records);
-        }
-      }
-
-      updateCosigStatusBanner(window.activeOrderCoSignature);
-      closeCosigApprovalModal();
-
-      var status = document.getElementById('orders-save-status');
-      if (status) {
-        status.textContent = 'Doctors\' Order co-signed & approved by ' + window.activeOrderCoSignature.doctor_name + '.';
-        window.setTimeout(function () { status.textContent = ''; }, 3500);
-      }
-    }
-    window.executeCoSignatureApproval = executeCoSignatureApproval;
+    // Co-Signature Approval Handlers (Official authorization is recorded on doctors_order_patient.html)
+    window.openCosigApprovalModal = function() {};
+    window.closeCosigApprovalModal = function() {};
+    window.executeCoSignatureApproval = function() {};
 
     // Connect Save Orders button to open pairing popup modal before final save
     var saveOrdersBtn = document.getElementById('save-orders-btn');
