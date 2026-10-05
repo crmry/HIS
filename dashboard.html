@@ -1840,11 +1840,6 @@
                       <div class="muted" style="font-size:11px;">
                         <i class="icon-info-sign"></i> Vital Signs Monitoring Record (Bedside Flowsheet / Graphic Sheet).
                       </div>
-                      <div>
-                        <button type="button" class="btn btn-mini btn-primary" onclick="openChartEntryModal('vitals')">
-                          <i class="icon-plus icon-white"></i> Record Vital Signs
-                        </button>
-                      </div>
                     </div>
                     <table class="table table-bordered table-condensed vitals-grid" id="vitals-table" style="margin-bottom:0;">
                       <thead>
@@ -1872,11 +1867,6 @@
                         <button type="button" class="btn" data-filter="ongoing"><i class="icon-play text-success"></i> Ongoing / Active (<span id="count-ivf-ongoing">2</span>)</button>
                         <button type="button" class="btn" data-filter="consumed"><i class="icon-check"></i> Previously Given (<span id="count-ivf-consumed">2</span>)</button>
                       </div>
-                      <div>
-                        <button type="button" class="btn btn-mini btn-primary" onclick="openChartEntryModal('ivf')">
-                          <i class="icon-plus icon-white"></i> Log IV Fluid / Drip
-                        </button>
-                      </div>
                     </div>
                     <table class="table table-bordered table-condensed" id="ivf-table" style="margin-bottom:0;">
                       <thead>
@@ -1900,11 +1890,6 @@
                     <div class="flowsheet-toolbar">
                       <div class="muted" style="font-size:11px;">
                         <i class="icon-tint text-error"></i> Official blood and blood component bedside transfusion tracking.
-                      </div>
-                      <div>
-                        <button type="button" class="btn btn-mini btn-primary" onclick="openChartEntryModal('transfusion')">
-                          <i class="icon-plus icon-white"></i> Log Blood Transfusion
-                        </button>
                       </div>
                     </div>
                     <table class="table table-bordered table-condensed" id="transfusion-table" style="margin-bottom:0;">
@@ -1931,11 +1916,6 @@
                       <div class="muted" style="font-size:11px;">
                         <i class="icon-time"></i> Capillary Blood Glucose (CBG) monitoring & corrective insulin administered.
                       </div>
-                      <div>
-                        <button type="button" class="btn btn-mini btn-primary" onclick="openChartEntryModal('cbg')">
-                          <i class="icon-plus icon-white"></i> Log CBG Reading
-                        </button>
-                      </div>
                     </div>
                     <table class="table table-bordered table-condensed" id="cbg-table" style="margin-bottom:0;">
                       <thead>
@@ -1959,11 +1939,6 @@
                         <button type="button" class="btn active" data-filter="all">All Inpatient Meds (<span id="count-meds-all">5</span>)</button>
                         <button type="button" class="btn" data-filter="active">Active Scheduled (<span id="count-meds-active">3</span>)</button>
                         <button type="button" class="btn" data-filter="prn">PRN / As Needed (<span id="count-meds-prn">2</span>)</button>
-                      </div>
-                      <div>
-                        <button type="button" class="btn btn-mini btn-primary" onclick="openChartEntryModal('medication')">
-                          <i class="icon-plus icon-white"></i> Record Administration
-                        </button>
                       </div>
                     </div>
                     <table class="table table-bordered table-condensed" id="med-summary-table" style="margin-bottom:0;">
@@ -3107,195 +3082,6 @@
     </div>
   </div>
 
-  <!-- ═══ BEDSIDE CLINICAL CHART FLOWSHEET ENTRY MODAL ═══ -->
-  <div class="seg-modal-backdrop" id="flowsheet-entry-modal" role="dialog" aria-modal="true" aria-labelledby="flowsheet-modal-heading">
-    <div class="seg-modal" style="min-width: 720px; max-width: 860px; margin: 25px auto;">
-      <div class="seg-modal-title" id="flowsheet-modal-heading" style="display:flex; justify-content:space-between; align-items:center;">
-        <span><i class="icon-edit"></i> Clinical Flowsheet<span id="flowsheet-modal-category" style="font-weight:normal; opacity:0.85; font-size:13px; margin-left:6px;"></span></span>
-        <button type="button" class="seg-modal-close" id="close-flowsheet-entry-modal">✕</button>
-      </div>
-      <div class="seg-modal-body" style="padding:16px 20px;">
-        <form id="flowsheet-entry-form" onsubmit="return false;" style="margin-bottom:0;">
-          <input type="hidden" id="fe-record-type" value="vitals">
-          <div class="row-fluid" style="margin-bottom:12px;">
-            <div class="span12">
-              <label style="font-weight:700;">Date & Time of Entry:</label>
-              <input type="datetime-local" id="fe-datetime" class="input-block-level">
-            </div>
-          </div>
-
-          <!-- Section IVF -->
-          <div id="fe-sec-ivf" class="fe-section">
-            <div class="row-fluid">
-              <div class="span4">
-                <label>Bottle / Line #:</label>
-                <input type="text" id="fe-ivf-bottle" class="input-block-level" placeholder="e.g. Bottle #4, Main Line">
-              </div>
-              <div class="span8">
-                <label>Solution & Incorporations:</label>
-                <input type="text" id="fe-ivf-solution" class="input-block-level" placeholder="e.g. Plain LRS 1L or D5 0.3 NaCl + 20 mEq KCl">
-              </div>
-            </div>
-            <div class="row-fluid">
-              <div class="span4">
-                <label>Infusion Rate:</label>
-                <input type="text" id="fe-ivf-rate" class="input-block-level" placeholder="e.g. 120 mL/hr (30 gtts/min)">
-              </div>
-              <div class="span4">
-                <label>Volume Status:</label>
-                <input type="text" id="fe-ivf-volume" class="input-block-level" placeholder="e.g. 1000 mL (800 infused)">
-              </div>
-              <div class="span4">
-                <label>Status:</label>
-                <select id="fe-ivf-status" class="input-block-level">
-                  <option value="Ongoing">Ongoing / Active</option>
-                  <option value="Consumed">Previously Given / Consumed</option>
-                  <option value="Discontinued">Discontinued / Held</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- Section Transfusion -->
-          <div id="fe-sec-transfusion" class="fe-section" style="display:none;">
-            <div class="row-fluid">
-              <div class="span4">
-                <label>Unit / Bag Serial #:</label>
-                <input type="text" id="fe-trans-serial" class="input-block-level" placeholder="e.g. B26-09124">
-              </div>
-              <div class="span4">
-                <label>Blood Component:</label>
-                <select id="fe-trans-component" class="input-block-level">
-                  <option value="Packed Red Blood Cells (PRBC)">Packed Red Blood Cells (PRBC)</option>
-                  <option value="Fresh Frozen Plasma (FFP)">Fresh Frozen Plasma (FFP)</option>
-                  <option value="Platelet Concentrate (PC)">Platelet Concentrate (PC)</option>
-                  <option value="Cryoprecipitate">Cryoprecipitate</option>
-                  <option value="Whole Blood (WB)">Whole Blood (WB)</option>
-                </select>
-              </div>
-              <div class="span4">
-                <label>Blood Type & Rh:</label>
-                <input type="text" id="fe-trans-type" class="input-block-level" placeholder="e.g. O Rh Positive">
-              </div>
-            </div>
-            <div class="row-fluid">
-              <div class="span4">
-                <label>Volume Transfused:</label>
-                <input type="text" id="fe-trans-vol" class="input-block-level" placeholder="e.g. 250 mL">
-              </div>
-              <div class="span4">
-                <label>Vitals Pre/Post Transfusion:</label>
-                <input type="text" id="fe-trans-vitals" class="input-block-level" placeholder="e.g. Pre: 104/65, 37.0°C | Post: 110/70, 37.2°C">
-              </div>
-              <div class="span4">
-                <label>Adverse Reaction Status:</label>
-                <select id="fe-trans-reaction" class="input-block-level">
-                  <option value="None / Uneventful">None / Uneventful</option>
-                  <option value="Fever / Chills">Fever / Chills</option>
-                  <option value="Urticaria / Rash">Urticaria / Rash</option>
-                  <option value="Hemolytic Reaction">Hemolytic Reaction</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- Section CBG -->
-          <div id="fe-sec-cbg" class="fe-section" style="display:none;">
-            <div class="row-fluid">
-              <div class="span4">
-                <label>CBG Reading (mg/dL):</label>
-                <input type="number" id="fe-cbg-val" class="input-block-level" placeholder="e.g. 165">
-              </div>
-              <div class="span4">
-                <label>Meal Relation / Timing:</label>
-                <select id="fe-cbg-timing" class="input-block-level">
-                  <option value="Fasting / Pre-Breakfast">Fasting / Pre-Breakfast (AC)</option>
-                  <option value="Pre-Lunch">Pre-Lunch (AC)</option>
-                  <option value="2h Post-Lunch">2h Post-Lunch (PC)</option>
-                  <option value="Pre-Dinner">Pre-Dinner (AC)</option>
-                  <option value="2h Post-Dinner">2h Post-Dinner (PC)</option>
-                  <option value="Bedtime (HS)">Bedtime (HS)</option>
-                  <option value="2 AM / 3 AM Check">2 AM / 3 AM Check</option>
-                  <option value="Random">Random Check</option>
-                </select>
-              </div>
-              <div class="span4">
-                <label>Insulin / Corrective Action:</label>
-                <input type="text" id="fe-cbg-action" class="input-block-level" placeholder="e.g. 4 Units Regular Insulin SQ">
-              </div>
-            </div>
-            <div class="row-fluid">
-              <div class="span12">
-                <label>Target / Remarks:</label>
-                <input type="text" id="fe-cbg-notes" class="input-block-level" placeholder="e.g. Target range 110-180 mg/dL. Patient asymptomatic.">
-              </div>
-            </div>
-          </div>
-
-          <!-- Section Vitals -->
-          <div id="fe-sec-vitals" class="fe-section" style="display:none;">
-            <div class="row-fluid">
-              <div class="span3"><label>Blood Pressure (BP, mmHg):</label><input type="text" id="fe-vs-bp" class="input-block-level" placeholder="120/80"></div>
-              <div class="span3"><label>Heart Rate (HR, bpm):</label><input type="number" id="fe-vs-hr" class="input-block-level" placeholder="78"></div>
-              <div class="span3"><label>Respiratory Rate (RR, /min):</label><input type="number" id="fe-vs-rr" class="input-block-level" placeholder="18"></div>
-              <div class="span3"><label>Temperature (Temp, °C):</label><input type="text" id="fe-vs-temp" class="input-block-level" placeholder="36.8"></div>
-            </div>
-            <div class="row-fluid">
-              <div class="span3"><label>Weight (WT, kg):</label><input type="text" id="fe-vs-weight" class="input-block-level" placeholder="61" oninput="autoCalcModalBmi()"></div>
-              <div class="span3"><label>Height (HT, cm):</label><input type="text" id="fe-vs-height" class="input-block-level" placeholder="158" oninput="autoCalcModalBmi()"></div>
-              <div class="span3"><label>Body Mass Index (BMI, kg/m²):</label><input type="text" id="fe-vs-bmi" class="input-block-level" placeholder="Auto-calculated" readonly style="background:#f9f9f9;"></div>
-              <div class="span3"><label>Oxygen Saturation (SpO₂, %):</label><input type="number" id="fe-vs-spo2" class="input-block-level" placeholder="98"></div>
-            </div>
-          </div>
-
-          <!-- Section Medication Admin -->
-          <div id="fe-sec-medication" class="fe-section" style="display:none;">
-            <div class="row-fluid">
-              <div class="span6">
-                <label>Medication & Strength:</label>
-                <input type="text" id="fe-med-name" class="input-block-level" placeholder="e.g. Ceftriaxone 2g vial">
-              </div>
-              <div class="span6">
-                <label>Route & Frequency:</label>
-                <input type="text" id="fe-med-route" class="input-block-level" placeholder="e.g. IVTT Once Daily (OD)">
-              </div>
-            </div>
-            <div class="row-fluid">
-              <div class="span4">
-                <label>Indication / Clinical Note:</label>
-                <input type="text" id="fe-med-indication" class="input-block-level" placeholder="e.g. CAP Moderate Risk">
-              </div>
-              <div class="span4">
-                <label>Next Dose Due:</label>
-                <input type="text" id="fe-med-next" class="input-block-level" placeholder="e.g. Tomorrow 08:00 AM">
-              </div>
-              <div class="span4">
-                <label>Status:</label>
-                <select id="fe-med-status" class="input-block-level">
-                  <option value="Active / Ongoing">Active / Ongoing</option>
-                  <option value="Active / PRN">Active / PRN</option>
-                  <option value="Completed">Completed / Finished</option>
-                  <option value="Discontinued">Discontinued / Held</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="row-fluid" style="margin-top:10px;">
-            <div class="span12">
-              <label>Clinical Decision Notes / Remarks:</label>
-              <input type="text" id="fe-general-remarks" class="input-block-level" placeholder="e.g. Given as ordered. Patient monitored.">
-            </div>
-          </div>
-
-          <div style="margin-top:16px; padding-top:12px; border-top:1px solid #e0e0e0; display:flex; justify-content:flex-end; gap:8px;">
-            <button type="button" class="btn" id="btn-cancel-flowsheet-entry">Cancel</button>
-            <button type="button" class="btn btn-primary" id="btn-save-flowsheet-entry"><i class="icon-ok icon-white"></i> Save to Patient Chart</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
 
   <!-- ═══ PATIENT ENCOUNTER CLINICAL RECORD MODAL ═══ -->
   <div class="seg-modal-backdrop" id="encounter-record-modal" role="dialog" aria-modal="true" aria-labelledby="encounter-record-heading">
@@ -5244,209 +5030,11 @@
 
     });
 
-    // ── Modal Handlers for Flowsheet Entry ──
-    function openChartEntryModal(type) {
-      var modal = document.getElementById('flowsheet-entry-modal');
-      if (!modal) return;
-      var typeSelect = document.getElementById('fe-record-type');
-      if (typeSelect && type) {
-        typeSelect.value = type;
-      }
-      var categoryLabels = {
-        vitals: 'Vital Signs Monitoring',
-        ivf: 'IV Fluid / Medication Drip',
-        transfusion: 'Blood Transfusion Record',
-        cbg: 'Capillary Blood Glucose (CBG)',
-        medication: 'Medication Administration (MAR)'
-      };
-      var subTitleEl = document.getElementById('flowsheet-modal-category');
-      if (subTitleEl) {
-        subTitleEl.textContent = categoryLabels[type] ? ' • ' + categoryLabels[type] : '';
-      }
-      var now = new Date();
-      var localIso = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-      var dtEl = document.getElementById('fe-datetime');
-      if (dtEl) dtEl.value = localIso;
-
-      syncFlowsheetModalSections();
-      modal.classList.add('open');
-    }
+    // ── Flowsheet View-Only Stubs (Bedside entry handled by nursing) ──
+    function openChartEntryModal(type) {}
     window.openChartEntryModal = openChartEntryModal;
-
-    function syncFlowsheetModalSections() {
-      var type = document.getElementById('fe-record-type').value;
-      ['ivf', 'transfusion', 'cbg', 'vitals', 'medication'].forEach(function(s) {
-        var el = document.getElementById('fe-sec-' + s);
-        if (el) el.style.display = s === type ? 'block' : 'none';
-      });
-    }
-
-    var recordTypeEl = document.getElementById('fe-record-type');
-    if (recordTypeEl) recordTypeEl.addEventListener('change', syncFlowsheetModalSections);
-
-    var openEntryBtn = document.getElementById('btn-open-flowsheet-entry');
-    if (openEntryBtn) {
-      openEntryBtn.addEventListener('click', function() {
-        var activeTabLink = document.querySelector('#clinical-chart-tabs li.active a');
-        var targetType = 'ivf';
-        if (activeTabLink) {
-          var href = activeTabLink.getAttribute('href');
-          if (href === '#chart-tab-vitals') targetType = 'vitals';
-          else if (href === '#chart-tab-ivf') targetType = 'ivf';
-          else if (href === '#chart-tab-transfusion') targetType = 'transfusion';
-          else if (href === '#chart-tab-cbg') targetType = 'cbg';
-          else if (href === '#chart-tab-meds') targetType = 'medication';
-        }
-        openChartEntryModal(targetType);
-      });
-    }
-
-    function closeFlowsheetEntryModal() {
-      var modal = document.getElementById('flowsheet-entry-modal');
-      if (modal) modal.classList.remove('open');
-    }
-
-    var closeFeBtn = document.getElementById('close-flowsheet-entry-modal');
-    if (closeFeBtn) closeFeBtn.addEventListener('click', closeFlowsheetEntryModal);
-    var cancelFeBtn = document.getElementById('btn-cancel-flowsheet-entry');
-    if (cancelFeBtn) cancelFeBtn.addEventListener('click', closeFlowsheetEntryModal);
-
-    var saveFeBtn = document.getElementById('btn-save-flowsheet-entry');
-    if (saveFeBtn) {
-      saveFeBtn.addEventListener('click', function() {
-        var type = document.getElementById('fe-record-type').value;
-        var dt = document.getElementById('fe-datetime').value || new Date().toISOString();
-        var staffEl = document.getElementById('fe-staff-signature');
-        var staff = (staffEl && staffEl.value ? staffEl.value.trim() : '') || (window.CURRENT_PHYSICIAN_NAME || 'Staff Nurse, RN');
-        var remarks = (document.getElementById('fe-general-remarks').value || '').trim();
-
-        var pid = activePatientId || SEED_PATIENT_ID;
-        var pData = getPatientChartMonitoring(pid);
-
-        var tabToActivate = '#chart-tab-' + type;
-
-        if (type === 'ivf') {
-          var solution = (document.getElementById('fe-ivf-solution').value || '').trim() || 'Plain LRS 1 L';
-          var bottle = (document.getElementById('fe-ivf-bottle').value || '').trim() || 'Bottle #' + ((pData.ivFluids || []).length + 1);
-          var rate = (document.getElementById('fe-ivf-rate').value || '').trim() || '120 mL/hr';
-          var vol = (document.getElementById('fe-ivf-volume').value || '').trim() || '1000 mL';
-          var status = document.getElementById('fe-ivf-status').value || 'Ongoing';
-          pData.ivFluids.push({
-            id: 'ivf-' + Date.now(),
-            bottle: bottle,
-            solution: solution,
-            rate: rate,
-            started: dt,
-            ended: status === 'Consumed' ? dt : '',
-            volume: vol,
-            status: status,
-            nurse: staff,
-            remarks: remarks
-          });
-          tabToActivate = '#chart-tab-ivf';
-        } else if (type === 'transfusion') {
-          var serial = (document.getElementById('fe-trans-serial').value || '').trim() || 'B26-' + Math.floor(10000 + Math.random() * 90000);
-          var comp = document.getElementById('fe-trans-component').value;
-          var btype = (document.getElementById('fe-trans-type').value || '').trim() || 'O Rh+';
-          var vol = (document.getElementById('fe-trans-vol').value || '').trim() || '250 mL';
-          var vitals = (document.getElementById('fe-trans-vitals').value || '').trim() || 'Vitals checked and stable';
-          var reaction = document.getElementById('fe-trans-reaction').value;
-          pData.transfusions.push({
-            id: 'trans-' + Date.now(),
-            serial: serial,
-            component: comp,
-            bloodType: btype,
-            volume: vol,
-            started: dt,
-            ended: dt,
-            vitals: vitals,
-            reaction: reaction,
-            nurse: staff,
-            crossmatch: 'Verified by ' + staff
-          });
-          tabToActivate = '#chart-tab-transfusion';
-        } else if (type === 'cbg') {
-          var reading = Number(document.getElementById('fe-cbg-val').value) || 120;
-          var timing = document.getElementById('fe-cbg-timing').value;
-          var action = (document.getElementById('fe-cbg-action').value || '').trim() || 'Monitored';
-          var notes = (document.getElementById('fe-cbg-notes').value || '').trim() || remarks || 'Target range 110-180 mg/dL';
-          pData.cbgs.push({
-            id: 'cbg-' + Date.now(),
-            dateTime: dt,
-            timing: timing,
-            reading: reading,
-            action: action,
-            notes: notes,
-            nurse: staff
-          });
-          tabToActivate = '#chart-tab-cbg';
-        } else if (type === 'vitals') {
-          var bp = (document.getElementById('fe-vs-bp').value || '').trim();
-          var hr = (document.getElementById('fe-vs-hr').value || '').trim();
-          var rr = (document.getElementById('fe-vs-rr').value || '').trim();
-          var temp = (document.getElementById('fe-vs-temp').value || '').trim();
-          var spo2 = (document.getElementById('fe-vs-spo2').value || '').trim();
-          var weight = (document.getElementById('fe-vs-weight').value || '').trim();
-          var height = (document.getElementById('fe-vs-height').value || '').trim();
-          var bmi = (document.getElementById('fe-vs-bmi') ? document.getElementById('fe-vs-bmi').value : '') || calculateBMI(weight, height);
-
-          var allPatients = getPatients();
-          var currentRec = allPatients.find(function(p) { return p.id === pid; });
-          if (currentRec) {
-            currentRec.data = currentRec.data || {};
-            currentRec.data.vital_signs = Array.isArray(currentRec.data.vital_signs) ? currentRec.data.vital_signs : [];
-            currentRec.data.vital_signs.unshift({
-              dateTime: dt,
-              bp: bp,
-              hr: hr,
-              rr: rr,
-              temp: temp,
-              wt: weight,
-              ht: height,
-              weight: weight,
-              height: height,
-              bmi: bmi,
-              spo2: spo2,
-              o2: spo2
-            });
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(allPatients));
-            renderVitalSigns(currentRec);
-          }
-          tabToActivate = '#chart-tab-vitals';
-        } else if (type === 'medication') {
-          var name = (document.getElementById('fe-med-name').value || '').trim() || 'Medication';
-          var route = (document.getElementById('fe-med-route').value || '').trim() || 'IVTT OD';
-          var ind = (document.getElementById('fe-med-indication').value || '').trim() || 'Inpatient therapy';
-          var next = (document.getElementById('fe-med-next').value || '').trim() || 'As scheduled';
-          var status = document.getElementById('fe-med-status').value;
-          pData.medications.push({
-            id: 'med-' + Date.now(),
-            name: name,
-            route: route,
-            indication: ind,
-            started: dt,
-            lastDose: dt,
-            nextDose: next,
-            doses24h: '1 dose',
-            status: status,
-            nurse: staff
-          });
-          tabToActivate = '#chart-tab-meds';
-        }
-
-        savePatientChartMonitoring(pid, pData);
-        var currentRec = getPatients().find(function(p) { return p.id === pid; });
-        renderClinicalMonitoring(currentRec);
-        closeFlowsheetEntryModal();
-
-        var tabLink = document.querySelector('#clinical-chart-tabs a[href="' + tabToActivate + '"]');
-        if (tabLink) {
-          if (window.jQuery) jQuery(tabLink).tab('show');
-          else tabLink.click();
-        }
-        showLayoutStatus('New bedside chart record saved successfully.');
-      });
-    }
+    function closeFlowsheetEntryModal() {}
+    window.closeFlowsheetEntryModal = closeFlowsheetEntryModal;
 
     // ── Encounter Rows & Modals (Record & Results) ──
     var encRows = document.getElementById('encounter-rows');

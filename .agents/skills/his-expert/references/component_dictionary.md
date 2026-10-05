@@ -29,7 +29,7 @@ Toolkit DOM Controls:
 | Dashlet / Domain | Wrapper ID / Class | Key Sub-Elements | Primary Action Buttons |
 | :--- | :--- | :--- | :--- |
 | **Demographics Banner** | `#patient-info-banner` | `#patient-name`, `#patient-hrn`, `#patient-age`, `#patient-sex`, `#patient-pin` | Patient selector dropdown |
-| **Vital Signs & Flowsheet**| `#dashlet-vitals` | `#vitals-table`, `#vitals-bp`, `#vitals-hr`, `#vitals-rr`, `#vitals-temp` | `#btn-open-flowsheet-entry` |
+| **Vital Signs & Flowsheet**| `#dashlet-vitals` | `#vitals-table`, `#vitals-bp`, `#vitals-hr`, `#vitals-rr`, `#vitals-temp` | View-only bedside monitoring (nursing logs) |
 | **Progress Notes (SOA)** | `.care-notes` | `#note-subjective`, `#note-objective`, `#note-assessment` | `#btn-save-progress-note` |
 | **Initial / Admitting Dx** | `#admitting-dx-col` | `#admitting_dx` | ICD-10 search input |
 | **Final Diagnosis** | `#final-dx-col` / `#row-final-dx` | `#final_dx`, `#final-dx-status-badge` | Read-only during inspection |
