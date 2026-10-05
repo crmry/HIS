@@ -453,8 +453,8 @@ async def scan_single_target(browser_ws, file_url):
                                 return 'Typing Mahin in cosig-doctor-search did not auto-select first matching physician';
                             }
                             const prevTitle = document.getElementById('cosig-preview-title');
-                            if (!prevTitle || !prevTitle.textContent.includes('Arthur Mahinay')) {
-                                return 'Auto-selection of physician did not update selection preview';
+                            if (!prevTitle || !prevTitle.textContent.includes('Mahinay, Arthur') || !prevTitle.textContent.includes('Pulmonary Medicine')) {
+                                return 'Auto-selection of physician did not update selection preview with doctor name and department';
                             }
                             const clearSearchBtn = document.getElementById('btn-clear-cosig-search');
                             if (clearSearchBtn) clearSearchBtn.click();

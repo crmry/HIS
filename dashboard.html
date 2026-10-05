@@ -3189,13 +3189,10 @@
 
         <div id="cosig-selection-preview" style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 3px solid #64748b; border-radius: 4px; padding: 10px 14px; margin-top: 10px;">
           <div id="cosig-preview-title" style="font-size: 11.5px; font-weight: 700; color: #334155;">Selection: NONE</div>
-          <div id="cosig-preview-desc" style="font-size: 11px; color: #64748b; margin-top: 2px;">
-            Order will be saved with requesting doctor e-signature only. No secondary co-signature or awaiting approval status.
-          </div>
+          <div id="cosig-preview-desc" style="display: none; font-size: 11px; color: #64748b; margin-top: 2px;"></div>
         </div>
       </div>
-      <div style="padding: 12px 18px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 11px; color: #64748b;">Default is NONE unless supervisory pairing is selected</span>
+      <div style="padding: 12px 18px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; align-items: center;">
         <div style="display: flex; gap: 8px;">
           <button type="button" class="btn" id="btn-cancel-cosig" onclick="closeOrderCosignatureModal(event)">Cancel</button>
           <button type="button" class="btn btn-primary" id="btn-confirm-save-cosig" onclick="confirmAndSaveOrderWithCosignature()">Confirm &amp; Save Order</button>
@@ -12030,7 +12027,10 @@
         var val = select ? select.value : 'NONE';
         if (!val || val === 'NONE') {
           if (previewTitle) previewTitle.textContent = 'Selection: NONE';
-          if (previewDesc) previewDesc.textContent = 'Order will be saved with requesting doctor e-signature only. No secondary co-signature or awaiting approval status.';
+          if (previewDesc) {
+            previewDesc.textContent = '';
+            previewDesc.style.display = 'none';
+          }
           if (previewCard) {
             previewCard.style.borderLeftColor = '#64748b';
             previewCard.style.background = '#f8fafc';
@@ -12039,13 +12039,13 @@
           var found = findDoctor(val);
           var name = found ? found.name : val;
           var docFormatted = (typeof window.formatDoctorNameLastFirst === 'function' && found) ? window.formatDoctorNameLastFirst(found) : name;
-          var title = found && found.title ? found.title : ('Dr. ' + name);
+          var dept = found ? (found.department || found.specialty || '') : '';
           if (previewTitle) {
-            previewTitle.textContent = 'Selection: ' + docFormatted + ' (' + name + ')';
+            previewTitle.textContent = 'Selection: ' + docFormatted + (dept ? ' • ' + dept : '');
           }
           if (previewDesc) {
-            previewDesc.innerHTML = '<strong>Co-Signature: Pending &ndash; ' + esc(title) + '</strong>. ' +
-              'The requesting doctor\'s electronic signature will appear immediately; the paired doctor\'s electronic signature will appear once approved / co-signed.';
+            previewDesc.textContent = '';
+            previewDesc.style.display = 'none';
           }
           if (previewCard) {
             previewCard.style.borderLeftColor = '#0b69a3';
@@ -12242,6 +12242,7 @@
 
       filterDoctors('');
       closeDropdown();
+      updatePreview();
       if (activeSelectedId && activeSelectedId !== 'NONE') {
         var initDoc = findDoctor(activeSelectedId);
         if (searchInput) {

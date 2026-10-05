@@ -44,15 +44,15 @@ if (typeof window !== 'undefined' && window.addEventListener) {
 // Hospital Staff & Physicians Directory for CPOE Pairing / Co-Signature Workflow
 if (typeof window !== 'undefined') {
   window.HOSPITAL_PHYSICIANS_DIRECTORY = [
-    { id: 'NONE', name: 'NONE', title: 'NONE', specialty: 'No Co-Signature (Standard Single Physician)', prc_no: '', s2_no: '', is_none: true },
-    { id: 'santos_maria', legacy_id: 'doc-maria-santos', name: 'Maria Santos, MD', title: 'Dr. Maria Santos', last_name: 'Santos', first_name: 'Maria', middle_initial: 'A.', specialty: 'Internal Medicine', prc_no: '0095512', s2_no: 'S2-095512-2026' },
-    { id: 'cruz_paolo', legacy_id: 'doc-paolo-cruz', name: 'Paolo Cruz, MD', title: 'Dr. Paolo Cruz', last_name: 'Cruz', first_name: 'Paolo', middle_initial: 'M.', specialty: 'Orthopedic Surgery', prc_no: '0087654', s2_no: 'S2-087654-2026' },
-    { id: 'reyes_andrea', legacy_id: 'doc-andrea-reyes', name: 'Andrea Reyes, MD', title: 'Dr. Andrea Reyes', last_name: 'Reyes', first_name: 'Andrea', middle_initial: 'L.', specialty: 'Pediatrics', prc_no: '0102938', s2_no: 'S2-0102938-2026' },
-    { id: 'garcia_liza', legacy_id: 'doc-liza-garcia', name: 'Liza Garcia, MD', title: 'Dr. Liza Garcia', last_name: 'Garcia', first_name: 'Liza', middle_initial: 'T.', specialty: 'Obstetrics and Gynecology', prc_no: '0091234', s2_no: 'S2-0091234-2026' },
-    { id: 'lim_roberto', legacy_id: 'doc-roberto-lim', name: 'Roberto Lim, MD', title: 'Dr. Roberto Lim', last_name: 'Lim', first_name: 'Roberto', middle_initial: 'S.', specialty: 'Emergency Medicine', prc_no: '0076543', s2_no: 'S2-076543-2026' },
-    { id: 'santos_miguel', legacy_id: 'doc-miguel-santos', name: 'Miguel Santos, MD', title: 'Dr. Miguel Santos', last_name: 'Santos', first_name: 'Miguel', middle_initial: 'C.', specialty: 'General Medicine', prc_no: '0094821', s2_no: 'S2-094821-2026' },
-    { id: 'mahinay_arthur', legacy_id: 'doc-arthur-mahinay', name: 'Arthur Mahinay, MD', title: 'Dr. Arthur Mahinay', last_name: 'Mahinay', first_name: 'Arthur', middle_initial: 'G.', specialty: 'Pulmonary Medicine', prc_no: '0081249', s2_no: 'S2-081249-2026' },
-    { id: 'mahinay_elena', legacy_id: 'doc-elena-mahinay', name: 'Elena Mahinay, MD', title: 'Dr. Elena Mahinay', last_name: 'Mahinay', first_name: 'Elena', middle_initial: 'R.', specialty: 'Cardiology', prc_no: '0079314', s2_no: 'S2-079314-2026' }
+    { id: 'NONE', name: 'NONE', title: 'NONE', specialty: 'No Co-Signature (Standard Single Physician)', department: 'No Co-Signature', prc_no: '', s2_no: '', is_none: true },
+    { id: 'santos_maria', legacy_id: 'doc-maria-santos', name: 'Maria Santos, MD', title: 'Dr. Maria Santos', last_name: 'Santos', first_name: 'Maria', middle_initial: 'A.', specialty: 'Internal Medicine', department: 'Internal Medicine', prc_no: '0095512', s2_no: 'S2-095512-2026' },
+    { id: 'cruz_paolo', legacy_id: 'doc-paolo-cruz', name: 'Paolo Cruz, MD', title: 'Dr. Paolo Cruz', last_name: 'Cruz', first_name: 'Paolo', middle_initial: 'M.', specialty: 'Orthopedic Surgery', department: 'Orthopedic Surgery', prc_no: '0087654', s2_no: 'S2-087654-2026' },
+    { id: 'reyes_andrea', legacy_id: 'doc-andrea-reyes', name: 'Andrea Reyes, MD', title: 'Dr. Andrea Reyes', last_name: 'Reyes', first_name: 'Andrea', middle_initial: 'L.', specialty: 'Pediatrics', department: 'Pediatrics', prc_no: '0102938', s2_no: 'S2-0102938-2026' },
+    { id: 'garcia_liza', legacy_id: 'doc-liza-garcia', name: 'Liza Garcia, MD', title: 'Dr. Liza Garcia', last_name: 'Garcia', first_name: 'Liza', middle_initial: 'T.', specialty: 'Obstetrics and Gynecology', department: 'Obstetrics and Gynecology', prc_no: '0091234', s2_no: 'S2-0091234-2026' },
+    { id: 'lim_roberto', legacy_id: 'doc-roberto-lim', name: 'Roberto Lim, MD', title: 'Dr. Roberto Lim', last_name: 'Lim', first_name: 'Roberto', middle_initial: 'S.', specialty: 'Emergency Medicine', department: 'Emergency Medicine', prc_no: '0076543', s2_no: 'S2-076543-2026' },
+    { id: 'santos_miguel', legacy_id: 'doc-miguel-santos', name: 'Miguel Santos, MD', title: 'Dr. Miguel Santos', last_name: 'Santos', first_name: 'Miguel', middle_initial: 'C.', specialty: 'General Medicine', department: 'General Medicine', prc_no: '0094821', s2_no: 'S2-094821-2026' },
+    { id: 'mahinay_arthur', legacy_id: 'doc-arthur-mahinay', name: 'Arthur Mahinay, MD', title: 'Dr. Arthur Mahinay', last_name: 'Mahinay', first_name: 'Arthur', middle_initial: 'G.', specialty: 'Pulmonary Medicine', department: 'Pulmonary Medicine', prc_no: '0081249', s2_no: 'S2-081249-2026' },
+    { id: 'mahinay_elena', legacy_id: 'doc-elena-mahinay', name: 'Elena Mahinay, MD', title: 'Dr. Elena Mahinay', last_name: 'Mahinay', first_name: 'Elena', middle_initial: 'R.', specialty: 'Cardiology', department: 'Cardiology', prc_no: '0079314', s2_no: 'S2-079314-2026' }
   ];
 
   window.formatDoctorNameLastFirst = function(d) {
