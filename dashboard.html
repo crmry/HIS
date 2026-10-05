@@ -375,39 +375,9 @@
        MOBILE VIEWPORT & TOUCH RESPONSIVE OVERRIDES (<= 768px)
        ══════════════════════════════════════════════════════════════════════ */
     @media (max-width: 768px) {
-      /* Single-line horizontal scrollable top navigation */
+      /* Hide legacy SegHIS utility topbar */
       .seg-topbar {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        padding: 5px 8px !important;
-        min-height: 38px !important;
-        gap: 6px !important;
-        align-items: center !important;
-        white-space: nowrap !important;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
-      }
-      .seg-topbar a {
-        white-space: nowrap !important;
-        flex-shrink: 0 !important;
-        padding: 4px 8px !important;
-        font-size: 11px !important;
-      }
-      .seg-topbar .seg-right {
-        margin-left: auto !important;
-        white-space: nowrap !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        flex-shrink: 0 !important;
-        padding-left: 6px !important;
-      }
-      .seg-topbar .seg-right #seg-clock {
         display: none !important;
-      }
-      .seg-topbar .seg-right .btn-mini {
-        padding: 2px 6px !important;
-        font-size: 10.5px !important;
       }
 
       /* Dock floating requisition toolkit to bottom-right pill button */
@@ -1697,8 +1667,8 @@
   <!-- ═══ MAIN APPLICATION ROOT ═══ -->
   <div id="dashboard-main-app">
 
-  <!-- ═══ SEGHIS UTILITY TOOLBAR ═══ -->
-  <nav class="seg-topbar" aria-label="Dashboard navigation">
+  <!-- ═══ SEGHIS UTILITY TOOLBAR (Hidden for Physician Clinical Module) ═══ -->
+  <nav class="seg-topbar" aria-label="Dashboard navigation" style="display: none !important;" hidden>
     <a href="dashboard.html" class="active">Physician Dashboard</a>
     <a href="patients.html">Patient List</a>
     <a href="doctors_order_patient.html" id="topbar-orders-link" title="Outpatient (OPD) Doctor's Orders">OPD Orders</a>
@@ -13993,7 +13963,10 @@
 
     // ── Init ──
     function updateClock() {
-      document.getElementById('seg-clock').textContent = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(new Date());
+      var clockEl = document.getElementById('seg-clock');
+      if (clockEl) {
+        clockEl.textContent = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(new Date());
+      }
     }
     updateClock();
     window.setInterval(updateClock, 1000);
