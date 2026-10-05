@@ -14,7 +14,7 @@ Use this table to jump directly to the relevant line numbers rather than reading
 | **Top Navigation Bar** | `496` – `595` | Hospital header, Department selector, Physician profile badge, and search bar. |
 | **Patient Demographics Banner** | `596` – `730` | `#patient-info-banner`: Name, HRN, Age/Sex, Civil Status, PhilHealth Identification Number (PIN), Admitting Service, Attending Physician. |
 | **Encounter History Tabs** | `731` – `850` | Encounter selector pill tabs, registry badges (`[IP]`, `[OP]`, `[ER]`), active vs historical inspection indicators. |
-| **Vital Signs & Bedside Flowsheet** | `851` – `2069` | `#dashlet-vitals`: BP, HR, RR, Temp, SpO2, GCS, Pain score, Intake/Output summary, and trend triggers. |
+| **Vital Signs & Bedside Flowsheet** | `851` – `2030` | `#dashlet-vitals`: BP, HR, RR, Temp, SpO2, GCS, Pain score, and trend triggers. |
 | **Progress Notes (SOA Format)** | `2070` – `2778` | **ROW 4.5**: Subjective, Objective, Assessment text areas, bedside notes, and historical round logs. |
 | **Admitting & Final Diagnoses** | `2779` – `2810` | **ROW 4 & ROW 5**: `#admitting_dx`, `#final_dx`, ICD-10 diagnostic codes, and encounter lock indicators. |
 | **Doctor's Orders (CPOE Summary)** | `2811` – `2836` | **ROW 6**: Active orders table (`#orders-summary-table`), order type tabs, and order action buttons. |
@@ -40,7 +40,7 @@ Every modal is declared in markup before the main `<script>` tags:
 | `#modal-cosig-approval` | `3140` – `3168` | Senior attending physician order co-signature verification dialog. |
 | `#rx-writer-modal` | `3169` – `3183` | Pop-out Prescription & Outpatient Rx Writer dialog. |
 | `#rx-print-modal` | `3184` – `3202` | Prescription pad official DOH/PhilHealth print preview dialog. |
-| `#flowsheet-entry-modal` | `3203` – `3428` | Bedside 24-hour vital signs and intake/output logging dialog. |
+| `#flowsheet-entry-modal` | `3173` – `3360` | Bedside 24-hour vital signs, IVF, transfusion, CBG, and medication logging dialog. |
 | `#encounter-record-modal` | `3429` – `3480` | Complete encounter summary record viewer. |
 | `#viewable-results-modal` | `3481` – `3567` | Unified diagnostic examination results viewer (transferred from main body). |
 | `#modal-referral-comanage` | `3568` – `3656` | Inter-departmental referral & physician co-management consultation modal. |

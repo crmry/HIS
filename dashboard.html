@@ -1829,7 +1829,6 @@
                   <li><a href="#chart-tab-transfusion" data-toggle="tab"><i class="icon-plus-sign"></i> Transfusion Records <span class="badge badge-inverse" id="tab-badge-transfusion">1 Unit</span></a></li>
                   <li><a href="#chart-tab-cbg" data-toggle="tab"><i class="icon-time"></i> CBGs <span class="badge badge-warning" id="tab-badge-cbg">4 logs</span></a></li>
                   <li><a href="#chart-tab-meds" data-toggle="tab"><i class="icon-medkit"></i> Summary of Medications <span class="badge badge-success" id="tab-badge-meds">5 Active</span></a></li>
-                  <li><a href="#chart-tab-io" data-toggle="tab"><i class="icon-exchange"></i> Intake & Output (I&O) <span class="badge badge-info" id="tab-badge-io">+550 mL</span></a></li>
                 </ul>
 
                 <!-- Tab Contents -->
@@ -1982,37 +1981,6 @@
                         </tr>
                       </thead>
                       <tbody id="med-summary-rows"></tbody>
-                    </table>
-                  </div>
-
-                  <!-- TAB 6: INTAKE & OUTPUT (I&O) -->
-                  <div class="tab-pane" id="chart-tab-io">
-                    <div class="flowsheet-toolbar">
-                      <div class="muted" style="font-size:11px;">
-                        <i class="icon-exchange"></i> Shift-by-shift fluid balance monitoring (7-3, 3-11, 11-7).
-                      </div>
-                      <div>
-                        <button type="button" class="btn btn-mini btn-primary" onclick="openChartEntryModal('io')">
-                          <i class="icon-plus icon-white"></i> Log Shift I&O
-                        </button>
-                      </div>
-                    </div>
-                    <table class="table table-bordered table-condensed" id="io-table" style="margin-bottom:0;">
-                      <thead>
-                        <tr style="background:#f9f9f9;">
-                          <th style="width:130px;">Date & Shift</th>
-                          <th>Intake: Oral / Tube</th>
-                          <th>Intake: IVF & Drips</th>
-                          <th>Intake: Blood / Meds</th>
-                          <th>Output: Urine</th>
-                          <th>Output: NGT / Drains</th>
-                          <th>Output: Stool / Emesis</th>
-                          <th style="width:115px;">Shift Total (In / Out)</th>
-                          <th style="width:115px;">Net Balance</th>
-                          <th style="width:120px;">Nurse</th>
-                        </tr>
-                      </thead>
-                      <tbody id="io-rows"></tbody>
                     </table>
                   </div>
 
@@ -3339,42 +3307,6 @@
                   <option value="Completed">Completed / Finished</option>
                   <option value="Discontinued">Discontinued / Held</option>
                 </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- Section I&O -->
-          <div id="fe-sec-io" class="fe-section" style="display:none;">
-            <div class="row-fluid">
-              <div class="span4">
-                <label>Shift:</label>
-                <select id="fe-io-shift" class="input-block-level">
-                  <option value="7:00 AM - 3:00 PM (Day)">7:00 AM - 3:00 PM (Day)</option>
-                  <option value="3:00 PM - 11:00 PM (Evening)">3:00 PM - 11:00 PM (Evening)</option>
-                  <option value="11:00 PM - 7:00 AM (Night)">11:00 PM - 7:00 AM (Night)</option>
-                </select>
-              </div>
-              <div class="span4">
-                <label>Intake - Oral / Enteral (mL):</label>
-                <input type="number" id="fe-io-in-oral" class="input-block-level" placeholder="e.g. 400">
-              </div>
-              <div class="span4">
-                <label>Intake - IVF & Drips (mL):</label>
-                <input type="number" id="fe-io-in-ivf" class="input-block-level" placeholder="e.g. 950">
-              </div>
-            </div>
-            <div class="row-fluid">
-              <div class="span4">
-                <label>Output - Urine (mL):</label>
-                <input type="number" id="fe-io-out-urine" class="input-block-level" placeholder="e.g. 850">
-              </div>
-              <div class="span4">
-                <label>Output - NGT / Drains (mL):</label>
-                <input type="number" id="fe-io-out-drain" class="input-block-level" placeholder="e.g. 0">
-              </div>
-              <div class="span4">
-                <label>Output - Stool / Emesis (mL):</label>
-                <input type="number" id="fe-io-out-stool" class="input-block-level" placeholder="e.g. 150">
               </div>
             </div>
           </div>
@@ -5292,51 +5224,6 @@
         }
       }
 
-      // ── 5. Intake & Output (I&O) ──
-      var ioRows = document.getElementById('io-rows');
-      if (ioRows) {
-        var allIo = Array.isArray(data.intakeOutput) ? data.intakeOutput : [];
-        var totalIn = 0, totalOut = 0;
-        allIo.forEach(function(io) {
-          totalIn += (Number(io.inOral || 0) + Number(io.inIvf || 0) + Number(io.inBloodMeds || 0));
-          totalOut += (Number(io.outUrine || 0) + Number(io.outDrain || 0) + Number(io.outStool || 0));
-        });
-        var netBalance = totalIn - totalOut;
-        var netSign = netBalance >= 0 ? '+' : '';
-
-        var tabBadgeIo = document.getElementById('tab-badge-io');
-        if (tabBadgeIo) tabBadgeIo.textContent = netSign + netBalance + ' mL';
-
-        var stripIoBadge = document.getElementById('strip-io-badge');
-        if (stripIoBadge) stripIoBadge.textContent = netSign + netBalance + ' mL';
-        var stripIoVal = document.getElementById('strip-io-val');
-        if (stripIoVal) stripIoVal.textContent = 'In: ' + totalIn.toLocaleString() + ' · Out: ' + totalOut.toLocaleString();
-        var stripIoSub = document.getElementById('strip-io-sub');
-        if (stripIoSub) stripIoSub.textContent = '24h Net: ' + netSign + netBalance + ' mL (' + (netBalance >= 0 ? 'Positive' : 'Negative') + ')';
-
-        if (allIo.length === 0) {
-          ioRows.innerHTML = '<tr><td colspan="10" class="muted text-center" style="padding:15px;">No Intake & Output records found.</td></tr>';
-        } else {
-          ioRows.innerHTML = allIo.map(function(item) {
-            var shiftIn = Number(item.inOral || 0) + Number(item.inIvf || 0) + Number(item.inBloodMeds || 0);
-            var shiftOut = Number(item.outUrine || 0) + Number(item.outDrain || 0) + Number(item.outStool || 0);
-            var shiftNet = shiftIn - shiftOut;
-            var shiftSign = shiftNet >= 0 ? '+' : '';
-            return '<tr>' +
-              '<td><strong>' + esc(item.shift || '—') + '</strong><br><small class="muted">' + esc(formatDate(item.date)) + '</small></td>' +
-              '<td>' + (Number(item.inOral) || 0) + ' mL</td>' +
-              '<td>' + (Number(item.inIvf) || 0) + ' mL</td>' +
-              '<td>' + (Number(item.inBloodMeds) || 0) + ' mL</td>' +
-              '<td><strong>' + (Number(item.outUrine) || 0) + ' mL</strong></td>' +
-              '<td>' + (Number(item.outDrain) || 0) + ' mL</td>' +
-              '<td>' + (Number(item.outStool) || 0) + ' mL</td>' +
-              '<td><small>In: ' + shiftIn + '<br>Out: ' + shiftOut + '</small></td>' +
-              '<td><span class="badge ' + (shiftNet >= 0 ? 'badge-info' : 'badge-warning') + '">' + shiftSign + shiftNet + ' mL</span></td>' +
-              '<td>' + esc(item.nurse || '—') + (item.remarks ? '<br><small class="muted">' + esc(item.remarks) + '</small>' : '') + '</td>' +
-              '</tr>';
-          }).join('');
-        }
-      }
 
       // ── 6. Update Latest VS Summary Card ──
       var stripVsVal = document.getElementById('strip-vs-val');
@@ -5400,8 +5287,7 @@
         ivf: 'IV Fluid / Medication Drip',
         transfusion: 'Blood Transfusion Record',
         cbg: 'Capillary Blood Glucose (CBG)',
-        medication: 'Medication Administration (MAR)',
-        io: 'Intake & Output (I&O) Shift'
+        medication: 'Medication Administration (MAR)'
       };
       var subTitleEl = document.getElementById('flowsheet-modal-category');
       if (subTitleEl) {
@@ -5419,7 +5305,7 @@
 
     function syncFlowsheetModalSections() {
       var type = document.getElementById('fe-record-type').value;
-      ['ivf', 'transfusion', 'cbg', 'vitals', 'medication', 'io'].forEach(function(s) {
+      ['ivf', 'transfusion', 'cbg', 'vitals', 'medication'].forEach(function(s) {
         var el = document.getElementById('fe-sec-' + s);
         if (el) el.style.display = s === type ? 'block' : 'none';
       });
@@ -5440,7 +5326,6 @@
           else if (href === '#chart-tab-transfusion') targetType = 'transfusion';
           else if (href === '#chart-tab-cbg') targetType = 'cbg';
           else if (href === '#chart-tab-meds') targetType = 'medication';
-          else if (href === '#chart-tab-io') targetType = 'io';
         }
         openChartEntryModal(targetType);
       });
@@ -5577,27 +5462,6 @@
             nurse: staff
           });
           tabToActivate = '#chart-tab-meds';
-        } else if (type === 'io') {
-          var shift = document.getElementById('fe-io-shift').value;
-          var inOral = Number(document.getElementById('fe-io-in-oral').value) || 0;
-          var inIvf = Number(document.getElementById('fe-io-in-ivf').value) || 0;
-          var outUrine = Number(document.getElementById('fe-io-out-urine').value) || 0;
-          var outDrain = Number(document.getElementById('fe-io-out-drain').value) || 0;
-          var outStool = Number(document.getElementById('fe-io-out-stool').value) || 0;
-          pData.intakeOutput.push({
-            id: 'io-' + Date.now(),
-            shift: shift,
-            date: dt.split('T')[0],
-            inOral: inOral,
-            inIvf: inIvf,
-            inBloodMeds: 0,
-            outUrine: outUrine,
-            outDrain: outDrain,
-            outStool: outStool,
-            nurse: staff,
-            remarks: remarks
-          });
-          tabToActivate = '#chart-tab-io';
         }
 
         savePatientChartMonitoring(pid, pData);
@@ -7014,30 +6878,6 @@
           if (stripTransVal) stripTransVal.textContent = 'None Recorded';
           if (stripTransSub) stripTransSub.textContent = 'No transfusions given';
           transRows.innerHTML = '<tr><td colspan="9" class="muted text-center" style="padding:15px;">No blood transfusion records for this encounter.</td></tr>';
-        }
-      }
-
-      // Intake & Output
-      var ioRows = document.getElementById('io-rows');
-      if (ioRows) {
-        var allIo = Array.isArray(enc.intakeOutput) ? enc.intakeOutput : [];
-        var totalIn = 0, totalOut = 0;
-        allIo.forEach(function(io) {
-          totalIn += (Number(io.inOral || 0) + Number(io.inIvf || 0) + Number(io.inBloodMeds || 0));
-          totalOut += (Number(io.outUrine || 0) + Number(io.outDrain || 0) + Number(io.outStool || 0));
-        });
-        var netBalance = totalIn - totalOut;
-        var netSign = netBalance >= 0 ? '+' : '';
-        var tabBadgeIo = document.getElementById('tab-badge-io');
-        if (tabBadgeIo) tabBadgeIo.textContent = netSign + netBalance + ' mL';
-        var stripIoBadge = document.getElementById('strip-io-badge');
-        if (stripIoBadge) stripIoBadge.textContent = netSign + netBalance + ' mL';
-        var stripIoVal = document.getElementById('strip-io-val');
-        if (stripIoVal) stripIoVal.textContent = 'In: ' + totalIn.toLocaleString() + ' · Out: ' + totalOut.toLocaleString();
-        var stripIoSub = document.getElementById('strip-io-sub');
-        if (stripIoSub) stripIoSub.textContent = '24h Net: ' + netSign + netBalance + ' mL (' + (netBalance >= 0 ? 'Positive' : 'Negative') + ')';
-        if (allIo.length === 0) {
-          ioRows.innerHTML = '<tr><td colspan="10" class="muted text-center" style="padding:15px;">No Intake & Output records found for this encounter.</td></tr>';
         }
       }
     }
