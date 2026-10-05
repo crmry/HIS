@@ -45,15 +45,37 @@ if (typeof window !== 'undefined' && window.addEventListener) {
 if (typeof window !== 'undefined') {
   window.HOSPITAL_PHYSICIANS_DIRECTORY = [
     { id: 'NONE', name: 'NONE', title: 'NONE', specialty: 'No Co-Signature (Standard Single Physician)', prc_no: '', s2_no: '', is_none: true },
-    { id: 'santos_maria', legacy_id: 'doc-maria-santos', name: 'Maria Santos, MD', title: 'Dr. Maria Santos', specialty: 'Internal Medicine', prc_no: '0095512', s2_no: 'S2-095512-2026' },
-    { id: 'cruz_paolo', legacy_id: 'doc-paolo-cruz', name: 'Paolo Cruz, MD', title: 'Dr. Paolo Cruz', specialty: 'Orthopedic Surgery', prc_no: '0087654', s2_no: 'S2-087654-2026' },
-    { id: 'reyes_andrea', legacy_id: 'doc-andrea-reyes', name: 'Andrea Reyes, MD', title: 'Dr. Andrea Reyes', specialty: 'Pediatrics', prc_no: '0102938', s2_no: 'S2-0102938-2026' },
-    { id: 'garcia_liza', legacy_id: 'doc-liza-garcia', name: 'Liza Garcia, MD', title: 'Dr. Liza Garcia', specialty: 'Obstetrics and Gynecology', prc_no: '0091234', s2_no: 'S2-0091234-2026' },
-    { id: 'lim_roberto', legacy_id: 'doc-roberto-lim', name: 'Roberto Lim, MD', title: 'Dr. Roberto Lim', specialty: 'Emergency Medicine', prc_no: '0076543', s2_no: 'S2-076543-2026' },
-    { id: 'santos_miguel', legacy_id: 'doc-miguel-santos', name: 'Miguel Santos, MD', title: 'Dr. Miguel Santos', specialty: 'General Medicine', prc_no: '0094821', s2_no: 'S2-094821-2026' },
-    { id: 'mahinay_arthur', legacy_id: 'doc-arthur-mahinay', name: 'Arthur Mahinay, MD', title: 'Dr. Arthur Mahinay', specialty: 'Pulmonary Medicine', prc_no: '0081249', s2_no: 'S2-081249-2026' },
-    { id: 'mahinay_elena', legacy_id: 'doc-elena-mahinay', name: 'Elena Mahinay, MD', title: 'Dr. Elena Mahinay', specialty: 'Cardiology', prc_no: '0079314', s2_no: 'S2-079314-2026' }
+    { id: 'santos_maria', legacy_id: 'doc-maria-santos', name: 'Maria Santos, MD', title: 'Dr. Maria Santos', last_name: 'Santos', first_name: 'Maria', middle_initial: 'A.', specialty: 'Internal Medicine', prc_no: '0095512', s2_no: 'S2-095512-2026' },
+    { id: 'cruz_paolo', legacy_id: 'doc-paolo-cruz', name: 'Paolo Cruz, MD', title: 'Dr. Paolo Cruz', last_name: 'Cruz', first_name: 'Paolo', middle_initial: 'M.', specialty: 'Orthopedic Surgery', prc_no: '0087654', s2_no: 'S2-087654-2026' },
+    { id: 'reyes_andrea', legacy_id: 'doc-andrea-reyes', name: 'Andrea Reyes, MD', title: 'Dr. Andrea Reyes', last_name: 'Reyes', first_name: 'Andrea', middle_initial: 'L.', specialty: 'Pediatrics', prc_no: '0102938', s2_no: 'S2-0102938-2026' },
+    { id: 'garcia_liza', legacy_id: 'doc-liza-garcia', name: 'Liza Garcia, MD', title: 'Dr. Liza Garcia', last_name: 'Garcia', first_name: 'Liza', middle_initial: 'T.', specialty: 'Obstetrics and Gynecology', prc_no: '0091234', s2_no: 'S2-0091234-2026' },
+    { id: 'lim_roberto', legacy_id: 'doc-roberto-lim', name: 'Roberto Lim, MD', title: 'Dr. Roberto Lim', last_name: 'Lim', first_name: 'Roberto', middle_initial: 'S.', specialty: 'Emergency Medicine', prc_no: '0076543', s2_no: 'S2-076543-2026' },
+    { id: 'santos_miguel', legacy_id: 'doc-miguel-santos', name: 'Miguel Santos, MD', title: 'Dr. Miguel Santos', last_name: 'Santos', first_name: 'Miguel', middle_initial: 'C.', specialty: 'General Medicine', prc_no: '0094821', s2_no: 'S2-094821-2026' },
+    { id: 'mahinay_arthur', legacy_id: 'doc-arthur-mahinay', name: 'Arthur Mahinay, MD', title: 'Dr. Arthur Mahinay', last_name: 'Mahinay', first_name: 'Arthur', middle_initial: 'G.', specialty: 'Pulmonary Medicine', prc_no: '0081249', s2_no: 'S2-081249-2026' },
+    { id: 'mahinay_elena', legacy_id: 'doc-elena-mahinay', name: 'Elena Mahinay, MD', title: 'Dr. Elena Mahinay', last_name: 'Mahinay', first_name: 'Elena', middle_initial: 'R.', specialty: 'Cardiology', prc_no: '0079314', s2_no: 'S2-079314-2026' }
   ];
+
+  window.formatDoctorNameLastFirst = function(d) {
+    if (!d) return '';
+    if (d.is_none || d.id === 'NONE') return 'NONE (No pairing / Standard single-physician order)';
+    var last = d.last_name || '';
+    var first = d.first_name || '';
+    var mi = d.middle_initial || '';
+    if (!last || !first) {
+      var clean = (d.name || '').replace(/,\s*MD$/i, '').replace(/^Dr\.?\s+/i, '').trim();
+      var parts = clean.split(/\s+/);
+      if (parts.length >= 2) {
+        last = parts[parts.length - 1];
+        first = parts.slice(0, parts.length - 1).join(' ');
+      } else {
+        last = clean;
+        first = '';
+      }
+    }
+    var res = last + (first ? ', ' + first : '');
+    if (mi) res += ' ' + mi;
+    return res;
+  };
 
   window.getEligibleCoSigningDoctors = function(excludeDoctorName) {
     var list = window.HOSPITAL_PHYSICIANS_DIRECTORY || [];
