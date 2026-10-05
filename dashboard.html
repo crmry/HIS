@@ -1825,8 +1825,8 @@
                 <!-- Nav Tabs for Flowsheet & Physical Chart Records -->
                 <ul class="nav nav-tabs" id="clinical-chart-tabs" style="margin-bottom:12px;">
                   <li class="active"><a href="#chart-tab-vitals" data-toggle="tab"><i class="icon-heart"></i> Vital Signs</a></li>
-                  <li><a href="#chart-tab-ivf" data-toggle="tab"><i class="icon-tint"></i> IV Fluids & Drips <span class="badge badge-info" id="tab-badge-ivf">0 Ongoing</span></a></li>
-                  <li><a href="#chart-tab-transfusion" data-toggle="tab"><i class="icon-plus-sign"></i> Blood Transfusion <span class="badge badge-inverse" id="tab-badge-transfusion">0 Units</span></a></li>
+                  <li><a href="#chart-tab-ivf" data-toggle="tab"><i class="icon-tint"></i> IV Fluids & Drips <span class="badge badge-info" id="tab-badge-ivf">2 Fluids</span></a></li>
+                  <li><a href="#chart-tab-transfusion" data-toggle="tab"><i class="icon-plus-sign"></i> Blood Transfusion <span class="badge badge-inverse" id="tab-badge-transfusion">1 Unit</span></a></li>
                   <li><a href="#chart-tab-cbg" data-toggle="tab"><i class="icon-time"></i> CBGs <span class="badge badge-warning" id="tab-badge-cbg">2 logs</span></a></li>
                   <li><a href="#chart-tab-meds" data-toggle="tab"><i class="icon-medkit"></i> Summary of Medications <span class="badge badge-success" id="tab-badge-meds">4 Active</span></a></li>
                 </ul>
@@ -4891,8 +4891,13 @@
     var activeMedsFilter = 'all';
 
     var seedChartMonitoring = {
-      ivFluids: [],
-      transfusions: [],
+      ivFluids: [
+        { id: 'ivf-1', bottle: 'Bottle #1', solution: 'Plain Normal Saline Solution (PNSS) 1 L', rate: '80 mL/hr', started: '2026-09-25T08:00:00+08:00', ended: '2026-09-25T16:00:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'Elena M. Ramos, RN', remarks: 'Medical Ward baseline hydration; peripheral line R cephalic vein' },
+        { id: 'ivf-2', bottle: 'Bottle #2', solution: 'D5 0.3% NaCl 1 L + 20 mEq KCl', rate: '100 mL/hr', started: '2026-09-25T16:00:00+08:00', ended: '2026-09-26T02:00:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'M. Cruz, RN', remarks: 'Infused completely; oral hydration adequate prior to discharge' }
+      ],
+      transfusions: [
+        { id: 'trans-1', serial: 'B26-08914', component: 'Packed Red Blood Cells (PRBC)', bloodType: 'O Rh Positive', volume: '250 mL', expiration: '2026-10-15', started: '2026-09-25T09:00:00+08:00', ended: '2026-09-25T12:00:00+08:00', vitals: 'Pre: 104/65, HR 115, T 37.5°C, SpO2 92% | Post: 110/70, HR 88, T 37.2°C, SpO2 96%', reaction: 'None / Uneventful', nurse: 'Elena M. Ramos, RN / Checked: Miguel Santos, MD', crossmatch: 'Crossmatched & Compatible (CLMMRH Blood Bank BB-2026-X0412)' }
+      ],
       cbgs: [
         { id: 'cbg-1', dateTime: '2026-06-20T08:30:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 132, action: 'HbA1c 7.2% — Add Empagliflozin 10 mg OD', notes: 'Post-discharge follow-up; suboptimal control on Metformin monotherapy', nurse: 'Miguel Santos, MD' },
         { id: 'cbg-2', dateTime: '2026-09-26T08:30:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 124, action: 'Target Met (80-130 mg/dL)', notes: 'Morning fasting check prior to OPD consultation; compliant with Empagliflozin and Metformin', nurse: 'Elena M. Ramos, RN' }
@@ -4987,7 +4992,7 @@
         if (countConEl) countConEl.textContent = consumedCount;
 
         var tabBadgeIvf = document.getElementById('tab-badge-ivf');
-        if (tabBadgeIvf) tabBadgeIvf.textContent = ongoingCount + ' Ongoing';
+        if (tabBadgeIvf) tabBadgeIvf.textContent = ongoingCount > 0 ? (ongoingCount + ' Ongoing') : (allIvf.length > 0 ? (allIvf.length + ' Fluids') : '0 Ongoing');
 
         var stripIvfBadge = document.getElementById('strip-ivf-badge');
         if (stripIvfBadge) stripIvfBadge.textContent = ongoingCount + ' Ongoing';
@@ -6787,7 +6792,7 @@
         var allIvf = Array.isArray(enc.ivFluids) ? enc.ivFluids : [];
         var ongoingCount = allIvf.filter(function(i) { return i.status === 'Ongoing'; }).length;
         var tabBadgeIvf = document.getElementById('tab-badge-ivf');
-        if (tabBadgeIvf) tabBadgeIvf.textContent = ongoingCount + ' Ongoing';
+        if (tabBadgeIvf) tabBadgeIvf.textContent = ongoingCount > 0 ? (ongoingCount + ' Ongoing') : (allIvf.length > 0 ? (allIvf.length + ' Fluids') : '0 Ongoing');
         var stripIvfBadge = document.getElementById('strip-ivf-badge');
         if (stripIvfBadge) stripIvfBadge.textContent = ongoingCount + ' Ongoing';
         var stripIvfVal = document.getElementById('strip-ivf-val');

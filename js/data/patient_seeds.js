@@ -94,7 +94,7 @@ if (typeof window !== 'undefined') {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 65,
+        seedVersion: 66,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -259,6 +259,13 @@ if (typeof window !== 'undefined') {
             { dateTime: '2025-12-05T11:15:00+08:00', bp: '122/78', hr: '74', rr: '16', temp: '36.5', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
             { dateTime: '2025-09-18T14:30:00+08:00', bp: '126/80', hr: '78', rr: '18', temp: '36.7', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
           ],
+          ivFluids: [
+            { id: 'ivf-1', bottle: 'Bottle #1', solution: 'Plain Normal Saline Solution (PNSS) 1 L', rate: '80 mL/hr', started: '2026-09-25T08:00:00+08:00', ended: '2026-09-25T16:00:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'Elena M. Ramos, RN', remarks: 'Medical Ward baseline hydration; peripheral line R cephalic vein' },
+            { id: 'ivf-2', bottle: 'Bottle #2', solution: 'D5 0.3% NaCl 1 L + 20 mEq KCl', rate: '100 mL/hr', started: '2026-09-25T16:00:00+08:00', ended: '2026-09-26T02:00:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'M. Cruz, RN', remarks: 'Infused completely; oral hydration adequate prior to discharge' }
+          ],
+          transfusions: [
+            { id: 'trans-1', serial: 'B26-08914', component: 'Packed Red Blood Cells (PRBC)', bloodType: 'O Rh Positive', volume: '250 mL', expiration: '2026-10-15', started: '2026-09-25T09:00:00+08:00', ended: '2026-09-25T12:00:00+08:00', vitals: 'Pre: 104/65, HR 115, T 37.5°C, SpO2 92% | Post: 110/70, HR 88, T 37.2°C, SpO2 96%', reaction: 'None / Uneventful', nurse: 'Elena M. Ramos, RN / Checked: Miguel Santos, MD', crossmatch: 'Crossmatched & Compatible (CLMMRH Blood Bank BB-2026-X0412)' }
+          ],
           admitting_diagnosis: '',
           final_diagnosis: '', // Blank for current active consultation; finalized on historical encounters
           progress_notes_subjective: '',
@@ -283,6 +290,13 @@ if (typeof window !== 'undefined') {
               ],
               cbgs: [
                 { dateTime: '2026-09-26T08:30:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 124, action: 'Target Met (80-130 mg/dL)', notes: 'Morning fasting check prior to OPD consultation; compliant with Empagliflozin 10 mg OD and Metformin 500 mg BID', nurse: 'Elena M. Ramos, RN' }
+              ],
+              ivFluids: [
+                { id: 'ivf-1', bottle: 'Bottle #1', solution: 'Plain Normal Saline Solution (PNSS) 1 L', rate: '80 mL/hr', started: '2026-09-25T08:00:00+08:00', ended: '2026-09-25T16:00:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'Elena M. Ramos, RN', remarks: 'Medical Ward baseline hydration; peripheral line R cephalic vein' },
+                { id: 'ivf-2', bottle: 'Bottle #2', solution: 'D5 0.3% NaCl 1 L + 20 mEq KCl', rate: '100 mL/hr', started: '2026-09-25T16:00:00+08:00', ended: '2026-09-26T02:00:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'M. Cruz, RN', remarks: 'Infused completely; oral hydration adequate prior to discharge' }
+              ],
+              transfusions: [
+                { id: 'trans-1', serial: 'B26-08914', component: 'Packed Red Blood Cells (PRBC)', bloodType: 'O Rh Positive', volume: '250 mL', expiration: '2026-10-15', started: '2026-09-25T09:00:00+08:00', ended: '2026-09-25T12:00:00+08:00', vitals: 'Pre: 104/65, HR 115, T 37.5°C, SpO2 92% | Post: 110/70, HR 88, T 37.2°C, SpO2 96%', reaction: 'None / Uneventful', nurse: 'Elena M. Ramos, RN / Checked: Miguel Santos, MD', crossmatch: 'Crossmatched & Compatible (CLMMRH Blood Bank BB-2026-X0412)' }
               ],
               medications: [
                 { id: 'med-op-0926-1', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
@@ -749,7 +763,7 @@ if (typeof window !== 'undefined') {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 65) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 66) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
