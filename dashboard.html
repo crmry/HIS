@@ -4667,8 +4667,8 @@
        ═══════════════════════════════════════════ */
 
     var STORAGE_KEY = window.STORAGE_KEY || 'clmmrh_patients_v1';
-    var SEED_PATIENT_ID = window.SEED_PATIENT_ID || 'patient_op_juan';
-    var OP_PATIENT_ID = window.OP_PATIENT_ID || 'patient_op_juan';
+    var SEED_PATIENT_ID = window.SEED_PATIENT_ID || 'patient_op_carmela';
+    var OP_PATIENT_ID = window.OP_PATIENT_ID || 'patient_op_carmela';
     var BLANK_PATIENT_ID = window.BLANK_PATIENT_ID || 'patient_new_blank_1790299677880';
     /* Authenticated physician and clinical user session context */
     window.CURRENT_PHYSICIAN_NAME =
@@ -4830,7 +4830,7 @@
 
       if (Array.isArray(data.vital_signs) && data.vital_signs.length > 0) {
         rows = data.vital_signs;
-      } else if (record && (record.id === SEED_PATIENT_ID || record.id === (window.OP_PATIENT_ID || 'patient_op_juan'))) {
+      } else if (record && (record.id === SEED_PATIENT_ID || record.id === (window.OP_PATIENT_ID || 'patient_op_carmela') || record.id === 'patient_op_juan')) {
         rows = seedVitalSigns;
       } else {
         var hasVitalValue = [
@@ -5667,7 +5667,7 @@
 
     function isInitialEncounter(enc, index, allEncounters) {
       if (!enc) return false;
-      // 2026-03-14 is a subsequent consultation; only 2025-09-18 is the initial visit for patient_op_juan
+      // 2026-03-14 is a subsequent consultation; only 2025-09-18 is the initial visit for patient_op_carmela
       if (enc.date === '2026-03-14' || String(enc.date || '').startsWith('2026-03-14')) return false;
       if (enc.is_initial || enc.isInitial) return true;
       if (enc.date === '2025-09-18' || String(enc.date || '').startsWith('2025-09-18')) return true;
@@ -13699,6 +13699,9 @@
       renderEncounters([]);
       if (urlPatientId) {
         var record = getPatients().find(function (r) { return r.id === urlPatientId; });
+        if (!record && (urlPatientId === 'patient_op_juan' || urlPatientId === 'patient_op_carmela')) {
+          record = getPatients().find(function (r) { return r.id === OP_PATIENT_ID || r.id === 'patient_op_carmela'; });
+        }
         if (record) loadPatientRecord(record);
         else clearAllPatientFields();
       } else {
@@ -14888,14 +14891,14 @@
 
     function redirectToObGyneModule(e) {
       if (e && e.preventDefault) e.preventDefault();
-      var pid = activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : 'patient_op_juan');
+      var pid = activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : (window.OP_PATIENT_ID || 'patient_op_carmela'));
       window.location.href = 'OB_Gyne_Clinical_Module.html?patient=' + encodeURIComponent(pid);
     }
     window.redirectToObGyneModule = redirectToObGyneModule;
 
     function redirectToNeonateModule(e) {
       if (e && e.preventDefault) e.preventDefault();
-      var pid = activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : 'patient_op_juan');
+      var pid = activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : (window.OP_PATIENT_ID || 'patient_op_carmela'));
       window.location.href = 'Neonate_Clinical_Module.html?patient=' + encodeURIComponent(pid);
     }
     window.redirectToNeonateModule = redirectToNeonateModule;

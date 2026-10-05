@@ -599,8 +599,8 @@
     <script>
         var STORAGE_KEY = window.STORAGE_KEY || "clmmrh_patients_v1";
         var COMPLIANCE_SNAPSHOT_KEY = "clmmrh_compliance_sheet_snapshot";
-        var SEED_PATIENT_ID = window.SEED_PATIENT_ID || "patient_op_juan";
-        var OP_PATIENT_ID = window.OP_PATIENT_ID || "patient_op_juan";
+        var SEED_PATIENT_ID = window.SEED_PATIENT_ID || "patient_op_carmela";
+        var OP_PATIENT_ID = window.OP_PATIENT_ID || "patient_op_carmela";
         var BLANK_PATIENT_ID = window.BLANK_PATIENT_ID || "patient_new_blank_1790299677880";
         var selector = document.getElementById("patient-selector");
         var encounterSelector = document.getElementById("encounter-selector");
@@ -2092,6 +2092,9 @@
                     String(item?.data?.hrn || "") === String(patientId) ||
                     ("hrn_" + String(item?.data?.hrn || "")) === String(patientId)
                 ) || null;
+                if (!record && (patientId === "patient_op_juan" || patientId === "patient_op_carmela")) {
+                    record = patients.find(item => item?.id === OP_PATIENT_ID || item?.id === "patient_op_carmela") || null;
+                }
             }
 
             if (!record && hrn) {

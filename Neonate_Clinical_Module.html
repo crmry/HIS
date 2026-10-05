@@ -2066,7 +2066,7 @@ const WEEKS_TO_MATURITY = {
   "46": "Post Term", "47": "Post Term", "48": "Post Term", "49": "Post Term", "50": "Post Term"
 };
 
-let currentPatientId = 'patient_op_juan';
+let currentPatientId = window.OP_PATIENT_ID || 'patient_op_carmela';
 
 function showNeonateToast(msg) {
   const t = document.getElementById('neoToast');
@@ -2976,7 +2976,8 @@ function resetNeonateForm() {
 // Initial Patient Hydration
 function initNeonateWorkspace() {
   const params = new URLSearchParams(window.location.search);
-  const pid = params.get('patient') || currentPatientId;
+  let pid = params.get('patient') || currentPatientId;
+  if (pid === 'patient_op_juan') pid = 'patient_op_carmela';
   currentPatientId = pid;
 
   if (typeof ensureSeedPatient === 'function') {
@@ -2986,7 +2987,11 @@ function initNeonateWorkspace() {
   let patient = null;
   if (typeof getPatients === 'function') {
     const list = getPatients();
-    patient = list.find(p => p.id === pid) || list[0];
+    patient = list.find(p => p.id === pid);
+    if (!patient && (pid === 'patient_op_juan' || pid === 'patient_op_carmela')) {
+      patient = list.find(p => p.id === (window.OP_PATIENT_ID || 'patient_op_carmela'));
+    }
+    if (!patient) patient = list[0];
   }
 
   if (patient) {
@@ -3022,8 +3027,8 @@ function initNeonateWorkspace() {
     if (neoData) {
       populateNeonateData(neoData);
     } else {
-      // Default baseline data for patient_op_juan if no previous custom neonate record exists
-      if (currentPatientId === 'patient_op_juan') {
+      // Default baseline data for Carmela Del Rosario if no previous custom neonate record exists
+      if (currentPatientId === 'patient_op_carmela' || currentPatientId === 'patient_op_juan') {
         const baseline = {
           classification: { inborn: 'singleton-in hospital', outborn: '', readmission: false, birthLocation: 'Delivery Room' },
           maternal: {

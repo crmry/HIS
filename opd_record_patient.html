@@ -298,14 +298,18 @@ Physical Examination: General Survey: Conscious, coherent, ambulatory. HEENT: An
       }
 
       function loadInitialOpdRecord() {
-        var pid = getUrlParam('patient') || getUrlParam('id') || 'patient_op_juan';
+        var pid = getUrlParam('patient') || getUrlParam('id') || (window.OP_PATIENT_ID || 'patient_op_carmela');
         var encDate = getUrlParam('encounter');
 
         if (typeof ensureSeedPatient === 'function') {
           ensureSeedPatient();
         }
         var patients = (typeof getPatients === 'function') ? getPatients() : [];
-        var record = patients.find(function (p) { return p.id === pid; }) || patients[0];
+        var record = patients.find(function (p) { return p.id === pid; });
+        if (!record && (pid === 'patient_op_juan' || pid === 'patient_op_carmela')) {
+          record = patients.find(function (p) { return p.id === (window.OP_PATIENT_ID || 'patient_op_carmela'); });
+        }
+        if (!record) record = patients[0];
 
         // Populate patient dropdown
         var sel = document.getElementById('opd-patient-select');

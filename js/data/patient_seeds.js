@@ -4,8 +4,9 @@
    ═══════════════════════════════════════════════════════════════ */
 
 var STORAGE_KEY = 'clmmrh_patients_v1';
-var SEED_PATIENT_ID = 'patient_op_juan';
-var OP_PATIENT_ID = 'patient_op_juan';
+var SEED_PATIENT_ID = 'patient_op_carmela';
+var OP_PATIENT_ID = 'patient_op_carmela';
+var LEGACY_OP_PATIENT_ID = 'patient_op_juan';
 var BLANK_PATIENT_ID = 'patient_new_blank_1790299677880';
 
 function safeParse(v, fb) {
@@ -87,12 +88,13 @@ if (typeof window !== 'undefined') {
       return opPatientRecord();
     }
 
-    var OP_PATIENT_ID = 'patient_op_juan';
+    var OP_PATIENT_ID = 'patient_op_carmela';
+    var LEGACY_OP_PATIENT_ID = 'patient_op_juan';
 
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 63,
+        seedVersion: 64,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -731,10 +733,27 @@ if (typeof window !== 'undefined') {
         } catch (e) {}
       }
 
+      // Explicitly purge or migrate legacy patient_op_juan record
+      var hadLegacyOp = records.some(function (r) {
+        return r && (r.id === 'patient_op_juan');
+      });
+      if (hadLegacyOp) {
+        records = records.filter(function (record) {
+          return record && record.id !== 'patient_op_juan';
+        });
+        try {
+          var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
+          if (store && store['patient_op_juan']) {
+            delete store['patient_op_juan'];
+            localStorage.setItem('clmmrh_chart_monitoring_data_v1', JSON.stringify(store));
+          }
+        } catch (e) {}
+      }
+
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 63) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 64) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});

@@ -2236,11 +2236,12 @@ window.filterTimeline = filterTimeline;
 window.toggleMenopauseFields = toggleMenopauseFields;
 window.acceptDeptCase = acceptDeptCase;
 
-let currentPatientId = 'patient_op_juan';
+let currentPatientId = window.OP_PATIENT_ID || 'patient_op_carmela';
 
 function initObGyneWorkspace() {
   const params = new URLSearchParams(window.location.search);
-  const pid = params.get('patient') || currentPatientId;
+  let pid = params.get('patient') || currentPatientId;
+  if (pid === 'patient_op_juan') pid = 'patient_op_carmela';
   currentPatientId = pid;
 
   if (typeof ensureSeedPatient === 'function') {
@@ -2250,7 +2251,11 @@ function initObGyneWorkspace() {
   let patient = null;
   if (typeof getPatients === 'function') {
     const list = getPatients();
-    patient = list.find(p => p.id === pid) || list[0];
+    patient = list.find(p => p.id === pid);
+    if (!patient && (pid === 'patient_op_juan' || pid === 'patient_op_carmela')) {
+      patient = list.find(p => p.id === (window.OP_PATIENT_ID || 'patient_op_carmela'));
+    }
+    if (!patient) patient = list[0];
   }
 
   if (patient) {
