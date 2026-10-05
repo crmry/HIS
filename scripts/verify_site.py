@@ -291,8 +291,9 @@ async def scan_single_target(browser_ws, file_url):
                     if (!obViewContainer) return 'OB view container not found in #hx-gyn';
                     const scoreEl = document.getElementById('ob-view-score-main');
                     if (!scoreEl || !scoreEl.textContent.trim()) return 'OB view score element empty or missing';
-                    const obBadge = document.getElementById('ob-view-status-badge');
-                    if (!obBadge) return 'OB view status badge missing in #hx-gyn';
+                    const obAddBtn = document.getElementById('btn-add-ob-record');
+                    if (!obAddBtn) return 'OB Add button (#btn-add-ob-record) missing in #hx-gyn';
+                    if (!obAddBtn.getAttribute('href') || !obAddBtn.getAttribute('href').includes('OB_Gyne_Clinical_Module.html')) return 'OB Add button does not link to OB_Gyne_Clinical_Module.html';
                 }
 
                 // Test Specialized Clinical Forms unified launcher list
@@ -583,8 +584,9 @@ async def scan_single_target(browser_ws, file_url):
                     if (!neoViewContainer) return 'Neonate view container not found in #hx-neo';
                     const sumType = document.getElementById('neo-view-sum-type');
                     if (!sumType || !sumType.textContent.trim()) return 'Neonate classification element empty or missing in #hx-neo';
-                    const neoBadge = document.getElementById('neo-view-status-badge');
-                    if (!neoBadge) return 'Neonate view status badge missing in #hx-neo';
+                    const neoAddBtn = document.getElementById('btn-add-neo-record');
+                    if (!neoAddBtn) return 'Neonate Add button (#btn-add-neo-record) missing in #hx-neo';
+                    if (!neoAddBtn.getAttribute('href') || !neoAddBtn.getAttribute('href').includes('Neonate_Clinical_Module.html')) return 'Neonate Add button does not link to Neonate_Clinical_Module.html';
                 }
 
                 // Test Neonate Growth Chart Modal with Patient Gender Baseline
