@@ -6105,10 +6105,8 @@
         index = encRows ? encRows.children.length : 0;
       }
       var tr = document.createElement('tr');
-      var dateDisplay = esc(formatDate(data && data.date || '') || (data && data.date) || '—');
-      if (data && data.discharge_date && data.discharge_date !== data.date) {
-        dateDisplay = esc(formatDate(data.date)) + ' &ndash; ' + esc(formatDate(data.discharge_date));
-      }
+      var encDateVal = (data && (data.admission_date || data.date)) || '';
+      var dateDisplay = esc(formatDate(encDateVal) || encDateVal || '—');
       var rawType = (data && (data.registry || data.type) || 'OP').trim();
       var typeUpper = rawType.toUpperCase();
       var typeClass = typeUpper === 'ER' ? 'type-er' : (typeUpper === 'IP' ? 'type-ip' : 'type-op');
@@ -8937,7 +8935,7 @@
 
     function getEncounterDateStr(enc) {
       if (!enc) return '';
-      var d = String(enc.date || (enc.dateTime ? enc.dateTime.slice(0, 10) : '')).trim();
+      var d = String((enc.admission_date || enc.date) || (enc.dateTime ? enc.dateTime.slice(0, 10) : '')).trim();
       if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
       if (/^\d{2}\/\d{2}\/\d{4}$/.test(d)) {
         var parts = d.split('/');
@@ -9142,8 +9140,8 @@
 
     function parseEncounterDateTime(enc) {
       if (!enc) return 0;
-      var d = String(enc.date || '').trim();
-      var t = String(enc.time || '').trim();
+      var d = String((enc.admission_date || enc.date) || '').trim();
+      var t = String(enc.time || enc.admission_time || '').trim();
       if (!d) return 0;
       var isoDate = d;
       if (/^\d{2}\/\d{2}\/\d{4}$/.test(d)) {
