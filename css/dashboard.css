@@ -2177,6 +2177,8 @@
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
     }
     .floating-req-item-btn[data-station="rx"] { border-left-color: #059669 !important; }
+    .floating-req-item-btn[data-station="results"] { border-left-color: #0284c7 !important; }
+    .floating-req-item-btn[data-station="referral"] { border-left-color: #10b981 !important; }
     .floating-req-item-btn[data-station="laboratory"] { border-left-color: #2563eb !important; }
     .floating-req-item-btn[data-station="radiology"] { border-left-color: #7c3aed !important; }
     .floating-req-item-btn[data-station="heart"] { border-left-color: #dc2626 !important; }

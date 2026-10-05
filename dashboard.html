@@ -2899,75 +2899,6 @@
       </div>
     </div>
 
-    <!-- ROW 10: Referral / Co-Manage -->
-    <div class="row-fluid">
-      <div class="span12 care-referral">
-        <div class="dashlet">
-          <div class="bootstrap-widget-header">
-            <h3>Referral / Co-Manage</h3>
-          </div>
-          <div class="bootstrap-widget-content" id="dashlet-referral">
-            <div class="referral-table-wrap">
-              <table class="table table-bordered table-condensed referral-table"
-                aria-label="Referral and co-manage history">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Department</th>
-                    <th>Reason for Referral</th>
-                    <th>Primary Physician</th>
-                    <th>Co-Managing Physician</th>
-                    <th>Receiving Physician</th>
-                  </tr>
-                </thead>
-                <tbody id="referral-rows"><tr class="referral-empty"><td colspan="6">No records found...</td></tr></tbody>
-              </table>
-            </div>
-            <div class="referral-fields">
-              <label for="referral-doctor">Refer to Physician</label>
-              <select id="referral-doctor">
-                <option value="">-Select a Physician-</option>
-                <option>Dr. Andrea Reyes</option>
-                <option>Dr. Miguel Santos</option>
-                <option>Dr. Liza Garcia</option>
-                <option>Dr. Paolo Cruz</option>
-              </select>
-              <label for="referral-department">Department</label>
-              <select id="referral-department">
-                <option value="">-Select a Department-</option>
-                <option value="EMERGENCY MEDICINE">EMERGENCY MEDICINE</option>
-                <option value="PATHOLOGY">PATHOLOGY</option>
-                <option value="DDIRS">DDIRS</option>
-                <option value="ORTHOPAEDICS">ORTHOPAEDICS</option>
-                <option value="OPHTHALMOLOGY">OPHTHALMOLOGY</option>
-                <option value="SURGERY">SURGERY</option>
-                <option value="PUBLIC HEALTH UNIT">PUBLIC HEALTH UNIT</option>
-                <option value="ENT-HNS">ENT-HNS</option>
-                <option value="ANESTHESIA">ANESTHESIA</option>
-                <option value="GENERAL MEDICINE">GENERAL MEDICINE</option>
-                <option value="PEDIATRICS">PEDIATRICS</option>
-                <option value="OBSTETRICS AND GYNECOLOGY">OBSTETRICS AND GYNECOLOGY</option>
-                <option value="FAMILY AND COMMUNITY MEDICINE">FAMILY AND COMMUNITY MEDICINE</option>
-                <option value="DEPARTMENT OF UROLOGY">DEPARTMENT OF UROLOGY</option>
-                <option value="THE CARDIOVASCULAR SURGERY AND INTERVENTION UNIT">THE CARDIOVASCULAR SURGERY AND INTERVENTION UNIT</option>
-              </select>
-              <label for="referral-reason">Reason for Referral</label>
-              <textarea id="referral-reason" rows="5"
-                placeholder="Enter the reason for referral or co-management..."></textarea>
-            </div>
-            <div id="referral-readonly-msg" style="display:none; margin-top:8px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; font-size:12px; color:#64748b; font-style:italic;">
-              <i class="icon-lock"></i> Referrals are finalized and signed for this encounter. New referrals must be ordered on the current or next encounter.
-            </div>
-            <div style="margin-top:8px; text-align:right;">
-              <span id="referral-save-status" role="status" aria-live="polite"></span>
-              <button type="button" class="btn btn-success btn-small" id="save-referral-btn">Save Referral</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
     <!-- ROW 10: Specialized Clinical Forms & Modules -->
     <div class="row-fluid">
       <div class="span12">
@@ -3629,6 +3560,95 @@
       <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 4px 4px; display:flex; justify-content:space-between; align-items:center;">
         <span style="font-size:11px; color:#718096;" id="viewable-results-footer-note"><i class="icon-info-sign"></i> Showing validated diagnostic examination results across all patient encounters</span>
         <button type="button" class="btn btn-primary" id="btn-close-viewable-results-modal" onclick="closeViewableResultsModal(event)">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ REFERRAL / CO-MANAGE MODAL (ACCESSIBLE VIA REQUISITIONS TOOLKIT) ═══ -->
+  <div class="seg-modal-backdrop" id="modal-referral-comanage" role="dialog" aria-modal="true" aria-labelledby="modal-referral-heading" style="display:none; z-index:2010;">
+    <div class="seg-modal" style="min-width: 860px; max-width: 1080px; margin: 25px auto;">
+      <div class="seg-modal-title" id="modal-referral-heading" style="display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, #1b4d3e, #0e2f24); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
+        <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
+          Referral / Co-Manage
+          <span id="modal-referral-count-badge" class="badge badge-success" style="font-size:11px; padding:2px 8px; background:#10b981; color:#fff; font-weight:600;">Consultations</span>
+        </span>
+        <button type="button" class="seg-modal-close" id="close-modal-referral-comanage" onclick="closeReferralModal(event)" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
+      </div>
+      <div class="seg-modal-body" style="padding:16px 20px; background:#fff; max-height:80vh; overflow-y:auto;">
+        <!-- Patient Demographics Banner -->
+        <div id="modal-referral-patient-banner" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:5px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+          <div>
+            <strong style="color:#475569;">Patient:</strong> <span id="ref-patient-name" style="font-weight:700; color:#1b4d3e;">—</span>
+            &nbsp;|&nbsp; <strong style="color:#475569;">HRN:</strong> <span id="ref-patient-hrn" style="font-family:monospace; font-weight:600;">—</span>
+            &nbsp;|&nbsp; <strong style="color:#475569;">Age/Sex:</strong> <span id="ref-patient-agesex">—</span>
+            &nbsp;|&nbsp; <strong style="color:#475569;">Primary Physician:</strong> <span id="ref-patient-physician">—</span>
+          </div>
+          <div>
+            <span class="badge" id="ref-patient-encounter-badge" style="background:#1b4d3e; color:#fff; font-size:10px;">Active Encounter</span>
+          </div>
+        </div>
+
+        <div class="bootstrap-widget-content" id="dashlet-referral">
+          <div class="referral-table-wrap">
+            <table class="table table-bordered table-condensed referral-table"
+              aria-label="Referral and co-manage history">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Department</th>
+                  <th>Reason for Referral</th>
+                  <th>Primary Physician</th>
+                  <th>Co-Managing Physician</th>
+                  <th>Receiving Physician</th>
+                </tr>
+              </thead>
+              <tbody id="referral-rows"><tr class="referral-empty"><td colspan="6">No records found...</td></tr></tbody>
+            </table>
+          </div>
+          <div class="referral-fields">
+            <label for="referral-doctor">Refer to Physician</label>
+            <select id="referral-doctor">
+              <option value="">-Select a Physician-</option>
+              <option>Dr. Andrea Reyes</option>
+              <option>Dr. Miguel Santos</option>
+              <option>Dr. Liza Garcia</option>
+              <option>Dr. Paolo Cruz</option>
+            </select>
+            <label for="referral-department">Department</label>
+            <select id="referral-department">
+              <option value="">-Select a Department-</option>
+              <option value="EMERGENCY MEDICINE">EMERGENCY MEDICINE</option>
+              <option value="PATHOLOGY">PATHOLOGY</option>
+              <option value="DDIRS">DDIRS</option>
+              <option value="ORTHOPAEDICS">ORTHOPAEDICS</option>
+              <option value="OPHTHALMOLOGY">OPHTHALMOLOGY</option>
+              <option value="SURGERY">SURGERY</option>
+              <option value="PUBLIC HEALTH UNIT">PUBLIC HEALTH UNIT</option>
+              <option value="ENT-HNS">ENT-HNS</option>
+              <option value="ANESTHESIA">ANESTHESIA</option>
+              <option value="GENERAL MEDICINE">GENERAL MEDICINE</option>
+              <option value="PEDIATRICS">PEDIATRICS</option>
+              <option value="OBSTETRICS AND GYNECOLOGY">OBSTETRICS AND GYNECOLOGY</option>
+              <option value="FAMILY AND COMMUNITY MEDICINE">FAMILY AND COMMUNITY MEDICINE</option>
+              <option value="DEPARTMENT OF UROLOGY">DEPARTMENT OF UROLOGY</option>
+              <option value="THE CARDIOVASCULAR SURGERY AND INTERVENTION UNIT">THE CARDIOVASCULAR SURGERY AND INTERVENTION UNIT</option>
+            </select>
+            <label for="referral-reason">Reason for Referral</label>
+            <textarea id="referral-reason" rows="5"
+              placeholder="Enter the reason for referral or co-management..."></textarea>
+          </div>
+          <div id="referral-readonly-msg" style="display:none; margin-top:8px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; font-size:12px; color:#64748b; font-style:italic;">
+            <i class="icon-lock"></i> Referrals are finalized and signed for this encounter. New referrals must be ordered on the current or next encounter.
+          </div>
+          <div style="margin-top:12px; text-align:right;">
+            <span id="referral-save-status" role="status" aria-live="polite"></span>
+            <button type="button" class="btn btn-success btn-small" id="save-referral-btn">Save Referral</button>
+          </div>
+        </div>
+      </div>
+      <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 4px 4px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:11px; color:#718096;"><i class="icon-info-sign"></i> Co-management orders and inter-departmental physician consultations</span>
+        <button type="button" class="btn btn-primary" id="btn-close-modal-referral-comanage" onclick="closeReferralModal(event)">Close</button>
       </div>
     </div>
   </div>
@@ -4750,6 +4770,14 @@
             <div class="floating-req-item-sub">Laboratory, Imaging &amp; Diagnostic Reports</div>
           </div>
           <span class="floating-req-item-action" id="floating-results-action">View</span>
+        </button>
+
+        <button type="button" class="floating-req-item-btn" id="floating-btn-referral" onclick="openReferralModal(event)" data-station="referral" title="Referral / Co-Manage (Physician &amp; Department Consultations)">
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">Referral / Co-Manage</div>
+            <div class="floating-req-item-sub">Physician &amp; Department Consultations</div>
+          </div>
+          <span class="floating-req-item-action" id="floating-referral-action">Open</span>
         </button>
       </div>
       <div class="floating-req-footer">
@@ -7242,6 +7270,7 @@
 
       // 3b. Render referrals specific to this historical encounter
       var encReferrals = Array.isArray(enc.referrals) ? enc.referrals : [];
+      if (!referralRows) referralRows = document.getElementById('referral-rows');
       if (referralRows) {
         if (!encReferrals.length) {
           referralRows.innerHTML = '<tr class="referral-empty"><td colspan="6" style="text-align:center; padding:15px; color:#64748b;">No referrals recorded for this historical encounter.</td></tr>';
@@ -7251,6 +7280,10 @@
               '<td>' + esc(referral.primaryPhysician) + '</td><td>' + esc(referral.coManagingPhysician) + '</td><td>' + esc(referral.receivingPhysician) + '</td></tr>';
           }).join('');
         }
+      }
+      var refCountBadge = document.getElementById('modal-referral-count-badge');
+      if (refCountBadge) {
+        refCountBadge.textContent = encReferrals.length ? encReferrals.length + ' ' + (encReferrals.length === 1 ? 'Consultation' : 'Consultations') : '0 Consultations';
       }
 
       // 4. Physician's Orders (Plans) & Summary
@@ -8460,6 +8493,17 @@
     var btnCloseViewableRes = document.getElementById('btn-close-viewable-results-modal');
     if (btnCloseViewableRes) btnCloseViewableRes.addEventListener('click', closeViewableResultsModal);
 
+    var refModalBackdrop = document.getElementById('modal-referral-comanage');
+    if (refModalBackdrop) {
+      refModalBackdrop.addEventListener('click', function (e) {
+        if (e.target === refModalBackdrop) closeReferralModal();
+      });
+    }
+    var closeRefBtn = document.getElementById('close-modal-referral-comanage');
+    if (closeRefBtn) closeRefBtn.addEventListener('click', closeReferralModal);
+    var btnCloseRef = document.getElementById('btn-close-modal-referral-comanage');
+    if (btnCloseRef) btnCloseRef.addEventListener('click', closeReferralModal);
+
     // Viewable Results module interaction listeners
     var viewableResultsTabs = document.getElementById('viewable-results-tabs');
     if (viewableResultsTabs) {
@@ -8587,6 +8631,7 @@
         closeEncounterEntryModal();
         closeEncounterSimulationModal();
         closeViewableResultsModal();
+        closeReferralModal();
       }
     });
 
@@ -11627,6 +11672,65 @@
       }
     }
 
+    function openReferralModal(e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      var toolkit = document.getElementById('floating-req-toolkit');
+      if (toolkit && !toolkit.classList.contains('pinned')) {
+        toolkit.classList.remove('expanded');
+        var arrow = document.getElementById('floating-req-toggle-arrow');
+        if (arrow) arrow.textContent = '\u25C0';
+        var handle = document.getElementById('floating-req-handle');
+        if (handle) handle.setAttribute('aria-expanded', 'false');
+      }
+      var modal = document.getElementById('modal-referral-comanage');
+      if (modal) {
+        var pData = currentPatientData();
+        var pName = (pData ? patientName(pData) : '') || 'UNKNOWN PATIENT';
+        var hrn = (pData && (pData.hrn || pData.hospital_number)) || '—';
+        var age = pData && pData.birthdate ? calculateAge(pData.birthdate) : (pData && pData.age ? pData.age : '—');
+        var sex = (pData && (pData.gender || pData.sex || '—')).charAt(0).toUpperCase();
+        var ageSex = (age ? age + ' / ' : '') + (sex || '—');
+        var physician = (pData && (pData.primary_physician || pData.attending_physician)) || 'Paolo Cruz, MD';
+
+        var nameEl = document.getElementById('ref-patient-name');
+        if (nameEl) nameEl.textContent = pName;
+        var hrnEl = document.getElementById('ref-patient-hrn');
+        if (hrnEl) hrnEl.textContent = hrn;
+        var ageSexEl = document.getElementById('ref-patient-agesex');
+        if (ageSexEl) ageSexEl.textContent = ageSex;
+        var physEl = document.getElementById('ref-patient-physician');
+        if (physEl) physEl.textContent = physician;
+
+        var encBadge = document.getElementById('ref-patient-encounter-badge');
+        if (encBadge) {
+          var isHist = activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex >= 0;
+          encBadge.textContent = isHist ? 'Historical Encounter (Signed / Read-Only)' : 'Active Encounter';
+          encBadge.style.background = isHist ? '#64748b' : '#1b4d3e';
+        }
+
+        if (typeof renderReferrals === 'function') {
+          renderReferrals();
+        }
+
+        modal.classList.add('open');
+        modal.style.display = 'block';
+        document.body.classList.add('modal-lock');
+      }
+    }
+
+    function closeReferralModal(e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      var modal = document.getElementById('modal-referral-comanage');
+      if (modal) {
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+      }
+      var otherOpen = document.querySelector('.seg-modal-backdrop.open');
+      if (!otherOpen) {
+        document.body.classList.remove('modal-lock');
+      }
+    }
+
     function initFloatingRequisitionToolkit() {
       var toolkit = document.getElementById('floating-req-toolkit');
       if (!toolkit || toolkit.dataset.initialized === 'true') return;
@@ -11660,6 +11764,11 @@
       var btnResults = document.getElementById('floating-btn-results') || document.getElementById('floating-btn-exam') || document.getElementById('floating-btn-lab');
       if (btnResults && !btnResults.hasAttribute('onclick')) {
         btnResults.addEventListener('click', openViewableResultsModal);
+      }
+
+      var btnReferral = document.getElementById('floating-btn-referral');
+      if (btnReferral && !btnReferral.hasAttribute('onclick')) {
+        btnReferral.addEventListener('click', openReferralModal);
       }
 
       // Click outside to collapse if expanded and not pinned
@@ -11783,6 +11892,11 @@
           closeRequestModal();
           return;
         }
+        var refModal = document.getElementById('modal-referral-comanage');
+        if (refModal && (refModal.classList.contains('open') || refModal.style.display === 'block')) {
+          closeReferralModal();
+          return;
+        }
         collapseFloatingRequisitionToolkit();
       }
     });
@@ -11802,6 +11916,8 @@
     window.closeRxWriterModal = closeRxWriterModal;
     window.openViewableResultsModal = openViewableResultsModal;
     window.closeViewableResultsModal = closeViewableResultsModal;
+    window.openReferralModal = openReferralModal;
+    window.closeReferralModal = closeReferralModal;
     window.openRequestModal = openRequestModal;
     window.closeRequestModal = closeRequestModal;
     window.toggleFloatingRequisitionToolkit = toggleFloatingRequisitionToolkit;
@@ -12694,14 +12810,20 @@
     var referralRows = document.getElementById('referral-rows');
 
     function renderReferrals() {
+      if (!referralRows) referralRows = document.getElementById('referral-rows');
+      if (!referralRows) return;
       if (!referrals.length) {
         referralRows.innerHTML = '<tr class="referral-empty"><td colspan="6">No records found...</td></tr>';
-        return;
+      } else {
+        referralRows.innerHTML = referrals.map(function (referral) {
+          return '<tr><td>' + esc(formatDate(referral.date)) + '</td><td>' + esc(referral.department) + '</td><td>' + esc(referral.reason) + '</td>' +
+            '<td>' + esc(referral.primaryPhysician) + '</td><td>' + esc(referral.coManagingPhysician) + '</td><td>' + esc(referral.receivingPhysician) + '</td></tr>';
+        }).join('');
       }
-      referralRows.innerHTML = referrals.map(function (referral) {
-        return '<tr><td>' + esc(formatDate(referral.date)) + '</td><td>' + esc(referral.department) + '</td><td>' + esc(referral.reason) + '</td>' +
-          '<td>' + esc(referral.primaryPhysician) + '</td><td>' + esc(referral.coManagingPhysician) + '</td><td>' + esc(referral.receivingPhysician) + '</td></tr>';
-      }).join('');
+      var countBadge = document.getElementById('modal-referral-count-badge');
+      if (countBadge) {
+        countBadge.textContent = referrals.length ? referrals.length + ' ' + (referrals.length === 1 ? 'Consultation' : 'Consultations') : '0 Consultations';
+      }
     }
 
     (document.getElementById('save-referral-btn') || { addEventListener: function() {} }).addEventListener('click', function () {

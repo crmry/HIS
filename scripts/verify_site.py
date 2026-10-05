@@ -179,6 +179,36 @@ async def scan_single_target(browser_ws, file_url):
                 document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
                 if (window.getComputedStyle(resModal).display !== 'none' || resModal.classList.contains('open')) return 'Examination result modal failed to close via Escape key';
 
+                // Test Referral / Co-Manage modal & close button
+                const refBtn = document.getElementById('floating-btn-referral');
+                if (!refBtn) return 'Button floating-btn-referral not found in floating requisition toolkit';
+                refBtn.click();
+                const refModal = document.getElementById('modal-referral-comanage');
+                if (!refModal || window.getComputedStyle(refModal).display === 'none') return 'Referral modal failed to open';
+
+                // Verify referral table and inputs exist inside the modal
+                const refRows = document.getElementById('referral-rows');
+                if (!refRows) return 'referral-rows not found in referral modal';
+                const refDoc = document.getElementById('referral-doctor');
+                const refDept = document.getElementById('referral-department');
+                const refReason = document.getElementById('referral-reason');
+                if (!refDoc || !refDept || !refReason) return 'Referral inputs not found in modal';
+
+                const refCloseBtn = document.getElementById('close-modal-referral-comanage');
+                if (!refCloseBtn) return 'Close button close-modal-referral-comanage not found';
+                refCloseBtn.click();
+                if (window.getComputedStyle(refModal).display !== 'none' || refModal.classList.contains('open')) return 'Referral modal failed to close via close button';
+
+                // Test Escape key dismissal on Referral modal
+                refBtn.click();
+                if (window.getComputedStyle(refModal).display === 'none') return 'Referral modal failed to reopen';
+                document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+                if (window.getComputedStyle(refModal).display !== 'none' || refModal.classList.contains('open')) return 'Referral modal failed to close via Escape key';
+
+                // Verify Referral dashlet was transferred from main dashboard body
+                const mainReferralDashlet = document.querySelector('.container-fluid > .row-fluid .care-referral');
+                if (mainReferralDashlet) return 'care-referral should be transferred from main dashboard body';
+
                 // Test CPOE Clinical Request modal via Doctor\'s Orders section
                 const cpoeReqBtn = document.getElementById('open-request-modal');
                 if (cpoeReqBtn) {
