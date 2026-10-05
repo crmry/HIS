@@ -39,6 +39,7 @@ Every modal is declared in markup before the main `<script>` tags:
 | `#modal-order-cosignature` | `3095` – `3139` | Physician order pairing & co-signature requisition modal. |
 | `#rx-writer-modal` | `3169` – `3183` | Pop-out Prescription & Outpatient Rx Writer dialog. |
 | `#rx-print-modal` | `3184` – `3202` | Prescription pad official DOH/PhilHealth print preview dialog. |
+| `#flowsheet-entry-modal` | `3085` – `3280` | Bedside clinical chart flowsheet entry dialog (including blood unit expiration). |
 | `#encounter-record-modal` | `3429` – `3480` | Complete encounter summary record viewer. |
 | `#viewable-results-modal` | `3481` – `3567` | Unified diagnostic examination results viewer (transferred from main body). |
 | `#modal-referral-comanage` | `3568` – `3656` | Inter-departmental referral & physician co-management consultation modal. |
