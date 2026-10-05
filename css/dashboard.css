@@ -2302,3 +2302,8 @@
       font-weight: 600;
     }
 
+    .encounter-date-preset-wrap,
+    #encounter-filter-count-badge {
+      display: none !important;
+    }
+
