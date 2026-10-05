@@ -382,12 +382,10 @@
             padding: 4px 6px 3px;
         }
 
-        .enc-sig-tag {
-            font-size: 7.5pt;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: #222;
-            margin-bottom: 1px;
+        .enc-sig-tag,
+        .enc-sig-supervision,
+        .enc-sig-process-note {
+            display: none !important;
         }
 
         .enc-sig-cursive {
@@ -419,23 +417,6 @@
             color: #333;
             line-height: 1.2;
             margin-top: 1px;
-        }
-
-        .enc-sig-supervision {
-            font-size: 6.5pt;
-            color: #444;
-            line-height: 1.2;
-            margin-top: 3px;
-            font-style: italic;
-            max-width: 320px;
-        }
-
-        .enc-sig-process-note {
-            font-size: 7pt;
-            font-style: italic;
-            color: #444;
-            line-height: 1.25;
-            padding: 2px 4px;
         }
 
         /* ── Official Footer ── */
@@ -689,17 +670,13 @@
                         <!-- Physician Authentication Row -->
                         <tr class="enc-sig-row">
                             <td class="cell-datetime enc-sig-spacer"></td>
-                            <td class="cell-notes enc-sig-spacer">
-                                <div class="enc-sig-process-note">(Esig is required as proof of the end of process for this particular sheet)</div>
-                            </td>
+                            <td class="cell-notes enc-sig-spacer"></td>
                             <td class="enc-sig-stamp">
                                 <div class="enc-sig-block">
-                                    <div class="enc-sig-tag">ESIG</div>
                                     <div class="enc-sig-cursive">R. Lim</div>
                                     <div class="enc-sig-line-draw">________________________________</div>
                                     <div class="enc-sig-name">Roberto Lim, MD</div>
                                     <div class="enc-sig-lic">PRC Lic. No.: 0089241 &bull; 06/12/2026 08:30 AM</div>
-                                    <div class="enc-sig-supervision">(The required number of physician’s changes based on the scenario where supervision, validation, or authorization by another physician is required.)</div>
                                 </div>
                             </td>
                             <td colspan="6" class="enc-sig-spacer"></td>
@@ -982,17 +959,13 @@
                         <!-- Physician Authentication Row -->
                         <tr class="enc-sig-row">
                             <td class="cell-datetime enc-sig-spacer"></td>
-                            <td class="cell-notes enc-sig-spacer">
-                                <div class="enc-sig-process-note">(Esig is required as proof of the end of process for this particular sheet)</div>
-                            </td>
+                            <td class="cell-notes enc-sig-spacer"></td>
                             <td class="enc-sig-stamp">
                                 <div class="enc-sig-block">
-                                    <div class="enc-sig-tag">ESIG</div>
                                     <div class="enc-sig-cursive">M. Santos</div>
                                     <div class="enc-sig-line-draw">________________________________</div>
                                     <div class="enc-sig-name">Miguel Santos, MD</div>
                                     <div class="enc-sig-lic">PRC Lic. No.: 0078312 &bull; 06/14/2026 09:00 AM</div>
-                                    <div class="enc-sig-supervision">(The required number of physician’s changes based on the scenario where supervision, validation, or authorization by another physician is required.)</div>
                                 </div>
                             </td>
                             <td colspan="6" class="enc-sig-spacer"></td>
@@ -1189,17 +1162,13 @@
             // Add blank signature stamp row
             html += '<tr class="enc-sig-row">' +
                 '<td class="cell-datetime enc-sig-spacer"></td>' +
-                '<td class="cell-notes enc-sig-spacer">' +
-                '<div class="enc-sig-process-note">(Esig is required as proof of the end of process for this particular sheet)</div>' +
-                '</td>' +
+                '<td class="cell-notes enc-sig-spacer"></td>' +
                 '<td class="enc-sig-stamp">' +
                 '<div class="enc-sig-block">' +
-                '<div class="enc-sig-tag">ESIG</div>' +
                 '<div class="enc-sig-cursive" style="color:#777;">Physician Signature</div>' +
                 '<div class="enc-sig-line-draw">________________________________</div>' +
                 '<div class="enc-sig-name">MD NAME, MD</div>' +
                 '<div class="enc-sig-lic">PRC Lic. No.: &mdash;</div>' +
-                '<div class="enc-sig-supervision">(The required number of physician’s changes based on the scenario where supervision, validation, or authorization by another physician is required.)</div>' +
                 '</div>' +
                 '</td>' +
                 '<td colspan="6" class="enc-sig-spacer"></td>' +

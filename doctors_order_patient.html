@@ -325,13 +325,10 @@
             text-align: center;
         }
 
-        .enc-sig-tag {
-            font-size: 7.5pt;
-            font-weight: 700;
-            color: #1e3a8a;
-            letter-spacing: 1px;
-            margin-bottom: -2px;
-            text-transform: uppercase;
+        .enc-sig-tag,
+        .enc-sig-supervision,
+        .enc-sig-process-note {
+            display: none !important;
         }
 
         .enc-sig-cursive {
@@ -364,26 +361,6 @@
             font-size: 8pt;
             color: #444;
             font-family: "Times New Roman", serif;
-        }
-
-        .enc-sig-supervision {
-            font-size: 6.8pt;
-            color: #64748b;
-            font-style: italic;
-            line-height: 1.25;
-            margin-top: 3px;
-            max-width: 270px;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .enc-sig-process-note {
-            font-size: 7.5pt;
-            color: #64748b;
-            font-style: italic;
-            line-height: 1.3;
-            padding: 6px 4px;
-            text-align: left;
         }
 
         .enc-sig-role {
@@ -1351,9 +1328,7 @@
                 ? '<div class="enc-sig-cont" style="font-size:7pt; color:#475569; font-style:italic; margin-top:2px;">(Orders continued on Page ' + (nextPage || 'next') + ')</div>'
                 : '';
             var dateDisplay = encDate ? formatDate(encDate) : '';
-            var processNote = isLastEncounter
-                ? '<div class="enc-sig-process-note">(Esig is required as proof of the end of process for this particular sheet)</div>'
-                : '';
+            var processNote = '';
 
             var stampHtml = '';
 
@@ -1371,7 +1346,6 @@
                         '<div class="enc-sig-dual-wrap">' +
                         '  <div class="enc-sig-block">' +
                         '    <div class="enc-sig-role">Ordered by: Dr. ' + physName + ' [E-Signature]</div>' +
-                        '    <div class="enc-sig-tag">ESIG</div>' +
                         '    <div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
                         '    <div class="enc-sig-line-draw">________________________________</div>' +
                         '    <div class="enc-sig-name">' + physName + '</div>' +
@@ -1379,7 +1353,6 @@
                         '  </div>' +
                         '  <div class="enc-sig-block" style="border-left:1px dashed #cbd5e1; padding-left:14px;">' +
                         '    <div class="enc-sig-role" style="color:#15803d;">Co-Signed by: Dr. ' + escapeHtml(pDocName) + ' [E-Signature]</div>' +
-                        '    <div class="enc-sig-tag" style="color:#15803d;">ESIG CO-SIGNATURE</div>' +
                         '    <div class="enc-sig-cursive" style="color:#14532d;">' + escapeHtml(pDocSig) + '</div>' +
                         '    <div class="enc-sig-line-draw">________________________________</div>' +
                         '    <div class="enc-sig-name">' + escapeHtml(pDocName) + '</div>' +
@@ -1390,11 +1363,10 @@
                         '<div style="text-align:center; margin-top:4px;">' +
                         '  <span class="badge-cosig-approved">Co-Signature: Approved / Co-Signed</span>' +
                         '</div>' +
-                        '<div class="enc-sig-supervision" style="margin-top:2px;">(The required number of physician’s changes based on the scenario where supervision, validation, or authorization by another physician is required.)</div>' +
                         contNotice;
                 } else {
                     // PENDING Co-Signature:
-                    // Display requesting doctor ESIG + Pending status badge
+                    // Display requesting doctor signature + Pending status badge
                     // Do NOT display the paired doctor's e-signature yet!
                     var approveBtnHtml = (encIndex != null)
                         ? '<button type="button" class="btn-approve-sheet-cosig" onclick="approveSheetOrderCoSignature(' + encIndex + ')">Co-Sign / Approve Order</button>'
@@ -1403,7 +1375,6 @@
                     stampHtml =
                         '<div class="enc-sig-block">' +
                         '  <div class="enc-sig-role">Ordered by: Dr. ' + physName + ' [E-Signature]</div>' +
-                        '  <div class="enc-sig-tag">ESIG</div>' +
                         '  <div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
                         '  <div class="enc-sig-line-draw">________________________________</div>' +
                         '  <div class="enc-sig-name">' + physName + '</div>' +
@@ -1413,22 +1384,19 @@
                         '    <div style="font-size:6.8pt; color:#b45309; margin-top:2px;">Awaiting supervisory authorization &amp; co-signature</div>' +
                         '    ' + approveBtnHtml +
                         '  </div>' +
-                        '  <div class="enc-sig-supervision" style="margin-top:3px;">(The required number of physician’s changes based on the scenario where supervision, validation, or authorization by another physician is required.)</div>' +
                         contNotice +
                         '</div>';
                 }
             } else {
                 // Default: NONE was selected (or no pairing)
-                // Requesting doctor ESIG only, no blank co-signature field or unnecessary "Awaiting Approval" status
+                // Requesting doctor signature only, no blank co-signature field or unnecessary "Awaiting Approval" status
                 stampHtml =
                     '<div class="enc-sig-block">' +
                     '  <div class="enc-sig-role">Ordered by: Dr. ' + physName + ' [E-Signature]</div>' +
-                    '  <div class="enc-sig-tag">ESIG</div>' +
                     '  <div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
                     '  <div class="enc-sig-line-draw">________________________________</div>' +
                     '  <div class="enc-sig-name">' + physName + '</div>' +
                     '  <div class="enc-sig-lic">PRC Lic. No.: ' + licText + (dateDisplay ? ' &bull; ' + escapeHtml(dateDisplay) : '') + '</div>' +
-                    '  <div class="enc-sig-supervision">(The required number of physician’s changes based on the scenario where supervision, validation, or authorization by another physician is required.)</div>' +
                     contNotice +
                     '</div>';
             }
