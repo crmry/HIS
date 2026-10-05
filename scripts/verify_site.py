@@ -152,6 +152,22 @@ async def scan_single_target(browser_ws, file_url):
                 resBtn.click();
                 const resModal = document.getElementById('viewable-results-modal');
                 if (!resModal || window.getComputedStyle(resModal).display === 'none') return 'Examination result modal failed to open';
+
+                // Test date range & scope filter controls in Examination Result modal
+                const resScopeSelect = document.getElementById('viewable-results-scope');
+                if (!resScopeSelect) return 'Scope select viewable-results-scope not found';
+                const resDateFrom = document.getElementById('viewable-results-date-from');
+                const resDateTo = document.getElementById('viewable-results-date-to');
+                if (!resDateFrom || !resDateTo) return 'Date range inputs for examination results not found';
+                const resResetBtn = document.getElementById('btn-results-reset-dates');
+                if (!resResetBtn) return 'Reset button btn-results-reset-dates not found';
+
+                // Test switching scope to current encounter
+                resScopeSelect.value = 'current';
+                resScopeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                // Test reset button
+                resResetBtn.click();
+
                 const resCloseBtn = document.getElementById('close-viewable-results-modal');
                 if (!resCloseBtn) return 'Close button close-viewable-results-modal not found';
                 resCloseBtn.click();

@@ -3565,6 +3565,32 @@
           </div>
         </div>
 
+        <!-- ═══ DATE RANGE & ENCOUNTER SCOPE FILTER BAR ═══ -->
+        <div class="viewable-results-filter-bar" id="viewable-results-filter-bar">
+          <div class="viewable-results-filter-group">
+            <label for="viewable-results-scope"><i class="icon-filter" style="opacity:0.75;"></i> Results Scope:</label>
+            <select id="viewable-results-scope" title="Select encounter or date scope for diagnostic results">
+              <option value="all" selected>All Encounters / Historical Results</option>
+              <option value="current">Current Encounter Only</option>
+              <option value="30d">Past 30 Days</option>
+              <option value="90d">Past 90 Days (3 Months)</option>
+              <option value="6m">Past 6 Months</option>
+              <option value="1y">Past 1 Year</option>
+              <option value="custom">Custom Date Range</option>
+            </select>
+          </div>
+
+          <div class="viewable-results-date-group" id="viewable-results-custom-dates">
+            <label for="viewable-results-date-from">From:</label>
+            <input type="date" id="viewable-results-date-from" title="Filter examinations performed from date" aria-label="From Date">
+
+            <label for="viewable-results-date-to">To:</label>
+            <input type="date" id="viewable-results-date-to" title="Filter examinations performed to date" aria-label="To Date">
+
+            <button type="button" class="btn btn-mini btn-inverse" id="btn-results-reset-dates" title="Reset date filters to show all historical results">Reset</button>
+          </div>
+        </div>
+
         <div class="dashlet" id="dashlet-viewable-results" style="margin-bottom:0; box-shadow:none; border:1px solid #e2e8f0; border-radius:4px;">
           <div class="bootstrap-widget-content" id="dashlet-results-content" style="padding:12px 14px;">
             <div class="viewable-results-nav" id="viewable-results-tabs">
@@ -3580,7 +3606,7 @@
               <table class="table table-bordered table-striped table-hover order-card-table viewable-results-table">
                 <thead>
                   <tr>
-                    <th style="width:140px;">Date &amp; Time</th>
+                    <th style="width:165px;">Date &amp; Time</th>
                     <th style="width:160px;">Department</th>
                     <th>Diagnostic Examination / Procedure</th>
                     <th style="width:90px; text-align:center;">Priority</th>
@@ -3597,7 +3623,7 @@
         </div>
       </div>
       <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 4px 4px; display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:11px; color:#718096;"><i class="icon-info-sign"></i> Showing validated diagnostic examination results for current patient encounter</span>
+        <span style="font-size:11px; color:#718096;" id="viewable-results-footer-note"><i class="icon-info-sign"></i> Showing validated diagnostic examination results across all patient encounters</span>
         <button type="button" class="btn btn-primary" id="btn-close-viewable-results-modal" onclick="closeViewableResultsModal(event)">Close</button>
       </div>
     </div>
@@ -7793,6 +7819,9 @@
        DOH DIAGNOSTIC EXAMINATION RESULTS (VIEWABLE RESULTS) MODULE
        ═══════════════════════════════════════════════════════════════ */
     var activeResultFilterCategory = 'all';
+    var activeResultScope = 'all';
+    var activeResultDateFrom = '';
+    var activeResultDateTo = '';
     var cachedViewableExaminations = [];
 
     function getExamCategoryBucket(exam) {
@@ -7812,71 +7841,122 @@
       return 'laboratory';
     }
 
+    function getExamIsoDate(exam, enc) {
+      var dStr = (exam && (exam.performed_at || exam.dateTime)) || (enc && enc.date) || '';
+      var m = String(dStr).match(/(\d{4})-(\d{2})-(\d{2})/);
+      if (m) return m[0];
+      var mSlash = String(dStr).match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if (mSlash) {
+        var mm = mSlash[1].length === 1 ? '0' + mSlash[1] : mSlash[1];
+        var dd = mSlash[2].length === 1 ? '0' + mSlash[2] : mSlash[2];
+        return mSlash[3] + '-' + mm + '-' + dd;
+      }
+      if (enc && enc.date) {
+        var mEnc = String(enc.date).match(/(\d{4})-(\d{2})-(\d{2})/);
+        if (mEnc) return mEnc[0];
+      }
+      return '';
+    }
+
     function collectAllViewableExaminations() {
       var exams = [];
       var seenIds = {};
 
       if (Array.isArray(loadedEncounters) && loadedEncounters.length > 0) {
-        // Scope to the current active encounter only.
-        // Past encounter results must not bleed into the active encounter view.
-        var currentEnc = null;
-        var currentEncIdx = -1;
-        for (var i = 0; i < loadedEncounters.length; i++) {
-          if (loadedEncounters[i].is_current || loadedEncounters[i].isCurrent) {
-            currentEnc = loadedEncounters[i];
-            currentEncIdx = i;
-            break;
+        var targetEncounters = [];
+
+        if (activeResultScope === 'current') {
+          var currentEnc = null;
+          var currentEncIdx = -1;
+          for (var i = 0; i < loadedEncounters.length; i++) {
+            if (loadedEncounters[i].is_current || loadedEncounters[i].isCurrent) {
+              currentEnc = loadedEncounters[i];
+              currentEncIdx = i;
+              break;
+            }
+          }
+          if (!currentEnc) {
+            currentEnc = loadedEncounters[0];
+            currentEncIdx = 0;
+          }
+          targetEncounters.push({ enc: currentEnc, encIdx: currentEncIdx });
+        } else {
+          for (var i = 0; i < loadedEncounters.length; i++) {
+            targetEncounters.push({ enc: loadedEncounters[i], encIdx: i });
           }
         }
-        // Fallback: use first encounter if none flagged as current
-        if (!currentEnc) {
-          currentEnc = loadedEncounters[0];
-          currentEncIdx = 0;
-        }
 
-        var encExams = getEncounterExaminations(currentEnc);
-        if (Array.isArray(encExams)) {
-          encExams.forEach(function (x, xIdx) {
-            var examId = x.id || ('EXAM-' + currentEncIdx + '-' + xIdx);
-            if (seenIds[examId]) return;
-            seenIds[examId] = true;
-            var priorityVal = x.priority;
-            if (!priorityVal && currentEnc && currentEnc.clinical_requests) {
-              for (var tabKey in currentEnc.clinical_requests) {
-                var reqList = currentEnc.clinical_requests[tabKey];
-                if (Array.isArray(reqList)) {
-                  var matchReq = reqList.find(function(r) {
-                    return r.description && x.name && (r.description.toLowerCase().indexOf(x.name.toLowerCase()) !== -1 || x.name.toLowerCase().indexOf(r.description.toLowerCase()) !== -1);
-                  });
-                  if (matchReq && matchReq.priority) {
-                    priorityVal = matchReq.priority;
-                    break;
+        targetEncounters.forEach(function (t) {
+          var enc = t.enc;
+          var encIdx = t.encIdx;
+          var encExams = getEncounterExaminations(enc);
+          if (Array.isArray(encExams)) {
+            encExams.forEach(function (x, xIdx) {
+              var examId = x.id || ('EXAM-' + encIdx + '-' + xIdx);
+              if (seenIds[examId]) return;
+              seenIds[examId] = true;
+
+              var examDate = x.performed_at || x.dateTime || enc.date || '—';
+              var isoDate = getExamIsoDate(x, enc);
+
+              // Date range filtering
+              if (activeResultDateFrom && isoDate && isoDate < activeResultDateFrom) {
+                return;
+              }
+              if (activeResultDateTo && isoDate && isoDate > activeResultDateTo) {
+                return;
+              }
+
+              var priorityVal = x.priority;
+              if (!priorityVal && enc && enc.clinical_requests) {
+                for (var tabKey in enc.clinical_requests) {
+                  var reqList = enc.clinical_requests[tabKey];
+                  if (Array.isArray(reqList)) {
+                    var matchReq = reqList.find(function(r) {
+                      return r.description && x.name && (r.description.toLowerCase().indexOf(x.name.toLowerCase()) !== -1 || x.name.toLowerCase().indexOf(r.description.toLowerCase()) !== -1);
+                    });
+                    if (matchReq && matchReq.priority) {
+                      priorityVal = matchReq.priority;
+                      break;
+                    }
                   }
                 }
               }
-            }
-            if (!priorityVal) priorityVal = 'Routine';
-            if (priorityVal.toUpperCase() === 'URGENT') priorityVal = 'STAT';
+              if (!priorityVal) priorityVal = 'Routine';
+              if (priorityVal.toUpperCase() === 'URGENT') priorityVal = 'STAT';
 
-            exams.push({
-              id: examId,
-              exam: x,
-              enc: currentEnc,
-              encIdx: currentEncIdx,
-              date: x.performed_at || x.dateTime || currentEnc.date || '—',
-              category: x.category || 'Laboratory',
-              bucket: getExamCategoryBucket(x),
-              name: x.name || 'Diagnostic Procedure',
-              priority: priorityVal,
-              status: x.status || 'Completed',
-              performed_by: x.performed_by || x.signee || (currentEnc.physician && currentEnc.physician.name) || 'Clinical Staff',
-              impression: x.impression || '',
-              findings: x.findings || '',
-              analytes: Array.isArray(x.analytes) ? x.analytes : []
+              var reg = (enc.registry || enc.type || (enc.is_current ? 'OP' : 'HIST')).toUpperCase();
+
+              exams.push({
+                id: examId,
+                exam: x,
+                enc: enc,
+                encIdx: encIdx,
+                encounter_registry: reg,
+                encounter_date: enc.date || '—',
+                date: examDate,
+                isoDate: isoDate,
+                category: x.category || 'Laboratory',
+                bucket: getExamCategoryBucket(x),
+                name: x.name || 'Diagnostic Procedure',
+                priority: priorityVal,
+                status: x.status || 'Completed',
+                performed_by: x.performed_by || x.signee || (enc.physician && enc.physician.name) || 'Clinical Staff',
+                impression: x.impression || '',
+                findings: x.findings || '',
+                analytes: Array.isArray(x.analytes) ? x.analytes : []
+              });
             });
-          });
-        }
+          }
+        });
       }
+
+      // Sort newest exams first
+      exams.sort(function (a, b) {
+        var ta = a.isoDate ? new Date(a.isoDate + 'T00:00:00').getTime() : 0;
+        var tb = b.isoDate ? new Date(b.isoDate + 'T00:00:00').getTime() : 0;
+        return tb - ta;
+      });
 
       cachedViewableExaminations = exams;
       return exams;
@@ -7965,11 +8045,33 @@
         return x.bucket === activeResultFilterCategory;
       });
 
+      // Update footer note dynamically
+      var footerNote = document.getElementById('viewable-results-footer-note');
+      if (footerNote) {
+        if (activeResultScope === 'current') {
+          footerNote.innerHTML = '<i class="icon-info-sign"></i> Showing validated diagnostic examination results for <strong>current patient encounter</strong>';
+        } else if (activeResultDateFrom || activeResultDateTo) {
+          var rangeStr = (activeResultDateFrom ? 'from <strong>' + esc(activeResultDateFrom) + '</strong>' : '') +
+                         (activeResultDateTo ? (activeResultDateFrom ? ' to ' : 'up to ') + '<strong>' + esc(activeResultDateTo) + '</strong>' : '');
+          footerNote.innerHTML = '<i class="icon-info-sign"></i> Showing validated diagnostic examination results ' + rangeStr + ' (' + exams.length + ' total result' + (exams.length === 1 ? '' : 's') + ' across encounters)';
+        } else {
+          footerNote.innerHTML = '<i class="icon-info-sign"></i> Showing validated diagnostic examination results across <strong>all patient encounters</strong> (' + exams.length + ' total result' + (exams.length === 1 ? '' : 's') + ')';
+        }
+      }
+
       var listEl = document.getElementById('viewable-results-list');
       if (!listEl) return;
 
       if (filtered.length === 0) {
-        listEl.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:22px 14px; color:#64748b; background:#f8fafc; font-style:italic;">No diagnostic examination results recorded in this section for this patient encounter.</td></tr>';
+        var emptyMsg = 'No diagnostic examination results recorded in this section ';
+        if (activeResultScope === 'current') {
+          emptyMsg += 'for this patient encounter.';
+        } else if (activeResultDateFrom || activeResultDateTo) {
+          emptyMsg += 'within the selected date range.';
+        } else {
+          emptyMsg += 'for this patient.';
+        }
+        listEl.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:22px 14px; color:#64748b; background:#f8fafc; font-style:italic;">' + emptyMsg + '</td></tr>';
         return;
       }
 
@@ -7985,10 +8087,16 @@
           ? '<span class="badge badge-important" style="background:#dc2626; color:#fff; font-size:10px; font-weight:700; padding:2px 7px;">STAT</span>'
           : '<span style="color:#475569; font-weight:600; font-size:11px;">Routine</span>';
 
+        var reg = item.encounter_registry || 'OP';
+        var regClass = reg === 'IP' ? 'badge-ip' : (reg === 'ER' ? 'badge-er' : 'badge-op');
+        var regBadge = '<span class="viewable-results-enc-badge ' + regClass + '" title="Encounter: ' + reg + '">' + reg + '</span>';
+
+        var snippet = buildExamSummarySnippet(item);
+
         return '<tr>' +
-          '<td style="white-space:nowrap; font-weight:600; color:#334155;">' + dateDisplay + '</td>' +
+          '<td style="white-space:nowrap; font-weight:600; color:#334155;">' + regBadge + dateDisplay + '</td>' +
           '<td><span class="badge" style="background:' + deptBadgeBg + '; color:#fff; font-size:10px; padding:2px 6px;">' + esc(item.category) + '</span></td>' +
-          '<td><strong style="color:#0e3d59; font-size:12.5px;">' + esc(item.name) + '</strong></td>' +
+          '<td><strong style="color:#0e3d59; font-size:12.5px;">' + esc(item.name) + '</strong>' + (snippet ? '<div style="margin-top:3px; font-size:11px; color:#475569; line-height:1.35;">' + snippet + '</div>' : '') + '</td>' +
           '<td style="text-align:center;">' + priorityHtml + '</td>' +
           '<td style="text-align:center;"><span class="badge badge-success" style="background:#2e7d32; color:#fff; font-size:10px;">' + esc(item.status) + '</span></td>' +
           '<td style="text-align:center;">' +
@@ -8381,6 +8489,95 @@
         renderViewableResults();
       });
     }
+
+    function initResultsDateFilterListeners() {
+      var scopeSelect = document.getElementById('viewable-results-scope');
+      var fromEl = document.getElementById('viewable-results-date-from');
+      var toEl = document.getElementById('viewable-results-date-to');
+      var resetBtn = document.getElementById('btn-results-reset-dates');
+
+      if (scopeSelect && scopeSelect.dataset.listenerBound !== 'true') {
+        scopeSelect.dataset.listenerBound = 'true';
+        scopeSelect.addEventListener('change', function () {
+          var val = scopeSelect.value;
+          activeResultScope = val;
+          if (val === 'all') {
+            activeResultDateFrom = '';
+            activeResultDateTo = '';
+            if (fromEl) fromEl.value = '';
+            if (toEl) toEl.value = '';
+          } else if (val === 'current') {
+            activeResultDateFrom = '';
+            activeResultDateTo = '';
+            if (fromEl) fromEl.value = '';
+            if (toEl) toEl.value = '';
+          } else if (val === 'custom') {
+            activeResultDateFrom = (fromEl && fromEl.value) || '';
+            activeResultDateTo = (toEl && toEl.value) || '';
+          } else {
+            var latestEncMs = 0;
+            if (Array.isArray(loadedEncounters)) {
+              loadedEncounters.forEach(function (e) {
+                var iso = getExamIsoDate(null, e);
+                if (iso) {
+                  var ms = new Date(iso + 'T00:00:00').getTime();
+                  if (ms > latestEncMs) latestEncMs = ms;
+                }
+              });
+            }
+            var baseMs = Math.max(Date.now(), latestEncMs || 0);
+            var endD = new Date(baseMs);
+            var startD = new Date(baseMs);
+            if (val === '30d') startD.setDate(startD.getDate() - 30);
+            else if (val === '90d') startD.setDate(startD.getDate() - 90);
+            else if (val === '6m') startD.setMonth(startD.getMonth() - 6);
+            else if (val === '1y') startD.setFullYear(startD.getFullYear() - 1);
+
+            var toIso = endD.toISOString().slice(0, 10);
+            var fromIso = startD.toISOString().slice(0, 10);
+            activeResultDateFrom = fromIso;
+            activeResultDateTo = toIso;
+            if (fromEl) fromEl.value = fromIso;
+            if (toEl) toEl.value = toIso;
+          }
+          renderViewableResults();
+        });
+      }
+
+      if (fromEl && fromEl.dataset.listenerBound !== 'true') {
+        fromEl.dataset.listenerBound = 'true';
+        fromEl.addEventListener('change', function () {
+          activeResultDateFrom = fromEl.value || '';
+          activeResultScope = 'custom';
+          if (scopeSelect) scopeSelect.value = 'custom';
+          renderViewableResults();
+        });
+      }
+
+      if (toEl && toEl.dataset.listenerBound !== 'true') {
+        toEl.dataset.listenerBound = 'true';
+        toEl.addEventListener('change', function () {
+          activeResultDateTo = toEl.value || '';
+          activeResultScope = 'custom';
+          if (scopeSelect) scopeSelect.value = 'custom';
+          renderViewableResults();
+        });
+      }
+
+      if (resetBtn && resetBtn.dataset.listenerBound !== 'true') {
+        resetBtn.dataset.listenerBound = 'true';
+        resetBtn.addEventListener('click', function () {
+          activeResultDateFrom = '';
+          activeResultDateTo = '';
+          activeResultScope = 'all';
+          if (fromEl) fromEl.value = '';
+          if (toEl) toEl.value = '';
+          if (scopeSelect) scopeSelect.value = 'all';
+          renderViewableResults();
+        });
+      }
+    }
+    initResultsDateFilterListeners();
 
     // Escape key closes modals
     document.addEventListener('keydown', function (e) {
@@ -11397,6 +11594,17 @@
         if (hrnEl) hrnEl.textContent = hrn;
         var ageSexEl = document.getElementById('res-patient-agesex');
         if (ageSexEl) ageSexEl.textContent = ageSex;
+
+        var scopeSelect = document.getElementById('viewable-results-scope');
+        if (scopeSelect) scopeSelect.value = activeResultScope || 'all';
+        var fromEl = document.getElementById('viewable-results-date-from');
+        if (fromEl) fromEl.value = activeResultDateFrom || '';
+        var toEl = document.getElementById('viewable-results-date-to');
+        if (toEl) toEl.value = activeResultDateTo || '';
+
+        if (typeof initResultsDateFilterListeners === 'function') {
+          initResultsDateFilterListeners();
+        }
 
         renderViewableResults();
 
