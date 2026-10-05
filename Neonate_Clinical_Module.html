@@ -573,7 +573,7 @@
   <!-- Hospital Patient Demographic Bar -->
   <header class="patient-banner" id="neonate-patient-banner">
     <div class="patient-info-left">
-      <div class="patient-name" id="banner-patient-name">DEL ROSARIO, JOAN B.</div>
+      <div class="patient-name" id="banner-patient-name">DEL ROSARIO, CARMELA B.</div>
       <div class="patient-meta-pill">HRN: <strong id="banner-hrn">0000001890</strong></div>
       <div class="patient-meta-pill">DOB: <strong id="banner-bdate">09/10/1986</strong> (<span id="banner-age">48</span> / <span id="banner-sex">Female</span>)</div>
       <div class="patient-meta-pill">Address: <strong id="banner-address">Brgy. Mansilingan, Bacolod City</strong></div>
@@ -689,7 +689,7 @@
               </div>
               <div class="form-group col-span-2">
                 <label class="form-label">Patient Master Context (from HIS)</label>
-                <input class="form-input" id="neo_patient_demographics_display" readonly style="background:var(--slate-100); font-weight:600;" value="DEL ROSARIO, JOAN B. • HRN: 0000001890 • Encounter: OP-2026-0926-0042">
+                <input class="form-input" id="neo_patient_demographics_display" readonly style="background:var(--slate-100); font-weight:600;" value="DEL ROSARIO, CARMELA B. • HRN: 0000001890 • Encounter: OP-2026-0926-0042">
               </div>
             </div>
           </div>
@@ -2993,7 +2993,7 @@ function initNeonateWorkspace() {
     currentPatientId = patient.id;
     const d = patient.data || {};
     const name = `${d.last_name || ''}, ${d.first_name || ''} ${d.middle_name || ''}`.trim();
-    document.getElementById('banner-patient-name').textContent = name || 'DEL ROSARIO, JOAN B.';
+    document.getElementById('banner-patient-name').textContent = name || 'DEL ROSARIO, CARMELA B.';
     document.getElementById('banner-hrn').textContent = d.hrn || '0000001890';
     document.getElementById('banner-bdate').textContent = d.birthdate || '09/10/1986';
     document.getElementById('banner-age').textContent = d.age || '48';
@@ -3027,7 +3027,7 @@ function initNeonateWorkspace() {
         const baseline = {
           classification: { inborn: 'singleton-in hospital', outborn: '', readmission: false, birthLocation: 'Delivery Room' },
           maternal: {
-            motherName: 'DEL ROSARIO, JOAN BAUTISTA',
+            motherName: 'DEL ROSARIO, CARMELA BAUTISTA',
             motherAddress: 'Brgy. Bata, Bacolod City, Negros Occidental',
             motherAge: 32,
             motherBloodType: 'O+',

@@ -624,7 +624,7 @@
   <!-- Hospital Patient Demographic Bar -->
   <header class="patient-banner">
     <div class="patient-info-left">
-      <div class="patient-name" id="banner-patient-name">DEL ROSARIO, JOAN B.</div>
+      <div class="patient-name" id="banner-patient-name">DEL ROSARIO, CARMELA B.</div>
       <div class="patient-meta-pill">HRN: <strong id="banner-hrn">0000001890</strong></div>
       <div class="patient-meta-pill">Age: <strong id="banner-age">48 / Female</strong></div>
       <div class="patient-meta-pill">Civil Status: <strong id="banner-civil">Married</strong></div>
@@ -2258,7 +2258,7 @@ function initObGyneWorkspace() {
     const d = patient.data || {};
     const name = `${d.last_name || ''}, ${d.first_name || ''} ${d.middle_name || ''}`.trim();
     const nameEl = document.getElementById('banner-patient-name');
-    if (nameEl) nameEl.textContent = name || 'DEL ROSARIO, JOAN B.';
+    if (nameEl) nameEl.textContent = name || 'DEL ROSARIO, CARMELA B.';
     const hrnEl = document.getElementById('banner-hrn');
     if (hrnEl) hrnEl.textContent = d.hrn || '0000001890';
     const ageEl = document.getElementById('banner-age');

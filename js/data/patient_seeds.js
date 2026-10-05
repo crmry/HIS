@@ -70,7 +70,7 @@ if (typeof window !== 'undefined') {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 60,
+        seedVersion: 61,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -79,7 +79,7 @@ if (typeof window !== 'undefined') {
           phic_member_category: 'Direct Contributor - Employed (Private)',
           attending_physician: { name: 'Miguel Santos, MD', prc_no: '0094821', s2_no: 'S2-094821-2026' },
           last_name: 'DEL ROSARIO',
-          first_name: 'JOAN',
+          first_name: 'CARMELA',
           middle_name: 'BAUTISTA',
           birthdate: '1978-03-22',
           gender: 'Female',
@@ -112,7 +112,7 @@ if (typeof window !== 'undefined') {
           neonate: {
             classification: { inborn: 'singleton-in hospital', outborn: '', readmission: false, birthLocation: 'Delivery Room' },
             maternal: {
-              motherName: 'DEL ROSARIO, JOAN BAUTISTA',
+              motherName: 'DEL ROSARIO, CARMELA BAUTISTA',
               motherAddress: 'Brgy. Bata, Bacolod City, Negros Occidental',
               motherAge: 32,
               motherBloodType: 'O+',
@@ -694,7 +694,7 @@ if (typeof window !== 'undefined') {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 60) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 61) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
