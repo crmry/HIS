@@ -3176,7 +3176,8 @@
             Pairing / Co-Signature Doctor
           </label>
           <div style="position:relative; margin-bottom: 6px;">
-            <input type="text" id="cosig-doctor-search" placeholder="Type to search physician name or specialty..." autocomplete="off" style="width: 100%; box-sizing: border-box; height: 32px; font-size: 12px; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
+            <input type="text" id="cosig-doctor-search" placeholder="Type to search physician name or specialty..." autocomplete="off" style="width: 100%; box-sizing: border-box; height: 32px; font-size: 12px; padding: 4px 28px 4px 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
+            <button type="button" id="btn-clear-cosig-search" title="Clear search" style="display:none; position:absolute; right:6px; top:50%; transform:translateY(-50%); background:none; border:none; color:#94a3b8; font-size:14px; cursor:pointer; padding:0 4px; line-height:1;">✕</button>
           </div>
           <select id="cosig-doctor-select" size="6" style="width: 100%; box-sizing: border-box; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px; background: #fff; line-height: 1.5;">
             <option value="NONE" selected>NONE (No pairing / Standard single-physician order)</option>
@@ -3193,8 +3194,8 @@
       <div style="padding: 12px 18px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 11px; color: #64748b;">Default is NONE unless supervisory pairing is selected</span>
         <div style="display: flex; gap: 8px;">
-          <button type="button" class="btn" id="btn-cancel-order-cosig" onclick="closeOrderCosignatureModal(event)">Cancel</button>
-          <button type="button" class="btn btn-primary" id="btn-confirm-save-order-cosig" onclick="confirmAndSaveOrderWithCosignature()">Confirm &amp; Save Order</button>
+          <button type="button" class="btn" id="btn-cancel-cosig" onclick="closeOrderCosignatureModal(event)">Cancel</button>
+          <button type="button" class="btn btn-primary" id="btn-confirm-save-cosig" onclick="confirmAndSaveOrderWithCosignature()">Confirm &amp; Save Order</button>
         </div>
       </div>
     </div>
@@ -11747,7 +11748,7 @@
       }
       banner.style.display = 'block';
       if (cosig.status === 'PENDING') {
-        var docName = cosig.doctor_name || cosig.paired_doctor || 'Supervising Physician';
+        var docName = cosig.doctor_title || (cosig.doctor_name ? ('Dr. ' + cosig.doctor_name.replace(/,\s*MD$/i, '')) : '') || cosig.paired_doctor || 'Supervising Physician';
         var docSpec = cosig.doctor_specialty ? ' (' + cosig.doctor_specialty + ')' : '';
         var reqDoc = cosig.requesting_doctor || 'Ordering Physician';
         banner.innerHTML =
@@ -11759,7 +11760,7 @@
             '<button type="button" class="btn btn-mini btn-warning" id="btn-approve-cosig" onclick="openCosigApprovalModal(event)" style="font-weight:700; padding:4px 10px; cursor:pointer;">Co-Sign / Approve Order</button>' +
           '</div>';
       } else if (cosig.status === 'APPROVED' || cosig.status === 'CO-SIGNED') {
-        var docName = cosig.doctor_name || cosig.paired_doctor || 'Co-Signing Physician';
+        var docName = cosig.doctor_title || (cosig.doctor_name ? ('Dr. ' + cosig.doctor_name.replace(/,\s*MD$/i, '')) : '') || cosig.paired_doctor || 'Co-Signing Physician';
         var aprDate = cosig.approved_at ? formatDateTime(cosig.approved_at) : 'Approved';
         var auditRef = cosig.audit_ref || 'COSIG-RECORD';
         banner.innerHTML =
@@ -11780,67 +11781,182 @@
       if (!modal) return;
       var select = document.getElementById('cosig-doctor-select');
       var searchInput = document.getElementById('cosig-doctor-search');
+      var clearBtn = document.getElementById('btn-clear-cosig-search');
       var previewTitle = document.getElementById('cosig-preview-title');
       var previewDesc = document.getElementById('cosig-preview-desc');
-
-      if (searchInput) searchInput.value = '';
+      var previewCard = document.getElementById('cosig-selection-preview');
 
       var doctors = typeof window.getEligibleCoSigningDoctors === 'function' ? window.getEligibleCoSigningDoctors() : [];
-      if (select) {
-        select.innerHTML = '';
-        doctors.forEach(function (d) {
-          var opt = document.createElement('option');
-          opt.value = d.id;
-          if (d.is_none || d.id === 'NONE') {
-            opt.textContent = 'NONE (No pairing / Standard single-physician order)';
-            opt.selected = true;
-          } else {
-            opt.textContent = d.name + ' — ' + d.specialty + (d.prc_no ? ' (PRC: ' + d.prc_no + ')' : '');
-          }
-          select.appendChild(opt);
-        });
 
-        // Default value: NONE (unless active order pairing exists)
-        if (window.activeOrderCoSignature && window.activeOrderCoSignature.doctor_id) {
-          select.value = window.activeOrderCoSignature.doctor_id;
-        } else {
-          select.value = 'NONE';
-        }
+      function findDoctor(val) {
+        if (!val || val === 'NONE') return null;
+        return doctors.find(function(d) {
+          return d.id === val ||
+                 d.legacy_id === val ||
+                 ('doc-' + d.id.replace('_', '-')) === val ||
+                 d.id.replace('doc-', '').replace(/-/g, '_') === val;
+        });
+      }
+
+      var activeSelectedId = 'NONE';
+      if (window.activeOrderCoSignature && window.activeOrderCoSignature.doctor_id) {
+        activeSelectedId = window.activeOrderCoSignature.doctor_id;
       }
 
       function updatePreview() {
         var val = select ? select.value : 'NONE';
-        if (val === 'NONE') {
+        if (!val || val === 'NONE') {
           if (previewTitle) previewTitle.textContent = 'Selection: NONE';
           if (previewDesc) previewDesc.textContent = 'Order will be saved with requesting doctor e-signature only. No secondary co-signature or awaiting approval status.';
+          if (previewCard) {
+            previewCard.style.borderLeftColor = '#64748b';
+            previewCard.style.background = '#f8fafc';
+          }
         } else {
-          var found = doctors.find(function(d){ return d.id === val; });
+          var found = findDoctor(val);
           var name = found ? found.name : val;
+          var title = found && found.title ? found.title : ('Dr. ' + name);
           var spec = found ? found.specialty : '';
-          if (previewTitle) previewTitle.textContent = 'Selection: ' + name + (spec ? ' (' + spec + ')' : '');
-          if (previewDesc) previewDesc.textContent = 'Co-Signature: Pending – ' + name + '. The requesting doctor\'s electronic signature will appear immediately; the paired doctor\'s electronic signature will appear once approved / co-signed.';
+          var prc = found && found.prc_no ? (' • PRC: ' + found.prc_no) : '';
+          if (previewTitle) {
+            previewTitle.textContent = 'Selection: ' + name + (spec ? ' (' + spec + ')' : '');
+          }
+          if (previewDesc) {
+            previewDesc.innerHTML = '<strong>Co-Signature: Pending &ndash; ' + esc(title) + '</strong>' + esc(prc) + '. ' +
+              'The requesting doctor\'s electronic signature will appear immediately; the paired doctor\'s electronic signature will appear once approved / co-signed.';
+          }
+          if (previewCard) {
+            previewCard.style.borderLeftColor = '#0b69a3';
+            previewCard.style.background = '#f0f7fb';
+          }
         }
       }
 
-      if (select) {
-        select.onchange = updatePreview;
+      function renderDoctorOptions(list, selectedVal) {
+        if (!select) return;
+        select.innerHTML = '';
+
+        if (!list || list.length === 0) {
+          var emptyOpt = document.createElement('option');
+          emptyOpt.value = '';
+          emptyOpt.disabled = true;
+          emptyOpt.textContent = 'No matching physicians found';
+          emptyOpt.style.color = '#94a3b8';
+          emptyOpt.style.fontStyle = 'italic';
+          select.appendChild(emptyOpt);
+          return;
+        }
+
+        list.forEach(function (d) {
+          var opt = document.createElement('option');
+          opt.value = d.id;
+          if (d.is_none || d.id === 'NONE') {
+            opt.textContent = 'NONE (No pairing / Standard single-physician order)';
+          } else {
+            opt.textContent = d.name + ' — ' + d.specialty + (d.prc_no ? ' (PRC: ' + d.prc_no + ')' : '');
+          }
+          if (d.id === selectedVal || d.legacy_id === selectedVal) {
+            opt.selected = true;
+          }
+          select.appendChild(opt);
+        });
+
+        if (selectedVal && Array.from(select.options).some(function(o){ return o.value === selectedVal; })) {
+          select.value = selectedVal;
+        } else if (list.length > 0) {
+          select.value = list[0].id;
+        }
       }
-      if (searchInput) {
-        searchInput.oninput = function() {
-          var term = this.value.toLowerCase().trim();
-          Array.from(select.options).forEach(function(opt) {
-            if (opt.value === 'NONE') {
-              opt.style.display = '';
-              return;
+
+      function filterDoctors(term) {
+        var q = (term || '').toLowerCase().trim();
+        if (clearBtn) {
+          clearBtn.style.display = q ? 'block' : 'none';
+        }
+
+        var filtered;
+        if (!q) {
+          filtered = doctors;
+          renderDoctorOptions(filtered, activeSelectedId || 'NONE');
+        } else {
+          filtered = doctors.filter(function (d) {
+            if (d.is_none || d.id === 'NONE') {
+              return 'none (no pairing / standard single-physician order)'.includes(q);
             }
-            opt.style.display = (!term || opt.textContent.toLowerCase().includes(term)) ? '' : 'none';
+            var nameMatch = d.name && d.name.toLowerCase().includes(q);
+            var specMatch = d.specialty && d.specialty.toLowerCase().includes(q);
+            var prcMatch = d.prc_no && d.prc_no.toLowerCase().includes(q);
+            var titleMatch = d.title && d.title.toLowerCase().includes(q);
+            return nameMatch || specMatch || prcMatch || titleMatch;
           });
+
+          // Auto-selection on typing: select top matching physician in real-time
+          var currentStillMatches = filtered.some(function(d){ return d.id === activeSelectedId || d.legacy_id === activeSelectedId; });
+          var nextSelectedId = currentStillMatches ? activeSelectedId : (filtered.length > 0 ? filtered[0].id : '');
+          activeSelectedId = nextSelectedId;
+          renderDoctorOptions(filtered, nextSelectedId);
+        }
+        updatePreview();
+      }
+
+      if (select) {
+        select.onchange = function() {
+          activeSelectedId = this.value;
+          updatePreview();
+        };
+        select.ondblclick = function() {
+          if (this.value) {
+            confirmAndSaveOrderWithCosignature();
+          }
         };
       }
 
-      updatePreview();
+      if (searchInput) {
+        searchInput.value = '';
+        searchInput.oninput = function() {
+          filterDoctors(this.value);
+        };
+        searchInput.onkeydown = function(e) {
+          if (!select || select.options.length === 0) return;
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            var nextIdx = Math.min(select.options.length - 1, select.selectedIndex + 1);
+            if (nextIdx >= 0 && !select.options[nextIdx].disabled) {
+              select.selectedIndex = nextIdx;
+              activeSelectedId = select.value;
+              updatePreview();
+            }
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            var prevIdx = Math.max(0, select.selectedIndex - 1);
+            if (prevIdx >= 0 && !select.options[prevIdx].disabled) {
+              select.selectedIndex = prevIdx;
+              activeSelectedId = select.value;
+              updatePreview();
+            }
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            confirmAndSaveOrderWithCosignature();
+          }
+        };
+      }
+
+      if (clearBtn) {
+        clearBtn.onclick = function() {
+          if (searchInput) {
+            searchInput.value = '';
+            searchInput.focus();
+          }
+          filterDoctors('');
+        };
+      }
+
+      filterDoctors('');
       modal.classList.add('open');
       document.body.classList.add('modal-lock');
+      window.setTimeout(function() {
+        if (searchInput) searchInput.focus();
+      }, 50);
     }
     window.openOrderCosignatureModal = openOrderCosignatureModal;
 
@@ -11858,7 +11974,13 @@
       var doctors = typeof window.getEligibleCoSigningDoctors === 'function' ? window.getEligibleCoSigningDoctors() : [];
 
       if (selVal && selVal !== 'NONE') {
-        var found = doctors.find(function (d) { return d.id === selVal; });
+        var found = doctors.find(function (d) { 
+          return d.id === selVal || 
+                 d.legacy_id === selVal || 
+                 d.id === 'doc-' + selVal || 
+                 d.id.replace('doc-', '').replace(/-/g, '_') === selVal ||
+                 d.id.replace(/_/g, '-') === selVal; 
+        });
         if (found) {
           var reqDoc = getCurrentPhysicianName() || 'Miguel Santos, MD';
           window.activeOrderCoSignature = {

@@ -2264,6 +2264,8 @@
                         <option value="garcia_liza">Dr. Liza Garcia • Obstetrics &amp; Gynecology • PRC: 0091234</option>
                         <option value="lim_roberto">Dr. Roberto Lim • Emergency Medicine • PRC: 0076543</option>
                         <option value="santos_miguel">Dr. Miguel Santos • General Medicine • PRC: 0094821</option>
+                        <option value="mahinay_arthur">Dr. Arthur Mahinay • Pulmonary Medicine • PRC: 0081249</option>
+                        <option value="mahinay_elena">Dr. Elena Mahinay • Cardiology • PRC: 0079314</option>
                     </select>
                 </div>
             </div>
@@ -2450,7 +2452,12 @@
                 var cosigData = null;
                 if (cosigVal && cosigVal !== "NONE") {
                     var dir = (typeof window.HOSPITAL_PHYSICIANS_DIRECTORY !== "undefined") ? window.HOSPITAL_PHYSICIANS_DIRECTORY : [];
-                    var matchedDoc = dir.find(function (d) { return d.id === cosigVal; });
+                    var matchedDoc = dir.find(function (d) { 
+                        return d.id === cosigVal || 
+                               d.legacy_id === cosigVal || 
+                               ('doc-' + d.id.replace('_', '-')) === cosigVal || 
+                               d.id.replace('doc-', '').replace(/-/g, '_') === cosigVal; 
+                    });
                     if (matchedDoc) {
                         cosigData = {
                             status: "PENDING",

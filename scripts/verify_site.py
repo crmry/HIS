@@ -424,6 +424,29 @@ async def scan_single_target(browser_ws, file_url):
                     // Test 4: Open and select a paired doctor (Dr. Maria Santos)
                     if (typeof window.openOrderCosignatureModal === 'function') {
                         window.openOrderCosignatureModal();
+
+                        // Test 4a: Live Search-as-you-type filtering & auto-selection
+                        const cosigSearch = document.getElementById('cosig-doctor-search');
+                        if (cosigSearch) {
+                            cosigSearch.value = 'Mahin';
+                            cosigSearch.dispatchEvent(new Event('input'));
+                            if (cosigSelect.options.length !== 2) {
+                                return 'Typing Mahin in cosig-doctor-search did not filter to 2 matching physicians';
+                            }
+                            if (cosigSelect.value !== 'mahinay_arthur') {
+                                return 'Typing Mahin in cosig-doctor-search did not auto-select first matching physician';
+                            }
+                            const prevTitle = document.getElementById('cosig-preview-title');
+                            if (!prevTitle || !prevTitle.textContent.includes('Arthur Mahinay')) {
+                                return 'Auto-selection of physician did not update selection preview';
+                            }
+                            const clearSearchBtn = document.getElementById('btn-clear-cosig-search');
+                            if (clearSearchBtn) clearSearchBtn.click();
+                            if (cosigSelect.options.length < 5) {
+                                return 'Clearing search input did not restore physician directory options';
+                            }
+                        }
+
                         cosigSelect.value = 'santos_maria';
                         cosigSelect.dispatchEvent(new Event('change'));
                         const btnConfirmSave = document.getElementById('btn-confirm-save-cosig');
