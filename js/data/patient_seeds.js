@@ -94,7 +94,7 @@ if (typeof window !== 'undefined') {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 66,
+        seedVersion: 67,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -253,11 +253,7 @@ if (typeof window !== 'undefined') {
           },
           vs_bp: '120/80', vs_hr: '74', vs_rr: '18', vs_temp: '36.6', vs_spo2: '99', vs_weight: '70', vs_height: '168', vs_date_time: '2026-09-26T09:30:00+08:00',
           vital_signs: [
-            { dateTime: '2026-09-26T09:30:00+08:00', bp: '120/80', hr: '74', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
-            { dateTime: '2026-06-20T10:00:00+08:00', bp: '134/84', hr: '76', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '98', o2: '98' },
-            { dateTime: '2026-03-14T08:45:00+08:00', bp: '128/80', hr: '74', rr: '16', temp: '36.6', wt: '71', ht: '168', weight: '71', height: '168', bmi: '25.2', spo2: '99', o2: '99' },
-            { dateTime: '2025-12-05T11:15:00+08:00', bp: '122/78', hr: '74', rr: '16', temp: '36.5', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' },
-            { dateTime: '2025-09-18T14:30:00+08:00', bp: '126/80', hr: '78', rr: '18', temp: '36.7', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
+            { dateTime: '2026-09-26T09:30:00+08:00', bp: '120/80', hr: '74', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
           ],
           ivFluids: [
             { id: 'ivf-1', bottle: 'Bottle #1', solution: 'Plain Normal Saline Solution (PNSS) 1 L', rate: '80 mL/hr', started: '2026-09-25T08:00:00+08:00', ended: '2026-09-25T16:00:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'Elena M. Ramos, RN', remarks: 'Medical Ward baseline hydration; peripheral line R cephalic vein' },
@@ -763,7 +759,7 @@ if (typeof window !== 'undefined') {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 66) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 67) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
