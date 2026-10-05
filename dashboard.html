@@ -1825,6 +1825,8 @@
                 <!-- Nav Tabs for Flowsheet & Physical Chart Records -->
                 <ul class="nav nav-tabs" id="clinical-chart-tabs" style="margin-bottom:12px;">
                   <li class="active"><a href="#chart-tab-vitals" data-toggle="tab"><i class="icon-heart"></i> Vital Signs</a></li>
+                  <li><a href="#chart-tab-ivf" data-toggle="tab"><i class="icon-tint"></i> IV Fluids & Drips <span class="badge badge-info" id="tab-badge-ivf">0 Ongoing</span></a></li>
+                  <li><a href="#chart-tab-transfusion" data-toggle="tab"><i class="icon-plus-sign"></i> Blood Transfusion <span class="badge badge-inverse" id="tab-badge-transfusion">0 Units</span></a></li>
                   <li><a href="#chart-tab-cbg" data-toggle="tab"><i class="icon-time"></i> CBGs <span class="badge badge-warning" id="tab-badge-cbg">2 logs</span></a></li>
                   <li><a href="#chart-tab-meds" data-toggle="tab"><i class="icon-medkit"></i> Summary of Medications <span class="badge badge-success" id="tab-badge-meds">4 Active</span></a></li>
                 </ul>
@@ -1857,7 +1859,59 @@
                     </table>
                   </div>
 
-                  <!-- TAB 2: CBGS -->
+                  <!-- TAB 2: IV FLUIDS & DRIPS -->
+                  <div class="tab-pane" id="chart-tab-ivf">
+                    <div class="flowsheet-toolbar">
+                      <div class="btn-group flowsheet-filter-group" id="ivf-filter-group">
+                        <button type="button" class="btn active" data-filter="all">All Fluids (<span id="count-ivf-all">0</span>)</button>
+                        <button type="button" class="btn" data-filter="ongoing"><i class="icon-play text-success"></i> Ongoing / Active (<span id="count-ivf-ongoing">0</span>)</button>
+                        <button type="button" class="btn" data-filter="consumed"><i class="icon-check"></i> Previously Given (<span id="count-ivf-consumed">0</span>)</button>
+                      </div>
+                    </div>
+                    <table class="table table-bordered table-condensed" id="ivf-table" style="margin-bottom:0;">
+                      <thead>
+                        <tr style="background:#f9f9f9;">
+                          <th style="width:80px;">Line / Bottle</th>
+                          <th>Solution & Additives / Incorporations</th>
+                          <th style="width:130px;">Infusion Rate</th>
+                          <th style="width:140px;">Date/Time Started</th>
+                          <th style="width:140px;">Date/Time Ended</th>
+                          <th style="width:130px;">Volume Status</th>
+                          <th style="width:100px;">Status</th>
+                          <th style="width:140px;">Nurse / Staff</th>
+                        </tr>
+                      </thead>
+                      <tbody id="ivf-rows"></tbody>
+                    </table>
+                  </div>
+
+                  <!-- TAB 3: TRANSFUSION RECORDS -->
+                  <div class="tab-pane" id="chart-tab-transfusion">
+                    <div class="flowsheet-toolbar">
+                      <div class="muted" style="font-size:11px;">
+                        <i class="icon-tint text-error"></i> Official blood and blood component bedside transfusion tracking.
+                      </div>
+                    </div>
+                    <table class="table table-bordered table-condensed" id="transfusion-table" style="margin-bottom:0;">
+                      <thead>
+                        <tr style="background:#f9f9f9;">
+                          <th style="width:125px;">Unit Serial #</th>
+                          <th style="width:140px;">Blood Component</th>
+                          <th style="width:95px;">Blood Type</th>
+                          <th style="width:85px;">Volume</th>
+                          <th style="width:115px;">Expiration Date</th>
+                          <th style="width:135px;">Started</th>
+                          <th style="width:135px;">Ended</th>
+                          <th>Vitals (Pre / Post Transfusion)</th>
+                          <th style="width:140px;">Adverse Reaction</th>
+                          <th style="width:150px;">Administered / Verified</th>
+                        </tr>
+                      </thead>
+                      <tbody id="transfusion-rows"></tbody>
+                    </table>
+                  </div>
+
+                  <!-- TAB 4: CBGS -->
                   <div class="tab-pane" id="chart-tab-cbg">
                     <div class="flowsheet-toolbar">
                       <div class="muted" style="font-size:11px;">
@@ -4943,7 +4997,9 @@
         if (stripIvfVal) stripIvfVal.textContent = firstOngoing ? (firstOngoing.solution.length > 24 ? firstOngoing.solution.substring(0, 24) + '...' : firstOngoing.solution) : 'None ongoing';
         if (stripIvfSub) stripIvfSub.textContent = firstOngoing ? firstOngoing.rate : 'No active drips';
 
-        if (filteredIvf.length === 0) {
+        if (allIvf.length === 0) {
+          ivfRows.innerHTML = '<tr><td colspan="8" class="muted text-center" style="padding:15px;">No IV fluids recorded for this patient.</td></tr>';
+        } else if (filteredIvf.length === 0) {
           ivfRows.innerHTML = '<tr><td colspan="8" class="muted text-center" style="padding:15px;">No IV fluids recorded for this filter.</td></tr>';
         } else {
           ivfRows.innerHTML = filteredIvf.map(function(item) {
