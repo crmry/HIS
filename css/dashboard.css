@@ -1828,13 +1828,6 @@
       border-left: 4px solid #0066cc;
       font-weight: 700;
     }
-    .encounter-table tbody tr.encounter-row-selected td {
-      background-color: #fef9c3 !important;
-    }
-    .encounter-table tbody tr.encounter-row-selected td:first-child {
-      border-left: 4px solid #ca8a04 !important;
-      font-weight: 700;
-    }
     .encounter-table tbody tr {
       cursor: default;
     }

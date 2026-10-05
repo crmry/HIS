@@ -70,7 +70,7 @@ if (typeof window !== 'undefined') {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 59,
+        seedVersion: 60,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -418,7 +418,6 @@ if (typeof window !== 'undefined') {
             {
               date: '2026-06-12',
               time: '08:30 AM',
-              ed_duration: 'ED Stay: 4 hrs',
               registry: 'ER',
               case_no: 'ER-2026-0612-0051',
               encounter_no: 'ER-2026-0612-0051',
@@ -695,7 +694,7 @@ if (typeof window !== 'undefined') {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 58) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 60) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});

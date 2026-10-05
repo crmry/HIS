@@ -6126,7 +6126,8 @@
       var isInitial = !isCurrent && isInitialEncounter(data, index, allEncounters);
 
       var currentBadge = isCurrent ? '<span class="badge badge-info" style="font-size:10px; font-weight:700; background:#0066cc; padding:2px 6px; border-radius:3px; vertical-align:middle; letter-spacing:0.2px; display:inline-block; line-height:normal;">Current</span>' : '';
-      var timeDisplay = (data && data.time) ? '<div style="font-size:11px; color:#64748b; margin-top:2px; font-weight:500;">' + esc(data.time) + '</div>' : '';
+      var rawTime = (data && data.time) ? String(data.time).replace(/\s*\((?:LOS|ED Stay)[^)]*\)/gi, '').trim() : '';
+      var timeDisplay = rawTime ? '<div style="font-size:11px; color:#64748b; margin-top:2px; font-weight:500;">' + esc(rawTime) + '</div>' : '';
 
       var pData = currentPatientData();
       var pId = activePatientId || (pData && (pData.id || pData.hrn)) || SEED_PATIENT_ID;
@@ -7142,13 +7143,11 @@
 
       activeInspectedEncounterIndex = index;
 
-      // Update row selection styling
+      // Historical rows are not selectable
       if (encRows) {
         encRows.querySelectorAll('tr').forEach(function (r) {
           r.classList.remove('encounter-row-selected');
         });
-        var targetRow = encRows.querySelector('tr[data-encounter-index="' + index + '"]');
-        if (targetRow) targetRow.classList.add('encounter-row-selected');
       }
 
 
@@ -8304,13 +8303,7 @@
           saveCurrentPatientRecord({ silent: true, refreshSelector: false });
           return;
         }
-
-        var row = e.target.closest('tr');
-        if (!row || !encRows.contains(row)) return;
-        var idx = parseInt(row.dataset.encounterIndex, 10);
-        if (!isNaN(idx)) {
-          inspectEncounterInDashboard(idx);
-        }
+        // Historical encounter rows are non-clickable and do not alter active consultation view
       });
     }
 
@@ -8680,7 +8673,6 @@
           {
             date: '2026-06-12',
             time: '08:30 AM',
-            ed_duration: 'ED Stay: 4 hrs',
             registry: 'ER',
             case_no: 'ER-2026-0612-0051',
             encounter_no: 'ER-2026-0612-0051',
