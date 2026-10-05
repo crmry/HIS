@@ -6125,16 +6125,7 @@
       var isInitial = !isCurrent && isInitialEncounter(data, index, allEncounters);
 
       var currentBadge = isCurrent ? '<span class="badge badge-info" style="font-size:10px; font-weight:700; background:#0066cc; padding:2px 6px; border-radius:3px; vertical-align:middle; letter-spacing:0.2px; display:inline-block; line-height:normal;">Current</span>' : '';
-      var timeDisplay = '';
-      if (data && data.discharge_date && data.discharge_date !== data.date) {
-        var admTime = data.admission_time || data.time || '12:30 PM';
-        var dischTime = data.discharge_time || '09:00 AM';
-        var losText = data.los ? ' (LOS: ' + esc(data.los) + ')' : '';
-        timeDisplay = '<div style="font-size:11px; color:#64748b; margin-top:2px; font-weight:500;">Adm: ' + esc(admTime) + ' &bull; Disch: ' + esc(dischTime) + losText + '</div>';
-      } else if (data && data.time) {
-        var extraEd = (typeUpper === 'ER' && data.ed_duration) ? ' <span style="color:#0284c7; font-weight:600;">(' + esc(data.ed_duration) + ')</span>' : '';
-        timeDisplay = '<div style="font-size:11px; color:#64748b; margin-top:2px; font-weight:500;">' + esc(data.time) + extraEd + '</div>';
-      }
+      var timeDisplay = (data && data.time) ? '<div style="font-size:11px; color:#64748b; margin-top:2px; font-weight:500;">' + esc(data.time) + '</div>' : '';
 
       var pData = currentPatientData();
       var pId = activePatientId || (pData && (pData.id || pData.hrn)) || SEED_PATIENT_ID;
