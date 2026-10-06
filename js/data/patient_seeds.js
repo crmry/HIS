@@ -709,7 +709,7 @@ if (typeof window !== 'undefined') {
     function erPatientRecord() {
       return {
         id: ER_PATIENT_ID,
-        seedVersion: 69,
+        seedVersion: 70,
         createdAt: '2026-06-12T08:30:00+08:00',
         updatedAt: '2026-06-14T09:30:00+08:00',
         data: {
@@ -753,6 +753,18 @@ if (typeof window !== 'undefined') {
           other_forms_notes: '',
           neonate: null,
           pediatric_growth: null,
+          vital_signs: [
+            { dateTime: '2026-06-14 09:00 AM', bp: '118/74', hr: '72', rr: '16', temp: '36.5', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '99', o2: '99' },
+            { dateTime: '2026-06-14 06:00 AM', bp: '116/74', hr: '70', rr: '16', temp: '36.5', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '99', o2: '99' },
+            { dateTime: '2026-06-13 10:00 PM', bp: '118/74', hr: '72', rr: '16', temp: '36.5', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '99', o2: '99' },
+            { dateTime: '2026-06-13 04:30 PM', bp: '118/76', hr: '74', rr: '16', temp: '36.6', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '99', o2: '99' },
+            { dateTime: '2026-06-13 10:15 AM', bp: '120/80', hr: '78', rr: '18', temp: '36.8', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '98', o2: '98' },
+            { dateTime: '2026-06-13 06:00 AM', bp: '120/80', hr: '80', rr: '18', temp: '37.0', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '97', o2: '97' },
+            { dateTime: '2026-06-12 10:00 PM', bp: '122/80', hr: '82', rr: '18', temp: '37.1', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '97', o2: '97' },
+            { dateTime: '2026-06-12 04:30 PM', bp: '126/80', hr: '86', rr: '20', temp: '37.5', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '96', o2: '96' },
+            { dateTime: '2026-06-12 12:30 PM', bp: '130/82', hr: '92', rr: '22', temp: '38.0', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '95', o2: '95' },
+            { dateTime: '2026-06-12 08:30 AM', bp: '138/86', hr: '102', rr: '24', temp: '38.2', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '93', o2: '93' }
+          ],
           encounters: [
             {
               date: '2026-06-14',
@@ -773,8 +785,14 @@ if (typeof window !== 'undefined') {
               follow_up: { date: '2026-06-21', clinic: 'General Medicine', reason: 'Post-discharge 1-week pulmonary and metabolic review.' },
               vital_signs: [
                 { dateTime: '2026-06-14 09:00 AM', bp: '118/74', hr: '72', rr: '16', temp: '36.5', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '99', o2: '99' },
+                { dateTime: '2026-06-14 06:00 AM', bp: '116/74', hr: '70', rr: '16', temp: '36.5', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '99', o2: '99' },
+                { dateTime: '2026-06-13 10:00 PM', bp: '118/74', hr: '72', rr: '16', temp: '36.5', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '99', o2: '99' },
                 { dateTime: '2026-06-13 04:30 PM', bp: '118/76', hr: '74', rr: '16', temp: '36.6', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '99', o2: '99' },
-                { dateTime: '2026-06-13 10:15 AM', bp: '120/80', hr: '78', rr: '18', temp: '36.8', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '98', o2: '98' }
+                { dateTime: '2026-06-13 10:15 AM', bp: '120/80', hr: '78', rr: '18', temp: '36.8', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '98', o2: '98' },
+                { dateTime: '2026-06-13 06:00 AM', bp: '120/80', hr: '80', rr: '18', temp: '37.0', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '97', o2: '97' },
+                { dateTime: '2026-06-12 10:00 PM', bp: '122/80', hr: '82', rr: '18', temp: '37.1', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '97', o2: '97' },
+                { dateTime: '2026-06-12 04:30 PM', bp: '126/80', hr: '86', rr: '20', temp: '37.5', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '96', o2: '96' },
+                { dateTime: '2026-06-12 12:30 PM', bp: '130/82', hr: '92', rr: '22', temp: '38.0', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '95', o2: '95' }
               ],
               medications: [
                 { id: 'med-ip-0614-1', name: 'Co-amoxiclav 625 mg tablet', route: 'Oral Three Times Daily (TID)', indication: 'Step-down therapy for pneumonia', started: '2026-06-14T09:00:00+08:00', doses24h: '3 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
@@ -846,6 +864,8 @@ if (typeof window !== 'undefined') {
               results: 'Admitted to Medical Ward - Bed 302-A',
               disposition: 'Admitted to Medical Ward',
               vital_signs: [
+                { dateTime: '2026-06-12 12:00 PM', bp: '132/84', hr: '96', rr: '22', temp: '38.0', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '95', o2: '95' },
+                { dateTime: '2026-06-12 10:30 AM', bp: '136/84', hr: '98', rr: '22', temp: '38.1', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '94', o2: '94' },
                 { dateTime: '2026-06-12 08:30 AM', bp: '138/86', hr: '102', rr: '24', temp: '38.2', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '93', o2: '93' }
               ],
               clinical_record: {
@@ -939,6 +959,30 @@ if (typeof window !== 'undefined') {
       };
     }
 
+    var erChartMonitoringData = {
+      ivFluids: [
+        { id: 'ivf-er-1', bottle: 'Bottle #1', solution: 'Plain Normal Saline Solution (PNSS) 1 L', rate: '80 mL/hr', started: '2026-06-12T12:45:00+08:00', ended: '2026-06-13T01:15:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'M. Santos, RN', remarks: 'ER to Medical Ward baseline hydration; IV cannula 20G left cephalic vein' },
+        { id: 'ivf-er-2', bottle: 'Bottle #2', solution: 'D5 0.3% NaCl 1 L + 20 mEq KCl', rate: '80 mL/hr', started: '2026-06-13T01:30:00+08:00', ended: '2026-06-13T14:00:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'R. Alcantara, RN', remarks: 'Hospital Day 2 maintenance hydration and electrolyte replacement' },
+        { id: 'ivf-er-3', bottle: 'Bottle #3', solution: 'Plain Normal Saline Solution (PNSS) 500 mL', rate: '20 mL/hr (KVO)', started: '2026-06-13T14:15:00+08:00', ended: '2026-06-14T09:00:00+08:00', volume: '500 mL (Consumed)', status: 'Consumed', nurse: 'E. Cruz, RN', remarks: 'Keep vein open for parenteral antibiotics; discontinued prior to discharge' }
+      ],
+      transfusions: [],
+      cbgs: [
+        { id: 'cbg-er-1', dateTime: '2026-06-12T12:30:00+08:00', timing: 'Admission Random Blood Sugar (RBS)', reading: 168, action: 'Stress hyperglycemia from acute CAP; regular diabetic diet', notes: 'Checked on transfer from ED to Medical Ward', nurse: 'M. Santos, RN' },
+        { id: 'cbg-er-2', dateTime: '2026-06-13T06:00:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 128, action: 'Target met (<140 mg/dL); continue Metformin 500 mg BID', notes: 'Hospital Day 2 morning fasting check', nurse: 'R. Alcantara, RN' },
+        { id: 'cbg-er-3', dateTime: '2026-06-13T17:00:00+08:00', timing: 'Pre-dinner CBG', reading: 134, action: 'Acceptable glycemic control', notes: 'Hospital Day 2 afternoon check prior to dinner', nurse: 'R. Alcantara, RN' },
+        { id: 'cbg-er-4', dateTime: '2026-06-14T06:00:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 118, action: 'Optimal fasting control (80-130 mg/dL)', notes: 'Hospital Day 3 pre-discharge fasting check; cleared on home Metformin', nurse: 'E. Cruz, RN' }
+      ],
+      medications: [
+        { id: 'med-er-1', name: 'Ceftriaxone 2 g IV vial', route: 'IV Once Daily (OD) ANST (-)', indication: 'Community-Acquired Pneumonia (Moderate Risk)', started: '2026-06-12T13:00:00+08:00', lastDose: '2026-06-13T13:00:00+08:00', nextDose: 'Shifted to oral step-down', doses24h: '2 doses', status: 'Completed / Shifted', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-2', name: 'Azithromycin 500 mg tablet', route: 'Oral Once Daily (OD) after meals', indication: 'Atypical coverage for CAP', started: '2026-06-12T13:05:00+08:00', lastDose: '2026-06-13T13:05:00+08:00', nextDose: 'Completed 3-day course', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-3', name: 'Co-amoxiclav 625 mg tablet', route: 'Oral Three Times Daily (TID)', indication: 'Discharge step-down therapy for pneumonia', started: '2026-06-14T09:00:00+08:00', lastDose: '2026-06-14T09:00:00+08:00', nextDose: '2026-06-14T17:00:00+08:00', doses24h: '3 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-4', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension Stage 1', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-14T08:00:00+08:00', nextDose: '2026-06-15T08:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-5', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-14T08:00:00+08:00', nextDose: '2026-06-14T18:00:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-6', name: 'Paracetamol 500 mg tablet', route: 'Oral Every 6 Hours PRN for Temp >= 38.0°C', indication: 'Fever / Headache', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-12T20:00:00+08:00', nextDose: 'PRN (Afebrile)', doses24h: '0 doses', status: 'Active / PRN', nurse: 'Miguel Santos, MD' }
+      ],
+      intakeOutput: []
+    };
+
     function ensureSeedPatient() {
       var records = getPatients();
 
@@ -995,16 +1039,16 @@ if (typeof window !== 'undefined') {
       var erIndex = records.findIndex(function (record) { return record.id === ER_PATIENT_ID; });
       if (erIndex < 0) {
         records.splice(1, 0, erPatientRecord());
-      } else if (Number(records[erIndex].seedVersion || 0) < 69) {
+      } else if (Number(records[erIndex].seedVersion || 0) < 70) {
         records[erIndex] = erPatientRecord();
-        try {
-          var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
-          if (store) {
-            delete store[ER_PATIENT_ID];
-            localStorage.setItem('clmmrh_chart_monitoring_data_v1', JSON.stringify(store));
-          }
-        } catch (e) {}
       }
+      try {
+        var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
+        if (store) {
+          store[ER_PATIENT_ID] = erChartMonitoringData;
+          localStorage.setItem('clmmrh_chart_monitoring_data_v1', JSON.stringify(store));
+        }
+      } catch (e) {}
 
       var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
       if (blankIndex < 0) records.push(blankPatientRecord());
@@ -1015,6 +1059,7 @@ if (typeof window !== 'undefined') {
     if (typeof window !== 'undefined') {
       window.ensureSeedPatient = ensureSeedPatient;
       window.erPatientRecord = erPatientRecord;
+      window.erChartMonitoring = erChartMonitoringData;
       window.opPatientRecord = opPatientRecord;
       window.blankPatientRecord = blankPatientRecord;
       window.seedPatientRecord = seedPatientRecord;

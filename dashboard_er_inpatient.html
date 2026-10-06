@@ -1838,8 +1838,8 @@
                   <!-- TAB 1: VITAL SIGNS -->
                   <div class="tab-pane active" id="chart-tab-vitals">
                     <div class="flowsheet-toolbar">
-                      <div class="muted" style="font-size:11px;">
-                        <i class="icon-info-sign"></i> Vital Signs Monitoring Record (Outpatient Consultation & Follow-up History).
+                      <div class="muted" style="font-size:11px;" id="vitals-monitoring-caption">
+                        <i class="icon-info-sign"></i> Vital Signs Monitoring Record (ER & Inpatient Admission Flowsheet — Daily Monitoring Log &amp; Vital Signs Trend).
                       </div>
                     </div>
                     <table class="table table-bordered table-condensed vitals-grid" id="vitals-table" style="margin-bottom:0;">
@@ -4780,6 +4780,19 @@
       { dateTime: '2026-09-26T09:30:00+08:00', bp: '120/80', hr: '74', rr: '18', temp: '36.6', wt: '70', ht: '168', weight: '70', height: '168', bmi: '24.8', spo2: '99', o2: '99' }
     ];
 
+    var erSeedVitalSigns = [
+      { dateTime: '2026-06-14 09:00 AM', bp: '118/74', hr: '72', rr: '16', temp: '36.5', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '99', o2: '99' },
+      { dateTime: '2026-06-14 06:00 AM', bp: '116/74', hr: '70', rr: '16', temp: '36.5', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '99', o2: '99' },
+      { dateTime: '2026-06-13 10:00 PM', bp: '118/74', hr: '72', rr: '16', temp: '36.5', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '99', o2: '99' },
+      { dateTime: '2026-06-13 04:30 PM', bp: '118/76', hr: '74', rr: '16', temp: '36.6', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '99', o2: '99' },
+      { dateTime: '2026-06-13 10:15 AM', bp: '120/80', hr: '78', rr: '18', temp: '36.8', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '98', o2: '98' },
+      { dateTime: '2026-06-13 06:00 AM', bp: '120/80', hr: '80', rr: '18', temp: '37.0', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '97', o2: '97' },
+      { dateTime: '2026-06-12 10:00 PM', bp: '122/80', hr: '82', rr: '18', temp: '37.1', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '97', o2: '97' },
+      { dateTime: '2026-06-12 04:30 PM', bp: '126/80', hr: '86', rr: '20', temp: '37.5', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '96', o2: '96' },
+      { dateTime: '2026-06-12 12:30 PM', bp: '130/82', hr: '92', rr: '22', temp: '38.0', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '95', o2: '95' },
+      { dateTime: '2026-06-12 08:30 AM', bp: '138/86', hr: '102', rr: '24', temp: '38.2', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '93', o2: '93' }
+    ];
+
     function calculateBMI(weightKg, heightCm) {
       var w = parseFloat(weightKg);
       var h = parseFloat(heightCm);
@@ -4811,11 +4824,22 @@
       var body = document.getElementById('vitals-rows');
       if (!body) return;
 
+      var captionEl = document.getElementById('vitals-monitoring-caption');
+      if (captionEl) {
+        if (record && record.id === (window.ER_PATIENT_ID || 'patient_er_juan')) {
+          captionEl.innerHTML = '<i class="icon-info-sign"></i> Vital Signs Monitoring Record (ER &amp; Inpatient Admission Flowsheet — Daily Monitoring Log &amp; Vital Signs Trend).';
+        } else {
+          captionEl.innerHTML = '<i class="icon-info-sign"></i> Vital Signs Monitoring Record (Outpatient Consultation &amp; Follow-up History).';
+        }
+      }
+
       var data = record && record.data ? record.data : {};
       var rows;
 
       if (Array.isArray(data.vital_signs) && data.vital_signs.length > 0) {
         rows = data.vital_signs;
+      } else if (record && record.id === (window.ER_PATIENT_ID || 'patient_er_juan')) {
+        rows = erSeedVitalSigns;
       } else if (record && (record.id === SEED_PATIENT_ID || record.id === (window.OP_PATIENT_ID || 'patient_op_carmela') || record.id === 'patient_op_juan')) {
         rows = seedVitalSigns;
       } else {
@@ -4848,7 +4872,8 @@
       }
 
       body.innerHTML = rows.map(function (row) {
-        var dateTime = row.dateTime || row.date_time || '';
+        var rawDt = row.dateTime || row.date_time || '';
+        var dtDisplay = rawDt ? (rawDt.includes('T') ? formatDateTime(rawDt).replace(',', '') : rawDt) : '—';
         var bp = row.bp || row.vs_bp || '—';
         var hr = row.hr || row.vs_hr || '—';
         var rr = row.rr || row.vs_rr || '—';
@@ -4859,7 +4884,7 @@
         var o2 = row.o2 || row.spo2 || row.vs_spo2 || '—';
 
         return '<tr>' +
-          '<td>' + esc(dateTime ? formatDateTime(dateTime).replace(',', '') : '—') + '</td>' +
+          '<td>' + esc(dtDisplay) + '</td>' +
           '<td>' + esc(bp) + '</td>' +
           '<td>' + esc(hr) + '</td>' +
           '<td>' + esc(rr) + '</td>' +
@@ -4901,6 +4926,30 @@
       intakeOutput: []
     };
 
+    var erChartMonitoring = {
+      ivFluids: [
+        { id: 'ivf-er-1', bottle: 'Bottle #1', solution: 'Plain Normal Saline Solution (PNSS) 1 L', rate: '80 mL/hr', started: '2026-06-12T12:45:00+08:00', ended: '2026-06-13T01:15:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'M. Santos, RN', remarks: 'ER to Medical Ward baseline hydration; IV cannula 20G left cephalic vein' },
+        { id: 'ivf-er-2', bottle: 'Bottle #2', solution: 'D5 0.3% NaCl 1 L + 20 mEq KCl', rate: '80 mL/hr', started: '2026-06-13T01:30:00+08:00', ended: '2026-06-13T14:00:00+08:00', volume: '1000 mL (Consumed)', status: 'Consumed', nurse: 'R. Alcantara, RN', remarks: 'Hospital Day 2 maintenance hydration and electrolyte replacement' },
+        { id: 'ivf-er-3', bottle: 'Bottle #3', solution: 'Plain Normal Saline Solution (PNSS) 500 mL', rate: '20 mL/hr (KVO)', started: '2026-06-13T14:15:00+08:00', ended: '2026-06-14T09:00:00+08:00', volume: '500 mL (Consumed)', status: 'Consumed', nurse: 'E. Cruz, RN', remarks: 'Keep vein open for parenteral antibiotics; discontinued prior to discharge' }
+      ],
+      transfusions: [],
+      cbgs: [
+        { id: 'cbg-er-1', dateTime: '2026-06-12T12:30:00+08:00', timing: 'Admission Random Blood Sugar (RBS)', reading: 168, action: 'Stress hyperglycemia from acute CAP; regular diabetic diet', notes: 'Checked on transfer from ED to Medical Ward', nurse: 'M. Santos, RN' },
+        { id: 'cbg-er-2', dateTime: '2026-06-13T06:00:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 128, action: 'Target met (<140 mg/dL); continue Metformin 500 mg BID', notes: 'Hospital Day 2 morning fasting check', nurse: 'R. Alcantara, RN' },
+        { id: 'cbg-er-3', dateTime: '2026-06-13T17:00:00+08:00', timing: 'Pre-dinner CBG', reading: 134, action: 'Acceptable glycemic control', notes: 'Hospital Day 2 afternoon check prior to dinner', nurse: 'R. Alcantara, RN' },
+        { id: 'cbg-er-4', dateTime: '2026-06-14T06:00:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 118, action: 'Optimal fasting control (80-130 mg/dL)', notes: 'Hospital Day 3 pre-discharge fasting check; cleared on home Metformin', nurse: 'E. Cruz, RN' }
+      ],
+      medications: [
+        { id: 'med-er-1', name: 'Ceftriaxone 2 g IV vial', route: 'IV Once Daily (OD) ANST (-)', indication: 'Community-Acquired Pneumonia (Moderate Risk)', started: '2026-06-12T13:00:00+08:00', lastDose: '2026-06-13T13:00:00+08:00', nextDose: 'Shifted to oral step-down', doses24h: '2 doses', status: 'Completed / Shifted', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-2', name: 'Azithromycin 500 mg tablet', route: 'Oral Once Daily (OD) after meals', indication: 'Atypical coverage for CAP', started: '2026-06-12T13:05:00+08:00', lastDose: '2026-06-13T13:05:00+08:00', nextDose: 'Completed 3-day course', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-3', name: 'Co-amoxiclav 625 mg tablet', route: 'Oral Three Times Daily (TID)', indication: 'Discharge step-down therapy for pneumonia', started: '2026-06-14T09:00:00+08:00', lastDose: '2026-06-14T09:00:00+08:00', nextDose: '2026-06-14T17:00:00+08:00', doses24h: '3 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-4', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension Stage 1', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-14T08:00:00+08:00', nextDose: '2026-06-15T08:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-5', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-14T08:00:00+08:00', nextDose: '2026-06-14T18:00:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-6', name: 'Paracetamol 500 mg tablet', route: 'Oral Every 6 Hours PRN for Temp >= 38.0°C', indication: 'Fever / Headache', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-12T20:00:00+08:00', nextDose: 'PRN (Afebrile)', doses24h: '0 doses', status: 'Active / PRN', nurse: 'Miguel Santos, MD' }
+      ],
+      intakeOutput: []
+    };
+
     function getChartMonitoringStore() {
       return safeParse(localStorage.getItem(CHART_MONITORING_KEY), {});
     }
@@ -4916,6 +4965,9 @@
       var store = getChartMonitoringStore();
       if (store && store[patientId]) {
         return store[patientId];
+      }
+      if (patientId === (window.ER_PATIENT_ID || 'patient_er_juan')) {
+        return JSON.parse(JSON.stringify(window.erChartMonitoring || erChartMonitoring));
       }
       if (patientId === SEED_PATIENT_ID || patientId === OP_PATIENT_ID || (!patientId && !store['blank'])) {
         return JSON.parse(JSON.stringify(seedChartMonitoring));
@@ -6464,6 +6516,19 @@
     function renderEncounterVitalSigns(enc) {
       var body = document.getElementById('vitals-rows');
       if (!body) return;
+
+      var captionEl = document.getElementById('vitals-monitoring-caption');
+      if (captionEl) {
+        var reg = (enc && (enc.registry || enc.type || '')) ? String(enc.registry || enc.type).toUpperCase() : 'IP';
+        if (reg === 'ER') {
+          captionEl.innerHTML = '<i class="icon-info-sign"></i> Vital Signs Monitoring Record (Emergency Department Acute Monitoring Flowsheet).';
+        } else if (reg === 'IP') {
+          captionEl.innerHTML = '<i class="icon-info-sign"></i> Vital Signs Monitoring Record (ER &amp; Inpatient Admission Flowsheet — Daily Monitoring Log &amp; Vital Signs Trend).';
+        } else {
+          captionEl.innerHTML = '<i class="icon-info-sign"></i> Vital Signs Monitoring Record (Outpatient Consultation &amp; Follow-up History).';
+        }
+      }
+
       var vsList = [];
       if (Array.isArray(enc.vital_signs) && enc.vital_signs.length > 0) {
         vsList = enc.vital_signs;
@@ -6503,9 +6568,10 @@
         }];
       }
       body.innerHTML = vsList.map(function (row) {
-        var dt = row.dateTime || row.date_time || ((enc.date || '') + ' ' + (enc.time || ''));
+        var rawDt = row.dateTime || row.date_time || ((enc.date || '') + ' ' + (enc.time || ''));
+        var dtDisplay = rawDt ? (rawDt.includes('T') ? formatDateTime(rawDt).replace(',', '') : rawDt) : '—';
         return '<tr>' +
-          '<td>' + esc(dt) + '</td>' +
+          '<td>' + esc(dtDisplay) + '</td>' +
           '<td>' + esc(row.bp || row.vs_bp || '—') + '</td>' +
           '<td>' + esc(row.hr || row.vs_hr || '—') + '</td>' +
           '<td>' + esc(row.rr || row.vs_rr || '—') + '</td>' +
@@ -6554,6 +6620,13 @@
             });
           }
         });
+      }
+
+      if (allMeds.length === 0) {
+        var patientChart = getPatientChartMonitoring(activePatientId);
+        if (patientChart && Array.isArray(patientChart.medications) && patientChart.medications.length > 0) {
+          allMeds = patientChart.medications;
+        }
       }
 
       var filteredMeds = allMeds.filter(function(item) {
@@ -6619,17 +6692,22 @@
       if (Array.isArray(enc.cbgs) && enc.cbgs.length > 0) {
         allCbg = enc.cbgs;
       } else {
-        var notes = (enc.progress_notes || '') + ' ' + (enc.patient_record || '');
-        var fbsM = notes.match(/(?:fasting\s*blood\s*sugar|FBS|blood\s*sugar)[^\d]*(\d{2,3})/i);
-        if (fbsM) {
-          allCbg = [{
-            dateTime: (enc.date || '') + ' ' + (enc.time || '08:00 AM'),
-            timing: 'Fasting Blood Sugar (FBS)',
-            reading: fbsM[1],
-            action: Number(fbsM[1]) > 130 ? 'Glycemic Review / Adjustment' : 'Target Met (80-130 mg/dL)',
-            notes: 'Encounter laboratory review',
-            nurse: enc.physician || 'Attending Physician'
-          }];
+        var patientChartCbg = getPatientChartMonitoring(activePatientId);
+        if (patientChartCbg && Array.isArray(patientChartCbg.cbgs) && patientChartCbg.cbgs.length > 0) {
+          allCbg = patientChartCbg.cbgs;
+        } else {
+          var notes = (enc.progress_notes || '') + ' ' + (enc.patient_record || '');
+          var fbsM = notes.match(/(?:fasting\s*blood\s*sugar|FBS|blood\s*sugar)[^\d]*(\d{2,3})/i);
+          if (fbsM) {
+            allCbg = [{
+              dateTime: (enc.date || '') + ' ' + (enc.time || '08:00 AM'),
+              timing: 'Fasting Blood Sugar (FBS)',
+              reading: fbsM[1],
+              action: Number(fbsM[1]) > 130 ? 'Glycemic Review / Adjustment' : 'Target Met (80-130 mg/dL)',
+              notes: 'Encounter laboratory review',
+              nurse: enc.physician || 'Attending Physician'
+            }];
+          }
         }
       }
 
@@ -6678,7 +6756,8 @@
       // IV Fluids
       var ivfRows = document.getElementById('ivf-rows');
       if (ivfRows) {
-        var allIvf = Array.isArray(enc.ivFluids) ? enc.ivFluids : [];
+        var patientChartIvf = getPatientChartMonitoring(activePatientId);
+        var allIvf = Array.isArray(enc.ivFluids) && enc.ivFluids.length > 0 ? enc.ivFluids : (patientChartIvf.ivFluids || []);
         var ongoingCount = allIvf.filter(function(i) { return i.status === 'Ongoing'; }).length;
         var tabBadgeIvf = document.getElementById('tab-badge-ivf');
         if (tabBadgeIvf) tabBadgeIvf.textContent = ongoingCount > 0 ? (ongoingCount + ' Ongoing') : (allIvf.length > 0 ? (allIvf.length + ' Fluids') : '0 Ongoing');
@@ -6696,13 +6775,32 @@
         }
         if (allIvf.length === 0) {
           ivfRows.innerHTML = '<tr><td colspan="8" class="muted text-center" style="padding:15px;">No IV fluids recorded for this encounter.</td></tr>';
+        } else {
+          ivfRows.innerHTML = allIvf.map(function(item) {
+            var statusBadge = item.status === 'Ongoing'
+              ? '<span class="badge badge-success"><i class="icon-play"></i> Ongoing</span>'
+              : (item.status === 'Consumed'
+                  ? '<span class="badge badge-inverse"><i class="icon-check"></i> Consumed</span>'
+                  : '<span class="badge badge-warning">' + esc(item.status) + '</span>');
+            return '<tr>' +
+              '<td><strong>' + esc(item.bottle || '—') + '</strong></td>' +
+              '<td><strong>' + esc(item.solution || '—') + '</strong></td>' +
+              '<td>' + esc(item.rate || '—') + '</td>' +
+              '<td>' + esc(item.started ? formatDateTime(item.started) : '—') + '</td>' +
+              '<td>' + esc(item.ended ? formatDateTime(item.ended) : '—') + '</td>' +
+              '<td>' + esc(item.volume || '—') + '</td>' +
+              '<td>' + statusBadge + '</td>' +
+              '<td>' + esc(item.nurse || '—') + (item.remarks ? '<br><small class="muted">' + esc(item.remarks) + '</small>' : '') + '</td>' +
+              '</tr>';
+          }).join('');
         }
       }
 
       // Transfusions
       var transRows = document.getElementById('transfusion-rows');
       if (transRows) {
-        var allTrans = Array.isArray(enc.transfusions) ? enc.transfusions : [];
+        var patientChartTrans = getPatientChartMonitoring(activePatientId);
+        var allTrans = Array.isArray(enc.transfusions) && enc.transfusions.length > 0 ? enc.transfusions : (patientChartTrans.transfusions || []);
         var tabBadgeTrans = document.getElementById('tab-badge-transfusion');
         if (tabBadgeTrans) tabBadgeTrans.textContent = allTrans.length + (allTrans.length === 1 ? ' Unit' : ' Units');
         var stripTransBadge = document.getElementById('strip-transfusion-badge');
