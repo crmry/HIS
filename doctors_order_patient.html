@@ -977,7 +977,7 @@
                 if (vs.temp) vsItems.push(`Temp ${vs.temp}°C`);
                 if (vs.wt || vs.weight) vsItems.push(`Wt ${vs.wt || vs.weight} kg`);
                 if (vs.spo2 || vs.o2) vsItems.push(`SpO2 ${vs.spo2 || vs.o2}%`);
-                if (vsItems.length) parts.push(`Vitals: ${vsItems.join(", ")}`);
+                if (vsItems.length) parts.push(vsItems.join(", "));
             }
 
             let rosText = "";
@@ -1017,7 +1017,7 @@
                 }
             }
             if (peText) {
-                parts.push(`PE: ${cleanProgressNotesText(peText)}`);
+                parts.push(cleanProgressNotesText(peText));
             }
 
             const row2 = parts.join("\n");
