@@ -709,7 +709,7 @@ if (typeof window !== 'undefined') {
     function erPatientRecord() {
       return {
         id: ER_PATIENT_ID,
-        seedVersion: 70,
+        seedVersion: 71,
         createdAt: '2026-06-12T08:30:00+08:00',
         updatedAt: '2026-06-14T09:30:00+08:00',
         data: {
@@ -845,6 +845,13 @@ if (typeof window !== 'undefined') {
                     { text: 'Continue current ward management and vital signs monitoring every 4 hours.', dateTime: '2026-06-13T16:30:00+08:00', cared: ['C'], timeSignature: 'C - 4:45 PM nurse' }
                   ]
                 }
+              ],
+              intakeOutput: [
+                { id: 'io-ip-1', shift: '7-3', date: '2026-06-12', inOral: 450, inIvf: 560, inBloodMeds: 50, outUrine: 650, outDrain: 0, outStool: 0, nurse: 'M. Santos, RN', remarks: 'Clear amber urine; PNSS 1L infusing at 80 mL/hr; tolerating oral fluids' },
+                { id: 'io-ip-2', shift: '3-11', date: '2026-06-12', inOral: 600, inIvf: 640, inBloodMeds: 50, outUrine: 750, outDrain: 0, outStool: 150, nurse: 'R. Alcantara, RN', remarks: 'Stable vitals; soft formed stool x1; adequate hydration' },
+                { id: 'io-ip-3', shift: '11-7', date: '2026-06-12', inOral: 200, inIvf: 640, inBloodMeds: 0, outUrine: 550, outDrain: 0, outStool: 0, nurse: 'E. Cruz, RN', remarks: 'Overnight balance positive; sleeping comfortably; no dysuria' },
+                { id: 'io-ip-4', shift: '7-3', date: '2026-06-13', inOral: 750, inIvf: 640, inBloodMeds: 50, outUrine: 850, outDrain: 0, outStool: 200, nurse: 'M. Santos, RN', remarks: 'Oral low-salt diet well tolerated; diuresing well; afebrile' },
+                { id: 'io-ip-5', shift: '3-11', date: '2026-06-13', inOral: 700, inIvf: 320, inBloodMeds: 0, outUrine: 750, outDrain: 0, outStool: 0, nurse: 'R. Alcantara, RN', remarks: 'IVF completed and stopped; good oral fluid intake maintained' }
               ]
             },
             {
@@ -886,6 +893,9 @@ if (typeof window !== 'undefined') {
                 { text: 'Azithromycin 500 mg tablet once daily.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:42 PM nurse\nA - 1:05 PM nurse' },
                 { text: 'Paracetamol 500 mg tablet every six hours as needed for fever >= 38.0°C.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:45 PM nurse\nA - 1:10 PM nurse' },
                 { text: 'Oxygen at 2 L/minute via nasal cannula; maintain SpO2 at 95% or higher.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:50 PM nurse' }
+              ],
+              intakeOutput: [
+                { id: 'io-er-1', shift: '7-3', date: '2026-06-12', inOral: 450, inIvf: 560, inBloodMeds: 50, outUrine: 650, outDrain: 0, outStool: 0, nurse: 'M. Santos, RN', remarks: 'Clear amber urine; PNSS 1L infusing at 80 mL/hr; tolerating oral fluids' }
               ]
             }
           ],
@@ -980,7 +990,13 @@ if (typeof window !== 'undefined') {
         { id: 'med-er-5', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-14T08:00:00+08:00', nextDose: '2026-06-14T18:00:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
         { id: 'med-er-6', name: 'Paracetamol 500 mg tablet', route: 'Oral Every 6 Hours PRN for Temp >= 38.0°C', indication: 'Fever / Headache', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-12T20:00:00+08:00', nextDose: 'PRN (Afebrile)', doses24h: '0 doses', status: 'Active / PRN', nurse: 'Miguel Santos, MD' }
       ],
-      intakeOutput: []
+      intakeOutput: [
+        { id: 'io-er-1', shift: '7-3', date: '2026-06-12', inOral: 450, inIvf: 560, inBloodMeds: 50, outUrine: 650, outDrain: 0, outStool: 0, nurse: 'M. Santos, RN', remarks: 'Clear amber urine; PNSS 1L infusing at 80 mL/hr; tolerating oral fluids' },
+        { id: 'io-er-2', shift: '3-11', date: '2026-06-12', inOral: 600, inIvf: 640, inBloodMeds: 50, outUrine: 750, outDrain: 0, outStool: 150, nurse: 'R. Alcantara, RN', remarks: 'Stable vitals; soft formed stool x1; adequate hydration' },
+        { id: 'io-er-3', shift: '11-7', date: '2026-06-12', inOral: 200, inIvf: 640, inBloodMeds: 0, outUrine: 550, outDrain: 0, outStool: 0, nurse: 'E. Cruz, RN', remarks: 'Overnight balance positive; sleeping comfortably; no dysuria' },
+        { id: 'io-er-4', shift: '7-3', date: '2026-06-13', inOral: 750, inIvf: 640, inBloodMeds: 50, outUrine: 850, outDrain: 0, outStool: 200, nurse: 'M. Santos, RN', remarks: 'Oral low-salt diet well tolerated; diuresing well; afebrile' },
+        { id: 'io-er-5', shift: '3-11', date: '2026-06-13', inOral: 700, inIvf: 320, inBloodMeds: 0, outUrine: 750, outDrain: 0, outStool: 0, nurse: 'R. Alcantara, RN', remarks: 'IVF completed and stopped; good oral fluid intake maintained' }
+      ]
     };
 
     function ensureSeedPatient() {
@@ -1039,7 +1055,7 @@ if (typeof window !== 'undefined') {
       var erIndex = records.findIndex(function (record) { return record.id === ER_PATIENT_ID; });
       if (erIndex < 0) {
         records.splice(1, 0, erPatientRecord());
-      } else if (Number(records[erIndex].seedVersion || 0) < 70) {
+      } else if (Number(records[erIndex].seedVersion || 0) < 71) {
         records[erIndex] = erPatientRecord();
       }
       try {
