@@ -120,9 +120,10 @@ async def scan_single_target(browser_ws, file_url):
                     break
 
         # Interactive component smoke tests for dashboard/updated pages
-        if any(p in file_url for p in ("dashboard.html",)):
+        if any(p in file_url for p in ("dashboard.html", "dashboard_er_inpatient.html")):
             smoke_js = """
             (async () => {
+                const isDashboardPage = window.location.href.includes('dashboard.html') || window.location.href.includes('dashboard_er_inpatient.html');
                 let toolkit = document.getElementById('floating-req-toolkit');
                 const t0 = Date.now();
                 while (!toolkit && Date.now() - t0 < 3000) {
@@ -327,7 +328,7 @@ async def scan_single_target(browser_ws, file_url):
                 }
 
                 // Test Specialized Clinical Forms unified launcher list
-                if (window.location.href.includes('dashboard.html')) {
+                if (isDashboardPage) {
                     const dashletForms = document.getElementById('dashlet-specialized-forms');
                     if (!dashletForms) return 'dashlet-specialized-forms not found';
                     const obModBtn = document.getElementById('btn-open-obgyne-module');
@@ -350,7 +351,7 @@ async def scan_single_target(browser_ws, file_url):
                 if (!floatingObBtn) return 'floating-btn-obgyne not found in requisition pad';
 
                 // Verify ER and Inpatient Progress Notes (SOA) vs OPD HPI/ROS/PE documentation behavior
-                if (window.location.href.includes('dashboard.html')) {
+                if (isDashboardPage) {
                     const pnRow = document.getElementById('row-progress-notes');
                     const pnDashlet = document.getElementById('dashlet-progress-notes');
                     if (!pnRow || !pnDashlet) {
@@ -600,7 +601,7 @@ async def scan_single_target(browser_ws, file_url):
                 }
 
                 // Test Neonate Growth Chart Modal with Patient Gender Baseline
-                if (window.location.href.includes('dashboard.html')) {
+                if (isDashboardPage) {
                     const fentonBtn = document.getElementById('btn-chart-fenton');
                     const neoModal = document.getElementById('neonate-chart-modal');
                     const neoImg = document.getElementById('neonateZoomedChartImg');
@@ -755,7 +756,7 @@ async def run_scan():
             fname = os.path.basename(hf)
             file_url = f"file:///{hf.replace(os.sep, '/')}"
             test_urls.append((fname, file_url))
-            if fname in ("dashboard.html", "doctors_order_patient.html", "opd_record_patient.html", "Neonate_Clinical_Module.html", "doctors_order_er_admission.html"):
+            if fname in ("dashboard.html", "dashboard_er_inpatient.html", "doctors_order_patient.html", "opd_record_patient.html", "Neonate_Clinical_Module.html", "doctors_order_er_admission.html"):
                 test_urls.append((f"{fname}?patient=patient_op_carmela", f"{file_url}?patient=patient_op_carmela"))
                 test_urls.append((f"{fname}?patient=patient_op_juan", f"{file_url}?patient=patient_op_juan"))
                 test_urls.append((f"{fname}?patient=patient_new_blank_1790299677880", f"{file_url}?patient=patient_new_blank_1790299677880"))
