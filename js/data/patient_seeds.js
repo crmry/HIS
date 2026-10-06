@@ -547,7 +547,13 @@ if (typeof window !== 'undefined') {
               progress_notes: 'Known diabetic and hypertensive for 6 years, transferring routine management to CLMMRH Outpatient Service. Compliant with oral maintenance therapy.',
               orders: [
                 { text: 'Register in CLMMRH Chronic Disease Management OPD Program.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['C'], timeSignature: 'C - 9:00 AM nurse' },
-                { text: 'CBC, FBS, HbA1c, BUN, Creatinine, Lipid Profile, Urinalysis.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['R'], timeSignature: 'R - 9:05 AM physician' },
+                { text: 'Complete Blood Count (CBC)', dateTime: '2026-03-14T08:45:00+08:00', cared: ['R'], timeSignature: 'R - 9:05 AM physician' },
+                { text: 'Fasting Blood Sugar (FBS)', dateTime: '2026-03-14T08:45:00+08:00', cared: ['R'], timeSignature: 'R - 9:05 AM physician' },
+                { text: 'HbA1c', dateTime: '2026-03-14T08:45:00+08:00', cared: ['R'], timeSignature: 'R - 9:05 AM physician' },
+                { text: 'Blood Urea Nitrogen (BUN)', dateTime: '2026-03-14T08:45:00+08:00', cared: ['R'], timeSignature: 'R - 9:05 AM physician' },
+                { text: 'Serum Creatinine', dateTime: '2026-03-14T08:45:00+08:00', cared: ['R'], timeSignature: 'R - 9:05 AM physician' },
+                { text: 'Lipid Profile', dateTime: '2026-03-14T08:45:00+08:00', cared: ['R'], timeSignature: 'R - 9:05 AM physician' },
+                { text: 'Routine Urinalysis', dateTime: '2026-03-14T08:45:00+08:00', cared: ['R'], timeSignature: 'R - 9:05 AM physician' },
                 { text: 'Continue Metformin 500 mg tablet BID and Losartan 50 mg tablet OD.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['C'], timeSignature: 'C - 9:10 AM nurse' },
                 { text: 'Follow-up with laboratory results after 1 week.', dateTime: '2026-03-14T08:45:00+08:00', cared: ['C'], timeSignature: 'C - 9:15 AM nurse' }
               ]

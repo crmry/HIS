@@ -562,7 +562,7 @@
             margin: 8mm;
         }
     </style>
-    <script src="js/data/patient_seeds.js?v=20261006_01"></script>
+    <script src="js/data/patient_seeds.js?v=20261006_02"></script>
 </head>
 <body>
     <div class="toolbar" style="display:none;">
@@ -1117,7 +1117,33 @@
         function categorizeAndSortOrders(rawOrders, defaultDt) {
             if (!Array.isArray(rawOrders)) return [];
             const result = [];
+
+            // Unpack any grouped comma-separated lab battery orders into individual rows
+            const expandedOrders = [];
             rawOrders.forEach(item => {
+                const rawText = typeof item === "string" ? item : (item?.text || "");
+                if (rawText.includes(",") && /\b(cbc|fbs|hba1c|bun|creatinine|lipid|urinalysis|blood\s*sugar|electrolytes)\b/i.test(rawText)) {
+                    const parts = rawText
+                        .replace(/\.$/, "")
+                        .split(",")
+                        .map(p => p.trim())
+                        .filter(Boolean);
+                    if (parts.length > 1) {
+                        parts.forEach(p => {
+                            expandedOrders.push({
+                                text: p,
+                                dateTime: item?.dateTime || "",
+                                cared: Array.isArray(item?.cared) ? [...item.cared] : ["R"],
+                                timeSignature: item?.timeSignature || ""
+                            });
+                        });
+                        return;
+                    }
+                }
+                expandedOrders.push(item);
+            });
+
+            expandedOrders.forEach(item => {
                 const rawText = typeof item === "string" ? item : (item?.text || "");
                 if (!rawText.trim()) return;
                 const { category, body } = detectOrderCategory(rawText);
