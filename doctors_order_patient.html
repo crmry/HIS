@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOCTOR'S ORDER / PROGRESS NOTES NURSES' COMPLIANCE SHEET</title>
+    <title>PHYSICIAN'S ORDERS / PROGRESS NOTES NURSES' COMPLIANCE SHEET</title>
     <style>
         :root {
             --ink: #111;
@@ -1240,14 +1240,14 @@
             return '<thead><tr>' +
                 '<th>DATE<br>TIME</th>' +
                 '<th>PROGRESS NOTES</th>' +
-                '<th>DOCTOR\'S ORDER</th>' +
+                '<th>PHYSICIAN\'S ORDER</th>' +
                 '<th>C</th><th>A</th><th>R</th><th>E</th><th>D</th>' +
                 '<th>TIME<br>SIGNATURE</th>' +
                 '</tr></thead>';
         }
 
         function ordersTableFooter() {
-            return '<div class="footer">Doctor\'s Orders Form<br>CLMMRH-MRS.F.032<br>Issued: 2/5/14<br>Issue .No. 001</div>';
+            return '<div class="footer">Physician\'s Orders Form<br>CLMMRH-MRS.F.032<br>Issued: 2/5/14<br>Issue .No. 001</div>';
         }
 
         function buildOrderRowHtml(item, rowIdx, isFirst, span, subIdx, totalSpan) {
@@ -1301,7 +1301,7 @@
             // Build a single blank A4 page for initial state (no patient loaded)
             var inner = '<p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>';
             inner += '<p class="hospital-address">Lacson - Burgos Streets, Bacolod City</p>';
-            inner += '<h1 class="form-title">DOCTOR\'S ORDER / PROGRESS NOTES<br>NURSES\'  COMPLIANCE SHEET</h1>';
+            inner += '<h1 class="form-title">PHYSICIAN\'S ORDERS / PROGRESS NOTES<br>NURSES\'  COMPLIANCE SHEET</h1>';
             inner += '<p class="form-subtitle">(Authenticate all Orders)</p>';
             inner += '<div class="patient-grid">';
             inner += '<div class="field"><label>Name of Patient</label><span class="field-val"></span></div>';
@@ -1314,10 +1314,10 @@
             inner += '<div class="field admit"><label>Admission Date</label><span class="field-val"></span></div>';
             inner += '</div></div>';
             inner += '<p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>';
-            inner += '<div class="page-orders-body"><table class="orders"><colgroup><col class="date"><col class="notes"><col class="order"><col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="sign"></colgroup><thead><tr><th>DATE<br>TIME</th><th>PROGRESS NOTES</th><th>DOCTOR\'S ORDER</th><th>C</th><th>A</th><th>R</th><th>E</th><th>D</th><th>TIME<br>SIGNATURE</th></tr></thead><tbody>';
+            inner += '<div class="page-orders-body"><table class="orders"><colgroup><col class="date"><col class="notes"><col class="order"><col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="sign"></colgroup><thead><tr><th>DATE<br>TIME</th><th>PROGRESS NOTES</th><th>PHYSICIAN\'S ORDER</th><th>C</th><th>A</th><th>R</th><th>E</th><th>D</th><th>TIME<br>SIGNATURE</th></tr></thead><tbody>';
             for (var k = 1; k <= 18; k++) { inner += buildBlankRowHtml(k); }
             inner += '</tbody></table></div>';
-            inner += '<div class="footer">Doctor\'s Orders Form<br>CLMMRH-MRS.F.032<br>Issued: 2/5/14<br>Issue .No. 001</div>';
+            inner += '<div class="footer">Physician\'s Orders Form<br>CLMMRH-MRS.F.032<br>Issued: 2/5/14<br>Issue .No. 001</div>';
             return '<div class="page" aria-label="Compliance sheet">' + inner + '</div>';
         }
 
@@ -1570,7 +1570,7 @@
                 // Standard full official hospital header across all pages
                 inner += '<p class="hospital-name">CORAZON LOCSIN MONTELIBANO MEMORIAL REGIONAL HOSPITAL</p>';
                 inner += '<p class="hospital-address">Lacson - Burgos Streets, Bacolod City</p>';
-                inner += '<h1 class="form-title">DOCTOR\'S ORDER / PROGRESS NOTES<br>NURSES\'  COMPLIANCE SHEET</h1>';
+                inner += '<h1 class="form-title">PHYSICIAN\'S ORDERS / PROGRESS NOTES<br>NURSES\'  COMPLIANCE SHEET</h1>';
                 inner += '<p class="form-subtitle">(Authenticate all Orders)</p>';
                 inner += '<div class="patient-grid">';
                 inner += '<div class="field"><label>Name of Patient</label><span class="field-val">' + escapeHtml(nameVal) + '</span></div>';
@@ -1586,7 +1586,7 @@
                 inner += '<p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>';
 
                 inner += '<div class="page-orders-body">';
-                inner += '<table class="orders" aria-label="Doctor orders page ' + (pgIdx + 1) + '">';
+                inner += '<table class="orders" aria-label="Physician orders page ' + (pgIdx + 1) + '">';
                 inner += ordersTableColgroup();
                 inner += ordersTableHead();
                 inner += '<tbody>';
@@ -2252,7 +2252,7 @@
                     <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
                         <label style="font-weight:normal; cursor:pointer; display:flex; align-items:center; gap:6px;">
                             <input type="radio" name="sheet-enc-orders-mode" value="none" checked>
-                            <strong>Observation Only (No Orders / Zero Orders)</strong> &mdash; Leaves Doctor's Orders column blank
+                            <strong>Observation Only (No Orders / Zero Orders)</strong> &mdash; Leaves Physician's Orders column blank
                         </label>
                         <label style="font-weight:normal; cursor:pointer; display:flex; align-items:center; gap:6px;">
                             <input type="radio" name="sheet-enc-orders-mode" value="custom">
@@ -2716,7 +2716,7 @@
 
             var docName = cosig.doctor_title || ("Dr. " + cosig.doctor_name);
             var confirmMsg = "CO-SIGNATURE AUTHORIZATION CONFIRMATION\n\n" +
-                "Authorize and co-sign this Doctor's Order as:\n" +
+                "Authorize and co-sign this Physician's Order as:\n" +
                 docName + "\n" +
                 (cosig.doctor_specialty ? cosig.doctor_specialty + "\n" : "") +
                 "PRC Lic. No.: " + cosig.doctor_prc + "\n\n" +

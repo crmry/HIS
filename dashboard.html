@@ -1671,8 +1671,8 @@
   <nav class="seg-topbar" aria-label="Dashboard navigation" style="display: none !important;" hidden>
     <a href="dashboard.html" class="active">Physician Dashboard</a>
     <a href="patients.html">Patient List</a>
-    <a href="doctors_order_patient.html" id="topbar-orders-link" title="Outpatient (OPD) Doctor's Orders">OPD Orders</a>
-    <a href="doctors_order_er_admission.html" id="topbar-er-orders-link" title="ER &amp; Inpatient Admission Doctor's Orders">ER &amp; Admission Orders</a>
+    <a href="doctors_order_patient.html" id="topbar-orders-link" title="Outpatient (OPD) Physician's Orders">OPD Orders</a>
+    <a href="doctors_order_er_admission.html" id="topbar-er-orders-link" title="ER &amp; Inpatient Admission Physician's Orders">ER &amp; Admission Orders</a>
     <a href="forms_localstorage.html">Register Patient</a>
     <span class="seg-right"><span id="seg-clock">10:56:01</span><button type="button" class="btn btn-mini btn-danger seg-end btn-conclude-care-trigger" style="margin-left:8px; vertical-align:baseline; font-weight:700; border:none; cursor:pointer;" title="Conclude consultation, encode Final Diagnosis, Disposition, Follow-up and Requisitions"><i class="icon-flag icon-white"></i> End Patient Care</button><button type="button" id="btn-lock-session" class="btn btn-mini btn-inverse" style="margin-left:8px; vertical-align:baseline;" title="Lock session"><i class="icon-lock icon-white"></i> Lock</button></span>
   </nav>
@@ -3604,7 +3604,7 @@
           <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
             <label style="font-weight:normal; cursor:pointer; display:flex; align-items:center; gap:6px;">
               <input type="radio" name="new-enc-orders-mode" value="none" checked>
-              <strong>Observation Only (No Orders / Zero Orders)</strong> &mdash; Leaves Doctor's Orders column blank
+              <strong>Observation Only (No Orders / Zero Orders)</strong> &mdash; Leaves Physician's Orders column blank
             </label>
             <label style="font-weight:normal; cursor:pointer; display:flex; align-items:center; gap:6px;">
               <input type="radio" name="new-enc-orders-mode" value="copy">
@@ -5969,11 +5969,11 @@
       var encStroke;
       if (typeUpper === 'ER') {
         encUrl = 'doctors_order_er_admission.html?patient=' + encodeURIComponent(pId) + '&view=er' + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
-        encViewTitle = "View Emergency Department Doctor's Order / Progress Notes Nurses' Compliance Sheet (ED to Admission)";
+        encViewTitle = "View Emergency Department Physician's Order / Progress Notes Nurses' Compliance Sheet (ED to Admission)";
         encStroke = "#c62828";
       } else if (typeUpper === 'IP') {
         encUrl = 'doctors_order_er_admission.html?patient=' + encodeURIComponent(pId) + '&view=admission' + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
-        encViewTitle = "View Inpatient Admission Doctor's Order / Progress Notes Nurses' Compliance Sheet";
+        encViewTitle = "View Inpatient Admission Physician's Order / Progress Notes Nurses' Compliance Sheet";
         encStroke = "#1565c0";
       } else if (isInitial) {
         encUrl = 'opd_record_patient.html?patient=' + encodeURIComponent(pId) + (encDate ? '&encounter=' + encodeURIComponent(encDate) : '');
