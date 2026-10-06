@@ -1986,9 +1986,8 @@
         <div class="row-fluid" id="row-progress-notes" style="display:none;">
           <div class="span12" id="progress-notes-col">
             <div class="dashlet" id="dashlet-progress-notes">
-              <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="bootstrap-widget-header">
                 <h3 id="progress-notes-header-title">Progress Notes (Subjective, Objective, Assessment)</h3>
-                <span class="badge badge-info" id="progress-notes-badge" style="font-size:10px; background:#0e3d59; color:#fff; padding:2px 8px;">DOH SOA Format</span>
               </div>
               <div class="bootstrap-widget-content" id="dashlet-progress-notes-content" style="padding:14px 16px;">
                 <!-- Hidden aggregate textarea for backward compatibility and automated form serialization -->
@@ -4635,7 +4634,7 @@
     </div>
   </aside>
 
-  <script src="js/data/patient_seeds.js?v=20261006_06"></script>
+  <script src="js/data/patient_seeds.js?v=20261006_07"></script>
   <script>
   var SCORE_TO_WEEKS_MAP = {
     "-10": 20, "-9": 21, "-8": 21, "-7": 21, "-6": 21, "-5": 22, "-4": 23, "-3": 23, "-2": 23, "-1": 23,
@@ -5871,11 +5870,6 @@
         // Do not duplicate progress notes into OPD HPI
         if (hxEl && isHistorical) {
           hxEl.value = '';
-        }
-
-        var badge = document.getElementById('progress-notes-badge');
-        if (badge) {
-          badge.textContent = (reg === 'ER' ? 'Emergency Department (ER)' : 'Inpatient (IP)') + ' Progress Notes';
         }
       } else {
         // OPD encounters:
