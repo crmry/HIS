@@ -469,7 +469,7 @@
             margin: 8mm;
         }
     </style>
-    <script src="js/data/patient_seeds.js?v=20261006_02"></script>
+    <script src="js/data/patient_seeds.js?v=20261006_03"></script>
 </head>
 <body>
 
@@ -1595,9 +1595,13 @@
                 switchView('all');
             }
 
-            var targetPid = patientParam || (window.OP_PATIENT_ID || 'patient_op_carmela');
+            var targetPid = patientParam || (window.ER_PATIENT_ID || 'patient_er_juan');
             var patients = getPatients();
             var found = patients.find(function(p) { return p.id === targetPid; });
+            if (!found && targetPid === 'patient_er_juan') {
+                found = patients.find(function(p) { return p.id === (window.OP_PATIENT_ID || 'patient_op_carmela'); });
+                if (found) targetPid = found.id;
+            }
             if (!found && (targetPid === 'patient_op_juan' || targetPid === 'patient_op_carmela')) {
                 found = patients.find(function(p) { return p.id === (window.OP_PATIENT_ID || 'patient_op_carmela'); });
                 if (found) targetPid = found.id;

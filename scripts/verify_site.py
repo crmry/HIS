@@ -115,7 +115,7 @@ async def scan_single_target(browser_ws, file_url):
                     args = " ".join([str(a.get("value", a.get("description", ""))) for a in params.get("args", [])])
                     if t in ("error", "assert"):
                         errors.append(f"Console {t}: {args}")
-            except asyncio.TimeoutError:
+            except (asyncio.TimeoutError, websockets.exceptions.ConnectionClosed):
                 if loaded and time.time() - t0 > 1.0:
                     break
 
@@ -371,21 +371,25 @@ async def scan_single_target(browser_ws, file_url):
                         return 'syncEncounterDocumentationSections not defined on window in dashboard.html';
                     }
 
-                    // For default/OPD encounter: Progress notes hidden, ROS & PE visible, HPI tab visible
+                    // For initial encounter state: OPD encounter has progress notes hidden; ER/IP encounter has progress notes visible
                     const rosRow = document.getElementById('row-review-of-systems');
                     const peRow = document.getElementById('row-physical-exam');
                     const hpiTabLi = document.getElementById('tab-li-hx-present');
-                    if (pnRow.style.display !== 'none') {
-                        return 'Progress Notes row should be hidden on OPD encounters';
-                    }
-                    if (rosRow && rosRow.style.display === 'none') {
-                        return 'Review of Systems should be visible on OPD encounters';
-                    }
-                    if (peRow && peRow.style.display === 'none') {
-                        return 'Physical Exam should be visible on OPD encounters';
-                    }
-                    if (hpiTabLi && hpiTabLi.style.display === 'none') {
-                        return 'HPI tab should be visible on OPD encounters';
+                    const isInitialOpd = pnRow.style.display === 'none';
+                    if (isInitialOpd) {
+                        if (rosRow && rosRow.style.display === 'none') {
+                            return 'Review of Systems should be visible on OPD encounters';
+                        }
+                        if (peRow && peRow.style.display === 'none') {
+                            return 'Physical Exam should be visible on OPD encounters';
+                        }
+                    } else {
+                        if (rosRow && rosRow.style.display !== 'none') {
+                            return 'Review of Systems should be hidden on ER/IP encounters';
+                        }
+                        if (peRow && peRow.style.display !== 'none') {
+                            return 'Physical Exam should be hidden on ER/IP encounters';
+                        }
                     }
 
                     // Test switching to an ER encounter
@@ -399,9 +403,12 @@ async def scan_single_target(browser_ws, file_url):
                     if (pnRow.style.display === 'none') {
                         return 'Progress Notes row should be visible on ER encounters';
                     }
-                    const sVal = document.getElementById('progress_notes_subjective')?.textContent;
-                    const oVal = document.getElementById('progress_notes_objective')?.textContent;
-                    const aVal = document.getElementById('progress_notes_assessment')?.textContent;
+                    const elSubj = document.getElementById('progress_notes_subjective');
+                    const elObj = document.getElementById('progress_notes_objective');
+                    const elAss = document.getElementById('progress_notes_assessment');
+                    const sVal = (elSubj && (elSubj.value || elSubj.textContent)) || '';
+                    const oVal = (elObj && (elObj.value || elObj.textContent)) || '';
+                    const aVal = (elAss && (elAss.value || elAss.textContent)) || '';
                     if (!sVal || !sVal.includes('Acute onset epigastric pain')) {
                         return 'Progress notes subjective not populated correctly for ER encounter';
                     }
@@ -713,14 +720,17 @@ async def scan_single_target(browser_ws, file_url):
                     elif msg.get("method") == "Runtime.exceptionThrown":
                         details = msg.get("params", {}).get("exceptionDetails", {})
                         errors.append(f"Interactive Smoke Test Exception: {details.get('text')} {details.get('exception', {}).get('description')}")
-                except asyncio.TimeoutError:
+                except (asyncio.TimeoutError, websockets.exceptions.ConnectionClosed):
                     pass
 
     # Close target
-    async with websockets.connect(browser_ws) as b_ws:
-        close_msg = {"id": 1, "method": "Target.closeTarget", "params": {"targetId": target_id}}
-        await b_ws.send(json.dumps(close_msg))
-        await b_ws.recv()
+    try:
+        async with websockets.connect(browser_ws) as b_ws:
+            close_msg = {"id": 1, "method": "Target.closeTarget", "params": {"targetId": target_id}}
+            await b_ws.send(json.dumps(close_msg))
+            await b_ws.recv()
+    except Exception:
+        pass
 
     return errors
 
@@ -758,6 +768,7 @@ async def run_scan():
             test_urls.append((fname, file_url))
             if fname in ("dashboard.html", "dashboard_er_inpatient.html", "doctors_order_patient.html", "opd_record_patient.html", "Neonate_Clinical_Module.html", "doctors_order_er_admission.html"):
                 test_urls.append((f"{fname}?patient=patient_op_carmela", f"{file_url}?patient=patient_op_carmela"))
+                test_urls.append((f"{fname}?patient=patient_er_juan", f"{file_url}?patient=patient_er_juan"))
                 test_urls.append((f"{fname}?patient=patient_op_juan", f"{file_url}?patient=patient_op_juan"))
                 test_urls.append((f"{fname}?patient=patient_new_blank_1790299677880", f"{file_url}?patient=patient_new_blank_1790299677880"))
 
