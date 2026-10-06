@@ -737,7 +737,7 @@ async def run_scan():
 
     try:
         version_data = None
-        for _ in range(15):
+        for _ in range(30):
             await asyncio.sleep(0.5)
             try:
                 with urllib.request.urlopen("http://127.0.0.1:9222/json/version") as r:

@@ -1354,14 +1354,12 @@
                     stampHtml =
                         '<div class="enc-sig-dual-wrap">' +
                         '  <div class="enc-sig-block">' +
-                        '    <div class="enc-sig-role">Ordered by: Dr. ' + physName + ' [E-Signature]</div>' +
                         '    <div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
                         '    <div class="enc-sig-line-draw">________________________________</div>' +
                         '    <div class="enc-sig-name">' + physName + '</div>' +
                         '    <div class="enc-sig-lic">PRC Lic. No.: ' + licText + (dateDisplay ? ' &bull; ' + escapeHtml(dateDisplay) : '') + '</div>' +
                         '  </div>' +
                         '  <div class="enc-sig-block" style="border-left:1px dashed #cbd5e1; padding-left:14px;">' +
-                        '    <div class="enc-sig-role" style="color:#15803d;">Co-Signed by: Dr. ' + escapeHtml(pDocName) + ' [E-Signature]</div>' +
                         '    <div class="enc-sig-cursive" style="color:#14532d;">' + escapeHtml(pDocSig) + '</div>' +
                         '    <div class="enc-sig-line-draw">________________________________</div>' +
                         '    <div class="enc-sig-name">' + escapeHtml(pDocName) + '</div>' +
@@ -1382,7 +1380,6 @@
 
                     stampHtml =
                         '<div class="enc-sig-block">' +
-                        '  <div class="enc-sig-role">Ordered by: Dr. ' + physName + ' [E-Signature]</div>' +
                         '  <div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
                         '  <div class="enc-sig-line-draw">________________________________</div>' +
                         '  <div class="enc-sig-name">' + physName + '</div>' +
@@ -1398,7 +1395,6 @@
                     // Historical encounter or non-pending: standard single physician signature
                     stampHtml =
                         '<div class="enc-sig-block">' +
-                        '  <div class="enc-sig-role">Ordered by: Dr. ' + physName + ' [E-Signature]</div>' +
                         '  <div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
                         '  <div class="enc-sig-line-draw">________________________________</div>' +
                         '  <div class="enc-sig-name">' + physName + '</div>' +
@@ -1410,7 +1406,6 @@
                 // Default: NONE was selected (or no pairing requested). Standard single physician signature only.
                 stampHtml =
                     '<div class="enc-sig-block">' +
-                    '  <div class="enc-sig-role">Ordered by: Dr. ' + physName + ' [E-Signature]</div>' +
                     '  <div class="enc-sig-cursive">' + escapeHtml(sigLabel) + '</div>' +
                     '  <div class="enc-sig-line-draw">________________________________</div>' +
                     '  <div class="enc-sig-name">' + physName + '</div>' +
