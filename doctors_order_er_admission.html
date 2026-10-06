@@ -310,15 +310,20 @@
             cursor: default;
         }
 
+        table.orders tbody td[rowspan] {
+            vertical-align: top !important;
+        }
+
         table.orders tbody td[rowspan] textarea {
-            height: 100% !important;
-            min-height: 100% !important;
+            height: auto;
+            min-height: 32px;
         }
 
         table.orders tbody td.cell-datetime {
-            vertical-align: middle;
+            vertical-align: top !important;
             text-align: center;
             background: #fff;
+            padding-top: 3px;
         }
 
         table.orders tbody td.cell-datetime textarea {
@@ -327,7 +332,10 @@
             color: #111;
             line-height: 1.35;
             white-space: pre-wrap;
+            vertical-align: top;
+            padding: 3px 4px;
         }
+
 
         table.orders tbody td.cell-notes {
             vertical-align: top;
@@ -1221,10 +1229,6 @@
 
         function resizeAllTextareas() {
             document.querySelectorAll("table.orders textarea").forEach(function(textarea) {
-                if (textarea.closest("td[rowspan]")) {
-                    textarea.style.height = "100%";
-                    return;
-                }
                 textarea.style.height = "auto";
                 if (textarea.value) {
                     textarea.style.height = Math.max(textarea.scrollHeight, 32) + "px";
@@ -1414,7 +1418,7 @@
 
         window.addEventListener('resize', resizeAllTextareas);
         document.addEventListener('input', function(e) {
-            if (e.target && e.target.tagName === 'TEXTAREA' && !e.target.closest('td[rowspan]')) {
+            if (e.target && e.target.tagName === 'TEXTAREA') {
                 e.target.style.height = 'auto';
                 e.target.style.height = Math.max(e.target.scrollHeight, 32) + 'px';
             }

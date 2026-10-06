@@ -209,9 +209,10 @@
         }
 
         table.orders tbody td.cell-datetime {
-            vertical-align: middle;
+            vertical-align: top !important;
             text-align: center;
             background: #fff;
+            padding-top: 3px;
         }
 
         table.orders tbody td.cell-datetime textarea {
@@ -220,14 +221,17 @@
             color: #111;
             line-height: 1.35;
             white-space: pre-wrap;
+            vertical-align: top;
+            padding: 3px 4px;
         }
 
         table.orders tbody td[rowspan] {
-            vertical-align: middle;
+            vertical-align: top !important;
         }
 
         table.orders tbody td[rowspan] textarea {
-            height: 100% !important;
+            height: auto;
+            min-height: 32px;
             box-sizing: border-box;
         }
 
@@ -1198,10 +1202,6 @@
 
         function resizeAllTextareas() {
             document.querySelectorAll("table.orders textarea").forEach(textarea => {
-                if (textarea.closest("td[rowspan]")) {
-                    textarea.style.height = "100%";
-                    return;
-                }
                 textarea.style.height = "auto";
                 if (textarea.value) {
                     textarea.style.height = Math.max(textarea.scrollHeight, 36) + "px";
@@ -2164,10 +2164,6 @@
 
         document.addEventListener("input", function (event) {
             if (event.target.matches("table.orders textarea")) {
-                if (event.target.closest("td[rowspan]")) {
-                    event.target.style.height = "100%";
-                    return;
-                }
                 event.target.style.height = "auto";
                 event.target.style.height = Math.max(event.target.scrollHeight, 36) + "px";
             }
