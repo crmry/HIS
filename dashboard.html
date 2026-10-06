@@ -2726,12 +2726,8 @@
     <div class="row-fluid" id="row-physician-orders">
       <div class="span12">
         <div class="dashlet">
-          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="bootstrap-widget-header">
             <h3>Physician's Orders (Plans)</h3>
-            <div>
-              <button type="button" class="btn btn-mini" id="expand-all-orders" style="margin-right:4px;">Expand All</button>
-              <button type="button" class="btn btn-mini" id="collapse-all-orders">Collapse All</button>
-            </div>
           </div>
           <div class="bootstrap-widget-content">
             <div id="orders-body"></div>
@@ -10955,37 +10951,6 @@
       }
     });
 
-    var expandAllBtn = document.getElementById('expand-all-orders');
-    if (expandAllBtn) {
-      expandAllBtn.addEventListener('click', function () {
-        ordersBody.querySelectorAll('.order-accordion-item').forEach(function (item) {
-          item.classList.add('active');
-          var arrow = item.querySelector('.order-accordion-arrow');
-          if (arrow) arrow.textContent = '▼';
-        });
-        ordersBody.querySelectorAll('.med-sub-item').forEach(function (item) {
-          item.classList.add('open');
-          var arrow = item.querySelector('.med-sub-arrow');
-          if (arrow) arrow.textContent = '▼';
-        });
-      });
-    }
-
-    var collapseAllBtn = document.getElementById('collapse-all-orders');
-    if (collapseAllBtn) {
-      collapseAllBtn.addEventListener('click', function () {
-        ordersBody.querySelectorAll('.order-accordion-item').forEach(function (item) {
-          item.classList.remove('active');
-          var arrow = item.querySelector('.order-accordion-arrow');
-          if (arrow) arrow.textContent = '▶';
-        });
-        ordersBody.querySelectorAll('.med-sub-item').forEach(function (item) {
-          item.classList.remove('open');
-          var arrow = item.querySelector('.med-sub-arrow');
-          if (arrow) arrow.textContent = '▶';
-        });
-      });
-    }
 
     function collectOrders() {
 
