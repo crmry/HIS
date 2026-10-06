@@ -338,7 +338,7 @@ if (typeof window !== 'undefined') {
               ],
               clinical_record: {
                 chief_complaint: 'Semi-annual comprehensive outpatient review and lab orders',
-                history: 'Patient is a 48-year-old female presenting for scheduled semi-annual review. Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea. Compliant with Metformin 500 mg BID and Losartan 50 mg OD. Home BP ranges 130-138/80-86 mmHg.',
+                history: 'Scheduled semi-annual review. Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea. Compliant with Metformin 500 mg BID and Losartan 50 mg OD. Home BP ranges 130-138/80-86 mmHg.',
                 final_diagnosis: 'Type 2 Diabetes Mellitus, suboptimally controlled; Essential Hypertension'
               },
               prescriptions: [
@@ -356,10 +356,10 @@ if (typeof window !== 'undefined') {
               pertinent_signs: ['Fatigue'],
               pertinent_signs_information: 'Reports occasional mild afternoon fatigue; denies polyuria, polydipsia, numbness, chest tightness, or dyspnea.',
               physical_exam: 'Alert, oriented, in no acute distress. Lungs: Clear to auscultation bilaterally. Heart: Regular rate and rhythm, no murmurs. Extremities: No edema, dorsalis pedis pulses palpable.',
-              progress_notes_subjective: 'Patient is a 48-year-old female presenting for scheduled semi-annual review. Compliant with Metformin 500 mg BID and Losartan 50 mg OD.',
+              progress_notes_subjective: 'Scheduled semi-annual review. Compliant with Metformin 500 mg BID and Losartan 50 mg OD.',
               progress_notes_objective: '',
               progress_notes_assessment: '',
-              progress_notes: 'Patient is a 48-year-old female presenting for scheduled semi-annual review. Compliant with Metformin 500 mg BID and Losartan 50 mg OD.',
+              progress_notes: 'Scheduled semi-annual review. Compliant with Metformin 500 mg BID and Losartan 50 mg OD.',
               orders: [
                 { text: 'Start Empagliflozin 10 mg tablet once daily in the morning.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:15 AM nurse' },
                 { text: 'Continue Metformin 500 mg tablet twice daily with meals.', dateTime: '2026-06-20T10:00:00+08:00', cared: ['C'], timeSignature: 'C - 10:18 AM nurse' },
@@ -483,7 +483,7 @@ if (typeof window !== 'undefined') {
               ],
               clinical_record: {
                 chief_complaint: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.',
-                history: 'Patient is a 48-year-old female presenting to the Emergency Department with a 3-day history of high-grade fever, productive cough with yellowish sputum, and shortness of breath. Known diabetic and hypertensive. BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93% on room air. Crackles over right lower lung field, tachypneic.',
+                history: 'High-grade fever, productive cough with yellowish sputum, and progressive shortness of breath x 3 days. Known diabetic and hypertensive. BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93% on room air. Crackles over right lower lung field, tachypneic.',
                 final_diagnosis: 'Community-Acquired Pneumonia, moderate risk; Essential Hypertension Stage 1'
               },
               progress_notes_subjective: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.',
@@ -587,7 +587,7 @@ if (typeof window !== 'undefined') {
               physical_exam: 'Gait normal without antalgic limp. Right knee: No joint effusion, no local warmth or erythema. Range of motion: Full flexion to 135° and full extension to 0°. Mild non-tender medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative.',
               clinical_record: {
                 chief_complaint: 'Follow-up right knee pain and mobility assessment',
-                history: 'Patient is a 47-year-old female with diagnosed mild primary osteoarthritis of the right knee returning for scheduled 3-month orthopedic follow-up. Demonstrates good symptom improvement on physical therapy and home quadriceps rehabilitation.',
+                history: 'Scheduled 3-month orthopedic follow-up for mild primary osteoarthritis of the right knee. Demonstrates good symptom improvement on physical therapy and home quadriceps rehabilitation.',
                 final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, clinically stable'
               },
               progress_notes_subjective: 'Patient reports significant improvement in right knee pain after physical therapy and home quadriceps strengthening exercises.',
@@ -639,10 +639,10 @@ if (typeof window !== 'undefined') {
               physical_exam: 'Right knee: Mild medial joint line tenderness and crepitus on passive flexion. No joint effusion, local warmth, or erythema. Active ROM 0° to 125°. Ligamentous testing negative.',
               clinical_record: {
                 chief_complaint: 'Right knee joint aching pain on walking and climbing stairs x 2 months',
-                history: 'Patient is a 47-year-old female presenting with a 2-month history of progressive right knee pain on walking and climbing stairs without prior trauma.',
+                history: 'Progressive right knee pain on walking and climbing stairs x 2 months without prior trauma.',
                 final_diagnosis: 'Unilateral Primary Osteoarthritis, Right Knee, Grade II'
               },
-              progress_notes: 'Patient is a 47-year-old female presenting with a 2-month history of progressive right knee pain on walking and climbing stairs without prior trauma.',
+              progress_notes: 'Progressive right knee pain on walking and climbing stairs x 2 months without prior trauma.',
               orders: [
                 { text: 'Digital Knee Radiograph (AP and Lateral Weight-Bearing Views) completed: Mild medial joint space narrowing.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:45 PM nurse' },
                 { text: 'Celecoxib 200 mg capsule once daily after meals for 14 days.', dateTime: '2025-09-18T14:30:00+08:00', cared: ['C'], timeSignature: 'C - 2:50 PM nurse' },
