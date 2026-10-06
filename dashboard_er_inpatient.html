@@ -1983,10 +1983,10 @@
         </div>
 
         <!-- ROW 4.5: Progress Notes (Subjective, Objective, Assessment) - ER & Inpatient Clinical Documentation -->
-        <div class="row-fluid" id="row-progress-notes" style="display:none;">
+        <div class="row-fluid" id="row-progress-notes">
           <div class="span12" id="progress-notes-col">
             <div class="dashlet" id="dashlet-progress-notes">
-              <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center; position:relative; padding-right:36px;">
                 <h3 id="progress-notes-header-title">Progress Notes (Subjective, Objective, Assessment)</h3>
                 <span class="badge badge-info" id="progress-notes-badge" style="font-size:10px; background:#0e3d59; color:#fff; padding:2px 8px;">DOH SOA Format</span>
               </div>
@@ -4638,7 +4638,7 @@
     </div>
   </aside>
 
-  <script src="js/data/patient_seeds.js?v=20261006_03"></script>
+  <script src="js/data/patient_seeds.js?v=20261006_05"></script>
   <script>
   var SCORE_TO_WEEKS_MAP = {
     "-10": 20, "-9": 21, "-8": 21, "-7": 21, "-6": 21, "-5": 22, "-4": 23, "-3": 23, "-2": 23, "-1": 23,
@@ -4730,7 +4730,7 @@
         var opt = document.createElement('option');
         opt.value = r.id;
         var d = r.data || {};
-        opt.textContent = (patientName(d) || 'Unnamed') + (d.hrn ? ' \u2014 ' + d.hrn : '') + (r.id === OP_PATIENT_ID ? ' (Outpatient \u2014 Adult Medicine OPD)' : r.id === BLANK_PATIENT_ID ? ' (New Patient \u2014 Blank Chart)' : '');
+        opt.textContent = (patientName(d) || 'Unnamed') + (d.hrn ? ' \u2014 ' + d.hrn : '') + (r.id === (window.ER_PATIENT_ID || 'patient_er_juan') ? ' (ER & Inpatient \u2014 General Medicine)' : r.id === OP_PATIENT_ID ? ' (Outpatient \u2014 Adult Medicine OPD)' : r.id === BLANK_PATIENT_ID ? ' (New Patient \u2014 Blank Chart)' : '');
         selector.appendChild(opt);
       });
     }
@@ -5839,68 +5839,28 @@
       var progAss = document.getElementById('progress_notes_assessment');
       var progEl = document.getElementById('progress_notes');
 
-      if (isErOrIp) {
-        // ER and Inpatient encounters:
-        // Do not use OPD-style HPI, ROS, and PE sections
-        if (rosRow) rosRow.style.display = 'none';
-        if (peRow) peRow.style.display = 'none';
-        if (hpiTabLi) {
-          hpiTabLi.style.display = 'none';
-          if (hpiTabLi.classList.contains('active')) {
-            hpiTabLi.classList.remove('active');
-            if (hxPresentTab) hxPresentTab.classList.remove('active');
-            var pmhLi = document.querySelector('a[href="#hx-past"]');
-            if (pmhLi && pmhLi.parentElement) pmhLi.parentElement.classList.add('active');
-            if (hxPastTab) hxPastTab.classList.add('active');
-          }
-        }
+      // On dedicated ER & Inpatient Dashboard, Progress Notes (SOA) is always prominently available
+      if (progRow) progRow.style.display = 'block';
+      if (rosRow) rosRow.style.display = 'block';
+      if (peRow) peRow.style.display = 'block';
+      if (hpiTabLi) hpiTabLi.style.display = '';
 
-        // Display Progress Notes (SOA)
-        if (progRow) progRow.style.display = 'block';
+      var parsedNotes = parseStructuredProgressNotes(enc);
+      if (progSubj) progSubj.value = parsedNotes.subjective || '';
+      if (progObj) progObj.value = parsedNotes.objective || '';
+      if (progAss) progAss.value = parsedNotes.assessment || '';
+      if (progEl) progEl.value = parsedNotes.combined || '';
 
-        var parsedNotes = parseStructuredProgressNotes(enc);
-        if (progSubj) progSubj.value = parsedNotes.subjective || '';
-        if (progObj) progObj.value = parsedNotes.objective || '';
-        if (progAss) progAss.value = parsedNotes.assessment || '';
-        if (progEl) progEl.value = parsedNotes.combined || '';
+      var isRo = Boolean(isHistorical);
+      [progSubj, progObj, progAss, progEl].forEach(function (el) {
+        if (!el) return;
+        el.readOnly = isRo;
+        el.disabled = isRo;
+      });
 
-        var isRo = Boolean(isHistorical);
-        [progSubj, progObj, progAss, progEl].forEach(function (el) {
-          if (!el) return;
-          el.readOnly = isRo;
-          el.disabled = isRo;
-        });
-
-        // Do not duplicate progress notes into OPD HPI
-        if (hxEl && isHistorical) {
-          hxEl.value = '';
-        }
-
-        var badge = document.getElementById('progress-notes-badge');
-        if (badge) {
-          badge.textContent = (reg === 'ER' ? 'Emergency Department (ER)' : 'Inpatient (IP)') + ' Progress Notes';
-        }
-      } else {
-        // OPD encounters:
-        // Display OPD HPI, Review of Systems, and Physical Examination
-        if (progRow) progRow.style.display = 'none';
-        if (rosRow) rosRow.style.display = 'block';
-        if (peRow) peRow.style.display = 'block';
-        if (hpiTabLi) {
-          hpiTabLi.style.display = '';
-          hpiTabLi.classList.add('active');
-          if (hxPresentTab) hxPresentTab.classList.add('active');
-          var pmhLi = document.querySelector('a[href="#hx-past"]');
-          if (pmhLi && pmhLi.parentElement) pmhLi.parentElement.classList.remove('active');
-          if (hxPastTab) hxPastTab.classList.remove('active');
-        }
-
-        [progSubj, progObj, progAss, progEl].forEach(function (el) {
-          if (!el) return;
-          el.value = '';
-          el.readOnly = false;
-          el.disabled = false;
-        });
+      var badge = document.getElementById('progress-notes-badge');
+      if (badge) {
+        badge.textContent = (reg === 'ER' ? 'Emergency Department (ER)' : 'Inpatient (IP)') + ' Progress Notes';
       }
     }
     window.syncEncounterDocumentationSections = syncEncounterDocumentationSections;
@@ -13600,7 +13560,7 @@
         if (fBadge) fBadge.style.display = 'none';
 
         var progRow = document.getElementById('row-progress-notes');
-        if (progRow) progRow.style.display = 'none';
+        if (progRow) progRow.style.display = 'block';
         ['progress_notes_subjective', 'progress_notes_objective', 'progress_notes_assessment', 'progress_notes'].forEach(function (id) {
           var el = document.getElementById(id);
           if (el) el.value = '';
@@ -13648,6 +13608,7 @@
     var savedOrdersDraftPayload = safeParse(localStorage.getItem('clmmrh_doctors_orders_draft'), null);
     var savedOrdersDraft = savedOrdersDraftPayload && savedOrdersDraftPayload.orders ? savedOrdersDraftPayload.orders : savedOrdersDraftPayload;
     function bootstrapDashboardData() {
+      if (typeof ensureSeedPatient === 'function') ensureSeedPatient();
       buildOrders(savedOrdersDraft || undefined);
       populateSelector();
       renderEncounters([]);
@@ -13660,13 +13621,34 @@
           } catch (e) {}
         }
         var record = getPatients().find(function (r) { return r.id === urlPatientId; });
+        if (!record && urlPatientId === 'patient_er_juan') {
+          if (typeof ensureSeedPatient === 'function') ensureSeedPatient();
+          record = getPatients().find(function (r) { return r.id === 'patient_er_juan'; });
+          if (!record && typeof erPatientRecord === 'function') {
+            record = erPatientRecord();
+          } else if (!record && typeof window.erPatientRecord === 'function') {
+            record = window.erPatientRecord();
+          }
+          if (record) {
+            var curr = getPatients();
+            if (!curr.some(function (p) { return p.id === record.id; })) {
+              curr.splice(1, 0, record);
+              savePatients(curr);
+              populateSelector();
+            }
+          }
+        }
         if (!record && (urlPatientId === 'patient_op_juan' || urlPatientId === 'patient_op_carmela')) {
           record = getPatients().find(function (r) { return r.id === OP_PATIENT_ID || r.id === 'patient_op_carmela'; });
         }
         if (record) loadPatientRecord(record);
         else clearAllPatientFields();
       } else {
-        var defaultRecord = getPatients().find(function (r) { return r.id === (window.ER_PATIENT_ID || 'patient_er_juan'); }) || getPatients().find(function (r) { return r.id === SEED_PATIENT_ID; }) || getPatients()[0];
+        var defaultRecord = getPatients().find(function (r) { return r.id === (window.ER_PATIENT_ID || 'patient_er_juan'); }) ||
+                            (typeof erPatientRecord === 'function' ? erPatientRecord() : null) ||
+                            (typeof window.erPatientRecord === 'function' ? window.erPatientRecord() : null) ||
+                            getPatients().find(function (r) { return r.id === SEED_PATIENT_ID; }) ||
+                            getPatients()[0];
         if (defaultRecord) loadPatientRecord(defaultRecord);
         else clearAllPatientFields();
       }

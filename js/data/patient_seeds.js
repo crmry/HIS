@@ -709,7 +709,7 @@ if (typeof window !== 'undefined') {
     function erPatientRecord() {
       return {
         id: ER_PATIENT_ID,
-        seedVersion: 68,
+        seedVersion: 69,
         createdAt: '2026-06-12T08:30:00+08:00',
         updatedAt: '2026-06-14T09:30:00+08:00',
         data: {
@@ -995,7 +995,7 @@ if (typeof window !== 'undefined') {
       var erIndex = records.findIndex(function (record) { return record.id === ER_PATIENT_ID; });
       if (erIndex < 0) {
         records.splice(1, 0, erPatientRecord());
-      } else if (Number(records[erIndex].seedVersion || 0) < 68) {
+      } else if (Number(records[erIndex].seedVersion || 0) < 69) {
         records[erIndex] = erPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
@@ -1010,4 +1010,23 @@ if (typeof window !== 'undefined') {
       if (blankIndex < 0) records.push(blankPatientRecord());
       else if (Number(records[blankIndex].seedVersion || 0) < 43) records[blankIndex] = blankPatientRecord();
       savePatients(records);
+    }
+
+    if (typeof window !== 'undefined') {
+      window.ensureSeedPatient = ensureSeedPatient;
+      window.erPatientRecord = erPatientRecord;
+      window.opPatientRecord = opPatientRecord;
+      window.blankPatientRecord = blankPatientRecord;
+      window.seedPatientRecord = seedPatientRecord;
+      window.getPatients = getPatients;
+      window.savePatients = savePatients;
+      window.ER_PATIENT_ID = ER_PATIENT_ID;
+      window.OP_PATIENT_ID = OP_PATIENT_ID;
+      window.SEED_PATIENT_ID = SEED_PATIENT_ID;
+      window.BLANK_PATIENT_ID = BLANK_PATIENT_ID;
+      try {
+        ensureSeedPatient();
+      } catch (e) {
+        console.warn('ensureSeedPatient auto-execution warning:', e);
+      }
     }

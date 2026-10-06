@@ -469,7 +469,7 @@
             margin: 8mm;
         }
     </style>
-    <script src="js/data/patient_seeds.js?v=20261006_03"></script>
+    <script src="js/data/patient_seeds.js?v=20261006_05"></script>
 </head>
 <body>
 
@@ -508,15 +508,15 @@
                 <div class="patient-grid">
                     <div class="field">
                         <label>Name of Patient</label>
-                        <span class="field-val" id="er-patient-name">DEL ROSARIO, CARMELA BAUTISTA</span>
+                        <span class="field-val" id="er-patient-name">MAKILING, JUAN DELA CRUZ</span>
                     </div>
                     <div class="field">
                         <label>Hospital Number</label>
-                        <span class="field-val" id="er-patient-hrn">0000001890</span>
+                        <span class="field-val" id="er-patient-hrn">0000001925</span>
                     </div>
                     <div class="field">
                         <label>Address</label>
-                        <span class="field-val" id="er-patient-address">Brgy. Bata, Bacolod City, Negros Occidental</span>
+                        <span class="field-val" id="er-patient-address">Brgy. Mansilingan, Bacolod City, Negros Occidental</span>
                     </div>
                     <div class="field">
                         <label>Ward / Room</label>
@@ -525,11 +525,11 @@
                     <div class="field span-2 split-row">
                         <div class="field age">
                             <label>Age</label>
-                            <span class="field-val" id="er-patient-age">48</span>
+                            <span class="field-val" id="er-patient-age">50</span>
                         </div>
                         <div class="field sex">
                             <label>Sex</label>
-                            <span class="field-val" id="er-patient-sex">F</span>
+                            <span class="field-val" id="er-patient-sex">M</span>
                         </div>
                         <div class="field admit">
                             <label>Admission Date</label>
@@ -814,15 +814,15 @@
                 <div class="patient-grid">
                     <div class="field">
                         <label>Name of Patient</label>
-                        <span class="field-val" id="adm-patient-name">DEL ROSARIO, CARMELA BAUTISTA</span>
+                        <span class="field-val" id="adm-patient-name">MAKILING, JUAN DELA CRUZ</span>
                     </div>
                     <div class="field">
                         <label>Hospital Number</label>
-                        <span class="field-val" id="adm-patient-hrn">0000001890</span>
+                        <span class="field-val" id="adm-patient-hrn">0000001925</span>
                     </div>
                     <div class="field">
                         <label>Address</label>
-                        <span class="field-val" id="adm-patient-address">Brgy. Bata, Bacolod City, Negros Occidental</span>
+                        <span class="field-val" id="adm-patient-address">Brgy. Mansilingan, Bacolod City, Negros Occidental</span>
                     </div>
                     <div class="field">
                         <label>Ward / Room</label>
@@ -831,15 +831,15 @@
                     <div class="field span-2 split-row">
                         <div class="field age">
                             <label>Age</label>
-                            <span class="field-val" id="adm-patient-age">48</span>
+                            <span class="field-val" id="adm-patient-age">50</span>
                         </div>
                         <div class="field sex">
                             <label>Sex</label>
-                            <span class="field-val" id="adm-patient-sex">F</span>
+                            <span class="field-val" id="adm-patient-sex">M</span>
                         </div>
                         <div class="field admit">
                             <label>Admission Date</label>
-                            <span class="field-val" id="adm-patient-admit">06/12/2026 08:30 AM</span>
+                            <span class="field-val" id="adm-patient-admit">06/12/2026 12:30 PM</span>
                         </div>
                     </div>
                 </div>
@@ -1503,6 +1503,7 @@
             var sel = document.getElementById('patient-selector');
             if (!sel) return;
 
+            sel.innerHTML = '<option value="">Select Hospital Patient...</option>';
             var patients = getPatients();
             patients.forEach(function(p) {
                 var d = p.data || p;
@@ -1511,7 +1512,10 @@
                 var label = (last && first) ? (last + ', ' + first) : (p.id || 'Patient');
                 var opt = document.createElement('option');
                 opt.value = p.id;
-                opt.textContent = label + ' (' + (d.registration_type || d.registry || 'PATIENT') + ')';
+                var regLabel = p.id === (window.ER_PATIENT_ID || 'patient_er_juan')
+                    ? 'ER & INPATIENT'
+                    : (d.registration_type || d.registry || (p.id === 'patient_op_carmela' ? 'OPD' : 'PATIENT'));
+                opt.textContent = label + ' (' + regLabel + ')';
                 sel.appendChild(opt);
             });
 
@@ -1519,6 +1523,9 @@
                 var pId = this.value;
                 if (!pId) return;
                 var found = patients.find(function(p) { return p.id === pId; });
+                if (!found && pId === (window.ER_PATIENT_ID || 'patient_er_juan')) {
+                    if (typeof erPatientRecord === 'function') found = erPatientRecord();
+                }
                 if (!found) return;
                 loadPatientDemographics(found);
             });
@@ -1540,10 +1547,10 @@
         function loadPatientDemographics(patientRecord) {
             var d = patientRecord.data || patientRecord;
             var fullName = ((d.last_name || '') + ', ' + (d.first_name || '') + ' ' + (d.middle_name || '')).trim().replace(/^,\s*/, '');
-            var hrn = d.hospital_number || d.hospital_no || d.hrn || '0000001890';
-            var address = d.address || 'Brgy. Bata, Bacolod City, Negros Occidental';
-            var age = d.age || calculateAge(d.birthdate) || '48';
-            var sex = (d.gender || d.sex || 'F').toUpperCase().startsWith('F') ? 'F' : 'M';
+            var hrn = d.hospital_number || d.hospital_no || d.hrn || '0000001925';
+            var address = d.address || 'Brgy. Mansilingan, Bacolod City, Negros Occidental';
+            var age = d.age || calculateAge(d.birthdate) || '50';
+            var sex = (d.gender || d.sex || 'M').toUpperCase().startsWith('F') ? 'F' : 'M';
 
             ['er', 'adm', 'tmpl'].forEach(function(prefix) {
                 var elName = document.getElementById(prefix + '-patient-name');
@@ -1554,7 +1561,7 @@
                 var elSex = document.getElementById(prefix + '-patient-sex');
                 var elAdmit = document.getElementById(prefix + '-patient-admit');
 
-                if (elName) elName.textContent = fullName || 'DEL ROSARIO, CARMELA BAUTISTA';
+                if (elName) elName.textContent = fullName || 'MAKILING, JUAN DELA CRUZ';
                 if (elHrn) elHrn.textContent = hrn;
                 if (elAddr) elAddr.textContent = address;
                 if (elAge) elAge.textContent = age;
@@ -1574,6 +1581,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            if (typeof ensureSeedPatient === 'function') {
+                ensureSeedPatient();
+            }
             populateBlankTemplateRows();
             initPatientSelector();
 
@@ -1598,8 +1608,13 @@
             var targetPid = patientParam || (window.ER_PATIENT_ID || 'patient_er_juan');
             var patients = getPatients();
             var found = patients.find(function(p) { return p.id === targetPid; });
-            if (!found && targetPid === 'patient_er_juan') {
-                found = patients.find(function(p) { return p.id === (window.OP_PATIENT_ID || 'patient_op_carmela'); });
+            if (!found && targetPid === (window.ER_PATIENT_ID || 'patient_er_juan')) {
+                if (typeof ensureSeedPatient === 'function') ensureSeedPatient();
+                patients = getPatients();
+                found = patients.find(function(p) { return p.id === (window.ER_PATIENT_ID || 'patient_er_juan'); });
+                if (!found && typeof erPatientRecord === 'function') {
+                    found = erPatientRecord();
+                }
                 if (found) targetPid = found.id;
             }
             if (!found && (targetPid === 'patient_op_juan' || targetPid === 'patient_op_carmela')) {

@@ -546,6 +546,27 @@ async def scan_single_target(browser_ws, file_url):
                     }
                 }
 
+                if (window.location.href.includes('dashboard_er_inpatient.html')) {
+                    const rowProg = document.getElementById('row-progress-notes');
+                    if (!rowProg || rowProg.style.display === 'none') {
+                        return 'dashboard_er_inpatient.html Progress Notes row is missing or hidden';
+                    }
+                    if (window.location.href.includes('patient=patient_er_juan')) {
+                        const pName = document.getElementById('banner-patient-name');
+                        if (!pName || !pName.textContent.includes('MAKILING, JUAN')) {
+                            return 'dashboard_er_inpatient.html did not display Juan Makiling in demographic banner';
+                        }
+                        const pHrn = document.getElementById('banner-hrn');
+                        if (!pHrn || pHrn.textContent.trim() !== '0000001925') {
+                            return 'dashboard_er_inpatient.html did not display HRN 0000001925 for Juan Makiling';
+                        }
+                        const encRows = document.getElementById('encounter-rows');
+                        if (!encRows || encRows.children.length === 0) {
+                            return 'dashboard_er_inpatient.html did not render encounters for Juan Makiling';
+                        }
+                    }
+                }
+
                 if (window.location.href.includes('doctors_order_er_admission.html')) {
                     const btnEr = document.getElementById('btn-view-er');
                     const btnAdm = document.getElementById('btn-view-admission');
@@ -562,6 +583,17 @@ async def scan_single_target(browser_ws, file_url):
                     if (window.currentViewMode() !== 'all') return 'Failed to switch to all sheets view';
                     btnEr.click();
                     if (window.currentViewMode() !== 'er') return 'Failed to switch back to er view';
+
+                    if (window.location.href.includes('patient=patient_er_juan')) {
+                        const erName = document.getElementById('er-patient-name');
+                        const admName = document.getElementById('adm-patient-name');
+                        if (!erName || !erName.textContent.includes('MAKILING, JUAN')) {
+                            return 'doctors_order_er_admission.html did not load Juan Makiling name in ER sheet header';
+                        }
+                        if (!admName || !admName.textContent.includes('MAKILING, JUAN')) {
+                            return 'doctors_order_er_admission.html did not load Juan Makiling name in Admission sheet header';
+                        }
+                    }
                 }
 
                 // Test Obstetric & Gynecologic standalone workspace encoder (on OB_Gyne_Clinical_Module.html)
