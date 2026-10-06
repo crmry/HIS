@@ -309,6 +309,13 @@ Physical Examination: General Survey: Conscious, coherent, ambulatory. HEENT: An
         if (!record && (pid === 'patient_op_juan' || pid === 'patient_op_carmela')) {
           record = patients.find(function (p) { return p.id === (window.OP_PATIENT_ID || 'patient_op_carmela'); });
         }
+        if (pid === 'patient_op_juan' && window.history && window.history.replaceState) {
+          try {
+            var normUrl = new URL(window.location.href);
+            normUrl.searchParams.set('patient', 'patient_op_carmela');
+            window.history.replaceState({}, '', normUrl.toString());
+          } catch (e) {}
+        }
         if (!record) record = patients[0];
 
         // Populate patient dropdown

@@ -13686,6 +13686,13 @@
       populateSelector();
       renderEncounters([]);
       if (urlPatientId) {
+        if (urlPatientId === 'patient_op_juan' && window.history && window.history.replaceState) {
+          try {
+            var normUrl = new URL(window.location.href);
+            normUrl.searchParams.set('patient', 'patient_op_carmela');
+            window.history.replaceState({}, '', normUrl.toString());
+          } catch (e) {}
+        }
         var record = getPatients().find(function (r) { return r.id === urlPatientId; });
         if (!record && (urlPatientId === 'patient_op_juan' || urlPatientId === 'patient_op_carmela')) {
           record = getPatients().find(function (r) { return r.id === OP_PATIENT_ID || r.id === 'patient_op_carmela'; });

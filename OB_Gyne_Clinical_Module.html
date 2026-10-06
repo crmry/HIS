@@ -2241,7 +2241,16 @@ let currentPatientId = window.OP_PATIENT_ID || 'patient_op_carmela';
 function initObGyneWorkspace() {
   const params = new URLSearchParams(window.location.search);
   let pid = params.get('patient') || currentPatientId;
-  if (pid === 'patient_op_juan') pid = 'patient_op_carmela';
+  if (pid === 'patient_op_juan') {
+    pid = 'patient_op_carmela';
+    if (window.history && window.history.replaceState) {
+      try {
+        const normUrl = new URL(window.location.href);
+        normUrl.searchParams.set('patient', 'patient_op_carmela');
+        window.history.replaceState({}, '', normUrl.toString());
+      } catch (e) {}
+    }
+  }
   currentPatientId = pid;
 
   if (typeof ensureSeedPatient === 'function') {
