@@ -2280,23 +2280,49 @@ function initObGyneWorkspace() {
     const encEl = document.getElementById('banner-encounter-no');
     if (encEl) encEl.textContent = d.encounter_no || 'OPD';
     const backBtn = document.getElementById('btn-ob-back-dashboard');
-    if (backBtn) backBtn.href = 'dashboard.html?patient=' + encodeURIComponent(currentPatientId);
+    if (backBtn) {
+      backBtn.href = (currentPatientId === 'patient_er_juan' ? 'dashboard_er_inpatient.html' : 'dashboard.html') + '?patient=' + encodeURIComponent(currentPatientId);
+    }
   }
 
-  // Restore draft if available
-  try {
-    const draftStr = localStorage.getItem('seghis_obgyne_draft_' + currentPatientId);
-    if (draftStr) {
-      const draft = JSON.parse(draftStr);
-      if (draft && draft.data) {
-        if (draft.data.pregnancies) patientState.pregnancies = draft.data.pregnancies;
-        if (draft.data.lmpHistory) patientState.lmpHistory = draft.data.lmpHistory;
-        if (draft.data.procedures) patientState.procedures = draft.data.procedures;
-        if (draft.data.gynecologicHistory) patientState.gynecologicHistory = draft.data.gynecologicHistory;
-      }
+  const isMalePatient = patient && patient.data && (/^(m|male)$/i.test(String(patient.data.sex || patient.data.gender || '').trim()));
+  let maleNotice = document.getElementById('male-ob-notice');
+  if (isMalePatient) {
+    if (!maleNotice) {
+      maleNotice = document.createElement('div');
+      maleNotice.id = 'male-ob-notice';
+      maleNotice.className = 'alert alert-warning';
+      maleNotice.style.cssText = 'margin:12px 24px; padding:12px 16px; background:#fffbeb; border:1px solid #fde68a; border-left:4px solid #f59e0b; border-radius:6px; color:#92400e; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px;';
+      maleNotice.innerHTML = '<i class="icon-warning-sign"></i> <span><strong>Clinical Documentation Notice:</strong> Selected patient is recorded as Male. Obstetric and gynecologic clinical forms are not applicable for this patient.</span>';
+      const container = document.querySelector('.workspace-body') || document.body;
+      container.insertBefore(maleNotice, container.firstChild);
     }
-  } catch (e) {
-    console.warn('Could not restore OB draft', e);
+    patientState.pregnancies = [];
+    patientState.lmpHistory = [];
+    patientState.procedures = [];
+    patientState.gynecologicHistory = {
+      menarcheAge: 'N/A',
+      interval: 'Not Applicable',
+      dysmenorrhea: 'Not Applicable',
+      remarks: 'Obstetric and Gynecologic clinical forms are not applicable for male patients.'
+    };
+  } else {
+    if (maleNotice) maleNotice.remove();
+    // Restore draft if available for female patients
+    try {
+      const draftStr = localStorage.getItem('seghis_obgyne_draft_' + currentPatientId);
+      if (draftStr) {
+        const draft = JSON.parse(draftStr);
+        if (draft && draft.data) {
+          if (draft.data.pregnancies) patientState.pregnancies = draft.data.pregnancies;
+          if (draft.data.lmpHistory) patientState.lmpHistory = draft.data.lmpHistory;
+          if (draft.data.procedures) patientState.procedures = draft.data.procedures;
+          if (draft.data.gynecologicHistory) patientState.gynecologicHistory = draft.data.gynecologicHistory;
+        }
+      }
+    } catch (e) {
+      console.warn('Could not restore OB draft', e);
+    }
   }
 }
 

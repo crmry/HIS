@@ -1997,8 +1997,8 @@
                   <li><a href="#hx-surgical" data-toggle="tab">Surgical History &amp; Operations</a></li>
                   <li><a href="#hx-family" data-toggle="tab">Family Medical History</a></li>
                   <li><a href="#hx-social" data-toggle="tab">Personal &amp; Social History</a></li>
-                  <li><a href="#hx-gyn" data-toggle="tab">Obstetric &amp; Gynecologic History</a></li>
-                  <li><a href="#hx-neo" data-toggle="tab">Neonatal History</a></li>
+                  <li id="tab-li-hx-gyn"><a href="#hx-gyn" data-toggle="tab">Obstetric &amp; Gynecologic History</a></li>
+                  <li id="tab-li-hx-neo"><a href="#hx-neo" data-toggle="tab">Neonatal History</a></li>
                   <li><a href="#hx-allergy" data-toggle="tab">Allergies</a></li>
                 </ul>
                 <div class="tab-content">
@@ -2028,6 +2028,10 @@
                     <div id="hx-social-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-gyn">
+                    <!-- MALE PATIENT INAPPLICABLE NOTICE -->
+                    <div class="alert alert-info" id="ob-male-inapplicable-notice" style="display:none; margin:16px 0; border-left:4px solid #0284c7; background:#f0f9ff; color:#0369a1;">
+                      <i class="icon-info-sign"></i> <strong>Clinical Documentation Invariant:</strong> Obstetric &amp; Gynecologic documentation is sex-specific to female patients and not applicable for male patients.
+                    </div>
                     <!-- OBSTETRIC & GYNECOLOGIC HISTORY — VIEWABLE CLINICAL SUMMARY -->
                     <div class="hx-summary-container" id="ob-view-container" style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:16px;">
                       <!-- Header with context -->
@@ -4635,7 +4639,7 @@
     </div>
   </aside>
 
-  <script src="js/data/patient_seeds.js?v=20261006_08"></script>
+  <script src="js/data/patient_seeds.js?v=20261006_09"></script>
   <script>
   var SCORE_TO_WEEKS_MAP = {
     "-10": 20, "-9": 21, "-8": 21, "-7": 21, "-6": 21, "-5": 22, "-4": 23, "-3": 23, "-2": 23, "-1": 23,
@@ -13972,37 +13976,46 @@
 
     function getDefaultObState(pid) {
       var isBlank = pid && (pid.indexOf('blank') !== -1 || pid.indexOf('new') !== -1);
-      if (isBlank) {
+      var isMale = pid && (pid === 'patient_er_juan' || pid === 'patient_op_juan');
+      if (!isMale && typeof getPatients === 'function') {
+        var pRec = getPatients().find(function (p) { return p.id === pid; });
+        if (pRec && pRec.data) {
+          var s = String(pRec.data.sex || pRec.data.gender || '').trim().toLowerCase();
+          if (s === 'male' || s === 'm') isMale = true;
+        }
+      }
+      if (isBlank || isMale) {
         return {
+          isMaleNotApplicable: !!isMale,
           pregnancies: [],
           lmpHistory: [],
           procedures: [],
           gynecologicHistory: {
-            menarcheAge: '',
-            lmpDate: '',
-            pmpDate: '',
-            interval: 'Regular (28-30 days)',
+            menarcheAge: isMale ? 'N/A' : '',
+            lmpDate: isMale ? 'N/A' : '',
+            pmpDate: isMale ? 'N/A' : '',
+            interval: isMale ? 'Not Applicable (Male)' : 'Regular (28-30 days)',
             duration: '',
-            flow: 'Moderate (3-4 pads/day, no clots)',
-            dysmenorrhea: 'None',
-            menopauseStatus: 'Pre-menopausal (Regular ovulatory cycles)',
+            flow: isMale ? 'Not Applicable' : 'Moderate (3-4 pads/day, no clots)',
+            dysmenorrhea: isMale ? 'Not Applicable' : 'None',
+            menopauseStatus: isMale ? 'Not Applicable' : 'Pre-menopausal (Regular ovulatory cycles)',
             menopauseAge: '',
-            pmb: 'No (Asymptomatic)',
-            climacteric: 'None',
+            pmb: isMale ? 'Not Applicable' : 'No (Asymptomatic)',
+            climacteric: isMale ? 'Not Applicable' : 'None',
             coitarche: '',
-            sexualActivity: 'Sexually Active',
+            sexualActivity: isMale ? 'Not Documented' : 'Sexually Active',
             infections: 'None reported / Denies history of STIs',
             infectionTreatment: '',
-            contraceptiveCurrent: 'None / Natural Family Planning',
+            contraceptiveCurrent: isMale ? 'Not Applicable' : 'None / Natural Family Planning',
             contraceptiveDuration: '',
             contraceptivePast: '',
-            screeningModality: 'Conventional Pap Smear',
+            screeningModality: isMale ? 'Not Applicable' : 'Conventional Pap Smear',
             lastPapDate: '',
-            lastPap: '',
+            lastPap: isMale ? 'Not Applicable' : '',
             hpvVaccine: 'Unvaccinated / None',
             diagnoses: '',
             surgeries: 'None / No prior gynecologic surgery',
-            remarks: ''
+            remarks: isMale ? 'Obstetric & Gynecologic documentation is not applicable for male patients.' : ''
           }
         };
       }
@@ -14148,6 +14161,17 @@
 
     function loadObStateForPatient(pid) {
       var currentId = pid || activePatientId || 'default';
+      var isMale = currentId === 'patient_er_juan' || currentId === 'patient_op_juan';
+      if (!isMale && typeof getPatients === 'function') {
+        var pRec = getPatients().find(function (p) { return p.id === currentId; });
+        if (pRec && pRec.data) {
+          var s = String(pRec.data.sex || pRec.data.gender || '').trim().toLowerCase();
+          if (s === 'male' || s === 'm') isMale = true;
+        }
+      }
+      if (isMale) {
+        return getDefaultObState(currentId);
+      }
       try {
         var raw = localStorage.getItem('HIS_OB_GYNE_' + currentId);
         if (raw) {
@@ -14175,6 +14199,9 @@
     function computeGTPAL() {
       if (!obPatientState || !obPatientState.pregnancies) {
         return { G: 0, T: 0, P: 0, A: 0, L: 0, totalPara: 0, displayGP: 'G0P0 (0-0-0-0)', scoreText: 'G0 T0 P0 A0 L0' };
+      }
+      if (obPatientState.isMaleNotApplicable) {
+        return { G: 0, T: 0, P: 0, A: 0, L: 0, totalPara: 0, displayGP: 'Not Applicable', scoreText: 'Male Patient' };
       }
       var pregs = obPatientState.pregnancies;
       var G = pregs.length;
@@ -14236,6 +14263,27 @@
 
     function renderSummaryCards() {
       if (!obPatientState) return;
+
+      if (obPatientState.isMaleNotApplicable || obPatientState.isMale) {
+        var vSm = document.getElementById('ob-view-score-main');
+        if (vSm) vSm.textContent = 'Not Applicable';
+        var vSg = document.getElementById('ob-view-score-gtpal');
+        if (vSg) vSg.textContent = 'Male Patient';
+        var vMm = document.getElementById('ob-view-menstrual-main');
+        if (vMm) vMm.textContent = 'Not Applicable';
+        var vMs = document.getElementById('ob-view-menstrual-sub');
+        if (vMs) vMs.textContent = 'Male Patient';
+        var vEm = document.getElementById('ob-view-edc-main');
+        if (vEm) vEm.textContent = 'EDC: —';
+        var vEs = document.getElementById('ob-view-edc-sub');
+        if (vEs) vEs.textContent = 'Not Applicable (Male)';
+        var vScM = document.getElementById('ob-view-screen-main');
+        if (vScM) vScM.textContent = 'Not Applicable';
+        var vScS = document.getElementById('ob-view-screen-sub');
+        if (vScS) vScS.textContent = 'Male Patient';
+        return;
+      }
+
       var gtpal = computeGTPAL();
 
       // Clinical summary indicators
@@ -14355,6 +14403,46 @@
 
     function initObGyneModule(patientId) {
       var pid = patientId || activePatientId || 'default';
+      
+      var pList = (typeof getPatients === 'function' ? getPatients() : []);
+      var pRec = pList.find(function (p) { return p.id === pid; });
+      var pData = (pRec && pRec.data) || {};
+      var pGender = String(pData.sex || pData.gender || '').trim().toLowerCase();
+      var isMale = pGender === 'male' || pGender === 'm' || pid === 'patient_er_juan' || pid === 'patient_op_juan';
+
+      var tabLiGyn = document.getElementById('tab-li-hx-gyn');
+      var obNotice = document.getElementById('ob-male-inapplicable-notice');
+      var obViewCont = document.getElementById('ob-view-container');
+
+      if (isMale) {
+        if (tabLiGyn) {
+          tabLiGyn.style.display = 'none';
+          if (tabLiGyn.classList.contains('active')) {
+            tabLiGyn.classList.remove('active');
+            var paneGyn = document.getElementById('hx-gyn');
+            if (paneGyn) paneGyn.classList.remove('active');
+            var tabLiHpi = document.getElementById('tab-li-hx-present');
+            var paneHpi = document.getElementById('hx-present');
+            if (tabLiHpi) tabLiHpi.classList.add('active');
+            if (paneHpi) paneHpi.classList.add('active');
+          }
+        }
+        if (obNotice) obNotice.style.display = 'block';
+        if (obViewCont) obViewCont.style.display = 'none';
+        var btnSpecializedOb = document.getElementById('btn-open-obgyne-module');
+        if (btnSpecializedOb) {
+          btnSpecializedOb.setAttribute('title', 'Not Applicable for Male Patients');
+        }
+      } else {
+        if (tabLiGyn) tabLiGyn.style.display = '';
+        if (obNotice) obNotice.style.display = 'none';
+        if (obViewCont) obViewCont.style.display = 'block';
+        var btnSpecializedOb = document.getElementById('btn-open-obgyne-module');
+        if (btnSpecializedOb) {
+          btnSpecializedOb.removeAttribute('title');
+        }
+      }
+
       obPatientState = loadObStateForPatient(pid);
       
       // Update launcher link
@@ -14370,8 +14458,8 @@
         if (specBadge) { specBadge.textContent = 'Draft Saved (' + draft.savedAt + ')'; specBadge.className = 'badge badge-warning'; }
         if (viewBadge) { viewBadge.textContent = 'Draft Saved (' + draft.savedAt + ')'; viewBadge.className = 'badge badge-warning'; }
       } else {
-        if (specBadge) { specBadge.textContent = 'Historical Continuity Active'; specBadge.className = 'badge badge-info'; }
-        if (viewBadge) { viewBadge.textContent = 'Historical Continuity Active'; viewBadge.className = 'badge badge-info'; }
+        if (specBadge) { specBadge.textContent = isMale ? 'Not Applicable' : 'Historical Continuity Active'; specBadge.className = isMale ? 'badge' : 'badge badge-info'; }
+        if (viewBadge) { viewBadge.textContent = isMale ? 'Not Applicable' : 'Historical Continuity Active'; viewBadge.className = isMale ? 'badge' : 'badge badge-info'; }
       }
 
       renderSummaryCards();

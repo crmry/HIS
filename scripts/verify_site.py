@@ -315,16 +315,24 @@ async def scan_single_target(browser_ws, file_url):
                 }
 
                 // Test Obstetric & Gynecologic History viewable summary in Medical History
-                const obTabLink = document.querySelector('a[href="#hx-gyn"]');
-                if (obTabLink) {
-                    obTabLink.click();
-                    const obViewContainer = document.getElementById('ob-view-container');
-                    if (!obViewContainer) return 'OB view container not found in #hx-gyn';
-                    const scoreEl = document.getElementById('ob-view-score-main');
-                    if (!scoreEl || !scoreEl.textContent.trim()) return 'OB view score element empty or missing';
-                    const obAddBtn = document.getElementById('btn-add-ob-record');
-                    if (!obAddBtn) return 'OB Add button (#btn-add-ob-record) missing in #hx-gyn';
-                    if (!obAddBtn.getAttribute('href') || !obAddBtn.getAttribute('href').includes('OB_Gyne_Clinical_Module.html')) return 'OB Add button does not link to OB_Gyne_Clinical_Module.html';
+                const obTabLi = document.getElementById('tab-li-hx-gyn');
+                const isObTabHidden = obTabLi && obTabLi.style.display === 'none';
+                if (!isObTabHidden) {
+                    const obTabLink = document.querySelector('a[href="#hx-gyn"]');
+                    if (obTabLink) {
+                        obTabLink.click();
+                        const obViewContainer = document.getElementById('ob-view-container');
+                        if (!obViewContainer) return 'OB view container not found in #hx-gyn';
+                        const scoreEl = document.getElementById('ob-view-score-main');
+                        if (!scoreEl || !scoreEl.textContent.trim()) return 'OB view score element empty or missing';
+                        const obAddBtn = document.getElementById('btn-add-ob-record');
+                        if (!obAddBtn) return 'OB Add button (#btn-add-ob-record) missing in #hx-gyn';
+                        if (!obAddBtn.getAttribute('href') || !obAddBtn.getAttribute('href').includes('OB_Gyne_Clinical_Module.html')) return 'OB Add button does not link to OB_Gyne_Clinical_Module.html';
+                    }
+                } else if (window.location.href.includes('patient=patient_er_juan')) {
+                    if (obTabLi.style.display !== 'none') {
+                        return 'OB-Gyne tab was not hidden for male patient Juan Makiling';
+                    }
                 }
 
                 // Test Specialized Clinical Forms unified launcher list
