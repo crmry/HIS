@@ -3811,7 +3811,7 @@
             </select>
           </div>
           <div>
-            <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Final Diagnosis:</label>
+            <label style="font-size:11px; font-weight:600; color:#475569; margin-bottom:2px;">Final Diagnosis <span style="color:#dc2626; font-weight:bold;">*</span>:</label>
             <textarea id="end-care-final-dx" rows="3" class="input-block-level" placeholder="Type or refine complete final clinical diagnosis..." style="font-size:13px; font-weight:600; color:#0f4c81; box-sizing:border-box;"></textarea>
           </div>
         </div>
@@ -14011,6 +14011,19 @@
         fuReasonInput.value = 'Quarterly chronic disease monitoring with repeat labs and evaluation.';
       }
 
+      var dxInput = document.getElementById('end-care-final-dx');
+      if (dxInput) {
+        dxInput.style.borderColor = '';
+        dxInput.style.boxShadow = '';
+        if (!dxInput.dataset.boundReset) {
+          dxInput.dataset.boundReset = 'true';
+          dxInput.addEventListener('input', function () {
+            this.style.borderColor = '';
+            this.style.boxShadow = '';
+          });
+        }
+      }
+
       var modal = document.getElementById('end-care-modal');
       if (modal) {
         modal.classList.add('open');
@@ -14031,7 +14044,13 @@
       var msg = document.getElementById('end-care-validation-msg');
       if (msg) msg.textContent = '';
       if (!finalDx) {
-        if (msg) msg.textContent = 'Please enter a Final Diagnosis with ICD-10 code before concluding care.';
+        alert('Final Diagnosis is a required field.');
+        var dxInput = document.getElementById('end-care-final-dx');
+        if (dxInput) {
+          dxInput.focus();
+          dxInput.style.borderColor = '#dc2626';
+          dxInput.style.boxShadow = '0 0 0 2px rgba(220, 38, 38, 0.2)';
+        }
         return;
       }
 
