@@ -3503,7 +3503,6 @@
             <strong style="color:#475569;">Patient:</strong> <span id="ref-patient-name" style="font-weight:700; color:#1b4d3e;">—</span>
             &nbsp;|&nbsp; <strong style="color:#475569;">HRN:</strong> <span id="ref-patient-hrn" style="font-family:monospace; font-weight:600;">—</span>
             &nbsp;|&nbsp; <strong style="color:#475569;">Age/Sex:</strong> <span id="ref-patient-agesex">—</span>
-            &nbsp;|&nbsp; <strong style="color:#475569;">Primary Physician:</strong> <span id="ref-patient-physician">—</span>
           </div>
           <div>
             <span class="badge" id="ref-patient-encounter-badge" style="background:#1b4d3e; color:#fff; font-size:10px;">Active Encounter</span>
@@ -11667,16 +11666,12 @@
         var age = pData && pData.birthdate ? calculateAge(pData.birthdate) : (pData && pData.age ? pData.age : '—');
         var sex = (pData && (pData.gender || pData.sex || '—')).charAt(0).toUpperCase();
         var ageSex = (age ? age + ' / ' : '') + (sex || '—');
-        var physician = (pData && (pData.primary_physician || pData.attending_physician)) || 'Paolo Cruz, MD';
-
         var nameEl = document.getElementById('ref-patient-name');
         if (nameEl) nameEl.textContent = pName;
         var hrnEl = document.getElementById('ref-patient-hrn');
         if (hrnEl) hrnEl.textContent = hrn;
         var ageSexEl = document.getElementById('ref-patient-agesex');
         if (ageSexEl) ageSexEl.textContent = ageSex;
-        var physEl = document.getElementById('ref-patient-physician');
-        if (physEl) physEl.textContent = physician;
 
         var encBadge = document.getElementById('ref-patient-encounter-badge');
         if (encBadge) {
