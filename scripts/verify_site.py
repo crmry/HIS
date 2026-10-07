@@ -551,6 +551,23 @@ async def scan_single_target(browser_ws, file_url):
                     if (endCareCosigModal.classList.contains('open') && window.getComputedStyle(endCareCosigModal).display !== 'none') {
                         return 'closeEndCareCosignatureModal failed to close modal';
                     }
+
+                    // Verify embedded Co-Signature section inside end-care-modal
+                    const endCareModal = document.getElementById('end-care-modal');
+                    const embeddedCosigSelect = document.getElementById('endcare-modal-cosig-select');
+                    const embeddedCosigSearch = document.getElementById('endcare-modal-cosig-search');
+                    if (!endCareModal || !embeddedCosigSelect || !embeddedCosigSearch) {
+                        return 'Embedded co-signature section elements missing inside end-care-modal';
+                    }
+                    if (typeof window.openEndCareModal === 'function') {
+                        window.openEndCareModal();
+                        if (embeddedCosigSelect.value !== 'NONE') {
+                            return 'Default selection in embedded endcare-modal-cosig-select is not NONE';
+                        }
+                        if (typeof window.closeEndCareModal === 'function') {
+                            window.closeEndCareModal();
+                        }
+                    }
                 }
 
                 if (window.location.href.includes('doctors_order_patient.html')) {
