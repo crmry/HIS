@@ -663,6 +663,10 @@ async def scan_single_target(browser_ws, file_url):
                         if (!admName || !admName.textContent.includes('MAKILING, JUAN')) {
                             return 'doctors_order_er_admission.html did not load Juan Makiling name in Admission sheet header';
                         }
+                        const admSheet = document.getElementById('sheet-admission');
+                        if (!admSheet || !admSheet.textContent.includes('Admit to Floor 1 ward 1') || !admSheet.textContent.includes('Under the service of Dr. Miguel Santos')) {
+                            return 'doctors_order_er_admission.html missing Admit to Floor 1 ward 1 in admission sheet';
+                        }
                     }
                 }
 

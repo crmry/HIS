@@ -8997,13 +8997,13 @@
             results: 'Admitted to Medical Ward',
             progress_notes: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension',
             orders: [
-              { text: 'Admit to Medical Ward under General Medicine service.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
-              { text: 'Monitor vital signs every four hours and record intake and output.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:32 PM nurse' },
+              { text: 'Admit to Floor 1 ward 1 under the service of Dr. Miguel Santos.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
               { text: 'Low-salt diet as tolerated.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:35 PM nurse' },
               { text: 'PNSS 1 L at 80 mL/hour.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['A'], timeSignature: 'A - 12:45 PM nurse' },
               { text: 'Ceftriaxone 2 g IV once daily.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A', 'E'], timeSignature: 'C - 12:40 PM nurse\nA - 1:00 PM nurse\nE - 1:20 PM nurse' },
               { text: 'Azithromycin 500 mg tablet once daily.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:42 PM nurse\nA - 1:05 PM nurse' },
               { text: 'Paracetamol 500 mg tablet every six hours as needed for fever.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 12:45 PM nurse\nA - 1:10 PM nurse' },
+              { text: 'Monitor vital signs every four hours and record intake and output.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:32 PM nurse' },
               { text: 'Oxygen at 2 L/minute via nasal cannula; maintain SpO2 at 95% or higher.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:50 PM nurse' }
             ]
           }
@@ -9648,7 +9648,7 @@
         '<span class="entry-label">' + label.charAt(0).toUpperCase() + label.slice(1) + ' ' + num + '</span>' +
         '<button type="button" class="btn btn-danger btn-mini rm-order" aria-label="Remove order">&times;</button>' +
         '</div>' +
-        '<textarea data-k="text" rows="2" class="input-block-level" placeholder="Enter ' + label + '..." style="margin-bottom:0;">' + esc((data && data.text) || '') + '</textarea>';
+        '<textarea data-k="text" rows="2" class="input-block-level" placeholder="' + (label.toLowerCase() === 'plan' ? 'e.g. Admit to Floor 1 ward 1 under the service of Dr. ...' : 'Enter ' + label + '...') + '" style="margin-bottom:0;">' + esc((data && data.text) || '') + '</textarea>';
       var textarea = d.querySelector('[data-k="text"]');
       textarea.addEventListener('input', function () {
         if (textarea.value.trim() && !d.dataset.createdAt) d.dataset.createdAt = new Date().toISOString();
@@ -12580,22 +12580,11 @@
         });
       }
 
-      [
-        { key: 'plans' },
-        { key: 'diet' },
-        { key: 'iv' },
-        { key: 'medications' },
-        { key: 'special' },
-        { key: 'procedures' }
-      ].forEach(function (category) {
-        var items = saved[category.key] || [];
+      // Canonical Admission Order Sequence: Plan -> Diet -> IV -> Labs / Diagnostics -> Meds -> Special Orders -> Procedures
+      ['plans', 'diet', 'iv'].forEach(function (catKey) {
+        var items = saved[catKey] || [];
         items.forEach(function (item) {
-          var text =
-            category.key === 'medications'
-              ? medicationOrderText(item)
-              : item.text;
-
-          addOrder(item, text, category.key);
+          addOrder(item, item.text, catKey);
         });
       });
 
@@ -12622,6 +12611,11 @@
         });
       });
 
+      var medItems = saved.medications || [];
+      medItems.forEach(function (item) {
+        addOrder(item, medicationOrderText(item), 'medications');
+      });
+
       if (saved.prescriptions && Array.isArray(saved.prescriptions.items)) {
         saved.prescriptions.items.forEach(function (rx) {
           var drugName = String(rx.drug || '').trim();
@@ -12635,6 +12629,13 @@
           addOrder(rx, text, 'rxWriter');
         });
       }
+
+      ['special', 'procedures'].forEach(function (catKey) {
+        var items = saved[catKey] || [];
+        items.forEach(function (item) {
+          addOrder(item, item.text, catKey);
+        });
+      });
 
       if (!rawRows.length) {
         if (body) {
