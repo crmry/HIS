@@ -28,15 +28,11 @@
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full min-w-[900px] border-collapse text-sm">
+        <table class="w-full border-collapse text-sm">
           <thead class="bg-gray-50">
             <tr class="text-left">
               <th class="border-b px-4 py-3 font-semibold">Hospital Number</th>
               <th class="border-b px-4 py-3 font-semibold">Patient Name</th>
-              <th class="border-b px-4 py-3 font-semibold">Case No.</th>
-              <th class="border-b px-4 py-3 font-semibold">Case Type</th>
-              <th class="border-b px-4 py-3 font-semibold">Gender</th>
-              <th class="border-b px-4 py-3 font-semibold">Last Saved</th>
               <th class="border-b px-4 py-3 text-right font-semibold">Action</th>
             </tr>
           </thead>
@@ -375,10 +371,6 @@
         <tr class="hover:bg-gray-50">
           <td class="border-b px-4 py-3 font-mono">${esc(d.hrn || '')}</td>
           <td class="border-b px-4 py-3 font-medium">${esc(patientName(d))}</td>
-          <td class="border-b px-4 py-3">${esc(d.case_no || '')}</td>
-          <td class="border-b px-4 py-3">${esc(d.case_type || '')}</td>
-          <td class="border-b px-4 py-3">${esc(d.gender || '')}</td>
-          <td class="border-b px-4 py-3">${esc(formatDateTime(record.updatedAt))}</td>
           <td class="border-b px-4 py-3 text-right">
             <div class="flex justify-end">
               <a href="dashboard.html?patient=${encodeURIComponent(record.id)}"
