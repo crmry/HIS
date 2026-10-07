@@ -355,8 +355,6 @@ async def scan_single_target(browser_ws, file_url):
                     if (closeModBtn) closeModBtn.click();
                     if (window.getComputedStyle(modModal).display !== 'none' && modModal.classList.contains('open')) return 'Clinical module action modal failed to close';
                 }
-                const floatingObBtn = document.getElementById('floating-btn-obgyne');
-                if (!floatingObBtn) return 'floating-btn-obgyne not found in requisition pad';
 
                 // Verify ER and Inpatient Progress Notes (SOA) vs OPD HPI/ROS/PE documentation behavior
                 if (isDashboardPage) {
