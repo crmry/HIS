@@ -393,34 +393,12 @@
           <td class="border-b px-4 py-3">${esc(d.gender || '')}</td>
           <td class="border-b px-4 py-3">${esc(formatDateTime(record.updatedAt))}</td>
           <td class="border-b px-4 py-3 text-right">
-            <div class="flex justify-end gap-2">
-              <button type="button"
-                      data-view="${esc(record.id)}"
-                      class="rounded border border-gray-300 bg-white px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-50">
-                View
-              </button>
+            <div class="flex justify-end">
               <a href="dashboard.html?patient=${encodeURIComponent(record.id)}"
-                 class="rounded border border-emerald-600 bg-white px-3 py-1.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">
+                 class="rounded border border-emerald-600 bg-white px-3 py-1.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50"
+                 title="Open Doctor's Dashboard">
                 Doctor's Dashboard
               </a>
-              <a href="doctors_order_patient.html?patient=${encodeURIComponent(record.id)}"
-                 class="rounded bg-emerald-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-800"
-                 title="Outpatient (OPD) Physician's Orders">
-                OPD Orders
-              </a>
-              <a href="doctors_order_er_admission.html?patient=${encodeURIComponent(record.id)}"
-                 class="rounded bg-sky-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-sky-800"
-                 title="ER &amp; Inpatient Admission Physician's Orders">
-                ER &amp; Admission Orders
-              </a>
-              <button type="button"
-                      data-delete="${esc(record.id)}"
-                      data-name="${esc(patientName(d))}"
-                      data-hrn="${esc(d.hrn || '')}"
-                      class="rounded border border-red-300 bg-white px-2.5 py-1.5 text-sm font-semibold text-red-600 hover:bg-red-50 hover:border-red-400"
-                      title="Delete patient record">
-                Delete
-              </button>
             </div>
           </td>
         </tr>
