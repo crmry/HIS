@@ -26,7 +26,7 @@
   - **Interactive Widget Smoke Testing**: Any interactive component (e.g., requisition pads, side drawers, CPOE modal launchers) must include automated click verification (`element.click()`) in the test harness to confirm event bindings, modal state toggling, and absence of runtime reference errors.
 - **Global Namespace & Refactoring Safety**:
   - Shared modules (e.g., `js/data/patient_seeds.js`) and consuming HTML files must never declare colliding top-level `const` or `let` variables in the global window scope.
-  - Consuming pages must use safe fallback patterns (`var STORAGE_KEY = window.STORAGE_KEY || ...;`) or scoped namespaces (`window.SegHIS`).
+  - Consuming pages must use safe fallback patterns (`var STORAGE_KEY = window.STORAGE_KEY || ...;`) or scoped namespaces (`window.HIS`).
   - When extracting or compartmentalizing scripts out of an HTML file, verify that all called helper functions (e.g., `buildEmptyPage`, table builders, renderers, event listeners) remain defined and accessible in the page's runtime scope.
 - **UI Responsiveness & Main-Thread Performance Invariants**:
   - **In-Memory Storage Caching**: Never perform synchronous `JSON.parse(localStorage.getItem(...))` repeatedly across loops, table renderers, or query lookups. Use an in-memory memoized cache invalidated on write and `window.addEventListener('storage')`.

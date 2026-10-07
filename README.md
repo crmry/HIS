@@ -1,5 +1,5 @@
 # Hospital Information System (HIS) — Physician's Module Dashboard
-### Corazon Locsin Montelibano Memorial Regional Hospital (CLMMRH) | SegHIS
+### Corazon Locsin Montelibano Memorial Regional Hospital (CLMMRH) | Hospital Information System (HIS)
 
 A web-based clinical dashboard and hospital information system designed for attending physicians, residents, and clinical care teams.
 
@@ -30,7 +30,7 @@ A web-based clinical dashboard and hospital information system designed for atte
   - *Oxygen Therapy & Medical Gas Orders* (Delivery method, Parameters, Goal/Target SpO2, Duration, Monitoring safety).
 - **Chronological Grouped Orders Summary Table**: Auto-groups orders sharing the same date/time with individual row entries and nurse execution tracking.
 
-### 3. Segworks Rx Writer (Prescription Writer)
+### 3. Physician Rx Writer (Prescription Writer)
 - Dedicated prescription writer module placed directly under Drugs and Medicines.
 - **Dangerous Drug License (DD/DDP / S2)** number management.
 - **Patient Particulars Card**: PID, Encounter Number, Patient Name, Address, Age, Gender, Prescription Date, and Clinical Impression (with Clear tool).

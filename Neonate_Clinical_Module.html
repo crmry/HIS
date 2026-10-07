@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SEGHIS+ Neonate Clinical Module — Structured Workspace</title>
+<title>Neonate Clinical Module — Structured Workspace</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
 <style>
   :root {
@@ -596,7 +596,7 @@
   <main class="workspace-card">
 
     <div class="workspace-header">
-      <span><i class="icon-stethoscope"></i> SEGHIS+ NEONATE CLINICAL RECORD &mdash; STRUCTURED WORKSPACE</span>
+      <span><i class="icon-stethoscope"></i> NEONATE CLINICAL RECORD &mdash; STRUCTURED WORKSPACE</span>
       <span style="font-size:11.5px; opacity:0.9;">CLMMRH Neonatology Clinical Decision Module</span>
     </div>
 
@@ -2044,7 +2044,7 @@
 <script src="js/data/patient_seeds.js"></script>
 <script>
 /* ════════════════════════════════════════════════════════════════════════════════
-   SEGHIS+ NEONATE CLINICAL MODULE STATE, CALCULATION & DATA PERSISTENCE
+   NEONATE CLINICAL MODULE STATE, CALCULATION & DATA PERSISTENCE
    ════════════════════════════════════════════════════════════════════════════════ */
 
 const SCORE_TO_WEEKS = {
@@ -2954,8 +2954,8 @@ function saveNeonateDraft() {
       status: 'draft',
       payload: payload
     };
-    localStorage.setItem('seghis_neonate_draft_' + currentPatientId, JSON.stringify(draft));
-    localStorage.setItem('seghis_neonate_draft', JSON.stringify(payload));
+    localStorage.setItem('clmmrh_neonate_draft_' + currentPatientId, JSON.stringify(draft));
+    localStorage.setItem('clmmrh_neonate_draft', JSON.stringify(payload));
     showNeonateToast('Neonatal draft saved successfully at ' + timeStr + '.');
   } catch (e) {
     showNeonateToast('Draft save failed.');
@@ -3021,7 +3021,7 @@ function initNeonateWorkspace() {
     // Hydrate neonate data if available (first check patient-specific draft, then saved state)
     let neoData = null;
     try {
-      const draftStr = localStorage.getItem('seghis_neonate_draft_' + currentPatientId);
+      const draftStr = localStorage.getItem('clmmrh_neonate_draft_' + currentPatientId);
       if (draftStr) {
         const draft = JSON.parse(draftStr);
         if (draft && draft.payload) neoData = draft.payload;

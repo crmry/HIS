@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   CLMMRH SegHIS — Clinical Patient Registry & Baseline Records
+   CLMMRH HIS — Clinical Patient Registry & Baseline Records
    Hospital Master Patient Index (EMPI) Clinical Baseline Records
    ═══════════════════════════════════════════════════════════════ */
 

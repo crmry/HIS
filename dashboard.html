@@ -376,7 +376,7 @@
        MOBILE VIEWPORT & TOUCH RESPONSIVE OVERRIDES (<= 768px)
        ══════════════════════════════════════════════════════════════════════ */
     @media (max-width: 768px) {
-      /* Hide legacy SegHIS utility topbar */
+      /* Hide legacy utility topbar */
       .seg-topbar {
         display: none !important;
       }
@@ -448,7 +448,7 @@
       }
     }
 
-    /* ── Seg Modal Dialog Base Styles ── */
+    /* ── Clinical Modal Dialog Base Styles ── */
     .seg-modal-backdrop {
       display: none;
       position: fixed;
@@ -940,7 +940,7 @@
     }
   
     /* ══════════════════════════════════════════════════════════════════════
-       SEGHIS+ NEONATE CLINICAL MODULE — SCOPED STYLES
+       NEONATE CLINICAL MODULE — SCOPED STYLES
        ══════════════════════════════════════════════════════════════════════ */
     .neo-workspace-container {
       background: #ffffff;
@@ -1668,7 +1668,7 @@
   <!-- ═══ MAIN APPLICATION ROOT ═══ -->
   <div id="dashboard-main-app">
 
-  <!-- ═══ SEGHIS UTILITY TOOLBAR (Hidden for Physician Clinical Module) ═══ -->
+  <!-- ═══ LEGACY UTILITY TOOLBAR (Hidden for Physician Clinical Module) ═══ -->
   <nav class="seg-topbar" aria-label="Dashboard navigation" style="display: none !important;" hidden>
     <a href="dashboard.html" class="active">Physician Dashboard</a>
     <a href="patients.html">Patient List</a>
@@ -2185,7 +2185,7 @@
                   </div>
                   
                   <div class="tab-pane" id="hx-neo">
-                    <!-- SEGHIS+ NEONATE CLINICAL RECORD — VIEWABLE CLINICAL SUMMARY -->
+                    <!-- NEONATE CLINICAL RECORD — VIEWABLE CLINICAL SUMMARY -->
                     <div class="hx-summary-container" id="neo-view-container" style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:16px;">
                       <!-- Header with context -->
                       <div class="hx-summary-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid #e2e8f0;">
@@ -10171,7 +10171,7 @@
 
     /* =========================================================
        RX WRITER (WRITE PRESCRIPTION) MODULE
-       Faithful implementation of Segworks Write Prescription
+       Physician Prescription Writer (Rx Writer)
        ========================================================= */
 
     function formatRxDateTime(d) {
@@ -12450,7 +12450,7 @@
     // ── Order Summary: preserve one saved order per line ──
     /* =========================================================
    CURRENT PHYSICIAN
-   Replace window.CURRENT_PHYSICIAN_NAME from SegHIS session
+   Replace window.CURRENT_PHYSICIAN_NAME from HIS physician session
    when connected to the real backend.
    ========================================================= */
 
@@ -14675,7 +14675,7 @@
         btnOb.href = 'OB_Gyne_Clinical_Module.html?patient=' + encodeURIComponent(pid);
       }
 
-      var draft = safeParse(localStorage.getItem('seghis_obgyne_draft_' + pid), null);
+      var draft = safeParse(localStorage.getItem('clmmrh_obgyne_draft_' + pid), null);
       var specBadge = document.getElementById('spec-ob-status-badge');
       var viewBadge = document.getElementById('ob-view-status-badge');
       if (draft && draft.savedAt) {
@@ -14742,7 +14742,7 @@
     initObGyneModule(activePatientId);
 
     /* ══════════════════════════════════════════════════════════════════════
-       SEGHIS+ NEONATE CLINICAL RECORD — JAVASCRIPT CONTROLLER
+       NEONATE CLINICAL RECORD — JAVASCRIPT CONTROLLER
        ══════════════════════════════════════════════════════════════════════ */
     var SCORE_TO_WEEKS_MAP = {
       "-10": 20, "-9": 21, "-8": 21, "-7": 21, "-6": 21, "-5": 22, "-4": 23, "-3": 23, "-2": 23, "-1": 23,
@@ -15097,7 +15097,7 @@
         btnNeo.href = 'Neonate_Clinical_Module.html?patient=' + encodeURIComponent(pid);
       }
 
-      var draft = safeParse(localStorage.getItem('seghis_neonate_draft_' + pid), null);
+      var draft = safeParse(localStorage.getItem('clmmrh_neonate_draft_' + pid), null);
       var specBadge = document.getElementById('spec-neo-status-badge');
       var viewBadge = document.getElementById('neo-view-status-badge');
       if (draft && draft.savedAt) {
@@ -15242,7 +15242,7 @@
         status: 'draft',
         data: window.obPatientState || null
       };
-      localStorage.setItem('seghis_obgyne_draft_' + pid, JSON.stringify(draft));
+      localStorage.setItem('clmmrh_obgyne_draft_' + pid, JSON.stringify(draft));
 
       // Update status badges
       var specBadge = document.getElementById('spec-ob-status-badge');
@@ -15273,7 +15273,7 @@
         status: 'draft',
         data: window.currentNeonateState || (typeof collectNeonateData === 'function' ? collectNeonateData() : null)
       };
-      localStorage.setItem('seghis_neonate_draft_' + pid, JSON.stringify(draft));
+      localStorage.setItem('clmmrh_neonate_draft_' + pid, JSON.stringify(draft));
 
       // Update status badges
       var specBadge = document.getElementById('spec-neo-status-badge');
@@ -15315,7 +15315,7 @@
       if (moduleKey === 'obgyne') {
         if (titleEl) titleEl.innerHTML = '<i class="icon-female"></i> Obstetric &amp; Gynecologic (OB-Gyne) Module';
         if (titleBar) titleBar.style.background = '#15803d';
-        var draft = safeParse(localStorage.getItem('seghis_obgyne_draft_' + pid), null);
+        var draft = safeParse(localStorage.getItem('clmmrh_obgyne_draft_' + pid), null);
         if (statusBadge) {
           if (draft && draft.savedAt) {
             statusBadge.textContent = 'Draft Saved (' + draft.savedAt + ')';
@@ -15328,7 +15328,7 @@
       } else {
         if (titleEl) titleEl.innerHTML = '<i class="icon-stethoscope"></i> Neonate Clinical Decision Module';
         if (titleBar) titleBar.style.background = '#1b4d3e';
-        var draft = safeParse(localStorage.getItem('seghis_neonate_draft_' + pid), null);
+        var draft = safeParse(localStorage.getItem('clmmrh_neonate_draft_' + pid), null);
         if (statusBadge) {
           if (draft && draft.savedAt) {
             statusBadge.textContent = 'Draft Saved (' + draft.savedAt + ')';

@@ -2310,7 +2310,7 @@ function initObGyneWorkspace() {
     if (maleNotice) maleNotice.remove();
     // Restore draft if available for female patients
     try {
-      const draftStr = localStorage.getItem('seghis_obgyne_draft_' + currentPatientId);
+      const draftStr = localStorage.getItem('clmmrh_obgyne_draft_' + currentPatientId);
       if (draftStr) {
         const draft = JSON.parse(draftStr);
         if (draft && draft.data) {
@@ -2336,7 +2336,7 @@ function saveGyneDraft() {
     status: 'draft',
     data: patientState
   };
-  localStorage.setItem('seghis_obgyne_draft_' + currentPatientId, JSON.stringify(draft));
+  localStorage.setItem('clmmrh_obgyne_draft_' + currentPatientId, JSON.stringify(draft));
   showToast('OB-Gyne draft saved successfully at ' + timeStr + '.');
 }
 
