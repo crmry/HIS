@@ -2077,7 +2077,7 @@
                           </span>
                         </div>
                         <div style="display:flex; align-items:center; gap:8px;">
-                          <a href="OB_Gyne_Clinical_Module.html" class="btn btn-mini btn-primary" id="btn-add-ob-record" onclick="redirectToObGyneModule(event)" title="Add / Encode Obstetric &amp; Gynecologic Record" style="font-size:11.5px; font-weight:700; padding:3px 12px; border-radius:4px; text-decoration:none; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 2px rgba(0,0,0,0.05);">
+                          <a href="javascript:void(0)" class="btn btn-mini btn-primary" id="btn-add-ob-record" onclick="redirectToObGyneModule(event)" title="Add / Encode Obstetric &amp; Gynecologic Record" style="font-size:11.5px; font-weight:700; padding:3px 12px; border-radius:4px; text-decoration:none; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 2px rgba(0,0,0,0.05); pointer-events:none; opacity:0.75;">
                             <i class="icon-plus"></i> Add
                           </a>
                         </div>
@@ -2198,7 +2198,7 @@
                           </span>
                         </div>
                         <div style="display:flex; align-items:center; gap:8px;">
-                          <a href="Neonate_Clinical_Module.html" class="btn btn-mini btn-primary" id="btn-add-neo-record" onclick="redirectToNeonateModule(event)" title="Add / Encode Neonatal Clinical Record" style="font-size:11.5px; font-weight:700; padding:3px 12px; border-radius:4px; text-decoration:none; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 2px rgba(0,0,0,0.05); background:#1b4d3e; border-color:#14382d;">
+                          <a href="javascript:void(0)" class="btn btn-mini btn-primary" id="btn-add-neo-record" onclick="redirectToNeonateModule(event)" title="Add / Encode Neonatal Clinical Record" style="font-size:11.5px; font-weight:700; padding:3px 12px; border-radius:4px; text-decoration:none; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 2px rgba(0,0,0,0.05); background:#1b4d3e; border-color:#14382d; pointer-events:none; opacity:0.75;">
                             <i class="icon-plus"></i> Add
                           </a>
                         </div>
@@ -2848,8 +2848,8 @@
           </div>
           <div class="bootstrap-widget-content" id="dashlet-other-forms">
             <div class="other-form-list">
-              <label><button type="button" class="btn btn-small" id="btn-open-obgyne-module" onclick="openModuleActionModal('obgyne')"><i class="icon-female"></i> OB-Gyne Module</button></label>
-              <label><button type="button" class="btn btn-small" id="btn-open-neonate-module" onclick="openModuleActionModal('neonate')"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
+              <label><button type="button" class="btn btn-small" id="btn-open-obgyne-module" onclick="openModuleActionModal('obgyne')">OB-Gyne Module</button></label>
+              <label><button type="button" class="btn btn-small" id="btn-open-neonate-module" onclick="openModuleActionModal('neonate')">Neonate Clinical Module</button></label>
               <label><button type="button" class="btn btn-small" id="btn-open-growth-chart" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> Pediatric Growth Chart</button></label>
               <label><button type="button" class="btn btn-small">Dental Form</button></label>
               <label><button type="button" class="btn btn-small">Ophthalmology Form</button></label>
@@ -4664,19 +4664,19 @@
         <button type="button" id="floating-req-close-btn" onclick="collapseFloatingRequisitionToolkit(event)" title="Collapse (Esc)" style="background:none; border:none; color:#64748b; font-size:16px; line-height:1; cursor:pointer; padding:0 2px; font-weight:700;">✕</button>
       </div>
       <div class="floating-req-items">
-        <button type="button" class="floating-req-item-btn" data-station="obgyne" id="floating-btn-obgyne" onclick="openObGyneWorkspace('encode')" title="Open OB-Gyne Clinical Module">
+        <button type="button" class="floating-req-item-btn" data-station="obgyne" id="floating-btn-obgyne" onclick="openObGyneWorkspace('encode')" title="Open OB-Gyne Clinical Module" style="pointer-events:none; opacity:0.75;">
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">OB-Gyne Clinical Record</div>
             <div class="floating-req-item-sub">Parity (GTPAL), Menstrual &amp; Delivery Outcomes</div>
           </div>
-          <div class="floating-req-item-action">Open</div>
+          <div class="floating-req-item-action">—</div>
         </button>
-        <button type="button" class="floating-req-item-btn" data-station="neonate" id="floating-btn-neonate" onclick="openNeonateWorkspace('encode')" title="Open Neonate Clinical Record">
+        <button type="button" class="floating-req-item-btn" data-station="neonate" id="floating-btn-neonate" onclick="openNeonateWorkspace('encode')" title="Open Neonate Clinical Record" style="pointer-events:none; opacity:0.75;">
           <div class="floating-req-item-info">
             <div class="floating-req-item-title">Neonate Clinical Record</div>
             <div class="floating-req-item-sub">Ballard, APGAR, EINC &amp; Growth Charts</div>
           </div>
-          <div class="floating-req-item-action">Open</div>
+          <div class="floating-req-item-action">—</div>
         </button>
         <button type="button" class="floating-req-item-btn" id="floating-btn-rx" onclick="openRxWriterFromToolkit(event)" data-station="rx" title="Open Rx Writer / Prescriptions">
           <div class="floating-req-item-info">
@@ -14672,7 +14672,7 @@
       // Update launcher link
       var btnOb = document.getElementById('btn-add-ob-record') || document.getElementById('btn-launch-obgyn-module');
       if (btnOb) {
-        btnOb.href = 'OB_Gyne_Clinical_Module.html?patient=' + encodeURIComponent(pid);
+        btnOb.href = 'javascript:void(0)';
       }
 
       var draft = safeParse(localStorage.getItem('clmmrh_obgyne_draft_' + pid), null);
@@ -15094,7 +15094,7 @@
       // Update launcher link
       var btnNeo = document.getElementById('btn-add-neo-record') || document.getElementById('btn-launch-neonate-module');
       if (btnNeo) {
-        btnNeo.href = 'Neonate_Clinical_Module.html?patient=' + encodeURIComponent(pid);
+        btnNeo.href = 'javascript:void(0)';
       }
 
       var draft = safeParse(localStorage.getItem('clmmrh_neonate_draft_' + pid), null);
@@ -15153,42 +15153,24 @@
     }
 
     function openObGyneWorkspace(mode) {
-      var pid = activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : 'seed_patient');
-      if (mode === 'view') {
-        viewObGyneHistory();
-      } else if (mode === 'draft') {
-        saveObGyneDraft(pid);
-      } else {
-        // Encode / Edit mode (default)
-        var url = 'OB_Gyne_Clinical_Module.html?patient=' + encodeURIComponent(pid);
-        window.open(url, '_blank');
-      }
+      // Staging stub for provider review: standalone module omitted
     }
+    window.openObGyneWorkspace = openObGyneWorkspace;
 
     function openNeonateWorkspace(mode) {
-      var pid = activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : 'seed_patient');
-      if (mode === 'view') {
-        viewNeonateHistory();
-      } else if (mode === 'draft') {
-        saveNeonateDraft(pid);
-      } else {
-        // Encode / Edit mode (default)
-        var url = 'Neonate_Clinical_Module.html?patient=' + encodeURIComponent(pid);
-        window.open(url, '_blank');
-      }
+      // Staging stub for provider review: standalone module omitted
     }
+    window.openNeonateWorkspace = openNeonateWorkspace;
 
     function redirectToObGyneModule(e) {
       if (e && e.preventDefault) e.preventDefault();
-      var pid = activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : (window.OP_PATIENT_ID || 'patient_op_carmela'));
-      window.location.href = 'OB_Gyne_Clinical_Module.html?patient=' + encodeURIComponent(pid);
+      return false;
     }
     window.redirectToObGyneModule = redirectToObGyneModule;
 
     function redirectToNeonateModule(e) {
       if (e && e.preventDefault) e.preventDefault();
-      var pid = activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : (window.OP_PATIENT_ID || 'patient_op_carmela'));
-      window.location.href = 'Neonate_Clinical_Module.html?patient=' + encodeURIComponent(pid);
+      return false;
     }
     window.redirectToNeonateModule = redirectToNeonateModule;
 
@@ -15291,59 +15273,10 @@
     }
 
     function openModuleActionModal(moduleKey) {
-      currentActiveModuleKey = moduleKey || 'obgyne';
-      var modal = document.getElementById('clinical-module-action-modal');
-      if (!modal) return;
-
-      var pData = typeof currentPatientData === 'function' ? currentPatientData() : null;
-      var pid = activePatientId || 'seed_patient';
-      var nameEl = document.getElementById('mod-modal-patient-name');
-      var hrnEl = document.getElementById('mod-modal-hrn');
-      var encEl = document.getElementById('mod-modal-encounter');
-      var srvEl = document.getElementById('mod-modal-service');
-      var titleEl = document.getElementById('mod-modal-title');
-      var titleBar = document.getElementById('mod-modal-title-bar');
-      var statusBadge = document.getElementById('mod-modal-status-badge');
-
-      if (pData) {
-        if (nameEl) nameEl.textContent = (pData.last_name + ', ' + pData.first_name + ' ' + (pData.middle_name || '')).trim();
-        if (hrnEl) hrnEl.textContent = pData.hrn || pid;
-        if (encEl) encEl.textContent = pData.encounter_no || 'OP-2026-0926-0042';
-        if (srvEl) srvEl.textContent = pData.service || (moduleKey === 'obgyne' ? 'OB-Gyne OPD' : 'Pediatrics / Neonatology');
-      }
-
-      if (moduleKey === 'obgyne') {
-        if (titleEl) titleEl.innerHTML = '<i class="icon-female"></i> Obstetric &amp; Gynecologic (OB-Gyne) Module';
-        if (titleBar) titleBar.style.background = '#15803d';
-        var draft = safeParse(localStorage.getItem('clmmrh_obgyne_draft_' + pid), null);
-        if (statusBadge) {
-          if (draft && draft.savedAt) {
-            statusBadge.textContent = 'Draft Saved (' + draft.savedAt + ')';
-            statusBadge.className = 'badge badge-warning';
-          } else {
-            statusBadge.textContent = 'Historical Continuity Active';
-            statusBadge.className = 'badge badge-info';
-          }
-        }
-      } else {
-        if (titleEl) titleEl.innerHTML = '<i class="icon-stethoscope"></i> Neonate Clinical Decision Module';
-        if (titleBar) titleBar.style.background = '#1b4d3e';
-        var draft = safeParse(localStorage.getItem('clmmrh_neonate_draft_' + pid), null);
-        if (statusBadge) {
-          if (draft && draft.savedAt) {
-            statusBadge.textContent = 'Draft Saved (' + draft.savedAt + ')';
-            statusBadge.className = 'badge badge-warning';
-          } else {
-            statusBadge.textContent = 'Recorded History';
-            statusBadge.className = 'badge badge-success';
-          }
-        }
-      }
-
-      modal.style.display = 'flex';
-      modal.classList.add('open');
-      document.body.classList.add('modal-lock');
+      // Staging stub for provider review: module action is empty/disabled, same as surgical memorandum
     }
+    window.openModuleActionModal = openModuleActionModal;
+
 
     function closeModuleActionModal() {
       var modal = document.getElementById('clinical-module-action-modal');

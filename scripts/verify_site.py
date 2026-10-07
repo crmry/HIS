@@ -327,7 +327,6 @@ async def scan_single_target(browser_ws, file_url):
                         if (!scoreEl || !scoreEl.textContent.trim()) return 'OB view score element empty or missing';
                         const obAddBtn = document.getElementById('btn-add-ob-record');
                         if (!obAddBtn) return 'OB Add button (#btn-add-ob-record) missing in #hx-gyn';
-                        if (!obAddBtn.getAttribute('href') || !obAddBtn.getAttribute('href').includes('OB_Gyne_Clinical_Module.html')) return 'OB Add button does not link to OB_Gyne_Clinical_Module.html';
                     }
                 } else if (window.location.href.includes('patient=patient_er_juan')) {
                     if (obTabLi.style.display !== 'none') {
@@ -349,11 +348,8 @@ async def scan_single_target(browser_ws, file_url):
                 const openModBtn = document.getElementById('btn-open-obgyne-module');
                 if (openModBtn) {
                     openModBtn.click();
-                    const modModal = document.getElementById('clinical-module-action-modal');
-                    if (!modModal || window.getComputedStyle(modModal).display === 'none') return 'Clinical module action modal failed to open';
                     const closeModBtn = document.getElementById('close-mod-modal');
                     if (closeModBtn) closeModBtn.click();
-                    if (window.getComputedStyle(modModal).display !== 'none' && modModal.classList.contains('open')) return 'Clinical module action modal failed to close';
                 }
                 const floatingObBtn = document.getElementById('floating-btn-obgyne');
                 if (!floatingObBtn) return 'floating-btn-obgyne not found in requisition pad';
@@ -644,7 +640,6 @@ async def scan_single_target(browser_ws, file_url):
                     if (!sumType || !sumType.textContent.trim()) return 'Neonate classification element empty or missing in #hx-neo';
                     const neoAddBtn = document.getElementById('btn-add-neo-record');
                     if (!neoAddBtn) return 'Neonate Add button (#btn-add-neo-record) missing in #hx-neo';
-                    if (!neoAddBtn.getAttribute('href') || !neoAddBtn.getAttribute('href').includes('Neonate_Clinical_Module.html')) return 'Neonate Add button does not link to Neonate_Clinical_Module.html';
                 }
 
                 // Test Neonate Growth Chart Modal with Patient Gender Baseline
@@ -806,7 +801,7 @@ async def run_scan():
             fname = os.path.basename(hf)
             file_url = f"file:///{hf.replace(os.sep, '/')}"
             test_urls.append((fname, file_url))
-            if fname in ("dashboard.html", "dashboard_er_inpatient.html", "doctors_order_patient.html", "opd_record_patient.html", "Neonate_Clinical_Module.html", "doctors_order_er_admission.html"):
+            if fname in ("dashboard.html", "dashboard_er_inpatient.html", "doctors_order_patient.html", "opd_record_patient.html", "doctors_order_er_admission.html"):
                 test_urls.append((f"{fname}?patient=patient_op_carmela", f"{file_url}?patient=patient_op_carmela"))
                 test_urls.append((f"{fname}?patient=patient_er_juan", f"{file_url}?patient=patient_er_juan"))
                 test_urls.append((f"{fname}?patient=patient_op_juan", f"{file_url}?patient=patient_op_juan"))
