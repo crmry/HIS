@@ -33,6 +33,7 @@
             <tr class="text-left">
               <th class="border-b px-4 py-3 font-semibold">Hospital Number</th>
               <th class="border-b px-4 py-3 font-semibold">Patient Name</th>
+              <th class="border-b px-4 py-3 font-semibold">Service Type</th>
               <th class="border-b px-4 py-3 text-right font-semibold">Action</th>
             </tr>
           </thead>
@@ -120,6 +121,28 @@
     const middle = String(data.middle_name || '').trim();
     const given = [first, middle].filter(Boolean).join(' ');
     return [last, given].filter(Boolean).join(', ');
+  }
+
+  function getServiceType(data) {
+    if (!data) return 'Outpatient';
+    const ct = String(data.service_type || data.case_type || '').toLowerCase();
+    const cn = String(data.case_no || data.encounter_no || '').toLowerCase();
+    const reg = String(data.registry || '').toLowerCase();
+
+    if (
+      ct.includes('inpatient') ||
+      ct === 'ip' ||
+      ct.startsWith('ip-') ||
+      ct.includes('er & inpatient') ||
+      cn.startsWith('ip-') ||
+      cn.includes('inpatient') ||
+      reg === 'ip' ||
+      reg === 'inpatient'
+    ) {
+      return 'Inpatient';
+    }
+
+    return 'Outpatient';
   }
 
   function formatDateTime(iso) {
@@ -354,14 +377,15 @@
       const formattedName = patientName(d).toLowerCase();
       const nameSequence = [d.last_name, d.first_name, d.middle_name].filter(Boolean).join(' ').toLowerCase();
       const hrn = String(d.hrn || '').toLowerCase();
+      const svcType = getServiceType(d).toLowerCase();
 
-      if (formattedName.includes(q) || nameSequence.includes(q) || hrn.includes(q)) {
+      if (formattedName.includes(q) || nameSequence.includes(q) || hrn.includes(q) || svcType.includes(q)) {
         return true;
       }
 
       const cleanQ = q.replace(/,/g, ' ').replace(/\s+/g, ' ').trim();
       const tokens = cleanQ.split(' ').filter(Boolean);
-      if (tokens.length > 0 && tokens.every(token => formattedName.includes(token) || nameSequence.includes(token) || hrn.includes(token))) {
+      if (tokens.length > 0 && tokens.every(token => formattedName.includes(token) || nameSequence.includes(token) || hrn.includes(token) || svcType.includes(token))) {
         return true;
       }
 
@@ -374,6 +398,7 @@
         <tr class="hover:bg-gray-50">
           <td class="border-b px-4 py-3 font-mono">${esc(d.hrn || '')}</td>
           <td class="border-b px-4 py-3 font-medium">${esc(patientName(d))}</td>
+          <td class="border-b px-4 py-3 text-gray-700">${esc(getServiceType(d))}</td>
           <td class="border-b px-4 py-3 text-right">
             <div class="flex justify-end">
               <a href="dashboard.html?patient=${encodeURIComponent(record.id)}"
