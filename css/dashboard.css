@@ -237,6 +237,9 @@
     .dashlet.is-collapsed > .bootstrap-widget-content {
       display: none !important;
     }
+    .dashlet.is-collapsed > .bootstrap-widget-header {
+      border-radius: 3px;
+    }
 
     /* ── Buttons (Green & Grey Two-Shade System) ── */
     .btn {
@@ -714,11 +717,16 @@
     }
     .order-entry .entry-label { font-size: 11px; font-weight: 700; color: var(--med-text-muted); }
     .orders-savebar {
-      margin: 8px -12px -12px;
+      margin: 6px 0 14px 0;
       padding: 8px 12px;
-      border-top: 1px solid var(--med-border);
+      border: 1px solid var(--med-border);
       background: #f4f8f6;
+      border-radius: 3px;
       text-align: right;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      box-sizing: border-box;
     }
     #orders-save-status { margin-right: 9px; color: var(--med-green); font-weight: 700; }
 

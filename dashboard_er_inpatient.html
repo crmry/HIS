@@ -2756,18 +2756,18 @@
     <!-- ROW 6: Doctor's Orders -->
     <div class="row-fluid" id="row-physician-orders">
       <div class="span12">
-        <div class="dashlet">
+        <div class="dashlet" id="dashlet-physician-orders">
           <div class="bootstrap-widget-header">
             <h3>Physician's Orders (Plans)</h3>
           </div>
           <div class="bootstrap-widget-content">
             <div id="orders-body"></div>
-            <div class="orders-savebar">
-              <span id="orders-save-status" role="status" aria-live="polite"></span>
-              <button type="button" class="btn btn-success btn-small" id="save-orders-btn">Save and Preview Physician's
-                Order</button>
-            </div>
           </div>
+        </div>
+        <div class="orders-savebar">
+          <span id="orders-save-status" role="status" aria-live="polite"></span>
+          <button type="button" class="btn btn-success btn-small" id="save-orders-btn">Save and Preview Physician's
+            Order</button>
         </div>
       </div>
     </div>
@@ -7169,6 +7169,10 @@
           btn.disabled = isReadOnly;
         }
       });
+      var ordersSaveBar = document.querySelector('.orders-savebar');
+      if (ordersSaveBar) {
+        ordersSaveBar.style.display = isReadOnly ? 'none' : '';
+      }
     }
 
     function inspectEncounterInDashboard(index) {

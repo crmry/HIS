@@ -462,6 +462,12 @@ async def scan_single_target(browser_ws, file_url):
                         return 'Doctors order co-signature modal elements missing on dashboard.html';
                     }
 
+                    // Verify save-orders-btn sits outside collapsible dashlet container
+                    const ordersDashlet = document.getElementById('dashlet-physician-orders');
+                    if (ordersDashlet && ordersDashlet.contains(saveOrdersBtn)) {
+                        return 'save-orders-btn should be outside collapsible orders dashlet';
+                    }
+
                     // Test 1: Clicking Save Orders opens the pairing modal
                     saveOrdersBtn.click();
                     if (!cosigModal.classList.contains('open')) {
