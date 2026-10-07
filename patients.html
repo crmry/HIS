@@ -21,7 +21,7 @@
       <div class="flex flex-col gap-3 border-b border-gray-200 p-4 md:flex-row md:items-center md:justify-between">
         <div class="relative w-full md:max-w-md">
           <input id="search" type="search"
-                 placeholder="Search HRN, patient name, case number..."
+                 placeholder="Search Patient Name (Last Name, First Name, Middle Name)..."
                  class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20">
         </div>
         <p id="count" class="text-sm text-gray-500"></p>
@@ -351,18 +351,21 @@
     const q = searchEl.value.trim().toLowerCase();
     const filtered = !q ? all : all.filter(record => {
       const d = record.data || {};
-      const haystack = [
-        d.hrn,
-        d.case_no,
-        d.case_type,
-        d.last_name,
-        d.first_name,
-        d.middle_name,
-        d.gender,
-        d.address
-      ].filter(Boolean).join(' ').toLowerCase();
+      const formattedName = patientName(d).toLowerCase();
+      const nameSequence = [d.last_name, d.first_name, d.middle_name].filter(Boolean).join(' ').toLowerCase();
+      const hrn = String(d.hrn || '').toLowerCase();
 
-      return haystack.includes(q);
+      if (formattedName.includes(q) || nameSequence.includes(q) || hrn.includes(q)) {
+        return true;
+      }
+
+      const cleanQ = q.replace(/,/g, ' ').replace(/\s+/g, ' ').trim();
+      const tokens = cleanQ.split(' ').filter(Boolean);
+      if (tokens.length > 0 && tokens.every(token => formattedName.includes(token) || nameSequence.includes(token) || hrn.includes(token))) {
+        return true;
+      }
+
+      return false;
     });
 
     rowsEl.innerHTML = filtered.map(record => {
@@ -388,7 +391,11 @@
     countEl.textContent = `${filtered.length} patient${filtered.length === 1 ? '' : 's'}`;
   }
 
-  searchEl.addEventListener('input', renderList);
+  var searchDebounceTimer = null;
+  searchEl.addEventListener('input', () => {
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(renderList, 100);
+  });
 
   rowsEl.addEventListener('click', event => {
     const viewButton = event.target.closest('[data-view]');
