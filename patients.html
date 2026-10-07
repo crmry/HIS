@@ -96,7 +96,7 @@
     </div>
   </div>
 
-<script src="js/data/patient_seeds.js?v=20261006_08"></script>
+<script src="js/data/patient_seeds.js?v=20261007_01"></script>
 <script>
   var STORAGE_KEY = window.STORAGE_KEY || 'clmmrh_patients_v1';
   const rowsEl = document.getElementById('patient-rows');
@@ -444,7 +444,14 @@
       const hrn = delButton.dataset.hrn ? ` (HRN: ${delButton.dataset.hrn})` : '';
       if (window.confirm(`Are you sure you want to delete ${name}${hrn}? This will remove the patient record from this browser storage.`)) {
         const remaining = getPatients().filter(r => r.id !== id);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(remaining));
+        if (typeof savePatients === 'function') {
+          savePatients(remaining);
+        } else {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(remaining));
+        }
+        if (typeof invalidatePatientsCache === 'function') {
+          invalidatePatientsCache();
+        }
         try {
           const mStore = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
           if (mStore && mStore[id]) {

@@ -1066,9 +1066,23 @@ if (typeof window !== 'undefined') {
         }
       } catch (e) {}
 
-      var blankIndex = records.findIndex(function (record) { return record.id === BLANK_PATIENT_ID; });
-      if (blankIndex < 0) records.push(blankPatientRecord());
-      else if (Number(records[blankIndex].seedVersion || 0) < 43) records[blankIndex] = blankPatientRecord();
+      // Explicitly purge blank sample patient record (patient_new_blank_1790299677880 / HRN 0000001678)
+      var hadBlankPatient = records.some(function (r) {
+        return r && (r.id === BLANK_PATIENT_ID || r.id === 'patient_new_blank_1790299677880' || (r.data && r.data.hrn === '0000001678'));
+      });
+      if (hadBlankPatient) {
+        records = records.filter(function (record) {
+          return record && record.id !== BLANK_PATIENT_ID && record.id !== 'patient_new_blank_1790299677880' && (!record.data || record.data.hrn !== '0000001678');
+        });
+        try {
+          var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
+          if (store && store[BLANK_PATIENT_ID]) {
+            delete store[BLANK_PATIENT_ID];
+            localStorage.setItem('clmmrh_chart_monitoring_data_v1', JSON.stringify(store));
+          }
+        } catch (e) {}
+      }
+
       savePatients(records);
     }
 
@@ -1081,6 +1095,7 @@ if (typeof window !== 'undefined') {
       window.seedPatientRecord = seedPatientRecord;
       window.getPatients = getPatients;
       window.savePatients = savePatients;
+      window.invalidatePatientsCache = invalidatePatientsCache;
       window.ER_PATIENT_ID = ER_PATIENT_ID;
       window.OP_PATIENT_ID = OP_PATIENT_ID;
       window.SEED_PATIENT_ID = SEED_PATIENT_ID;
