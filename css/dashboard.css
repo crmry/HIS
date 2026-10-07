@@ -2136,7 +2136,8 @@
       align-items: center;
       width: 100%;
     }
-    #cosig-doctor-search {
+    #cosig-doctor-search,
+    #endcare-cosig-doctor-search {
       width: 100%;
       box-sizing: border-box;
       height: 34px;
@@ -2149,12 +2150,14 @@
       cursor: text;
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
-    #cosig-doctor-search:focus {
-      border-color: #2563eb;
+    #cosig-doctor-search:focus,
+    #endcare-cosig-doctor-search:focus {
+      border-color: #1b4d3e;
       outline: none;
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18);
+      box-shadow: 0 0 0 2px rgba(27, 77, 62, 0.18);
     }
-    #btn-toggle-cosig-dropdown {
+    #btn-toggle-cosig-dropdown,
+    #btn-toggle-endcare-cosig-dropdown {
       position: absolute;
       right: 6px;
       top: 50%;
@@ -2168,11 +2171,13 @@
       line-height: 1;
       border-radius: 3px;
     }
-    #btn-toggle-cosig-dropdown:hover {
+    #btn-toggle-cosig-dropdown:hover,
+    #btn-toggle-endcare-cosig-dropdown:hover {
       color: #1e293b;
       background: #f1f5f9;
     }
-    #cosig-doctor-select.cosig-floating-dropdown {
+    #cosig-doctor-select.cosig-floating-dropdown,
+    #endcare-cosig-doctor-select.cosig-floating-dropdown {
       display: none;
       position: absolute;
       top: 100%;
@@ -2183,7 +2188,7 @@
       width: 100%;
       box-sizing: border-box;
       font-size: 12.5px;
-      border: 1px solid #3b82f6;
+      border: 1px solid #1b4d3e;
       border-radius: 4px;
       padding: 4px;
       background: #ffffff;
@@ -2191,17 +2196,21 @@
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
       max-height: 190px;
     }
-    #cosig-doctor-select.cosig-floating-dropdown.open {
+    #cosig-doctor-select.cosig-floating-dropdown.open,
+    #endcare-cosig-doctor-select.cosig-floating-dropdown.open {
       display: block !important;
     }
-    #cosig-doctor-select.cosig-floating-dropdown option {
+    #cosig-doctor-select.cosig-floating-dropdown option,
+    #endcare-cosig-doctor-select.cosig-floating-dropdown option {
       padding: 6px 10px;
       border-radius: 3px;
       cursor: pointer;
       font-size: 12.5px;
     }
     #cosig-doctor-select.cosig-floating-dropdown option:hover,
-    #cosig-doctor-select.cosig-floating-dropdown option:checked {
+    #cosig-doctor-select.cosig-floating-dropdown option:checked,
+    #endcare-cosig-doctor-select.cosig-floating-dropdown option:hover,
+    #endcare-cosig-doctor-select.cosig-floating-dropdown option:checked {
       background: #eff6ff;
       color: #1d4ed8;
       font-weight: 600;

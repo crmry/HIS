@@ -524,6 +524,27 @@ async def scan_single_target(browser_ws, file_url):
                             return 'Co-signature status banner should not be displayed on dashboard';
                         }
                     }
+
+                    // Verify End Patient Care Pairing / Co-Signature Modal on Dashboard pages
+                    const endCareCosigModal = document.getElementById('modal-end-care-cosignature');
+                    const endCareCosigSelect = document.getElementById('endcare-cosig-doctor-select');
+                    if (!endCareCosigModal || !endCareCosigSelect) {
+                        return 'modal-end-care-cosignature or endcare-cosig-doctor-select missing on dashboard';
+                    }
+                    if (typeof window.openEndCareCosignatureModal !== 'function' || typeof window.closeEndCareCosignatureModal !== 'function') {
+                        return 'End Patient Care co-signature modal functions not exported on window';
+                    }
+                    window.openEndCareCosignatureModal();
+                    if (!endCareCosigModal.classList.contains('open')) {
+                        return 'openEndCareCosignatureModal failed to open modal-end-care-cosignature';
+                    }
+                    if (endCareCosigSelect.value !== 'NONE') {
+                        return 'Default selection in endcare-cosig-doctor-select is not NONE';
+                    }
+                    window.closeEndCareCosignatureModal(null, false);
+                    if (endCareCosigModal.classList.contains('open') && window.getComputedStyle(endCareCosigModal).display !== 'none') {
+                        return 'closeEndCareCosignatureModal failed to close modal';
+                    }
                 }
 
                 if (window.location.href.includes('doctors_order_patient.html')) {
