@@ -531,6 +531,26 @@ async def scan_single_target(browser_ws, file_url):
                         }
                     }
 
+                    // Verify CPOE Medication row removal and addition without auto-resurrection
+                    const schedBody = document.querySelector('[data-medication-list="scheduled"]');
+                    if (schedBody) {
+                        const firstRmBtn = schedBody.querySelector('.rm-medication');
+                        if (firstRmBtn && window.getComputedStyle(firstRmBtn).display !== 'none') {
+                            const initialCount = schedBody.children.length;
+                            firstRmBtn.click();
+                            if (schedBody.children.length >= initialCount) {
+                                return 'Clicking rm-medication failed to remove row or auto-resurrected row';
+                            }
+                            const addMedBtn = document.querySelector('button[data-add-med="scheduled"]');
+                            if (addMedBtn && window.getComputedStyle(addMedBtn).display !== 'none') {
+                                addMedBtn.click();
+                                if (schedBody.children.length !== initialCount) {
+                                    return 'Clicking data-add-med="scheduled" failed to re-add medication row';
+                                }
+                            }
+                        }
+                    }
+
                     // Verify End Patient Care Pairing / Co-Signature Modal on Dashboard pages
                     const endCareCosigModal = document.getElementById('modal-end-care-cosignature');
                     const endCareCosigSelect = document.getElementById('endcare-cosig-doctor-select');

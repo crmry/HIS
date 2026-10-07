@@ -9805,12 +9805,15 @@
       var type = item.orderType || 'scheduled';
 
       if (type === 'continuous') {
+        if (!item.additiveDrug && !item.solution && !item.prescribedDose && !item.infusionRate && !item.text) {
+          return '';
+        }
         var parts = [];
         if (item.additiveDrug) parts.push(item.additiveDrug);
         if (item.solution) parts.push('in ' + item.solution);
         if (item.finalConcentration) parts.push('(Conc: ' + item.finalConcentration + ')');
         var doseStr = [item.prescribedDose, item.doseExpression].filter(Boolean).join(' ');
-        if (doseStr) parts.push('at ' + doseStr);
+        if (item.prescribedDose) parts.push('at ' + doseStr);
         if (item.infusionRate) parts.push('Rate: ' + item.infusionRate + (String(item.infusionRate).toLowerCase().indexOf('ml') === -1 ? ' mL/hr' : ''));
         var text = parts.join(' ');
         if (item.precautions) text += ' | Precautions: ' + item.precautions;
@@ -9819,6 +9822,9 @@
       }
 
       if (type === 'oxygen') {
+        if (!item.deliveryMethod && !item.oxygenParameters && !item.text) {
+          return '';
+        }
         var parts = [];
         if (item.deliveryMethod) parts.push(item.deliveryMethod);
         if (item.oxygenParameters) parts.push('at ' + item.oxygenParameters);
@@ -9831,9 +9837,12 @@
       }
 
       // Scheduled / Intermittent
+      if (!item.genericName && !item.medication && !item.drug && !item.dose && !item.preparation && !item.text) {
+        return '';
+      }
       var genericName = item.genericName || item.medication || item.drug || '';
       var preparation = item.preparation || item.dosageForm || '';
-      var dose = [item.dose, item.doseUnit].filter(Boolean).join(' ');
+      var dose = item.dose ? [item.dose, item.doseUnit].filter(Boolean).join(' ') : '';
       var parts = [genericName, preparation, dose, item.route, item.frequency, item.duration ? 'x ' + item.duration : '']
         .map(function (v) { return String(v || '').trim(); }).filter(Boolean);
       var text = parts.join(' - ');
@@ -9916,12 +9925,6 @@
           panel.style.display = t === type ? '' : 'none';
         }
       });
-      var body = document.querySelector('[data-medication-list="' + type + '"]');
-      if (body && !body.children.length) {
-        if (type === 'continuous') addContinuousMedRow(body, {});
-        else if (type === 'oxygen') addOxygenMedRow(body, {});
-        else addScheduledMedRow(body, {});
-      }
     }
 
     function attachMedicationRowListeners(row) {
@@ -9935,6 +9938,16 @@
           scheduleOrderSummaryUpdate();
         });
       });
+      var rmBtn = row.querySelector('.rm-medication');
+      if (rmBtn) {
+        rmBtn.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          row.remove();
+          updateMedicationBadges();
+          renderOrderSummary();
+        });
+      }
     }
 
     function addScheduledMedRow(body, data) {
@@ -11148,17 +11161,14 @@
 
       var removeMedicationBtn = e.target.closest('.rm-medication');
       if (removeMedicationBtn) {
+        e.preventDefault();
+        e.stopPropagation();
         var medicationRow = removeMedicationBtn.closest('.medication-row');
-        var medicationBodyForRemove = medicationRow.parentElement;
-        var rType = medicationRow.dataset.orderType || 'scheduled';
-        medicationRow.remove();
-        if (!medicationBodyForRemove.children.length) {
-          if (rType === 'continuous') addContinuousMedRow(medicationBodyForRemove, {});
-          else if (rType === 'oxygen') addOxygenMedRow(medicationBodyForRemove, {});
-          else addScheduledMedRow(medicationBodyForRemove, {});
+        if (medicationRow) {
+          medicationRow.remove();
+          updateMedicationBadges();
+          renderOrderSummary();
         }
-        updateMedicationBadges();
-        renderOrderSummary();
         return;
       }
 
