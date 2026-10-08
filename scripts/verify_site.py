@@ -377,26 +377,31 @@ async def scan_single_target(browser_ws, file_url):
                         return 'syncEncounterDocumentationSections not defined on window in dashboard.html';
                     }
 
-                    // For initial encounter state: OPD encounter has progress notes hidden; ER/IP encounter has progress notes visible
+                    // For initial encounter state: OPD encounter has Progress Notes visible and collapsible
                     const rosRow = document.getElementById('row-review-of-systems');
                     const peRow = document.getElementById('row-physical-exam');
                     const hpiTabLi = document.getElementById('tab-li-hx-present');
-                    const isInitialOpd = pnRow.style.display === 'none';
-                    if (isInitialOpd) {
-                        if (rosRow && rosRow.style.display === 'none') {
-                            return 'Review of Systems should be visible on OPD encounters';
-                        }
-                        if (peRow && peRow.style.display === 'none') {
-                            return 'Physical Exam should be visible on OPD encounters';
-                        }
-                    } else {
-                        if (rosRow && rosRow.style.display !== 'none') {
-                            return 'Review of Systems should be hidden on ER/IP encounters';
-                        }
-                        if (peRow && peRow.style.display !== 'none') {
-                            return 'Physical Exam should be hidden on ER/IP encounters';
-                        }
+                    if (pnRow.style.display === 'none') {
+                        return 'Progress Notes row should be visible on OPD encounters';
                     }
+                    if (rosRow && rosRow.style.display === 'none') {
+                        return 'Review of Systems should be visible on OPD encounters';
+                    }
+                    if (peRow && peRow.style.display === 'none') {
+                        return 'Physical Exam should be visible on OPD encounters';
+                    }
+
+                    // Test collapsible behavior of Progress Notes dashlet
+                    const pnToggle = pnDashlet.querySelector('.dashlet-toggle');
+                    if (!pnToggle) {
+                        return 'dashlet-progress-notes toggle button missing';
+                    }
+                    const wasCollapsed = pnDashlet.classList.contains('is-collapsed');
+                    pnToggle.click();
+                    if (pnDashlet.classList.contains('is-collapsed') === wasCollapsed) {
+                        return 'dashlet-progress-notes toggle failed to switch is-collapsed state';
+                    }
+                    pnToggle.click(); // restore state
 
                     // Test switching to an ER encounter
                     const erTestEnc = {
@@ -440,8 +445,8 @@ async def scan_single_target(browser_ws, file_url):
                         hx_present: 'Routine follow-up'
                     };
                     window.syncEncounterDocumentationSections(opdTestEnc, false);
-                    if (pnRow.style.display !== 'none') {
-                        return 'Progress Notes row should be hidden when restored to OPD';
+                    if (pnRow.style.display === 'none') {
+                        return 'Progress Notes row should remain visible when restored to OPD';
                     }
                     if (rosRow && rosRow.style.display === 'none') {
                         return 'Review of Systems should be restored on OPD';

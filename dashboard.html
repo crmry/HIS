@@ -2692,27 +2692,11 @@
       </div>
     </div>
 
-    <!-- ROW 5: Final Diagnosis (Positioned directly BELOW Admitting Diagnosis, displayed ONLY for Historical Encounters) -->
-    <div class="row-fluid" id="row-final-dx" style="display:none;">
-      <div class="span12" id="final-dx-col">
-        <div class="dashlet" id="dashlet-final-diagnosis">
-          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <h3>Final Diagnosis</h3>
-            <span id="final-dx-status-badge" style="display:none; font-size:11px; padding:2px 8px; border-radius:3px; background:#065f46; color:#a7f3d0; font-weight:600; text-transform:uppercase;">Signed / Finalized</span>
-          </div>
-          <div class="bootstrap-widget-content">
-            <textarea id="final_dx" name="final_diagnosis" rows="4" class="input-block-level"
-              placeholder="Final Diagnosis is encoded when concluding consultation via End Patient Care..." readonly disabled></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ROW 5.5: Progress Notes (Subjective, Objective, Assessment) - Positioned in between Initial Diagnosis and Physician's Orders (Plans) -->
-    <div class="row-fluid" id="row-progress-notes" style="display:none;">
+    <!-- ROW 5: Progress Notes (Subjective, Objective, Assessment) - Collapsible Dashlet situated below Initial Diagnosis -->
+    <div class="row-fluid" id="row-progress-notes">
       <div class="span12" id="progress-notes-col">
         <div class="dashlet" id="dashlet-progress-notes">
-          <div class="bootstrap-widget-header">
+          <div class="bootstrap-widget-header" style="cursor:pointer;" title="Click to collapse / expand Progress Notes">
             <h3 id="progress-notes-header-title">Progress Notes (Subjective, Objective, Assessment)</h3>
           </div>
           <div class="bootstrap-widget-content" id="dashlet-progress-notes-content" style="padding:14px 16px;">
@@ -2747,6 +2731,22 @@
                   placeholder="Document clinical impression, diagnostic reasoning, interval condition, and disease trajectory..."></textarea>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 5.5: Final Diagnosis (Positioned below Progress Notes, displayed ONLY for Historical Encounters) -->
+    <div class="row-fluid" id="row-final-dx" style="display:none;">
+      <div class="span12" id="final-dx-col">
+        <div class="dashlet" id="dashlet-final-diagnosis">
+          <div class="bootstrap-widget-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>Final Diagnosis</h3>
+            <span id="final-dx-status-badge" style="display:none; font-size:11px; padding:2px 8px; border-radius:3px; background:#065f46; color:#a7f3d0; font-weight:600; text-transform:uppercase;">Signed / Finalized</span>
+          </div>
+          <div class="bootstrap-widget-content">
+            <textarea id="final_dx" name="final_diagnosis" rows="4" class="input-block-level"
+              placeholder="Final Diagnosis is encoded when concluding consultation via End Patient Care..." readonly disabled></textarea>
           </div>
         </div>
       </div>
@@ -4516,8 +4516,31 @@
           header.appendChild(
             toggle
           );
+
+          header.style.cursor = 'pointer';
+          header.addEventListener('click', function (event) {
+            if (event.target.closest('button, a, input, select, textarea')) {
+              return;
+            }
+            toggle.click();
+          });
         });
     }
+
+    function toggleProgressNotesCollapse(forceCollapsed) {
+      var dashlet = document.getElementById('dashlet-progress-notes');
+      if (!dashlet) return;
+      var toggle = dashlet.querySelector('.dashlet-toggle');
+      var shouldCollapse = (typeof forceCollapsed === 'boolean') ? forceCollapsed : !dashlet.classList.contains('is-collapsed');
+      setDashletCollapsed(dashlet, shouldCollapse, toggle);
+      var currentState = getDashletState();
+      currentState['dashlet-progress-notes-content'] = shouldCollapse;
+      try {
+        localStorage.setItem(DASHLET_STATE_KEY, JSON.stringify(currentState));
+      } catch (e) {}
+    }
+    window.toggleProgressNotesCollapse = toggleProgressNotesCollapse;
+
     var form = document.getElementById('dashboard-form');
     /* =========================================================
    PHYSICAL EXAMINATION BUILDER
@@ -6095,29 +6118,37 @@
         hpiTabLi.style.display = '';
       }
 
+      // Display Progress Notes across all encounters (OPD, ER, IP)
+      if (progRow) progRow.style.display = 'block';
+
+      var parsedNotes = parseStructuredProgressNotes(enc);
+      if (!parsedNotes.combined && !isHistorical && activePatientId) {
+        var pData = currentPatientData();
+        if (pData) {
+          parsedNotes = parseStructuredProgressNotes(pData);
+        }
+      }
+      if (progSubj) progSubj.value = parsedNotes.subjective || '';
+      if (progObj) progObj.value = parsedNotes.objective || '';
+      if (progAss) progAss.value = parsedNotes.assessment || '';
+      if (progEl) progEl.value = parsedNotes.combined || '';
+
+      var isRo = Boolean(isHistorical);
+      [progSubj, progObj, progAss, progEl].forEach(function (el) {
+        if (!el) return;
+        el.readOnly = isRo;
+        el.disabled = isRo;
+      });
+
       if (isErOrIp) {
         // ER and Inpatient encounters:
         // Do not use OPD-style ROS, and PE sections
         if (rosRow) rosRow.style.display = 'none';
         if (peRow) peRow.style.display = 'none';
 
-        // Display Progress Notes (SOA) and Intake & Output (I&O)
-        if (progRow) progRow.style.display = 'block';
+        // Display Intake & Output (I&O)
         var ioTabLi = document.getElementById('tab-li-io');
         if (ioTabLi) ioTabLi.style.display = '';
-
-        var parsedNotes = parseStructuredProgressNotes(enc);
-        if (progSubj) progSubj.value = parsedNotes.subjective || '';
-        if (progObj) progObj.value = parsedNotes.objective || '';
-        if (progAss) progAss.value = parsedNotes.assessment || '';
-        if (progEl) progEl.value = parsedNotes.combined || '';
-
-        var isRo = Boolean(isHistorical);
-        [progSubj, progObj, progAss, progEl].forEach(function (el) {
-          if (!el) return;
-          el.readOnly = isRo;
-          el.disabled = isRo;
-        });
 
         // Ensure HPI remains populated from clinical record or encounter data
         if (hxEl) {
@@ -6131,7 +6162,6 @@
       } else {
         // OPD encounters:
         // Display OPD HPI, Review of Systems, and Physical Examination
-        if (progRow) progRow.style.display = 'none';
         var ioTabLi = document.getElementById('tab-li-io');
         if (ioTabLi) {
           ioTabLi.style.display = 'none';
@@ -6155,13 +6185,6 @@
           if (pmhLi && pmhLi.parentElement) pmhLi.parentElement.classList.remove('active');
           if (hxPastTab) hxPastTab.classList.remove('active');
         }
-
-        [progSubj, progObj, progAss, progEl].forEach(function (el) {
-          if (!el) return;
-          el.value = '';
-          el.readOnly = false;
-          el.disabled = false;
-        });
       }
     }
     window.syncEncounterDocumentationSections = syncEncounterDocumentationSections;
@@ -13646,7 +13669,7 @@
         var combinedPN = syncProgressNotesAggregate();
         data.progress_notes = combinedPN;
 
-        if (curEncForSave && !isInitialEncounter(curEncForSave, curEncSaveIdx, data.encounters)) {
+        if (curEncForSave) {
           curEncForSave.progress_notes_subjective = sVal;
           curEncForSave.progress_notes_objective = oVal;
           curEncForSave.progress_notes_assessment = aVal;
@@ -13970,10 +13993,14 @@
         if (fBadge) fBadge.style.display = 'none';
 
         var progRow = document.getElementById('row-progress-notes');
-        if (progRow) progRow.style.display = 'none';
+        if (progRow) progRow.style.display = 'block';
         ['progress_notes_subjective', 'progress_notes_objective', 'progress_notes_assessment', 'progress_notes'].forEach(function (id) {
           var el = document.getElementById(id);
-          if (el) el.value = '';
+          if (el) {
+            el.value = '';
+            el.readOnly = false;
+            el.disabled = false;
+          }
         });
 
         syncPainSiteUI(false, '');
