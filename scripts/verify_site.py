@@ -378,6 +378,14 @@ async def scan_single_target(browser_ws, file_url):
                     }
 
                     // For initial encounter state: OPD encounter has Progress Notes visible and collapsible
+                    const clinEvalDashlet = document.getElementById('dashlet-clinical-evaluation');
+                    if (!clinEvalDashlet) {
+                        return 'dashlet-clinical-evaluation unified group box missing in dashboard.html';
+                    }
+                    if (clinEvalDashlet.classList.contains('is-collapsed')) {
+                        return 'dashlet-clinical-evaluation should be open/maximized by default';
+                    }
+
                     const rosRow = document.getElementById('row-review-of-systems');
                     const peRow = document.getElementById('row-physical-exam');
                     const hpiTabLi = document.getElementById('tab-li-hx-present');
