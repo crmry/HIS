@@ -601,6 +601,16 @@ async def scan_single_target(browser_ws, file_url):
                             window.closeEndCareModal();
                         }
                     }
+
+                    // Verify Summary of Medications 10-column layout aligned with Rx Writer
+                    const medTable = document.getElementById('med-summary-table');
+                    if (medTable) {
+                        const ths = Array.from(medTable.querySelectorAll('thead th')).map(th => th.textContent.trim());
+                        const expectedHeaders = ['Drug name', 'Quantity', 'Dosage', 'Frequency', 'Timing', 'Period', 'Duration', 'Date Started', 'Remarks', 'Doctor'];
+                        if (ths.length !== 10 || !expectedHeaders.every((h, i) => ths[i] === h)) {
+                            return 'med-summary-table headers do not match expected 10-column Rx Writer schema: ' + ths.join(', ');
+                        }
+                    }
                 }
 
                 if (window.location.href.includes('doctors_order_patient.html')) {

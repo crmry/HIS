@@ -1947,15 +1947,16 @@
                     <table class="table table-bordered table-condensed" id="med-summary-table" style="margin-bottom:0;">
                       <thead>
                         <tr style="background:#f9f9f9;">
-                          <th>Medication & Strength</th>
-                          <th style="width:125px;">Route & Frequency</th>
-                          <th>Indication / Purpose</th>
-                          <th style="width:125px;">Date Started</th>
-                          <th style="width:145px;">Last Dose Given</th>
-                          <th style="width:145px;">Next Dose Due</th>
-                          <th style="width:100px;">24h Doses</th>
-                          <th style="width:95px;">Status</th>
-                          <th style="width:130px;">Nurse / Staff</th>
+                          <th>Drug name</th>
+                          <th style="width:75px;">Quantity</th>
+                          <th style="width:90px;">Dosage</th>
+                          <th style="width:130px;">Frequency</th>
+                          <th style="width:110px;">Timing</th>
+                          <th style="width:70px;">Period</th>
+                          <th style="width:80px;">Duration</th>
+                          <th style="width:95px;">Date Started</th>
+                          <th style="width:115px;">Remarks</th>
+                          <th style="width:130px;">Doctor</th>
                         </tr>
                       </thead>
                       <tbody id="med-summary-rows"></tbody>
@@ -5050,10 +5051,10 @@
         { id: 'cbg-2', dateTime: '2026-09-26T08:30:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 124, action: 'Target Met (80-130 mg/dL)', notes: 'Morning fasting check prior to OPD consultation; compliant with Empagliflozin and Metformin', nurse: 'Elena M. Ramos, RN' }
       ],
       medications: [
-        { id: 'med-1', name: 'Empagliflozin 10 mg tablet', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', lastDose: '2026-09-26T07:00:00+08:00', nextDose: '2026-09-27T07:00:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
-        { id: 'med-2', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:00:00+08:00', nextDose: '2026-09-26T19:00:00+08:00', doses24h: '2 doses', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
-        { id: 'med-3', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:00:00+08:00', nextDose: '2026-09-27T07:00:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', nurse: 'Miguel Santos, MD' },
-        { id: 'med-4', name: 'Celecoxib 200 mg capsule', route: 'Oral Once Daily PRN for severe right knee pain', indication: 'Primary Osteoarthritis, Right Knee', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-20T08:00:00+08:00', nextDose: 'PRN (As needed)', doses24h: '0 doses', status: 'Active / PRN', nurse: 'Miguel Santos, MD' }
+        { id: 'med-1', name: 'Empagliflozin 10 mg tablet', quantity: '30 tabs', dosage: '10 mg', frequency: 'Once daily (OD)', timing: 'Morning', period: 'Days', duration: '30 days', route: 'Oral Once Daily (OD) in the morning', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-20T10:00:00+08:00', lastDose: '2026-09-26T07:00:00+08:00', nextDose: '2026-09-27T07:00:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', doctor: 'Miguel Santos, MD', nurse: 'Miguel Santos, MD' },
+        { id: 'med-2', name: 'Metformin 500 mg tablet', quantity: '60 tabs', dosage: '500 mg', frequency: 'Twice daily (BID)', timing: 'With meals', period: 'Days', duration: '30 days', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:00:00+08:00', nextDose: '2026-09-26T19:00:00+08:00', doses24h: '2 doses', status: 'Active / Ongoing', doctor: 'Miguel Santos, MD', nurse: 'Miguel Santos, MD' },
+        { id: 'med-3', name: 'Losartan 50 mg tablet', quantity: '30 tabs', dosage: '50 mg', frequency: 'Once daily (OD)', timing: 'Morning', period: 'Days', duration: '30 days', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-26T07:00:00+08:00', nextDose: '2026-09-27T07:00:00+08:00', doses24h: '1 dose', status: 'Active / Ongoing', doctor: 'Miguel Santos, MD', nurse: 'Miguel Santos, MD' },
+        { id: 'med-4', name: 'Celecoxib 200 mg capsule', quantity: '10 caps', dosage: '200 mg', frequency: 'Once daily PRN', timing: 'As needed', period: 'Days', duration: '10 days', route: 'Oral Once Daily PRN for severe right knee pain', indication: 'Primary Osteoarthritis, Right Knee', started: '2026-03-14T08:45:00+08:00', lastDose: '2026-09-20T08:00:00+08:00', nextDose: 'PRN (As needed)', doses24h: '0 doses', status: 'Active / PRN', doctor: 'Miguel Santos, MD', nurse: 'Miguel Santos, MD' }
       ],
       intakeOutput: []
     };
@@ -5072,12 +5073,12 @@
         { id: 'cbg-er-4', dateTime: '2026-06-14T06:00:00+08:00', timing: 'Fasting Blood Sugar (FBS)', reading: 118, action: 'Optimal fasting control (80-130 mg/dL)', notes: 'Hospital Day 3 pre-discharge fasting check; cleared on home Metformin', nurse: 'E. Cruz, RN' }
       ],
       medications: [
-        { id: 'med-er-1', name: 'Ceftriaxone 2 g IV vial', route: 'IV Once Daily (OD) ANST (-)', indication: 'Community-Acquired Pneumonia (Moderate Risk)', started: '2026-06-12T13:00:00+08:00', lastDose: '2026-06-13T13:00:00+08:00', nextDose: 'Shifted to oral step-down', doses24h: '2 doses', status: 'Completed / Shifted', nurse: 'Miguel Santos, MD' },
-        { id: 'med-er-2', name: 'Azithromycin 500 mg tablet', route: 'Oral Once Daily (OD) after meals', indication: 'Atypical coverage for CAP', started: '2026-06-12T13:05:00+08:00', lastDose: '2026-06-13T13:05:00+08:00', nextDose: 'Completed 3-day course', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
-        { id: 'med-er-3', name: 'Co-amoxiclav 625 mg tablet', route: 'Oral Three Times Daily (TID)', indication: 'Discharge step-down therapy for pneumonia', started: '2026-06-14T09:00:00+08:00', lastDose: '2026-06-14T09:00:00+08:00', nextDose: '2026-06-14T17:00:00+08:00', doses24h: '3 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
-        { id: 'med-er-4', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension Stage 1', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-14T08:00:00+08:00', nextDose: '2026-06-15T08:00:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
-        { id: 'med-er-5', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-14T08:00:00+08:00', nextDose: '2026-06-14T18:00:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' },
-        { id: 'med-er-6', name: 'Paracetamol 500 mg tablet', route: 'Oral Every 6 Hours PRN for Temp >= 38.0°C', indication: 'Fever / Headache', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-12T20:00:00+08:00', nextDose: 'PRN (Afebrile)', doses24h: '0 doses', status: 'Active / PRN', nurse: 'Miguel Santos, MD' }
+        { id: 'med-er-1', name: 'Ceftriaxone 2 g IV vial', quantity: '2 vials', dosage: '2 g', frequency: 'Once daily (OD)', timing: 'ANST (-)', period: 'Days', duration: '2 days', route: 'IV Once Daily (OD) ANST (-)', indication: 'Community-Acquired Pneumonia (Moderate Risk)', started: '2026-06-12T13:00:00+08:00', lastDose: '2026-06-13T13:00:00+08:00', nextDose: 'Shifted to oral step-down', doses24h: '2 doses', status: 'Completed / Shifted', doctor: 'Miguel Santos, MD', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-2', name: 'Azithromycin 500 mg tablet', quantity: '3 tabs', dosage: '500 mg', frequency: 'Once daily (OD)', timing: 'After meals', period: 'Days', duration: '3 days', route: 'Oral Once Daily (OD) after meals', indication: 'Atypical coverage for CAP', started: '2026-06-12T13:05:00+08:00', lastDose: '2026-06-13T13:05:00+08:00', nextDose: 'Completed 3-day course', doses24h: '1 dose', status: 'Active', doctor: 'Miguel Santos, MD', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-3', name: 'Co-amoxiclav 625 mg tablet', quantity: '21 tabs', dosage: '625 mg', frequency: 'Every 8 hours (TID)', timing: 'With meals', period: 'Days', duration: '7 days', route: 'Oral Three Times Daily (TID)', indication: 'Discharge step-down therapy for pneumonia', started: '2026-06-14T09:00:00+08:00', lastDose: '2026-06-14T09:00:00+08:00', nextDose: '2026-06-14T17:00:00+08:00', doses24h: '3 doses', status: 'Active', doctor: 'Miguel Santos, MD', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-4', name: 'Losartan 50 mg tablet', quantity: '30 tabs', dosage: '50 mg', frequency: 'Once daily (OD)', timing: 'Morning', period: 'Days', duration: '30 days', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension Stage 1', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-14T08:00:00+08:00', nextDose: '2026-06-15T08:00:00+08:00', doses24h: '1 dose', status: 'Active', doctor: 'Miguel Santos, MD', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-5', name: 'Metformin 500 mg tablet', quantity: '60 tabs', dosage: '500 mg', frequency: 'Twice daily (BID)', timing: 'With meals', period: 'Days', duration: '30 days', route: 'Oral Twice Daily (BID) with meals', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-14T08:00:00+08:00', nextDose: '2026-06-14T18:00:00+08:00', doses24h: '2 doses', status: 'Active', doctor: 'Miguel Santos, MD', nurse: 'Miguel Santos, MD' },
+        { id: 'med-er-6', name: 'Paracetamol 500 mg tablet', quantity: '10 tabs', dosage: '500 mg', frequency: 'Every 6 hours PRN', timing: 'Temp >= 38.0°C', period: 'Days', duration: '3 days', route: 'Oral Every 6 Hours PRN for Temp >= 38.0°C', indication: 'Fever / Headache', started: '2026-06-12T08:30:00+08:00', lastDose: '2026-06-12T20:00:00+08:00', nextDose: 'PRN (Afebrile)', doses24h: '0 doses', status: 'Active / PRN', doctor: 'Miguel Santos, MD', nurse: 'Miguel Santos, MD' }
       ],
       intakeOutput: []
     };
@@ -5139,6 +5140,75 @@
       var store = getChartMonitoringStore();
       store[patientId] = data;
       localStorage.setItem(CHART_MONITORING_KEY, JSON.stringify(store));
+    }
+
+    function parseMedRxFields(item) {
+      item = item || {};
+      var drug = item.name || item.drug || '—';
+      var quantity = item.quantity || item.qty || '';
+      var dosage = item.dosage || item.dose || '';
+      var frequency = item.frequency || item.freq || '';
+      var timing = item.timing || '';
+      var period = item.period || 'Days';
+      var duration = item.duration || '';
+
+      if (!dosage && drug !== '—') {
+        var mDose = drug.match(/\b(\d+(?:\.\d+)?\s*(?:mg|g|mcg|ml|iu|units?))\b/i);
+        if (mDose) dosage = mDose[1];
+      }
+
+      var routeStr = item.route || '';
+      if (!frequency && routeStr) {
+        if (/once\s*daily\s*prn/i.test(routeStr)) frequency = 'Once daily PRN';
+        else if (/every\s*6\s*hours/i.test(routeStr)) frequency = 'Every 6 hours PRN';
+        else if (/every\s*4(?:-6)?\s*hours/i.test(routeStr)) frequency = 'Every 4-6 hours PRN';
+        else if (/once\s*daily|\bOD\b/i.test(routeStr)) frequency = 'Once daily (OD)';
+        else if (/twice\s*daily|\bBID\b/i.test(routeStr)) frequency = 'Twice daily (BID)';
+        else if (/three\s*times\s*daily|\bTID\b/i.test(routeStr)) frequency = 'Every 8 hours (TID)';
+        else if (/four\s*times\s*daily|\bQID\b/i.test(routeStr)) frequency = 'Every 6 hours (QID)';
+        else if (/bedtime|\bHS\b/i.test(routeStr)) frequency = 'At bedtime (HS)';
+        else frequency = routeStr.replace(/^(?:Oral|IV)\s+/i, '');
+      }
+
+      if (!timing && routeStr) {
+        if (/in\s*the\s*morning|morning/i.test(routeStr)) timing = 'Morning';
+        else if (/with\s*meals/i.test(routeStr)) timing = 'With meals';
+        else if (/after\s*meals/i.test(routeStr)) timing = 'After meals';
+        else if (/before\s*meals/i.test(routeStr)) timing = 'Before meals';
+        else if (/bedtime/i.test(routeStr)) timing = 'At bedtime';
+        else if (/severe\s*(?:right\s*)?knee\s*pain|severe\s*pain/i.test(routeStr)) timing = 'For severe pain';
+        else if (/Temp\s*>=\s*38/i.test(routeStr)) timing = 'For fever >= 38.0°C';
+        else if (/ANST/i.test(routeStr)) timing = 'ANST (-)';
+        else if (/prn/i.test(routeStr)) timing = 'As needed';
+        else timing = 'Routine';
+      }
+
+      if (!duration) {
+        if (item.doses24h && !/^\d+\s*dose/i.test(item.doses24h) && item.doses24h !== '—') {
+          duration = item.doses24h;
+        } else if (/PRN/i.test(item.status || '') || /PRN/i.test(frequency)) {
+          duration = 'PRN';
+        } else {
+          duration = '30 days';
+        }
+      }
+
+      if (!quantity) {
+        if (/capsule/i.test(drug)) quantity = duration === 'PRN' ? '10 caps' : '30 caps';
+        else if (/vial/i.test(drug)) quantity = '2 vials';
+        else if (/tablet/i.test(drug)) quantity = /BID/i.test(frequency) ? '60 tabs' : (/TID/i.test(frequency) ? '90 tabs' : '30 tabs');
+        else quantity = '—';
+      }
+
+      return {
+        drug: drug,
+        quantity: quantity || '—',
+        dosage: dosage || '—',
+        frequency: frequency || '—',
+        timing: timing || '—',
+        period: period || 'Days',
+        duration: duration || '—'
+      };
     }
 
     function renderClinicalMonitoring(record) {
@@ -5327,24 +5397,33 @@
         }
 
         if (filteredMeds.length === 0) {
-          medRows.innerHTML = '<tr><td colspan="9" class="muted text-center" style="padding:15px;">No medications found for this filter.</td></tr>';
+          medRows.innerHTML = '<tr><td colspan="10" class="muted text-center" style="padding:15px;">No medications found for this filter.</td></tr>';
         } else {
           medRows.innerHTML = filteredMeds.map(function(item) {
-            var statusBadge = /prn/i.test(item.status || '')
+            var rxFields = parseMedRxFields(item);
+            var statusBadge = /prn/i.test(item.status || item.remarks || '')
               ? '<span class="badge badge-info">Active / PRN</span>'
-              : (/active/i.test(item.status || '')
+              : (/active/i.test(item.status || item.remarks || '')
                   ? '<span class="badge badge-success">Active / Ongoing</span>'
-                  : '<span class="badge badge-inverse">' + esc(item.status) + '</span>');
+                  : (/completed|shifted/i.test(item.status || item.remarks || '')
+                      ? '<span class="badge badge-inverse">' + esc(item.status || item.remarks) + '</span>'
+                      : '<span class="badge">' + esc(item.status || item.remarks || 'Active') + '</span>'));
+            var remarksContent = statusBadge;
+            if (item.remarks && item.remarks !== item.status && !/active/i.test(item.remarks)) {
+              remarksContent += '<br><small class="muted">' + esc(item.remarks) + '</small>';
+            }
+            var docName = item.doctor || item.physician || item.nurse || '—';
             return '<tr>' +
-              '<td><strong>' + esc(item.name || '—') + '</strong></td>' +
-              '<td>' + esc(item.route || '—') + '</td>' +
-              '<td><small>' + esc(item.indication || '—') + '</small></td>' +
+              '<td><strong>' + esc(rxFields.drug) + '</strong></td>' +
+              '<td>' + esc(rxFields.quantity) + '</td>' +
+              '<td>' + esc(rxFields.dosage) + '</td>' +
+              '<td>' + esc(rxFields.frequency) + '</td>' +
+              '<td>' + esc(rxFields.timing) + '</td>' +
+              '<td>' + esc(rxFields.period) + '</td>' +
+              '<td>' + esc(rxFields.duration) + '</td>' +
               '<td>' + esc(item.started ? formatDate(item.started) : '—') + '</td>' +
-              '<td>' + esc(item.lastDose ? formatDateTime(item.lastDose) : '—') + '</td>' +
-              '<td>' + esc(item.nextDose ? formatDateTime(item.nextDose) : '—') + '</td>' +
-              '<td><span class="badge">' + esc(item.doses24h || '—') + '</span></td>' +
-              '<td>' + statusBadge + '</td>' +
-              '<td>' + esc(item.nurse || '—') + '</td>' +
+              '<td>' + remarksContent + '</td>' +
+              '<td>' + esc(docName) + '</td>' +
               '</tr>';
           }).join('');
         }
@@ -6800,11 +6879,19 @@
           return {
             id: 'enc-rx-' + idx,
             name: p.drug,
+            drug: p.drug,
+            quantity: p.qty || p.quantity || '',
+            dosage: p.dosage || p.dose || '',
+            frequency: p.frequency || p.freq || '',
+            timing: p.timing || '',
+            period: p.period || 'Days',
+            duration: p.duration || '',
             route: p.sig || 'Oral as directed',
             indication: enc.diagnosis || 'Maintenance therapy',
             started: enc.date ? enc.date + 'T' + (enc.time ? enc.time : '08:00:00') : '',
             doses24h: 'Active',
-            status: 'Active',
+            status: 'Active / Ongoing',
+            doctor: enc.physician || 'Attending Physician',
             nurse: enc.physician || 'Attending Physician'
           };
         });
@@ -6815,11 +6902,13 @@
             allMeds.push({
               id: 'enc-ord-' + idx,
               name: t,
+              drug: t,
               route: 'Per CPOE Plan',
               indication: enc.diagnosis || 'Prescribed therapy',
               started: (o && o.dateTime) || (enc.date ? enc.date + 'T08:00:00' : ''),
               doses24h: 'Active',
-              status: /PRN/i.test(t) ? 'Active / PRN' : 'Active',
+              status: /PRN/i.test(t) ? 'Active / PRN' : 'Active / Ongoing',
+              doctor: enc.physician || 'Attending Physician',
               nurse: enc.physician || 'Attending Physician'
             });
           }
@@ -6867,22 +6956,33 @@
       }
 
       if (filteredMeds.length === 0) {
-        medRows.innerHTML = '<tr><td colspan="8" class="muted text-center" style="padding:15px;">No active medications ordered for this encounter.</td></tr>';
+        medRows.innerHTML = '<tr><td colspan="10" class="muted text-center" style="padding:15px;">No active medications ordered for this encounter.</td></tr>';
       } else {
         medRows.innerHTML = filteredMeds.map(function(item) {
-          var isPrn = /prn/i.test(item.status || '');
-          var statusBadge = isPrn
-            ? '<span class="badge badge-warning"><i class="icon-time"></i> PRN</span>'
-            : '<span class="badge badge-success"><i class="icon-ok"></i> Active</span>';
+          var rxFields = parseMedRxFields(item);
+          var statusBadge = /prn/i.test(item.status || item.remarks || '')
+            ? '<span class="badge badge-info">Active / PRN</span>'
+            : (/active/i.test(item.status || item.remarks || '')
+                ? '<span class="badge badge-success">Active / Ongoing</span>'
+                : (/completed|shifted/i.test(item.status || item.remarks || '')
+                    ? '<span class="badge badge-inverse">' + esc(item.status || item.remarks) + '</span>'
+                    : '<span class="badge">' + esc(item.status || item.remarks || 'Active') + '</span>'));
+          var remarksContent = statusBadge;
+          if (item.remarks && item.remarks !== item.status && !/active/i.test(item.remarks)) {
+            remarksContent += '<br><small class="muted">' + esc(item.remarks) + '</small>';
+          }
+          var docName = item.doctor || item.physician || item.nurse || '—';
           return '<tr>' +
-            '<td><strong>' + esc(item.name || '—') + '</strong></td>' +
-            '<td>' + esc(item.route || '—') + '</td>' +
-            '<td>' + esc(item.indication || '—') + '</td>' +
-            '<td>' + esc(item.started ? formatDateTime(item.started) : '—') + '</td>' +
-            '<td>' + esc(item.lastDose ? formatDateTime(item.lastDose) : '—') + '</td>' +
-            '<td>' + esc(item.doses24h || '—') + '</td>' +
-            '<td>' + statusBadge + '</td>' +
-            '<td>' + esc(item.nurse || '—') + '</td>' +
+            '<td><strong>' + esc(rxFields.drug) + '</strong></td>' +
+            '<td>' + esc(rxFields.quantity) + '</td>' +
+            '<td>' + esc(rxFields.dosage) + '</td>' +
+            '<td>' + esc(rxFields.frequency) + '</td>' +
+            '<td>' + esc(rxFields.timing) + '</td>' +
+            '<td>' + esc(rxFields.period) + '</td>' +
+            '<td>' + esc(rxFields.duration) + '</td>' +
+            '<td>' + esc(item.started ? formatDate(item.started) : '—') + '</td>' +
+            '<td>' + remarksContent + '</td>' +
+            '<td>' + esc(docName) + '</td>' +
             '</tr>';
         }).join('');
       }
