@@ -665,6 +665,11 @@
       background: rgba(0, 0, 0, 0.25);
       color: #ffffff;
     }
+    .med-sub-pill.has-orders {
+      background: rgba(0, 0, 0, 0.42);
+      color: #ffffff;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+    }
     .med-sub-body {
       padding: 8px 10px 10px;
       background: #ffffff;
@@ -684,6 +689,10 @@
     .med-sub-item:not(.open) .med-sub-pill {
       background: #cdd9d2;
       color: #374349;
+    }
+    .med-sub-item:not(.open) .med-sub-pill.has-orders {
+      background: var(--med-green);
+      color: #ffffff;
     }
     .med-sub-add-btn {
       background: #ffffff !important;

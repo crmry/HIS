@@ -9565,7 +9565,7 @@
       var raf = window.requestAnimationFrame || function (fn) { return setTimeout(fn, 16); };
       _orderSummaryRaf = raf(function () {
         _orderSummaryRaf = null;
-        updateCategoryBadges();
+        updateMedicationBadges();
         renderOrderSummary();
       });
     }
@@ -9854,6 +9854,67 @@
       return text ? '[SCHEDULED] ' + text : '';
     }
 
+    function isMedicationRowActive(row) {
+      if (!row) return false;
+      if (row.dataset.userAdded === 'true') return true;
+      var parent = row.parentElement;
+      if (parent && parent.children.length > 1) return true;
+      var type = row.dataset.orderType || 'scheduled';
+      if (type === 'continuous') {
+        var drug = row.querySelector('[data-medication-field="additiveDrug"]');
+        var sol = row.querySelector('[data-medication-field="solution"]');
+        var conc = row.querySelector('[data-medication-field="finalConcentration"]');
+        var dose = row.querySelector('[data-medication-field="prescribedDose"]');
+        var rate = row.querySelector('[data-medication-field="infusionRate"]');
+        var prec = row.querySelector('[data-medication-field="precautions"]');
+        return !!(
+          (drug && drug.value.trim()) ||
+          (sol && sol.value.trim() && sol.value !== '-- Select Diluent --') ||
+          (conc && conc.value.trim()) ||
+          (dose && dose.value.trim()) ||
+          (rate && rate.value.trim()) ||
+          (prec && prec.value.trim()) ||
+          row.dataset.createdAt ||
+          (row.dataset.cared && row.dataset.cared !== '[]')
+        );
+      }
+      if (type === 'oxygen') {
+        var dev = row.querySelector('[data-medication-field="deliveryMethod"]');
+        var param = row.querySelector('[data-medication-field="oxygenParameters"]');
+        var target = row.querySelector('[data-medication-field="oxygenTarget"]');
+        var dur = row.querySelector('[data-medication-field="oxygenDuration"]');
+        var oPrec = row.querySelector('[data-medication-field="precautions"]');
+        return !!(
+          (dev && dev.value.trim() && dev.value !== '-- Select Device --') ||
+          (param && param.value.trim()) ||
+          (target && target.value.trim() && target.value !== '-- Select Target --') ||
+          (dur && dur.value.trim() && dur.value !== '-- Duration --') ||
+          (oPrec && oPrec.value.trim()) ||
+          row.dataset.createdAt ||
+          (row.dataset.cared && row.dataset.cared !== '[]')
+        );
+      }
+      // Scheduled / Intermittent
+      var gen = row.querySelector('[data-medication-field="genericName"]');
+      var prep = row.querySelector('[data-medication-field="preparation"]');
+      var doseVal = row.querySelector('[data-medication-field="dose"]');
+      var route = row.querySelector('[data-medication-field="route"]');
+      var freq = row.querySelector('[data-medication-field="frequency"]');
+      var duration = row.querySelector('[data-medication-field="duration"]');
+      var precautions = row.querySelector('[data-medication-field="precautions"]');
+      return !!(
+        (gen && gen.value.trim()) ||
+        (prep && prep.value.trim()) ||
+        (doseVal && doseVal.value.trim()) ||
+        (route && route.value.trim() && route.value !== '-- Route --') ||
+        (freq && freq.value.trim() && freq.value !== '-- Frequency --') ||
+        (duration && duration.value.trim() && duration.value !== '-- Duration --') ||
+        (precautions && precautions.value.trim()) ||
+        row.dataset.createdAt ||
+        (row.dataset.cared && row.dataset.cared !== '[]')
+      );
+    }
+
     function updateCategoryBadges() {
       ORDERS.forEach(function (o) {
         var badge = document.getElementById('badge-' + o.key);
@@ -9866,9 +9927,7 @@
           badge.textContent = count + (count === 1 ? ' request' : ' requests');
         } else if (o.structuredMedication) {
           var medRows = ordersBody.querySelectorAll('.medication-row');
-          count = Array.from(medRows).filter(function (row) {
-            return !!medicationOrderText(readMedicationRow(row));
-          }).length;
+          count = Array.from(medRows).filter(isMedicationRowActive).length;
           badge.textContent = count + (count === 1 ? ' order' : ' orders');
         } else if (o.rxWriter) {
           var rxRows = document.querySelectorAll('#rx-medicines-body tr:not(.rx-empty-row)');
@@ -9899,10 +9958,13 @@
         var badge = document.getElementById('med-count-' + type);
         var body = document.querySelector('[data-medication-list="' + type + '"]');
         if (badge && body) {
-          var count = Array.from(body.children).filter(function (row) {
-            return !!medicationOrderText(readMedicationRow(row));
-          }).length;
+          var count = Array.from(body.children).filter(isMedicationRowActive).length;
           badge.textContent = count + (count === 1 ? ' order' : ' orders');
+          if (count > 0) {
+            badge.classList.add('has-orders');
+          } else {
+            badge.classList.remove('has-orders');
+          }
         }
       });
       updateCategoryBadges();
@@ -11141,6 +11203,7 @@
         if (mType === 'continuous') newRow = addContinuousMedRow(mBody, {});
         else if (mType === 'oxygen') newRow = addOxygenMedRow(mBody, {});
         else newRow = addScheduledMedRow(mBody, {});
+        newRow.dataset.userAdded = 'true';
         var firstInput = newRow.querySelector('input, select');
         if (firstInput) firstInput.focus();
         updateMedicationBadges();
