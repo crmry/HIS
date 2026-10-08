@@ -709,7 +709,7 @@ if (typeof window !== 'undefined') {
     function erPatientRecord() {
       return {
         id: ER_PATIENT_ID,
-        seedVersion: 72,
+        seedVersion: 73,
         createdAt: '2026-06-12T08:30:00+08:00',
         updatedAt: '2026-06-14T09:30:00+08:00',
         data: {
@@ -915,7 +915,7 @@ if (typeof window !== 'undefined') {
               diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk; I10 - Essential Hypertension Stage 1',
               patient_record: 'Initial assessment and emergency stabilization',
               results: 'Admitted to Medical Ward - Bed 302-A',
-              disposition: 'Admitted to Medical Ward',
+              disposition: 'Admitted to Medical Ward (DOH ED Disposition: For Inpatient Admission)',
               vital_signs: [
                 { dateTime: '2026-06-12 12:00 PM', bp: '132/84', hr: '96', rr: '22', temp: '38.0', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '95', o2: '95' },
                 { dateTime: '2026-06-12 10:30 AM', bp: '136/84', hr: '98', rr: '22', temp: '38.1', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '94', o2: '94' },
@@ -928,10 +928,10 @@ if (typeof window !== 'undefined') {
               },
               progress_notes_subjective: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.',
               progress_notes_objective: 'Vital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.',
-              progress_notes_assessment: 'Diagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension',
-              progress_notes: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension',
+              progress_notes_assessment: 'Diagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension. DOH ED Disposition: For Inpatient Admission.',
+              progress_notes: 'Three-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath.\nVital signs: BP 138/86 mmHg, HR 102 bpm, RR 24/min, Temp 38.2 °C, SpO2 93%\nPhysical exam: Crackles over right lower lung field, tachypneic.\nDiagnosis: Community-acquired pneumonia, moderate risk; Essential hypertension. DOH ED Disposition: For Inpatient Admission.',
               orders: [
-                { text: 'Admit to Floor 1 ward 1 under the service of Dr. Miguel Santos.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:30 PM nurse' },
+                { text: 'DOH ED Disposition: Admit to Floor 1 Ward 1 under the service of Dr. Miguel Santos.', dateTime: '2026-06-12T12:30:00+08:00', cared: ['C', 'E'], timeSignature: 'C - 12:30 PM nurse\nE - 12:30 PM nurse' },
                 { text: 'Low-salt diet, soft consistency as tolerated.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C'], timeSignature: 'C - 12:35 PM nurse' },
                 { text: 'PNSS 1 L at 80 mL/hour.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['A'], timeSignature: 'A - 12:45 PM nurse' },
                 { text: 'Ceftriaxone 2 g IV once daily after negative skin test.', dateTime: '2026-06-12T08:30:00+08:00', cared: ['C', 'A', 'E'], timeSignature: 'C - 12:40 PM nurse\nA - 1:00 PM nurse\nE - 1:20 PM nurse' },
@@ -1101,7 +1101,7 @@ if (typeof window !== 'undefined') {
       var erIndex = records.findIndex(function (record) { return record.id === ER_PATIENT_ID; });
       if (erIndex < 0) {
         records.splice(1, 0, erPatientRecord());
-      } else if (Number(records[erIndex].seedVersion || 0) < 72) {
+      } else if (Number(records[erIndex].seedVersion || 0) < 73) {
         records[erIndex] = erPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
