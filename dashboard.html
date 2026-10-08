@@ -6090,21 +6090,16 @@
       var progAss = document.getElementById('progress_notes_assessment');
       var progEl = document.getElementById('progress_notes');
 
+      // History of Present Illness (HPI) tab is always visible across all registry types (OPD, ER, IP)
+      if (hpiTabLi) {
+        hpiTabLi.style.display = '';
+      }
+
       if (isErOrIp) {
         // ER and Inpatient encounters:
-        // Do not use OPD-style HPI, ROS, and PE sections
+        // Do not use OPD-style ROS, and PE sections
         if (rosRow) rosRow.style.display = 'none';
         if (peRow) peRow.style.display = 'none';
-        if (hpiTabLi) {
-          hpiTabLi.style.display = 'none';
-          if (hpiTabLi.classList.contains('active')) {
-            hpiTabLi.classList.remove('active');
-            if (hxPresentTab) hxPresentTab.classList.remove('active');
-            var pmhLi = document.querySelector('a[href="#hx-past"]');
-            if (pmhLi && pmhLi.parentElement) pmhLi.parentElement.classList.add('active');
-            if (hxPastTab) hxPastTab.classList.add('active');
-          }
-        }
 
         // Display Progress Notes (SOA) and Intake & Output (I&O)
         if (progRow) progRow.style.display = 'block';
@@ -6124,9 +6119,14 @@
           el.disabled = isRo;
         });
 
-        // Do not duplicate progress notes into OPD HPI
-        if (hxEl && isHistorical) {
-          hxEl.value = '';
+        // Ensure HPI remains populated from clinical record or encounter data
+        if (hxEl) {
+          var hx = (enc.clinical_record && enc.clinical_record.history) || enc.hx_present || '';
+          if (!hx && activePatientId) {
+            var pData = currentPatientData();
+            hx = (pData && pData.hx_present) || '';
+          }
+          if (hx) hxEl.value = cleanHpiText(hx);
         }
       } else {
         // OPD encounters:
@@ -7301,13 +7301,12 @@
 
       var hxEl = document.getElementById('hx_present');
       if (hxEl) {
-        if (isErOrIp) {
-          // Do not duplicate ER/IP progress notes into HPI field
-          hxEl.value = '';
-        } else {
-          var hx = (enc.clinical_record && enc.clinical_record.history) || enc.hx_present || '';
-          hxEl.value = cleanHpiText(hx);
+        var hx = (enc.clinical_record && enc.clinical_record.history) || enc.hx_present || '';
+        if (!hx && isErOrIp && activePatientId) {
+          var pData = currentPatientData();
+          hx = (pData && pData.hx_present) || '';
         }
+        hxEl.value = cleanHpiText(hx);
       }
 
       // 3. Diagnoses - Return Final Diagnosis in its rightful space ONLY for historical encounters

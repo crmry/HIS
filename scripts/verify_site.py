@@ -430,8 +430,8 @@ async def scan_single_target(browser_ws, file_url):
                     if (peRow && peRow.style.display !== 'none') {
                         return 'Physical Exam should be hidden on ER encounters';
                     }
-                    if (hpiTabLi && hpiTabLi.style.display !== 'none') {
-                        return 'HPI tab should be hidden on ER encounters';
+                    if (hpiTabLi && hpiTabLi.style.display === 'none') {
+                        return 'HPI tab should be visible on ER encounters';
                     }
 
                     // Test restoring back to OPD encounter
