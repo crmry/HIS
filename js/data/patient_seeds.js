@@ -709,7 +709,7 @@ if (typeof window !== 'undefined') {
     function erPatientRecord() {
       return {
         id: ER_PATIENT_ID,
-        seedVersion: 75,
+        seedVersion: 76,
         createdAt: '2026-06-12T08:30:00+08:00',
         updatedAt: '2026-06-14T09:30:00+08:00',
         data: {
@@ -1101,7 +1101,7 @@ if (typeof window !== 'undefined') {
       var erIndex = records.findIndex(function (record) { return record.id === ER_PATIENT_ID; });
       if (erIndex < 0) {
         records.splice(1, 0, erPatientRecord());
-      } else if (Number(records[erIndex].seedVersion || 0) < 75) {
+      } else if (Number(records[erIndex].seedVersion || 0) < 76) {
         records[erIndex] = erPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
