@@ -709,7 +709,7 @@ if (typeof window !== 'undefined') {
     function erPatientRecord() {
       return {
         id: ER_PATIENT_ID,
-        seedVersion: 71,
+        seedVersion: 72,
         createdAt: '2026-06-12T08:30:00+08:00',
         updatedAt: '2026-06-14T09:30:00+08:00',
         data: {
@@ -852,6 +852,52 @@ if (typeof window !== 'undefined') {
                 { id: 'io-ip-3', shift: '11-7', date: '2026-06-12', inOral: 200, inIvf: 640, inBloodMeds: 0, outUrine: 550, outDrain: 0, outStool: 0, nurse: 'E. Cruz, RN', remarks: 'Overnight balance positive; sleeping comfortably; no dysuria' },
                 { id: 'io-ip-4', shift: '7-3', date: '2026-06-13', inOral: 750, inIvf: 640, inBloodMeds: 50, outUrine: 850, outDrain: 0, outStool: 200, nurse: 'M. Santos, RN', remarks: 'Oral low-salt diet well tolerated; diuresing well; afebrile' },
                 { id: 'io-ip-5', shift: '3-11', date: '2026-06-13', inOral: 700, inIvf: 320, inBloodMeds: 0, outUrine: 750, outDrain: 0, outStool: 0, nurse: 'R. Alcantara, RN', remarks: 'IVF completed and stopped; good oral fluid intake maintained' }
+              ]
+            },
+            {
+              date: '2026-06-13',
+              time: '10:15 AM',
+              registry: 'IP',
+              case_no: 'IP-2026-0612-0088',
+              encounter_no: 'IP-2026-0612-0088-02',
+              service: 'General Medicine',
+              ward_room: 'Medical Ward - Bed 302-A',
+              physician: 'Miguel Santos, MD',
+              prc_license: '0078312',
+              is_current: false,
+              status_tag: 'Morning Rounds',
+              diagnosis: 'J18.9 - Community-Acquired Pneumonia, moderate risk, resolving; I10 - Essential Hypertension',
+              patient_record: 'Hospital Day 2 — Morning Ward Rounds (Bed 302-A)',
+              results: 'Afebrile x 24 hours; weaned to room air; responding to IV Ceftriaxone',
+              disposition: 'Continue Inpatient Management',
+              follow_up: null,
+              vital_signs: [
+                { dateTime: '2026-06-13 10:15 AM', bp: '120/80', hr: '78', rr: '18', temp: '36.8', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '98', o2: '98' },
+                { dateTime: '2026-06-13 06:00 AM', bp: '120/80', hr: '80', rr: '18', temp: '37.0', wt: '72', ht: '170', weight: '72', height: '170', bmi: '24.9', spo2: '97', o2: '97' }
+              ],
+              medications: [
+                { id: 'med-ip-0613-1', name: 'Ceftriaxone 2 g vial', route: 'IV Once Daily (OD) (Day 2 of 7)', indication: 'Targeted antimicrobial therapy for CAP-MR', started: '2026-06-12T12:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-ip-0613-2', name: 'Azithromycin 500 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Atypical coverage for CAP', started: '2026-06-12T12:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-ip-0613-3', name: 'Losartan 50 mg tablet', route: 'Oral Once Daily (OD)', indication: 'Essential Hypertension', started: '2026-06-12T08:30:00+08:00', doses24h: '1 dose', status: 'Active', nurse: 'Miguel Santos, MD' },
+                { id: 'med-ip-0613-4', name: 'Metformin 500 mg tablet', route: 'Oral Twice Daily (BID)', indication: 'Type 2 Diabetes Mellitus', started: '2026-06-12T08:30:00+08:00', doses24h: '2 doses', status: 'Active', nurse: 'Miguel Santos, MD' }
+              ],
+              clinical_record: {
+                chief_complaint: 'Hospital Day 2: Morning Rounds for CAP-MR and Essential Hypertension',
+                history: 'Hospital Day 2. Patient was admitted to Medical Ward from Emergency Department on June 12, 2026. Received IV Ceftriaxone 2 g OD (Day 2 of 7) and Azithromycin 500 mg OD. Temperature has normalized (afebrile at 36.8 °C for the past 24 hours). Dyspnea significantly resolved, ambulating comfortably in room. Productive cough is looser and less frequent with clearing sputum.',
+                final_diagnosis: 'Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics'
+              },
+              progress_notes_subjective: 'Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved. Afebrile x 24 hours.',
+              progress_notes_objective: 'Vital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% room air.\nLungs: Decreased crackles over right lower lung field, good air entry.',
+              progress_notes_assessment: 'Diagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics. Hemodynamically stable.',
+              progress_notes: 'Hospital Day 2 (Morning Rounds). Productive cough decreasing, dyspnea significantly resolved. Afebrile x 24 hours.\nVital signs: BP 120/80 mmHg, HR 78 bpm, RR 18/min, Temp 36.8 °C, SpO2 98% on room air.\nLungs: Decreased crackles over right lower lung field, good air entry.\nDiagnosis: Community-Acquired Pneumonia, moderate risk, resolving on targeted IV antibiotics.',
+              orders: [
+                { text: 'Wean off nasal cannula oxygen; maintain SpO2 >= 95% on room air.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 10:30 AM nurse' },
+                { text: 'Regular diet as tolerated; encourage oral fluid intake.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 10:30 AM nurse' },
+                { text: 'Continue D5 0.9 NaCl 1L to run at 80 cc/hr.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:35 AM nurse\nA - 11:00 AM nurse' },
+                { text: 'Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['R'], timeSignature: 'R - 10:45 AM physician' },
+                { text: 'Continue IV Ceftriaxone 2 g OD (Day 2 of 7).', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:35 AM nurse\nA - 11:00 AM nurse' },
+                { text: 'Shift Azithromycin to oral 500 mg tablet once daily after meals.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C', 'A'], timeSignature: 'C - 10:40 AM nurse\nA - 11:05 AM nurse' },
+                { text: 'Paracetamol 500 mg tablet q4h PRN for fever >= 38.0°C.', dateTime: '2026-06-13T10:15:00+08:00', cared: ['C'], timeSignature: 'C - 11:00 AM nurse' }
               ]
             },
             {
@@ -1055,8 +1101,15 @@ if (typeof window !== 'undefined') {
       var erIndex = records.findIndex(function (record) { return record.id === ER_PATIENT_ID; });
       if (erIndex < 0) {
         records.splice(1, 0, erPatientRecord());
-      } else if (Number(records[erIndex].seedVersion || 0) < 71) {
+      } else if (Number(records[erIndex].seedVersion || 0) < 72) {
         records[erIndex] = erPatientRecord();
+        try {
+          var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
+          if (store && store[ER_PATIENT_ID]) {
+            delete store[ER_PATIENT_ID];
+            localStorage.setItem('clmmrh_chart_monitoring_data_v1', JSON.stringify(store));
+          }
+        } catch (e) {}
       }
       try {
         var store = safeParse(localStorage.getItem('clmmrh_chart_monitoring_data_v1'), {});
