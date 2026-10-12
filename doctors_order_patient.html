@@ -1037,13 +1037,14 @@
 
             const row2 = parts.join("\n");
 
-            // Row 3: (Diagnosis without label and without ICD-10 code)
+            // Row 3: (Diagnosis without label and without ICD-10 code - aligned with Face Sheet Final Diagnosis)
             const rawDiag = String(
-                enc?.diagnosis ||
                 enc?.clinical_record?.final_diagnosis ||
+                enc?.final_diagnosis ||
+                primaryData?.final_diagnosis ||
+                enc?.diagnosis ||
                 enc?.clinical_record?.admitting_diagnosis ||
                 primaryData?.admitting_diagnosis ||
-                primaryData?.final_diagnosis ||
                 ""
             ).trim();
             const cleanDiag = rawDiag

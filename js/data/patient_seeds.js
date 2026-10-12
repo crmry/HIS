@@ -661,7 +661,7 @@ if (typeof window !== 'undefined') {
               is_current: false,
               is_initial: true,
               status_tag: 'Initial Visit',
-              diagnosis: 'M17.11 - Unilateral Primary Osteoarthritis, Right Knee, mild',
+              diagnosis: 'M17.11 - Unilateral Primary Osteoarthritis, Right Knee, Grade II',
               patient_record: 'Initial orthopedic evaluation for progressive right knee joint pain',
               results: 'Digital Knee X-ray AP/Lateral: mild medial joint space narrowing; no fracture',
               disposition: 'Treated and Discharged (Outpatient)',
