@@ -1,0 +1,8 @@
+.DS_Store
+tmp/
+*.tmp
+scratch/
+*.pptx
+*.ppt
+*.docx
+*.doc

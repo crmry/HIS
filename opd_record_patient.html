@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Out-Patient Department Record — Form OPD-F-014</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    body {
+      background: #e5e7eb;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #111827;
+    }
+
+    .sheet {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 16px auto;
+      background: white;
+      padding: 10mm 10mm 8mm;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, .12);
+      font-family: Arial, Helvetica, sans-serif;
+      color: #111827;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .line {
+      border-bottom: 1px solid #111827;
+      min-height: 18px;
+    }
+
+    .checkbox {
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid #111827;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      font-size: 11px;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .checkbox.checked::after {
+      content: "✓";
+      color: #000000;
+    }
+
+    .nurse-sig-cursive,
+    .phys-cursive-line {
+      font-family: "Brush Script MT", "Segoe Script", "Apple Chancery", cursive;
+      font-size: 17px;
+      line-height: 1;
+      color: #0f172a;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .sheet {
+        margin: 0;
+        box-shadow: none;
+        width: 210mm;
+        min-height: 297mm;
+        padding: 8mm 9mm 6mm;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- A4 Physical Record Sheet -->
+  <main class="sheet text-[10px] leading-tight">
+    <div>
+      <!-- Header -->
+      <section class="text-center mb-5">
+        <div class="text-[10.5px]">Republic of the Philippines</div>
+        <div class="text-[10.5px]">Department of Health</div>
+        <div class="text-[14.5px] font-bold tracking-tight">REGIONAL MEDICAL CENTER &amp; HOSPITAL</div>
+        <div class="text-[10.5px]">Medical Center Drive, Health District 1000</div>
+        <div class="text-[14.5px] font-bold mt-1 tracking-wide">OUT-PATIENT DEPARTMENT RECORD</div>
+      </section>
+
+      <!-- Hospital form / clinic / hospital no -->
+      <section class="grid grid-cols-2 gap-8 items-end mb-2">
+        <div>
+          <div class="font-bold text-[12.5px]">HOSPITAL FORM II</div>
+          <div class="flex items-end gap-2 mt-1">
+            <span class="font-bold text-[12.5px]">CLINIC:</span>
+            <span class="text-[12.5px] border-b border-black min-w-[170px] px-1 pb-[1px]" id="opd-clinic">PT Rehab</span>
+          </div>
+        </div>
+        <div class="flex justify-end items-end gap-2">
+          <span class="font-bold text-[12.5px]">HOSPITAL #:</span>
+          <span class="border-b border-black min-w-[110px] text-center text-[12.5px] font-bold pb-[1px]" id="opd-hrn">0000199337</span>
+        </div>
+      </section>
+
+      <div class="border-t-2 border-black mb-1.5"></div>
+
+      <!-- Patient info table -->
+      <section class="border border-gray-700 mb-3 text-[10.5px]">
+        <div class="grid grid-cols-3 border-b border-gray-700 text-center font-bold text-[11.5px]">
+          <div class="px-2 py-0.5 border-r border-gray-700" id="opd-surname">DEL ROSARIO</div>
+          <div class="px-2 py-0.5 border-r border-gray-700" id="opd-first-name">CARMELA</div>
+          <div class="px-2 py-0.5" id="opd-middle-name">BAUTISTA</div>
+        </div>
+        <div class="grid grid-cols-3 border-b border-gray-700 text-center text-[9px] font-semibold text-gray-700">
+          <div class="px-2 py-0.5 border-r border-gray-700">SURNAME</div>
+          <div class="px-2 py-0.5 border-r border-gray-700">NAME</div>
+          <div class="px-2 py-0.5">MIDDLE NAME</div>
+        </div>
+        <div class="grid grid-cols-1 border-b border-gray-700">
+          <div class="px-2 py-0.5"><span class="font-bold">ADDRESS:</span> <span id="opd-address">Brgy. Central, Metro City</span></div>
+        </div>
+        <div class="grid grid-cols-12 border-b border-gray-700">
+          <div class="col-span-3 px-2 py-0.5"><span class="font-bold">BIRTHDATE:</span> <span id="opd-birthdate">04/12/1978</span></div>
+          <div class="col-span-2 px-2 py-0.5"><span class="font-bold">AGE:</span> <span id="opd-age">48</span></div>
+          <div class="col-span-2 px-2 py-0.5"><span class="font-bold">SEX:</span> <span id="opd-sex">F</span></div>
+          <div class="col-span-2 px-2 py-0.5"><span class="font-bold">STATUS:</span> <span id="opd-civil-status">Married</span></div>
+          <div class="col-span-3 px-2 py-0.5"><span class="font-bold">NATIONALITY:</span> <span id="opd-nationality">Filipino</span></div>
+        </div>
+        <div class="grid grid-cols-12 border-b border-gray-700">
+          <div class="col-span-5 px-2 py-0.5"><span class="font-bold">INFORMANT:</span> <span id="opd-informant">Patient</span>,</div>
+          <div class="col-span-4 px-2 py-0.5"><span class="font-bold">CONTACT NO:</span> <span id="opd-contact">09502946085</span></div>
+          <div class="col-span-3 px-2 py-0.5"><span class="font-bold">RELIGION:</span> <span id="opd-religion">ROMAN CATHOLIC (RC)</span></div>
+        </div>
+        <div class="px-2 py-0.5">
+          <span class="font-bold">DATE &amp; TIME OF TRANSACTION:</span>
+          <span class="ml-2 font-medium" id="opd-transaction-dt">07/14/2026 1:55:00PM</span>
+        </div>
+      </section>
+
+      <!-- Chief complaint -->
+      <section class="flex items-end gap-2 mb-3 px-1">
+        <span class="font-bold text-[11px] shrink-0">Chief Complaints:</span>
+        <span class="border-b-2 border-black flex-1 pb-[1px] font-medium text-[11px]" id="opd-chief-complaint">Right knee joint aching pain on walking and climbing stairs x 2 months</span>
+      </section>
+
+      <!-- HPI + Vital signs -->
+      <section class="grid grid-cols-[1fr_165px] gap-4 mb-3.5">
+        <div>
+          <div class="font-bold text-[11px] mb-1">History of Present Illness and P.E..</div>
+          <div class="text-[9.5px] leading-relaxed whitespace-pre-line text-justify text-gray-900" id="opd-hpi-pe">Patient is a 47-year-old male presenting with a 2-month history of right knee pain without prior trauma. Denies knee locking, giving way, or redness. Range of motion preserved without antalgic gait.
+
+Past Medical History: Type 2 Diabetes Mellitus; Essential Hypertension Stage 1. Personal/Social History: Non-smoker, non-drinker. Family History: Mother (+) T2DM; Father (+) HTN. Allergies: No Known Drug Allergies (NKDA).
+
+Pertinent Signs and Symptoms: Localized right knee joint ache, joint line crepitus; afebrile.
+
+Physical Examination: General Survey: Conscious, coherent, ambulatory. HEENT: Anicteric sclerae, pink conjunctivae. Chest &amp; Lungs: Clear breath sounds bilaterally. Cardiovascular: Normal rate, regular rhythm. Abdomen: Soft, non-tender. Extremities / PE: Right knee: Mild medial joint line crepitus. Anterior/posterior drawer and McMurray tests negative. Neurologic: Intact, GCS 15. Skin: Good turgor, no petechiae.</div>
+        </div>
+
+        <div class="text-[9.5px]">
+          <div class="font-bold text-[10.5px]">VITAL SIGNS:</div>
+          <div class="font-bold mb-1">TIME TAKEN: <span class="font-normal" id="vs-time">02:30 PM</span></div>
+          <div class="space-y-1">
+            <div class="grid grid-cols-[68px_1fr] gap-1 items-end"><span>BP mmHg:</span><span class="border-b border-black font-semibold text-center pb-[1px]" id="vs-bp">126/80</span></div>
+            <div class="grid grid-cols-[68px_1fr] gap-1 items-end"><span>PR bpm:</span><span class="border-b border-black font-semibold text-center pb-[1px]" id="vs-pr">78</span></div>
+            <div class="grid grid-cols-[68px_1fr] gap-1 items-end"><span>RR cpm:</span><span class="border-b border-black font-semibold text-center pb-[1px]" id="vs-rr">18</span></div>
+            <div class="grid grid-cols-[68px_1fr] gap-1 items-end"><span>Temp in °C</span><span class="border-b border-black font-semibold text-center pb-[1px]" id="vs-temp">36.7</span></div>
+            <div class="grid grid-cols-[68px_1fr] gap-1 items-end"><span>Others:</span><span class="border-b border-black font-semibold text-center text-[9px] pb-[1px]" id="vs-others">O2 Sat: 99% RA</span></div>
+            <div class="grid grid-cols-[68px_1fr] gap-1 items-end"><span>Weight in kgs:</span><span class="border-b border-black font-semibold text-center pb-[1px]" id="vs-wt">70</span></div>
+            <div class="grid grid-cols-[68px_1fr] gap-1 items-end"><span>Height in cms:</span><span class="border-b border-black font-semibold text-center pb-[1px]" id="vs-ht">168</span></div>
+          </div>
+
+          <div class="mt-2 text-center">
+            <div class="nurse-sig-cursive" id="opd-nurse-sig">E. Dela Cruz</div>
+            <div class="text-[9px]">Lic No.: <strong id="opd-nurse-lic">0078214</strong></div>
+            <div class="border-b border-black mt-0.5"></div>
+            <div class="text-[8.5px] mt-0.5 text-gray-700">Name and Signature of Staff</div>
+          </div>
+
+          <div class="mt-3.5 ml-1">
+            <div class="font-bold text-[10px] leading-3 mb-1">CONSULTATION<br>TIME:</div>
+            <div class="grid grid-cols-[30px_1fr] gap-y-1 text-[9.5px]">
+              <span>IN :</span>
+              <span class="font-semibold" id="opd-time-in">02:30 PM</span>
+              <span>OUT :</span>
+              <span class="font-semibold" id="opd-time-out">03:15 PM</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Diagnosis -->
+      <section class="mb-3 px-1">
+        <div class="font-bold text-[11px] mb-0.5">DIAGNOSIS:</div>
+        <div class="text-[11px] font-bold" id="opd-diagnosis"></div>
+      </section>
+
+      <!-- Services -->
+      <section class="mb-3.5 px-1">
+        <div class="font-bold text-[11px] mb-0.5">Service/Treatment/Procedure Rendered:</div>
+        <div class="text-[9.5px] whitespace-pre-line leading-relaxed text-gray-900" id="opd-procedures-rendered">See Physicians’ Order / Progress Notes</div>
+      </section>
+
+      <!-- Disposition -->
+      <section class="px-1 mb-3">
+        <div class="font-bold text-[11px] mb-1.5">Disposition:</div>
+        <div class="grid grid-cols-3 gap-x-6 gap-y-1.5 max-w-[660px] text-[10px]">
+          <label class="flex items-center gap-1.5"><span class="checkbox" id="box-treated"></span><span>Treated &amp; Discharged</span></label>
+          <label class="flex items-center gap-1.5"><span class="checkbox" id="box-not-around"></span><span>Not Around When Called</span></label>
+          <label class="flex items-center gap-1.5"><span class="checkbox" id="box-rescheduled"></span><span>Rescheduled</span></label>
+
+          <label class="flex items-center gap-1.5"><span class="checkbox" id="box-admitted"></span><span>Admitted</span></label>
+          <label class="flex items-center gap-1.5"><span class="checkbox" id="box-er"></span><span>Sent Directly to E.R.</span></label>
+          <label class="flex items-center gap-1.5"><span class="checkbox" id="box-minor-or"></span><span>STAT Minor OR</span></label>
+
+          <label class="flex items-center gap-1.5"><span class="checkbox" id="box-refused"></span><span>Refused Admission/DAMA</span></label>
+          <label class="flex items-center gap-1.5"><span class="checkbox" id="box-referred"></span><span>Referred to Other Health Facility</span></label>
+          <div></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Signature section & Institutional Footer -->
+    <section class="grid grid-cols-[1fr_390px] gap-4 items-end mt-4 pt-1">
+      <div class="text-[8.5px] leading-tight self-end pb-1 text-gray-700">
+        <div class="font-bold text-black">OPD Face Sheet</div>
+        <div>OPD.F.014</div>
+        <div>Effectivity Date: 02/20/2023</div>
+        <div>Issue No.: 007</div>
+      </div>
+
+      <div>
+        <div class="text-center mb-1">
+          <div class="phys-cursive-line text-[17px]" id="opd-phys-cursive">Paolo Cruz</div>
+          <div class="font-bold text-[11px]" id="opd-phys-name">PAOLO CRUZ, MD.</div>
+          <div class="text-[9.5px] text-gray-700" id="opd-phys-lic">LICENSE NO, 0091245</div>
+          <div class="text-[9.5px] text-gray-700" id="opd-phys-datetime">DATE &amp; TIME 09/18/2025 02:30 PM</div>
+        </div>
+        <div class="border-b-2 border-black"></div>
+        <div class="text-center text-[10px] mt-0.5">Physician's Signature over Printed Name</div>
+        <div class="flex justify-center items-end gap-2 mt-2 text-[10px]">
+          <span>License No.</span>
+          <span class="border-b border-black w-36">&nbsp;</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Shared Scripts & Live Data Binding -->
+  <script src="js/data/patient_seeds.js?v=20260930_02"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      function esc(s) {
+        if (!s) return '';
+        return String(s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function getUrlParam(key) {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(key) || '';
+      }
+
+      function calculateAge(birthDateStr) {
+        if (!birthDateStr) return '';
+        var b = new Date(birthDateStr);
+        if (isNaN(b.getTime())) return '';
+        var today = new Date();
+        var age = today.getFullYear() - b.getFullYear();
+        var m = today.getMonth() - b.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < b.getDate())) age--;
+        return age > 0 ? String(age) : '0';
+      }
+
+      function formatCleanDate(dStr) {
+        if (!dStr) return '';
+        var d = new Date(dStr);
+        if (isNaN(d.getTime())) return dStr;
+        return d.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      }
+
+      function loadInitialOpdRecord() {
+        var pid = getUrlParam('patient') || getUrlParam('id') || (window.OP_PATIENT_ID || 'patient_op_carmela');
+        var encDate = getUrlParam('encounter');
+
+        if (typeof ensureSeedPatient === 'function') {
+          ensureSeedPatient();
+        }
+        var patients = (typeof getPatients === 'function') ? getPatients() : [];
+        var record = patients.find(function (p) { return p.id === pid; });
+        if (!record && (pid === 'patient_op_juan' || pid === 'patient_op_carmela')) {
+          record = patients.find(function (p) { return p.id === (window.OP_PATIENT_ID || 'patient_op_carmela'); });
+        }
+        if (pid === 'patient_op_juan' && window.history && window.history.replaceState) {
+          try {
+            var normUrl = new URL(window.location.href);
+            normUrl.searchParams.set('patient', 'patient_op_carmela');
+            window.history.replaceState({}, '', normUrl.toString());
+          } catch (e) {}
+        }
+        if (!record) record = patients[0];
+
+        // Populate patient dropdown
+        var sel = document.getElementById('opd-patient-select');
+        if (sel) {
+          sel.innerHTML = '';
+          patients.forEach(function (p) {
+            var opt = document.createElement('option');
+            opt.value = p.id;
+            var d = p.data || {};
+            var pName = (d.last_name || d.name || 'Patient') + ', ' + (d.first_name || '');
+            opt.textContent = pName.trim() + ' (' + (d.hrn || p.id) + ')';
+            if (p.id === pid) opt.selected = true;
+            sel.appendChild(opt);
+          });
+          sel.addEventListener('change', function () {
+            window.location.search = '?patient=' + encodeURIComponent(this.value);
+          });
+        }
+
+        if (!record || !record.data) return;
+        var data = record.data;
+        var encounters = Array.isArray(data.encounters) ? data.encounters : [];
+
+        // Identify Initial Encounter
+        var initialEnc = null;
+        if (encDate) {
+          initialEnc = encounters.find(function (e) { return e.date === encDate; });
+        }
+        if (!initialEnc) {
+          initialEnc = encounters.find(function (e) { return e.is_initial || e.status_tag === 'Initial Visit' || e.status_tag === 'Initial Visit (ER)'; });
+        }
+        if (!initialEnc && encounters.length > 0) {
+          initialEnc = encounters[encounters.length - 1]; // Oldest encounter chronologically
+        }
+        if (!initialEnc) {
+          initialEnc = {
+            date: data.admission_date || '2025-09-18',
+            time: '02:30 PM',
+            service: data.ward_area || 'General Medicine',
+            physician: (data.attending_physician && data.attending_physician.name) || 'Paolo Cruz, MD',
+            prc_license: (data.attending_physician && data.attending_physician.prc_no) || '0091245',
+            diagnosis: data.admitting_diagnosis || data.final_diagnosis || 'General Outpatient Consultation',
+            disposition: data.disposition || 'Treated & Discharged'
+          };
+        }
+
+        // 1. Demographics
+        var surname = (data.last_name || '').toUpperCase();
+        var firstName = (data.first_name || '').toUpperCase();
+        var middleName = (data.middle_name || '').toUpperCase();
+
+        var hrnVal = data.hrn || '0000199337';
+        var hrnEl = document.getElementById('opd-hrn');
+        if (hrnEl) hrnEl.textContent = hrnVal;
+
+        var surEl = document.getElementById('opd-surname');
+        if (surEl) surEl.textContent = surname || 'DEL ROSARIO';
+
+        var fnEl = document.getElementById('opd-first-name');
+        if (fnEl) fnEl.textContent = firstName || 'CARMELA';
+
+        var mnEl = document.getElementById('opd-middle-name');
+        if (mnEl) mnEl.textContent = middleName || 'BAUTISTA';
+
+        var bdateEl = document.getElementById('opd-birthdate');
+        if (bdateEl) bdateEl.textContent = formatCleanDate(data.birthdate) || '04/12/1978';
+
+        var addrEl = document.getElementById('opd-address');
+        if (addrEl) addrEl.textContent = data.address || 'Brgy. Central, Metro City';
+
+        var age = data.age || calculateAge(data.birthdate) || '48';
+        var sex = (data.gender || data.sex || 'F').charAt(0).toUpperCase();
+
+        var ageEl = document.getElementById('opd-age');
+        if (ageEl) ageEl.textContent = age;
+
+        var sexEl = document.getElementById('opd-sex');
+        if (sexEl) sexEl.textContent = sex;
+
+        var txDate = initialEnc.date ? formatCleanDate(initialEnc.date) : '07/14/2026';
+        var txTime = initialEnc.time || '1:55:00PM';
+        var txEl = document.getElementById('opd-transaction-dt');
+        if (txEl) txEl.textContent = txDate + ' ' + txTime;
+
+        var civEl = document.getElementById('opd-civil-status');
+        if (civEl) civEl.textContent = data.civil_status || data.status || 'Married';
+
+        var natEl = document.getElementById('opd-nationality');
+        if (natEl) natEl.textContent = data.nationality || 'Filipino';
+
+        var contEl = document.getElementById('opd-contact');
+        if (contEl) contEl.textContent = data.contact_no || data.mobile || '09502946085';
+
+        var relEl = document.getElementById('opd-religion');
+        if (relEl) relEl.textContent = data.religion || 'ROMAN CATHOLIC (RC)';
+
+        var infEl = document.getElementById('opd-informant');
+        if (infEl) infEl.textContent = data.informant || 'Patient';
+
+        var clinicName = initialEnc.service || data.ward_area || 'PT Rehab';
+        var clEl = document.getElementById('opd-clinic');
+        if (clEl) clEl.textContent = clinicName;
+
+        // 2. Chief Complaint
+        var cc = (initialEnc.clinical_record && initialEnc.clinical_record.chief_complaint) ||
+                 initialEnc.chief_complaint ||
+                 data.visit_chief_complaint ||
+                 data.chief_complaint ||
+                 'Right knee joint aching pain on walking and climbing stairs x 2 months';
+        var ccEl = document.getElementById('opd-chief-complaint');
+        if (ccEl) ccEl.textContent = cc;
+
+        // 3. Medical History & PE
+        var hpiText = (initialEnc.clinical_record && initialEnc.clinical_record.history) ||
+                      data.hx_present ||
+                      initialEnc.patient_record ||
+                      'Patient is a 47-year-old male presenting with a 2-month history of right knee pain without prior trauma. Denies knee locking, giving way, or redness. Range of motion preserved without antalgic gait.';
+
+        var fullHistAndPe = hpiText;
+
+        if (data.hx_past && fullHistAndPe.indexOf(data.hx_past) === -1) {
+          fullHistAndPe += '\n\nPast Medical History: ' + data.hx_past;
+        }
+        if (data.hx_social && fullHistAndPe.indexOf(data.hx_social) === -1) {
+          fullHistAndPe += '\nPersonal / Social History: ' + data.hx_social;
+        }
+        if (data.hx_family && fullHistAndPe.indexOf(data.hx_family) === -1) {
+          fullHistAndPe += '\nFamily History: ' + data.hx_family;
+        }
+        if (data.hx_allergy) {
+          fullHistAndPe += '\nAllergies: ' + data.hx_allergy;
+        }
+
+        var signs = Array.isArray(data.pertinent_signs) ? data.pertinent_signs : [];
+        var signsInfo = data.pertinent_signs_information || '';
+        var signsText = signs.length ? (signs.join(', ') + (signsInfo ? ' — ' + signsInfo : '')) : 'Localized right knee joint ache, joint line crepitus; afebrile.';
+        fullHistAndPe += '\n\nPertinent Signs and Symptoms: ' + signsText;
+
+        var genSurveyText = (data.pe_general_survey || data.pe_general || 'Conscious, coherent, ambulatory');
+        if (data.pe_general_survey_other) {
+          genSurveyText += ' (' + data.pe_general_survey_other + ')';
+        }
+        fullHistAndPe += '\n\nPhysical Examination: General Survey: ' + genSurveyText +
+          '. HEENT: ' + (Array.isArray(data.pe_heent) && data.pe_heent.length ? data.pe_heent.join(', ') : (data.pe_heent_other || data.pe_heent || 'Anicteric sclerae, pink conjunctivae')) +
+          '. Chest & Lungs: ' + (Array.isArray(data.pe_chest_lungs) && data.pe_chest_lungs.length ? data.pe_chest_lungs.join(', ') : (data.pe_chest_lungs_other || data.pe_chest_lungs || 'Clear breath sounds bilaterally')) +
+          '. Cardiovascular: ' + (data.pe_cvs_other || data.pe_cardiovascular || 'Normal rate, regular rhythm') +
+          '. Abdomen: ' + (Array.isArray(data.pe_abdomen) && data.pe_abdomen.length ? data.pe_abdomen.join(', ') : (data.pe_abdomen_other || data.pe_abdomen || 'Soft, non-tender')) +
+          '. Extremities / PE: ' + (initialEnc.results || data.pe_skin_extremities_other || data.pe_extremities || 'Right knee: Mild medial joint line crepitus. Negative drawer and McMurray tests.') +
+          '. Neurologic: ' + (data.pe_neuro_exam_other || data.pe_neurologic || 'Intact, GCS 15') +
+          '. Skin: ' + (data.pe_skin_extremities || data.pe_skin || 'Good turgor, no petechiae') + '.';
+
+        var hpiEl = document.getElementById('opd-hpi-pe');
+        if (hpiEl) hpiEl.textContent = fullHistAndPe;
+
+        // 4. Vital Signs Table
+        var vsList = Array.isArray(initialEnc.vital_signs) && initialEnc.vital_signs.length ? initialEnc.vital_signs :
+                     (Array.isArray(data.vital_signs) && data.vital_signs.length ? data.vital_signs : []);
+        var vs = vsList[0] || {
+          dateTime: txDate + ' ' + txTime,
+          bp: '126/80',
+          hr: '78',
+          rr: '18',
+          temp: '36.7',
+          wt: '70',
+          ht: '168'
+        };
+
+        var vsTimeStr = initialEnc.time || '02:30 PM';
+        var vtEl = document.getElementById('vs-time');
+        if (vtEl) vtEl.textContent = vsTimeStr;
+
+        var vTempEl = document.getElementById('vs-temp');
+        if (vTempEl) vTempEl.textContent = vs.temp || '36.7';
+
+        var vPrEl = document.getElementById('vs-pr');
+        if (vPrEl) vPrEl.textContent = vs.hr || vs.pr || '78';
+
+        var vRrEl = document.getElementById('vs-rr');
+        if (vRrEl) vRrEl.textContent = vs.rr || '18';
+
+        var vBpEl = document.getElementById('vs-bp');
+        if (vBpEl) vBpEl.textContent = vs.bp || '126/80';
+
+        var vWtEl = document.getElementById('vs-wt');
+        if (vWtEl) vWtEl.textContent = vs.wt || vs.weight || '70';
+
+        var vHtEl = document.getElementById('vs-ht');
+        if (vHtEl) vHtEl.textContent = vs.ht || vs.height || '168';
+
+        var nurseName = vs.nurse || initialEnc.nurse || data.triage_nurse || 'E. Dela Cruz, RN';
+        var cleanNurseName = nurseName.replace(/,\s*RN$/i, '').trim();
+
+        var nSigEl = document.getElementById('opd-nurse-sig');
+        if (nSigEl) nSigEl.textContent = cleanNurseName;
+
+        var nLicEl = document.getElementById('opd-nurse-lic');
+        if (nLicEl) nLicEl.textContent = data.triage_nurse_lic || '0078214';
+
+        // 5. Diagnosis - Exclusively display Final Diagnosis entered by the physician
+        function cleanDiagnosisText(dxStr) {
+          if (!dxStr) return '';
+          var s = String(dxStr);
+          s = s.replace(/\s*[\(\[]\s*(?:ICD(?:-?10)?(?:\s*:\s*|\s+))?[A-Z][0-9]{1,2}(?:\.[0-9A-Z]{1,4})?(?:\s*,\s*[A-Z0-9\.\s]+)*[\)\]]/gi, '');
+          s = s.replace(/\s*[\(\[]\s*ICD[^\)\]]+[\)\]]/gi, '');
+          s = s.replace(/^[A-Z][0-9]{1,2}(?:\.[0-9A-Z]{1,4})?\s*-\s*/gi, '');
+          return s.trim();
+        }
+
+        var curEnc = encounters.find(function (e) { return e.is_current || e.isCurrent; });
+        var finalDx = '';
+
+        // Priority 1: Current active encounter's final diagnosis entered/saved by the physician
+        if (curEnc) {
+          finalDx = (curEnc.final_diagnosis || (curEnc.clinical_record && curEnc.clinical_record.final_diagnosis) || '').trim();
+        }
+        // Priority 2: Patient record level final diagnosis
+        if (!finalDx && data.final_diagnosis) {
+          finalDx = String(data.final_diagnosis).trim();
+        }
+        // Priority 3: Target encounter's explicit final diagnosis
+        if (!finalDx && initialEnc) {
+          finalDx = (initialEnc.final_diagnosis || (initialEnc.clinical_record && initialEnc.clinical_record.final_diagnosis) || '').trim();
+        }
+        // Priority 4: Clean encounter diagnosis without ICD code prefix
+        if (!finalDx && curEnc && curEnc.diagnosis) {
+          finalDx = cleanDiagnosisText(curEnc.diagnosis);
+        }
+        if (!finalDx && initialEnc && initialEnc.diagnosis) {
+          finalDx = cleanDiagnosisText(initialEnc.diagnosis);
+        }
+
+        var dxEl = document.getElementById('opd-diagnosis');
+        if (dxEl) dxEl.textContent = finalDx || '—';
+
+        // Consultation Time
+        var timeIn = initialEnc.time || '02:30 PM';
+        var tInEl = document.getElementById('opd-time-in');
+        if (tInEl) tInEl.textContent = timeIn;
+
+        var timeOut = '03:15 PM';
+        if (timeIn.indexOf('AM') !== -1) timeOut = '11:45 AM';
+        if (timeIn.indexOf('08:') !== -1) timeOut = '09:30 AM';
+        var tOutEl = document.getElementById('opd-time-out');
+        if (tOutEl) tOutEl.textContent = timeOut;
+
+        // 6. Services & Procedures Rendered - Fixed clinical cross-reference
+        var procEl = document.getElementById('opd-procedures-rendered');
+        if (procEl) procEl.textContent = 'See Physicians’ Order / Progress Notes';
+
+        // 7. Dispositions
+        var dispVal = (initialEnc.disposition || data.disposition || 'Treated & Discharged').toLowerCase();
+        var boxIds = {
+          'treated': document.getElementById('box-treated'),
+          'admitted': document.getElementById('box-admitted'),
+          'refused': document.getElementById('box-refused'),
+          'not-around': document.getElementById('box-not-around'),
+          'er': document.getElementById('box-er'),
+          'referred': document.getElementById('box-referred'),
+          'rescheduled': document.getElementById('box-rescheduled'),
+          'minor-or': document.getElementById('box-minor-or')
+        };
+
+        Object.keys(boxIds).forEach(function (k) {
+          if (boxIds[k]) boxIds[k].classList.remove('checked');
+        });
+
+        if (dispVal.indexOf('treated') !== -1 || dispVal.indexOf('discharged') !== -1) {
+          if (boxIds.treated) boxIds.treated.classList.add('checked');
+        } else if (dispVal.indexOf('admit') !== -1) {
+          if (boxIds.admitted) boxIds.admitted.classList.add('checked');
+        } else if (dispVal.indexOf('refused') !== -1 || dispVal.indexOf('dama') !== -1) {
+          if (boxIds.refused) boxIds.refused.classList.add('checked');
+        } else if (dispVal.indexOf('er') !== -1 || dispVal.indexOf('emergency') !== -1) {
+          if (boxIds.er) boxIds.er.classList.add('checked');
+        } else if (dispVal.indexOf('referred') !== -1) {
+          if (boxIds.referred) boxIds.referred.classList.add('checked');
+        } else if (dispVal.indexOf('rescheduled') !== -1) {
+          if (boxIds.rescheduled) boxIds.rescheduled.classList.add('checked');
+        } else if (dispVal.indexOf('minor or') !== -1) {
+          if (boxIds['minor-or']) boxIds['minor-or'].classList.add('checked');
+        }
+
+        // 8. Physician Authentications
+        var rawDoc = initialEnc.physician || (data.attending_physician && data.attending_physician.name) || 'Paolo Cruz, MD';
+        var sigText = rawDoc.replace(/^Dr\.\s*/i, '').replace(/,\s*MD\.?$/i, '').trim();
+        var printDoc = sigText.toUpperCase() + ', MD.';
+        var lic = initialEnc.prc_license || (data.attending_physician && data.attending_physician.prc_no) || '0091245';
+
+        var pCurEl = document.getElementById('opd-phys-cursive');
+        if (pCurEl) pCurEl.textContent = sigText;
+
+        var pNameEl = document.getElementById('opd-phys-name');
+        if (pNameEl) pNameEl.textContent = printDoc;
+
+        var pLicEl = document.getElementById('opd-phys-lic');
+        if (pLicEl) pLicEl.textContent = 'LICENSE NO, ' + lic;
+
+        var pDtEl = document.getElementById('opd-phys-datetime');
+        if (pDtEl) pDtEl.textContent = 'DATE & TIME ' + txDate + ' ' + (initialEnc.time || '02:30 PM');
+
+        if (getUrlParam('print') === '1' || getUrlParam('print') === 'true' || getUrlParam('autoprint') === '1') {
+          setTimeout(function () {
+            window.print();
+          }, 400);
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', loadInitialOpdRecord);
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHYSICIAN'S ORDERS / PROGRESS NOTES NURSES' COMPLIANCE SHEET (ER &amp; ADMISSION)</title>
+    <style>
+        :root {
+            --ink: #111;
+            --line: #000;
+            --page: #fff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #d8d8d8;
+            color: var(--ink);
+            font-family: "Times New Roman", Times, serif;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* ── Minimal Unobtrusive Toolbar (Hidden in view-only mode to match OPD compliance sheet) ── */
+        .toolbar {
+            display: none !important;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: #ffffff;
+            border-bottom: 1px solid #cbd5e1;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            color: #1e293b;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .doh-flow-bar {
+            display: none !important;
+        }
+
+        .toolbar a,
+        .toolbar button,
+        .toolbar select {
+            font-family: inherit;
+            font-size: 12px;
+            padding: 5px 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            background: #f8fafc;
+            color: #1e293b;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            line-height: 1.4;
+        }
+
+        .toolbar a:hover,
+        .toolbar button:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .toolbar a.btn-dashboard {
+            background: #1b4d3e;
+            border-color: #1b4d3e;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .toolbar a.btn-dashboard:hover {
+            background: #153e32;
+        }
+
+        .toolbar a.btn-opd {
+            background: #0e3d59;
+            border-color: #0e3d59;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .toolbar a.btn-opd:hover {
+            background: #0a2d42;
+        }
+
+        .toolbar .view-group {
+            display: inline-flex;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+            margin: 0 4px;
+        }
+
+        .toolbar .view-group button {
+            border: none;
+            border-radius: 0;
+            border-right: 1px solid #cbd5e1;
+            padding: 5px 12px;
+            font-weight: 500;
+            background: #ffffff;
+            color: #475569;
+        }
+        .toolbar .view-group button:last-child {
+            border-right: none;
+        }
+        .toolbar .view-group button.active {
+            background: #0284c7 !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .toolbar button.btn-print {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .toolbar button.btn-print:hover {
+            background: #1d4ed8;
+        }
+
+        .toolbar select {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            color: #1e293b;
+            min-width: 180px;
+        }
+
+        /* ── Standard A4 Page Layout ── */
+        .page-container {
+            width: 100%;
+            padding: 16px 0 32px;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto 30px;
+            padding: 14mm 12mm 10mm;
+            background: var(--page);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-orders-body {
+            flex: 1;
+        }
+
+        .page + .page {
+            margin-top: 32px;
+        }
+
+        /* ── Official Hospital Header ── */
+        .hospital-name {
+            text-align: center;
+            font-size: 12.5pt;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            margin: 0;
+        }
+
+        .hospital-address {
+            text-align: center;
+            font-size: 10pt;
+            margin: 1px 0 14px;
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 13.5pt;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            margin: 0;
+            line-height: 1.25;
+        }
+
+        .form-subtitle {
+            text-align: center;
+            font-size: 10pt;
+            margin: 6px 0 14px;
+        }
+
+        /* ── Patient Demographics Grid ── */
+        .patient-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px 28px;
+            margin-bottom: 10px;
+            font-size: 10.5pt;
+        }
+
+        .field {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .field.span-2 {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            white-space: nowrap;
+        }
+
+        .field-val {
+            flex: 1;
+            min-width: 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 11pt;
+            padding: 0 2px 1px;
+            display: inline-block;
+        }
+
+        .split-row {
+            display: flex;
+            gap: 22px;
+            min-width: 0;
+        }
+
+        .split-row .field {
+            flex: 0 1 auto;
+        }
+
+        .field.age {
+            width: 90px;
+        }
+
+        .field.sex {
+            width: 72px;
+        }
+
+        .field.ward {
+            flex: 1;
+            min-width: 110px;
+        }
+
+        .field.admit {
+            flex: 1;
+        }
+
+        /* ── Nurse Compliance Legend ── */
+        .legend {
+            font-size: 9.5pt;
+            letter-spacing: 0.2px;
+            margin: 8px 0 4px;
+            text-align: left;
+        }
+
+        /* ── Compliance Table ── */
+        table.orders {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 9.5pt;
+        }
+
+        table.orders th,
+        table.orders td {
+            border: 1px solid var(--line);
+            vertical-align: top;
+            padding: 0;
+        }
+
+        table.orders thead th {
+            font-weight: 700;
+            text-align: center;
+            padding: 3px 2px;
+            line-height: 1.2;
+            background: #fff;
+        }
+
+        table.orders col.date { width: 12%; }
+        table.orders col.notes { width: 24%; }
+        table.orders col.order { width: 36%; }
+        table.orders col.mark { width: 3.2%; }
+        table.orders col.sign { width: 12%; }
+
+        table.orders tbody td {
+            height: auto;
+            min-height: 9.2mm;
+        }
+
+        table.orders tbody td textarea {
+            width: 100%;
+            height: auto;
+            min-height: 32px;
+            border: none;
+            resize: none;
+            outline: none;
+            font: inherit;
+            font-size: 10pt;
+            padding: 3px 4px;
+            background: transparent;
+            line-height: 1.35;
+            overflow: hidden;
+            box-sizing: border-box;
+            display: block;
+            pointer-events: none;
+            user-select: text;
+            cursor: default;
+        }
+
+        table.orders tbody td[rowspan] {
+            vertical-align: top !important;
+        }
+
+        table.orders tbody td[rowspan] textarea {
+            height: auto;
+            min-height: 32px;
+        }
+
+        table.orders tbody td.cell-datetime {
+            vertical-align: top !important;
+            text-align: center;
+            background: #fff;
+            padding-top: 3px;
+        }
+
+        table.orders tbody td.cell-datetime textarea {
+            text-align: center;
+            font-weight: 600;
+            color: #111;
+            line-height: 1.35;
+            white-space: pre-wrap;
+            vertical-align: top;
+            padding: 3px 4px;
+        }
+
+
+        table.orders tbody td.cell-notes {
+            vertical-align: top;
+        }
+
+        table.orders tbody td.cell-notes textarea {
+            line-height: 1.35;
+        }
+
+        table.orders tbody td.cell-notes.notes-first {
+            border-bottom: hidden;
+        }
+
+        table.orders tbody td.cell-notes.notes-mid {
+            border-top: hidden;
+            border-bottom: hidden;
+        }
+
+        table.orders tbody td.cell-notes.notes-last {
+            border-top: hidden;
+        }
+
+        table.orders tbody td.mark {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        table.orders tbody td.mark input[type="checkbox"] {
+            width: 13px;
+            height: 13px;
+            margin: 0;
+            accent-color: #111;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* ── Physician Authentication Stamp Row ── */
+        tr.enc-sig-row td {
+            padding: 4px 6px;
+            vertical-align: middle;
+        }
+
+        td.enc-sig-stamp {
+            padding: 4px 8px !important;
+        }
+
+        .enc-sig-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 4px 6px 3px;
+        }
+
+        .enc-sig-tag,
+        .enc-sig-supervision,
+        .enc-sig-process-note {
+            display: none !important;
+        }
+
+        .enc-sig-cursive {
+            font-family: 'Brush Script MT', 'Segoe Script', cursive;
+            font-size: 13.5pt;
+            color: #1a2a40;
+            line-height: 1.1;
+            user-select: none;
+        }
+
+        .enc-sig-line-draw {
+            font-size: 7.5pt;
+            color: #333;
+            letter-spacing: -0.5px;
+            line-height: 0.8;
+            margin-top: -1px;
+            margin-bottom: 2px;
+        }
+
+        .enc-sig-name {
+            font-size: 8.5pt;
+            font-weight: 700;
+            color: #111;
+            line-height: 1.2;
+        }
+
+        .enc-sig-lic {
+            font-size: 7.5pt;
+            color: #333;
+            line-height: 1.2;
+            margin-top: 1px;
+        }
+
+        /* ── Official Footer ── */
+        .footer {
+            margin-top: 10px;
+            font-size: 9.5pt;
+            line-height: 1.35;
+        }
+
+        /* ── Print Media Optimization ── */
+        @media print {
+            html, body {
+                background: #fff;
+            }
+
+            .toolbar {
+                display: none !important;
+            }
+
+            .page-container {
+                padding: 0;
+            }
+
+            .page {
+                margin: 0 !important;
+                box-shadow: none !important;
+                width: auto !important;
+                min-height: auto !important;
+                padding: 10mm 10mm 8mm !important;
+                page-break-after: always;
+                break-after: page;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+        }
+
+        @page {
+            size: A4;
+            margin: 8mm;
+        }
+    </style>
+    <script src="js/data/patient_seeds.js?v=20261007_01"></script>
+</head>
+<body>
+
+    <!-- Minimal Unobtrusive Toolbar (Hidden in view-only mode to match OPD compliance sheet) -->
+    <header class="toolbar" role="banner" style="display:none;">
+        <a href="dashboard.html" class="btn-dashboard" id="link-dashboard" title="Return to Doctor's Dashboard">&larr; Doctor's Dashboard</a>
+        <a href="doctors_order_patient.html" class="btn-opd" id="link-opd-orders" title="View Outpatient (OPD) Orders">OPD Physician's Orders</a>
+        <a href="patients.html" id="link-patients" title="Open Patient Registry">Patient Directory</a>
+
+        <div class="view-group" role="group" aria-label="Sheet View Switcher">
+            <button type="button" id="btn-view-all" class="active" onclick="switchView('all')">All Sheets (Full Episode)</button>
+            <button type="button" id="btn-view-er" onclick="switchView('er')">1. ED Arrival (06/12)</button>
+            <button type="button" id="btn-view-admission" onclick="switchView('admission')">2. Inpatient Admission (06/12 &ndash; 06/14)</button>
+            <button type="button" id="btn-view-template" onclick="switchView('template')">Blank Template</button>
+        </div>
+
+        <select id="patient-selector" aria-label="Select Hospital Patient">
+            <option value="">Select Hospital Patient...</option>
+        </select>
+
+        <button type="button" class="btn-print" id="btn-print" onclick="window.print()">Print Sheet</button>
+    </header>
+
+    <main class="page-container" id="pages-container">
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             SHEET 1: EXAMPLE 1 — EMERGENCY DEPARTMENT (ER)
+             ══════════════════════════════════════════════════════════════════ -->
+        <article class="page" id="sheet-er" aria-label="Physician's Orders Sheet - Emergency Department">
+            <header class="page-header">
+                <p class="hospital-name">REGIONAL MEDICAL CENTER &amp; HOSPITAL</p>
+                <p class="hospital-address">Medical Center Drive, Health District</p>
+                <h1 class="form-title">PHYSICIAN'S ORDERS / PROGRESS NOTES<br>NURSES' COMPLIANCE SHEET</h1>
+                <p class="form-subtitle">(Authenticate all Orders)</p>
+
+                <div class="patient-grid">
+                    <div class="field">
+                        <label>Name of Patient</label>
+                        <span class="field-val" id="er-patient-name">MAKILING, JUAN DELA CRUZ</span>
+                    </div>
+                    <div class="field">
+                        <label>Hospital Number</label>
+                        <span class="field-val" id="er-patient-hrn">0000001925</span>
+                    </div>
+                    <div class="field">
+                        <label>Address</label>
+                        <span class="field-val" id="er-patient-address">Brgy. San Jose, Medical District</span>
+                    </div>
+                    <div class="field">
+                        <label>Ward / Room</label>
+                        <span class="field-val" id="er-patient-ward">ER - Acute Care Bed 04</span>
+                    </div>
+                    <div class="field span-2 split-row">
+                        <div class="field age">
+                            <label>Age</label>
+                            <span class="field-val" id="er-patient-age">50</span>
+                        </div>
+                        <div class="field sex">
+                            <label>Sex</label>
+                            <span class="field-val" id="er-patient-sex">M</span>
+                        </div>
+                        <div class="field admit">
+                            <label>Admission Date</label>
+                            <span class="field-val" id="er-patient-admit">06/12/2026 08:30 AM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>
+            </header>
+
+            <div class="page-orders-body">
+                <table class="orders" aria-label="Emergency Room Orders Table">
+                    <colgroup>
+                        <col class="date">
+                        <col class="notes">
+                        <col class="order">
+                        <col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="mark">
+                        <col class="sign">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>DATE<br>TIME</th>
+                            <th>PROGRESS NOTES</th>
+                            <th>PHYSICIAN'S ORDER</th>
+                            <th>C</th><th>A</th><th>R</th><th>E</th><th>D</th>
+                            <th>TIME<br>SIGNATURE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Row 1: Emergency Intake & Stabilization Orders -->
+                        <tr>
+                            <td rowspan="12" class="cell-datetime">
+                                <textarea readonly>06/12/2026&#10;08:30 AM</textarea>
+                            </td>
+                            <td class="cell-notes notes-first">
+                                <textarea rows="4">High-grade fever, productive cough with yellowish sputum, and progressive shortness of breath x 3 days. Wt: 70 kg, Ht: 168 cm, BMI: 24.8 kg/m².</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="3">Secure IV access / Hep lock. Start PNSS 1 L at 80 mL/hour. Oxygen at 2-3 L/min via nasal cannula; maintain SpO2 &gt;= 95%. Emergency stabilization and baseline diagnostic workup.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 08:45A</textarea></td>
+                        </tr>
+
+                        <!-- Row 2: Subjective & TPR/Vitals -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="3">3-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath. Known hypertensive and diabetic on maintenance therapy.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Monitor TPR and BP every 1 hour until stabilized, then every 4 hours with pulse oximetry. Record vital signs flowsheet.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 08:45A</textarea></td>
+                        </tr>
+
+                        <!-- Row 3: Objective & Diet -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="4">BP 138/86 mmHg, HR 102 bpm, RR 24 cpm, Temp 38.2°C, SpO2 93% on room air. Tachypneic, in moderate respiratory distress. Chest: Inspiratory crackles over right lower lung field. Heart: S1/S2 distinct, tachycardic.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Low-salt, diabetic soft diet as tolerated.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 08:48A</textarea></td>
+                        </tr>
+
+                        <!-- Row 4: Assessment & IVF -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="3">CBC WBC 14.8 x 10^9/L (82% Neutrophils), Hb 12.4 g/dL, Plt 285 x 10^9/L; Creatinine 1.0 mg/dL, BUN 16 mg/dL; Na 138, K 4.1, Cl 101 mmol/L; RBS 164 mg/dL. CXR: Right lower lobe consolidation.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Plain Normal Saline Solution (PNSS) 1 L at 80 mL/hour.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 08:50A</textarea></td>
+                        </tr>
+
+                        <!-- Row 5: Laboratory & Diagnostic Requests -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2">Emergency stabilization, targeted parenteral antibiotics, respiratory support.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Complete Blood Count (CBC) with platelet, BUN, Creatinine, Electrolytes stat.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 08:55A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Sputum Gram stain and C&amp;S stat.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 08:55A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Chest Radiograph (PA/Lateral views) stat.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 08:55A</textarea></td>
+                        </tr>
+
+                        <!-- Row 6: Medications -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2">Negative ANST confirmed prior to Ceftriaxone infusion. No adverse drug reactions observed.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Ceftriaxone 2 g IVTT once daily after negative skin test (ANST -).</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:00A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Azithromycin 500 mg 1 tablet OD PO.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:00A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Paracetamol 500 mg 1 tablet q6h PRN for fever &gt;= 38.0°C.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:00A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Losartan 50 mg 1 tablet OD PO in morning.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:00A</textarea></td>
+                        </tr>
+
+                        <!-- Row 7: Special Order -->
+                        <tr>
+                            <td class="cell-notes notes-last">
+                                <textarea rows="3">Elevate head of bed 30-45 degrees. Aspiration precautions. Monitor blood glucose and notify physician for SpO2 &lt; 92% or Temp &gt;= 38.5°C.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="3">Oxygen at 2 L/minute via nasal cannula; maintain SpO2 &gt;= 95%. Monitor vital signs every 4 hours and record intake and output (I/O) every shift. Refer PRN.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:05A</textarea></td>
+                        </tr>
+
+                        <!-- Physician Authentication Row -->
+                        <tr class="enc-sig-row">
+                            <td class="cell-datetime enc-sig-spacer"></td>
+                            <td class="cell-notes enc-sig-spacer"></td>
+                            <td class="enc-sig-stamp">
+                                <div class="enc-sig-block">
+                                    <div class="enc-sig-cursive">R. Lim</div>
+                                    <div class="enc-sig-line-draw">________________________________</div>
+                                    <div class="enc-sig-name">Roberto Lim, MD</div>
+                                    <div class="enc-sig-lic">PRC Lic. No.: 0089241 &bull; 06/12/2026 08:30 AM</div>
+                                </div>
+                            </td>
+                            <td colspan="6" class="enc-sig-spacer"></td>
+                        </tr>
+
+                        <!-- Closure of ER Progress Notes: Disposition for Inpatient Admission (06/12/2026 12:30 PM) -->
+                        <tr>
+                            <td rowspan="2" class="cell-datetime">
+                                <textarea readonly>06/12/2026&#10;12:30 PM</textarea>
+                            </td>
+                            <td class="cell-notes notes-first">
+                                <textarea rows="3">ED Reassessment Note:&#10;Patient stabilized on 2 L/min NC. BP 130/82 mmHg, HR 92 bpm, RR 22 cpm, Temp 38.0°C, SpO2 95%. Condition upon transfer: Conscious, coherent, stable.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">For Admission</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 12:30P</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-last">
+                                <textarea rows="3">CXR confirms right lower lobe consolidation. Endorsed complete chart and patient care to Floor 1 Ward 1 nursing staff.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="3">1. Admit to Floor 1 Ward 1 (Medical Ward - Bed 302-A) under the service of Dr. Miguel Santos.&#10;2. Endorse complete chart, diagnostic results, ongoing IVF PNSS, and nasal cannula O2 to Ward Nurse.&#10;3. Transport via wheelchair with nursing escort.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 12:30P</textarea></td>
+                        </tr>
+
+                        <!-- ER Closure Physician Authentication Row -->
+                        <tr class="enc-sig-row">
+                            <td class="cell-notes enc-sig-spacer"></td>
+                            <td class="enc-sig-stamp">
+                                <div class="enc-sig-block">
+                                    <div class="enc-sig-cursive">R. Lim</div>
+                                    <div class="enc-sig-line-draw">________________________________</div>
+                                    <div class="enc-sig-name">Roberto Lim, MD</div>
+                                    <div class="enc-sig-lic">PRC Lic. No.: 0089241 &bull; 06/12/2026 12:30 PM</div>
+                                </div>
+                            </td>
+                            <td colspan="6" class="enc-sig-spacer"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <footer class="footer">
+                Physician's Orders Form<br>
+                MRS-F-032<br>
+                Issued: 2/5/14<br>
+                Issue .No. 001
+            </footer>
+        </article>
+
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             SHEET 2: EXAMPLE 2 — INPATIENT ADMISSION
+             ══════════════════════════════════════════════════════════════════ -->
+        <article class="page" id="sheet-admission" aria-label="Physician's Orders Sheet - Inpatient Admission">
+            <header class="page-header">
+                <p class="hospital-name">REGIONAL MEDICAL CENTER &amp; HOSPITAL</p>
+                <p class="hospital-address">Medical Center Drive, Health District</p>
+                <h1 class="form-title">PHYSICIAN'S ORDERS / PROGRESS NOTES<br>NURSES' COMPLIANCE SHEET</h1>
+                <p class="form-subtitle">(Authenticate all Orders)</p>
+
+                <div class="patient-grid">
+                    <div class="field">
+                        <label>Name of Patient</label>
+                        <span class="field-val" id="adm-patient-name">MAKILING, JUAN DELA CRUZ</span>
+                    </div>
+                    <div class="field">
+                        <label>Hospital Number</label>
+                        <span class="field-val" id="adm-patient-hrn">0000001925</span>
+                    </div>
+                    <div class="field">
+                        <label>Address</label>
+                        <span class="field-val" id="adm-patient-address">Brgy. San Jose, Medical District</span>
+                    </div>
+                    <div class="field">
+                        <label>Ward / Room</label>
+                        <span class="field-val" id="adm-patient-ward">Floor 1 - Ward 1</span>
+                    </div>
+                    <div class="field span-2 split-row">
+                        <div class="field age">
+                            <label>Age</label>
+                            <span class="field-val" id="adm-patient-age">50</span>
+                        </div>
+                        <div class="field sex">
+                            <label>Sex</label>
+                            <span class="field-val" id="adm-patient-sex">M</span>
+                        </div>
+                        <div class="field admit">
+                            <label>Admission Date</label>
+                            <span class="field-val" id="adm-patient-admit">06/12/2026 12:30 PM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>
+            </header>
+
+            <div class="page-orders-body">
+                <table class="orders" aria-label="Inpatient Admission Orders Table">
+                    <colgroup>
+                        <col class="date">
+                        <col class="notes">
+                        <col class="order">
+                        <col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="mark">
+                        <col class="sign">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>DATE<br>TIME</th>
+                            <th>PROGRESS NOTES</th>
+                            <th>PHYSICIAN'S ORDER</th>
+                            <th>C</th><th>A</th><th>R</th><th>E</th><th>D</th>
+                            <th>TIME<br>SIGNATURE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Hospital Day 1: Inpatient Ward Admission Orders (06/12/2026 12:30 PM) -->
+                        <!-- Row 1: Admission Plan -->
+                        <tr>
+                            <td rowspan="12" class="cell-datetime">
+                                <textarea readonly>06/12/2026&#10;12:30 PM</textarea>
+                            </td>
+                            <td class="cell-notes notes-first">
+                                <textarea rows="2">For Admission (transferred from Emergency Department).</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">For Admission</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 12:30P</textarea></td>
+                        </tr>
+
+                        <!-- Row 2: Admitting Destination & Attending Physician -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="3">3-day history of high-grade fever, productive cough with yellowish sputum, and progressive shortness of breath. Known type 2 diabetic and hypertensive.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Admit to Floor 1 ward 1&#10;Under the service of Dr. Miguel Santos</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 12:45P</textarea></td>
+                        </tr>
+
+                        <!-- Row 2: Diet -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="3">BP 136/84 mmHg, HR 98 bpm, RR 22 cpm, Temp 38.0°C, SpO2 94% on 2 L/min NC. Wt: 70 kg, Ht: 168 cm, BMI: 24.8 kg/m².</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Low-salt, diabetic soft diet as tolerated.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 12:48P</textarea></td>
+                        </tr>
+
+                        <!-- Row 3: IV -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="3">Chest: Inspiratory crackles over right lower lung field. Heart: S1/S2 distinct, regular rhythm. Abdomen: Soft, non-tender.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Continue PNSS 1 L at 80 mL/hour.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 12:50P</textarea></td>
+                        </tr>
+
+                        <!-- Row 4: Labs -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="3">CBC WBC 14.8 x 10^9/L (82% Segmenters), Hb 12.4 g/dL, Plt 285 x 10^9/L; Creatinine 1.0 mg/dL, BUN 16 mg/dL; Na 138, K 4.1, Cl 101 mmol/L; RBS 164 mg/dL. CXR: Right lower lobe consolidation.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Follow up pending Sputum Gram stain and C&amp;S.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 12:52P</textarea></td>
+                        </tr>
+
+                        <!-- Row 5: Diagnostics -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="3">Community-Acquired Pneumonia, Moderate Risk; Essential Hypertension Stage 1; Type 2 Diabetes Mellitus.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Repeat CBC and serum creatinine tomorrow 6:00 AM.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 12:52P</textarea></td>
+                        </tr>
+
+                        <!-- Row 6: Meds (1) -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="3">Skin test negative (ANST -). Ceftriaxone 2 g IV initiated. Tolerated without hypersensitivity or rash.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Ceftriaxone 2 g IVTT once daily (Day 1 of 7).</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 01:00P</textarea></td>
+                        </tr>
+
+                        <!-- Row 7: Meds (2) -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Azithromycin 500 mg 1 tablet OD PO.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 01:00P</textarea></td>
+                        </tr>
+
+                        <!-- Row 8: Meds (3) -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Paracetamol 500 mg 1 tablet q6h PRN for fever &gt;= 38.0°C.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 01:00P</textarea></td>
+                        </tr>
+
+                        <!-- Row 9: Meds (4) -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Losartan 50 mg 1 tablet OD PO in morning.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 01:00P</textarea></td>
+                        </tr>
+
+                        <!-- Row 10: Special Order -->
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="3">Continue inpatient parenteral antimicrobials, respiratory support, strict glycemic and blood pressure monitoring.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Monitor TPR and BP every 4 hours with continuous pulse oximetry. Strict flowsheet record.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 12:45P</textarea></td>
+                        </tr>
+
+                        <!-- Row 11: Procedure / Respiratory & Intake-Output -->
+                        <tr>
+                            <td class="cell-notes notes-last">
+                                <textarea rows="3">Elevate head of bed 30-45°. Aspiration precautions. Monitor blood glucose. Notify physician for SpO2 &lt; 92% or Temp &gt;= 38.5°C.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="3">Oxygen at 2 L/minute via nasal cannula; maintain SpO2 &gt;= 95%. Strict Intake &amp; Output (I/O) recording every shift. Aspiration precautions.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 01:05P</textarea></td>
+                        </tr>
+
+                        <!-- Physician Authentication Row for Day 1 Admission -->
+                        <tr class="enc-sig-row">
+                            <td class="cell-datetime enc-sig-spacer"></td>
+                            <td class="cell-notes enc-sig-spacer"></td>
+                            <td class="enc-sig-stamp">
+                                <div class="enc-sig-block">
+                                    <div class="enc-sig-cursive">M. Santos</div>
+                                    <div class="enc-sig-line-draw">________________________________</div>
+                                    <div class="enc-sig-name">Miguel Santos, MD</div>
+                                    <div class="enc-sig-lic">PRC Lic. No.: 0078312 &bull; 06/12/2026 12:30 PM</div>
+                                </div>
+                            </td>
+                            <td colspan="6" class="enc-sig-spacer"></td>
+                        </tr>
+
+                        <!-- Hospital Day 2: Morning Rounds (06/13/2026 10:15 AM) -->
+                        <tr>
+                            <td rowspan="9" class="cell-datetime">
+                                <textarea readonly>06/13/2026&#10;10:15 AM</textarea>
+                            </td>
+                            <td class="cell-notes notes-first">
+                                <textarea rows="2">Productive cough decreasing, dyspnea significantly resolved. Afebrile x 24 hours.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Wean off nasal cannula oxygen; maintain SpO2 &gt;= 95% on room air.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 10:30A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2">BP 120/80 mmHg, HR 78 bpm, RR 18 cpm, Temp 36.8°C, SpO2 98% on room air.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Regular diet as tolerated; encourage oral fluid intake.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 10:30A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2">Conscious, comfortable in bed. Lungs: Decreased crackles over right lower lung field, good air entry.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Continue D5 0.9 NaCl 1L to run at 80 cc/hr.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 10:35A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2">CAP-MR resolving on targeted IV antibiotics. Hemodynamically stable, afebrile, lungs clearing.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Repeat Complete Blood Count (CBC) and serum creatinine tomorrow 6:00 AM.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 10:45A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Continue IV Ceftriaxone 2 g OD (Day 2 of 7).</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 11:00A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Shift Azithromycin to oral 500 mg tablet once daily after meals.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 11:00A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Paracetamol 500 mg tablet q4h PRN for fever &gt;= 38.0°C.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 11:00A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Continue Losartan 50 mg tablet OD in morning.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 11:00A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-last">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">May ambulate inside room as tolerated. Vital signs every 4 hours and record intake and output every shift.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 11:00A</textarea></td>
+                        </tr>
+
+                        <!-- Hospital Day 3: Discharge Orders (06/14/2026 09:00 AM) -->
+                        <tr>
+                            <td rowspan="6" class="cell-datetime">
+                                <textarea readonly>06/14/2026&#10;09:00 AM</textarea>
+                            </td>
+                            <td class="cell-notes notes-first">
+                                <textarea rows="2">Patient clinically well, completely afebrile x 48 hours. Lungs clear bilaterally. Tolerating oral intake.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Discharge patient today. Issue discharge clearance and PhilHealth CF4 completion.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:30A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2">BP 118/74 mmHg, HR 72 bpm, RR 16 cpm, Temp 36.5°C, SpO2 99% on room air.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Shift to oral Co-amoxiclav 625 mg tablet TID after meals to complete 7-day course.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:35A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2">CAP-MR clinically resolved, hypertension controlled. Fit for discharge with oral home regimen.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Resume oral Metformin 500 mg tablet BID with meals.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:40A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Resume oral Losartan 50 mg tablet OD in morning.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:40A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-mid">
+                                <textarea rows="2">Discontinue all invasive lines. Patient cleared for discharge.</textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Discontinue IVF line. Issue discharge clearance and home instructions.</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:45A</textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td class="cell-notes notes-last">
+                                <textarea rows="2"></textarea>
+                            </td>
+                            <td>
+                                <textarea rows="2">Follow-up at Adult Medicine Outpatient Clinic on 06/20/2026 (after 1 week).</textarea>
+                            </td>
+                            <td class="mark"><input type="checkbox" checked aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2">Elena M. Ramos, RN&#10;PRC: 0084512 09:50A</textarea></td>
+                        </tr>
+
+                        <!-- Physician Authentication Row -->
+                        <tr class="enc-sig-row">
+                            <td class="cell-datetime enc-sig-spacer"></td>
+                            <td class="cell-notes enc-sig-spacer"></td>
+                            <td class="enc-sig-stamp">
+                                <div class="enc-sig-block">
+                                    <div class="enc-sig-cursive">M. Santos</div>
+                                    <div class="enc-sig-line-draw">________________________________</div>
+                                    <div class="enc-sig-name">Miguel Santos, MD</div>
+                                    <div class="enc-sig-lic">PRC Lic. No.: 0078312 &bull; 06/14/2026 09:00 AM</div>
+                                </div>
+                            </td>
+                            <td colspan="6" class="enc-sig-spacer"></td>
+                        </tr>
+
+                        <!-- Graceful blank fill row -->
+                        <tr>
+                            <td><textarea rows="2"></textarea></td>
+                            <td><textarea rows="2"></textarea></td>
+                            <td><textarea rows="2"></textarea></td>
+                            <td class="mark"><input type="checkbox" aria-label="Carried"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Administered"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Request made"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Endorsed"></td>
+                            <td class="mark"><input type="checkbox" aria-label="Discontinued"></td>
+                            <td><textarea rows="2"></textarea></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <footer class="footer">
+                Physician's Orders Form<br>
+                MRS-F-032<br>
+                Issued: 2/5/14<br>
+                Issue .No. 001
+            </footer>
+        </article>
+
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             SHEET 3: CLEAN BLANK HOSPITAL TEMPLATE
+             ══════════════════════════════════════════════════════════════════ -->
+        <article class="page" id="sheet-template" aria-label="Physician's Orders Sheet - Blank Hospital Template" style="display:none;">
+            <header class="page-header">
+                <p class="hospital-name">REGIONAL MEDICAL CENTER &amp; HOSPITAL</p>
+                <p class="hospital-address">Medical Center Drive, Health District</p>
+                <h1 class="form-title">PHYSICIAN'S ORDERS / PROGRESS NOTES<br>NURSES' COMPLIANCE SHEET</h1>
+                <p class="form-subtitle">(Authenticate all Orders)</p>
+
+                <div class="patient-grid">
+                    <div class="field">
+                        <label>Name of Patient</label>
+                        <span class="field-val" id="tmpl-patient-name"></span>
+                    </div>
+                    <div class="field">
+                        <label>Hospital Number</label>
+                        <span class="field-val" id="tmpl-patient-hrn"></span>
+                    </div>
+                    <div class="field">
+                        <label>Address</label>
+                        <span class="field-val" id="tmpl-patient-address"></span>
+                    </div>
+                    <div class="field">
+                        <label>Ward / Room</label>
+                        <span class="field-val" id="tmpl-patient-ward"></span>
+                    </div>
+                    <div class="field span-2 split-row">
+                        <div class="field age">
+                            <label>Age</label>
+                            <span class="field-val" id="tmpl-patient-age"></span>
+                        </div>
+                        <div class="field sex">
+                            <label>Sex</label>
+                            <span class="field-val" id="tmpl-patient-sex"></span>
+                        </div>
+                        <div class="field admit">
+                            <label>Admission Date</label>
+                            <span class="field-val" id="tmpl-patient-admit"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="legend">C &#8211; CARRIED &nbsp;&nbsp; A &#8211; ADMINISTERED &nbsp;&nbsp; R &#8211; REQUEST MADE &nbsp;&nbsp; E &#8211; ENDORSED &nbsp;&nbsp; D &#8211; DISCONTINUED</p>
+            </header>
+
+            <div class="page-orders-body">
+                <table class="orders" aria-label="Blank Template Orders Table">
+                    <colgroup>
+                        <col class="date">
+                        <col class="notes">
+                        <col class="order">
+                        <col class="mark"><col class="mark"><col class="mark"><col class="mark"><col class="mark">
+                        <col class="sign">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>DATE<br>TIME</th>
+                            <th>PROGRESS NOTES</th>
+                            <th>PHYSICIAN'S ORDER</th>
+                            <th>C</th><th>A</th><th>R</th><th>E</th><th>D</th>
+                            <th>TIME<br>SIGNATURE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="template-tbody">
+                        <!-- 16 clean blank writable rows -->
+                    </tbody>
+                </table>
+            </div>
+
+            <footer class="footer">
+                Physician's Orders Form<br>
+                MRS-F-032<br>
+                Issued: 2/5/14<br>
+                Issue .No. 001
+            </footer>
+        </article>
+
+    </main>
+
+    <script>
+        var STORAGE_KEY = window.STORAGE_KEY || 'his_patients_v1';
+        var getPatients = window.getPatients || function() {
+            try {
+                var raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    var parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                }
+            } catch (e) {}
+            return window.DEFAULT_PATIENTS || [];
+        };
+
+        var currentViewModeState = 'all';
+
+        window.currentViewMode = function() {
+            return currentViewModeState;
+        };
+
+        function resizeAllTextareas() {
+            document.querySelectorAll("table.orders textarea").forEach(function(textarea) {
+                textarea.style.height = "auto";
+                if (textarea.value) {
+                    textarea.style.height = Math.max(textarea.scrollHeight, 32) + "px";
+                }
+            });
+        }
+
+        function switchView(mode) {
+            var targetMode = (mode === 'discharge') ? 'admission' : mode;
+            currentViewModeState = targetMode;
+            var buttons = document.querySelectorAll('.view-group button');
+            buttons.forEach(function(b) { b.classList.remove('active'); });
+
+            var activeBtn = document.getElementById('btn-view-' + targetMode);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            var sheetEr = document.getElementById('sheet-er');
+            var sheetAdm = document.getElementById('sheet-admission');
+            var sheetTmpl = document.getElementById('sheet-template');
+
+            if (targetMode === 'er') {
+                if (sheetEr) sheetEr.style.display = 'flex';
+                if (sheetAdm) sheetAdm.style.display = 'none';
+                if (sheetTmpl) sheetTmpl.style.display = 'none';
+            } else if (targetMode === 'admission') {
+                if (sheetEr) sheetEr.style.display = 'none';
+                if (sheetAdm) sheetAdm.style.display = 'flex';
+                if (sheetTmpl) sheetTmpl.style.display = 'none';
+            } else if (targetMode === 'template') {
+                if (sheetEr) sheetEr.style.display = 'none';
+                if (sheetAdm) sheetAdm.style.display = 'none';
+                if (sheetTmpl) sheetTmpl.style.display = 'flex';
+            } else {
+                // 'all': Show both realistic clinical sheets representing the hospital episode (ER + Inpatient Admission)
+                if (sheetEr) sheetEr.style.display = 'flex';
+                if (sheetAdm) sheetAdm.style.display = 'flex';
+                if (sheetTmpl) sheetTmpl.style.display = 'none';
+            }
+            setTimeout(resizeAllTextareas, 20);
+        }
+
+        function populateBlankTemplateRows() {
+            var tbody = document.getElementById('template-tbody');
+            if (!tbody) return;
+            var html = '';
+            for (var i = 1; i <= 14; i++) {
+                html += '<tr>' +
+                    '<td><textarea rows="2"></textarea></td>' +
+                    '<td><textarea rows="2"></textarea></td>' +
+                    '<td><textarea rows="2"></textarea></td>' +
+                    '<td class="mark"><input type="checkbox" aria-label="Carried"></td>' +
+                    '<td class="mark"><input type="checkbox" aria-label="Administered"></td>' +
+                    '<td class="mark"><input type="checkbox" aria-label="Request made"></td>' +
+                    '<td class="mark"><input type="checkbox" aria-label="Endorsed"></td>' +
+                    '<td class="mark"><input type="checkbox" aria-label="Discontinued"></td>' +
+                    '<td><textarea rows="2"></textarea></td>' +
+                    '</tr>';
+            }
+            // Add blank signature stamp row
+            html += '<tr class="enc-sig-row">' +
+                '<td class="cell-datetime enc-sig-spacer"></td>' +
+                '<td class="cell-notes enc-sig-spacer"></td>' +
+                '<td class="enc-sig-stamp">' +
+                '<div class="enc-sig-block">' +
+                '<div class="enc-sig-cursive" style="color:#777;">Physician Signature</div>' +
+                '<div class="enc-sig-line-draw">________________________________</div>' +
+                '<div class="enc-sig-name">MD NAME, MD</div>' +
+                '<div class="enc-sig-lic">PRC Lic. No.: &mdash;</div>' +
+                '</div>' +
+                '</td>' +
+                '<td colspan="6" class="enc-sig-spacer"></td>' +
+                '</tr>';
+            tbody.innerHTML = html;
+        }
+
+        function initPatientSelector() {
+            var sel = document.getElementById('patient-selector');
+            if (!sel) return;
+
+            sel.innerHTML = '<option value="">Select Hospital Patient...</option>';
+            var patients = getPatients();
+            patients.forEach(function(p) {
+                var d = p.data || p;
+                var last = d.last_name || d.lastName || '';
+                var first = d.first_name || d.firstName || '';
+                var label = (last && first) ? (last + ', ' + first) : (p.id || 'Patient');
+                var opt = document.createElement('option');
+                opt.value = p.id;
+                var regLabel = p.id === (window.ER_PATIENT_ID || 'patient_er_juan')
+                    ? 'ER & INPATIENT'
+                    : (p.id === (window.OB_PATIENT_ID || 'patient_ob_maria') ? 'OB-GYNE OPD' : (d.registration_type || d.registry || (p.id === 'patient_op_carmela' ? 'OPD' : 'PATIENT')));
+                opt.textContent = label + ' (' + regLabel + ')';
+                sel.appendChild(opt);
+            });
+
+            sel.addEventListener('change', function() {
+                var pId = this.value;
+                if (!pId) return;
+                var found = patients.find(function(p) { return p.id === pId; });
+                if (!found && pId === (window.ER_PATIENT_ID || 'patient_er_juan')) {
+                    if (typeof erPatientRecord === 'function') found = erPatientRecord();
+                }
+                if (!found) return;
+                loadPatientDemographics(found);
+            });
+        }
+
+        function calculateAge(birthdate) {
+            if (!birthdate) return '';
+            var dob = new Date(birthdate + 'T00:00:00');
+            if (isNaN(dob.getTime())) return '';
+            var now = new Date();
+            var age = now.getFullYear() - dob.getFullYear();
+            var month = now.getMonth() - dob.getMonth();
+            if (month < 0 || (month === 0 && now.getDate() < dob.getDate())) {
+                age--;
+            }
+            return age >= 0 ? String(age) : '';
+        }
+
+        function loadPatientDemographics(patientRecord) {
+            var d = patientRecord.data || patientRecord;
+            var fullName = ((d.last_name || '') + ', ' + (d.first_name || '') + ' ' + (d.middle_name || '')).trim().replace(/^,\s*/, '');
+            var hrn = d.hospital_number || d.hospital_no || d.hrn || '0000001925';
+            var address = d.address || 'Brgy. San Jose, Medical District';
+            var age = d.age || calculateAge(d.birthdate) || '50';
+            var sex = (d.gender || d.sex || 'M').toUpperCase().startsWith('F') ? 'F' : 'M';
+
+            ['er', 'adm', 'tmpl'].forEach(function(prefix) {
+                var elName = document.getElementById(prefix + '-patient-name');
+                var elHrn = document.getElementById(prefix + '-patient-hrn');
+                var elAddr = document.getElementById(prefix + '-patient-address');
+                var elWard = document.getElementById(prefix + '-patient-ward');
+                var elAge = document.getElementById(prefix + '-patient-age');
+                var elSex = document.getElementById(prefix + '-patient-sex');
+                var elAdmit = document.getElementById(prefix + '-patient-admit');
+
+                if (elName) elName.textContent = fullName || 'MAKILING, JUAN DELA CRUZ';
+                if (elHrn) elHrn.textContent = hrn;
+                if (elAddr) elAddr.textContent = address;
+                if (elAge) elAge.textContent = age;
+                if (elSex) elSex.textContent = sex;
+
+                if (elWard) {
+                    if (prefix === 'er') elWard.textContent = d.er_bed || 'ER - Acute Care Bed 04';
+                    else if (prefix === 'adm') elWard.textContent = d.ward_room || 'Floor 1 - Ward 1';
+                    else elWard.textContent = d.ward_room || 'Floor 1 - Ward 1';
+                }
+                if (elAdmit) {
+                    if (prefix === 'er') elAdmit.textContent = '06/12/2026 08:30 AM';
+                    else if (prefix === 'adm') elAdmit.textContent = '06/12/2026 12:30 PM';
+                    else elAdmit.textContent = d.admitted_at || d.admission_date || '06/12/2026 08:30 AM';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof ensureSeedPatient === 'function') {
+                ensureSeedPatient();
+            }
+            populateBlankTemplateRows();
+            initPatientSelector();
+
+            var params = new URLSearchParams(window.location.search);
+            var viewParam = params.get('view');
+            var patientParam = params.get('patient');
+            var encounterParam = params.get('encounter');
+
+            if (!viewParam && encounterParam) {
+                if (encounterParam === '2026-06-12') viewParam = 'er';
+                else if (encounterParam === '2026-06-13' || encounterParam === '2026-06-14') viewParam = 'admission';
+            }
+
+            if (viewParam && ['er', 'admission', 'template', 'all'].includes(viewParam)) {
+                switchView(viewParam);
+            } else if (viewParam === 'discharge') {
+                switchView('admission');
+            } else {
+                switchView('all');
+            }
+
+            var targetPid = patientParam || (window.ER_PATIENT_ID || 'patient_er_juan');
+            var patients = getPatients();
+            var found = patients.find(function(p) { return p.id === targetPid; });
+            if (!found && targetPid === (window.ER_PATIENT_ID || 'patient_er_juan')) {
+                if (typeof ensureSeedPatient === 'function') ensureSeedPatient();
+                patients = getPatients();
+                found = patients.find(function(p) { return p.id === (window.ER_PATIENT_ID || 'patient_er_juan'); });
+                if (!found && typeof erPatientRecord === 'function') {
+                    found = erPatientRecord();
+                }
+                if (found) targetPid = found.id;
+            }
+            if (!found && (targetPid === 'patient_op_juan' || targetPid === 'patient_op_carmela')) {
+                found = patients.find(function(p) { return p.id === (window.OP_PATIENT_ID || 'patient_op_carmela'); });
+                if (found) targetPid = found.id;
+            }
+            if (patientParam === 'patient_op_juan' && window.history && window.history.replaceState) {
+                try {
+                    var normUrl = new URL(window.location.href);
+                    normUrl.searchParams.set('patient', 'patient_op_carmela');
+                    window.history.replaceState({}, '', normUrl.toString());
+                } catch (e) {}
+            }
+            if (found) {
+                var sel = document.getElementById('patient-selector');
+                if (sel) sel.value = targetPid;
+                loadPatientDemographics(found);
+            }
+
+            setTimeout(resizeAllTextareas, 50);
+        });
+
+        window.addEventListener('resize', resizeAllTextareas);
+        document.addEventListener('input', function(e) {
+            if (e.target && e.target.tagName === 'TEXTAREA') {
+                e.target.style.height = 'auto';
+                e.target.style.height = Math.max(e.target.scrollHeight, 32) + 'px';
+            }
+        });
+    </script>
+</body>
+</html>

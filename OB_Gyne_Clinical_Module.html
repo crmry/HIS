@@ -1,0 +1,2455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OB-Gyne Clinical Module</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
+<style>
+  :root {
+    --med-green: #1e7e34;
+    --med-green-dark: #155724;
+    --med-green-light: #28a745;
+    --primary-blue: #1967d2;
+    --primary-blue-hover: #1558b0;
+    --primary-blue-soft: #e8f0fe;
+    --slate-900: #0f172a;
+    --slate-800: #1e293b;
+    --slate-700: #334155;
+    --slate-600: #475569;
+    --slate-500: #64748b;
+    --slate-400: #94a3b8;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --slate-50: #f8fafc;
+    --border-color: #d1d5db;
+    --card-border: #e5e7eb;
+    --danger-red: #dc2626;
+    --danger-soft: #fee2e2;
+    --warning-yellow: #d97706;
+    --warning-soft: #fef3c7;
+    --success-green: #16a34a;
+    --success-soft: #dcfce7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #ffffff;
+    color: var(--slate-800);
+    line-height: 1.45;
+    font-size: 13px;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  .workspace-card.ob-app-root {
+    background: #ffffff;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  /* ── Modals / Dialogs ── */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+  }
+  .modal-overlay.open {
+    display: flex;
+  }
+  .modal-dialog {
+    background: #ffffff;
+    border-radius: 8px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+  }
+  .modal-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--slate-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--slate-50);
+    border-radius: 8px 8px 0 0;
+  }
+  .modal-header h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--slate-900);
+  }
+  .btn-close-modal {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    color: var(--slate-500);
+    cursor: pointer;
+    line-height: 1;
+  }
+  .btn-close-modal:hover {
+    color: var(--slate-800);
+  }
+  .modal-body {
+    padding: 16px 18px;
+  }
+  .modal-footer {
+    padding: 12px 18px;
+    border-top: 1px solid var(--slate-200);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    background: var(--slate-50);
+    border-radius: 0 0 8px 8px;
+  }
+
+  .btn-card-action {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--slate-800);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .btn-card-action:hover {
+    background: var(--slate-100);
+    border-color: var(--slate-400);
+  }
+  .btn-card-primary {
+    background: var(--primary-blue);
+    border: 1px solid var(--primary-blue);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .btn-card-primary:hover {
+    background: var(--primary-blue-hover);
+  }
+
+  .form-row-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .form-field {
+    display: flex;
+    flex-direction: column;
+  }
+  .form-field label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--slate-700);
+    margin-bottom: 4px;
+  }
+  .form-control {
+    width: 100%;
+    padding: 7px 9px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 12.5px;
+    color: var(--slate-900);
+    background: #ffffff;
+    font-family: inherit;
+  }
+  .form-control:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 2px rgba(25, 103, 210, 0.15);
+  }
+
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    background: #ffffff;
+  }
+  table.clinical-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    text-align: left;
+  }
+  table.clinical-table thead th {
+    background: #ffffff;
+    color: var(--slate-500);
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--slate-200);
+    white-space: nowrap;
+  }
+  table.clinical-table tbody td {
+    padding: 11px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--slate-800);
+    vertical-align: middle;
+  }
+  .col-num {
+    font-weight: 700;
+    color: var(--slate-700);
+    width: 38px;
+  }
+
+  /* ── Interactive Toasts ── */
+  .toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 2000;
+  }
+  .toast-msg {
+    background: var(--slate-900);
+    color: #ffffff;
+    padding: 9px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: fadeIn 0.2s ease;
+  }
+  .toast-msg.success {
+    background: #0f5132;
+    border-left: 4px solid #20c997;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Obstetric History panel */
+  .ob-hist-panel { background:#fff; border:none; padding:0; margin:0 0 16px 0; }
+  .ob-hist-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .ob-hist-title { font-size:18px; font-weight:600; color:#111827; margin:0; }
+  .ob-dirty-flag { font-size:11px; font-weight:600; color:#ea580c; display:none; }
+  #btn-save-ob-history { background:transparent; color:#cbd5e1; font-weight:700; font-size:11px; letter-spacing:0.5px; border:none; border-radius:4px; padding:6px 16px; cursor:default; transition:all 0.15s; }
+  #btn-save-ob-history.ob-save-dirty { background:#111827; color:#ffffff; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,0.1); }
+  
+  .ob-tiles { display:grid; grid-template-columns:repeat(6, 1fr); border:1px solid #e2e8f0; border-radius:8px; background:#ffffff; overflow:hidden; margin-bottom:20px; }
+  .ob-tile { padding:12px 14px; display:flex; flex-direction:column; justify-content:space-between; border-right:1px solid #f1f5f9; }
+  .ob-tile:last-child { border-right:none; }
+  .ob-tile-top { display:flex; justify-content:space-between; align-items:baseline; }
+  .ob-tile-key { font-size:11px; font-weight:500; color:#64748b; }
+  .ob-tile-val { font-size:18px; font-weight:700; color:#0f172a; }
+  .ob-tile-sub { font-size:10px; color:#94a3b8; font-style:normal; margin-top:4px; }
+  
+  .ob-review-chip { margin-top:10px; margin-bottom:14px; padding:8px 12px; background:#fffbeb; border:1px solid #fde68a; border-left:3px solid #f59e0b; border-radius:4px; font-size:12px; color:#92400e; }
+  .ob-review-chip ul { margin:4px 0 0 18px; padding:0; }
+  
+  .ob-preg-card { margin-top:14px; border:1px solid #e5e7eb; border-radius:8px; background:#ffffff; padding:18px 22px; box-shadow:0 1px 3px rgba(0,0,0,0.02); }
+  .ob-preg-card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .ob-card-title-group { display:flex; align-items:baseline; gap:8px; }
+  .ob-card-g { font-size:15px; font-weight:700; color:#111827; }
+  .ob-card-tag { font-size:13px; font-weight:400; color:#374151; }
+  
+  .ob-card-menu-wrap { position:relative; }
+  .ob-card-kebab { background:transparent; border:none; font-size:20px; line-height:1; color:#94a3b8; cursor:pointer; padding:2px 8px; border-radius:4px; }
+  .ob-card-kebab:hover { color:#1e293b; background:#f1f5f9; }
+  .ob-dropdown-menu { display:none; position:absolute; right:0; top:100%; z-index:50; min-width:120px; background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; box-shadow:0 4px 12px rgba(0,0,0,0.08); padding:4px 0; }
+  .ob-dropdown-menu.open { display:block; }
+  .ob-dropdown-item { display:block; width:100%; text-align:left; padding:8px 14px; font-size:12.5px; font-weight:500; color:#334155; background:none; border:none; cursor:pointer; }
+  .ob-dropdown-item:hover { background:#f1f5f9; color:#0f172a; }
+  .ob-dropdown-danger { color:#dc2626; }
+  .ob-dropdown-danger:hover { background:#fef2f2; color:#b91c1c; }
+  
+  .ob-sec-title { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:#111827; margin:16px 0 8px; }
+  .ob-row { display:flex; align-items:baseline; padding:4px 0; font-size:13px; }
+  .ob-row-k { width:230px; min-width:230px; font-size:10.5px; font-weight:500; text-transform:uppercase; color:#888888; letter-spacing:0.3px; }
+  .ob-row-v { font-weight:600; color:#111827; flex:1; }
+  .ob-empty { font-size:12px; color:#94a3b8; padding:4px 0; }
+  
+  .ob-acog-box { margin-top:16px; padding:14px 18px; background:#f5f6ff; border:1px solid #dcdffe; border-radius:6px; }
+  .ob-acog-title { font-size:12px; font-weight:600; color:#4338ca; margin-bottom:4px; }
+  .ob-acog-desc { font-size:11.5px; color:#6366f1; margin-bottom:4px; }
+  .ob-acog-edd { font-size:12px; font-weight:700; color:#312e81; }
+  
+  .ob-baby-table { width:100%; border-collapse:collapse; margin-top:14px; font-size:12.5px; }
+  .ob-baby-table th { text-align:left; font-size:10px; font-weight:500; text-transform:uppercase; color:#888888; letter-spacing:0.3px; padding:6px 12px 6px 0; border-bottom:1px solid #f1f5f9; }
+  .ob-baby-table td { padding:8px 12px 8px 0; font-weight:600; color:#111827; border-bottom:1px solid #f8fafc; }
+  
+  .ob-baby { border-top:1px solid #f1f5f9; padding-top:12px; margin-top:12px; }
+  .ob-baby-title { font-size:11px; font-weight:700; text-transform:uppercase; color:#475569; margin-bottom:8px; }
+  .ob-help { font-size:11px; color:#64748b; margin-top:4px; }
+  .ob-sec-subhead { font-size:13px; font-weight:600; color:#111827; margin:8px 0 10px; }
+  .ob-preview { font-size:12px; color:#334155; margin:2px 0 8px; }
+  .ob-issue { color:#b91c1c; font-size:11.5px; margin-top:2px; }
+  .ob-form-error { margin-top:10px; padding:8px 12px; background:#fef2f2; border:1px solid #fecaca; border-radius:4px; color:#b91c1c; font-size:12px; font-weight:600; }
+  
+  /* Obstetric History split layout: left editor, right history */
+  .ob-split { display:grid; grid-template-columns:380px minmax(0, 1fr); gap:0; align-items:stretch; min-height:100vh; width:100%; }
+  .ob-left { position:sticky; top:0; height:100vh; max-height:100vh; display:flex; flex-direction:column; background:#ffffff; border-right:1px solid #e5e7eb; border-left:none; border-top:none; border-bottom:none; border-radius:0; box-shadow:none; overflow:hidden; }
+  .ob-right { min-width:0; padding:24px 32px 60px; background:#ffffff; }
+  .ob-right .ob-hist-panel { border:none; padding:0; margin:0; }
+  
+  .ob-view { display:none; flex-direction:column; min-height:0; flex:1; }
+  .ob-view.open { display:flex; }
+  .ob-view-inner { display:flex; flex-direction:column; min-height:0; flex:1; }
+  .ob-view form { display:flex; flex-direction:column; min-height:0; flex:1; }
+  .ob-view .modal-header { display:flex; align-items:center; gap:8px; padding:14px 18px; border-bottom:1px solid #f1f5f9; background:#ffffff; }
+  .ob-view .modal-header h3 { flex:1; text-align:center; font-size:14px; font-weight:600; color:#111827; margin:0; }
+  .ob-nav-back, .ob-view .btn-close-modal { order:-1; background:none; border:none; font-size:14px; color:#111827; cursor:pointer; padding:4px 6px; border-radius:4px; line-height:1; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+  .ob-nav-back:hover, .ob-view .btn-close-modal:hover { background:#f1f5f9; }
+  .ob-view .modal-body { overflow-y:auto; flex:1; min-height:0; padding:14px 18px 20px; }
+  
+  .ob-left .form-field { margin-bottom:14px; }
+  .ob-left label { font-size:10.5px; font-weight:500; text-transform:uppercase; color:#888888; letter-spacing:0.3px; margin-bottom:5px; display:block; }
+  .ob-left .form-control { background:#eeeeee; border:1px solid transparent; border-radius:4px; height:36px; padding:0 10px; font-size:13px; color:#111827; box-sizing:border-box; width:100%; transition:background 0.15s, border-color 0.15s; }
+  .ob-left .form-control:focus { background:#ffffff; border-color:#94a3b8; outline:none; }
+  .ob-left textarea.form-control { height:auto; padding:8px 10px; min-height:56px; resize:vertical; }
+  .ob-left select.form-control { appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); background-repeat:no-repeat; background-position:right 10px center; padding-right:28px; }
+  
+  .ob-inline-input-group { display:flex; align-items:center; gap:8px; }
+  .ob-input-sm { width:64px !important; text-align:center; }
+  .ob-inline-unit { font-size:12px; color:#888888; }
+  .ob-date-grid { display:grid; grid-template-columns:1fr 90px; gap:8px; }
+  .ob-date-range-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .ob-display-val { font-size:13px; font-weight:400; color:#111827; padding:4px 0; }
+  
+  .ob-pill-group { display:flex; gap:6px; }
+  .ob-pill { background:transparent; color:#374151; font-weight:500; font-size:11px; padding:6px 14px; border-radius:4px; border:none; cursor:pointer; text-transform:uppercase; transition:all 0.15s; }
+  .ob-pill.active { background:#4b5563; color:#ffffff; font-weight:600; }
+  
+  .btn-ob-add { border:1px solid #222222; background:#ffffff; color:#111111; font-weight:600; font-size:12px; padding:6px 18px; border-radius:4px; cursor:pointer; text-transform:uppercase; transition:all 0.15s; }
+  .btn-ob-add:hover { background:#f8fafc; }
+  
+  .ob-form-footer { position:sticky; bottom:0; background:#fff; border-top:1px solid #f1f5f9; display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:10px 16px; }
+  .ob-form-footer #btn-remove-present { margin-right:auto !important; }
+  
+  .ob-menu { display:flex; flex-direction:column; padding:8px 0; }
+  .ob-menu-item { text-align:left; background:none; border:none; padding:14px 20px; font-size:14px; font-weight:500; color:#111827; cursor:pointer; display:block; width:100%; transition:background 0.15s; }
+  .ob-menu-item:hover { background:#f8fafc; color:#000; }
+  
+  .ob-unsaved-bar { display:none; position:fixed; left:0; right:0; bottom:0; z-index:1000; background:#f97316; color:#ffffff; text-align:center; font-size:10.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:5px 0; }
+  .ob-unsaved-bar.show { display:block; }
+  
+  .ob-empty-state { margin-top:14px; padding:24px; border:1px dashed #cbd5e1; border-radius:8px; font-size:13px; color:#64748b; text-align:center; }
+  
+  @media (max-width: 900px) {
+    .ob-split { grid-template-columns:1fr; }
+    .ob-left { position:static; height:auto; max-height:none; border-right:none; border-bottom:1px solid #e5e7eb; }
+    .ob-right { padding:16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hidden verification & test hooks for verify_site.py & patient state -->
+<div style="display:none;" aria-hidden="true">
+  <span id="banner-patient-name"></span>
+  <span id="banner-hrn"></span>
+  <span id="banner-age"></span>
+  <span id="banner-encounter-no"></span>
+  <span id="val-obstetric-score">G3P2 (2-0-1-2)</span>
+  <span id="val-current-lmp">09/05/2026</span>
+  <span id="val-edd">06/12/2027</span>
+  <span id="val-pregnancy-count">3</span>
+  <button type="button" id="btn-ob-header-save-draft" onclick="saveGyneDraft()"></button>
+</div>
+
+<main id="ob-workspace-card" class="workspace-card ob-app-root">
+  <div class="ob-split">
+    <aside class="ob-left" id="ob-left-panel" aria-label="Pregnancy editor">
+      <div class="ob-view open" id="ob-view-menu">
+        <div class="modal-header">
+          <a href="dashboard.html" id="btn-ob-back-dashboard" class="ob-nav-back" aria-label="Back to dashboard">&#10094;</a>
+          <h3>Pregnancy</h3>
+        </div>
+              <nav class="ob-menu" aria-label="Pregnancy sections">
+                <button type="button" class="ob-menu-item" id="btn-open-present-preg" onclick="openPresentModal()">Present Pregnancy</button>
+                <button type="button" class="ob-menu-item" id="btn-open-past-preg" onclick="openAddPregModal()">Past Pregnancy</button>
+              </nav>
+            </div>
+
+            <div class="ob-view" id="modal-pregnancy">
+              <div class="ob-view-inner">
+                <div class="modal-header">
+                  <button type="button" class="btn-close-modal ob-nav-back" aria-label="Back" onclick="closePregnancyModal()">&#10094;</button>
+                  <h3 id="modal-pregnancy-title">Past Pregnancy</h3>
+                </div>
+                <form id="form-pregnancy" onsubmit="handlePregnancySubmit(event)" novalidate>
+                  <div class="modal-body">
+                    <input type="hidden" id="preg-index" value="-1">
+                    <input type="hidden" id="preg-sequence" value="">
+                    
+                    <div class="form-field">
+                      <label for="preg-type">TYPE OF PREGNANCY</label>
+                      <select id="preg-type" class="form-control" onchange="handlePregTypeChange()">
+                        <option value="singleton">Singleton Pregnancy</option>
+                        <option value="multiple">Multiple Pregnancy</option>
+                        <option value="miscarriage">Miscarriage</option>
+                        <option value="ectopic">Ectopic</option>
+                        <option value="molar">Molar</option>
+                      </select>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="preg-month">DATE OF DELIVERY *</label>
+                      <div class="ob-date-grid">
+                        <select id="preg-month" class="form-control">
+                          <option value="">Month</option>
+                          <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+                          <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+                          <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+                          <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+                        </select>
+                        <input type="text" id="preg-year" class="form-control" inputmode="numeric" maxlength="4" placeholder="YYYY">
+                      </div>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="preg-place">PLACE</label>
+                      <input type="text" id="preg-place" class="form-control" list="list-preg-places" placeholder="e.g. Regional Medical Center">
+                      <datalist id="list-preg-places">
+                        <option value="Regional Medical Center">Regional Medical Center</option>
+                        <option value="Tertiary Hospital (Government / Public)">Tertiary Hospital (Government / Public)</option>
+                        <option value="LGU / District Hospital">LGU / District Hospital</option>
+                        <option value="Private Hospital / Medical Center">Private Hospital / Medical Center</option>
+                        <option value="Birthing Home / Lying-In Clinic / RHU">Birthing Home / Lying-In Clinic / RHU</option>
+                        <option value="Home Delivery">Home Delivery</option>
+                        <option value="In Transit / Other">In Transit / Other</option>
+                      </datalist>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="preg-ga-weeks">AGE OF GESTATION *</label>
+                      <div class="ob-inline-input-group">
+                        <input type="number" id="preg-ga-weeks" class="form-control ob-input-sm" min="0" max="45" step="1" placeholder="0">
+                        <span class="ob-inline-unit">weeks</span>
+                        <input type="number" id="preg-ga-days" class="form-control ob-input-sm" min="0" max="6" step="1" placeholder="0">
+                        <span class="ob-inline-unit">days</span>
+                      </div>
+                    </div>
+
+                    <div id="grp-delivery">
+                      <div class="form-field">
+                        <label for="preg-mode">MODE OF DELIVERY</label>
+                        <select id="preg-mode" class="form-control" onchange="handlePregModeChange()">
+                          <option value="Normal (Vaginal Delivery)">Normal (Vaginal Delivery)</option>
+                          <option value="Cesarean">Cesarean</option>
+                          <option value="Vaginal Birth after Cesarean (VBAC)">Vaginal Birth after Cesarean (VBAC)</option>
+                          <option value="Vacuum Extraction">Vacuum Extraction</option>
+                          <option value="Forceps Delivery">Forceps Delivery</option>
+                        </select>
+                      </div>
+
+                      <div id="grp-cs" style="display:none;">
+                        <div class="form-field">
+                          <label for="preg-cs-search">INDICATION</label>
+                          <input type="text" id="preg-cs-search" class="form-control" placeholder="Search indication" autocomplete="off" oninput="debouncedCsFilter()" style="margin-bottom:6px;">
+                          <select id="preg-cs-indication" class="form-control" aria-label="Cesarean indication" onchange="handleCsIndicationChange()"></select>
+                          <div class="ob-help" id="preg-cs-note"></div>
+                        </div>
+                        <div class="form-field" id="grp-cs-other" style="display:none;">
+                          <label for="preg-cs-other">Other Indication (specify)</label>
+                          <input type="text" id="preg-cs-other" class="form-control" placeholder="Medically documented indication">
+                        </div>
+                      </div>
+
+                      <div id="grp-multiple" style="display:none;">
+                        <div class="form-field">
+                          <label for="preg-multitype">MULTIPLE PREGNANCY TYPE</label>
+                          <select id="preg-multitype" class="form-control" onchange="handleMultiTypeChange()">
+                            <option value="Twins">Twins</option>
+                            <option value="Triplets">Triplets</option>
+                            <option value="Quadruplets">Quadruplets</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                        <div class="form-field" id="grp-baby-count" style="display:none;">
+                          <label for="preg-baby-count">Number of Babies</label>
+                          <input type="number" id="preg-baby-count" class="form-control" min="2" step="1" value="5" onchange="handleBabyCountChange()">
+                        </div>
+                      </div>
+
+                      <div class="form-field">
+                        <label for="preg-remarks">PREGNANCY REMARKS</label>
+                        <textarea id="preg-remarks" class="form-control" rows="2"></textarea>
+                      </div>
+
+                      <div id="preg-babies"></div>
+                    </div>
+
+                    <div id="grp-loss" style="display:none;">
+                      <div class="form-field">
+                        <label for="preg-intervention" id="lbl-preg-intervention">INTERVENTION</label>
+                        <select id="preg-intervention" class="form-control" onchange="handleInterventionChange()"></select>
+                      </div>
+                      <div class="form-field" id="grp-surgery" style="display:none;">
+                        <label for="preg-surgery-details">SURGICAL PROCEDURE / DETAILS</label>
+                        <textarea id="preg-surgery-details" class="form-control" rows="2"></textarea>
+                      </div>
+                      <div class="form-field" id="grp-loss-remarks">
+                        <label for="preg-remarks-loss">PREGNANCY REMARKS</label>
+                        <textarea id="preg-remarks-loss" class="form-control" rows="2" oninput="obSyncLossRemarks(this)"></textarea>
+                      </div>
+                    </div>
+
+                    <!-- Clinical Details / Auxiliary (Attendant, Complications) -->
+                    <div id="grp-clinical-aux" style="margin-top:14px; padding-top:12px; border-top:1px dashed #e2e8f0;">
+                      <div class="form-field" id="grp-attendant">
+                        <label for="preg-attendant">Attendant at Birth</label>
+                        <select id="preg-attendant" class="form-control">
+                          <option value="OB-Gyne Specialist / Physician" selected>OB-Gyne Specialist / Physician</option>
+                          <option value="Resident Physician / Medical Officer">Resident Physician / Medical Officer</option>
+                          <option value="Registered Midwife">Registered Midwife</option>
+                          <option value="Registered Nurse">Registered Nurse</option>
+                          <option value="Traditional Birth Attendant (Hilot)">Traditional Birth Attendant (Hilot)</option>
+                          <option value="Unattended / None">Unattended / None</option>
+                          <option value="N/A">N/A</option>
+                        </select>
+                      </div>
+
+                      <div id="grp-complications">
+                        <div class="form-field">
+                          <label for="preg-maternal-comp">Maternal / Intrapartum Complications</label>
+                          <select id="preg-maternal-comp" class="form-control">
+                            <option value="None / Uncomplicated" selected>None / Uncomplicated</option>
+                            <option value="Gestational Hypertension">Gestational Hypertension</option>
+                            <option value="Preeclampsia (without severe features)">Preeclampsia (without severe features)</option>
+                            <option value="Preeclampsia (with severe features) / Eclampsia">Preeclampsia (with severe features) / Eclampsia</option>
+                            <option value="Gestational Diabetes Mellitus (GDM)">Gestational Diabetes Mellitus (GDM)</option>
+                            <option value="Postpartum Hemorrhage (PPH / Atony)">Postpartum Hemorrhage (PPH / Atony)</option>
+                            <option value="Premature Rupture of Membranes (PROM / PPROM)">Premature Rupture of Membranes (PROM)</option>
+                            <option value="Chorioamnionitis / Puerperal Sepsis">Chorioamnionitis / Puerperal Sepsis</option>
+                            <option value="Perineal Laceration (1st Degree)">Perineal Laceration (1st Degree)</option>
+                            <option value="Perineal Laceration (2nd Degree, repaired)">Perineal Laceration (2nd Degree, repaired)</option>
+                            <option value="Perineal Laceration (3rd / 4th Degree / OASIS)">Perineal Laceration (3rd / 4th Degree / OASIS)</option>
+                            <option value="Episiotomy (Mediolateral)">Episiotomy (Mediolateral)</option>
+                            <option value="Placental Complication (Previa / Abruption / Retained)">Placental Complication (Previa / Abruption)</option>
+                          </select>
+                        </div>
+                        <div class="form-field" id="grp-fetal-outcome">
+                          <label for="preg-fetal-outcome">Fetal / Neonatal Condition</label>
+                          <select id="preg-fetal-outcome" class="form-control">
+                            <option value="Living &amp; Well (APGAR 9, 10)" selected>Living &amp; Well (APGAR 9, 10)</option>
+                            <option value="Living &amp; Well">Living &amp; Well</option>
+                            <option value="Neonatal Sepsis">Neonatal Sepsis</option>
+                            <option value="Respiratory Distress Syndrome (RDS)">Respiratory Distress Syndrome (RDS)</option>
+                            <option value="Birth Asphyxia / Low APGAR">Birth Asphyxia / Low APGAR</option>
+                            <option value="NICU Admission">NICU Admission</option>
+                            <option value="Congenital Anomaly">Congenital Anomaly</option>
+                            <option value="Neonatal Demise / Death">Neonatal Demise / Death</option>
+                            <option value="Stillbirth / Non-viable">Stillbirth / Non-viable</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="ob-form-error" id="preg-form-error" role="alert" style="display:none;"></div>
+                  </div>
+                  <div class="modal-footer ob-form-footer">
+                    <button type="button" class="btn-card-action" id="btn-cancel-preg" onclick="closePregnancyModal()">Cancel</button>
+                    <button type="submit" class="btn-card-primary btn-ob-add" id="btn-save-preg">ADD</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Modal: Present Pregnancy (LMP and ultrasound dating) -->
+            <div class="ob-view" id="modal-present-preg">
+              <div class="ob-view-inner">
+                <div class="modal-header">
+                  <button type="button" class="btn-close-modal ob-nav-back" id="btn-close-present-preg" aria-label="Back" onclick="closePresentModal()">&#10094;</button>
+                  <h3 id="modal-present-title">Add Present Pregnancy</h3>
+                </div>
+                <form id="form-present-preg" onsubmit="handlePresentSubmit(event)" novalidate>
+                  <div class="modal-body">
+                    <div class="ob-sec-subhead">Based on LMP</div>
+                    <div class="form-field">
+                      <label for="pp-lmp-start">LAST NORMAL MENSTRUATION PERIOD (LMP)</label>
+                      <div class="ob-date-range-grid">
+                        <input type="date" id="pp-lmp-start" class="form-control" oninput="handleLmpStartInput()" onchange="handleLmpStartInput()">
+                        <input type="date" id="pp-lmp-end" class="form-control" oninput="schedulePresentPreview()" onchange="schedulePresentPreview()">
+                      </div>
+                    </div>
+                    <div class="form-field">
+                      <label>AGE OF GESTATION</label>
+                      <div class="ob-display-val" id="pp-lmp-ga-display">—</div>
+                    </div>
+
+                    <div class="ob-sec-subhead" style="margin-top:16px;">Based on Ultrasound</div>
+                    <div class="form-field">
+                      <label for="pp-us-date">ULTRASOUND DATE</label>
+                      <input type="date" id="pp-us-date" class="form-control" oninput="schedulePresentPreview()">
+                    </div>
+                    <div class="form-field">
+                      <label>AGE OF GESTATION (ULTRASOUND)</label>
+                      <div class="ob-inline-input-group">
+                        <input type="number" id="pp-us-weeks" class="form-control ob-input-sm" min="0" step="1" placeholder="0" oninput="schedulePresentPreview()">
+                        <span class="ob-inline-unit">weeks</span>
+                        <input type="number" id="pp-us-days" class="form-control ob-input-sm" min="0" max="6" step="1" placeholder="0" oninput="schedulePresentPreview()">
+                        <span class="ob-inline-unit">days</span>
+                      </div>
+                    </div>
+                    <div class="form-field">
+                      <label>EXPECTED DELIVERY DATE</label>
+                      <div class="ob-display-val" id="pp-us-edd-display">—</div>
+                    </div>
+                    <div class="form-field">
+                      <label>AGE OF GESTATION (TODAY)</label>
+                      <div class="ob-display-val" id="pp-us-ga-display">—</div>
+                    </div>
+
+                    <div class="ob-preview" id="pp-lmp-preview" style="display:none;"></div>
+                    <div class="ob-preview" id="pp-us-preview" style="display:none;"></div>
+                    <div class="ob-help" id="pp-diff-note"></div>
+                    <div class="ob-form-error" id="pp-form-error" role="alert" style="display:none;"></div>
+                  </div>
+                  <div class="modal-footer ob-form-footer">
+                    <button type="button" class="btn-card-action" id="btn-remove-present" onclick="endPresentPregnancy()" style="margin-right:auto; display:none;">Mark as No Longer Pregnant</button>
+                    <button type="button" class="btn-card-action" id="btn-cancel-present" onclick="closePresentModal()">Cancel</button>
+                    <button type="submit" class="btn-card-primary btn-ob-add" id="btn-add-present">ADD</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </aside>
+          <main class="ob-right">
+            <section class="ob-hist-panel" id="ob-hist-panel" aria-label="Obstetric History dataset">
+              <div class="ob-hist-head">
+                <h2 class="ob-hist-title">Obstetric History</h2>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span class="ob-dirty-flag" id="ob-dirty-flag" aria-live="polite"></span>
+                  <button type="button" id="btn-save-ob-history" onclick="saveObHistory()">SAVE</button>
+                </div>
+              </div>
+              <div class="ob-tiles" id="ob-tiles"></div>
+              <div class="ob-review-chip" id="ob-review-chip" style="display:none;"></div>
+              <div id="ob-present-card"></div>
+              <div id="ob-history-cards"></div>
+            </section>
+          </main>
+        </div>
+        <div class="ob-unsaved-bar" id="ob-unsaved-bar" role="status">YOU HAVE UNSAVED CHANGES</div>
+      </main>
+
+<!-- ════════════════ MODALS ════════════════ -->
+
+<!-- Modal 1: Add / Edit Pregnancy Record -->
+<!-- Modal 2: LMP & PMP Management & Longitudinal History Modal -->
+<div class="modal-overlay" id="modal-lmp">
+  <div class="modal-dialog" style="max-width:720px;">
+    <div class="modal-header">
+      <h3>Last Menstrual Period (LMP) &amp; PMP Management</h3>
+      <button type="button" class="btn-close-modal" onclick="closeLmpModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- Update Form -->
+      <form id="form-lmp-update" onsubmit="handleLmpUpdate(event)">
+        <div class="form-row-grid" style="margin-bottom:12px;">
+          <div class="form-field">
+            <label for="input-new-lmp">Current LMP Date (1st Day of Last Menses)</label>
+            <input type="date" id="input-new-lmp" class="form-control" required>
+          </div>
+          <div class="form-field">
+            <label for="input-new-pmp">Previous Menstrual Period (PMP Date)</label>
+            <input type="date" id="input-new-pmp" class="form-control" placeholder="1st Day of Preceding Menses">
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <small style="color:var(--slate-500); font-size:11px;">
+            Updating LMP &amp; PMP automatically re-computes EDD, EGA, and cycle regularity while permanently preserving longitudinal history.
+          </small>
+          <button type="submit" class="btn-card-primary" style="white-space:nowrap;">Update &amp; Preserve LMP</button>
+        </div>
+      </form>
+
+      <!-- Calculations Preview -->
+      <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:6px; padding:12px 14px; margin-bottom:16px;">
+        <div style="font-weight:700; font-size:12px; color:var(--slate-800); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.3px;">
+          Clinical Computations (Naegele's Rule)
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; font-size:12px;">
+          <div>Calculated EDD: <strong id="preview-calc-edd" style="color:var(--slate-900);">—</strong></div>
+          <div>Estimated Gestational Age: <strong id="preview-calc-ega" style="color:var(--slate-900);">—</strong></div>
+          <div>Cycle Length (PMP to LMP): <strong id="preview-calc-cycle" style="color:var(--slate-900);">—</strong></div>
+        </div>
+      </div>
+
+      <!-- Preserved Historical LMP Entries Table -->
+      <h4 style="font-size:12px; font-weight:700; color:var(--slate-800); margin-bottom:8px; text-transform:uppercase;">
+        Preserved Longitudinal Menstrual History (Audit-Ready Record)
+      </h4>
+      <div class="table-responsive">
+        <table class="clinical-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>RECORDED LMP</th>
+              <th>PREVIOUS PMP</th>
+              <th>CYCLE INTERVAL</th>
+              <th>DATE ENTERED</th>
+              <th>ENCOUNTER / NOTES</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-lmp-history">
+            <!-- Dynamically populated per DOH HFDB dataset standards -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-card-action" onclick="closeLmpModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Toast Container -->
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+<!-- Scripts -->
+<script src="js/data/patient_seeds.js"></script>
+<script src="js/ob/ob_calc.js"></script>
+<script src="js/ob/cs_indications.js"></script>
+<script>
+/* ─────────────────────────────────────────────────────────────────────────────
+   CLINICAL DATA MODEL & STATE (DOH HFDB & POGS COMPLIANT)
+   ───────────────────────────────────────────────────────────────────────────── */
+const patientState = {
+  // 1. Pregnancy Records matching DOH HFDB Medical Records Manual Dataset
+  pregnancies: [
+    {
+      seq: 'P1',
+      year: '2021',
+      outcome: 'Full Term Live Birth',
+      mode: 'Low Segment Cesarean Section (LSCS) — Primary',
+      term: 'Term',
+      ga: '39 weeks',
+      gaWeeks: 39,
+      sex: 'Female',
+      weight: '3.10 kg (3,100 g)',
+      place: 'Tertiary Hospital (Government / Public)',
+      attendant: 'OB-Gyne Specialist / Physician',
+      maternalComp: 'None / Uncomplicated',
+      fetalOutcome: 'Living & Well (APGAR 9, 10)',
+      multiple: 'No (Singleton)',
+      living: 1,
+      remarks: 'Primary CS due to Cephalopelvic Disproportion (CPD)'
+    },
+    {
+      seq: 'P2',
+      year: '2023',
+      outcome: 'Full Term Live Birth',
+      mode: 'Normal Spontaneous Vaginal Delivery (SVD)',
+      term: 'Term',
+      ga: '38 weeks',
+      gaWeeks: 38,
+      sex: 'Male',
+      weight: '3.00 kg (3,000 g)',
+      place: 'Tertiary Hospital (Government / Public)',
+      attendant: 'Resident Physician / Medical Officer',
+      maternalComp: 'Perineal Laceration (2nd Degree, repaired)',
+      fetalOutcome: 'Living & Well (APGAR 8, 9)',
+      multiple: 'No (Singleton)',
+      living: 1,
+      remarks: 'Successful Vaginal Birth After Cesarean (VBAC)'
+    },
+    {
+      seq: 'P3',
+      year: '2025',
+      outcome: 'Spontaneous Abortion / Miscarriage',
+      mode: 'Dilatation & Curettage (D&C / Raspa)',
+      term: 'Abortion',
+      ga: '10 weeks',
+      gaWeeks: 10,
+      sex: 'N/A',
+      weight: 'N/A',
+      place: 'Tertiary Hospital (Government / Public)',
+      attendant: 'OB-Gyne Specialist / Physician',
+      maternalComp: 'Incomplete abortion with moderate bleeding; well tolerated post-D&C',
+      fetalOutcome: 'Stillbirth / Non-viable',
+      multiple: 'No (Singleton)',
+      living: 0,
+      remarks: 'Histopathology: Products of conception, benign'
+    }
+  ],
+
+  // 2. Longitudinal LMP & PMP History (DOH Preserved Baseline)
+  lmpHistory: [
+    {
+      id: 'lmp-1',
+      date: '2026-09-05',
+      pmpDate: '2026-08-08',
+      cycleInterval: '28 days',
+      dateFormatted: '09/05/2026',
+      pmpFormatted: '08/08/2026',
+      recordedAt: '2026-09-30 08:30',
+      encounter: 'OPD Active Encounter',
+      isCurrent: true
+    },
+    {
+      id: 'lmp-2',
+      date: '2024-12-10',
+      pmpDate: '2024-11-12',
+      cycleInterval: '28 days',
+      dateFormatted: '12/10/2024',
+      pmpFormatted: '11/12/2024',
+      recordedAt: '2024-12-15 10:15',
+      encounter: 'Previous G3 Workup',
+      isCurrent: false
+    },
+    {
+      id: 'lmp-3',
+      date: '2022-08-01',
+      pmpDate: '2022-07-04',
+      cycleInterval: '28 days',
+      dateFormatted: '08/01/2022',
+      pmpFormatted: '07/04/2022',
+      recordedAt: '2022-08-05 09:00',
+      encounter: 'Previous G2 Prenatal Encounter',
+      isCurrent: false
+    }
+  ],
+
+  // 3. Clinical Procedures Performed
+  procedures: [
+    {
+      id: 'proc-1',
+      name: 'Internal Examination',
+      datetime: '2026-09-30T09:15',
+      findings: 'Cervix closed, thick, firm, posterior. No active vaginal bleeding, no pooling of amniotic fluid.',
+      remarks: 'Pelvic structures within normal physiological limits.',
+      provider: 'Dr. Maria Santos, MD (PRC #0091245)'
+    },
+    {
+      id: 'proc-2',
+      name: 'Pap Smear',
+      datetime: '2025-11-14T10:00',
+      findings: 'Adequate sample. Negative for intraepithelial lesion or malignancy (NILM).',
+      remarks: 'Advised annual routine screening surveillance.',
+      provider: 'Dr. Paolo Cruz, MD (PRC #0078451)'
+    }
+  ],
+
+  // 4. Gynecologic History State (DOH HFDB & POGS CPG Standards)
+  gynecologicHistory: {
+    menarcheAge: '12',
+    lmpDate: '2026-09-05',
+    pmpDate: '2026-08-08',
+    interval: 'Regular (28-30 days)',
+    duration: '4',
+    flow: 'Moderate (3-4 pads/day, no clots)',
+    dysmenorrhea: 'Mild / Tolerable (No analgesics required)',
+    menopauseStatus: 'Pre-menopausal (Regular ovulatory cycles)',
+    menopauseAge: '',
+    pmb: 'No (Asymptomatic)',
+    climacteric: 'None',
+    coitarche: '20',
+    sexualActivity: 'Sexually Active',
+    infections: 'None reported / Denies history of STIs',
+    infectionTreatment: 'N/A',
+    contraceptiveCurrent: 'Combined Oral Contraceptive Pills (COCP)',
+    contraceptiveDuration: '18 months',
+    contraceptivePast: 'None reported',
+    screeningModality: 'Conventional Pap Smear',
+    lastPapDate: '2025-11-14',
+    lastPap: 'Negative for Intraepithelial Lesion or Malignancy (NILM) / Normal',
+    hpvVaccine: 'Completed (Full series — 3 doses)',
+    diagnoses: 'Mild Dysmenorrhea, resolved',
+    surgeries: 'Dilatation & Curettage (D&C / Raspa) — 2025',
+    remarks: 'Patient is compliant with prescribed oral contraceptive regimen; denies abnormal intermenstrual bleeding, postcoital spotting, or foul-smelling vaginal discharge. Pelvic ultrasound reveals normal anteverted uterus, homogenous myometrium, endometrial thickness 5.2 mm, normal bilateral ovaries.'
+  }
+};
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   OBSTETRIC HISTORY (PRESENT / PAST PREGNANCY) — canonical engine: js/ob/ob_calc.js
+   ───────────────────────────────────────────────────────────────────────────── */
+var obCalc = window.HIS.obCalc;
+var csCatalog = window.HIS.csIndications;
+var OB_TYPE_LABELS = { singleton: 'Singleton Pregnancy', multiple: 'Multiple Pregnancy', miscarriage: 'Miscarriage', ectopic: 'Ectopic', molar: 'Molar' };
+var OB_INTERVENTIONS = {
+  miscarriage: { label: 'Intervention', options: ['No Intervention', 'Dilation and Curettage (D&C)'] },
+  molar: { label: 'Intervention', options: ['Suction', 'TAHMIS'] },
+  ectopic: { label: 'Intervention', options: ['Medical Management', 'Surgery'] }
+};
+var OB_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+var obDirty = false;
+var csFilterTimer = null;
+var presentPreviewFrame = null;
+
+function obIsLoss(type) { return type === 'miscarriage' || type === 'ectopic' || type === 'molar'; }
+
+function computeGTPAL() {
+  const s = obCalc.calculateObstetricSummary(patientState.pregnancies, { hasPresent: !!(patientState.presentPregnancy && patientState.presentPregnancy.active) });
+  return {
+    G: s.G, T: s.FT, P: s.Pr, A: s.Ab, L: s.LB, totalPara: s.P,
+    issues: s.issues, isComplete: s.isComplete,
+    displayGP: `G${s.G}P${s.P} (${s.FT}-${s.Pr}-${s.Ab}-${s.LB})`,
+    scoreText: `G${s.G} T${s.FT} P${s.Pr} A${s.Ab} L${s.LB}`
+  };
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   OBSTETRIC CALCULATORS: EDD (Naegele's Rule), EGA & CYCLE DURATION
+   ───────────────────────────────────────────────────────────────────────────── */
+function computeEDD(lmpDateStr, pmpDateStr) {
+  const none = { eddStr: '—', eddDisplay: '—', egaStr: '—', cycleDaysStr: '—' };
+  if (!lmpDateStr) return none;
+  const r = obCalc.lmpDating(lmpDateStr, null);
+  if (!r.edd) return none;
+  const p = r.edd.split('-');
+  const eddDisplay = `${p[1]}/${p[2]}/${p[0]}`;
+  const egaStr = r.ga ? `${r.ga.weeks} wks ${r.ga.days} days` : '—';
+  let cycleDaysStr = '—';
+  if (pmpDateStr) {
+    const a = obCalc.dayNumber(lmpDateStr), b = obCalc.dayNumber(pmpDateStr);
+    if (a !== null && b !== null && a > b) cycleDaysStr = `${a - b} days`;
+  }
+  return { eddStr: r.edd, eddDisplay, egaStr, cycleDaysStr };
+}
+
+function obFmtLong(iso) {
+  const n = obCalc.dayNumber(iso);
+  if (n === null) return '—';
+  const p = iso.split('-');
+  return `${OB_MONTHS[+p[1] - 1].slice(0, 3)} ${p[2]}, ${p[0]}`;
+}
+
+function obGaText(p) {
+  const n = obCalc.normalizePregnancy(p, 0);
+  if (n.gaDays === null) return p.ga || '—';
+  const w = Math.floor(n.gaDays / 7), d = n.gaDays % 7;
+  return d ? `${w} weeks ${d} days` : `${w} weeks`;
+}
+
+function obDeliveryDateText(p) {
+  const y = p.deliveryYear || p.year || '—';
+  const m = parseInt(p.deliveryMonth, 10);
+  return (m >= 1 && m <= 12) ? `${OB_MONTHS[m - 1].slice(0, 3)} ${y}` : String(y);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   OBSTETRIC HISTORY PANEL RENDERER (GP(TPAL) tiles, present card)
+   ───────────────────────────────────────────────────────────────────────────── */
+function renderObHistoryPanel() {
+  const tiles = document.getElementById('ob-tiles');
+  if (!tiles) return;
+  const g = computeGTPAL();
+  const defs = [['G', g.G, '# of Pregnancy'], ['P', g.totalPara, '# of Delivery'], ['FT', g.T, '# of Full term'], ['Pr', g.P, '# of Preterm'], ['Ab', g.A, '# of Abortion'], ['LB', g.L, '# of Currently Living']];
+  tiles.innerHTML = defs.map(d => `<div class="ob-tile"><div class="ob-tile-top"><span class="ob-tile-key">${d[0]}</span><span class="ob-tile-val" id="ob-tile-${d[0]}">${d[1]}</span></div><div class="ob-tile-sub">${d[2]}</div></div>`).join('');
+  const chip = document.getElementById('ob-review-chip');
+  if (chip) {
+    if (g.isComplete) { chip.style.display = 'none'; chip.innerHTML = ''; }
+    else {
+      chip.style.display = 'block';
+      chip.innerHTML = `<strong>Incomplete / Needs Clinical Review</strong><ul>${g.issues.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`;
+    }
+  }
+  const dirty = document.getElementById('ob-dirty-flag');
+  if (dirty) dirty.textContent = obDirty ? 'You have unsaved changes' : '';
+  const bar = document.getElementById('ob-unsaved-bar');
+  if (bar) bar.classList.toggle('show', obDirty);
+  const saveBtn = document.getElementById('btn-save-ob-history');
+  if (saveBtn) saveBtn.classList.toggle('ob-save-dirty', obDirty);
+  renderPresentCard();
+}
+
+function renderPresentCard() {
+  const host = document.getElementById('ob-present-card');
+  if (!host) return;
+  const pp = patientState.presentPregnancy;
+  if (!pp || !pp.active) { host.innerHTML = ''; return; }
+  const n = patientState.pregnancies.length + 1;
+  const lmp = obCalc.lmpDating(pp.lmpStart, pp.lmpEnd);
+  const us = obCalc.ultrasoundDating(pp.usDate, pp.usWeeks, pp.usDays);
+  const lmpRange = pp.lmpStart ? (obFmtLong(pp.lmpStart) + (pp.lmpEnd && pp.lmpEnd !== pp.lmpStart ? ' - ' + obFmtLong(pp.lmpEnd) : '')) : '—';
+  let html = `<article class="ob-preg-card" id="card-present-preg">
+    <div class="ob-preg-card-head">
+      <div class="ob-card-title-group">
+        <strong class="ob-card-g">G${n}</strong>
+        <span class="ob-card-tag">( Present Pregnancy )</span>
+      </div>
+      <div class="ob-card-menu-wrap">
+        <button type="button" class="ob-card-kebab" aria-label="Card actions" onclick="toggleCardMenu(this, event)">···</button>
+        <div class="ob-dropdown-menu">
+          <button type="button" class="ob-dropdown-item" id="btn-edit-present" onclick="openPresentModal()">Edit</button>
+        </div>
+      </div>
+    </div>`;
+  html += '<div class="ob-sec-title">BASED ON LMP</div>';
+  if (pp.lmpStart && lmp.edd) {
+    html += obRow('LAST NORMAL MENSTRUATION PERIOD', lmpRange);
+    html += obRow('EXPECTED DELIVERY DATE', obFmtLong(lmp.edd));
+    html += obRow('AGE OF GESTATION', lmp.ga ? obCalc.formatGA(lmp.ga) : '—');
+  } else html += '<div class="ob-empty">Not recorded</div>';
+  html += '<div class="ob-sec-title">BASED ON ULTRASOUND</div>';
+  if (pp.usDate && us.edd) {
+    html += obRow('ULTRASOUND DATE', obFmtLong(pp.usDate));
+    html += obRow('AGE OF GESTATION (ULTRASOUND)', `${pp.usWeeks} weeks ${pp.usDays} days`);
+    html += obRow('EXPECTED DELIVERY DATE', obFmtLong(us.edd));
+    html += obRow('AGE OF GESTATION', us.ga ? obCalc.formatGA(us.ga) : '—');
+  } else html += '<div class="ob-empty">Not recorded</div>';
+  const diff = obCalc.eddDifferenceDays(lmp, us);
+  if (lmp.edd || us.edd) {
+    const recommendedEdd = obFmtLong(lmp.edd || us.edd);
+    html += `<div class="ob-acog-box">
+      <div class="ob-acog-title">First-trimester ultrasound (Up to 13 6/7 weeks of gestation)</div>
+      <div class="ob-acog-desc">ACOG guidelines recommend using EDD based on LMP date</div>
+      <div class="ob-acog-edd">Expected Delivery Date: ${recommendedEdd}</div>
+    </div>`;
+  }
+  html += '</article>';
+  host.innerHTML = html;
+}
+function obRow(k, v) { return `<div class="ob-row"><span class="ob-row-k">${escapeHtml(k)}</span><span class="ob-row-v">${escapeHtml(v)}</span></div>`; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TOP SUMMARY CARDS RENDERER
+   ───────────────────────────────────────────────────────────────────────────── */
+function renderSummaryCards() {
+  // 1. Obstetric Score (DOH / POGS)
+  const gtpal = computeGTPAL();
+  const scoreEl = document.getElementById('val-obstetric-score');
+  if (scoreEl) scoreEl.textContent = gtpal.displayGP;
+  const subEl = document.getElementById('val-obstetric-sub');
+  if (subEl) subEl.textContent = `Full GTPAL: ${gtpal.scoreText}` + (gtpal.isComplete ? '' : ' (needs review)');
+
+  // 2. Current LMP & PMP
+  const currentLmpObj = patientState.lmpHistory.find(l => l.isCurrent) || patientState.lmpHistory[0];
+  const lmpVal = currentLmpObj ? currentLmpObj.dateFormatted : '—';
+  const lmpEl = document.getElementById('val-current-lmp');
+  if (lmpEl) lmpEl.textContent = lmpVal;
+  const pmpSub = document.getElementById('val-pmp-sub');
+  if (pmpSub) {
+    if (currentLmpObj && currentLmpObj.pmpFormatted) {
+      pmpSub.textContent = `PMP: ${currentLmpObj.pmpFormatted} (${currentLmpObj.cycleInterval || '28d cycle'})`;
+    } else {
+      pmpSub.textContent = 'PMP: Not recorded';
+    }
+  }
+
+  // 3. EDD
+  const eddEl = document.getElementById('val-edd');
+  if (eddEl) {
+    if (currentLmpObj && currentLmpObj.date) {
+      const calc = computeEDD(currentLmpObj.date, currentLmpObj.pmpDate);
+      eddEl.textContent = calc.eddDisplay;
+      const eddSub = document.getElementById('val-edd-sub');
+      if (eddSub) eddSub.textContent = `EGA: ${calc.egaStr} (Naegele)`;
+    } else {
+      eddEl.textContent = '—';
+      const eddSub = document.getElementById('val-edd-sub');
+      if (eddSub) eddSub.textContent = 'No active LMP';
+    }
+  }
+
+  // 4. Pregnancy Records Count
+  const countEl = document.getElementById('val-pregnancy-count');
+  if (countEl) countEl.textContent = `${patientState.pregnancies.length} Records`;
+  renderObHistoryPanel();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PREGNANCY HISTORY TABLE RENDERER (chronological, newest first)
+   ───────────────────────────────────────────────────────────────────────────── */
+function renderPregnancyTable() {
+  const host = document.getElementById('ob-history-cards');
+  if (!host) return;
+  if (!patientState.pregnancies.length) {
+    host.innerHTML = '<div class="ob-empty-state">No past pregnancy records. Select Past Pregnancy to add an entry.</div>';
+    return;
+  }
+  const order = obCalc.chronologicalOrder(patientState.pregnancies);
+  const rows = order.map((o, pos) => ({ p: o.p, index: o.i, g: pos + 1 })).reverse();
+  host.innerHTML = rows.map(row => {
+    const p = row.p, index = row.index;
+    const type = obCalc.normalizePregnancy(p, index).type;
+    const loss = obIsLoss(type);
+    let h = `<article class="ob-preg-card" data-preg-id="${escapeHtml(p.id || '')}">
+      <div class="ob-preg-card-head">
+        <div class="ob-card-title-group">
+          <strong class="ob-card-g">G${row.g}</strong>
+        </div>
+        <div class="ob-card-menu-wrap">
+          <button type="button" class="ob-card-kebab" aria-label="Card actions" onclick="toggleCardMenu(this, event)">···</button>
+          <div class="ob-dropdown-menu">
+            <button type="button" class="ob-dropdown-item" onclick="openEditPregModal(${index})">Edit</button>
+            <button type="button" class="ob-dropdown-item ob-dropdown-danger" onclick="archivePregnancy(${index})">Archive</button>
+          </div>
+        </div>
+      </div>`;
+    h += obRow('TYPE OF PREGNANCY', OB_TYPE_LABELS[type] || p.outcome || '—');
+    if (type === 'multiple' && p.multiType) h += obRow('MULTIPLE PREGNANCY TYPE', p.multiType);
+    h += obRow(loss ? 'DATE OF LOSS' : 'YEAR OF DELIVERY', obDeliveryDateText(p));
+    if (p.place && p.place !== 'N/A') h += obRow('PLACE', p.place);
+    h += obRow('AGE OF GESTATION', obGaText(p));
+    if (!loss) {
+      h += obRow('MODE OF DELIVERY', p.mode || 'Normal (Vaginal Delivery)');
+      if (p.csIndication && /^cesarean$/i.test(p.mode || '')) {
+        h += obRow('CESAREAN INDICATION', (p.csIndication.id === 'OTHER' ? 'Other: ' + (p.csIndication.other || '') : (p.csIndication.label || '')) + (p.csIndication.cls ? ' (' + p.csIndication.cls + ')' : ''));
+      }
+      if (p.attendant && p.attendant !== 'N/A') h += obRow('ATTENDANT', p.attendant);
+    } else {
+      if (p.intervention) h += obRow('INTERVENTION', p.intervention);
+      if (p.surgeryDetails) h += obRow('SURGICAL PROCEDURE / DETAILS', p.surgeryDetails);
+    }
+    if (p.maternalComp && p.maternalComp !== 'None / Uncomplicated' && p.maternalComp !== 'None') {
+      h += obRow('MATERNAL COMPLICATIONS', p.maternalComp);
+    }
+    if (p.remarks && p.remarks !== '-') h += obRow('PREGNANCY REMARKS', p.remarks);
+    if (!loss) {
+      const babies = Array.isArray(p.babies) ? p.babies : legacyBabiesFor(p, type);
+      h += '<table class="ob-baby-table"><thead><tr><th>NAME</th><th>SEX</th><th>BIRTH WEIGHT</th><th>CURRENT STATUS</th><th>REMARKS</th></tr></thead><tbody>' +
+        babies.map(b => {
+          const wStr = (b.weightKg !== null && b.weightKg !== undefined && b.weightKg !== '') ? Number(b.weightKg).toFixed(2) + ' kgs' : '';
+          const stStr = b.status ? (b.status.toLowerCase() === 'living' ? 'Living' : (b.status.toLowerCase() === 'deceased' ? 'Deceased' : b.status)) : '';
+          return `<tr><td>${escapeHtml(b.name || '')}</td><td>${escapeHtml(b.sex || '')}</td><td>${escapeHtml(wStr)}</td><td>${escapeHtml(stStr)}</td><td>${escapeHtml(b.remarks || '')}</td></tr>`;
+        }).join('') +
+        '</tbody></table>';
+    }
+    return h + '</article>';
+  }).join('');
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   OB-GYNE PROCEDURES RENDERER
+   ───────────────────────────────────────────────────────────────────────────── */
+function renderProceduresTable() {
+  const tbody = document.getElementById('tbody-procedures');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  if (!patientState.procedures.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--slate-400); padding:20px;">No specialty procedures documented for this patient.</td></tr>`;
+    return;
+  }
+
+  patientState.procedures.forEach((proc, index) => {
+    const dt = new Date(proc.datetime);
+    const dateFormatted = isNaN(dt.getTime()) ? proc.datetime : dt.toLocaleString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit'
+    });
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="white-space:nowrap; font-weight:600;">${escapeHtml(dateFormatted)}</td>
+      <td><strong style="color:var(--primary-blue);">${escapeHtml(proc.name)}</strong></td>
+      <td style="max-width:280px;">${escapeHtml(proc.findings)}</td>
+      <td style="color:var(--slate-600);">${escapeHtml(proc.remarks || '—')}</td>
+      <td style="font-size:11.5px; color:var(--slate-700);">${escapeHtml(proc.provider)}</td>
+      <td style="text-align:right;">
+        <button type="button" class="btn-table-sm btn-table-danger" onclick="removeProcedure(${index})">Remove</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   LONGITUDINAL CLINICAL HISTORY TIMELINE
+   ───────────────────────────────────────────────────────────────────────────── */
+let activeTimelineFilter = 'all';
+
+function renderLongitudinalTimeline() {
+  const container = document.getElementById('timeline-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const events = [];
+
+  // 1. Add Pregnancies
+  patientState.pregnancies.forEach(p => {
+    events.push({
+      category: 'pregnancy',
+      title: `Pregnancy ${p.seq}: ${p.outcome}`,
+      dateStr: p.year,
+      sortDate: new Date(p.year.length === 4 ? `${p.year}-01-01` : p.year).getTime() || 0,
+      body: `Delivery: ${p.mode} • GA: ${p.ga} • Infant: ${p.sex}, ${p.weight} • Place: ${p.place || 'Hospital'} • Attendant: ${p.attendant || 'Physician'} • Complications: ${p.maternalComp || 'None'} / ${p.fetalOutcome || 'Living & Well'}${p.remarks && p.remarks !== '-' ? ' • ' + p.remarks : ''}`
+    });
+  });
+
+  // 2. Add LMP Entries
+  patientState.lmpHistory.forEach(l => {
+    events.push({
+      category: 'lmp',
+      title: `${l.isCurrent ? 'Current' : 'Historical'} LMP Record: ${l.dateFormatted}${l.pmpFormatted ? ' (PMP: ' + l.pmpFormatted + ')' : ''}`,
+      dateStr: l.dateFormatted,
+      sortDate: new Date(l.date).getTime() || 0,
+      body: `Recorded during ${l.encounter} • Cycle interval: ${l.cycleInterval || 'Regular'} (Audit Timestamp: ${l.recordedAt})`
+    });
+  });
+
+  // 3. Add Procedures
+  patientState.procedures.forEach(proc => {
+    events.push({
+      category: 'procedure',
+      title: `OB-Gyne Procedure: ${proc.name}`,
+      dateStr: proc.datetime.slice(0, 10),
+      sortDate: new Date(proc.datetime).getTime() || 0,
+      body: `Findings: ${proc.findings} | Remarks: ${proc.remarks} (${proc.provider})`
+    });
+  });
+
+  // 4. Add Gynecologic Notes
+  const gh = patientState.gynecologicHistory;
+  if (gh && gh.remarks) {
+    events.push({
+      category: 'gyne',
+      title: `Gynecologic Evaluation & Menstrual Profile`,
+      dateStr: '2026-09-30',
+      sortDate: new Date('2026-09-30').getTime(),
+      body: `Menarche: ${gh.menarcheAge} yrs • Cycle: ${gh.interval} • Contraceptive: ${gh.contraceptiveCurrent} (${gh.contraceptiveDuration}) • Cervical Screening: ${gh.lastPap} • Surgeries: ${gh.surgeries} • Notes: ${gh.remarks}`
+    });
+  }
+
+  // Sort descending by date
+  events.sort((a, b) => b.sortDate - a.sortDate);
+
+  const filtered = activeTimelineFilter === 'all'
+    ? events
+    : events.filter(e => e.category === activeTimelineFilter);
+
+  if (!filtered.length) {
+    container.innerHTML = `<div style="text-align:center; color:var(--slate-400); padding:20px;">No timeline records match the selected category.</div>`;
+    return;
+  }
+
+  filtered.forEach(ev => {
+    const item = document.createElement('div');
+    item.className = 'timeline-item';
+    item.innerHTML = `
+      <div class="timeline-item-header">
+        <span class="timeline-item-type">${escapeHtml(ev.category)}</span>
+        <span class="timeline-item-date">${escapeHtml(ev.dateStr)}</span>
+      </div>
+      <div class="timeline-item-title">${escapeHtml(ev.title)}</div>
+      <div class="timeline-item-body">${escapeHtml(ev.body)}</div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function filterTimeline(category, pillEl) {
+  activeTimelineFilter = category;
+  document.querySelectorAll('.filter-pill').forEach(el => el.classList.remove('active'));
+  if (pillEl) pillEl.classList.add('active');
+  renderLongitudinalTimeline();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PREGNANCY MODAL HANDLERS (DOH HFDB DATASETS)
+   ───────────────────────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────────
+   PAST PREGNANCY FORM: ADD / EDIT (staged until SAVE)
+   ───────────────────────────────────────────────────────────────────────────── */
+function obNewId() { return 'preg-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+function obEl(id) { return document.getElementById(id); }
+
+function obShowView(name) {
+  const views = ['modal-pregnancy', 'modal-present-preg'];
+  views.forEach(v => { const el = obEl(v); if (el) el.classList.toggle('open', v === name); });
+  const menu = obEl('ob-view-menu');
+  if (menu) menu.classList.toggle('open', name === 'menu');
+  const panel = obEl('ob-left-panel');
+  if (panel) { const body = panel.querySelector('.ob-view.open .modal-body'); if (body) body.scrollTop = 0; }
+}
+
+function markObDirty() {
+  obDirty = true;
+  renderObHistoryPanel();
+}
+
+function obShowFormError(id, msg) {
+  const el = obEl(id);
+  if (!el) return;
+  el.textContent = msg || '';
+  el.style.display = msg ? 'block' : 'none';
+}
+
+/* ---- Cesarean indication select (grouped, searchable) ---- */
+function buildCsOptions(filter, selectedId, legacyLabel) {
+  const sel = obEl('preg-cs-indication');
+  if (!sel) return;
+  const q = String(filter || '').trim().toLowerCase();
+  const groups = {};
+  const orderKeys = [];
+  csCatalog.list.forEach(item => {
+    if (q && (item.label + ' ' + item.group + ' ' + item.cls).toLowerCase().indexOf(q) === -1 && item.id !== selectedId) return;
+    const key = item.cls + ' — ' + item.group;
+    if (!groups[key]) { groups[key] = []; orderKeys.push(key); }
+    groups[key].push(item);
+  });
+  let html = '<option value="">Select indication</option>';
+  orderKeys.forEach(k => {
+    html += `<optgroup label="${escapeHtml(k)}">` + groups[k].map(i => `<option value="${escapeHtml(i.id)}"${i.id === selectedId ? ' selected' : ''}>${escapeHtml(i.label)}</option>`).join('') + '</optgroup>';
+  });
+  html += `<option value="OTHER"${selectedId === 'OTHER' ? ' selected' : ''}>Other / Specify</option>`;
+  if (legacyLabel) html += `<option value="__LEGACY__" selected>${escapeHtml(legacyLabel)} (previously recorded)</option>`;
+  sel.innerHTML = html;
+  handleCsIndicationChange(true);
+}
+
+function debouncedCsFilter() {
+  clearTimeout(csFilterTimer);
+  csFilterTimer = setTimeout(() => {
+    const cur = obEl('preg-cs-indication').value;
+    buildCsOptions(obEl('preg-cs-search').value, cur === '__LEGACY__' ? '' : cur, cur === '__LEGACY__' ? obEl('preg-cs-indication').options[obEl('preg-cs-indication').selectedIndex].text.replace(/ \(previously recorded\)$/, '') : '');
+  }, 120);
+}
+
+function handleCsIndicationChange(silent) {
+  const v = obEl('preg-cs-indication').value;
+  const item = csCatalog.byId(v);
+  obEl('preg-cs-note').textContent = item && item.note ? item.note : '';
+  obEl('grp-cs-other').style.display = v === 'OTHER' ? 'block' : 'none';
+}
+
+/* ---- Conditional sections ---- */
+function handlePregTypeChange() {
+  const type = obEl('preg-type').value;
+  const loss = obIsLoss(type);
+  obEl('grp-delivery').style.display = loss ? 'none' : 'block';
+  obEl('grp-loss').style.display = loss ? 'block' : 'none';
+  obEl('grp-attendant').style.display = loss ? 'none' : '';
+  obEl('grp-fetal-outcome').style.display = loss ? 'none' : '';
+  obEl('grp-multiple').style.display = type === 'multiple' ? 'block' : 'none';
+  if (loss) {
+    const cfg = OB_INTERVENTIONS[type];
+    const sel = obEl('preg-intervention');
+    const prev = sel.dataset.pending || sel.value;
+    sel.innerHTML = '<option value="">Select intervention</option>' + cfg.options.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('');
+    if (prev && cfg.options.indexOf(prev) !== -1) sel.value = prev;
+    delete sel.dataset.pending;
+    obEl('lbl-preg-intervention').textContent = cfg.label;
+    handleInterventionChange();
+  } else {
+    if (type === 'singleton') ensureBabyRows(1);
+    else handleMultiTypeChange(true);
+    handlePregModeChange();
+  }
+}
+
+function handlePregModeChange() {
+  obEl('grp-cs').style.display = obEl('preg-mode').value === 'Cesarean' ? 'block' : 'none';
+}
+
+function handleInterventionChange() {
+  const type = obEl('preg-type').value;
+  obEl('grp-surgery').style.display = (type === 'ectopic' && obEl('preg-intervention').value === 'Surgery') ? 'block' : 'none';
+}
+
+var OB_MULTI_COUNTS = { Twins: 2, Triplets: 3, Quadruplets: 4 };
+
+function handleMultiTypeChange(silent) {
+  const mt = obEl('preg-multitype').value;
+  const isOther = mt === 'Other';
+  obEl('grp-baby-count').style.display = isOther ? 'block' : 'none';
+  const target = isOther ? Math.max(2, parseInt(obEl('preg-baby-count').value, 10) || 2) : OB_MULTI_COUNTS[mt];
+  if (!ensureBabyRows(target, true)) {
+    // user declined to remove populated baby records: restore previous selection
+    const n = document.querySelectorAll('#preg-babies .ob-baby').length;
+    const keys = Object.keys(OB_MULTI_COUNTS).filter(k => OB_MULTI_COUNTS[k] === n);
+    obEl('preg-multitype').value = keys.length ? keys[0] : 'Other';
+    obEl('grp-baby-count').style.display = keys.length ? 'none' : 'block';
+    obEl('preg-baby-count').value = n;
+  }
+}
+
+function handleBabyCountChange() {
+  const n = Math.max(2, parseInt(obEl('preg-baby-count').value, 10) || 2);
+  if (!ensureBabyRows(n, true)) obEl('preg-baby-count').value = document.querySelectorAll('#preg-babies .ob-baby').length;
+  else obEl('preg-baby-count').value = n;
+}
+
+/* ---- Per-baby rows ---- */
+function babyRowHtml(i, b, totalCount) {
+  b = b || {};
+  const sex = (b.sex || '').toLowerCase();
+  const st = (b.status || '').toLowerCase();
+  const isMale = sex === 'male';
+  const isFemale = sex === 'female';
+  const isLiving = st === 'living';
+  const isDeceased = st === 'deceased';
+  const showTitle = (totalCount !== undefined ? totalCount : 2) > 1;
+
+  return `<div class="ob-baby" data-baby-id="${escapeHtml(b.id || '')}">
+    ${showTitle ? `<div class="ob-baby-title">Baby ${i + 1}</div>` : ''}
+    <input type="hidden" class="baby-name" value="${escapeHtml(b.name || '')}">
+    <div class="ob-field-group">
+      <label class="ob-field-label">Sex</label>
+      <input type="hidden" class="baby-sex" value="${escapeHtml(b.sex || '')}">
+      <div class="ob-pill-group" data-target="baby-sex">
+        <button type="button" class="ob-pill-btn ${isMale ? 'active' : ''}" onclick="obSelectPill(this, 'Male')">MALE</button>
+        <button type="button" class="ob-pill-btn ${isFemale ? 'active' : ''}" onclick="obSelectPill(this, 'Female')">FEMALE</button>
+      </div>
+    </div>
+    <div class="ob-field-group">
+      <label class="ob-field-label">Birth Weight</label>
+      <div class="ob-inline-input-wrap">
+        <input type="number" class="ob-field-input baby-weight" min="0" step="any" placeholder="0.00" value="${b.weightKg !== null && b.weightKg !== undefined && b.weightKg !== '' ? escapeHtml(b.weightKg) : ''}">
+        <span class="ob-inline-label">kgs</span>
+      </div>
+    </div>
+    <div class="ob-field-group">
+      <label class="ob-field-label">Current Status</label>
+      <input type="hidden" class="baby-status" value="${escapeHtml(b.status || '')}">
+      <div class="ob-pill-group" data-target="baby-status">
+        <button type="button" class="ob-pill-btn ${isLiving ? 'active' : ''}" onclick="obSelectPill(this, 'living')">LIVING</button>
+        <button type="button" class="ob-pill-btn ${isDeceased ? 'active' : ''}" onclick="obSelectPill(this, 'deceased')">DECEASED</button>
+      </div>
+    </div>
+    <div class="ob-field-group">
+      <label class="ob-field-label">Baby Remarks</label>
+      <input type="text" class="ob-field-input baby-remarks" placeholder="Enter baby remarks..." value="${escapeHtml(b.remarks || '')}">
+    </div>
+  </div>`;
+}
+
+function obSelectPill(btn, val) {
+  const group = btn.closest('.ob-pill-group');
+  if (!group) return;
+  const targetClass = group.dataset.target;
+  const parent = group.closest('.ob-field-group') || group.closest('.ob-baby');
+  const input = parent ? parent.querySelector('.' + targetClass) : null;
+  group.querySelectorAll('.ob-pill-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (input) {
+    input.value = val;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+}
+window.obSelectPill = obSelectPill;
+
+function obSyncLossRemarks(el) {
+  const rem = obEl('preg-remarks');
+  if (rem) rem.value = el.value;
+}
+window.obSyncLossRemarks = obSyncLossRemarks;
+
+function toggleCardMenu(btn, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  const wrap = btn.closest('.ob-card-menu-wrap') || btn.parentElement;
+  const menu = wrap ? wrap.querySelector('.ob-dropdown-menu') : null;
+  const isOpen = menu && menu.classList.contains('open');
+  closeCardMenus();
+  if (!isOpen && menu) {
+    menu.classList.add('open');
+  }
+}
+window.toggleCardMenu = toggleCardMenu;
+
+function closeCardMenus() {
+  document.querySelectorAll('.ob-dropdown-menu.open').forEach(m => m.classList.remove('open'));
+}
+window.closeCardMenus = closeCardMenus;
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.ob-card-menu-wrap')) {
+    closeCardMenus();
+  }
+});
+
+function collectBabies() {
+  return Array.from(document.querySelectorAll('#preg-babies .ob-baby')).map((el, i) => {
+    const wEl = el.querySelector('.baby-weight');
+    const w = wEl ? wEl.value : '';
+    const nameEl = el.querySelector('.baby-name');
+    const sexEl = el.querySelector('.baby-sex');
+    const statusEl = el.querySelector('.baby-status');
+    const remEl = el.querySelector('.baby-remarks');
+    return {
+      id: el.dataset.babyId || ('baby-' + Date.now().toString(36) + i + Math.random().toString(36).slice(2, 5)),
+      seq: i + 1,
+      name: nameEl ? nameEl.value.trim() : '',
+      sex: sexEl ? sexEl.value : '',
+      weightKg: (w === '' || isNaN(parseFloat(w))) ? null : parseFloat(w),
+      status: statusEl ? statusEl.value : '',
+      remarks: remEl ? remEl.value.trim() : ''
+    };
+  });
+}
+
+function babyRowHasData(el) {
+  const nameEl = el.querySelector('.baby-name');
+  const sexEl = el.querySelector('.baby-sex');
+  const weightEl = el.querySelector('.baby-weight');
+  const statusEl = el.querySelector('.baby-status');
+  const remEl = el.querySelector('.baby-remarks');
+  return !!(
+    (nameEl && nameEl.value.trim()) ||
+    (sexEl && sexEl.value) ||
+    (weightEl && weightEl.value) ||
+    (statusEl && statusEl.value) ||
+    (remEl && remEl.value.trim())
+  );
+}
+
+/* Returns false when the user declines removal of populated baby records. */
+function ensureBabyRows(count, confirmRemoval) {
+  const host = obEl('preg-babies');
+  const current = collectBabies();
+  if (count < current.length) {
+    const rows = host.querySelectorAll('.ob-baby');
+    const populated = Array.from(rows).slice(count).some(babyRowHasData);
+    if (populated && confirmRemoval && !confirm('Reducing the number of babies will remove the details entered for the extra baby records. Continue?')) return false;
+  }
+  const list = [];
+  for (let i = 0; i < count; i++) list.push(current[i] || {});
+  host.innerHTML = list.map((b, i) => babyRowHtml(i, b, count)).join('');
+  return true;
+}
+
+/* ---- Open / close ---- */
+function openAddPregModal() {
+  obEl('modal-pregnancy-title').textContent = 'Past Pregnancy';
+  obEl('btn-save-preg').textContent = 'ADD';
+  obEl('preg-index').value = '-1';
+  obEl('preg-sequence').value = '';
+  obEl('preg-type').value = 'singleton';
+  obEl('preg-month').value = '';
+  obEl('preg-year').value = '';
+  obEl('preg-place').value = 'Tertiary Hospital (Government / Public)';
+  obEl('preg-attendant').value = 'OB-Gyne Specialist / Physician';
+  obEl('preg-ga-weeks').value = '';
+  obEl('preg-ga-days').value = '';
+  setModeOptions('Normal (Vaginal Delivery)');
+  obEl('preg-search') && (obEl('preg-search').value = '');
+  obEl('preg-cs-search').value = '';
+  buildCsOptions('', '', '');
+  obEl('preg-cs-other').value = '';
+  obEl('preg-multitype').value = 'Twins';
+  obEl('preg-baby-count').value = 5;
+  obEl('preg-babies').innerHTML = '';
+  obEl('preg-surgery-details').value = '';
+  obEl('preg-maternal-comp').value = 'None / Uncomplicated';
+  obEl('preg-fetal-outcome').value = 'Living & Well (APGAR 9, 10)';
+  obEl('preg-remarks').value = '';
+  if (obEl('preg-remarks-loss')) obEl('preg-remarks-loss').value = '';
+  obShowFormError('preg-form-error', '');
+  handlePregTypeChange();
+  obShowView('modal-pregnancy');
+}
+
+function setModeOptions(value) {
+  const sel = obEl('preg-mode');
+  Array.from(sel.querySelectorAll('option[data-legacy="1"]')).forEach(o => o.remove());
+  if (value && !Array.from(sel.options).some(o => o.value === value)) {
+    const o = document.createElement('option');
+    o.value = value; o.textContent = value; o.dataset.legacy = '1';
+    sel.appendChild(o);
+  }
+  sel.value = value || 'Normal (Vaginal Delivery)';
+}
+
+function legacyBabiesFor(p, type) {
+  const living = (p.living === undefined || p.living === null || p.living === '') ? null : (Number(p.living) || 0);
+  const mt = String(p.multiple || '');
+  let count = 1;
+  if (type === 'multiple') count = /triplet/i.test(mt) ? 3 : (/quad/i.test(mt) ? 4 : 2);
+  const kg = parseFloat(String(p.weight || '').replace(/,/g, ''));
+  const sex = /^(male|female)$/i.test(p.sex || '') ? p.sex : '';
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    out.push({
+      name: '', sex: i === 0 ? sex : '', weightKg: (i === 0 && !isNaN(kg)) ? kg : null,
+      status: living !== null && i < living ? 'living' : '', remarks: ''
+    });
+  }
+  return out;
+}
+
+function openEditPregModal(index) {
+  const p = patientState.pregnancies[index];
+  if (!p) return;
+  const norm = obCalc.normalizePregnancy(p, index);
+  const type = norm.type || 'singleton';
+  obEl('modal-pregnancy-title').textContent = 'Past Pregnancy';
+  obEl('btn-save-preg').textContent = 'UPDATE';
+  obEl('preg-index').value = index;
+  obEl('preg-sequence').value = p.seq || '';
+  obEl('preg-type').value = type;
+  obEl('preg-month').value = p.deliveryMonth ? String(parseInt(p.deliveryMonth, 10)) : '';
+  obEl('preg-year').value = p.deliveryYear || ((/^\d{4}/.exec(String(p.year || '')) || [''])[0]);
+  obEl('preg-place').value = p.place || 'Tertiary Hospital (Government / Public)';
+  obEl('preg-attendant').value = p.attendant || 'OB-Gyne Specialist / Physician';
+  obEl('preg-ga-weeks').value = norm.gaDays === null ? '' : Math.floor(norm.gaDays / 7);
+  obEl('preg-ga-days').value = norm.gaDays === null ? '' : (norm.gaDays % 7);
+  const loss = obIsLoss(type);
+  if (!loss) setModeOptions(p.mode || 'Normal (Vaginal Delivery)'); else setModeOptions('Normal (Vaginal Delivery)');
+  obEl('preg-cs-search').value = '';
+  if (p.csIndication && p.csIndication.id && csCatalog.byId(p.csIndication.id)) buildCsOptions('', p.csIndication.id, '');
+  else if (p.csIndication && p.csIndication.label) buildCsOptions('', '', p.csIndication.label);
+  else buildCsOptions('', '', '');
+  obEl('preg-cs-other').value = (p.csIndication && p.csIndication.other) || '';
+  if (p.csIndication && p.csIndication.id === 'OTHER') { obEl('preg-cs-indication').value = 'OTHER'; handleCsIndicationChange(); }
+  const babies = Array.isArray(p.babies) ? p.babies : legacyBabiesFor(p, type);
+  if (type === 'multiple') {
+    const n = babies.length;
+    const key = Object.keys(OB_MULTI_COUNTS).filter(k => OB_MULTI_COUNTS[k] === n)[0];
+    obEl('preg-multitype').value = key || 'Other';
+    obEl('preg-baby-count').value = Math.max(2, n);
+  }
+  obEl('preg-babies').innerHTML = babies.map((b, i) => babyRowHtml(i, b, babies.length)).join('');
+  obEl('preg-intervention').dataset.pending = p.intervention || '';
+  obEl('preg-surgery-details').value = p.surgeryDetails || '';
+  obEl('preg-maternal-comp').value = p.maternalComp || 'None / Uncomplicated';
+  obEl('preg-fetal-outcome').value = p.fetalOutcome || 'Living & Well (APGAR 9, 10)';
+  obEl('preg-remarks').value = (p.remarks && p.remarks !== '-') ? p.remarks : '';
+  if (obEl('preg-remarks-loss')) obEl('preg-remarks-loss').value = (p.remarks && p.remarks !== '-') ? p.remarks : '';
+  obShowFormError('preg-form-error', '');
+  // Show / hide conditional groups without regenerating baby rows
+  obEl('grp-delivery').style.display = loss ? 'none' : 'block';
+  obEl('grp-loss').style.display = loss ? 'block' : 'none';
+  obEl('grp-attendant').style.display = loss ? 'none' : '';
+  obEl('grp-fetal-outcome').style.display = loss ? 'none' : '';
+  obEl('grp-multiple').style.display = type === 'multiple' ? 'block' : 'none';
+  obEl('grp-baby-count').style.display = (type === 'multiple' && obEl('preg-multitype').value === 'Other') ? 'block' : 'none';
+  if (loss) handlePregTypeChange();
+  handlePregModeChange();
+  handleCsIndicationChange();
+  obShowView('modal-pregnancy');
+}
+
+function closePregnancyModal() {
+  obShowView('menu');
+}
+
+function handleOutcomeChange() { /* superseded by handlePregTypeChange */ }
+
+/* ---- Submit (ADD / UPDATE stages the record; SAVE persists) ---- */
+function handlePregnancySubmit(event) {
+  event.preventDefault();
+  const submitBtn = obEl('btn-save-preg');
+  if (submitBtn.disabled) return;
+  const index = parseInt(obEl('preg-index').value, 10);
+  const old = index >= 0 ? patientState.pregnancies[index] : null;
+  const type = obEl('preg-type').value;
+  const loss = obIsLoss(type);
+
+  const year = obEl('preg-year').value.trim();
+  const monthStr = obEl('preg-month').value;
+  const wStr = obEl('preg-ga-weeks').value.trim();
+  const dStr = obEl('preg-ga-days').value.trim();
+  const nowY = new Date().getFullYear();
+
+  if (!/^\d{4}$/.test(year) || +year < 1900 || +year > nowY) return obShowFormError('preg-form-error', 'Enter a valid four-digit delivery year.');
+  const requireMonth = !old || old.deliveryMonth;
+  if (requireMonth && !monthStr) return obShowFormError('preg-form-error', 'Select the month of delivery.');
+  if (monthStr && +year === nowY && +monthStr > new Date().getMonth() + 1) return obShowFormError('preg-form-error', 'Delivery date cannot be in the future.');
+  if (wStr === '' || isNaN(+wStr) || +wStr < 0 || Math.floor(+wStr) !== +wStr) return obShowFormError('preg-form-error', 'Enter the age of gestation in whole weeks.');
+  if (dStr === '' || isNaN(+dStr) || +dStr < 0 || +dStr > 6 || Math.floor(+dStr) !== +dStr) return obShowFormError('preg-form-error', 'Age of gestation days must be 0 to 6.');
+  const gaWeeks = +wStr, gaDays = +dStr, gaTotal = gaWeeks * 7 + gaDays;
+  if (gaWeeks > 45) { if (!confirm('The age of gestation entered exceeds 45 weeks. Confirm this value is correct?')) return; }
+
+  let mode = old ? old.mode : 'N/A';
+  let csIndication = old ? old.csIndication : undefined;
+  let babies = old ? old.babies : undefined;
+  let intervention = old ? old.intervention : undefined;
+  let surgeryDetails = old ? old.surgeryDetails : undefined;
+  let multiType = old ? old.multiType : undefined;
+
+  if (loss) {
+    intervention = obEl('preg-intervention').value;
+    if (!intervention) return obShowFormError('preg-form-error', 'Select the intervention.');
+    surgeryDetails = (type === 'ectopic' && intervention === 'Surgery') ? obEl('preg-surgery-details').value.trim() : (surgeryDetails || '');
+    if (type === 'ectopic' && intervention === 'Surgery' && !surgeryDetails) return obShowFormError('preg-form-error', 'Enter the surgical procedure / details.');
+    mode = intervention;
+    if (gaTotal >= obCalc.VIABLE_DAYS && !confirm('A pregnancy loss recorded at 20 weeks or later is flagged for clinical review and is not counted as an abortion. Continue?')) return;
+  } else {
+    mode = obEl('preg-mode').value;
+    if (mode === 'Cesarean') {
+      const v = obEl('preg-cs-indication').value;
+      const requireCs = !old || old.csIndication;
+      if (v === '__LEGACY__' && old && old.csIndication) {
+        csIndication = old.csIndication;
+      } else if (v === 'OTHER') {
+        const other = obEl('preg-cs-other').value.trim();
+        if (!other) return obShowFormError('preg-form-error', 'Specify the cesarean indication.');
+        csIndication = { id: 'OTHER', label: 'Other / Specify', cls: '', other: other, version: csCatalog.version };
+      } else if (v && csCatalog.byId(v)) {
+        const it = csCatalog.byId(v);
+        csIndication = { id: it.id, label: it.label, cls: it.cls, group: it.group, version: csCatalog.version };
+      } else if (requireCs) {
+        return obShowFormError('preg-form-error', 'Select the cesarean indication.');
+      }
+    }
+    babies = collectBabies();
+    if (type === 'singleton') babies = babies.slice(0, 1);
+    if (type === 'multiple') {
+      if (babies.length < 2) return obShowFormError('preg-form-error', 'A multiple pregnancy requires at least two babies.');
+      multiType = obEl('preg-multitype').value;
+    }
+    for (let i = 0; i < babies.length; i++) {
+      if (babies[i].weightKg !== null && (isNaN(babies[i].weightKg) || babies[i].weightKg <= 0)) return obShowFormError('preg-form-error', 'Birth weight must be a positive value in kg for Baby ' + (i + 1) + '.');
+    }
+    if (gaTotal < obCalc.VIABLE_DAYS && !confirm('A delivery recorded before 20 weeks is flagged for clinical review. Continue?')) return;
+  }
+  obShowFormError('preg-form-error', '');
+  submitBtn.disabled = true;
+
+  const first = babies && babies[0];
+  const living = (!loss && babies) ? babies.filter(b => b.status === 'living').length : 0;
+  const term = gaTotal >= obCalc.TERM_DAYS ? 'Term' : (gaTotal >= obCalc.VIABLE_DAYS ? 'Preterm' : 'Abortion');
+  const outcomeByType = { miscarriage: 'Spontaneous Abortion / Miscarriage', ectopic: 'Ectopic Pregnancy', molar: 'Hydatidiform Mole (Molar)' };
+  const outcome = loss ? outcomeByType[type] : (gaTotal >= obCalc.TERM_DAYS ? 'Full Term Delivery' : (gaTotal >= obCalc.VIABLE_DAYS ? 'Preterm Delivery' : 'Delivery before 20 weeks'));
+
+  const record = Object.assign({}, old || {}, {
+    id: (old && old.id) || obNewId(),
+    seq: (old && old.seq) || ('P' + (patientState.pregnancies.length + 1)),
+    status: 'completed',
+    type: type,
+    deliveryMonth: monthStr ? +monthStr : null,
+    deliveryYear: +year,
+    year: monthStr ? (OB_MONTHS[+monthStr - 1].slice(0, 3) + ' ' + year) : year,
+    outcome: outcome,
+    mode: mode,
+    term: term,
+    gaWeeks: gaWeeks,
+    gaDays: gaDays,
+    ga: gaDays ? `${gaWeeks} weeks ${gaDays} days` : `${gaWeeks} weeks`,
+    place: obEl('preg-place').value,
+    attendant: loss ? ((old && old.attendant) || 'N/A') : obEl('preg-attendant').value,
+    maternalComp: obEl('preg-maternal-comp').value,
+    fetalOutcome: loss ? ((old && old.fetalOutcome) || 'Stillbirth / Non-viable') : obEl('preg-fetal-outcome').value,
+    remarks: obEl('preg-remarks').value.trim() || '-',
+    csCatalogVersion: csCatalog.version
+  });
+  if (loss) {
+    record.intervention = intervention;
+    record.surgeryDetails = surgeryDetails || '';
+    record.living = 0;
+    record.sex = (old && old.sex) || 'N/A';
+    record.weight = (old && old.weight) || 'N/A';
+    record.multiple = 'No (Singleton)';
+  } else {
+    record.babies = babies;
+    record.living = living;
+    record.sex = (first && first.sex) || 'N/A';
+    record.weight = (first && first.weightKg !== null) ? first.weightKg.toFixed(2) + ' kg' : 'N/A';
+    record.multiple = type === 'multiple' ? (multiType === 'Triplets' ? 'Triplets' : (multiType === 'Twins' ? 'Twins' : 'Other Multiple Gestation')) : 'No (Singleton)';
+    if (type === 'multiple') record.multiType = multiType;
+    if (mode === 'Cesarean' && csIndication) record.csIndication = csIndication;
+  }
+
+  if (index >= 0) {
+    patientState.pregnancies[index] = record;
+    showToast('Pregnancy record updated. Select Save to store changes.');
+  } else {
+    patientState.pregnancies.push(record);
+    showToast('Pregnancy record added. Select Save to store changes.');
+  }
+
+  closePregnancyModal();
+  markObDirty();
+  renderPregnancyTable();
+  renderSummaryCards();
+  renderLongitudinalTimeline();
+  submitBtn.disabled = false;
+}
+
+function archivePregnancy(index) {
+  const p = patientState.pregnancies[index];
+  if (!p) return;
+  if (confirm(`Archive pregnancy record ${p.seq || ''} (${obDeliveryDateText(p)} • ${p.outcome})? This will update the auto-derived GP(TPAL) score.`)) {
+    patientState.pregnancies.splice(index, 1);
+    markObDirty();
+    renderPregnancyTable();
+    renderSummaryCards();
+    renderLongitudinalTimeline();
+    showToast(`Pregnancy record ${p.seq || ''} archived. Select Save to store changes.`);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PRESENT PREGNANCY (LMP + ULTRASOUND DATING)
+   ───────────────────────────────────────────────────────────────────────────── */
+function getLocalTodayIso() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function handleLmpStartInput() {
+  const startEl = obEl('pp-lmp-start');
+  const endEl = obEl('pp-lmp-end');
+  if (startEl && startEl.value && endEl && !endEl.value) {
+    endEl.value = getLocalTodayIso();
+  }
+  schedulePresentPreview();
+}
+window.handleLmpStartInput = handleLmpStartInput;
+
+function openPresentModal() {
+  const pp = patientState.presentPregnancy || {};
+  obEl('pp-lmp-start').value = pp.lmpStart || '';
+  obEl('pp-lmp-end').value = pp.lmpEnd || getLocalTodayIso();
+  obEl('pp-us-date').value = pp.usDate || '';
+  obEl('pp-us-weeks').value = (pp.usWeeks === undefined || pp.usWeeks === null) ? '' : pp.usWeeks;
+  obEl('pp-us-days').value = (pp.usDays === undefined || pp.usDays === null) ? '' : pp.usDays;
+  obEl('modal-present-title').textContent = pp.active ? 'Present Pregnancy' : 'Add Present Pregnancy';
+  obEl('btn-add-present').textContent = pp.active ? 'UPDATE' : 'ADD';
+  obEl('btn-remove-present').style.display = pp.active ? '' : 'none';
+  obShowFormError('pp-form-error', '');
+  updatePresentPreview();
+  obShowView('modal-present-preg');
+}
+
+function closePresentModal() {
+  obShowView('menu');
+}
+
+function schedulePresentPreview() {
+  if (presentPreviewFrame) return;
+  presentPreviewFrame = window.requestAnimationFrame(() => { presentPreviewFrame = null; updatePresentPreview(); });
+}
+
+function updatePresentPreview() {
+  const ls = obEl('pp-lmp-start').value, le = obEl('pp-lmp-end').value;
+  const ud = obEl('pp-us-date').value, uw = obEl('pp-us-weeks').value, ux = obEl('pp-us-days').value;
+  const lp = obEl('pp-lmp-preview'), up = obEl('pp-us-preview'), dn = obEl('pp-diff-note');
+  const lmpGaDisp = obEl('pp-lmp-ga-display');
+  const usEddDisp = obEl('pp-us-edd-display');
+  const usGaDisp = obEl('pp-us-ga-display');
+
+  let lmp = null, us = null;
+  if (ls) {
+    lmp = obCalc.lmpDating(ls, le);
+    if (lmpGaDisp) lmpGaDisp.textContent = lmp.ga ? obCalc.formatGA(lmp.ga) : '—';
+    if (lp) {
+      lp.innerHTML = lmp.edd ? `Expected Delivery Date: <strong>${escapeHtml(obFmtLong(lmp.edd))}</strong> &nbsp; Age of Gestation: <strong>${escapeHtml(lmp.ga ? obCalc.formatGA(lmp.ga) : '—')}</strong>` : '';
+      if (lmp.issues.length) lp.innerHTML += `<div class="ob-issue">${escapeHtml(lmp.issues.join('; '))}</div>`;
+    }
+  } else {
+    if (lmpGaDisp) lmpGaDisp.textContent = '—';
+    if (lp) lp.innerHTML = '';
+  }
+
+  if (ud || uw !== '' || ux !== '') {
+    us = obCalc.ultrasoundDating(ud, uw, ux);
+    if (usEddDisp) usEddDisp.textContent = us.edd ? obFmtLong(us.edd) : '—';
+    if (usGaDisp) usGaDisp.textContent = us.ga ? obCalc.formatGA(us.ga) : '—';
+    if (up) {
+      up.innerHTML = us.edd ? `Expected Delivery Date: <strong>${escapeHtml(obFmtLong(us.edd))}</strong> &nbsp; Age of Gestation: <strong>${escapeHtml(us.ga ? obCalc.formatGA(us.ga) : '—')}</strong>` : '';
+      if (us.issues.length) up.innerHTML += `<div class="ob-issue">${escapeHtml(us.issues.join('; '))}</div>`;
+    }
+  } else {
+    if (usEddDisp) usEddDisp.textContent = '—';
+    if (usGaDisp) usGaDisp.textContent = '—';
+    if (up) up.innerHTML = '';
+  }
+
+  const diff = obCalc.eddDifferenceDays(lmp, us);
+  if (dn) dn.textContent = diff === null ? '' : `Ultrasound EDD differs from LMP EDD by ${Math.abs(diff)} day${Math.abs(diff) === 1 ? '' : 's'}. The final EDD is determined by the attending physician.`;
+}
+
+function handlePresentSubmit(event) {
+  event.preventDefault();
+  const ls = obEl('pp-lmp-start').value, le = obEl('pp-lmp-end').value;
+  const ud = obEl('pp-us-date').value, uw = obEl('pp-us-weeks').value, ux = obEl('pp-us-days').value;
+  const hasUs = !!(ud || uw !== '' || ux !== '');
+  if (!ls && !hasUs) return obShowFormError('pp-form-error', 'Enter the LMP or ultrasound dating.');
+  if (ls) {
+    const l = obCalc.lmpDating(ls, le);
+    if (!l.valid) return obShowFormError('pp-form-error', l.issues.join('; '));
+  }
+  if (hasUs) {
+    const u = obCalc.ultrasoundDating(ud, uw, ux);
+    if (!u.valid) return obShowFormError('pp-form-error', u.issues.join('; '));
+  }
+  patientState.presentPregnancy = {
+    active: true,
+    lmpStart: ls || '',
+    lmpEnd: le || '',
+    usDate: hasUs ? ud : '',
+    usWeeks: hasUs ? +uw : null,
+    usDays: hasUs ? +ux : null
+  };
+  closePresentModal();
+  markObDirty();
+  renderSummaryCards();
+  showToast('Present pregnancy recorded. Select Save to store changes.');
+}
+
+function endPresentPregnancy() {
+  if (!patientState.presentPregnancy || !patientState.presentPregnancy.active) return;
+  if (!confirm('Mark the present pregnancy as ended? Dating entries are retained, and the pregnancy can then be recorded as a Past Pregnancy.')) return;
+  patientState.presentPregnancy.active = false;
+  closePresentModal();
+  markObDirty();
+  renderSummaryCards();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SAVE / LOAD (HIS_OB_GYNE_<patient>) WITH PRE-WRITE BACKUP
+   ───────────────────────────────────────────────────────────────────────────── */
+var OB_SCHEMA_VERSION = 2;
+function obStorageKey() { return 'HIS_OB_GYNE_' + currentPatientId; }
+
+function saveObHistory() {
+  const key = obStorageKey();
+  try {
+    const existing = localStorage.getItem(key);
+    if (existing && !localStorage.getItem(key + '__bak_v1')) localStorage.setItem(key + '__bak_v1', existing);
+    const payload = {
+      obSchemaVersion: OB_SCHEMA_VERSION,
+      pregnancies: patientState.pregnancies,
+      lmpHistory: patientState.lmpHistory,
+      procedures: patientState.procedures,
+      gynecologicHistory: patientState.gynecologicHistory,
+      presentPregnancy: patientState.presentPregnancy || null
+    };
+    localStorage.setItem(key, JSON.stringify(payload));
+    obDirty = false;
+    renderObHistoryPanel();
+    showToast('Obstetric history saved.');
+  } catch (e) {
+    showToast('Obstetric history could not be saved.', 'error');
+  }
+}
+
+function loadSavedObHistory() {
+  try {
+    const raw = localStorage.getItem(obStorageKey());
+    if (!raw) return false;
+    const d = JSON.parse(raw);
+    if (!d || !d.pregnancies || !d.lmpHistory) return false;
+    patientState.pregnancies = d.pregnancies;
+    patientState.lmpHistory = d.lmpHistory;
+    if (d.procedures) patientState.procedures = d.procedures;
+    if (d.gynecologicHistory) patientState.gynecologicHistory = d.gynecologicHistory;
+    if (d.presentPregnancy) patientState.presentPregnancy = d.presentPregnancy;
+    return true;
+  } catch (e) {
+    console.warn('Could not read stored obstetric history', e);
+    return false;
+  }
+}
+
+window.addEventListener('beforeunload', function (e) {
+  if (obDirty) { e.preventDefault(); e.returnValue = ''; }
+});
+
+window.openAddPregModal = openAddPregModal;
+window.openEditPregModal = openEditPregModal;
+window.closePregnancyModal = closePregnancyModal;
+window.handlePregnancySubmit = handlePregnancySubmit;
+window.handleOutcomeChange = handleOutcomeChange;
+window.archivePregnancy = archivePregnancy;
+window.handlePregTypeChange = handlePregTypeChange;
+window.handlePregModeChange = handlePregModeChange;
+window.handleCsIndicationChange = handleCsIndicationChange;
+window.debouncedCsFilter = debouncedCsFilter;
+window.handleInterventionChange = handleInterventionChange;
+window.handleMultiTypeChange = handleMultiTypeChange;
+window.handleBabyCountChange = handleBabyCountChange;
+window.openPresentModal = openPresentModal;
+window.closePresentModal = closePresentModal;
+window.schedulePresentPreview = schedulePresentPreview;
+window.handlePresentSubmit = handlePresentSubmit;
+window.endPresentPregnancy = endPresentPregnancy;
+window.saveObHistory = saveObHistory;
+window.obSelectPill = obSelectPill;
+window.obSyncLossRemarks = obSyncLossRemarks;
+window.toggleCardMenu = toggleCardMenu;
+window.closeCardMenus = closeCardMenus;
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   LMP & PMP MANAGEMENT & PRESERVATION MODAL (DOH HFDB)
+   ───────────────────────────────────────────────────────────────────────────── */
+function openLmpModal() {
+  const currentLmp = patientState.lmpHistory.find(l => l.isCurrent);
+  if (currentLmp) {
+    if (currentLmp.date) document.getElementById('input-new-lmp').value = currentLmp.date;
+    if (currentLmp.pmpDate) document.getElementById('input-new-pmp').value = currentLmp.pmpDate;
+    const calc = computeEDD(currentLmp.date, currentLmp.pmpDate);
+    document.getElementById('preview-calc-edd').textContent = calc.eddDisplay;
+    document.getElementById('preview-calc-ega').textContent = calc.egaStr;
+    document.getElementById('preview-calc-cycle').textContent = calc.cycleDaysStr;
+  }
+  renderLmpHistoryTable();
+  document.getElementById('modal-lmp').classList.add('open');
+}
+
+function closeLmpModal() {
+  document.getElementById('modal-lmp').classList.remove('open');
+}
+
+function updateModalPreview() {
+  const lmpVal = document.getElementById('input-new-lmp').value;
+  const pmpVal = document.getElementById('input-new-pmp').value;
+  const calc = computeEDD(lmpVal, pmpVal);
+  document.getElementById('preview-calc-edd').textContent = calc.eddDisplay;
+  document.getElementById('preview-calc-ega').textContent = calc.egaStr;
+  document.getElementById('preview-calc-cycle').textContent = calc.cycleDaysStr;
+}
+
+document.getElementById('input-new-lmp').addEventListener('input', updateModalPreview);
+document.getElementById('input-new-pmp').addEventListener('input', updateModalPreview);
+
+function handleLmpUpdate(event) {
+  event.preventDefault();
+  const newDate = document.getElementById('input-new-lmp').value;
+  const newPmp = document.getElementById('input-new-pmp').value;
+  if (!newDate) return;
+
+  // Mark all previous LMPs as not current (PRESERVING them in history!)
+  patientState.lmpHistory.forEach(l => { l.isCurrent = false; });
+
+  const parts = newDate.split('-');
+  const formatted = `${parts[1]}/${parts[2]}/${parts[0]}`;
+  let pmpFormatted = '—';
+  let cycleInterval = 'Regular';
+  if (newPmp) {
+    const pParts = newPmp.split('-');
+    pmpFormatted = `${pParts[1]}/${pParts[2]}/${pParts[0]}`;
+    const d1 = new Date(newDate + 'T00:00:00');
+    const d2 = new Date(newPmp + 'T00:00:00');
+    if (!isNaN(d1) && !isNaN(d2) && d1 > d2) {
+      const days = Math.round((d1 - d2) / (1000 * 60 * 60 * 24));
+      cycleInterval = `${days} days`;
+    }
+  }
+
+  const now = new Date();
+  const stamp = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+
+  // Insert new current LMP at the top
+  patientState.lmpHistory.unshift({
+    id: 'lmp-' + Date.now(),
+    date: newDate,
+    pmpDate: newPmp || '',
+    cycleInterval: cycleInterval,
+    dateFormatted: formatted,
+    pmpFormatted: pmpFormatted,
+    recordedAt: stamp,
+    encounter: 'OPD Active Encounter',
+    isCurrent: true
+  });
+
+  // Sync Gynecologic tab views
+  const lmpView = document.getElementById('gyne-lmp-view');
+  if (lmpView) lmpView.value = formatted;
+  const pmpView = document.getElementById('gyne-pmp-view');
+  if (pmpView) pmpView.value = pmpFormatted;
+
+  renderLmpHistoryTable();
+  renderSummaryCards();
+  renderLongitudinalTimeline();
+  showToast('LMP & PMP updated and prior entries preserved.');
+}
+
+function renderLmpHistoryTable() {
+  const tbody = document.getElementById('tbody-lmp-history');
+  tbody.innerHTML = '';
+
+  patientState.lmpHistory.forEach((l, index) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="col-num">${index + 1}</td>
+      <td><strong>${escapeHtml(l.dateFormatted)}</strong></td>
+      <td>${escapeHtml(l.pmpFormatted || '—')}</td>
+      <td>${escapeHtml(l.cycleInterval || 'Regular')}</td>
+      <td style="color:var(--slate-500); font-size:11.5px;">${escapeHtml(l.recordedAt)}</td>
+      <td>${escapeHtml(l.encounter)}</td>
+      <td>
+        ${l.isCurrent
+          ? '<span style="color:var(--success-green); font-weight:700; background:var(--success-soft); padding:2px 6px; border-radius:3px; font-size:10.5px;">CURRENT</span>'
+          : '<span style="color:var(--slate-500); font-weight:500; font-size:10.5px;">HISTORICAL</span>'}
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PROCEDURES TAB LOGIC
+   ───────────────────────────────────────────────────────────────────────────── */
+function toggleCustomProcedure(procName) {
+  const wrap = document.getElementById('wrap-custom-proc');
+  const input = document.getElementById('proc-custom-name');
+  if (procName === 'Other / Custom Procedure') {
+    wrap.style.display = 'block';
+    input.required = true;
+    input.focus();
+  } else {
+    wrap.style.display = 'none';
+    input.required = false;
+  }
+}
+
+function saveProcedure(event) {
+  event.preventDefault();
+  const selectVal = document.getElementById('proc-select').value;
+  let finalName = selectVal;
+  if (selectVal === 'Other / Custom Procedure') {
+    const custom = document.getElementById('proc-custom-name').value.trim();
+    if (!custom) {
+      showToast('Please enter the custom procedure name.', 'error');
+      return;
+    }
+    finalName = custom;
+  }
+
+  const newProc = {
+    id: 'proc-' + Date.now(),
+    name: finalName,
+    datetime: document.getElementById('proc-datetime').value,
+    findings: document.getElementById('proc-findings').value.trim(),
+    remarks: document.getElementById('proc-remarks').value.trim() || '—',
+    provider: document.getElementById('proc-provider').value.trim() || (patientState && patientState.provider) || 'Liza Garcia, MD'
+  };
+
+  patientState.procedures.unshift(newProc);
+  renderProceduresTable();
+  renderLongitudinalTimeline();
+
+  // Reset Form
+  document.getElementById('proc-findings').value = '';
+  document.getElementById('proc-remarks').value = '';
+  document.getElementById('proc-custom-name').value = '';
+  document.getElementById('proc-select').value = 'Capillary Blood Glucose (CBG)';
+  toggleCustomProcedure('Capillary Blood Glucose (CBG)');
+  initProcDateTime();
+
+  showToast('OB-Gyne procedure recorded successfully.');
+}
+
+function removeProcedure(index) {
+  const p = patientState.procedures[index];
+  if (!p) return;
+  if (confirm(`Remove procedure record "${p.name}"?`)) {
+    patientState.procedures.splice(index, 1);
+    renderProceduresTable();
+    renderLongitudinalTimeline();
+    showToast('Procedure removed.');
+  }
+}
+
+function initProcDateTime() {
+  const el = document.getElementById('proc-datetime');
+  if (!el) return;
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  el.value = now.toISOString().slice(0, 16);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   GYNECOLOGIC HISTORY FORM HANDLER & FIELD TOGGLES
+   ───────────────────────────────────────────────────────────────────────────── */
+function toggleMenopauseFields(status) {
+  const wrap = document.getElementById('wrap-menopause-age');
+  if (wrap) {
+    wrap.style.display = (status.includes('Post-menopausal') || status.includes('Surgical')) ? 'flex' : 'none';
+  }
+}
+
+function saveGyneHistory(event) {
+  event.preventDefault();
+  patientState.gynecologicHistory = {
+    menarcheAge: document.getElementById('gyne-menarche').value.trim(),
+    interval: document.getElementById('gyne-interval').value,
+    duration: document.getElementById('gyne-duration').value.trim(),
+    flow: document.getElementById('gyne-flow').value,
+    dysmenorrhea: document.getElementById('gyne-dysmenorrhea').value,
+    menopauseStatus: document.getElementById('gyne-menopause-status').value,
+    menopauseAge: document.getElementById('gyne-menopause-age').value.trim(),
+    pmb: document.getElementById('gyne-pmb').value,
+    climacteric: document.getElementById('gyne-climacteric').value,
+    coitarche: document.getElementById('gyne-coitarche').value.trim(),
+    sexualActivity: document.getElementById('gyne-sexual-activity').value,
+    infections: document.getElementById('gyne-infections').value,
+    infectionTreatment: document.getElementById('gyne-infection-treatment').value.trim(),
+    contraceptiveCurrent: document.getElementById('gyne-contraceptive-current').value,
+    contraceptiveDuration: document.getElementById('gyne-contraceptive-duration').value.trim(),
+    contraceptivePast: document.getElementById('gyne-contraceptive-past').value.trim(),
+    screeningModality: document.getElementById('gyne-screening-modality').value,
+    lastPapDate: document.getElementById('gyne-last-pap-date').value,
+    lastPap: document.getElementById('gyne-last-pap').value,
+    hpvVaccine: document.getElementById('gyne-hpv-vaccine').value,
+    diagnoses: document.getElementById('gyne-diagnoses').value.trim(),
+    surgeries: document.getElementById('gyne-surgeries').value,
+    remarks: document.getElementById('gyne-remarks').value.trim()
+  };
+  renderLongitudinalTimeline();
+  showToast('Gynecologic history saved successfully.');
+}
+
+function populateGyneForm() {
+  const gh = patientState.gynecologicHistory;
+  if (!gh) return;
+  const setVal = (id, v) => {
+    const el = document.getElementById(id);
+    if (el && v !== undefined) el.value = v;
+  };
+  setVal('gyne-menarche', gh.menarcheAge);
+  setVal('gyne-interval', gh.interval);
+  setVal('gyne-duration', gh.duration);
+  setVal('gyne-flow', gh.flow);
+  setVal('gyne-dysmenorrhea', gh.dysmenorrhea);
+  setVal('gyne-menopause-status', gh.menopauseStatus);
+  setVal('gyne-menopause-age', gh.menopauseAge);
+  setVal('gyne-pmb', gh.pmb);
+  setVal('gyne-climacteric', gh.climacteric);
+  setVal('gyne-coitarche', gh.coitarche);
+  setVal('gyne-sexual-activity', gh.sexualActivity);
+  setVal('gyne-infections', gh.infections);
+  setVal('gyne-infection-treatment', gh.infectionTreatment);
+  setVal('gyne-contraceptive-current', gh.contraceptiveCurrent);
+  setVal('gyne-contraceptive-duration', gh.contraceptiveDuration);
+  setVal('gyne-contraceptive-past', gh.contraceptivePast);
+  setVal('gyne-screening-modality', gh.screeningModality);
+  setVal('gyne-last-pap-date', gh.lastPapDate);
+  setVal('gyne-last-pap', gh.lastPap);
+  setVal('gyne-hpv-vaccine', gh.hpvVaccine);
+  setVal('gyne-diagnoses', gh.diagnoses);
+  setVal('gyne-surgeries', gh.surgeries);
+  setVal('gyne-remarks', gh.remarks);
+  toggleMenopauseFields(gh.menopauseStatus || '');
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DEPARTMENT-FIRST NOTIFICATION WORKFLOW
+   ───────────────────────────────────────────────────────────────────────────── */
+function acceptDeptCase(caseId) {
+  const item = document.querySelector(`.queue-item[data-id="${caseId}"]`);
+  if (!item) return;
+
+  const doctorList = document.getElementById('queue-doctor-list');
+  const emptyPlaceholder = document.getElementById('empty-doctor-queue');
+  if (emptyPlaceholder) emptyPlaceholder.remove();
+
+  // Clone item to Doctor's Queue with accepted status
+  const clone = item.cloneNode(true);
+  const actionBtn = clone.querySelector('button');
+  if (actionBtn) {
+    actionBtn.textContent = 'Accepted';
+    actionBtn.disabled = true;
+    actionBtn.style.color = 'var(--success-green)';
+    actionBtn.style.borderColor = 'var(--success-green)';
+    actionBtn.style.cursor = 'default';
+  }
+
+  doctorList.appendChild(clone);
+  item.remove();
+
+  showToast('Case accepted and added to personal worklist.');
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   UI UTILITIES: TABS, TOASTS, ESCAPING
+   ───────────────────────────────────────────────────────────────────────────── */
+document.querySelectorAll('.workspace-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.workspace-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+    this.classList.add('active');
+    const targetId = this.getAttribute('data-target');
+    const targetPanel = document.getElementById(targetId);
+    if (targetPanel) targetPanel.classList.add('active');
+  });
+});
+
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast-msg ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 2800);
+}
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, m => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[m]));
+}
+
+// Window bindings for inline attributes
+window.openAddPregModal = openAddPregModal;
+window.openEditPregModal = openEditPregModal;
+window.closePregnancyModal = closePregnancyModal;
+window.handlePregnancySubmit = handlePregnancySubmit;
+window.handleOutcomeChange = handleOutcomeChange;
+window.archivePregnancy = archivePregnancy;
+window.openLmpModal = openLmpModal;
+window.closeLmpModal = closeLmpModal;
+window.handleLmpUpdate = handleLmpUpdate;
+window.toggleCustomProcedure = toggleCustomProcedure;
+window.saveProcedure = saveProcedure;
+window.removeProcedure = removeProcedure;
+window.saveGyneHistory = saveGyneHistory;
+window.filterTimeline = filterTimeline;
+window.toggleMenopauseFields = toggleMenopauseFields;
+window.acceptDeptCase = acceptDeptCase;
+
+let currentPatientId = window.OB_PATIENT_ID || 'patient_ob_maria';
+
+function initObGyneWorkspace() {
+  const params = new URLSearchParams(window.location.search);
+  let pid = params.get('patient') || currentPatientId;
+  if (pid === 'patient_op_juan') {
+    pid = 'patient_op_carmela';
+    if (window.history && window.history.replaceState) {
+      try {
+        const normUrl = new URL(window.location.href);
+        normUrl.searchParams.set('patient', 'patient_op_carmela');
+        window.history.replaceState({}, '', normUrl.toString());
+      } catch (e) {}
+    }
+  }
+  currentPatientId = pid;
+
+  if (typeof ensureSeedPatient === 'function') {
+    ensureSeedPatient();
+  }
+
+  let patient = null;
+  if (typeof getPatients === 'function') {
+    const list = getPatients();
+    patient = list.find(p => p.id === pid);
+    if (!patient && (pid === 'patient_op_juan' || pid === 'patient_op_carmela')) {
+      patient = list.find(p => p.id === (window.OP_PATIENT_ID || 'patient_op_carmela'));
+    }
+    if (!patient && (pid === 'patient_ob_maria' || pid === (window.OB_PATIENT_ID || 'patient_ob_maria'))) {
+      patient = list.find(p => p.id === (window.OB_PATIENT_ID || 'patient_ob_maria'));
+    }
+    if (!patient) {
+      patient = list.find(p => p.id === (window.OB_PATIENT_ID || 'patient_ob_maria')) || list[0];
+    }
+  }
+
+  if (patient) {
+    currentPatientId = patient.id;
+    const d = patient.data || {};
+    const name = `${d.last_name || ''}, ${d.first_name || ''} ${d.middle_name || ''}`.trim();
+    const nameEl = document.getElementById('banner-patient-name');
+    if (nameEl) nameEl.textContent = name || 'SANTOS, MARIA CLARA E.';
+    const hrnEl = document.getElementById('banner-hrn');
+    if (hrnEl) hrnEl.textContent = d.hrn || '0000001925';
+    const ageEl = document.getElementById('banner-age');
+    if (ageEl) ageEl.textContent = (d.age || '28') + ' / ' + (d.gender || 'Female');
+    const encEl = document.getElementById('banner-encounter-no');
+    if (encEl) encEl.textContent = d.encounter_no || 'OB-2026-1011-0018';
+    const backBtn = document.getElementById('btn-ob-back-dashboard');
+    if (backBtn) {
+      backBtn.href = (currentPatientId === 'patient_er_juan' ? 'dashboard_er_inpatient.html' : 'dashboard.html') + '?patient=' + encodeURIComponent(currentPatientId);
+    }
+  }
+
+  const isMalePatient = patient && patient.data && (/^(m|male)$/i.test(String(patient.data.sex || patient.data.gender || '').trim()));
+  let maleNotice = document.getElementById('male-ob-notice');
+  if (isMalePatient) {
+    if (!maleNotice) {
+      maleNotice = document.createElement('div');
+      maleNotice.id = 'male-ob-notice';
+      maleNotice.className = 'alert alert-warning';
+      maleNotice.style.cssText = 'margin:12px 24px; padding:12px 16px; background:#fffbeb; border:1px solid #fde68a; border-left:4px solid #f59e0b; border-radius:6px; color:#92400e; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px;';
+      maleNotice.innerHTML = '<i class="icon-warning-sign"></i> <span><strong>Clinical Documentation Notice:</strong> Selected patient is recorded as Male. Obstetric and gynecologic clinical forms are not applicable for this patient.</span>';
+      const container = document.querySelector('.workspace-body') || document.body;
+      container.insertBefore(maleNotice, container.firstChild);
+    }
+    patientState.pregnancies = [];
+    patientState.lmpHistory = [];
+    patientState.procedures = [];
+    patientState.gynecologicHistory = {
+      menarcheAge: 'N/A',
+      interval: 'Not Applicable',
+      dysmenorrhea: 'Not Applicable',
+      remarks: 'Obstetric and Gynecologic clinical forms are not applicable for male patients.'
+    };
+  } else {
+    if (maleNotice) maleNotice.remove();
+    loadSavedObHistory();
+    // Restore draft if available for female patients
+    try {
+      const draftStr = localStorage.getItem('his_obgyne_draft_' + currentPatientId);
+      if (draftStr) {
+        const draft = JSON.parse(draftStr);
+        if (draft && draft.data) {
+          if (draft.data.pregnancies) patientState.pregnancies = draft.data.pregnancies;
+          if (draft.data.lmpHistory) patientState.lmpHistory = draft.data.lmpHistory;
+          if (draft.data.procedures) patientState.procedures = draft.data.procedures;
+          if (draft.data.gynecologicHistory) patientState.gynecologicHistory = draft.data.gynecologicHistory;
+          if (draft.data.presentPregnancy) patientState.presentPregnancy = draft.data.presentPregnancy;
+        }
+      }
+    } catch (e) {
+      console.warn('Could not restore OB draft', e);
+    }
+  }
+}
+
+function saveGyneDraft() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const draft = {
+    patientId: currentPatientId,
+    timestamp: now.toISOString(),
+    savedAt: timeStr,
+    status: 'draft',
+    data: patientState
+  };
+  localStorage.setItem('his_obgyne_draft_' + currentPatientId, JSON.stringify(draft));
+  showToast('OB-Gyne draft saved successfully at ' + timeStr + '.');
+}
+
+window.initObGyneWorkspace = initObGyneWorkspace;
+window.saveGyneDraft = saveGyneDraft;
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   APPLICATION INITIALIZATION
+   ───────────────────────────────────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  initObGyneWorkspace();
+  renderSummaryCards();
+  renderPregnancyTable();
+  renderProceduresTable();
+  populateGyneForm();
+  renderLongitudinalTimeline();
+  initProcDateTime();
+});
+</script>
+
+</body>
+</html>
+
