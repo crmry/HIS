@@ -1926,10 +1926,15 @@
                 <input class="form-input" type="text" id="neo_dx_congenital" name="neo_dx_congenital" placeholder="Specify congenital anomaly or syndrome">
               </div>
 
-              <!-- Accountability: Encoded by Physician -->
-              <div class="form-group col-span-3">
+              <!-- Accountability: Encoded by Physician & Save Neonatal DX -->
+              <div class="form-group col-span-2">
                 <label class="form-label" for="neo_dx_encoded_by">Encoded by (Physician) <span style="color:#dc2626;">*</span></label>
-                <input class="form-input" type="text" id="neo_dx_encoded_by" name="neo_dx_encoded_by" placeholder="Physician Full Name, MD (PRC License No.)">
+                <input class="form-input" type="text" id="neo_dx_encoded_by" name="neo_dx_encoded_by" readonly style="background:#f8fafc; color:#1e293b; font-weight:600; cursor:default; border-color:#cbd5e1;" placeholder="Miguel Santos, MD | PRC No. 0094821 | Date">
+              </div>
+              <div class="form-group col-span-1" style="display:flex; justify-content:flex-end; align-items:flex-end;">
+                <button type="button" class="btn-primary" id="btn-save-neonatal-dx" onclick="saveNeonatalDx()" style="height:36px; width:100%; font-size:12px; font-weight:700; letter-spacing:0.3px; background:#1b4d3e; border:1px solid #14382d; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08); cursor:pointer;">
+                  <i class="icon-ok icon-white"></i> SAVE NEONATAL DX
+                </button>
               </div>
             </div>
           </div>
@@ -2011,10 +2016,15 @@
                 </select>
               </div>
 
-              <!-- Accountability: Encoded by Physician or Nurse -->
-              <div class="form-group col-span-3">
+              <!-- Accountability: Encoded by Physician or Nurse & Save KMC -->
+              <div class="form-group col-span-2">
                 <label class="form-label" for="neo_kmc_encoded_by">Encoded by (Physician / Nurse) <span style="color:#dc2626;">*</span></label>
-                <input class="form-input" type="text" id="neo_kmc_encoded_by" name="neo_kmc_encoded_by" placeholder="Physician or Nurse Full Name, MD / RN (License No.)">
+                <input class="form-input" type="text" id="neo_kmc_encoded_by" name="neo_kmc_encoded_by" readonly style="background:#f8fafc; color:#1e293b; font-weight:600; cursor:default; border-color:#cbd5e1;" placeholder="Elena M. Ramos, RN | PRC No. 0084321 | Date">
+              </div>
+              <div class="form-group col-span-1" style="display:flex; justify-content:flex-end; align-items:flex-end;">
+                <button type="button" class="btn-primary" id="btn-save-kmc-nutrition" onclick="saveKmcNutrition()" style="height:36px; width:100%; font-size:12px; font-weight:700; letter-spacing:0.3px; background:#1b4d3e; border:1px solid #14382d; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08); cursor:pointer;">
+                  <i class="icon-ok icon-white"></i> SAVE KMC &amp; DISCHARGE NUTRITION
+                </button>
               </div>
             </div>
           </div>
@@ -2123,6 +2133,15 @@ document.querySelectorAll('.workspace-tab').forEach(btn => {
     btn.classList.add('active');
     const panel = document.getElementById(btn.dataset.tab);
     if (panel) panel.classList.add('active');
+
+    const globalSaveBtn = document.getElementById('btn-save-neonate-record');
+    if (globalSaveBtn) {
+      if (btn.dataset.tab === 'tab-diagnosis') {
+        globalSaveBtn.style.display = 'none';
+      } else {
+        globalSaveBtn.style.display = '';
+      }
+    }
   });
 });
 
@@ -2958,7 +2977,7 @@ function populateNeonateData(data) {
   document.getElementById('neo_dx_sepsis_culture').value = dx.sepsisCulture || '';
   document.getElementById('neo_dx_asphyxia').value = dx.asphyxia || '';
   document.getElementById('neo_dx_congenital').value = dx.congenital || '';
-  document.getElementById('neo_dx_encoded_by').value = dx.encodedBy || '';
+  document.getElementById('neo_dx_encoded_by').value = dx.encodedBy || getFormattedEncoderCredentials('physician');
 
   // KMC
   const kmc = data.kmc || {};
@@ -2971,10 +2990,73 @@ function populateNeonateData(data) {
   document.getElementById('neo_kmc_surfactant').value = kmc.surfactant || '';
   document.getElementById('neo_kmc_weight_discharge').value = kmc.weightDischarge || '';
   document.getElementById('neo_kmc_futility').value = kmc.futility || '';
-  document.getElementById('neo_kmc_encoded_by').value = kmc.encodedBy || '';
+  document.getElementById('neo_kmc_encoded_by').value = kmc.encodedBy || getFormattedEncoderCredentials('nurse');
 
   updateSummaryHighlights();
   updateNeonateGrowthChartButtons();
+}
+
+function getFormattedEncoderCredentials(role) {
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10);
+  if (role === 'physician') {
+    const doc = window.CURRENT_PHYSICIAN_NAME || 'Miguel Santos, MD';
+    return `${doc} | PRC No. 0094821 | ${dateStr}`;
+  } else {
+    return `Elena M. Ramos, RN | PRC No. 0084321 | ${dateStr}`;
+  }
+}
+
+function saveNeonatalDx() {
+  const creds = getFormattedEncoderCredentials('physician');
+  document.getElementById('neo_dx_encoded_by').value = creds;
+  const payload = collectNeonateData();
+  payload.diagnosis.encodedBy = creds;
+  try {
+    localStorage.setItem('HIS_NEONATE_' + currentPatientId, JSON.stringify(payload));
+    if (typeof getPatients === 'function' && typeof savePatients === 'function') {
+      const records = getPatients();
+      const idx = records.findIndex(r => r.id === currentPatientId);
+      if (idx >= 0) {
+        records[idx].data = records[idx].data || {};
+        records[idx].data.neonate = payload;
+        savePatients(records);
+      }
+    }
+    showNeonateToast('Neonatal Diagnosis saved successfully.');
+  } catch (e) {
+    console.error('Error saving neonatal diagnosis', e);
+    showNeonateToast('Failed to save Neonatal Diagnosis.');
+  }
+}
+
+function saveKmcNutrition() {
+  const creds = getFormattedEncoderCredentials('nurse');
+  document.getElementById('neo_kmc_encoded_by').value = creds;
+  const payload = collectNeonateData();
+  payload.kmc.encodedBy = creds;
+  try {
+    localStorage.setItem('HIS_NEONATE_' + currentPatientId, JSON.stringify(payload));
+    if (typeof getPatients === 'function' && typeof savePatients === 'function') {
+      const records = getPatients();
+      const idx = records.findIndex(r => r.id === currentPatientId);
+      if (idx >= 0) {
+        records[idx].data = records[idx].data || {};
+        records[idx].data.neonate = payload;
+        savePatients(records);
+      }
+    }
+    showNeonateToast('KMC & Discharge Nutrition saved successfully.');
+  } catch (e) {
+    console.error('Error saving KMC & nutrition', e);
+    showNeonateToast('Failed to save KMC & Discharge Nutrition.');
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.saveNeonatalDx = saveNeonatalDx;
+  window.saveKmcNutrition = saveKmcNutrition;
+  window.getFormattedEncoderCredentials = getFormattedEncoderCredentials;
 }
 
 function saveNeonateRecord() {
@@ -3202,7 +3284,7 @@ function initNeonateWorkspace() {
             respStatus: 'Normal', respSupport: '',
             sepsisStatus: 'None', sepsisCulture: '',
             asphyxia: 'No', congenital: 'None',
-            encodedBy: 'Miguel Santos, MD'
+            encodedBy: 'Miguel Santos, MD | PRC No. 0094821 | 2026-09-26'
           },
           kmc: {
             enrollDate: '2026-09-26',
@@ -3214,7 +3296,7 @@ function initNeonateWorkspace() {
             surfactant: 'Not Applicable',
             weightDischarge: 3.20,
             futility: '',
-            encodedBy: 'Elena M. Ramos, RN'
+            encodedBy: 'Elena M. Ramos, RN | PRC No. 0084321 | 2026-09-26'
           }
         };
         populateNeonateData(baseline);

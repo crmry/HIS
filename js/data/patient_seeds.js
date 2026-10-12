@@ -279,7 +279,8 @@ if (typeof window !== 'undefined') {
               biliClass: 'None', biliOther: '', biliLevel: '',
               respStatus: 'Normal', respSupport: '',
               sepsisStatus: 'None', sepsisCulture: '',
-              asphyxia: 'No', congenital: 'None'
+              asphyxia: 'No', congenital: 'None',
+              encodedBy: 'Miguel Santos, MD | PRC No. 0094821 | 2026-09-26'
             },
             kmc: {
               enrollDate: '2026-09-26',
@@ -290,7 +291,8 @@ if (typeof window !== 'undefined') {
               donorMilk: 'No',
               surfactant: 'Not Applicable',
               weightDischarge: '3.20',
-              futility: ''
+              futility: '',
+              encodedBy: 'Elena M. Ramos, RN | PRC No. 0084321 | 2026-09-26'
             }
           },
           vs_bp: '120/80', vs_hr: '74', vs_rr: '18', vs_temp: '36.6', vs_spo2: '99', vs_weight: '70', vs_height: '168', vs_date_time: '2026-09-26T09:30:00+08:00',
