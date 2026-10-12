@@ -2877,19 +2877,30 @@
     <div class="row-fluid">
       <div class="span12">
         <div class="dashlet" id="dashlet-specialized-forms">
-          <div class="bootstrap-widget-header">
-            <h3>Specialized Clinical Forms</h3>
+          <div class="bootstrap-widget-header" style="display:flex; align-items:center; justify-content:space-between; padding-right:36px; box-sizing:border-box;">
+            <div style="display:flex; align-items:center; width:100%; gap:24px;">
+              <div style="flex:1;">
+                <h3 style="margin:0; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; color:#ffffff;">Specialized Physical Examination Form</h3>
+              </div>
+              <div style="min-width:320px;">
+                <h3 style="margin:0; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; color:#ffffff;">Special Form</h3>
+              </div>
+            </div>
           </div>
-          <div class="bootstrap-widget-content" id="dashlet-other-forms">
-            <div class="other-form-list">
-              <label><button type="button" class="btn btn-small" id="btn-open-obgyne-module" onclick="openModuleActionModal('obgyne')"><i class="icon-female"></i> OB-Gyne Module</button></label>
-              <label><button type="button" class="btn btn-small" id="btn-open-neonate-module" onclick="openModuleActionModal('neonate')"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
-              <label><button type="button" class="btn btn-small" id="btn-open-growth-chart" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> Pediatric Growth Chart</button></label>
-              <label><button type="button" class="btn btn-small">Dental Form</button></label>
-              <label><button type="button" class="btn btn-small">Ophthalmology Form</button></label>
-              <label><button type="button" class="btn btn-small">Trauma Sheet</button></label>
-              <label><button type="button" class="btn btn-small">Operative Technique</button></label>
-              <label><button type="button" class="btn btn-small">Surgical Memorandum</button></label>
+          <div class="bootstrap-widget-content" id="dashlet-other-forms" style="padding:10px 14px;">
+            <div style="display:flex; flex-wrap:wrap; gap:24px; align-items:flex-start;">
+              <div class="other-form-list" id="group-physical-exam-forms" style="flex:1; display:flex; flex-wrap:wrap; gap:8px;">
+                <label><button type="button" class="btn btn-small" id="btn-open-obgyne-module" onclick="openModuleActionModal('obgyne')"><i class="icon-female"></i> OB-Gyne Module</button></label>
+                <label><button type="button" class="btn btn-small" id="btn-open-neonate-module" onclick="openModuleActionModal('neonate')"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
+                <label><button type="button" class="btn btn-small" id="btn-open-growth-chart" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> Pediatric Growth Chart</button></label>
+                <label><button type="button" class="btn btn-small">Dental Form</button></label>
+                <label><button type="button" class="btn btn-small">Ophthalmology Form</button></label>
+                <label><button type="button" class="btn btn-small">Trauma Sheet</button></label>
+              </div>
+              <div class="other-form-list" id="group-special-forms" style="min-width:320px; display:flex; flex-wrap:wrap; gap:8px;">
+                <label><button type="button" class="btn btn-small">Operative Technique</button></label>
+                <label><button type="button" class="btn btn-small">Surgical Memorandum</button></label>
+              </div>
             </div>
           </div>
         </div>
