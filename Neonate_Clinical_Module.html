@@ -1531,9 +1531,14 @@
                 <label class="form-label" for="neo_ror_ref_date">Date Referred</label>
                 <input class="form-input" type="date" id="neo_ror_ref_date" name="neo_ror_ref_date" disabled>
               </div>
-              <div class="form-group col-span-4">
+              <div class="form-group col-span-3">
                 <label class="form-label" for="neo_ror_physician">Responsible Physician</label>
                 <input class="form-input" type="text" id="neo_ror_physician" name="neo_ror_physician" placeholder="Attending Pediatrician / Ophthalmologist, MD">
+              </div>
+              <div class="form-group col-span-1" style="display:flex; justify-content:flex-end; align-items:flex-end;">
+                <button type="button" class="btn-primary" id="btn-save-ror" onclick="saveScreeningSub('ror', 'Red Orange Reflex Screening')" style="height:36px; width:100%; font-size:12px; font-weight:700; letter-spacing:0.3px; background:#1b4d3e; border:1px solid #14382d; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08); cursor:pointer;">
+                  <i class="icon-ok icon-white"></i> SAVE
+                </button>
               </div>
             </div>
           </div>
@@ -1541,7 +1546,7 @@
           <!-- Retinopathy of Prematurity -->
           <div class="section-card">
             <div class="section-card-title"><i class="icon-eye-close"></i> B. Retinopathy of Prematurity (ROP)</div>
-            <div class="form-grid-3" style="margin-bottom:10px;">
+            <div class="form-grid-4" style="margin-bottom:10px;">
               <div class="form-group">
                 <label class="form-label" for="neo_rop_applicable">Applicable</label>
                 <select class="form-select" id="neo_rop_applicable" name="neo_rop_applicable">
@@ -1558,6 +1563,11 @@
               <div class="form-group">
                 <label class="form-label" for="neo_rop_physician">Responsible Physician (Ophthalmologist)</label>
                 <input class="form-input" type="text" id="neo_rop_physician" name="neo_rop_physician" placeholder="Physician Full Name, MD">
+              </div>
+              <div class="form-group" style="display:flex; justify-content:flex-end; align-items:flex-end;">
+                <button type="button" class="btn-primary" id="btn-save-rop" onclick="saveScreeningSub('rop', 'ROP Screening')" style="height:36px; width:100%; font-size:12px; font-weight:700; letter-spacing:0.3px; background:#1b4d3e; border:1px solid #14382d; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08); cursor:pointer;">
+                  <i class="icon-ok icon-white"></i> SAVE
+                </button>
               </div>
             </div>
             <div class="table-responsive">
@@ -1669,9 +1679,14 @@
                 <label class="form-label" for="neo_enbs_others">Others</label>
                 <input class="form-input" type="text" id="neo_enbs_others" name="neo_enbs_others">
               </div>
-              <div class="form-group col-span-3">
+              <div class="form-group col-span-2">
                 <label class="form-label" for="neo_enbs_physician">Responsible Physician</label>
                 <input class="form-input" type="text" id="neo_enbs_physician" name="neo_enbs_physician" placeholder="Attending Pediatrician / Newborn Care Physician, MD">
+              </div>
+              <div class="form-group col-span-1" style="display:flex; justify-content:flex-end; align-items:flex-end;">
+                <button type="button" class="btn-primary" id="btn-save-enbs" onclick="saveScreeningSub('enbs', 'ENBS Screening')" style="height:36px; width:100%; font-size:12px; font-weight:700; letter-spacing:0.3px; background:#1b4d3e; border:1px solid #14382d; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08); cursor:pointer;">
+                  <i class="icon-ok icon-white"></i> SAVE
+                </button>
               </div>
             </div>
           </div>
@@ -1709,9 +1724,17 @@
                   <option value="No">No</option>
                 </select>
               </div>
-              <div class="form-group col-span-3">
+              <div class="form-group">
+                <!-- Spacer to keep physician and save button aligned on bottom row -->
+              </div>
+              <div class="form-group col-span-2">
                 <label class="form-label" for="neo_hearing_physician">Responsible Physician (ENT / Pediatrician)</label>
                 <input class="form-input" type="text" id="neo_hearing_physician" name="neo_hearing_physician" placeholder="Physician Full Name, MD">
+              </div>
+              <div class="form-group col-span-1" style="display:flex; justify-content:flex-end; align-items:flex-end;">
+                <button type="button" class="btn-primary" id="btn-save-hearing" onclick="saveScreeningSub('hearing', 'Newborn Hearing Screening')" style="height:36px; width:100%; font-size:12px; font-weight:700; letter-spacing:0.3px; background:#1b4d3e; border:1px solid #14382d; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08); cursor:pointer;">
+                  <i class="icon-ok icon-white"></i> SAVE
+                </button>
               </div>
             </div>
           </div>
@@ -1749,9 +1772,14 @@
                 <label class="form-label" for="neo_cranial_remarks">Remarks</label>
                 <input class="form-input" type="text" id="neo_cranial_remarks" name="neo_cranial_remarks">
               </div>
-              <div class="form-group col-span-4">
+              <div class="form-group col-span-3">
                 <label class="form-label" for="neo_cranial_physician">Responsible Physician (Radiologist / Sonologist)</label>
                 <input class="form-input" type="text" id="neo_cranial_physician" name="neo_cranial_physician" placeholder="Physician Full Name, MD">
+              </div>
+              <div class="form-group col-span-1" style="display:flex; justify-content:flex-end; align-items:flex-end;">
+                <button type="button" class="btn-primary" id="btn-save-cranial" onclick="saveScreeningSub('cranialUtz', 'Cranial Ultrasound')" style="height:36px; width:100%; font-size:12px; font-weight:700; letter-spacing:0.3px; background:#1b4d3e; border:1px solid #14382d; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08); cursor:pointer;">
+                  <i class="icon-ok icon-white"></i> SAVE
+                </button>
               </div>
             </div>
           </div>
@@ -1835,9 +1863,14 @@
                 <label class="form-label" for="neo_cchd_screener">Printed Name of Screener</label>
                 <input class="form-input" type="text" id="neo_cchd_screener" name="neo_cchd_screener">
               </div>
-              <div class="form-group col-span-3">
+              <div class="form-group col-span-2">
                 <label class="form-label" for="neo_cchd_physician">Responsible Physician (Pediatrician / Cardiologist)</label>
                 <input class="form-input" type="text" id="neo_cchd_physician" name="neo_cchd_physician" placeholder="Attending Physician Full Name, MD">
+              </div>
+              <div class="form-group col-span-1" style="display:flex; justify-content:flex-end; align-items:flex-end;">
+                <button type="button" class="btn-primary" id="btn-save-cchd" onclick="saveScreeningSub('cchd', 'CCHD Screening')" style="height:36px; width:100%; font-size:12px; font-weight:700; letter-spacing:0.3px; background:#1b4d3e; border:1px solid #14382d; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08); cursor:pointer;">
+                  <i class="icon-ok icon-white"></i> SAVE
+                </button>
               </div>
             </div>
           </div>
@@ -3053,9 +3086,30 @@ function saveKmcNutrition() {
   }
 }
 
+function saveScreeningSub(subKey, title) {
+  const payload = collectNeonateData();
+  try {
+    localStorage.setItem('HIS_NEONATE_' + currentPatientId, JSON.stringify(payload));
+    if (typeof getPatients === 'function' && typeof savePatients === 'function') {
+      const records = getPatients();
+      const idx = records.findIndex(r => r.id === currentPatientId);
+      if (idx >= 0) {
+        records[idx].data = records[idx].data || {};
+        records[idx].data.neonate = payload;
+        savePatients(records);
+      }
+    }
+    showNeonateToast((title || 'Screening') + ' saved successfully.');
+  } catch (e) {
+    console.error('Error saving screening section ' + subKey, e);
+    showNeonateToast('Failed to save ' + (title || 'Screening') + '.');
+  }
+}
+
 if (typeof window !== 'undefined') {
   window.saveNeonatalDx = saveNeonatalDx;
   window.saveKmcNutrition = saveKmcNutrition;
+  window.saveScreeningSub = saveScreeningSub;
   window.getFormattedEncoderCredentials = getFormattedEncoderCredentials;
 }
 
