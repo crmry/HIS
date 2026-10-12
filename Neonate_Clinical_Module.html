@@ -2100,7 +2100,7 @@
         </div>
 
         <!-- WORKSPACE FOOTER ACTIONS -->
-        <div class="action-bar">
+        <div class="action-bar" id="neonate-action-bar">
           <button type="button" class="btn-secondary" onclick="resetNeonateForm()"><i class="icon-refresh"></i> Reset Form</button>
           <button type="button" class="btn-secondary" onclick="saveNeonateDraft()"><i class="icon-save"></i> Save Draft</button>
           <button type="submit" class="btn-primary" id="btn-save-neonate-record"><i class="icon-ok icon-white"></i> Save Neonate Record</button>
@@ -2167,12 +2167,12 @@ document.querySelectorAll('.workspace-tab').forEach(btn => {
     const panel = document.getElementById(btn.dataset.tab);
     if (panel) panel.classList.add('active');
 
-    const globalSaveBtn = document.getElementById('btn-save-neonate-record');
-    if (globalSaveBtn) {
-      if (btn.dataset.tab === 'tab-diagnosis') {
-        globalSaveBtn.style.display = 'none';
+    const actionBar = document.getElementById('neonate-action-bar');
+    if (actionBar) {
+      if (btn.dataset.tab === 'tab-screening' || btn.dataset.tab === 'tab-diagnosis') {
+        actionBar.style.display = 'none';
       } else {
-        globalSaveBtn.style.display = '';
+        actionBar.style.display = '';
       }
     }
   });
@@ -3358,6 +3358,15 @@ function initNeonateWorkspace() {
     }
   }
   updateNeonateGrowthChartButtons();
+  const activeTab = document.querySelector('.workspace-tab.active');
+  const actionBar = document.getElementById('neonate-action-bar');
+  if (actionBar && activeTab) {
+    if (activeTab.dataset.tab === 'tab-screening' || activeTab.dataset.tab === 'tab-diagnosis') {
+      actionBar.style.display = 'none';
+    } else {
+      actionBar.style.display = '';
+    }
+  }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
