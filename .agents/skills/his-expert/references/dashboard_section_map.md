@@ -24,7 +24,7 @@
 | **Admitting & Final Diagnoses** | `2716` – `2817` | `2715` – `2816` | `#admitting-dx-col` (`#admitting_dx`), `#final-dx-col` (`#final_dx`), ICD-10 diagnostic search. |
 | **Disposition Dashlet** | `2818` – `2850` | `2817` – `2849` | `#dashlet-disposition`: Radio options (`disposition`), `#save-disposition-btn`. |
 | **Follow-up Dashlet** | `2851` – `2878` | `2850` – `2877` | `#dashlet-followup`: Follow-up toggles (`follow_up_needed`), date picker, clinic instructions. |
-| **Specialized Clinical Forms** | `2879` – `2922` | `2878` – `2921` | `#dashlet-specialized-forms`: OB-Gyne & Neonatal encoders quick links. |
+| **Special Forms & Operative Records** | `2879` – `2922` | `2878` – `2921` | `#dashlet-special-forms`: Operative Technique & Surgical Memorandum. Note: `#dashlet-specialized-forms` (Specialized PE Forms) is located directly inside the Physical Examination section (`#row-physical-exam`). |
 | **Clinical Modals Markup** | `2923` – `4897` | `2922` – `4854` | All persistent modal backdrops (`.seg-modal-backdrop`). See Section 2 below. |
 | **Floating Requisition Drawer** | `4898` – `4947` | `4855` – `4903` | `#floating-req-toolkit`: Pinned drawer handle, OB-Gyne, Neonate, Rx Writer, Results, Referral buttons. |
 | **Core JavaScript Engine** | `4948` – `16729` | `4904` – `16648` | All application state, patient seeds, CPOE builders, order tables, event wiring. See Section 3 below. |

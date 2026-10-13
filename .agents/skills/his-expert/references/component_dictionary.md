@@ -36,7 +36,8 @@ Toolkit DOM Controls:
 | **Doctor's Orders (CPOE)** | `#orders-summary-table` | Table body `#orders-summary-rows` | `#save-orders-btn`, `#open-request-modal` |
 | **Disposition** | `#dashlet-disposition` | `input[name="disposition"]` | `#save-disposition-btn` |
 | **Follow-up** | `#dashlet-followup` | `input[name="follow_up_needed"]`, `#follow-up-fields` | `#save-followup-btn` |
-| **Specialized Forms** | `#dashlet-specialized-forms` | Physical Examination Form and Special Form groups | OB-Gyne & Neonate quick links |
+| **Specialized Forms (PE)** | `#dashlet-specialized-forms` | Inside `#row-physical-exam`, `#group-physical-exam-forms` | OB-Gyne, Neonate, Growth Chart, Eye Record, ROP, Oral Health, CBE, Ophtha, Trauma, Otoscopic quick links |
+| **Special Forms & Operative Records** | `#dashlet-special-forms` | Row 10 `#dashlet-special-forms`, `#group-special-forms` | Operative Technique, Surgical Memorandum |
 
 ---
 

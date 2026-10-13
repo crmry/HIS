@@ -2702,6 +2702,25 @@
                   </div>
 
                 </div>
+
+                <!-- Specialized Physical Examination Forms -->
+                <div class="specialized-pe-forms-container" id="dashlet-specialized-forms" style="margin-top:16px; padding:12px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px;">
+                  <div style="font-size:11px; font-weight:700; color:#1b4d3e; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+                    <i class="icon-stethoscope"></i> Specialized Physical Examination Forms
+                  </div>
+                  <div class="other-form-list" id="group-physical-exam-forms" style="display:flex; flex-wrap:wrap; gap:8px;">
+                    <label><button type="button" class="btn btn-small" id="btn-open-obgyne-module" onclick="openModuleActionModal('obgyne')"><i class="icon-female"></i> OB-Gyne Module</button></label>
+                    <label><button type="button" class="btn btn-small" id="btn-open-neonate-module" onclick="openModuleActionModal('neonate')"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
+                    <label><button type="button" class="btn btn-small" id="btn-open-growth-chart" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> Pediatric Growth Chart</button></label>
+                    <label><button type="button" class="btn btn-small" id="btn-open-eye-record" onclick="openSpecializedPEForm('Eye Record')"><i class="icon-eye-open"></i> Eye Record</button></label>
+                    <label><button type="button" class="btn btn-small" id="btn-open-rop-screening" onclick="openSpecializedPEForm('ROP Screening')"><i class="icon-search"></i> ROP Screening</button></label>
+                    <label><button type="button" class="btn btn-small" id="btn-open-oral-health" onclick="openSpecializedPEForm('Oral Health Record')"><i class="icon-smile"></i> Oral Health Record</button></label>
+                    <label><button type="button" class="btn btn-small" id="btn-open-breast-exam" onclick="openSpecializedPEForm('Clinical Breast Examination')"><i class="icon-heart"></i> Clinical Breast Examination</button></label>
+                    <label><button type="button" class="btn btn-small" id="btn-open-ophthalmology" onclick="openSpecializedPEForm('Ophthalmology Form')"><i class="icon-eye-open"></i> Ophthalmology Form</button></label>
+                    <label><button type="button" class="btn btn-small" id="btn-open-trauma-sheet" onclick="openSpecializedPEForm('Trauma Sheet')"><i class="icon-ambulance"></i> Trauma Sheet</button></label>
+                    <label><button type="button" class="btn btn-small" id="btn-open-ent-exam" onclick="openSpecializedPEForm('Otoscopic &amp; Hearing Exam')"><i class="icon-headphones"></i> Otoscopic &amp; Hearing Exam</button></label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2871,34 +2890,17 @@
       </div>
     </div>
 
-    <!-- ROW 10: Specialized Clinical Forms & Modules -->
-    <div class="row-fluid">
+    <!-- ROW 10: Special Forms & Operative Records -->
+    <div class="row-fluid" id="row-special-forms">
       <div class="span12">
-        <div class="dashlet" id="dashlet-specialized-forms">
-          <div class="bootstrap-widget-header" style="display:flex; align-items:center; justify-content:space-between; padding-right:36px; box-sizing:border-box;">
-            <div style="display:flex; align-items:center; width:100%; gap:24px;">
-              <div style="flex:1;">
-                <h3 style="margin:0; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; color:#ffffff;">Specialized Physical Examination Form</h3>
-              </div>
-              <div style="min-width:320px;">
-                <h3 style="margin:0; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; color:#ffffff;">Special Form</h3>
-              </div>
-            </div>
+        <div class="dashlet" id="dashlet-special-forms">
+          <div class="bootstrap-widget-header">
+            <h3>Special Forms &amp; Operative Records</h3>
           </div>
           <div class="bootstrap-widget-content" id="dashlet-other-forms" style="padding:10px 14px;">
-            <div style="display:flex; flex-wrap:wrap; gap:24px; align-items:flex-start;">
-              <div class="other-form-list" id="group-physical-exam-forms" style="flex:1; display:flex; flex-wrap:wrap; gap:8px;">
-                <label><button type="button" class="btn btn-small" id="btn-open-obgyne-module" onclick="openModuleActionModal('obgyne')"><i class="icon-female"></i> OB-Gyne Module</button></label>
-                <label><button type="button" class="btn btn-small" id="btn-open-neonate-module" onclick="openModuleActionModal('neonate')"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
-                <label><button type="button" class="btn btn-small" id="btn-open-growth-chart" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> Pediatric Growth Chart</button></label>
-                <label><button type="button" class="btn btn-small">Dental Form</button></label>
-                <label><button type="button" class="btn btn-small">Ophthalmology Form</button></label>
-                <label><button type="button" class="btn btn-small">Trauma Sheet</button></label>
-              </div>
-              <div class="other-form-list" id="group-special-forms" style="min-width:320px; display:flex; flex-wrap:wrap; gap:8px;">
-                <label><button type="button" class="btn btn-small">Operative Technique</button></label>
-                <label><button type="button" class="btn btn-small">Surgical Memorandum</button></label>
-              </div>
+            <div class="other-form-list" id="group-special-forms" style="display:flex; flex-wrap:wrap; gap:8px;">
+              <label><button type="button" class="btn btn-small" id="btn-open-operative-technique" onclick="openSpecializedPEForm('Operative Technique')"><i class="icon-file-text"></i> Operative Technique</button></label>
+              <label><button type="button" class="btn btn-small" id="btn-open-surgical-memo" onclick="openSpecializedPEForm('Surgical Memorandum')"><i class="icon-file"></i> Surgical Memorandum</button></label>
             </div>
           </div>
         </div>
@@ -16669,7 +16671,14 @@
       }
     });
 
+    function openSpecializedPEForm(formTitle) {
+      if (typeof showHospitalToast === 'function') {
+        showHospitalToast(formTitle + ' initiated for clinical physical examination documentation.', '#1b4d3e');
+      }
+    }
+
     // Window bindings & stubs
+    window.openSpecializedPEForm = openSpecializedPEForm;
     window.openGrowthChartModal = openGrowthChartModal;
     window.openWorkbookChart = openGrowthChartModal;
     window.openZoomModal = openZoomModal;
