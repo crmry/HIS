@@ -5650,9 +5650,6 @@
                           ? '<span class="badge badge-inverse">' + esc(item.status || item.remarks) + '</span>'
                           : '<span class="badge">' + esc(item.status || item.remarks || 'Active') + '</span>')));
             var remarksContent = statusBadge;
-            if (item.remarks && item.remarks !== item.status && !/active/i.test(item.remarks)) {
-              remarksContent += '<br><small class="muted">' + esc(item.remarks) + '</small>';
-            }
             var rawDoc = item.doctor || item.physician || item.nurse || '';
             if (!rawDoc || /attending\s*physician/i.test(String(rawDoc))) {
               rawDoc = getPatientPhysicianName(activePatientId);
@@ -7443,9 +7440,6 @@
                         ? '<span class="badge badge-inverse">' + esc(item.status || item.remarks) + '</span>'
                         : '<span class="badge">' + esc(item.status || item.remarks || 'Active') + '</span>')));
           var remarksContent = statusBadge;
-          if (item.remarks && item.remarks !== item.status && !/active/i.test(item.remarks)) {
-            remarksContent += '<br><small class="muted">' + esc(item.remarks) + '</small>';
-          }
           var rawDoc = item.doctor || item.physician || item.nurse || '';
           if (!rawDoc || /attending\s*physician/i.test(String(rawDoc))) {
             rawDoc = (enc && (enc.physician || enc.attending_physician)) || getPatientPhysicianName(activePatientId);
