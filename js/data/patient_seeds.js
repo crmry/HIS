@@ -8,6 +8,7 @@ var SEED_PATIENT_ID = 'patient_op_carmela';
 var OP_PATIENT_ID = 'patient_op_carmela';
 var ER_PATIENT_ID = 'patient_er_juan';
 var OB_PATIENT_ID = 'patient_ob_maria';
+var NEO_PATIENT_ID = 'patient_neo_santos';
 var LEGACY_OP_PATIENT_ID = 'patient_op_juan';
 var BLANK_PATIENT_ID = 'patient_new_blank_1790299677880';
 
@@ -15,6 +16,7 @@ if (typeof window !== 'undefined') {
   window.ER_PATIENT_ID = ER_PATIENT_ID;
   window.OP_PATIENT_ID = OP_PATIENT_ID;
   window.OB_PATIENT_ID = OB_PATIENT_ID;
+  window.NEO_PATIENT_ID = NEO_PATIENT_ID;
   window.SEED_PATIENT_ID = SEED_PATIENT_ID;
   window.BLANK_PATIENT_ID = BLANK_PATIENT_ID;
 }
@@ -101,6 +103,7 @@ if (typeof window !== 'undefined') {
     var OP_PATIENT_ID = 'patient_op_carmela';
     var ER_PATIENT_ID = 'patient_er_juan';
     var OB_PATIENT_ID = 'patient_ob_maria';
+    var NEO_PATIENT_ID = 'patient_neo_santos';
     var LEGACY_OP_PATIENT_ID = 'patient_op_juan';
 
     function opPatientRecord() {
@@ -1290,6 +1293,341 @@ if (typeof window !== 'undefined') {
       };
     }
 
+    var neoSeedData = {
+      classification: {
+        inborn: 'singleton-in hospital',
+        outborn: '',
+        readmission: false,
+        birthLocation: 'Delivery Room'
+      },
+      maternal: {
+        motherName: 'SANTOS, MARIA CLARA ESPINOSA',
+        motherAddress: 'Brgy. San Jose, Medical District',
+        motherAge: 28,
+        motherBloodType: 'O+',
+        status: 'Married',
+        edc: '2026-10-11',
+        lmp: '2026-02-05',
+        aogWeeks: '39 0/7',
+        gravida: 3,
+        para: 2,
+        presentation: 'Cephalic',
+        position: 'LOA',
+        classification: 'Normal',
+        deliveryType: 'NSD',
+        deliveryTime: '08:30',
+        bow: 'Ruptured',
+        rupturedTime: '06:15',
+        stage1: '7 hours 30 mins',
+        stage2: '20 mins',
+        csIndication: '',
+        complications: 'None / Uncomplicated spontaneous vaginal delivery.',
+        steroids: { dose1: '', dose2: '', dose3: '', dose4: '' }
+      },
+      maternalRiskFactors: {
+        selected: ['Vaccination'],
+        othersText: ''
+      },
+      apgar: {
+        scores: {
+          m1: { hr: '2', rr: '2', tone: '1', reflex: '2', color: '1' },
+          m5: { hr: '2', rr: '2', tone: '2', reflex: '2', color: '1' },
+          m10: { hr: '2', rr: '2', tone: '2', reflex: '2', color: '2' }
+        },
+        exceeding: ''
+      },
+      measurements: {
+        weight: 3.15,
+        headCirc: 34.5,
+        length: 50,
+        chestCirc: 33.0,
+        abdCirc: 31.0,
+        temp: 36.6,
+        cardiacRate: 144,
+        respRate: 46,
+        babyBloodType: 'O+',
+        cordCondition: 'Clean, 3 vessels (2 arteries, 1 vein), clamped'
+      },
+      einc: {
+        status: 'Complete',
+        timeStart: '08:30',
+        timeEnd: '10:00',
+        interventions: [
+          'Immediate and thorough drying',
+          'Early skin-to-skin contact',
+          'Properly timed cord clamping',
+          'Non-separation / Initiation of breastfeeding'
+        ],
+        reason: '',
+        provider: 'Andrea Reyes, MD'
+      },
+      ballard: {
+        scores: {
+          neuro_posture: '4',
+          neuro_square: '4',
+          neuro_arm: '3',
+          neuro_popliteal: '3',
+          neuro_scarf: '3',
+          neuro_heel: '3',
+          phys_skin: '3',
+          phys_lanugo: '3',
+          phys_plantar: '4',
+          phys_breast: '3',
+          phys_eye_ear: '3',
+          phys_genitals: '3'
+        },
+        totalScore: 38,
+        weeks: 39,
+        maturity: 'Full Term'
+      },
+      physicalExam: {
+        general: 'Alert',
+        generalOthers: '',
+        color: 'Pink',
+        head: 'Normal / Normocephalic, no caput or cephalohematoma',
+        eent: 'Intact palate, bilaterally reactive pupils, red reflex present',
+        neck: 'Supple, no masses or webbed neck',
+        heart: 'Normal rate and regular rhythm, no murmurs',
+        chestLungs: 'Clear breath sounds throughout, symmetric expansion',
+        abdomen: 'Soft, non-distended, normoactive bowel sounds',
+        genitalia: 'Testes bilaterally descended in scrotum, rugae well formed',
+        anus: 'Patent, passed meconium within 12 hours',
+        skin: 'Pink, warm, good turgor, mild vernix caseosa',
+        extremities: 'Intact, normal range of motion, symmetrical movement',
+        otherFindings: 'Active neonatal reflexes (Moro, sucking, rooting, grasp positive)',
+        sex: 'Male',
+        nicuReason: '',
+        nicuOthers: ''
+      },
+      aftercare: {
+        vitk: { date: '2026-10-11', remarks: '1 mg IM Right vastus lateralis given' },
+        eye: { date: '2026-10-11', remarks: 'Erythromycin 0.5% ointment OU applied' },
+        bcg: { date: '2026-10-11', remarks: '0.05 mL ID Right deltoid given' },
+        hepab: { date: '2026-10-11', remarks: '0.5 mL IM Left vastus lateralis given' },
+        hbig: { date: '', remarks: '' },
+        nurse: 'Andrea Reyes, MD'
+      },
+      screening: {
+        ror: { date: '2026-10-11', findings: '+/normal', abnormal: '', refDate: '', physician: 'Andrea Reyes, MD' },
+        rop: { date: '', findings: '', abnormal: '', refDate: '', physician: '' },
+        hearing: { date: '2026-10-12', findings: 'Pass', abnormal: '', refDate: '', physician: 'Andrea Reyes, MD' },
+        cchd: { date: '2026-10-12', findings: 'Negative', abnormal: '', refDate: '', physician: 'Andrea Reyes, MD' },
+        enbs: { date: '2026-10-13', filterCardNo: 'ENBS-2026-88491', status: 'Collected / Sent to NIH Newborn Screening Center', physician: 'Andrea Reyes, MD' }
+      }
+    };
+
+    function neoPatientRecord() {
+      return {
+        id: NEO_PATIENT_ID,
+        seedVersion: 1,
+        createdAt: '2026-10-11T08:30:00+08:00',
+        updatedAt: '2026-10-13T09:00:00+08:00',
+        data: {
+          hrn: '0000001926',
+          philhealth_no: '06-029384712-4-01',
+          phic_member_category: 'Newborn Care Package (NCP) Eligible / Dependent',
+          attending_physician: { name: 'Andrea Reyes, MD', prc_no: '0102938', s2_no: 'S2-0102938-2026' },
+          last_name: 'SANTOS',
+          first_name: 'BABY BOY',
+          middle_name: 'ESPINOSA',
+          birthdate: '2026-10-11',
+          birth_time: '08:30',
+          gender: 'Male',
+          age: '2 days (Neonate)',
+          civil_status: 'Child',
+          mother_patient_id: 'patient_ob_maria',
+          mother_name: 'MARIA CLARA ESPINOSA SANTOS',
+          mother_hrn: '0000001925',
+          mother_philhealth_no: '06-029384712-4',
+          father_name: 'JUAN CRISOSTOMO IBARRA SANTOS',
+          address: 'Brgy. San Jose, Medical District',
+          ward_room: 'Nursery / Rooming-in — Bassinet 03',
+          ward_area: 'Nursery / Neonatal Care',
+          case_no: 'NB-2026-1011-0001',
+          encounter_no: 'NB-2026-1011-0001',
+          case_type: 'Inpatient',
+          registration_type: 'Newborn Care / Rooming-in',
+          chief_complaint: 'Routine newborn post-delivery clinical care and rooming-in surveillance',
+          hx_present: 'Male infant delivered at 39 weeks AOG via uncomplicated spontaneous vaginal delivery to a 28-year-old Gravida 3 Para 2 mother. Cried vigorously immediately at delivery with APGAR scores of 8 at 1 min, 9 at 5 mins, and 10 at 10 mins. Placed skin-to-skin with mother and initiated on exclusive breastfeeding. Transferred to Rooming-in Nursery for ongoing neonatal clinical surveillance.',
+          hx_surgical: 'No previous surgical procedures.',
+          hx_past: 'Birth Weight: 3.15 kg (3,150 g), Length: 50 cm, Head Circumference: 34.5 cm. Ballard Score 38 corresponding to 39 weeks gestational maturity (Full Term, AGA). Uncomplicated immediate neonatal adaptation.',
+          hx_family: 'Mother with well-managed prenatal course (Blood Type O+); Father in good health. No known congenital disorders or hereditary metabolic anomalies.',
+          hx_social: 'Cohabiting with mother in Rooming-in Nursery under exclusive breastfeeding care.',
+          hx_allergy: 'No known drug or environmental allergies.',
+          interview_medications: [],
+          pertinent_signs: ['Active cry and good suck', 'Pink skin and mucous membranes', 'Normal neonatal reflexes'],
+          pertinent_signs_information: 'Vigorous cry, spontaneous movement, sucking actively on breast, no respiratory distress or cyanosis.',
+          pe_general: 'Active, alert, vigorous neonate in no cardiopulmonary distress. Pink skin, good neonatal tone and spontaneous symmetric movements.',
+          pe_heent: 'Normocephalic, fontanelles soft and flat (anterior fontanelle 2 x 2 cm), no caput succedaneum or cephalohematoma. Red reflex present bilaterally. Palate intact, strong rooting and sucking reflex.',
+          pe_chest_lungs: 'Symmetric chest excursions, clear breath sounds throughout both lung fields, no retractions, stridor, or grunting. Respiratory rate 44 cpm.',
+          pe_cardiovascular: 'Normodynamic precordium, normal heart sounds S1/S2, regular rate (140 bpm), no murmurs. Equal peripheral and femoral pulses bilaterally.',
+          pe_abdomen: 'Soft, non-distended, no organomegaly. Umbilical cord clamped with 3 vessels noted, clean and dry with no bleeding or discharge.',
+          pe_genitalia: 'Normal male external genitalia, bilateral testes descended in scrotal sac, well-formed rugae, urethral meatus at penile tip. Anus patent, passed dark meconium within 12 hours of life.',
+          pe_extremities: 'Five intact digits per extremity, full range of motion, normal palmar and plantar creases, Ortolani and Barlow negative (no hip dysplasia).',
+          pe_neurologic: 'Age-appropriate neonatal reflexes: robust Moro, symmetric palmar/plantar grasp, intact sucking and rooting.',
+          pe_skin: 'Warm, pink, good skin turgor, mild vernix caseosa, no jaundice, no petechiae or rashes.',
+          pe_other: '',
+          other_forms: [],
+          other_forms_notes: '',
+          vs_bp: '68/42',
+          vs_hr: '140',
+          vs_rr: '44',
+          vs_temp: '36.8',
+          vs_spo2: '99',
+          vs_weight: '3.15',
+          vs_height: '50',
+          vs_date_time: '2026-10-13T08:00:00+08:00',
+          vital_signs: [
+            { dateTime: '2026-10-13T08:00:00+08:00', bp: '68/42', hr: '140', rr: '44', temp: '36.8', wt: '3.08', ht: '50', weight: '3.08', height: '50', spo2: '99', o2: '99' },
+            { dateTime: '2026-10-12T08:00:00+08:00', bp: '66/40', hr: '138', rr: '42', temp: '36.8', wt: '3.10', ht: '50', weight: '3.10', height: '50', spo2: '99', o2: '99' },
+            { dateTime: '2026-10-11T08:30:00+08:00', bp: '68/44', hr: '144', rr: '46', temp: '36.6', wt: '3.15', ht: '50', weight: '3.15', height: '50', spo2: '98', o2: '98' }
+          ],
+          ivFluids: [],
+          transfusions: [],
+          admitting_diagnosis: 'Z38.0 - Single liveborn infant, born in hospital (vaginal delivery)',
+          final_diagnosis: 'Z38.0 - Single liveborn infant, born in hospital, term, appropriate for gestational age (AGA)',
+          progress_notes_subjective: 'Day 2 of life; breastfeeding well every 2-3 hours on demand with good latch; passed meconium x 3 and voided clear urine x 4; no fever, no vomiting, no lethargy.',
+          progress_notes_objective: 'Temp 36.8°C, HR 140 bpm, RR 44 cpm, SpO2 99% in room air. Weight 3.08 kg (physiological 2.2% weight loss, normal). Anicteric sclerae, pink skin. Umbilicus clean and dry. Normal neonatal reflexes.',
+          progress_notes_assessment: 'Day 2 of Life Male Neonate; Term (39 weeks AOG) Appropriate for Gestational Age (AGA); Stable Rooming-In Course on Exclusive Breastfeeding.',
+          progress_notes: 'Day 2 of Life Male Neonate; Term (39 weeks AOG) Appropriate for Gestational Age (AGA); Stable Rooming-In Course on Exclusive Breastfeeding. Continue rooming-in with exclusive breastfeeding on demand; maintain dry umbilical cord care; schedule Expanded Newborn Screening (ENBS) at 48 hours; anticipate routine discharge home with mother upon pediatrician clearance.',
+          encounters: [
+            {
+              date: '2026-10-13',
+              time: '08:00 AM',
+              registry: 'IP',
+              service: 'Pediatrics / Neonatology',
+              physician: 'Andrea Reyes, MD',
+              prc_license: '0102938',
+              is_current: true,
+              status_tag: 'Inpatient Rounding',
+              diagnosis: 'Z38.0 - Single liveborn infant, born in hospital (vaginal delivery)',
+              patient_record: 'Day 2 neonatal surveillance and rooming-in progress evaluation',
+              results: 'Newborn Hearing Screening Test: Pass bilaterally; CCHD Pulse Oximetry: Pass (pre-ductal 99%, post-ductal 98%); ENBS filter paper scheduled.',
+              vital_signs: [
+                { dateTime: '2026-10-13T08:00:00+08:00', bp: '68/42', hr: '140', rr: '44', temp: '36.8', wt: '3.08', ht: '50', weight: '3.08', height: '50', spo2: '99', o2: '99' }
+              ],
+              medications: [
+                { id: 'med-neo-1', name: 'Phytomenadione (Vitamin K1) 1 mg / 0.5 mL ampule', quantity: '1 ampule', dosage: '1 mg', frequency: 'Single dose', timing: 'At birth', period: 'Dose', duration: '1 dose', route: 'Intramuscular (IM) Right vastus lateralis', indication: 'Hemorrhagic disease of the newborn prophylaxis', started: '2026-10-11T08:35:00+08:00', doses24h: '1 dose', status: 'Completed / Given', doctor: 'Andrea Reyes, MD', nurse: 'Andrea Reyes, MD' },
+                { id: 'med-neo-2', name: 'Erythromycin 0.5% ophthalmic ointment', quantity: '1 tube', dosage: '1 cm ribbon per eye', frequency: 'Single dose', timing: 'At birth', period: 'Dose', duration: '1 dose', route: 'Ophthalmic (OU) both eyes', indication: 'Neonatal ophthalmia prophylaxis', started: '2026-10-11T08:40:00+08:00', doses24h: '1 dose', status: 'Completed / Given', doctor: 'Andrea Reyes, MD', nurse: 'Andrea Reyes, MD' },
+                { id: 'med-neo-3', name: 'Hepatitis B Vaccine (Recombinant) 10 mcg / 0.5 mL', quantity: '1 dose', dosage: '0.5 mL', frequency: 'Single dose', timing: 'At birth', period: 'Dose', duration: '1 dose', route: 'Intramuscular (IM) Left vastus lateralis', indication: 'Newborn immunization birth dose', started: '2026-10-11T09:00:00+08:00', doses24h: '1 dose', status: 'Completed / Given', doctor: 'Andrea Reyes, MD', nurse: 'Andrea Reyes, MD' },
+                { id: 'med-neo-4', name: 'BCG Vaccine (Bacille Calmette-Guérin) 0.05 mL', quantity: '1 dose', dosage: '0.05 mL', frequency: 'Single dose', timing: 'At birth', period: 'Dose', duration: '1 dose', route: 'Intradermal (ID) Right deltoid', indication: 'Newborn tuberculosis immunization', started: '2026-10-11T09:00:00+08:00', doses24h: '1 dose', status: 'Completed / Given', doctor: 'Andrea Reyes, MD', nurse: 'Andrea Reyes, MD' }
+              ],
+              orders: [],
+              clinical_record: {
+                chief_complaint: 'Routine newborn clinical care and rooming-in surveillance',
+                history: 'Male infant delivered at 39 weeks AOG via uncomplicated vaginal delivery to Maria Clara Santos.',
+                final_diagnosis: 'Z38.0 - Single liveborn infant, born in hospital, term, AGA'
+              },
+              examinations: []
+            }
+          ],
+          orders: {
+            diet: 'Exclusive breastfeeding on demand (every 2-3 hours)',
+            ivf: 'None (Enteral feeding well established)',
+            medications: [
+              { drug: 'Phytomenadione (Vitamin K1) 1 mg IM', dosage: '1 mg IM single dose', sig: 'Given at birth (Right vastus lateralis)' },
+              { drug: 'Erythromycin 0.5% eye ointment OU', dosage: '1 ribbon OU single application', sig: 'Given at birth' },
+              { drug: 'Hepatitis B Vaccine 0.5 mL IM', dosage: '0.5 mL IM single dose', sig: 'Given at birth (Left vastus lateralis)' },
+              { drug: 'BCG Vaccine 0.05 mL ID', dosage: '0.05 mL ID single dose', sig: 'Given at birth (Right deltoid)' }
+            ],
+            labs: [
+              { lab: 'Expanded Newborn Screening (ENBS)', status: 'Pending / Scheduled at 48 hours' },
+              { lab: 'Critical Congenital Heart Disease (CCHD) Screening', status: 'Completed (Pass)' },
+              { lab: 'Newborn Hearing Screening Test (NHST)', status: 'Completed (Pass)' }
+            ],
+            diagnostics: []
+          },
+          savedOrders: [
+            {
+              id: 'ord-neo-1',
+              type: 'diet',
+              text: 'Exclusive breastfeeding on demand (every 2-3 hours); strictly no water, glucose water, or formula supplementation',
+              physician: 'Andrea Reyes, MD',
+              datetime: '2026-10-11T08:35:00+08:00',
+              status: 'Active'
+            },
+            {
+              id: 'ord-neo-2',
+              type: 'nursing',
+              text: 'Essential Intrapartum and Newborn Care (EINC) completion; uninterrupted skin-to-skin contact with mother Maria Clara; rooming-in',
+              physician: 'Andrea Reyes, MD',
+              datetime: '2026-10-11T08:35:00+08:00',
+              status: 'Active'
+            },
+            {
+              id: 'ord-neo-3',
+              type: 'medication',
+              text: 'Phytomenadione (Vitamin K1) 1 mg IM stat at birth (Right anterolateral thigh / vastus lateralis)',
+              physician: 'Andrea Reyes, MD',
+              datetime: '2026-10-11T08:35:00+08:00',
+              status: 'Active'
+            },
+            {
+              id: 'ord-neo-4',
+              type: 'medication',
+              text: 'Erythromycin 0.5% ophthalmic ointment apply both eyes (OU) within 1 hour of birth',
+              physician: 'Andrea Reyes, MD',
+              datetime: '2026-10-11T08:35:00+08:00',
+              status: 'Active'
+            },
+            {
+              id: 'ord-neo-5',
+              type: 'medication',
+              text: 'Hepatitis B Vaccine 0.5 mL IM birth dose (Left anterolateral thigh / vastus lateralis)',
+              physician: 'Andrea Reyes, MD',
+              datetime: '2026-10-11T08:35:00+08:00',
+              status: 'Active'
+            },
+            {
+              id: 'ord-neo-6',
+              type: 'medication',
+              text: 'BCG Vaccine 0.05 mL ID birth dose (Right deltoid)',
+              physician: 'Andrea Reyes, MD',
+              datetime: '2026-10-11T08:35:00+08:00',
+              status: 'Active'
+            },
+            {
+              id: 'ord-neo-7',
+              type: 'diagnostic',
+              text: 'Perform Expanded Newborn Screening (ENBS) via heel prick at 24-48 hours of life prior to discharge',
+              physician: 'Andrea Reyes, MD',
+              datetime: '2026-10-11T08:35:00+08:00',
+              status: 'Active'
+            },
+            {
+              id: 'ord-neo-8',
+              type: 'diagnostic',
+              text: 'Newborn Hearing Screening Test (Automated Auditory Brainstem Response / OAE) and CCHD pulse oximetry screening',
+              physician: 'Andrea Reyes, MD',
+              datetime: '2026-10-11T08:35:00+08:00',
+              status: 'Active'
+            }
+          ],
+          chart_monitoring: {
+            medications: [
+              { id: 'cm-neo-1', name: 'Phytomenadione (Vitamin K1) 1 mg IM', route: 'IM Right Vastus Lateralis', indication: 'Newborn prophylaxis', started: '2026-10-11' },
+              { id: 'cm-neo-2', name: 'Erythromycin 0.5% eye ointment OU', route: 'Topical Ophthalmic', indication: 'Eye prophylaxis', started: '2026-10-11' },
+              { id: 'cm-neo-3', name: 'Hepatitis B Vaccine 0.5 mL IM', route: 'IM Left Vastus Lateralis', indication: 'Birth immunization', started: '2026-10-11' },
+              { id: 'cm-neo-4', name: 'BCG Vaccine 0.05 mL ID', route: 'ID Right Deltoid', indication: 'Birth immunization', started: '2026-10-11' }
+            ],
+            vital_signs: [
+              { dateTime: '2026-10-13T08:00:00+08:00', bp: '68/42', hr: '140', rr: '44', temp: '36.8', wt: '3.08', ht: '50', weight: '3.08', height: '50', spo2: '99', o2: '99' },
+              { dateTime: '2026-10-12T08:00:00+08:00', bp: '66/40', hr: '138', rr: '42', temp: '36.8', wt: '3.10', ht: '50', weight: '3.10', height: '50', spo2: '99', o2: '99' },
+              { dateTime: '2026-10-11T08:30:00+08:00', bp: '68/44', hr: '144', rr: '46', temp: '36.6', wt: '3.15', ht: '50', weight: '3.15', height: '50', spo2: '98', o2: '98' }
+            ],
+            ivFluids: [],
+            transfusions: []
+          },
+          referrals: [],
+          disposition: 'Rooming-in with Mother',
+          follow_up_needed: 'Yes',
+          follow_up_date: '2026-10-18',
+          follow_up_reason: '1-week post-discharge newborn well-baby checkup, weight check, and ENBS results follow-up.',
+          neonate: neoSeedData
+        }
+      };
+    }
+
     function blankPatientRecord() {
       return {
         id: BLANK_PATIENT_ID,
@@ -1429,6 +1767,20 @@ if (typeof window !== 'undefined') {
       } else if (Number(records[obIndex].seedVersion || 0) < 2) {
         records[obIndex] = obPatientRecord();
       }
+
+      var neoIndex = records.findIndex(function (record) { return record.id === NEO_PATIENT_ID; });
+      if (neoIndex < 0) {
+        records.splice(3, 0, neoPatientRecord());
+      } else if (Number(records[neoIndex].seedVersion || 0) < 1) {
+        records[neoIndex] = neoPatientRecord();
+      }
+      try {
+        var neoStorageKey = 'HIS_NEONATE_' + NEO_PATIENT_ID;
+        var existingNeo = safeParse(localStorage.getItem(neoStorageKey), null);
+        if (!existingNeo || !existingNeo.measurements) {
+          localStorage.setItem(neoStorageKey, JSON.stringify(neoSeedData));
+        }
+      } catch (e) {}
       try {
         var obStorageKey = 'HIS_OB_GYNE_' + OB_PATIENT_ID;
         var existingOb = safeParse(localStorage.getItem(obStorageKey), null);
@@ -1578,6 +1930,7 @@ if (typeof window !== 'undefined') {
       window.erChartMonitoring = erChartMonitoringData;
       window.opPatientRecord = opPatientRecord;
       window.obPatientRecord = obPatientRecord;
+      window.neoPatientRecord = neoPatientRecord;
       window.blankPatientRecord = blankPatientRecord;
       window.seedPatientRecord = seedPatientRecord;
       window.getPatients = getPatients;
@@ -1586,6 +1939,7 @@ if (typeof window !== 'undefined') {
       window.ER_PATIENT_ID = ER_PATIENT_ID;
       window.OP_PATIENT_ID = OP_PATIENT_ID;
       window.OB_PATIENT_ID = OB_PATIENT_ID;
+      window.NEO_PATIENT_ID = NEO_PATIENT_ID;
       window.SEED_PATIENT_ID = SEED_PATIENT_ID;
       window.BLANK_PATIENT_ID = BLANK_PATIENT_ID;
       try {

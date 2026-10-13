@@ -1565,7 +1565,7 @@
                 opt.value = p.id;
                 var regLabel = p.id === (window.ER_PATIENT_ID || 'patient_er_juan')
                     ? 'ER & INPATIENT'
-                    : (p.id === (window.OB_PATIENT_ID || 'patient_ob_maria') ? 'OB-GYNE OPD' : (d.registration_type || d.registry || (p.id === 'patient_op_carmela' ? 'OPD' : 'PATIENT')));
+                    : (p.id === (window.OB_PATIENT_ID || 'patient_ob_maria') ? 'OB-GYNE OPD' : (p.id === (window.NEO_PATIENT_ID || 'patient_neo_santos') ? 'NEONATE' : (d.registration_type || d.registry || (p.id === 'patient_op_carmela' ? 'OPD' : 'PATIENT'))));
                 opt.textContent = label + ' (' + regLabel + ')';
                 sel.appendChild(opt);
             });

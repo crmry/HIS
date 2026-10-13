@@ -606,6 +606,7 @@
         var SEED_PATIENT_ID = window.SEED_PATIENT_ID || "patient_op_carmela";
         var OP_PATIENT_ID = window.OP_PATIENT_ID || "patient_op_carmela";
         var OB_PATIENT_ID = window.OB_PATIENT_ID || "patient_ob_maria";
+        var NEO_PATIENT_ID = window.NEO_PATIENT_ID || "patient_neo_santos";
         var BLANK_PATIENT_ID = window.BLANK_PATIENT_ID || "patient_new_blank_1790299677880";
         var selector = document.getElementById("patient-selector");
         var encounterSelector = document.getElementById("encounter-selector");
@@ -1677,7 +1678,7 @@
                 option.value = String(record.id || "");
                 const data = record.data || {};
                 option.textContent =
-                    `${patientName(data) || "Unnamed patient"}${data.hrn ? " — " + data.hrn : ""}${record.id === (window.OB_PATIENT_ID || "patient_ob_maria") ? " (Outpatient — Obstetrics & Gynecology OPD)" : record.id === SEED_PATIENT_ID ? " (Inpatient — Medical Ward)" : record.id === OP_PATIENT_ID ? " (Outpatient — Adult Medicine OPD)" : record.id === BLANK_PATIENT_ID ? " (New Patient — Blank Chart)" : ""}`;
+                    `${patientName(data) || "Unnamed patient"}${data.hrn ? " — " + data.hrn : ""}${record.id === (window.OB_PATIENT_ID || "patient_ob_maria") ? " (Outpatient — Obstetrics & Gynecology OPD)" : record.id === (window.NEO_PATIENT_ID || "patient_neo_santos") ? " (Neonate — Nursery / Rooming-in)" : record.id === SEED_PATIENT_ID ? " (Inpatient — Medical Ward)" : record.id === OP_PATIENT_ID ? " (Outpatient — Adult Medicine OPD)" : record.id === BLANK_PATIENT_ID ? " (New Patient — Blank Chart)" : ""}`;
                 selector.appendChild(option);
             });
 

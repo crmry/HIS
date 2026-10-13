@@ -1028,6 +1028,7 @@ async def run_scan():
                 test_urls.append((f"{fname}?patient=patient_op_juan", f"{file_url}?patient=patient_op_juan"))
                 test_urls.append((f"{fname}?patient=patient_new_blank_1790299677880", f"{file_url}?patient=patient_new_blank_1790299677880"))
                 test_urls.append((f"{fname}?patient=patient_ob_maria", f"{file_url}?patient=patient_ob_maria"))
+                test_urls.append((f"{fname}?patient=patient_neo_santos", f"{file_url}?patient=patient_neo_santos"))
 
         results = {}
         print("Running Site-Wide Automated Quality Gate...")

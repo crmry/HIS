@@ -2148,7 +2148,7 @@ const WEEKS_TO_MATURITY = {
   "46": "Post Term", "47": "Post Term", "48": "Post Term", "49": "Post Term", "50": "Post Term"
 };
 
-let currentPatientId = window.OP_PATIENT_ID || 'patient_op_carmela';
+let currentPatientId = window.NEO_PATIENT_ID || 'patient_neo_santos';
 
 function showNeonateToast(msg) {
   const t = document.getElementById('neoToast');
@@ -3193,7 +3193,10 @@ function initNeonateWorkspace() {
     if (!patient && (pid === 'patient_op_juan' || pid === 'patient_op_carmela')) {
       patient = list.find(p => p.id === (window.OP_PATIENT_ID || 'patient_op_carmela'));
     }
-    if (!patient) patient = list[0];
+    if (!patient && (pid === 'patient_neo_santos' || pid === (window.NEO_PATIENT_ID || 'patient_neo_santos'))) {
+      patient = list.find(p => p.id === (window.NEO_PATIENT_ID || 'patient_neo_santos'));
+    }
+    if (!patient) patient = list.find(p => p.id === (window.NEO_PATIENT_ID || 'patient_neo_santos')) || list[0];
   }
 
   if (patient) {
@@ -3223,7 +3226,9 @@ function initNeonateWorkspace() {
         const stored = localStorage.getItem('HIS_NEONATE_' + currentPatientId);
         if (stored) neoData = JSON.parse(stored);
       }
-      else if (d.neonate) neoData = d.neonate;
+      if (!neoData && d.neonate) {
+        neoData = d.neonate;
+      }
     } catch (e) {}
 
     if (neoData) {

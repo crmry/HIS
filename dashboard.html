@@ -2050,7 +2050,6 @@
                       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                         <div>
                           <strong style="font-size:12px; color:#1e293b; text-transform:uppercase; letter-spacing:0.4px;">Interviewed / Home Medications</strong>
-                          <span class="muted" style="font-size:11px; margin-left:6px;">(Auto-reflects in Summary of Medications flowsheet)</span>
                         </div>
                         <button type="button" class="btn btn-mini btn-primary" id="btn-add-interview-med" onclick="openInterviewMedModal()">
                           <i class="icon-plus icon-white"></i> Add Medication
@@ -4975,6 +4974,7 @@
     var SEED_PATIENT_ID = window.SEED_PATIENT_ID || 'patient_op_carmela';
     var OP_PATIENT_ID = window.OP_PATIENT_ID || 'patient_op_carmela';
     var OB_PATIENT_ID = window.OB_PATIENT_ID || 'patient_ob_maria';
+    var NEO_PATIENT_ID = window.NEO_PATIENT_ID || 'patient_neo_santos';
     var BLANK_PATIENT_ID = window.BLANK_PATIENT_ID || 'patient_new_blank_1790299677880';
     /* Authenticated physician and clinical user session context */
     window.CURRENT_PHYSICIAN_NAME =
@@ -5039,7 +5039,7 @@
         var opt = document.createElement('option');
         opt.value = r.id;
         var d = r.data || {};
-        opt.textContent = (patientName(d) || 'Unnamed') + (d.hrn ? ' \u2014 ' + d.hrn : '') + (r.id === (window.ER_PATIENT_ID || 'patient_er_juan') ? ' (ER & Inpatient \u2014 General Medicine)' : r.id === (window.OB_PATIENT_ID || 'patient_ob_maria') ? ' (Outpatient \u2014 Obstetrics & Gynecology OPD)' : r.id === OP_PATIENT_ID ? ' (Outpatient \u2014 Adult Medicine OPD)' : r.id === BLANK_PATIENT_ID ? ' (New Patient \u2014 Blank Chart)' : '');
+        opt.textContent = (patientName(d) || 'Unnamed') + (d.hrn ? ' \u2014 ' + d.hrn : '') + (r.id === (window.ER_PATIENT_ID || 'patient_er_juan') ? ' (ER & Inpatient \u2014 General Medicine)' : r.id === (window.OB_PATIENT_ID || 'patient_ob_maria') ? ' (Outpatient \u2014 Obstetrics & Gynecology OPD)' : r.id === (window.NEO_PATIENT_ID || 'patient_neo_santos') ? ' (Neonate \u2014 Nursery / Rooming-in)' : r.id === OP_PATIENT_ID ? ' (Outpatient \u2014 Adult Medicine OPD)' : r.id === BLANK_PATIENT_ID ? ' (New Patient \u2014 Blank Chart)' : '');
         selector.appendChild(opt);
       });
     }
@@ -5142,6 +5142,8 @@
           captionEl.innerHTML = '<i class="icon-info-sign"></i> Vital Signs Monitoring Record (ER &amp; Inpatient Admission Flowsheet — Daily Monitoring Log &amp; Vital Signs Trend).';
         } else if (record && record.id === (window.OB_PATIENT_ID || 'patient_ob_maria')) {
           captionEl.innerHTML = '<i class="icon-info-sign"></i> Vital Signs Monitoring Record (Obstetrics &amp; Gynecology Prenatal Surveillance Flowsheet).';
+        } else if (record && record.id === (window.NEO_PATIENT_ID || 'patient_neo_santos')) {
+          captionEl.innerHTML = '<i class="icon-info-sign"></i> Vital Signs Monitoring Record (Neonatal Vital Signs &amp; Temperature Surveillance Flowsheet).';
         } else {
           captionEl.innerHTML = '<i class="icon-info-sign"></i> Vital Signs Monitoring Record (Outpatient Consultation &amp; Follow-up History).';
         }
@@ -14664,6 +14666,10 @@
         if (!record && (urlPatientId === 'patient_ob_maria' || urlPatientId === (window.OB_PATIENT_ID || 'patient_ob_maria'))) {
           if (typeof ensureSeedPatient === 'function') ensureSeedPatient();
           record = getPatients().find(function (r) { return r.id === (window.OB_PATIENT_ID || 'patient_ob_maria'); });
+        }
+        if (!record && (urlPatientId === 'patient_neo_santos' || urlPatientId === (window.NEO_PATIENT_ID || 'patient_neo_santos'))) {
+          if (typeof ensureSeedPatient === 'function') ensureSeedPatient();
+          record = getPatients().find(function (r) { return r.id === (window.NEO_PATIENT_ID || 'patient_neo_santos'); });
         }
         if (record) loadPatientRecord(record);
         else clearAllPatientFields();
