@@ -837,6 +837,7 @@
     }
     .order-card-table tbody tr:nth-child(even) td { background: #f8faf9; }
     .order-card-table input[type="text"],
+    .order-card-table input[type="number"],
     .order-card-table select {
       width: 100%;
       height: 26px;
@@ -850,10 +851,20 @@
       color: var(--med-text-main);
     }
     .order-card-table input[type="text"]:focus,
+    .order-card-table input[type="number"]:focus,
     .order-card-table select:focus {
       border-color: var(--med-green);
       box-shadow: 0 0 4px rgba(31, 125, 69, 0.3);
       outline: none;
+    }
+    .order-card-table input[type="number"]::-webkit-inner-spin-button,
+    .order-card-table input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .order-card-table input[type="number"] {
+      -moz-appearance: textfield;
+      appearance: textfield;
     }
     .med-count-pill {
       display: inline-block;

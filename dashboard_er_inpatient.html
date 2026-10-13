@@ -10625,7 +10625,7 @@
 
       row.innerHTML =
         '<td><select data-medication-field="solution" aria-label="Carrier solution">' + renderSelectOptions(INFUSION_SOLUTIONS, data && data.solution, '-- Select Diluent --') + '</select></td>' +
-        '<td style="text-align:center;"><input type="number" data-medication-field="qty" min="1" value="' + esc((data && data.qty) || '') + '" placeholder="1" aria-label="Quantity (bags/bottles)" style="width:100%; text-align:center; min-width:36px;"></td>' +
+        '<td style="text-align:center;"><input type="number" data-medication-field="qty" min="1" value="' + esc((data && data.qty) || '') + '" placeholder="1" aria-label="Quantity (bags/bottles)" style="text-align:center;"></td>' +
         '<td><input type="text" data-medication-field="additiveDrug" list="med-sample-infusion-drugs" value="' + esc((data && (data.additiveDrug || data.drug)) || '') + '" placeholder="e.g. Norepinephrine 4 mg" aria-label="Drug in mixture"></td>' +
         '<td><input type="text" data-medication-field="finalConcentration" list="med-sample-concentrations" value="' + esc((data && data.finalConcentration) || '') + '" placeholder="e.g. 16 mcg/mL" aria-label="Final concentration"></td>' +
         '<td><div style="display:flex; align-items:center; gap:2px;"><input type="text" data-medication-field="prescribedDose" value="' + esc(doseNumVal) + '" placeholder="e.g. 0.05-0.2" aria-label="Prescribed dose" style="flex:1 1 50%; min-width:38px;"><select data-medication-field="doseUnit" aria-label="Dose unit" style="flex:0 0 auto; width:auto; min-width:88px; font-size:11px; padding:2px 3px; margin:0;">' + renderSelectOptions(PRESCRIBED_DOSE_UNITS, doseUnitVal, '-- Unit --') + '</select></div></td>' +
