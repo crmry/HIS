@@ -10184,6 +10184,14 @@
       'mL/h', 'drops/mins'
     ];
 
+    var PRESCRIBED_DOSE_UNITS = [
+      'mcg/kg/min', 'mcg/min', 'mcg/hr',
+      'mg/kg/min', 'mg/min', 'mg/hr',
+      'units/hr', 'units/min',
+      'mEq/hr', 'mEq/min',
+      'nmol/kg/min'
+    ];
+
     var SAMPLE_CONTINUOUS_DOSES = [
       '0.05 - 0.2 mcg/kg/min',
       '0.02 - 0.1 mcg/kg/min',
@@ -10320,7 +10328,7 @@
         if (item.additiveDrug) parts.push(item.additiveDrug);
         if (item.solution) parts.push('in ' + item.solution);
         if (item.finalConcentration) parts.push('(Conc: ' + item.finalConcentration + ')');
-        var doseStr = [item.prescribedDose, item.doseExpression].filter(Boolean).join(' ');
+        var doseStr = [item.prescribedDose, item.doseUnit || item.doseExpression].filter(Boolean).join(' ');
         if (item.prescribedDose) parts.push('at ' + doseStr);
         if (item.infusionRate) {
           var rateStr = String(item.infusionRate).trim();
@@ -10575,6 +10583,17 @@
         prescribedDoseVal = prescribedDoseVal + ' ' + data.doseExpression;
       }
 
+      // Split stored prescribedDose into numeric value + unit for the two-field layout
+      var doseUnitVal = (data && data.doseUnit) ? String(data.doseUnit).trim() : '';
+      var doseNumVal = prescribedDoseVal;
+      if (!doseUnitVal && prescribedDoseVal) {
+        var _doseUnitMatch = prescribedDoseVal.match(/(?:nmol|m?(?:c?g|eq)|units?)\/?(?:kg\/)?(?:min|hr|h)/i);
+        if (_doseUnitMatch) {
+          doseUnitVal = _doseUnitMatch[0];
+          doseNumVal = prescribedDoseVal.slice(0, prescribedDoseVal.lastIndexOf(_doseUnitMatch[0])).trim().replace(/[-\s]+$/, '').trim();
+        }
+      }
+
       var rawRate = (data && data.infusionRate) ? String(data.infusionRate).trim() : '';
       var rateVal = rawRate;
       var rateUnitVal = (data && data.infusionRateUnit) ? String(data.infusionRateUnit).trim() : '';
@@ -10606,7 +10625,7 @@
         '<td><select data-medication-field="solution" aria-label="Carrier solution">' + renderSelectOptions(INFUSION_SOLUTIONS, data && data.solution, '-- Select Diluent --') + '</select></td>' +
         '<td><input type="text" data-medication-field="additiveDrug" list="med-sample-infusion-drugs" value="' + esc((data && (data.additiveDrug || data.drug)) || '') + '" placeholder="e.g. Norepinephrine 4 mg" aria-label="Drug in mixture"></td>' +
         '<td><input type="text" data-medication-field="finalConcentration" list="med-sample-concentrations" value="' + esc((data && data.finalConcentration) || '') + '" placeholder="e.g. 16 mcg/mL" aria-label="Final concentration"></td>' +
-        '<td><input type="text" data-medication-field="prescribedDose" list="med-sample-continuous-doses" value="' + esc(prescribedDoseVal) + '" placeholder="e.g. 0.05-0.2 mcg/kg/min" aria-label="Prescribed dose and unit"></td>' +
+        '<td><div style="display:flex; align-items:center; gap:2px;"><input type="text" data-medication-field="prescribedDose" value="' + esc(doseNumVal) + '" placeholder="e.g. 0.05-0.2" aria-label="Prescribed dose" style="flex:1 1 50%; min-width:38px;"><select data-medication-field="doseUnit" aria-label="Dose unit" style="flex:0 0 auto; width:auto; min-width:88px; font-size:11px; padding:2px 3px; margin:0;">' + renderSelectOptions(PRESCRIBED_DOSE_UNITS, doseUnitVal, '-- Unit --') + '</select></div></td>' +
         '<td><div style="display:flex; align-items:center; gap:2px;"><input type="text" data-medication-field="infusionRate" value="' + esc(rateVal) + '" placeholder="15" aria-label="Infusion rate" style="flex:1 1 45%; min-width:32px;"><select data-medication-field="infusionRateUnit" aria-label="Infusion rate unit" style="flex:0 0 auto; width:auto; min-width:74px; font-size:11px; padding:2px 3px; margin:0;">' + renderSelectOptions(INFUSION_RATE_UNITS, rateUnitVal) + '</select></div></td>' +
         '<td><input type="text" data-medication-field="precautions" list="med-sample-infusion-precautions" value="' + esc((data && data.precautions) || '') + '" placeholder="Titration goals, MAP target..." aria-label="Infusion precautions"></td>' +
         '<td class="medication-remove"><button type="button" class="btn btn-danger btn-mini rm-medication" aria-label="Remove infusion">&times;</button></td>';
