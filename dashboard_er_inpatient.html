@@ -2059,18 +2059,21 @@
                         <table class="table table-bordered table-condensed table-striped" id="interview-meds-table" style="margin-bottom:0; font-size:11.5px;">
                           <thead>
                             <tr style="background:#f1f5f9; color:#475569;">
-                              <th style="width:26%;">Drug Name</th>
-                              <th style="width:10%;">Qty</th>
-                              <th style="width:10%;">Dosage</th>
-                              <th style="width:16%;">Frequency / Timing</th>
-                              <th style="width:10%;">Duration</th>
-                              <th style="width:14%;">Physician</th>
-                              <th style="width:8%;">Status</th>
-                              <th style="width:6%; text-align:center;">Action</th>
+                              <th>Drug name</th>
+                              <th style="width:75px;">Quantity</th>
+                              <th style="width:90px;">Dosage</th>
+                              <th style="width:130px;">Frequency</th>
+                              <th style="width:110px;">Timing</th>
+                              <th style="width:70px;">Period</th>
+                              <th style="width:80px;">Duration</th>
+                              <th style="width:95px;">Date Started</th>
+                              <th style="width:115px;">Remarks</th>
+                              <th style="width:130px;">Doctor</th>
+                              <th style="width:50px; text-align:center;">Action</th>
                             </tr>
                           </thead>
                           <tbody id="interview-meds-tbody">
-                            <tr><td colspan="8" class="text-center muted" style="padding:10px;">No interview medications recorded. Click "+ Add Medication" to encode.</td></tr>
+                            <tr><td colspan="11" class="text-center muted" style="padding:10px;">No interview medications recorded. Click "+ Add Medication" to encode.</td></tr>
                           </tbody>
                         </table>
                       </div>
@@ -7006,20 +7009,27 @@
       var pRec = (typeof getPatients === 'function' ? getPatients() : []).find(function(r) { return r.id === pId; });
       var meds = (pRec && pRec.data && Array.isArray(pRec.data.interview_medications)) ? pRec.data.interview_medications : [];
       if (meds.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center muted" style="padding:10px;">No interview medications recorded. Click "+ Add Medication" to encode.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="11" class="text-center muted" style="padding:10px;">No interview medications recorded. Click "+ Add Medication" to encode.</td></tr>';
         return;
       }
       tbody.innerHTML = meds.map(function(m, idx) {
-        var freqTiming = [m.frequency, m.timing].filter(Boolean).join(' • ') || '—';
         var doc = m.doctor || getPatientPhysicianName(pId);
+        if (/^Dr\.?\s+/i.test(doc) && /,\s*M\.?D\.?/i.test(doc)) {
+          doc = doc.replace(/^Dr\.?\s+/i, '');
+        }
+        var remarksBadge = '<span class="badge" style="background:#0284c7; color:#fff; font-size:10px;">Home Med</span>';
+        var remarksText = m.remarks ? '<div style="font-size:10.5px; color:#64748b; margin-top:2px;">' + esc(m.remarks) + '</div>' : '';
         return '<tr>' +
           '<td><strong>' + esc(m.name) + '</strong></td>' +
           '<td>' + esc(m.quantity || '—') + '</td>' +
           '<td>' + esc(m.dosage || '—') + '</td>' +
-          '<td>' + esc(freqTiming) + '</td>' +
+          '<td>' + esc(m.frequency || '—') + '</td>' +
+          '<td>' + esc(m.timing || '—') + '</td>' +
+          '<td>' + esc(m.period || '—') + '</td>' +
           '<td>' + esc(m.duration || 'Ongoing') + '</td>' +
+          '<td>' + esc(m.started ? formatDate(m.started) : '—') + '</td>' +
+          '<td>' + remarksBadge + remarksText + '</td>' +
           '<td>' + esc(doc) + '</td>' +
-          '<td><span class="badge" style="background:#0284c7; color:#fff; font-size:10px;">Home Med</span></td>' +
           '<td style="text-align:center;">' +
             '<button type="button" class="btn btn-mini btn-danger" onclick="deleteInterviewMed(' + idx + ')" title="Remove medication" style="padding:1px 6px;">✕</button>' +
           '</td>' +
