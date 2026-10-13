@@ -1941,7 +1941,7 @@
                       <div class="btn-group flowsheet-filter-group" id="meds-filter-group">
                         <button type="button" class="btn active" data-filter="all">All Prescribed Meds (<span id="count-meds-all">4</span>)</button>
                         <button type="button" class="btn" data-filter="active">Active Scheduled (<span id="count-meds-active">3</span>)</button>
-                        <button type="button" class="btn" data-filter="antimicrobial">Anti-Microbial Medicines (<span id="count-meds-antimicrobial">0</span>)</button>
+                        <button type="button" class="btn" data-filter="antimicrobial">Anti-Microbial Medicines (Ask assistance with AMS for data sets needed) (<span id="count-meds-antimicrobial">0</span>)</button>
                       </div>
                     </div>
                     <table class="table table-bordered table-condensed" id="med-summary-table" style="margin-bottom:0;">
@@ -5632,7 +5632,7 @@
 
         if (filteredMeds.length === 0) {
           var emptyMsg = (activeMedsFilter === 'antimicrobial' || activeMedsFilter === 'prn')
-            ? 'No anti-microbial medicines on record. (Awaiting AMS dataset specification).'
+            ? 'No anti-microbial medicines on record. (Ask assistance with AMS for data sets needed).'
             : 'No medications found for this filter.';
           medRows.innerHTML = '<tr><td colspan="10" class="muted text-center" style="padding:15px;">' + emptyMsg + '</td></tr>';
         } else {
@@ -7425,7 +7425,7 @@
 
       if (filteredMeds.length === 0) {
         var emptyMsg = (activeMedsFilter === 'antimicrobial' || activeMedsFilter === 'prn')
-          ? 'No anti-microbial medicines on record. (Awaiting AMS dataset specification).'
+          ? 'No anti-microbial medicines on record. (Ask assistance with AMS for data sets needed).'
           : 'No active medications ordered for this encounter.';
         medRows.innerHTML = '<tr><td colspan="10" class="muted text-center" style="padding:15px;">' + emptyMsg + '</td></tr>';
       } else {
