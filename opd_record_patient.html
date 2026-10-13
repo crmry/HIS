@@ -450,8 +450,9 @@ Physical Examination: General Survey: Conscious, coherent, ambulatory. HEENT: An
           fullHistAndPe += '\nAllergies: ' + data.hx_allergy;
         }
 
-        var signs = Array.isArray(data.pertinent_signs) ? data.pertinent_signs : [];
-        var signsInfo = data.pertinent_signs_information || '';
+        var signs = (Array.isArray(initialEnc.pertinent_signs) && initialEnc.pertinent_signs.length) ? initialEnc.pertinent_signs :
+                    (Array.isArray(data.pertinent_signs) ? data.pertinent_signs : []);
+        var signsInfo = initialEnc.pertinent_signs_information || data.pertinent_signs_information || '';
         var signsText = signs.length ? (signs.join(', ') + (signsInfo ? ' — ' + signsInfo : '')) : 'Localized right knee joint ache, joint line crepitus; afebrile.';
         fullHistAndPe += '\n\nPertinent Signs and Symptoms: ' + signsText;
 
@@ -459,12 +460,13 @@ Physical Examination: General Survey: Conscious, coherent, ambulatory. HEENT: An
         if (data.pe_general_survey_other) {
           genSurveyText += ' (' + data.pe_general_survey_other + ')';
         }
+        var extPeText = initialEnc.physical_exam || initialEnc.results || data.pe_skin_extremities_other || data.pe_extremities || 'Right knee: Mild medial joint line crepitus. Negative drawer and McMurray tests.';
         fullHistAndPe += '\n\nPhysical Examination: General Survey: ' + genSurveyText +
           '. HEENT: ' + (Array.isArray(data.pe_heent) && data.pe_heent.length ? data.pe_heent.join(', ') : (data.pe_heent_other || data.pe_heent || 'Anicteric sclerae, pink conjunctivae')) +
           '. Chest & Lungs: ' + (Array.isArray(data.pe_chest_lungs) && data.pe_chest_lungs.length ? data.pe_chest_lungs.join(', ') : (data.pe_chest_lungs_other || data.pe_chest_lungs || 'Clear breath sounds bilaterally')) +
           '. Cardiovascular: ' + (data.pe_cvs_other || data.pe_cardiovascular || 'Normal rate, regular rhythm') +
           '. Abdomen: ' + (Array.isArray(data.pe_abdomen) && data.pe_abdomen.length ? data.pe_abdomen.join(', ') : (data.pe_abdomen_other || data.pe_abdomen || 'Soft, non-tender')) +
-          '. Extremities / PE: ' + (initialEnc.results || data.pe_skin_extremities_other || data.pe_extremities || 'Right knee: Mild medial joint line crepitus. Negative drawer and McMurray tests.') +
+          '. Extremities / PE: ' + extPeText +
           '. Neurologic: ' + (data.pe_neuro_exam_other || data.pe_neurologic || 'Intact, GCS 15') +
           '. Skin: ' + (data.pe_skin_extremities || data.pe_skin || 'Good turgor, no petechiae') + '.';
 
@@ -528,24 +530,27 @@ Physical Examination: General Survey: Conscious, coherent, ambulatory. HEENT: An
         var curEnc = encounters.find(function (e) { return e.is_current || e.isCurrent; });
         var finalDx = '';
 
-        // Priority 1: Current active encounter's final diagnosis entered/saved by the physician
-        if (curEnc) {
+        // Priority 1: Target encounter explicit final diagnosis
+        if (initialEnc) {
+          finalDx = (initialEnc.final_diagnosis || (initialEnc.clinical_record && initialEnc.clinical_record.final_diagnosis) || '').trim();
+        }
+        // Priority 2: Target encounter clean diagnosis without ICD code prefix
+        if (!finalDx && initialEnc && initialEnc.diagnosis) {
+          finalDx = cleanDiagnosisText(initialEnc.diagnosis);
+        }
+        // Priority 3: Current active encounter's final diagnosis entered/saved by the physician
+        if (!finalDx && curEnc) {
           finalDx = (curEnc.final_diagnosis || (curEnc.clinical_record && curEnc.clinical_record.final_diagnosis) || '').trim();
         }
-        // Priority 2: Patient record level final diagnosis
+        // Priority 4: Patient record level final diagnosis
         if (!finalDx && data.final_diagnosis) {
           finalDx = String(data.final_diagnosis).trim();
         }
-        // Priority 3: Target encounter's explicit final diagnosis
-        if (!finalDx && initialEnc) {
-          finalDx = (initialEnc.final_diagnosis || (initialEnc.clinical_record && initialEnc.clinical_record.final_diagnosis) || '').trim();
-        }
-        // Priority 4: Clean encounter diagnosis without ICD code prefix
         if (!finalDx && curEnc && curEnc.diagnosis) {
           finalDx = cleanDiagnosisText(curEnc.diagnosis);
         }
-        if (!finalDx && initialEnc && initialEnc.diagnosis) {
-          finalDx = cleanDiagnosisText(initialEnc.diagnosis);
+        if (/Unilateral Primary Osteoarthritis,\s*Right Knee,\s*mild/i.test(finalDx)) {
+          finalDx = finalDx.replace(/Unilateral Primary Osteoarthritis,\s*Right Knee,\s*mild/i, 'Unilateral Primary Osteoarthritis, Right Knee, Grade II');
         }
 
         var dxEl = document.getElementById('opd-diagnosis');

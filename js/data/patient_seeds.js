@@ -109,7 +109,7 @@ if (typeof window !== 'undefined') {
     function opPatientRecord() {
       return {
         id: OP_PATIENT_ID,
-        seedVersion: 69,
+        seedVersion: 70,
         createdAt: '2026-03-14T08:45:00+08:00',
         updatedAt: '2026-09-26T09:30:00+08:00',
         data: {
@@ -1727,7 +1727,7 @@ if (typeof window !== 'undefined') {
       var opIndex = records.findIndex(function (record) { return record.id === OP_PATIENT_ID; });
       if (opIndex < 0) {
         records.unshift(opPatientRecord());
-      } else if (Number(records[opIndex].seedVersion || 0) < 69) {
+      } else if (Number(records[opIndex].seedVersion || 0) < 70) {
         records[opIndex] = opPatientRecord();
         try {
           var store = safeParse(localStorage.getItem('his_chart_monitoring_data_v1'), {});

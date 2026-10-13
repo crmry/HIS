@@ -1039,15 +1039,18 @@
             const row2 = parts.join("\n");
 
             // Row 3: (Diagnosis without label and without ICD-10 code - aligned with Face Sheet Final Diagnosis)
-            const rawDiag = String(
+            let rawDiag = String(
                 enc?.clinical_record?.final_diagnosis ||
                 enc?.final_diagnosis ||
-                primaryData?.final_diagnosis ||
                 enc?.diagnosis ||
+                primaryData?.final_diagnosis ||
                 enc?.clinical_record?.admitting_diagnosis ||
                 primaryData?.admitting_diagnosis ||
                 ""
             ).trim();
+            if (/Unilateral Primary Osteoarthritis,\s*Right Knee,\s*mild/i.test(rawDiag)) {
+                rawDiag = rawDiag.replace(/Unilateral Primary Osteoarthritis,\s*Right Knee,\s*mild/i, "Unilateral Primary Osteoarthritis, Right Knee, Grade II");
+            }
             const cleanDiag = rawDiag
                 .replace(/^(Initial\s+Diagnosis|Diagnosis|Impression|Admitting\s+Diagnosis|Final\s+Diagnosis):\s*/i, "")
                 .replace(/^[A-Z][0-9]{2}(\.[0-9]{1,2})?\s*-\s*/i, "")
@@ -1063,14 +1066,14 @@
         }
 
         const CATEGORY_PRIORITY = {
-            "Plan": 1,
-            "Diet": 2,
-            "IV": 3,
-            "Labs": 4,
-            "Diagnostics": 5,
-            "Meds": 6,
+            "Diet": 1,
+            "IV": 2,
+            "Labs": 3,
+            "Diagnostics": 4,
+            "Meds": 5,
+            "Procedures": 6,
             "Special Order": 7,
-            "Procedures": 8
+            "Plan": 8
         };
 
         function detectOrderCategory(orderText) {
@@ -1857,7 +1860,11 @@
                             if (rx.duration) text += " x " + String(rx.duration).trim() + " " + String(rx.period || "Days").trim();
                         }
                         if (rx.qty || rx.quantity) text += " [Qty: " + String(rx.qty || rx.quantity).trim() + "]";
-                        const alreadyExists = orders.some(o => o.text.toLowerCase().startsWith('rx:') && o.text.toLowerCase().includes(drugName.toLowerCase()));
+                        const alreadyExists = orders.some(o => {
+                            const oText = (o.text || "").toLowerCase();
+                            const dName = drugName.toLowerCase();
+                            return oText.includes(dName);
+                        });
                         if (!alreadyExists) {
                             orders.push({
                                 text: text,
