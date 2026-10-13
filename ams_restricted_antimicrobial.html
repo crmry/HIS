@@ -1,0 +1,2195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antimicrobial Stewardship (AMS) — Restricted Antibiotic Request Form (AMS.F.003)</title>
+    <style>
+        :root {
+            --primary: #155e75;
+            --primary-dark: #0e3b4a;
+            --accent: #0284c7;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --bg-canvas: #e2e8f0;
+            --sheet-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border-dark: #1e293b;
+            --border-light: #94a3b8;
+            --table-border: #334155;
+            --font-serif: "Times New Roman", Times, Georgia, serif;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            font-size: 13px;
+            line-height: 1.4;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* ── Top Application Navigation Bar ── */
+        .app-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: #ffffff;
+            border-bottom: 1px solid #cbd5e1;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .app-topbar .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-topbar .brand .badge {
+            background: #0f766e;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .app-topbar .brand h1 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .app-topbar .brand .subtext {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: 4px;
+        }
+
+        .app-topbar .actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #334155;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .nav-btn:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+            border-color: #94a3b8;
+        }
+
+        .nav-btn.primary {
+            background: #0f766e;
+            color: #ffffff;
+            border-color: #0f766e;
+        }
+
+        .nav-btn.primary:hover {
+            background: #115e59;
+            border-color: #115e59;
+        }
+
+        .nav-btn.accent {
+            background: #0284c7;
+            color: #ffffff;
+            border-color: #0284c7;
+        }
+
+        .nav-btn.accent:hover {
+            background: #0369a1;
+            border-color: #0369a1;
+        }
+
+        .patient-select {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #0f172a;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+            min-width: 260px;
+        }
+
+        .view-toggle {
+            display: inline-flex;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 2px;
+        }
+
+        .view-toggle button {
+            border: none;
+            background: transparent;
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .view-toggle button.active {
+            background: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* ── Workspace Container ── */
+        .workspace {
+            max-width: 1040px;
+            margin: 24px auto 60px;
+            padding: 0 16px;
+        }
+
+        /* ── Official A4 Document Sheet Styling ── */
+        .document-page {
+            background: var(--sheet-bg);
+            width: 100%;
+            max-width: 880px;
+            margin: 0 auto 36px;
+            padding: 36px 44px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            border-radius: 2px;
+            font-family: var(--font-serif);
+            color: #000000;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .page-badge-corner {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            font-family: var(--font-sans);
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            text-transform: uppercase;
+        }
+
+        /* Page 1 Hospital Header */
+        .doc-header-center {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .doc-header-center .hosp-name {
+            font-size: 14pt;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+        }
+
+        .doc-header-center .hosp-sub {
+            font-size: 10pt;
+            margin: 2px 0 6px;
+        }
+
+        .doc-header-center .committee-title {
+            font-size: 12pt;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin: 6px 0 2px;
+            text-transform: uppercase;
+        }
+
+        .doc-header-center .form-main-title {
+            font-size: 13pt;
+            font-weight: bold;
+            color: #0369a1;
+            text-transform: uppercase;
+            margin: 4px 0 2px;
+            letter-spacing: 0.3px;
+        }
+
+        .doc-header-center .program-note {
+            font-size: 9.5pt;
+            font-style: italic;
+            margin: 2px 0 10px;
+        }
+
+        /* Demographics Table */
+        .form-grid-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+            border: 1.5px solid #000000;
+            font-size: 9.5pt;
+        }
+
+        .form-grid-table td, 
+        .form-grid-table th {
+            border: 1px solid #000000;
+            padding: 4px 6px;
+            vertical-align: top;
+        }
+
+        .form-grid-table .cell-label {
+            font-size: 8pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #111827;
+            display: block;
+            margin-bottom: 2px;
+            font-family: var(--font-sans);
+        }
+
+        .form-grid-table .field-sub {
+            display: flex;
+            justify-content: space-between;
+            font-size: 8pt;
+            color: #374151;
+            font-family: var(--font-sans);
+            margin-top: 2px;
+        }
+
+        .form-grid-table input[type="text"],
+        .form-grid-table input[type="number"],
+        .form-grid-table select {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 9.5pt;
+            color: #000;
+            padding: 2px 0;
+            outline: none;
+        }
+
+        .form-grid-table input:focus,
+        .form-grid-table select:focus {
+            background: #eff6ff;
+        }
+
+        .section-header-bar {
+            background: #f1f5f9;
+            font-family: var(--font-sans);
+            font-size: 9pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 4px 6px;
+            border: 1px solid #000000;
+            border-bottom: none;
+        }
+
+        /* Tables for Drugs, Cultures & Recommendations */
+        .clinical-records-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+            border: 1.5px solid #000000;
+            font-size: 9pt;
+        }
+
+        .clinical-records-table th {
+            border: 1px solid #000000;
+            background: #f8fafc;
+            padding: 5px 6px;
+            text-align: center;
+            font-weight: bold;
+            font-family: var(--font-sans);
+            font-size: 8.5pt;
+        }
+
+        .clinical-records-table td {
+            border: 1px solid #000000;
+            padding: 4px 6px;
+            vertical-align: middle;
+        }
+
+        .clinical-records-table input[type="text"],
+        .clinical-records-table select {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 9pt;
+            padding: 2px 0;
+            outline: none;
+        }
+
+        .clinical-records-table input:focus,
+        .clinical-records-table select:focus {
+            background: #eff6ff;
+        }
+
+        /* Checkbox styling */
+        .check-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-right: 14px;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: 9pt;
+            user-select: none;
+        }
+
+        .check-item input[type="checkbox"] {
+            margin: 0;
+            width: 13px;
+            height: 13px;
+            cursor: pointer;
+        }
+
+        /* Justification Box */
+        .justification-box {
+            border: 1.5px solid #000000;
+            margin-bottom: 12px;
+            padding: 6px 8px;
+            font-size: 9pt;
+        }
+
+        .justification-header {
+            font-family: var(--font-sans);
+            font-weight: bold;
+            font-size: 9pt;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .justification-textarea {
+            width: 100%;
+            border: 1px dashed #cbd5e1;
+            background: transparent;
+            font-family: inherit;
+            font-size: 9.5pt;
+            line-height: 1.4;
+            padding: 4px;
+            resize: vertical;
+            min-height: 38px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .justification-textarea:focus {
+            background: #eff6ff;
+            border-color: #94a3b8;
+        }
+
+        /* Site of Infection Box */
+        .infection-sites-box {
+            border: 1.5px solid #000000;
+            margin-bottom: 12px;
+            padding: 6px 8px;
+        }
+
+        .infection-sites-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px 10px;
+            margin-top: 4px;
+        }
+
+        /* Physician Signatures & Approval Section */
+        .physician-approval-box {
+            border: 1.5px solid #000000;
+            margin-bottom: 14px;
+        }
+
+        .physician-req-bar {
+            padding: 6px 8px;
+            border-bottom: 1px solid #000000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .approval-mode-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1.5px solid #000000;
+        }
+
+        .approval-column {
+            padding: 6px 10px;
+        }
+
+        .approval-column:first-child {
+            border-right: 1px solid #000000;
+        }
+
+        .approval-col-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .approval-active-indicator {
+            font-size: 8pt;
+            color: #dc2626;
+            font-weight: 700;
+            font-family: var(--font-sans);
+            text-transform: uppercase;
+        }
+
+        .approval-fields-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .approval-fields-row label {
+            display: block;
+            font-size: 8pt;
+            color: #374151;
+            font-family: var(--font-sans);
+        }
+
+        .approval-fields-row input,
+        .approval-fields-row select {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 3px;
+            padding: 3px 6px;
+            font-family: inherit;
+            font-size: 9pt;
+            box-sizing: border-box;
+        }
+
+        /* Clean Red / Line Divider: DO NOT WRITE BELOW THIS LINE */
+        .do-not-write-divider {
+            border: none;
+            border-top: 2px solid #dc2626;
+            margin: 14px 0 8px;
+            position: relative;
+            text-align: center;
+        }
+
+        .do-not-write-tag {
+            position: relative;
+            top: -10px;
+            background: #ffffff;
+            padding: 0 12px;
+            color: #dc2626;
+            font-family: var(--font-sans);
+            font-weight: bold;
+            font-size: 8.5pt;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Recommendation Section */
+        .recommendation-box {
+            border: 1.5px solid #000000;
+            padding: 8px 10px;
+            margin-top: 4px;
+        }
+
+        .recommendation-options {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .rec-action-btn {
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            border-radius: 4px;
+            padding: 2px 7px;
+            font-size: 11px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .rec-action-btn.approve {
+            color: #16a34a;
+            border-color: #86efac;
+        }
+
+        .rec-action-btn.approve.selected {
+            background: #16a34a;
+            color: #ffffff;
+            border-color: #16a34a;
+        }
+
+        .rec-action-btn.reject {
+            color: #dc2626;
+            border-color: #fca5a5;
+        }
+
+        .rec-action-btn.reject.selected {
+            background: #dc2626;
+            color: #ffffff;
+            border-color: #dc2626;
+        }
+
+        .disapproved-section {
+            margin-top: 8px;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 8px;
+        }
+
+        .disapproved-title {
+            font-family: var(--font-sans);
+            font-weight: bold;
+            font-size: 8.5pt;
+            text-transform: uppercase;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .disapproved-item-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 8px;
+            margin-bottom: 6px;
+            align-items: center;
+            background: #fef2f2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border-left: 3px solid #dc2626;
+        }
+
+        .disapproved-item-name {
+            font-weight: bold;
+            font-size: 9pt;
+            color: #991b1b;
+        }
+
+        .disapproved-item-input {
+            width: 100%;
+            border: 1px solid #f87171;
+            border-radius: 3px;
+            padding: 3px 6px;
+            font-size: 8.5pt;
+            background: #fff;
+            box-sizing: border-box;
+        }
+
+        .doc-footer-codes {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 10px;
+            font-size: 8pt;
+            font-family: var(--font-sans);
+            color: #475569;
+        }
+
+        .doc-footer-codes .annex-notice {
+            font-style: italic;
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        /* ── Page 2 (Annex) Official Hospital Layout ── */
+        .annex-page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .annex-doh-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .annex-doh-brand .seal-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1.5px solid #0f766e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8pt;
+            font-weight: bold;
+            text-align: center;
+            color: #0f766e;
+            line-height: 1.1;
+            background: #f0fdfa;
+        }
+
+        .annex-hosp-titles {
+            line-height: 1.25;
+        }
+
+        .annex-hosp-titles .doh-tag {
+            font-size: 9pt;
+            color: #334155;
+            text-transform: uppercase;
+            font-family: var(--font-sans);
+        }
+
+        .annex-hosp-titles .hosp-name-lg {
+            font-size: 13pt;
+            font-weight: bold;
+            margin: 0;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        .annex-hosp-titles .hosp-contacts {
+            font-size: 8pt;
+            color: #475569;
+            font-family: var(--font-sans);
+        }
+
+        .annex-valid-date {
+            font-size: 8.5pt;
+            font-weight: bold;
+            text-align: right;
+            font-family: var(--font-sans);
+            color: #000;
+        }
+
+        /* Classification Policy Blocks */
+        .policy-group-container {
+            border: 1.5px solid #000000;
+            margin-bottom: 10px;
+        }
+
+        .policy-block {
+            padding: 5px 8px;
+            font-size: 8.5pt;
+            border-bottom: 1px solid #000000;
+            line-height: 1.35;
+        }
+
+        .policy-block:last-child {
+            border-bottom: none;
+        }
+
+        .policy-block-title {
+            font-family: var(--font-sans);
+            font-weight: bold;
+            font-size: 9.5pt;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .policy-block.very-restricted .policy-block-title {
+            color: #000000;
+        }
+
+        /* 4-Column Master Antibiotics Classification Table */
+        .annex-master-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1.5px solid #000000;
+            font-size: 8.5pt;
+            margin-bottom: 10px;
+        }
+
+        .annex-master-table th {
+            border: 1px solid #000000;
+            background: #f1f5f9;
+            padding: 5px 6px;
+            font-family: var(--font-sans);
+            font-size: 8.5pt;
+            font-weight: bold;
+            text-align: center;
+            width: 25%;
+        }
+
+        .annex-master-table td {
+            border: 1px solid #000000;
+            padding: 4px 6px;
+            vertical-align: top;
+        }
+
+        .annex-drug-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 4px;
+            margin-bottom: 5px;
+            line-height: 1.25;
+        }
+
+        .annex-drug-item .cat-code {
+            font-weight: bold;
+            font-family: var(--font-sans);
+            font-size: 7.5pt;
+            display: inline-block;
+            min-width: 18px;
+        }
+
+        .annex-drug-item .drug-label {
+            font-size: 8.5pt;
+        }
+
+        .annex-drug-item .drug-aware {
+            font-style: italic;
+            font-size: 8pt;
+            color: #1e293b;
+        }
+
+        /* AWaRe Definitions Section */
+        .aware-definitions-box {
+            border: 1.5px solid #000000;
+            padding: 6px 8px;
+            margin-bottom: 10px;
+            font-size: 8pt;
+            line-height: 1.35;
+        }
+
+        .aware-def-item {
+            margin-bottom: 4px;
+        }
+
+        .aware-def-item strong {
+            font-family: var(--font-sans);
+        }
+
+        .aware-def-item.access strong {
+            color: #166534;
+        }
+
+        .aware-def-item.watch strong {
+            color: #b45309;
+        }
+
+        .aware-def-item.reserve strong {
+            color: #991b1b;
+        }
+
+        .aware-legend-note {
+            font-size: 7.5pt;
+            color: #475569;
+            font-style: italic;
+            margin-top: 4px;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 3px;
+        }
+
+        /* Procedure Ordered List */
+        .procedure-steps-box {
+            border: 1.5px solid #000000;
+            padding: 6px 10px;
+            font-size: 8pt;
+            line-height: 1.35;
+        }
+
+        .procedure-steps-box .proc-heading {
+            font-family: var(--font-sans);
+            font-weight: bold;
+            font-size: 8.5pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .procedure-steps-box ol {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .procedure-steps-box li {
+            margin-bottom: 4px;
+            text-align: justify;
+        }
+
+        /* Interactive Add Row Controls (Screen Only) */
+        .interactive-add-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: -6px;
+            margin-bottom: 10px;
+        }
+
+        .btn-add-mini {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            color: #0f766e;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-add-mini:hover {
+            background: #f0fdfa;
+            border-color: #0f766e;
+        }
+
+        .btn-del-mini {
+            background: transparent;
+            border: none;
+            color: #ef4444;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+
+        .btn-del-mini:hover {
+            color: #b91c1c;
+        }
+
+        /* Toast Feedback */
+        #ams-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.25s ease;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        #ams-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Print / Annex Preview Styles ── */
+        @media print {
+            body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .app-topbar,
+            .interactive-add-row,
+            .btn-del-mini,
+            .rec-action-btn:not(.selected) {
+                display: none !important;
+            }
+
+            .workspace {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .document-page {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                margin: 0 !important;
+                padding: 28px 36px !important;
+                max-width: 100% !important;
+                page-break-after: always !important;
+                break-after: page !important;
+            }
+
+            .document-page:last-child {
+                page-break-after: auto !important;
+                break-after: auto !important;
+            }
+
+            .page-badge-corner {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══ TOPBAR / CONTROLS ═══ -->
+    <header class="app-topbar" id="app-topbar">
+        <div class="brand">
+            <span class="badge">AMS.F.003</span>
+            <div>
+                <h1>Restricted Antibiotic Request Form</h1>
+                <span class="subtext">CLMMRH Antimicrobial Stewardship Committee Program</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <select id="patient-selector" class="patient-select" title="Switch active patient">
+                <option value="">Select patient record...</option>
+            </select>
+
+            <div class="view-toggle">
+                <button type="button" id="btn-view-editor" class="active" onclick="switchViewMode('editor')">Interactive Form</button>
+                <button type="button" id="btn-view-preview" onclick="switchViewMode('preview')">A4 Document Preview (2 Pages)</button>
+            </div>
+
+            <button type="button" class="nav-btn primary" id="btn-save-request" onclick="saveAmsRequest()">
+                Save Request
+            </button>
+
+            <button type="button" class="nav-btn accent" id="btn-print-request" onclick="printAmsForm()">
+                Print / Save PDF
+            </button>
+
+            <a href="dashboard.html" id="btn-back-dashboard" class="nav-btn" title="Return to Physician Dashboard">
+                Return to Dashboard
+            </a>
+        </div>
+    </header>
+
+    <!-- ═══ MAIN WORKSPACE ═══ -->
+    <main class="workspace" id="ams-workspace">
+
+        <!-- ═════════════════════════════════════════════════════════════════ -->
+        <!-- PAGE 1: RESTRICTED ANTIBIOTIC REQUEST FORM (AMS.F.003)           -->
+        <!-- ═════════════════════════════════════════════════════════════════ -->
+        <article class="document-page" id="document-page-1" aria-label="Restricted Antibiotic Request Form Page 1">
+            <div class="page-badge-corner">Page 1 of 2</div>
+
+            <!-- Header -->
+            <div class="doc-header-center">
+                <p class="hosp-name">Corazon Locsin Montelibano Memorial Regional Hospital</p>
+                <p class="hosp-sub">Cor. Burgos-Lacson Streets, Bacolod City 6100 Negros Occidental</p>
+                <p class="committee-title">Antimicrobial Stewardship Committee</p>
+                <h2 class="form-main-title">Restricted Antibiotic Request Form</h2>
+                <p class="program-note">This form is a part of the hospital's Antimicrobial Stewardship Program.</p>
+            </div>
+
+            <!-- Patient Demographics Grid -->
+            <table class="form-grid-table" id="table-patient-demographics">
+                <tr>
+                    <td colspan="4" style="width: 58%;">
+                        <span class="cell-label">Patient's Name</span>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+                            <div>
+                                <input type="text" id="pt-last-name" placeholder="LAST NAME" style="font-weight: bold; text-transform: uppercase;">
+                                <div class="field-sub"><span>LAST NAME</span></div>
+                            </div>
+                            <div>
+                                <input type="text" id="pt-first-name" placeholder="FIRST NAME" style="font-weight: bold; text-transform: uppercase;">
+                                <div class="field-sub"><span>FIRST NAME</span></div>
+                            </div>
+                            <div>
+                                <input type="text" id="pt-middle-name" placeholder="MIDDLE NAME" style="font-weight: bold; text-transform: uppercase;">
+                                <div class="field-sub"><span>MIDDLE NAME</span></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="width: 8%;">
+                        <span class="cell-label">Age</span>
+                        <input type="text" id="pt-age" placeholder="Age" style="text-align: center; font-weight: bold;">
+                    </td>
+                    <td style="width: 14%;">
+                        <span class="cell-label">Sex</span>
+                        <label class="check-item"><input type="checkbox" id="sex-m" onchange="toggleSex('M')"> Male</label>
+                        <label class="check-item"><input type="checkbox" id="sex-f" onchange="toggleSex('F')"> Female</label>
+                    </td>
+                    <td style="width: 20%;">
+                        <span class="cell-label">Dept:</span>
+                        <input type="text" id="pt-department" placeholder="e.g. Internal Medicine / Surgery">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <span class="cell-label">Ward / Rm Number:</span>
+                        <input type="text" id="pt-ward-room" placeholder="e.g. Medical Ward 2 - Bed 14">
+                    </td>
+                    <td colspan="3">
+                        <span class="cell-label">Patient Hospital #:</span>
+                        <input type="text" id="pt-hospital-no" placeholder="0000000000" style="font-weight: bold; letter-spacing: 0.5px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <span class="cell-label">Clinical Diagnosis / Name of Surgery:</span>
+                        <input type="text" id="pt-clinical-diagnosis" placeholder="INITIAL DIAGNOSIS" style="font-weight: bold; color: #000;">
+                    </td>
+                    <td>
+                        <span class="cell-label">Weight</span>
+                        <input type="text" id="pt-weight" placeholder="kg" style="text-align: center;">
+                    </td>
+                    <td>
+                        <span class="cell-label">Creatinine</span>
+                        <input type="text" id="pt-creatinine" placeholder="mg/dL">
+                    </td>
+                    <td>
+                        <span class="cell-label">Creatinine Clearance</span>
+                        <input type="text" id="pt-crcl" placeholder="mL/min">
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Section 1: Drugs Requested -->
+            <div class="section-header-bar">DRUGS REQUESTED</div>
+            <table class="clinical-records-table" id="table-drugs-requested">
+                <thead>
+                    <tr>
+                        <th style="width: 44%;">Drug Description</th>
+                        <th style="width: 20%;">Dose / Frequency<br><span style="font-weight: normal; font-size: 7.5pt;">(q/hr)</span></th>
+                        <th style="width: 16%;">Duration<br><span style="font-weight: normal; font-size: 7.5pt;">(days)</span></th>
+                        <th style="width: 20%;">Quantity Requested<br><span style="font-weight: normal; font-size: 7.5pt;">(tab/amp/vial)</span></th>
+                        <th style="width: 26px;" class="print-hide"></th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-drugs-requested">
+                    <!-- Populated dynamically via JS -->
+                </tbody>
+            </table>
+            <div class="interactive-add-row print-hide">
+                <button type="button" class="btn-add-mini" onclick="addDrugRequestedRow()">+ Add Requested Drug Row</button>
+            </div>
+
+            <!-- Section 2: Justification for Requests -->
+            <div class="justification-box">
+                <div class="justification-header">
+                    <span>JUSTIFICATION FOR REQUESTS:</span>
+                    <label class="check-item"><input type="checkbox" id="just-prophylactic"> Prophylactic</label>
+                    <span style="font-weight: bold;">Therapeutic:</span>
+                    <label class="check-item"><input type="checkbox" id="just-empiric"> Empiric</label>
+                    <label class="check-item"><input type="checkbox" id="just-definitive"> Definitive / Culture-guided</label>
+                </div>
+                <div>
+                    <span style="font-weight: bold; font-family: var(--font-sans); font-size: 8.5pt;">Reason for Request:</span>
+                    <textarea class="justification-textarea" id="just-reason" rows="2" placeholder="Document clinical rationale, severity, risk factors, or failure of first-line antimicrobial agents..."></textarea>
+                </div>
+            </div>
+
+            <!-- Section 3: Site of Infection -->
+            <div class="infection-sites-box">
+                <span style="font-family: var(--font-sans); font-weight: bold; font-size: 8.5pt; text-transform: uppercase;">SITE OF INFECTION</span>
+                <div class="infection-sites-grid">
+                    <label class="check-item"><input type="checkbox" id="site-blood"> Blood</label>
+                    <label class="check-item"><input type="checkbox" id="site-cns"> CNS</label>
+                    <label class="check-item"><input type="checkbox" id="site-gut"> GUT</label>
+                    <label class="check-item"><input type="checkbox" id="site-catheter"> Catheter Related (Urine/IV)</label>
+                    <label class="check-item"><input type="checkbox" id="site-respiratory"> Respiratory</label>
+                    <label class="check-item"><input type="checkbox" id="site-cvs"> CVS</label>
+                    <label class="check-item"><input type="checkbox" id="site-skin"> Skin Soft Tissue</label>
+                    <div style="grid-column: span 1;">
+                        <label class="check-item" style="width: 100%;"><input type="checkbox" id="site-others-check"> Others, specify:</label>
+                    </div>
+                    <label class="check-item"><input type="checkbox" id="site-git"> GIT</label>
+                    <label class="check-item"><input type="checkbox" id="site-reproductive"> Reproductive</label>
+                    <div style="grid-column: span 2;">
+                        <input type="text" id="site-others-text" placeholder="Specify other site..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 3px; font-size: 8.5pt; padding: 2px 6px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Culture / Sensitivity Result -->
+            <div class="section-header-bar">
+                CULTURE / SENSITIVITY RESULT: <span style="font-weight: normal; text-transform: none; font-size: 8pt;">(If indication for request is DEFINITIVE)</span>
+            </div>
+            <table class="clinical-records-table" id="table-cultures">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">Date</th>
+                        <th style="width: 22%;">Specimen / Source</th>
+                        <th style="width: 18%;">Gram Stain</th>
+                        <th style="width: 20%;">Isolate(s)</th>
+                        <th style="width: 25%;">Sensitivity Pattern</th>
+                        <th style="width: 26px;" class="print-hide"></th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-cultures">
+                    <!-- Dynamic culture rows -->
+                </tbody>
+            </table>
+            <div class="interactive-add-row print-hide">
+                <button type="button" class="btn-add-mini" onclick="addCultureRow()">+ Add Culture Result Row</button>
+            </div>
+
+            <!-- Section 5: Requested By & Approval -->
+            <div class="physician-approval-box">
+                <!-- Requested By bar -->
+                <div class="physician-req-bar">
+                    <div style="flex: 2;">
+                        <span style="font-weight: bold; font-family: var(--font-sans); font-size: 8.5pt; display: block;">Requested By:</span>
+                        <input type="text" id="req-physician-name" placeholder="Signature over Printed Name of Physician" style="width: 100%; border: none; border-bottom: 1px solid #000; font-weight: bold; padding: 2px 0;">
+                        <span style="font-size: 7.5pt; color: #475569; font-family: var(--font-sans);">Signature over Printed Name of Physician</span>
+                    </div>
+                    <div style="flex: 1;">
+                        <span style="font-size: 8pt; color: #374151; font-family: var(--font-sans); display: block;">Date of Signature:</span>
+                        <input type="date" id="req-signature-date" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 3px; padding: 2px 4px; font-size: 8.5pt;">
+                    </div>
+                    <div style="flex: 1;">
+                        <span style="font-size: 8pt; color: #374151; font-family: var(--font-sans); display: block;">Time of Signature:</span>
+                        <input type="text" id="req-signature-time" placeholder="e.g. 09:30 AM" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 3px; padding: 2px 4px; font-size: 8.5pt;">
+                    </div>
+                </div>
+
+                <!-- Approval: SMS & Call side-by-side -->
+                <div class="approval-mode-grid">
+                    <!-- Column 1: SMS Approval -->
+                    <div class="approval-column" id="col-approval-sms">
+                        <div class="approval-col-header">
+                            <label class="check-item"><input type="checkbox" id="app-mode-sms" onchange="toggleApprovalMode('sms')"> <strong>SMS</strong></label>
+                            <span class="approval-active-indicator" id="tag-sms-active">ACTIVE IF SMS IS SELECT</span>
+                        </div>
+                        <div class="approval-fields-row">
+                            <div>
+                                <label>Date of Referral</label>
+                                <input type="date" id="sms-ref-date">
+                            </div>
+                            <div>
+                                <label>Time of Referral</label>
+                                <input type="text" id="sms-ref-time" placeholder="e.g. 10:15 AM">
+                            </div>
+                        </div>
+                        <div>
+                            <label style="font-size: 8pt; font-family: var(--font-sans); color: #991b1b; font-weight: bold;">Paired Doctor:</label>
+                            <select id="sms-approving-physician" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 3px; padding: 3px 6px; font-size: 8.5pt; font-family: inherit;">
+                                <option value="">Select Name of Approving Physician...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Call Approval -->
+                    <div class="approval-column" id="col-approval-call">
+                        <div class="approval-col-header">
+                            <label class="check-item"><input type="checkbox" id="app-mode-call" onchange="toggleApprovalMode('call')"> <strong>Call</strong></label>
+                            <span class="approval-active-indicator" id="tag-call-active">ACTIVE IF CALL IS SELECTED</span>
+                        </div>
+                        <div class="approval-fields-row">
+                            <div>
+                                <label>Date of Referral</label>
+                                <input type="date" id="call-ref-date">
+                            </div>
+                            <div>
+                                <label>Time of Referral</label>
+                                <input type="text" id="call-ref-time" placeholder="e.g. 10:30 AM">
+                            </div>
+                        </div>
+                        <div>
+                            <label style="font-size: 8pt; font-family: var(--font-sans); color: #991b1b; font-weight: bold;">Paired Doctor:</label>
+                            <select id="call-approving-physician" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 3px; padding: 3px 6px; font-size: 8.5pt; font-family: inherit;">
+                                <option value="">Select Name of Approving Physician...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Red Dividing Line -->
+            <div class="do-not-write-divider">
+                <span class="do-not-write-tag">DO NOT WRITE BELOW THIS LINE</span>
+            </div>
+
+            <!-- Section 6: Recommendation (AMS Committee / Approver) -->
+            <div class="recommendation-box">
+                <span style="font-family: var(--font-sans); font-weight: bold; font-size: 8.5pt; text-transform: uppercase; display: block; margin-bottom: 4px;">RECOMMENDATION:</span>
+                <div class="recommendation-options">
+                    <label class="check-item"><input type="checkbox" id="rec-start"> Start</label>
+                    <label class="check-item"><input type="checkbox" id="rec-continue"> Continue</label>
+                    <label class="check-item"><input type="checkbox" id="rec-discontinue"> Discontinue</label>
+                    <label class="check-item"><input type="checkbox" id="rec-revise"> Revise as follows</label>
+                </div>
+
+                <!-- Recommendation Drugs Table with Decision Toggles -->
+                <table class="clinical-records-table" id="table-recommendations" style="margin-bottom: 6px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 44%;">Drugs<br><span style="font-weight: normal; font-size: 7.5pt;">(LIST OF RESTRICTED ANTIBIOTIC REQUESTED)</span></th>
+                            <th style="width: 20%;">Dose/Frequency<br><span style="font-weight: normal; font-size: 7.5pt;">(q hour)</span></th>
+                            <th style="width: 16%;">Duration<br><span style="font-weight: normal; font-size: 7.5pt;">(hrs/days)</span></th>
+                            <th style="width: 20%;">Requested Quantity<br><span style="font-weight: normal; font-size: 7.5pt;">(tab/amp/vial)</span></th>
+                            <th style="width: 70px; text-align: center;">Decision</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-recommendations">
+                        <!-- Populated dynamically and synced from requested drugs -->
+                    </tbody>
+                </table>
+
+                <!-- Disapproved (State reason) block -->
+                <div class="disapproved-section">
+                    <div class="disapproved-title">
+                        <label class="check-item" style="margin: 0;"><input type="checkbox" id="rec-disapproved-check"> <strong>Disapproved (State reason)</strong></label>
+                        <span style="font-size: 7.5pt; color: #dc2626; font-weight: normal;">(Auto-transfers items rejected with ✖)</span>
+                    </div>
+                    <div id="disapproved-reasons-container">
+                        <div id="disapproved-empty-notice" style="font-size: 8pt; color: #64748b; font-style: italic; padding: 2px 0;">
+                            No items marked for disapproval. Click the red ✖ on any drug above to state rejection rationale.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Approving Authority Stamp -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px; border-top: 1px solid #000; padding-top: 6px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <span style="font-size: 8pt; font-family: var(--font-sans); color: #374151; display: block;">Date of Signature:</span>
+                        <input type="date" id="rec-sig-date" style="border: 1px solid #cbd5e1; border-radius: 3px; padding: 2px 4px; font-size: 8.5pt;">
+                    </div>
+                    <div>
+                        <span style="font-size: 8pt; font-family: var(--font-sans); color: #374151; display: block;">Time of Signature:</span>
+                        <input type="text" id="rec-sig-time" placeholder="e.g. 11:45 AM" style="border: 1px solid #cbd5e1; border-radius: 3px; padding: 2px 4px; font-size: 8.5pt;">
+                    </div>
+                    <div style="flex: 2; min-width: 280px; text-align: right;">
+                        <span style="font-size: 8pt; font-family: var(--font-sans); color: #991b1b; font-weight: bold; display: block;">Paired Doctor:</span>
+                        <select id="rec-approving-authority" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 3px; padding: 3px 6px; font-size: 8.5pt; font-family: inherit; font-weight: bold;">
+                            <option value="">Select Approving Department Training Officer / Chairman / ID Consultant...</option>
+                        </select>
+                        <span style="font-size: 7.5pt; color: #111827; font-family: var(--font-sans); font-weight: 600; display: block; margin-top: 2px;">
+                            Department Training Officer / Chairman / ICC Chairman / ID Consultant
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 1 Footer Form Meta -->
+            <div class="doc-footer-codes">
+                <span class="annex-notice">(Please see list of restricted antibiotics at the back)</span>
+                <div style="text-align: right;">
+                    <strong>RESTRICTED ANTIBIOTIC REQUEST FORM</strong><br>
+                    AMS.F.003<br>
+                    Issue Date : 8/9/18 &nbsp;|&nbsp; Issue No. : 004
+                </div>
+            </div>
+        </article>
+
+        <!-- ═════════════════════════════════════════════════════════════════ -->
+        <!-- PAGE 2: OFFICIAL ANNEX — RESTRICTED ANTIBIOTICS & AMS PROCEDURES -->
+        <!-- ═════════════════════════════════════════════════════════════════ -->
+        <article class="document-page" id="document-page-2" aria-label="Restricted Antibiotic Request Form Page 2 (Annex)">
+            <div class="page-badge-corner">Page 2 of 2 (Annex)</div>
+
+            <!-- Annex Official Header -->
+            <div class="annex-page-header">
+                <div class="annex-doh-brand">
+                    <div class="seal-circle">DOH<br>CLMMRH</div>
+                    <div class="annex-hosp-titles">
+                        <span class="doh-tag">Department of Health</span>
+                        <h2 class="hosp-name-lg">Corazon Locsin Montelibano Memorial Regional Hospital</h2>
+                        <span class="hosp-contacts">Burgos - Lacson St., Bacolod City, 6100 &nbsp;|&nbsp; (034) 703-1350 &nbsp;|&nbsp; clmmrh.doh.gov.ph</span>
+                    </div>
+                </div>
+                <div class="annex-valid-date">
+                    Valid until: December 31, 2025
+                </div>
+            </div>
+
+            <!-- Classification Policy Blocks -->
+            <div class="policy-group-container">
+                <div class="policy-block very-restricted">
+                    <div class="policy-block-title">VERY RESTRICTED ANTIBIOTICS</div>
+                    <div>
+                        Only doses within the first 24 hours from first dose will be dispensed by the pharmacy. Additional doses thereafter should need approval of the AMS Team Leader, ID consultant, Department Chairman and Consultant on-duty (if ID consultant and AMS Team Leader are not available)
+                    </div>
+                </div>
+
+                <div class="policy-block restricted">
+                    <div class="policy-block-title">RESTRICTED ANTIBIOTICS</div>
+                    <div>
+                        Only doses within the first 24 hours from first dose will be dispensed by the pharmacy. Additional doses thereafter need approval from Department Training Officer or Chairman
+                    </div>
+                </div>
+
+                <div class="policy-block non-restricted">
+                    <div class="policy-block-title">NON-RESTRICTED ANTIBIOTICS</div>
+                    <div style="text-align: center;">
+                        Others not listed as restricted or very restricted antibiotics may be given without the need of this form.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4-Column Master Antibiotics Classification Table -->
+            <table class="annex-master-table">
+                <thead>
+                    <tr>
+                        <th>Cephalosporins</th>
+                        <th>BLICS</th>
+                        <th>Carbapenems</th>
+                        <th>Others</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <!-- Col 1: Cephalosporins -->
+                        <td>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Ceftazidime</span> <span class="drug-aware">(Watch)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Cefepime</span> <span class="drug-aware">(Watch)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Cefpirome</span> <span class="drug-aware">(Watch)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Ceftazidime-Avibactam*</span> <span class="drug-aware">(Reserve)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Ceftaroline*</span> <span class="drug-aware">(Reserve)</span></div>
+                            </div>
+                        </td>
+
+                        <!-- Col 2: BLICS -->
+                        <td>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Piperacillin-Tazobactam</span> <span class="drug-aware">(Watch)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Cefoperazone-Sulbactam*</span> <span class="drug-aware">(Watch)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Ceftolozane-Tazobactam*</span> <span class="drug-aware">(Reserve)</span></div>
+                            </div>
+                        </td>
+
+                        <!-- Col 3: Carbapenems -->
+                        <td>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Ertapenem</span> <span class="drug-aware">(Watch)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Meropenem</span> <span class="drug-aware">(Watch)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Imipenem*</span> <span class="drug-aware">(Reserve)</span></div>
+                            </div>
+                        </td>
+
+                        <!-- Col 4: Others -->
+                        <td>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Fluconazole, Amphotericin B, Voriconazole</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Vancomycin</span> <span class="drug-aware">(Watch)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">IV/PO Linezolid</span> <span class="drug-aware">(Reserve)</span>, <span class="drug-label">Tigecycline*</span> <span class="drug-aware">(Reserve)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">IV Levofloxacin</span> <span class="drug-aware">(Watch)</span><br><span class="drug-label">IV Ciprofloxacin</span> <span class="drug-aware">(Watch)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">Polymyxin E (Colistin)</span> <span class="drug-aware">(Reserve)</span><br><span class="drug-label">Polymyxin B</span> <span class="drug-aware">(Reserve)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">R</span>
+                                <div><span class="drug-label">All aminoglycosides EXCEPT for Gentamicin</span> <span class="drug-aware">(Pedia-Access, Adult-Watch)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">IV Acyclovir</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">IV Aztreonam</span> <span class="drug-aware">(Reserve)</span></div>
+                            </div>
+                            <div class="annex-drug-item">
+                                <span class="cat-code">VR</span>
+                                <div><span class="drug-label">IV Fosfomycin</span> <span class="drug-aware">(Reserve)</span><br><span class="drug-label">PO Fosfomycin</span> <span class="drug-aware">(Watch)</span></div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- WHO AWaRe Classification Guidance -->
+            <div class="aware-definitions-box">
+                <div class="aware-def-item access">
+                    <strong>Access antibiotics</strong> have a narrow spectrum of activity, lower cost, a good safety profile and generally low resistance potential. They are often recommended as empiric first or second-choice treatment options for common infections.
+                </div>
+                <div class="aware-def-item watch">
+                    <strong>Watch antibiotics</strong> are broader-spectrum antibiotics, generally with higher costs and are recommended only as first-choice options for patients with more severe clinical presentations or for infections where the causative pathogens are more likely to be resistant to Access antibiotics, such as upper urinary tract infections (UTIs).
+                </div>
+                <div class="aware-def-item reserve">
+                    <strong>Reserve antibiotics</strong> are last-choice antibiotics used to treat multidrug-resistant infections.
+                </div>
+                <div class="aware-legend-note">
+                    * Non-PNDF &nbsp;|&nbsp; ( ) WHO AWaRe classification of antibiotics
+                </div>
+            </div>
+
+            <!-- PROCEDURE SECTION -->
+            <div class="procedure-steps-box">
+                <div class="proc-heading">PROCEDURE:</div>
+                <ol>
+                    <li>The attending/service physician shall fill out this form completely upon ordering for the specific restricted antibiotic/s in the patient's chart.</li>
+                    <li>Approval from the Department Training Officer or Chairman for orange-coded antimicrobials and AMS Team Leader, ID consultant and Department Chairman or Consultant on-duty (if ID consultant and AMS Team Leader are not available) for the red-coded antimicrobials, may be via phone/online platform consultation or actual rounds. If by phone or online platform, the referring resident shall sign in the form and document date and time of the call. The approving physician should sign in the designated area on the form within 24 hours to document his/her agreement.</li>
+                    <li>Pharmacy will dispense the ordered doses of any of these restricted antibiotics within 24 hours (48 hours if ordered on weekends), provided the attending/ service physician has filled out this form at the time he/she ordered the said antibiotic in the patient's chart. Succeeding doses after the 24th hour (48th hour if ordered on weekends) will already need the phone, online platform or written approval as mentioned in number 2, for the pharmacy to dispense the ordered drugs.</li>
+                    <li>The pharmacists shall check for the availability of this completed form before serving the ordered antibiotic/s.</li>
+                </ol>
+            </div>
+        </article>
+
+    </main>
+
+    <div id="ams-toast" role="status" aria-live="polite">Form saved successfully.</div>
+
+    <!-- ═══ SCRIPTS ═══ -->
+    <script src="js/data/patient_seeds.js"></script>
+    <script>
+        // ── RESTRICTED ANTIMICROBIALS MASTER CATALOG ──
+        const RESTRICTED_ANTIBIOTICS_DB = [
+            { category: "Carbapenems", name: "Meropenem 1 g vial", tier: "VR", aware: "Watch" },
+            { category: "Carbapenems", name: "Meropenem 500 mg vial", tier: "VR", aware: "Watch" },
+            { category: "Carbapenems", name: "Ertapenem 1 g vial", tier: "VR", aware: "Watch" },
+            { category: "Carbapenems", name: "Imipenem-Cilastatin 500 mg vial*", tier: "VR", aware: "Reserve" },
+            { category: "BLICS", name: "Piperacillin-Tazobactam 4.5 g vial", tier: "VR", aware: "Watch" },
+            { category: "BLICS", name: "Piperacillin-Tazobactam 2.25 g vial", tier: "VR", aware: "Watch" },
+            { category: "BLICS", name: "Cefoperazone-Sulbactam 1.5 g vial*", tier: "VR", aware: "Watch" },
+            { category: "BLICS", name: "Ceftolozane-Tazobactam 1.5 g vial*", tier: "VR", aware: "Reserve" },
+            { category: "Cephalosporins", name: "Ceftazidime 1 g vial", tier: "VR", aware: "Watch" },
+            { category: "Cephalosporins", name: "Cefepime 1 g vial", tier: "VR", aware: "Watch" },
+            { category: "Cephalosporins", name: "Cefepime 2 g vial", tier: "VR", aware: "Watch" },
+            { category: "Cephalosporins", name: "Cefpirome 1 g vial", tier: "VR", aware: "Watch" },
+            { category: "Cephalosporins", name: "Ceftazidime-Avibactam 2.5 g vial*", tier: "VR", aware: "Reserve" },
+            { category: "Cephalosporins", name: "Ceftaroline 600 mg vial*", tier: "VR", aware: "Reserve" },
+            { category: "Glycopeptides", name: "Vancomycin 500 mg vial", tier: "VR", aware: "Watch" },
+            { category: "Glycopeptides", name: "Vancomycin 1 g vial", tier: "VR", aware: "Watch" },
+            { category: "Oxazolidinones", name: "Linezolid 600 mg/300 mL IV infusion", tier: "VR", aware: "Reserve" },
+            { category: "Oxazolidinones", name: "Linezolid 600 mg tablet", tier: "VR", aware: "Reserve" },
+            { category: "Glycylcyclines", name: "Tigecycline 50 mg vial*", tier: "VR", aware: "Reserve" },
+            { category: "Polymyxins", name: "Polymyxin E (Colistimethate Sodium 2,000,000 IU)", tier: "VR", aware: "Reserve" },
+            { category: "Polymyxins", name: "Polymyxin B 500,000 IU vial", tier: "VR", aware: "Reserve" },
+            { category: "Fluoroquinolones", name: "Levofloxacin 500 mg/100 mL IV infusion", tier: "VR", aware: "Watch" },
+            { category: "Fluoroquinolones", name: "Levofloxacin 750 mg/150 mL IV infusion", tier: "VR", aware: "Watch" },
+            { category: "Fluoroquinolones", name: "Ciprofloxacin 200 mg/100 mL IV infusion", tier: "VR", aware: "Watch" },
+            { category: "Aminoglycosides", name: "Amikacin 500 mg/2 mL vial", tier: "R", aware: "Watch" },
+            { category: "Aminoglycosides", name: "Tobramycin 80 mg/2 mL vial", tier: "R", aware: "Watch" },
+            { category: "Antifungals", name: "Fluconazole 200 mg/100 mL IV infusion", tier: "VR", aware: "Watch" },
+            { category: "Antifungals", name: "Amphotericin B 50 mg vial", tier: "VR", aware: "Watch" },
+            { category: "Antifungals", name: "Voriconazole 200 mg vial", tier: "VR", aware: "Watch" },
+            { category: "Antivirals", name: "Acyclovir 250 mg IV vial", tier: "VR", aware: "Watch" },
+            { category: "Monobactams", name: "Aztreonam 1 g vial", tier: "VR", aware: "Reserve" },
+            { category: "Fosfomycin", name: "Fosfomycin 4 g IV vial", tier: "VR", aware: "Reserve" },
+            { category: "Fosfomycin", name: "Fosfomycin Trometamol 3 g sachet (PO)", tier: "VR", aware: "Watch" }
+        ];
+
+        let currentPatientId = "";
+        let currentRecord = null;
+        let requestedDrugs = [];
+        let recommendationsDecisions = {}; // { drugIndex: 'approved' | 'disapproved' }
+        let disapprovedReasons = {}; // { drugIndex: reasonText }
+
+        // ── TOAST NOTIFICATION ──
+        function showToast(message) {
+            const toast = document.getElementById("ams-toast");
+            if (!toast) return;
+            toast.textContent = message;
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+
+        // ── VIEW SWITCHER (EDITOR vs PREVIEW) ──
+        function switchViewMode(mode) {
+            const btnEditor = document.getElementById("btn-view-editor");
+            const btnPreview = document.getElementById("btn-view-preview");
+            const page2 = document.getElementById("document-page-2");
+
+            if (mode === "preview") {
+                btnEditor.classList.remove("active");
+                btnPreview.classList.add("active");
+                page2.style.display = "block";
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                showToast("Displaying official A4 Document Preview: Page 1 with Page 2 (Annex) attached.");
+            } else {
+                btnPreview.classList.remove("active");
+                btnEditor.classList.add("active");
+                page2.style.display = "block"; // Keep visible so user can reference guidelines at will
+                showToast("Form Editor Mode active.");
+            }
+        }
+
+        // ── POPULATE PAIRED PHYSICIANS DROPDOWNS ──
+        function populatePhysiciansDirectories() {
+            const selectSMS = document.getElementById("sms-approving-physician");
+            const selectCall = document.getElementById("call-approving-physician");
+            const selectRec = document.getElementById("rec-approving-authority");
+
+            const dir = (typeof window.HOSPITAL_PHYSICIANS_DIRECTORY !== "undefined")
+                ? window.HOSPITAL_PHYSICIANS_DIRECTORY.filter(d => !d.is_none && d.id !== 'NONE')
+                : [];
+
+            const optionsHtml = '<option value="">Select Paired Doctor...</option>' +
+                dir.map(d => `<option value="${escapeHtml(d.id)}">${escapeHtml(d.name)} — ${escapeHtml(d.specialty || d.department)} (PRC: ${escapeHtml(d.prc_no || 'Verified')})</option>`).join('');
+
+            if (selectSMS) selectSMS.innerHTML = optionsHtml;
+            if (selectCall) selectCall.innerHTML = optionsHtml;
+
+            const recOptionsHtml = '<option value="">Select Department Training Officer / Chairman / ID Consultant...</option>' +
+                dir.map(d => `<option value="${escapeHtml(d.id)}">${escapeHtml(d.name)} — ${escapeHtml(d.specialty || d.department)}</option>`).join('');
+            if (selectRec) selectRec.innerHTML = recOptionsHtml;
+        }
+
+        // ── SEX TOGGLE ──
+        function toggleSex(gender) {
+            const m = document.getElementById("sex-m");
+            const f = document.getElementById("sex-f");
+            if (gender === 'M') {
+                if (m) m.checked = true;
+                if (f) f.checked = false;
+            } else if (gender === 'F') {
+                if (f) f.checked = true;
+                if (m) m.checked = false;
+            }
+        }
+
+        // ── APPROVAL MODE TOGGLES (SMS vs CALL) ──
+        function toggleApprovalMode(mode) {
+            const chkSMS = document.getElementById("app-mode-sms");
+            const chkCall = document.getElementById("app-mode-call");
+            const tagSMS = document.getElementById("tag-sms-active");
+            const tagCall = document.getElementById("tag-call-active");
+
+            const smsDate = document.getElementById("sms-ref-date");
+            const smsTime = document.getElementById("sms-ref-time");
+            const smsDoc = document.getElementById("sms-approving-physician");
+
+            const callDate = document.getElementById("call-ref-date");
+            const callTime = document.getElementById("call-ref-time");
+            const callDoc = document.getElementById("call-approving-physician");
+
+            const now = new Date();
+            const todayIso = now.toISOString().split('T')[0];
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            if (mode === 'sms' && chkSMS && chkSMS.checked) {
+                tagSMS.style.color = "#16a34a";
+                tagSMS.textContent = "ACTIVE (SMS SELECTED)";
+                if (smsDate && !smsDate.value) smsDate.value = todayIso;
+                if (smsTime && !smsTime.value) smsTime.value = timeStr;
+            } else if (chkSMS && !chkSMS.checked) {
+                tagSMS.style.color = "#dc2626";
+                tagSMS.textContent = "ACTIVE IF SMS IS SELECT";
+            }
+
+            if (mode === 'call' && chkCall && chkCall.checked) {
+                tagCall.style.color = "#16a34a";
+                tagCall.textContent = "ACTIVE (CALL SELECTED)";
+                if (callDate && !callDate.value) callDate.value = todayIso;
+                if (callTime && !callTime.value) callTime.value = timeStr;
+            } else if (chkCall && !chkCall.checked) {
+                tagCall.style.color = "#dc2626";
+                tagCall.textContent = "ACTIVE IF CALL IS SELECTED";
+            }
+        }
+
+        // ── DRUGS REQUESTED TABLE MANAGEMENT ──
+        function buildDrugOptionList(selectedDrugName) {
+            let html = '<option value="">-- Select from Database of Restricted Antimicrobials --</option>';
+            const categories = [...new Set(RESTRICTED_ANTIBIOTICS_DB.map(d => d.category))];
+            categories.forEach(cat => {
+                html += `<optgroup label="${escapeHtml(cat)}">`;
+                RESTRICTED_ANTIBIOTICS_DB.filter(d => d.category === cat).forEach(d => {
+                    const sel = (d.name === selectedDrugName) ? " selected" : "";
+                    html += `<option value="${escapeHtml(d.name)}"${sel}>[${d.tier}] ${escapeHtml(d.name)} (${d.aware})</option>`;
+                });
+                html += `</optgroup>`;
+            });
+            return html;
+        }
+
+        function addDrugRequestedRow(drug = {}) {
+            const tbody = document.getElementById("tbody-drugs-requested");
+            if (!tbody) return;
+
+            const rowIdx = tbody.children.length;
+            const tr = document.createElement("tr");
+            tr.dataset.rowIdx = rowIdx;
+
+            tr.innerHTML = `
+                <td>
+                    <select class="req-drug-select" onchange="onDrugRowChange(${rowIdx})" style="width: 100%; font-weight: 600;">
+                        ${buildDrugOptionList(drug.name || "")}
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="req-drug-dose" value="${escapeHtml(drug.dose || '')}" placeholder="e.g. 1 g IV q8h" oninput="onDrugRowChange(${rowIdx})">
+                </td>
+                <td>
+                    <input type="text" class="req-drug-duration" value="${escapeHtml(drug.duration || '')}" placeholder="e.g. 7 days" oninput="onDrugRowChange(${rowIdx})">
+                </td>
+                <td>
+                    <input type="text" class="req-drug-qty" value="${escapeHtml(drug.qty || '')}" placeholder="e.g. 21 vials" oninput="onDrugRowChange(${rowIdx})">
+                </td>
+                <td class="print-hide" style="text-align: center;">
+                    <button type="button" class="btn-del-mini" title="Remove drug" onclick="removeDrugRequestedRow(${rowIdx})">✕</button>
+                </td>
+            `;
+
+            tbody.appendChild(tr);
+            syncRecommendationsTable();
+        }
+
+        function removeDrugRequestedRow(rowIdx) {
+            const tbody = document.getElementById("tbody-drugs-requested");
+            if (!tbody) return;
+            if (tbody.children[rowIdx]) {
+                tbody.children[rowIdx].remove();
+                // Re-index remaining rows
+                Array.from(tbody.children).forEach((tr, idx) => {
+                    tr.dataset.rowIdx = idx;
+                    const sel = tr.querySelector(".req-drug-select");
+                    const dose = tr.querySelector(".req-drug-dose");
+                    const dur = tr.querySelector(".req-drug-duration");
+                    const qty = tr.querySelector(".req-drug-qty");
+                    const del = tr.querySelector(".btn-del-mini");
+                    if (sel) sel.setAttribute("onchange", `onDrugRowChange(${idx})`);
+                    if (dose) dose.setAttribute("oninput", `onDrugRowChange(${idx})`);
+                    if (dur) dur.setAttribute("oninput", `onDrugRowChange(${idx})`);
+                    if (qty) qty.setAttribute("oninput", `onDrugRowChange(${idx})`);
+                    if (del) del.setAttribute("onclick", `removeDrugRequestedRow(${idx})`);
+                });
+                syncRecommendationsTable();
+            }
+        }
+
+        function onDrugRowChange(rowIdx) {
+            syncRecommendationsTable();
+        }
+
+        // ── SYNC RECOMMENDATIONS TABLE WITH REQUESTED DRUGS ──
+        function syncRecommendationsTable() {
+            const reqTbody = document.getElementById("tbody-drugs-requested");
+            const recTbody = document.getElementById("tbody-recommendations");
+            if (!reqTbody || !recTbody) return;
+
+            const rows = Array.from(reqTbody.children);
+            recTbody.innerHTML = "";
+
+            if (rows.length === 0) {
+                recTbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; font-style: italic; padding: 10px;">Select requested antimicrobials above to populate recommendation review items.</td></tr>`;
+                renderDisapprovedReasons();
+                return;
+            }
+
+            rows.forEach((tr, idx) => {
+                const drugSelect = tr.querySelector(".req-drug-select");
+                const doseInput = tr.querySelector(".req-drug-dose");
+                const durInput = tr.querySelector(".req-drug-duration");
+                const qtyInput = tr.querySelector(".req-drug-qty");
+
+                const drugName = drugSelect ? drugSelect.value : "";
+                const dose = doseInput ? doseInput.value : "";
+                const duration = durInput ? durInput.value : "";
+                const qty = qtyInput ? qtyInput.value : "";
+
+                const decision = recommendationsDecisions[idx] || "approved";
+
+                const recTr = document.createElement("tr");
+                recTr.dataset.recIdx = idx;
+                recTr.innerHTML = `
+                    <td style="font-weight: 600;">
+                        ${drugName ? escapeHtml(drugName) : '<span style="color:#94a3b8; font-style:italic;">[Select drug above]</span>'}
+                    </td>
+                    <td>${escapeHtml(dose)}</td>
+                    <td>${escapeHtml(duration)}</td>
+                    <td>${escapeHtml(qty)}</td>
+                    <td style="text-align: center; white-space: nowrap;">
+                        <button type="button" class="rec-action-btn approve ${decision === 'approved' ? 'selected' : ''}" title="Approve this antibiotic" onclick="setDrugDecision(${idx}, 'approved')">
+                            ✔
+                        </button>
+                        <button type="button" class="rec-action-btn reject ${decision === 'disapproved' ? 'selected' : ''}" title="Disapprove this antibiotic (auto-creates rejection reason)" onclick="setDrugDecision(${idx}, 'disapproved')">
+                            ✖
+                        </button>
+                    </td>
+                `;
+                recTbody.appendChild(recTr);
+            });
+
+            renderDisapprovedReasons();
+        }
+
+        function setDrugDecision(drugIdx, decision) {
+            recommendationsDecisions[drugIdx] = decision;
+            syncRecommendationsTable();
+        }
+
+        // ── RENDER DISAPPROVED REASONS LIST & AUTO-CHECK DISAPPROVED ──
+        function renderDisapprovedReasons() {
+            const container = document.getElementById("disapproved-reasons-container");
+            const chkDisapproved = document.getElementById("rec-disapproved-check");
+            const reqTbody = document.getElementById("tbody-drugs-requested");
+            if (!container || !reqTbody) return;
+
+            const reqRows = Array.from(reqTbody.children);
+            const disapprovedIndices = Object.keys(recommendationsDecisions)
+                .filter(idx => recommendationsDecisions[idx] === "disapproved")
+                .map(Number);
+
+            if (disapprovedIndices.length > 0) {
+                if (chkDisapproved) chkDisapproved.checked = true;
+                container.innerHTML = "";
+                disapprovedIndices.forEach(idx => {
+                    const row = reqRows[idx];
+                    const drugName = row ? (row.querySelector(".req-drug-select")?.value || `Drug #${idx + 1}`) : `Drug #${idx + 1}`;
+                    const existingReason = disapprovedReasons[idx] || "";
+
+                    const itemDiv = document.createElement("div");
+                    itemDiv.className = "disapproved-item-row";
+                    itemDiv.innerHTML = `
+                        <div class="disapproved-item-name">✖ ${escapeHtml(drugName)}:</div>
+                        <div>
+                            <input type="text" class="disapproved-item-input" 
+                                placeholder="Specify clinical reason for rejection (e.g. De-escalate to narrow-spectrum agent, no documented susceptibility)..." 
+                                value="${escapeHtml(existingReason)}"
+                                oninput="onDisapprovalReasonChange(${idx}, this.value)">
+                        </div>
+                    `;
+                    container.appendChild(itemDiv);
+                });
+            } else {
+                if (chkDisapproved) chkDisapproved.checked = false;
+                container.innerHTML = `
+                    <div id="disapproved-empty-notice" style="font-size: 8pt; color: #64748b; font-style: italic; padding: 2px 0;">
+                        No items marked for disapproval. Click the red ✖ on any drug above to state rejection rationale.
+                    </div>
+                `;
+            }
+        }
+
+        function onDisapprovalReasonChange(idx, val) {
+            disapprovedReasons[idx] = val;
+        }
+
+        // ── CULTURE RESULTS TABLE MANAGEMENT ──
+        function addCultureRow(cult = {}) {
+            const tbody = document.getElementById("tbody-cultures");
+            if (!tbody) return;
+
+            const rowIdx = tbody.children.length;
+            const tr = document.createElement("tr");
+            tr.dataset.cultIdx = rowIdx;
+
+            tr.innerHTML = `
+                <td>
+                    <input type="date" value="${cult.date || ''}" style="width: 100%;">
+                </td>
+                <td>
+                    <input type="text" value="${escapeHtml(cult.specimen || '')}" placeholder="e.g. Blood, Tracheal Aspirate, Sputum, Urine">
+                </td>
+                <td>
+                    <input type="text" value="${escapeHtml(cult.gram || '')}" placeholder="e.g. Gram-negative bacilli">
+                </td>
+                <td>
+                    <input type="text" value="${escapeHtml(cult.isolate || '')}" placeholder="e.g. Klebsiella pneumoniae (ESBL+)">
+                </td>
+                <td>
+                    <input type="text" value="${escapeHtml(cult.pattern || '')}" placeholder="e.g. Sensitive: Meropenem, Colistin; Resistant: Ceftriaxone">
+                </td>
+                <td class="print-hide" style="text-align: center;">
+                    <button type="button" class="btn-del-mini" title="Remove culture row" onclick="removeCultureRow(${rowIdx})">✕</button>
+                </td>
+            `;
+
+            tbody.appendChild(tr);
+        }
+
+        function removeCultureRow(rowIdx) {
+            const tbody = document.getElementById("tbody-cultures");
+            if (!tbody) return;
+            if (tbody.children[rowIdx]) {
+                tbody.children[rowIdx].remove();
+                Array.from(tbody.children).forEach((tr, idx) => {
+                    tr.dataset.cultIdx = idx;
+                    const del = tr.querySelector(".btn-del-mini");
+                    if (del) del.setAttribute("onclick", `removeCultureRow(${idx})`);
+                });
+            }
+        }
+
+        // ── PATIENT SELECTOR & AUTO-BINDING ──
+        function initPatientSelector() {
+            const sel = document.getElementById("patient-selector");
+            if (!sel) return;
+
+            if (typeof getPatients !== 'function') return;
+            const list = getPatients();
+            sel.innerHTML = '<option value="">-- Select Patient Record --</option>';
+
+            list.forEach(p => {
+                const opt = document.createElement("option");
+                opt.value = p.id;
+                const d = p.data || {};
+                const name = `${d.last_name || ''}, ${d.first_name || ''}`.trim() || p.id;
+                opt.textContent = `${name} (HRN: ${d.hrn || 'N/A'}) — ${d.case_type || 'Patient'}`;
+                sel.appendChild(opt);
+            });
+
+            sel.addEventListener("change", function () {
+                if (sel.value) {
+                    loadPatient(sel.value);
+                }
+            });
+        }
+
+        function loadPatient(patientId) {
+            if (typeof getPatients !== 'function') return;
+            const list = getPatients();
+            const record = list.find(p => p.id === patientId);
+            if (!record) return;
+
+            currentPatientId = patientId;
+            currentRecord = record;
+
+            const d = record.data || {};
+            const encounters = Array.isArray(d.encounters) ? d.encounters : [];
+            const curEnc = encounters.find(e => e.is_current || e.isCurrent) || encounters[0] || {};
+
+            // 1. Demographics
+            document.getElementById("pt-last-name").value = d.last_name || "";
+            document.getElementById("pt-first-name").value = d.first_name || "";
+            document.getElementById("pt-middle-name").value = d.middle_name || "";
+
+            const bdate = d.birthdate;
+            if (bdate) {
+                const ageY = calculateAgeFromDob(bdate);
+                document.getElementById("pt-age").value = ageY;
+            } else {
+                document.getElementById("pt-age").value = d.age || "";
+            }
+
+            const sex = String(d.gender || d.sex || "").toUpperCase();
+            if (sex.startsWith("M")) toggleSex("M");
+            else if (sex.startsWith("F")) toggleSex("F");
+
+            document.getElementById("pt-department").value = curEnc.service || d.department || d.ward_area || "Internal Medicine";
+            document.getElementById("pt-ward-room").value = d.ward_room || d.wardRoom || "Medical Ward 1 - Bed 04";
+            document.getElementById("pt-hospital-no").value = d.hrn || "";
+
+            // 2. Clinical Diagnosis (Initial Diagnosis priority per Form standard)
+            const rawDx = curEnc.diagnosis || curEnc.final_diagnosis || d.final_diagnosis || d.admitting_diagnosis || "";
+            const cleanDx = rawDx.replace(/^[A-Z][0-9]{2}(\.[0-9]{1,2})?\s*-\s*/i, "").trim();
+            document.getElementById("pt-clinical-diagnosis").value = cleanDx || "Community-Acquired Pneumonia, High Risk; Sepsis";
+
+            // 3. Weight, Creatinine, Creatinine Clearance
+            const vs = Array.isArray(d.vital_signs) && d.vital_signs[0] ? d.vital_signs[0] : (curEnc.vital_signs && curEnc.vital_signs[0] ? curEnc.vital_signs[0] : {});
+            document.getElementById("pt-weight").value = vs.wt || vs.weight || "65";
+            document.getElementById("pt-creatinine").value = "1.2 mg/dL";
+            document.getElementById("pt-crcl").value = "68 mL/min";
+
+            // 4. Requesting Physician
+            const docName = (curEnc.physician || (d.attending_physician && d.attending_physician.name) || "Miguel Santos, MD");
+            document.getElementById("req-physician-name").value = docName;
+            const now = new Date();
+            document.getElementById("req-signature-date").value = now.toISOString().split("T")[0];
+            document.getElementById("req-signature-time").value = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            // 5. Default Requested Drugs (if patient already has antibiotics in order/meds or initial default)
+            const tbodyDrugs = document.getElementById("tbody-drugs-requested");
+            tbodyDrugs.innerHTML = "";
+            recommendationsDecisions = {};
+            disapprovedReasons = {};
+
+            const existingMeds = Array.isArray(d.medications) ? d.medications : [];
+            const antiInfectives = existingMeds.filter(m => {
+                const name = (m.name || "").toLowerCase();
+                return /meropenem|piperacillin|vancomycin|ceftriaxone|ceftazidime|cefepime|ciprofloxacin|levofloxacin/i.test(name);
+            });
+
+            if (antiInfectives.length > 0) {
+                antiInfectives.forEach(m => {
+                    addDrugRequestedRow({
+                        name: m.name.includes("Meropenem") ? "Meropenem 1 g vial" :
+                              m.name.includes("Piperacillin") ? "Piperacillin-Tazobactam 4.5 g vial" :
+                              m.name.includes("Vancomycin") ? "Vancomycin 1 g vial" : "Meropenem 1 g vial",
+                        dose: m.frequency || "1 g IV q8h",
+                        duration: m.duration || "7 days",
+                        qty: "21 vials"
+                    });
+                });
+            } else {
+                // High-risk hospital empiric default for AMS Form demonstration
+                addDrugRequestedRow({
+                    name: "Meropenem 1 g vial",
+                    dose: "1 g IV q8h",
+                    duration: "7 days",
+                    qty: "21 vials"
+                });
+            }
+
+            // 6. Default Infection Site & Culture Example
+            document.getElementById("site-respiratory").checked = true;
+            document.getElementById("just-empiric").checked = true;
+            document.getElementById("just-reason").value = "Hospital-acquired pneumonia with sepsis; non-responsive to baseline beta-lactam therapy. High risk of multidrug-resistant Pseudomonas aeruginosa.";
+
+            const tbodyCultures = document.getElementById("tbody-cultures");
+            tbodyCultures.innerHTML = "";
+            addCultureRow({
+                date: now.toISOString().split("T")[0],
+                specimen: "Endotracheal Aspirate",
+                gram: "Gram-negative bacilli, abundant",
+                isolate: "Pending 48h automated identification",
+                pattern: "Preliminary: Multi-drug resistance suspected"
+            });
+
+            // Update Dash button href
+            const backBtn = document.getElementById("btn-back-dashboard");
+            if (backBtn) {
+                const dashTarget = (record.id === (window.ER_PATIENT_ID || 'patient_er_juan')) ? 'dashboard_er_inpatient.html' : 'dashboard.html';
+                backBtn.href = `${dashTarget}?patient=${encodeURIComponent(patientId)}`;
+            }
+
+            // Sync selector UI
+            const sel = document.getElementById("patient-selector");
+            if (sel) sel.value = patientId;
+
+            // Load any saved AMS request from localStorage
+            loadSavedAmsRequest(patientId);
+        }
+
+        function calculateAgeFromDob(dobString) {
+            if (!dobString) return "";
+            const birth = new Date(dobString);
+            if (isNaN(birth.getTime())) return "";
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const m = today.getMonth() - birth.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            return age >= 0 ? age : "";
+        }
+
+        // ── SAVE & LOAD AMS FORM TO LOCALSTORAGE ──
+        function saveAmsRequest() {
+            if (!currentPatientId) {
+                alert("Please select a patient before saving.");
+                return;
+            }
+
+            const formData = {
+                patientId: currentPatientId,
+                updatedAt: new Date().toISOString(),
+                demographics: {
+                    lastName: document.getElementById("pt-last-name").value,
+                    firstName: document.getElementById("pt-first-name").value,
+                    middleName: document.getElementById("pt-middle-name").value,
+                    age: document.getElementById("pt-age").value,
+                    sex: document.getElementById("sex-m").checked ? "M" : (document.getElementById("sex-f").checked ? "F" : ""),
+                    department: document.getElementById("pt-department").value,
+                    wardRoom: document.getElementById("pt-ward-room").value,
+                    hospitalNo: document.getElementById("pt-hospital-no").value,
+                    clinicalDiagnosis: document.getElementById("pt-clinical-diagnosis").value,
+                    weight: document.getElementById("pt-weight").value,
+                    creatinine: document.getElementById("pt-creatinine").value,
+                    crcl: document.getElementById("pt-crcl").value
+                },
+                drugsRequested: [],
+                justification: {
+                    prophylactic: document.getElementById("just-prophylactic").checked,
+                    empiric: document.getElementById("just-empiric").checked,
+                    definitive: document.getElementById("just-definitive").checked,
+                    reason: document.getElementById("just-reason").value
+                },
+                infectionSites: {
+                    blood: document.getElementById("site-blood").checked,
+                    cns: document.getElementById("site-cns").checked,
+                    gut: document.getElementById("site-gut").checked,
+                    catheter: document.getElementById("site-catheter").checked,
+                    respiratory: document.getElementById("site-respiratory").checked,
+                    cvs: document.getElementById("site-cvs").checked,
+                    skin: document.getElementById("site-skin").checked,
+                    others: document.getElementById("site-others-check").checked,
+                    othersText: document.getElementById("site-others-text").value,
+                    git: document.getElementById("site-git").checked,
+                    reproductive: document.getElementById("site-reproductive").checked
+                },
+                approval: {
+                    sms: document.getElementById("app-mode-sms").checked,
+                    smsDate: document.getElementById("sms-ref-date").value,
+                    smsTime: document.getElementById("sms-ref-time").value,
+                    smsDoctor: document.getElementById("sms-approving-physician").value,
+                    call: document.getElementById("app-mode-call").checked,
+                    callDate: document.getElementById("call-ref-date").value,
+                    callTime: document.getElementById("call-ref-time").value,
+                    callDoctor: document.getElementById("call-approving-physician").value
+                },
+                recommendation: {
+                    start: document.getElementById("rec-start").checked,
+                    continue: document.getElementById("rec-continue").checked,
+                    discontinue: document.getElementById("rec-discontinue").checked,
+                    revise: document.getElementById("rec-revise").checked,
+                    decisions: recommendationsDecisions,
+                    disapprovedChecked: document.getElementById("rec-disapproved-check").checked,
+                    disapprovedReasons: disapprovedReasons,
+                    sigDate: document.getElementById("rec-sig-date").value,
+                    sigTime: document.getElementById("rec-sig-time").value,
+                    authority: document.getElementById("rec-approving-authority").value
+                }
+            };
+
+            const tbodyDrugs = document.getElementById("tbody-drugs-requested");
+            if (tbodyDrugs) {
+                Array.from(tbodyDrugs.children).forEach(tr => {
+                    const sel = tr.querySelector(".req-drug-select");
+                    const dose = tr.querySelector(".req-drug-dose");
+                    const dur = tr.querySelector(".req-drug-duration");
+                    const qty = tr.querySelector(".req-drug-qty");
+                    if (sel && sel.value) {
+                        formData.drugsRequested.push({
+                            name: sel.value,
+                            dose: dose ? dose.value : "",
+                            duration: dur ? dur.value : "",
+                            qty: qty ? qty.value : ""
+                        });
+                    }
+                });
+            }
+
+            try {
+                let store = {};
+                const raw = localStorage.getItem("his_ams_requests_store");
+                if (raw) store = JSON.parse(raw);
+                store[currentPatientId] = formData;
+                localStorage.setItem("his_ams_requests_store", JSON.stringify(store));
+                showToast("Restricted Antibiotic Request Form saved to hospital records.");
+            } catch (e) {
+                console.error("Save AMS request error:", e);
+                showToast("Error saving request to localStorage: " + e.message);
+            }
+        }
+
+        function loadSavedAmsRequest(patientId) {
+            try {
+                const raw = localStorage.getItem("his_ams_requests_store");
+                if (!raw) return;
+                const store = JSON.parse(raw);
+                const data = store[patientId];
+                if (!data) return;
+
+                if (data.drugsRequested && data.drugsRequested.length > 0) {
+                    const tbody = document.getElementById("tbody-drugs-requested");
+                    tbody.innerHTML = "";
+                    data.drugsRequested.forEach(d => addDrugRequestedRow(d));
+                }
+
+                if (data.recommendation) {
+                    if (data.recommendation.decisions) recommendationsDecisions = Object.assign({}, data.recommendation.decisions);
+                    if (data.recommendation.disapprovedReasons) disapprovedReasons = Object.assign({}, data.recommendation.disapprovedReasons);
+                    syncRecommendationsTable();
+                }
+
+                if (data.approval) {
+                    if (data.approval.sms) {
+                        document.getElementById("app-mode-sms").checked = true;
+                        toggleApprovalMode('sms');
+                        if (data.approval.smsDoctor) document.getElementById("sms-approving-physician").value = data.approval.smsDoctor;
+                    }
+                    if (data.approval.call) {
+                        document.getElementById("app-mode-call").checked = true;
+                        toggleApprovalMode('call');
+                        if (data.approval.callDoctor) document.getElementById("call-approving-physician").value = data.approval.callDoctor;
+                    }
+                }
+            } catch (e) {
+                console.warn("Load AMS request error:", e);
+            }
+        }
+
+        // ── PRINT ACTION (AUTOMATICALLY INCLUDES PAGE 1 AND PAGE 2) ──
+        function printAmsForm() {
+            // Ensure Page 2 is visible for print
+            document.getElementById("document-page-2").style.display = "block";
+            window.print();
+        }
+
+        // ── URL INITIALIZATION ──
+        function initFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const pid = params.get("patient") || (window.ER_PATIENT_ID || "patient_er_juan");
+            loadPatient(pid);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // ── LIFECYCLE STARTUP ──
+        document.addEventListener("DOMContentLoaded", function () {
+            if (typeof ensureSeedPatient === 'function') {
+                ensureSeedPatient();
+            }
+            populatePhysiciansDirectories();
+            initPatientSelector();
+            initFromUrl();
+        });
+    </script>
+</body>
+</html>

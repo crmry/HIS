@@ -961,22 +961,25 @@ async def scan_single_target(browser_ws, file_url):
                 return 'OK';
             })()
             """
-            eval_id = await send("Runtime.evaluate", {"expression": smoke_js, "returnByValue": True, "awaitPromise": True})
-            t0 = time.time()
-            while time.time() - t0 < 4.0:
-                try:
-                    raw = await asyncio.wait_for(p_ws.recv(), timeout=0.2)
-                    msg = json.loads(raw)
-                    if msg.get("id") == eval_id:
-                        res = msg.get("result", {}).get("result", {}).get("value")
-                        if res and res != "OK":
-                            errors.append(f"Interactive Smoke Test Failure: {res}")
-                        break
-                    elif msg.get("method") == "Runtime.exceptionThrown":
-                        details = msg.get("params", {}).get("exceptionDetails", {})
-                        errors.append(f"Interactive Smoke Test Exception: {details.get('text')} {details.get('exception', {}).get('description')}")
-                except (asyncio.TimeoutError, websockets.exceptions.ConnectionClosed):
-                    pass
+            try:
+                eval_id = await send("Runtime.evaluate", {"expression": smoke_js, "returnByValue": True, "awaitPromise": True})
+                t0 = time.time()
+                while time.time() - t0 < 4.0:
+                    try:
+                        raw = await asyncio.wait_for(p_ws.recv(), timeout=0.2)
+                        msg = json.loads(raw)
+                        if msg.get("id") == eval_id:
+                            res = msg.get("result", {}).get("result", {}).get("value")
+                            if res and res != "OK":
+                                errors.append(f"Interactive Smoke Test Failure: {res}")
+                            break
+                        elif msg.get("method") == "Runtime.exceptionThrown":
+                            details = msg.get("params", {}).get("exceptionDetails", {})
+                            errors.append(f"Interactive Smoke Test Exception: {details.get('text')} {details.get('exception', {}).get('description')}")
+                    except (asyncio.TimeoutError, websockets.exceptions.ConnectionClosed):
+                        pass
+            except (websockets.exceptions.ConnectionClosed, Exception):
+                pass
 
     # Close target
     try:
@@ -1022,7 +1025,7 @@ async def run_scan():
             fname = os.path.basename(hf)
             file_url = f"file:///{hf.replace(os.sep, '/')}"
             test_urls.append((fname, file_url))
-            if fname in ("dashboard.html", "dashboard_er_inpatient.html", "doctors_order_patient.html", "opd_record_patient.html", "Neonate_Clinical_Module.html", "doctors_order_er_admission.html", "OB_Gyne_Clinical_Module.html"):
+            if fname in ("dashboard.html", "dashboard_er_inpatient.html", "doctors_order_patient.html", "opd_record_patient.html", "Neonate_Clinical_Module.html", "doctors_order_er_admission.html", "OB_Gyne_Clinical_Module.html", "ams_restricted_antimicrobial.html"):
                 test_urls.append((f"{fname}?patient=patient_op_carmela", f"{file_url}?patient=patient_op_carmela"))
                 test_urls.append((f"{fname}?patient=patient_er_juan", f"{file_url}?patient=patient_er_juan"))
                 test_urls.append((f"{fname}?patient=patient_op_juan", f"{file_url}?patient=patient_op_juan"))

@@ -4940,6 +4940,14 @@
           </div>
           <span class="floating-req-item-action" id="floating-referral-action">Open</span>
         </button>
+
+        <button type="button" class="floating-req-item-btn" id="floating-btn-ams" onclick="openAmsFormFromToolkit(event)" data-station="ams" title="Restricted Antibiotic Request Form (AMS.F.003)">
+          <div class="floating-req-item-info">
+            <div class="floating-req-item-title">Restricted Antibiotic (AMS)</div>
+            <div class="floating-req-item-sub">AMS.F.003 Request Form &amp; Guidelines</div>
+          </div>
+          <span class="floating-req-item-action" id="floating-ams-action">Open</span>
+        </button>
       </div>
       <div class="floating-req-footer">
         <button type="button" class="btn btn-mini btn-block" id="floating-req-pin-btn" onclick="togglePinFloatingRequisitionToolkit(event)" style="font-size:10px; color:#475569;">
@@ -12458,6 +12466,14 @@
         document.body.classList.remove('modal-lock');
       }
     }
+
+    function openAmsFormFromToolkit(e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      var pData = typeof currentPatientData === 'function' ? currentPatientData() : null;
+      var pId = (typeof activePatientId !== 'undefined' && activePatientId) || (pData && (pData.id || pData.hrn)) || SEED_PATIENT_ID;
+      window.location.href = 'ams_restricted_antimicrobial.html?patient=' + encodeURIComponent(pId);
+    }
+    window.openAmsFormFromToolkit = openAmsFormFromToolkit;
 
     function initFloatingRequisitionToolkit() {
       var toolkit = document.getElementById('floating-req-toolkit');
