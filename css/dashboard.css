@@ -2114,6 +2114,7 @@
     .floating-req-item-btn[data-station="radiology"] { border-left-color: #7c3aed !important; }
     .floating-req-item-btn[data-station="heart"] { border-left-color: #dc2626 !important; }
     .floating-req-item-btn[data-station="respiratory"] { border-left-color: #0d9488 !important; }
+    .floating-req-item-btn[data-station="ams"] { border-left-color: #0e7490 !important; }
     .floating-req-item-info {
       flex: 1 !important;
       min-width: 0 !important;

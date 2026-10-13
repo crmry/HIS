@@ -218,6 +218,11 @@ async def scan_single_target(browser_ws, file_url):
                 document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
                 if (window.getComputedStyle(refModal).display !== 'none' || refModal.classList.contains('open')) return 'Referral modal failed to close via Escape key';
 
+                // Verify AMS Restricted Antibiotic button in toolkit
+                const amsBtn = document.getElementById('floating-btn-ams');
+                if (!amsBtn) return 'Button floating-btn-ams not found in floating requisition toolkit';
+                if (typeof window.openAmsFormFromToolkit !== 'function') return 'window.openAmsFormFromToolkit is not defined';
+
                 // Verify Referral dashlet was transferred from main dashboard body
                 const mainReferralDashlet = document.querySelector('.container-fluid > .row-fluid .care-referral');
                 if (mainReferralDashlet) return 'care-referral should be transferred from main dashboard body';
