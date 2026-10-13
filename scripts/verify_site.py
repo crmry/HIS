@@ -637,7 +637,7 @@ async def scan_single_target(browser_ws, file_url):
                         // Verify that Doctor column never displays generic 'Attending Physician' placeholder
                         const docCells = Array.from(document.querySelectorAll('#med-summary-rows tr td:nth-child(10)'));
                         for (const cell of docCells) {
-                            if (/attending\s*physician/i.test(cell.textContent.trim())) {
+                            if (/attending\\s*physician/i.test(cell.textContent.trim())) {
                                 return 'Summary of medications doctor column contains generic Attending Physician placeholder: ' + cell.textContent.trim();
                             }
                         }

@@ -9,7 +9,7 @@
 Whenever the user requests moving or transferring a dashlet into the Requisitions floating drawer (or adding a new quick pad action), execute these 5 steps in order:
 
 ### Step 1: Add the Button in `#floating-req-toolkit`
-Navigate to lines `~4760–4780` in `dashboard.html` (`.floating-req-items`):
+Navigate to lines `~4920–4945` in `dashboard.html` (`.floating-req-items`):
 ```html
 <button type="button" class="floating-req-item-btn" id="floating-btn-<name>" onclick="open<Name>Modal(event)" data-station="<name>" title="<Title> (<Sub>)">
   <div class="floating-req-item-info">
@@ -18,10 +18,6 @@ Navigate to lines `~4760–4780` in `dashboard.html` (`.floating-req-items`):
   </div>
   <span class="floating-req-item-action" id="floating-<name>-action">Open</span>
 </button>
-```
-In `css/dashboard.css` (lines `~2180`), add an accent color:
-```css
-.floating-req-item-btn[data-station="<name>"] { border-left-color: #10b981 !important; }
 ```
 
 ### Step 2: Declare the Modal Markup
@@ -54,7 +50,7 @@ Navigate to the Modals section (lines `~3550–3700` in `dashboard.html`):
       </div>
     </div>
     <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 4px 4px; display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-size:11px; color:#718096;"><i class="icon-info-sign"></i> <Footer guidance note></span>
+      <span style="font-size:11px; color:#718096;"><i class="icon-info-sign"></i> Guidance Note</span>
       <button type="button" class="btn btn-primary" id="btn-close-modal-<name>" onclick="close<Name>Modal(event)">Close</button>
     </div>
   </div>
@@ -62,7 +58,7 @@ Navigate to the Modals section (lines `~3550–3700` in `dashboard.html`):
 ```
 
 ### Step 3: Implement Open & Close Controllers
-Navigate to lines `~11650–11720` in `dashboard.html`:
+Navigate to lines `~12300–12450` in `dashboard.html`:
 ```javascript
 function open<Name>Modal(e) {
   if (e && e.stopPropagation) e.stopPropagation();
@@ -71,8 +67,6 @@ function open<Name>Modal(e) {
     toolkit.classList.remove('expanded');
     var arrow = document.getElementById('floating-req-toggle-arrow');
     if (arrow) arrow.textContent = '\u25C0';
-    var handle = document.getElementById('floating-req-handle');
-    if (handle) handle.setAttribute('aria-expanded', 'false');
   }
   var modal = document.getElementById('modal-<name>');
   if (modal) {
@@ -110,59 +104,64 @@ function close<Name>Modal(e) {
 ```
 
 ### Step 4: Wire Up Listeners & Window Exports
-1. In `initFloatingRequisitionToolkit()` (`line ~11700`):
-   ```javascript
-   var btn<Name> = document.getElementById('floating-btn-<name>');
-   if (btn<Name> && !btn<Name>.hasAttribute('onclick')) {
-     btn<Name>.addEventListener('click', open<Name>Modal);
-   }
-   ```
-2. In backdrop dismissal section (`line ~8490`):
-   ```javascript
-   var <name>ModalBackdrop = document.getElementById('modal-<name>');
-   if (<name>ModalBackdrop) {
-     <name>ModalBackdrop.addEventListener('click', function (e) {
-       if (e.target === <name>ModalBackdrop) close<Name>Modal();
-     });
-   }
-   var close<Name>Btn = document.getElementById('close-modal-<name>');
-   if (close<Name>Btn) close<Name>Btn.addEventListener('click', close<Name>Modal);
-   var btnClose<Name> = document.getElementById('btn-close-modal-<name>');
-   if (btnClose<Name>) btnClose<Name>.addEventListener('click', close<Name>Modal);
-   ```
-3. In Escape key listener (`lines ~8625 and ~11890`):
-   ```javascript
-   close<Name>Modal();
-   ```
-4. In Window Exports (`line ~11915`):
-   ```javascript
-   window.open<Name>Modal = open<Name>Modal;
-   window.close<Name>Modal = close<Name>Modal;
-   ```
-
-### Step 5: Clean Main Body & Add Smoke Test
-1. Remove or set `display:none;` on the original row in the main body (lines `~2890–2920`).
-2. Add click, open, and close assertions in `scripts/verify_site.py` (lines `~180–210`).
+Export to `window` at lines `~12470`:
+```javascript
+window.open<Name>Modal = open<Name>Modal;
+window.close<Name>Modal = close<Name>Modal;
+```
 
 ---
 
 ## Runbook 2: Modifying CPOE Orders & Summaries
 
-- **State Model**: All active orders are stored in `savedOrders = { plans: [], diet: [], iv: [], medications: [], special: [] }`.
-- **Render Trigger**: Call `renderOrdersTable()` (line `~12700`). It automatically sorts by timestamp, coalesces rows with identical times using `rowspan`, and displays attending physician signatures.
-- **Lockdown Check**: Always check `activeInspectedEncounterIndex !== null && activeInspectedEncounterIndex >= 0` before allowing new orders to be committed.
+When modifying CPOE categories (Diet, IVF, General Orders):
+1. **Locate**: Run `python .agents/skills/his-expert/scripts/locate.py "renderOrdersTable"`.
+2. **Order Aggregation**: Ensure `collectOrders()` extracts the updated field schema from DOM rows.
+3. **Summary Badge Coalescing**: Keep order counter updates wrapped in `scheduleOrderSummaryUpdate()` using `window.requestAnimationFrame`.
 
 ---
 
-## Runbook 3: Automated Quality Gate & Verification
+## Runbook 3: Modifying Medication Tables (Scheduled, Continuous, Oxygen)
 
-Run the verification gate locally before staging:
+When modifying columns, headers, or row inputs in the medication tables:
 
+### 1. Locate Row Generator and Table Header in 1 Shot
+Run:
 ```bash
-python3 scripts/verify_site.py
+python .agents/skills/his-expert/scripts/locate.py addContinuousMedRow
 ```
+Notice:
+- `addContinuousMedRow`: line `~10646` in `dashboard.html`, line `~10551` in `dashboard_er_inpatient.html`
+- Table `<thead>`: line `~10775` in `dashboard.html`, line `~10680` in `dashboard_er_inpatient.html`
 
-The script verifies:
-1. All 19 pages (`dashboard.html`, `opd_record_patient.html`, `doctors_order_patient.html`, etc.) across both default and patient query routes.
-2. Interactive widget click smoke tests (Requisitions drawer handle, Rx writer modal, Results modal, Referral modal, CPOE request modal).
-3. Zero console errors, zero syntax errors, and zero broken asset requests.
+### 2. Apply Field & Header Edits Concurrently
+Ensure the column order in `<thead>` matches `row.innerHTML` exactly:
+- `Carrier Solution (Diluent)` (`<select>`)
+- `Drug/s in Mixture` (`<input type="text">` with datalist)
+- `Final Concentration` (`<input type="text">` with datalist)
+- `Prescribed Dose & Unit` (`<input type="text">` with datalist)
+- `*Infusion Rate` (`<input type="text">` with `mL/h` span)
+- `Titration / Safety Instructions` (`<input type="text">` with datalist)
+
+### 3. Synchronize Both Dashboards
+Always apply matching edits to **both** `dashboard.html` and `dashboard_er_inpatient.html`.
+
+---
+
+## Runbook 4: Converting Select Dropdowns into Textboxes with Datalist Suggestions
+
+When physicians request flexible typing (free text) while retaining standard options:
+
+1. **Declare the Datalist** (in the `<datalist>` constants block around line `~10370`):
+   ```javascript
+   '<datalist id="med-sample-<feature>">' +
+   SAMPLE_<FEATURE>.map(function (v) { return '<option value="' + esc(v) + '">'; }).join('') +
+   '</datalist>' +
+   ```
+2. **Replace `<select>` with `<input>` in Row Builder**:
+   ```javascript
+   // Old: '<td><select data-medication-field="<field>">...</select></td>'
+   // New:
+   '<td><input type="text" data-medication-field="<field>" list="med-sample-<feature>" value="' + esc((data && data.<field>) || '') + '" placeholder="<placeholder>"></td>'
+   ```
+3. **Preserve Fallbacks**: Ensure legacy string/object data binds gracefully to the value attribute.

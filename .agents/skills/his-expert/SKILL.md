@@ -8,56 +8,66 @@ description: >-
 
 # HIS Expert Skill & Architectural Navigator
 
-This skill provides an indexed architectural map, component dictionary, and fast-patch recipes for the Physician Dashboard codebase (`HIS`).
+This skill provides an indexed architectural map, component dictionary, and fast-patch engine for the Physician Dashboard codebase (`HIS`).
 
-Use this skill to bypass token-heavy scanning across the 15,400+ line `dashboard.html` file and execute zero-drift, targeted modifications directly.
+Use this skill to bypass token-heavy scanning across the 16,700+ line `dashboard.html` file and execute zero-drift, targeted modifications directly in minimal tool turns.
 
 ---
 
-## 4 Golden Rules for Zero-Waste Token Execution
+## 4 Mandatory Invariants for Zero-Waste Token Execution
 
-1. **Check the Section Map First**: Never read large 500+ line blocks of `dashboard.html`. Consult [dashboard_section_map.md](./references/dashboard_section_map.md) to locate exact line numbers.
-2. **Use Targeted Grep Signatures**: Search only for unique element IDs or function signatures (see [component_dictionary.md](./references/component_dictionary.md)) rather than broad keywords like `patient` or `order`.
-3. **Follow Standard Fast-Patch Runbooks**: Use proven step-by-step blueprints in [fast_patch_runbooks.md](./references/fast_patch_runbooks.md) for recurring clinical dashboard tasks.
-4. **Adhere to Hospital EHR & Repository Invariants**:
-   - **Issue-First Invariant**: Create a GitHub issue via API *before* patching code (`crmry/HIS/issues`).
-   - **Strict Verification Gate**: Execute `python3 scripts/verify_site.py` across all 19 workspace pages.
-   - **Continuous Push Invariant**: Stage, commit referencing the issue, and push to `origin/main`.
-   - **Zero AI Markers**: Never write artificial test tags, AI disclaimers, or mock markers in UI or code comments.
+### 1. Zero-Clarification Delay Invariant (Fix What Is Asked Immediately)
+- **Do NOT Pause for Clarification**: When a user requests a feature, UI change, field adjustment, or bug fix, **NEVER** invoke the `ask_question` tool or halt to ask questions if the requirement or clinical intent is reasonably inferrable.
+- **Translate Clinical Intent & Typos Directly**: Recognize common medical abbreviations and typos automatically:
+  - `"Final Conception"` $\rightarrow$ `"Final Concentration"`
+  - `"Prescribed Dose & Unit *Infusion Rate"` $\rightarrow$ update continuous infusion columns with required asterisk
+  - `"Fq"` $\rightarrow$ `"Frequency"`
+  - `"stat to now"` $\rightarrow$ update stat urgency button to label `Now`
+- **Execute Directly with Sensible Defaults**: Implement the change cleanly using hospital EHR standards and summarize the outcome concisely in your response.
+
+### 2. Single-Command Dynamic Locator (No Exploratory Reading)
+- **Never Call Chains of `view_file`**: Do NOT view slices repeatedly across turns.
+- **Run the Dynamic Locator Engine**:
+  ```bash
+  python .agents/skills/his-expert/scripts/locate.py <identifier>
+  ```
+  This command inspects both `dashboard.html` and `dashboard_er_inpatient.html` simultaneously in `< 0.1s`, printing the exact `StartLine` and `EndLine` ready for `replace_file_content`.
+
+### 3. Concurrent Multi-Dashboard Patching
+- When modifying CPOE orders, medication tables, or patient views, always patch **both** `dashboard.html` and `dashboard_er_inpatient.html` within the same turn.
+- View at most **one** target slice (15–40 lines) if needed, then immediately call `replace_file_content`.
+
+### 4. Mandatory Issue-First, Verification & Push Invariant
+- **Pre-Patch Issue Creation**: File an issue via GitHub API before modifying code (`crmry/HIS/issues`).
+- **Headless Verification Gate**: Run `python scripts/verify_site.py` across all workspace pages. Must pass with zero errors.
+- **Continuous Git Synchronization**: Stage, commit referencing the issue, and push to `origin/main`.
+- **Zero AI Markers**: Never write artificial demo tags, AI disclaimers, or mock qualifiers in UI or code comments.
 
 ---
 
 ## Quick Reference Index
 
-| Documentation & Guides | Purpose & Contents |
+| Documentation & Tools | Purpose & Contents |
 | :--- | :--- |
-| [Section Map](./references/dashboard_section_map.md) | Exact line-range index for HTML markup, modals, floating drawer, and JavaScript functions in `dashboard.html`. |
-| [Component Dictionary](./references/component_dictionary.md) | Mapping of Dashlets, IDs, Modals, State Variables (`savedOrders`, `referrals`, etc.), and Read-Only Locks. |
-| [Fast-Patch Runbooks](./references/fast_patch_runbooks.md) | Step-by-step recipes for Requisition Drawer transfers, CPOE modifications, and automated verification. |
+| [Dynamic Locator Engine](./scripts/locate.py) | Python CLI tool returning exact `StartLine`/`EndLine` ranges for `replace_file_content` across all dashboards. |
+| [Section Map](./references/dashboard_section_map.md) | Exact line-range index for HTML markup, modals, floating drawer, and JavaScript functions (`16,729` lines). |
+| [Component Dictionary](./references/component_dictionary.md) | Mapping of Dashlets, IDs, CPOE Medication grids, Modals, State Variables (`savedOrders`, `referrals`), and Locks. |
+| [Fast-Patch Runbooks](./references/fast_patch_runbooks.md) | Step-by-step recipes for Requisition Drawer transfers, CPOE modifications, and datalist textboxes. |
 
 ---
 
-## Standard One-Shot Workflow Command
+## Standard 3-Turn Fast Execution Blueprint
 
-To execute the mandatory issue-tracking and verification workflow in minimal turns:
+Execute any user change within **3 turns maximum**:
 
 ```bash
-# 1. Create GitHub Issue
-GH_TOKEN=$(printf "protocol=https\nhost=github.com\n" | git credential fill | grep "^password=" | cut -d= -f2)
-ISSUE_URL=$(curl -s -H "Authorization: token $GH_TOKEN" -H "Accept: application/vnd.github.v3+json" \
-  https://api.github.com/repos/crmry/HIS/issues \
-  -d '{"title":"<type>(<module>): <description>","body":"### Context & Requirements\n..."}' | grep -o 'https://github.com/crmry/HIS/issues/[0-9]*' | head -1)
-ISSUE_NUM=$(basename "$ISSUE_URL")
+# Turn 1: Locate Target Lines
+python .agents/skills/his-expert/scripts/locate.py <target-feature-or-id>
 
-# 2. (Apply edits to files via replace_file_content)
+# Turn 2: Apply Edits directly via replace_file_content in dashboard.html and dashboard_er_inpatient.html
 
-# 3. Headless Verification Gate
-python3 scripts/verify_site.py
-
-# 4. Commit, Push, and Close Issue
+# Turn 3: Headless Verification Gate & Git Sync
+python scripts/verify_site.py
 git add .
-git commit -m "<type>(<module>): <description> (Fixes #$ISSUE_NUM)"
-git push origin main
-curl -s -X PATCH -H "Authorization: token $GH_TOKEN" -H "Accept: application/vnd.github.v3+json" \
-  https://api.github.com/repos/crmry/HIS/issues/$ISSUE_NUM -d '{"state":"closed"}'
+git commit -m "<type>(<module>): <description>"
 ```

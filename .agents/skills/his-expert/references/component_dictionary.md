@@ -28,19 +28,60 @@ Toolkit DOM Controls:
 
 | Dashlet / Domain | Wrapper ID / Class | Key Sub-Elements | Primary Action Buttons |
 | :--- | :--- | :--- | :--- |
-| **Demographics Banner** | `#patient-info-banner` | `#patient-name`, `#patient-hrn`, `#patient-age`, `#patient-sex`, `#patient-pin` | Patient selector dropdown |
-| **Vital Signs & Flowsheet**| `#dashlet-vitals` | `#vitals-table`, `#vitals-bp`, `#vitals-hr`, `#vitals-rr`, `#vitals-temp` | View-only bedside monitoring (nursing logs) |
-| **Progress Notes (SOA)** | `.care-notes` | `#note-subjective`, `#note-objective`, `#note-assessment` | `#btn-save-progress-note` |
-| **Initial / Admitting Dx** | `#admitting-dx-col` | `#admitting_dx` | ICD-10 search input |
-| **Final Diagnosis** | `#final-dx-col` / `#row-final-dx` | `#final_dx`, `#final-dx-status-badge` | Read-only during inspection |
-| **Doctor's Orders** | `#orders-summary-table` | Table body `#orders-summary-rows` | `#save-orders-btn`, `#open-request-modal` |
+| **Demographics Banner** | `#dashlet-patient-info` | `#banner-patient-name`, `#banner-hrn`, `#banner-encounter-no`, `#banner-bdate`, `#banner-phic` | Patient selector dropdown |
+| **Encounter History** | `#dashlet-encounter` | `#encounter-rows`, `#encounter-date-from`, `#encounter-date-to` | `#btn-clear-date-filter`, department filter group |
+| **Vital Signs & Flowsheet**| `#dashlet-vitals` | `#clinical-chart-tabs`, bedside tables (Vitals, IVF, Blood Transfusion, Intake/Output) | Bedside nursing flowsheet log triggers |
+| **Admitting Diagnosis** | `#admitting-dx-col` | `#admitting_dx` | ICD-10 search input |
+| **Final Diagnosis** | `#final-dx-col` | `#final_dx`, encounter lock indicators | Read-only during inspection |
+| **Doctor's Orders (CPOE)** | `#orders-summary-table` | Table body `#orders-summary-rows` | `#save-orders-btn`, `#open-request-modal` |
 | **Disposition** | `#dashlet-disposition` | `input[name="disposition"]` | `#save-disposition-btn` |
 | **Follow-up** | `#dashlet-followup` | `input[name="follow_up_needed"]`, `#follow-up-fields` | `#save-followup-btn` |
-| **Specialized Forms** | `#dashlet-specialized-forms` | `#dashlet-other-forms` | `#btn-open-obgyne-module`, `#btn-open-neonate-module` |
+| **Specialized Forms** | `#dashlet-specialized-forms` | Physical Examination Form and Special Form groups | OB-Gyne & Neonate quick links |
 
 ---
 
-## 3. JavaScript State Variables
+## 3. CPOE Medication Subsystem & Grid Fields
+
+The medication order pad (`.medication-grid`) supports three order categories:
+
+### A. Continuous Infusions (`data-medication-list="continuous"`)
+- **Row Generator**: `addContinuousMedRow(body, data)`
+- **Table Headers**:
+  - `Carrier Solution (Diluent)` (width: 20%, required)
+  - `Drug/s in Mixture` (width: 20%, required)
+  - `Final Concentration` (width: 14%)
+  - `Prescribed Dose & Unit` (width: 17%, required)
+  - `*Infusion Rate` (width: 11%, required, includes `mL/h` unit suffix)
+  - `Titration / Safety Instructions`
+- **Field Selectors**:
+  - `data-medication-field="solution"`: Dropdown (`INFUSION_SOLUTIONS`)
+  - `data-medication-field="additiveDrug"`: Textbox (`list="med-sample-infusion-drugs"`)
+  - `data-medication-field="finalConcentration"`: Textbox (`list="med-sample-concentrations"`)
+  - `data-medication-field="prescribedDose"`: Textbox (`list="med-sample-continuous-doses"`, unified dose and unit)
+  - `data-medication-field="infusionRate"`: Textbox (rate number in mL/h)
+  - `data-medication-field="precautions"`: Textbox (`list="med-sample-infusion-precautions"`)
+
+### B. Scheduled Medications (`data-medication-list="scheduled"`)
+- **Row Generator**: `addScheduledMedRow(body, data)`
+- **Field Selectors**:
+  - `data-medication-field="drug"`: Drug name (`list="med-sample-drugs"`)
+  - `data-medication-field="dose"`: Dose quantity
+  - `data-medication-field="unit"`: Dose unit dropdown / datalist
+  - `data-medication-field="route"`: Flexible textbox (`list="med-sample-routes"`)
+  - `data-medication-field="frequency"`: Flexible textbox (`list="med-sample-frequencies"`)
+  - `data-medication-field="instructions"`: Special instructions
+
+### C. Oxygen Therapy (`data-medication-list="oxygen"`)
+- **Row Generator**: `addOxygenMedRow(body, data)`
+- **Field Selectors**:
+  - `data-medication-field="deliveryMethod"`: Delivery device dropdown (`OXYGEN_METHODS`)
+  - `data-medication-field="oxygenParameters"`: Textbox (e.g. `2-3 L/min`)
+  - `data-medication-field="oxygenTarget"`: Target parameter dropdown (`OXYGEN_TARGETS`)
+  - `data-medication-field="oxygenDuration"`: Duration dropdown (`OXYGEN_DURATIONS`)
+
+---
+
+## 4. JavaScript State Variables
 
 All shared state variables live in the page's closure/global scope:
 
@@ -49,16 +90,14 @@ All shared state variables live in the page's closure/global scope:
 | `activePatientId` | `string` | ID of the currently selected patient record (e.g. `'patient_op_juan'`). |
 | `activeInspectedEncounterIndex` | `number \| null` | `null` or `0` when viewing active encounter. `> 0` when inspecting historical encounter. |
 | `savedOrders` | `object` | Dictionary of CPOE orders: `{ plans: [], diet: [], iv: [], medications: [], special: [] }`. |
-| `referrals` | `Array<object>` | List of active encounter referrals: `[{ date, department, reason, primaryPhysician, coManagingPhysician, receivingPhysician }]`. |
+| `referrals` | `Array<object>` | List of active encounter referrals. |
 | `loadedEncounters` | `Array<object>` | Complete list of all encounters for the active patient. |
-| `activeResultScope` | `string` | Filter for diagnostic results modal: `'all'`, `'current'`, `'30d'`, `'90d'`, `'6m'`, `'1y'`, `'custom'`. |
-| `activeResultDateFrom` | `string` | Custom date range start (`YYYY-MM-DD`). |
-| `activeResultDateTo` | `string` | Custom date range end (`YYYY-MM-DD`). |
+| `activeResultScope` | `string` | Filter for diagnostic results modal (`'all'`, `'current'`, `'30d'`, etc.). |
 | `_cachedCurrentPatientRecord` | `object \| null` | In-memory cache of current patient data. Invalidate on save or switch. |
 
 ---
 
-## 4. Historical Encounter Read-Only Lock Engine
+## 5. Historical Encounter Read-Only Lock Engine
 
 When `activeInspectedEncounterIndex > 0`, `setDashboardReadOnly(true)` is executed. It strictly disables or hides the following controls to preserve clinical audit trails:
 
