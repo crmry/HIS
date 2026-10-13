@@ -10357,6 +10357,12 @@
         '<datalist id="med-sample-preparations">' +
         SAMPLE_PREPARATIONS.map(function (p) { return '<option value="' + esc(p) + '">'; }).join('') +
         '</datalist>' +
+        '<datalist id="med-sample-routes">' +
+        MED_ROUTES.map(function (r) { return '<option value="' + esc(r) + '">'; }).join('') +
+        '</datalist>' +
+        '<datalist id="med-sample-frequencies">' +
+        MED_FREQUENCIES.map(function (f) { return '<option value="' + esc(f) + '">'; }).join('') +
+        '</datalist>' +
         '<datalist id="med-sample-precautions">' +
         SAMPLE_PRECAUTIONS.map(function (p) { return '<option value="' + esc(p) + '">'; }).join('') +
         '</datalist>' +
@@ -10577,18 +10583,6 @@
           scheduleOrderSummaryUpdate();
         });
       });
-      var freqSelect = row.querySelector('[data-medication-field="frequency"]');
-      var freqCustom = row.querySelector('[data-medication-field="frequencyCustom"]');
-      if (freqSelect && freqCustom) {
-        freqSelect.addEventListener('change', function () {
-          if (freqSelect.value === 'Others (Specify)' || freqSelect.value === 'Others') {
-            freqCustom.style.display = 'block';
-            freqCustom.focus();
-          } else {
-            freqCustom.style.display = 'none';
-          }
-        });
-      }
       var rmBtn = row.querySelector('.rm-medication');
       if (rmBtn) {
         rmBtn.addEventListener('click', function (ev) {
@@ -10618,14 +10612,12 @@
         if (m) { doseVal = m[1]; doseUnit = m[2]; }
       }
 
-      var hasCustomFreq = !!(data && (data.frequency === 'Others (Specify)' || data.frequency === 'Others' || data.frequencyCustom));
-
       row.innerHTML =
         '<td><input type="text" data-medication-field="genericName" list="med-sample-generics" value="' + esc((data && (data.genericName || data.medication || data.drug)) || '') + '" placeholder="e.g. Paracetamol" aria-label="Generic name"></td>' +
         '<td><input type="text" data-medication-field="preparation" value="' + esc((data && (data.preparation || data.dosageForm)) || '') + '" placeholder="e.g. 500 mg tablet, 250 mg/5 mL susp, 1 g vial" aria-label="Preparation"></td>' +
         '<td><div style="display:flex; gap:3px;"><input type="text" data-medication-field="dose" value="' + esc(doseVal) + '" placeholder="500" style="width:55%;" aria-label="Dose"><select data-medication-field="doseUnit" style="width:45%;" aria-label="Dose unit">' + renderSelectOptions(DOSE_UNITS, doseUnit || 'mg') + '</select></div></td>' +
-        '<td><select data-medication-field="route" aria-label="Route">' + renderSelectOptions(MED_ROUTES, data && data.route, '-- Route --') + '</select></td>' +
-        '<td><div class="med-freq-wrap" style="display:flex; flex-direction:column; gap:2px;"><select data-medication-field="frequency" aria-label="Frequency">' + renderSelectOptions(MED_FREQUENCIES, data && data.frequency, '-- Frequency --') + '</select><input type="text" data-medication-field="frequencyCustom" placeholder="e.g. q20min nebulization, q3 min epi" value="' + esc((data && (data.frequencyCustom || '')) || '') + '" style="display:' + (hasCustomFreq ? 'block' : 'none') + '; font-size:11px; padding:2px 4px; box-sizing:border-box; width:100%; margin-top:2px;" aria-label="Custom frequency"></div></td>' +
+        '<td><input type="text" data-medication-field="route" list="med-sample-routes" value="' + esc((data && data.route) || '') + '" placeholder="e.g. Oral (PO), Airway Inhalation" aria-label="Route"></td>' +
+        '<td><input type="text" data-medication-field="frequency" list="med-sample-frequencies" value="' + esc((data && (data.frequency || data.frequencyCustom)) || '') + '" placeholder="e.g. Once daily (OD), q20min nebulization" aria-label="Frequency"></td>' +
         '<td><select data-medication-field="duration" aria-label="Duration">' + renderSelectOptions(MED_DURATIONS, data && data.duration, '-- Duration --') + '</select></td>' +
         '<td><input type="text" data-medication-field="precautions" list="med-sample-precautions" value="' + esc((data && (data.precautions || data.remarks)) || '') + '" placeholder="Safety, monitoring, withholding..." aria-label="Precautions"></td>' +
         '<td class="medication-remove"><button type="button" class="btn btn-danger btn-mini rm-medication" aria-label="Remove medication">&times;</button></td>';
@@ -10705,9 +10697,6 @@
       row.querySelectorAll('[data-medication-field]').forEach(function (input) {
         item[input.dataset.medicationField] = input.value.trim();
       });
-      if ((item.frequency === 'Others (Specify)' || item.frequency === 'Others') && item.frequencyCustom) {
-        item.frequency = item.frequencyCustom;
-      }
 
       item.text = medicationOrderText(item);
       return item;
