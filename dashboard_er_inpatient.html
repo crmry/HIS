@@ -10180,6 +10180,19 @@
       'mg/hr', 'mg/min', 'mEq/hr', 'mL/hr', 'drops/min'
     ];
 
+    var SAMPLE_CONTINUOUS_DOSES = [
+      '0.05 - 0.2 mcg/kg/min',
+      '0.02 - 0.1 mcg/kg/min',
+      '0.5 - 2 mcg/kg/min',
+      '2 - 20 mcg/kg/min',
+      '5 - 15 mcg/kg/min',
+      '0.5 - 2 mg/hr',
+      '1 - 10 units/hr',
+      '10 - 20 mEq/hr',
+      '1 - 5 mcg/min',
+      'Titrate per protocol'
+    ];
+
     var SAMPLE_INFUSION_PRECAUTIONS = [
       'Titrate to maintain MAP ≥ 65 mmHg',
       'Titrate by 0.02 mcg/kg/min every 5-10 mins for target BP',
@@ -10276,6 +10289,9 @@
         '</datalist>' +
         '<datalist id="med-sample-concentrations">' +
         SAMPLE_CONCENTRATIONS.map(function (c) { return '<option value="' + esc(c) + '">'; }).join('') +
+        '</datalist>' +
+        '<datalist id="med-sample-continuous-doses">' +
+        SAMPLE_CONTINUOUS_DOSES.map(function (d) { return '<option value="' + esc(d) + '">'; }).join('') +
         '</datalist>' +
         '<datalist id="med-sample-infusion-precautions">' +
         SAMPLE_INFUSION_PRECAUTIONS.map(function (p) { return '<option value="' + esc(p) + '">'; }).join('') +
@@ -10542,11 +10558,16 @@
       row.dataset.cared = JSON.stringify(data && Array.isArray(data.cared) ? data.cared : []);
       row.dataset.timeSignature = (data && data.timeSignature) || '';
 
+      var prescribedDoseVal = data && data.prescribedDose ? data.prescribedDose : '';
+      if (data && data.doseExpression && prescribedDoseVal && prescribedDoseVal.indexOf(data.doseExpression) === -1) {
+        prescribedDoseVal = prescribedDoseVal + ' ' + data.doseExpression;
+      }
+
       row.innerHTML =
         '<td><select data-medication-field="solution" aria-label="Carrier solution">' + renderSelectOptions(INFUSION_SOLUTIONS, data && data.solution, '-- Select Diluent --') + '</select></td>' +
         '<td><input type="text" data-medication-field="additiveDrug" list="med-sample-infusion-drugs" value="' + esc((data && (data.additiveDrug || data.drug)) || '') + '" placeholder="e.g. Norepinephrine 4 mg" aria-label="Drug in mixture"></td>' +
         '<td><input type="text" data-medication-field="finalConcentration" list="med-sample-concentrations" value="' + esc((data && data.finalConcentration) || '') + '" placeholder="e.g. 16 mcg/mL" aria-label="Final concentration"></td>' +
-        '<td><div style="display:flex; gap:3px;"><input type="text" data-medication-field="prescribedDose" value="' + esc((data && data.prescribedDose) || '') + '" placeholder="e.g. 0.05-0.2" style="width:45%;" aria-label="Prescribed dose"><select data-medication-field="doseExpression" style="width:55%;" aria-label="Dose expression">' + renderSelectOptions(DOSE_EXPRESSIONS, data && data.doseExpression || 'mcg/kg/min') + '</select></div></td>' +
+        '<td><input type="text" data-medication-field="prescribedDose" list="med-sample-continuous-doses" value="' + esc(prescribedDoseVal) + '" placeholder="e.g. 0.05-0.2 mcg/kg/min" aria-label="Prescribed dose and unit"></td>' +
         '<td><div style="display:flex; align-items:center; gap:2px;"><input type="text" data-medication-field="infusionRate" value="' + esc((data && data.infusionRate) || '') + '" placeholder="15" aria-label="Infusion rate"><span style="font-size:10px; font-weight:700; color:#555;">mL/h</span></div></td>' +
         '<td><input type="text" data-medication-field="precautions" list="med-sample-infusion-precautions" value="' + esc((data && data.precautions) || '') + '" placeholder="Titration goals, MAP target..." aria-label="Infusion precautions"></td>' +
         '<td class="medication-remove"><button type="button" class="btn btn-danger btn-mini rm-medication" aria-label="Remove infusion">&times;</button></td>';
