@@ -10668,7 +10668,7 @@
       row.innerHTML =
         '<td><select data-medication-field="deliveryMethod" aria-label="Delivery method">' + renderSelectOptions(OXYGEN_METHODS, data && data.deliveryMethod, '-- Select Device --') + '</select></td>' +
         '<td><input type="text" data-medication-field="oxygenParameters" value="' + esc((data && data.oxygenParameters) || '') + '" placeholder="e.g. 2-3 L/min" aria-label="Prescribed parameter"></td>' +
-        '<td><input type="text" data-medication-field="precautions" list="med-sample-oxygen-precautions" value="' + esc((data && data.precautions) || '') + '" placeholder="Pulse oximetry, ABG, humidification..." aria-label="Oxygen precautions"></td>' +
+        '<td><input type="text" data-medication-field="precautions" value="' + esc((data && data.precautions) || '') + '" placeholder="Pulse oximetry, ABG, humidification..." aria-label="Oxygen precautions"></td>' +
         '<td><input type="text" data-medication-field="remarks" value="' + esc((data && data.remarks) || '') + '" placeholder="Remarks..." aria-label="Remarks"></td>' +
         '<td class="medication-remove"><button type="button" class="btn btn-danger btn-mini rm-medication" aria-label="Remove oxygen">&times;</button></td>';
 
