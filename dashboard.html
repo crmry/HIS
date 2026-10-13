@@ -10423,6 +10423,7 @@
         if (item.additiveDrug) parts.push(item.additiveDrug);
         if (item.solution) parts.push('in ' + item.solution);
         if (item.finalConcentration) parts.push('(Conc: ' + item.finalConcentration + ')');
+        if (item.qty) parts.unshift('Qty: ' + item.qty);
         var doseStr = [item.prescribedDose, item.doseUnit || item.doseExpression].filter(Boolean).join(' ');
         if (item.prescribedDose) parts.push('at ' + doseStr);
         if (item.infusionRate) {
@@ -10718,6 +10719,7 @@
 
       row.innerHTML =
         '<td><select data-medication-field="solution" aria-label="Carrier solution">' + renderSelectOptions(INFUSION_SOLUTIONS, data && data.solution, '-- Select Diluent --') + '</select></td>' +
+        '<td style="text-align:center;"><input type="number" data-medication-field="qty" min="1" value="' + esc((data && data.qty) || '') + '" placeholder="1" aria-label="Quantity (bags/bottles)" style="width:100%; text-align:center; min-width:36px;"></td>' +
         '<td><input type="text" data-medication-field="additiveDrug" list="med-sample-infusion-drugs" value="' + esc((data && (data.additiveDrug || data.drug)) || '') + '" placeholder="e.g. Norepinephrine 4 mg" aria-label="Drug in mixture"></td>' +
         '<td><input type="text" data-medication-field="finalConcentration" list="med-sample-concentrations" value="' + esc((data && data.finalConcentration) || '') + '" placeholder="e.g. 16 mcg/mL" aria-label="Final concentration"></td>' +
         '<td><div style="display:flex; align-items:center; gap:2px;"><input type="text" data-medication-field="prescribedDose" value="' + esc(doseNumVal) + '" placeholder="e.g. 0.05-0.2" aria-label="Prescribed dose" style="flex:1 1 50%; min-width:38px;"><select data-medication-field="doseUnit" aria-label="Dose unit" style="flex:0 0 auto; width:auto; min-width:88px; font-size:11px; padding:2px 3px; margin:0;">' + renderSelectOptions(PRESCRIBED_DOSE_UNITS, doseUnitVal, '-- Unit --') + '</select></div></td>' +
@@ -10822,6 +10824,7 @@
         '<div class="med-sub-title">' +
         '<span class="med-sub-arrow">▼</span>' +
         '<span>Continuous Infusions</span>' +
+        '<span style="font-size:10px; font-weight:400; color:#b45309; background:#fef3c7; border:1px solid #fde68a; border-radius:3px; padding:1px 6px; margin-left:8px; letter-spacing:0.02em;">For IM or Pedia dosing — request pharmacist / senior physician assistance</span>' +
         '</div>' +
         '<div style="display:flex; align-items:center; gap:8px;">' +
         '<span class="med-sub-pill" id="med-count-continuous">0 orders</span>' +
@@ -10833,10 +10836,11 @@
         '<table class="order-card-table medication-grid" aria-label="Continuous infusion orders">' +
         '<thead><tr>' +
         '<th style="width:19%;"><span class="required">*</span>Carrier Solution (Diluent)</th>' +
-        '<th style="width:19%;"><span class="required">*</span>Drug/s in Mixture</th>' +
-        '<th style="width:13%;">Final Concentration</th>' +
-        '<th style="width:16%;"><span class="required">*</span>Prescribed Dose &amp; Unit</th>' +
-        '<th style="width:13%;"><span class="required">*</span>Infusion Rate</th>' +
+        '<th style="width:6%; text-align:center;">Qty</th>' +
+        '<th style="width:16%;"><span class="required">*</span>Drug/s in Mixture</th>' +
+        '<th style="width:12%;">Final Concentration</th>' +
+        '<th style="width:15%;"><span class="required">*</span>Prescribed Dose &amp; Unit</th>' +
+        '<th style="width:12%;"><span class="required">*</span>Infusion Rate</th>' +
         '<th>Titration / Safety Instructions</th>' +
         '<th style="width:36px; text-align:center;"></th>' +
         '</tr></thead>' +
