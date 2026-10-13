@@ -470,14 +470,6 @@
             font-weight: bold;
         }
 
-        .approval-active-indicator {
-            font-size: 8pt;
-            color: #dc2626;
-            font-weight: 700;
-            font-family: var(--font-sans);
-            text-transform: uppercase;
-        }
-
         .approval-fields-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -503,21 +495,21 @@
             box-sizing: border-box;
         }
 
-        /* Clean Red / Line Divider: DO NOT WRITE BELOW THIS LINE */
+        /* Divider: DO NOT WRITE BELOW THIS LINE */
         .do-not-write-divider {
             border: none;
-            border-top: 2px solid #dc2626;
+            border-top: 1.5px solid #000000;
+            border-bottom: 1px solid #000000;
+            padding: 2px 0;
             margin: 14px 0 8px;
             position: relative;
             text-align: center;
         }
 
         .do-not-write-tag {
-            position: relative;
-            top: -10px;
             background: #ffffff;
             padding: 0 12px;
-            color: #dc2626;
+            color: #000000;
             font-family: var(--font-sans);
             font-weight: bold;
             font-size: 8.5pt;
@@ -1060,7 +1052,7 @@
                 <tr>
                     <td colspan="4">
                         <span class="cell-label">Clinical Diagnosis / Name of Surgery:</span>
-                        <input type="text" id="pt-clinical-diagnosis" placeholder="INITIAL DIAGNOSIS" style="font-weight: bold; color: #000;">
+                        <input type="text" id="pt-clinical-diagnosis" placeholder="Clinical Diagnosis / Name of Surgery" style="font-weight: bold; color: #000;">
                     </td>
                     <td>
                         <span class="cell-label">Weight</span>
@@ -1182,7 +1174,6 @@
                     <div class="approval-column" id="col-approval-sms">
                         <div class="approval-col-header">
                             <label class="check-item"><input type="checkbox" id="app-mode-sms" onchange="toggleApprovalMode('sms')"> <strong>SMS</strong></label>
-                            <span class="approval-active-indicator" id="tag-sms-active">ACTIVE IF SMS IS SELECT</span>
                         </div>
                         <div class="approval-fields-row">
                             <div>
@@ -1195,10 +1186,10 @@
                             </div>
                         </div>
                         <div>
-                            <label style="font-size: 8pt; font-family: var(--font-sans); color: #991b1b; font-weight: bold;">Paired Doctor:</label>
                             <select id="sms-approving-physician" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 3px; padding: 3px 6px; font-size: 8.5pt; font-family: inherit;">
                                 <option value="">Select Name of Approving Physician...</option>
                             </select>
+                            <span style="font-size: 7.5pt; color: #111827; font-family: var(--font-sans); font-weight: 600; display: block; margin-top: 3px; text-align: center;">Name of Approving Physician</span>
                         </div>
                     </div>
 
@@ -1206,7 +1197,6 @@
                     <div class="approval-column" id="col-approval-call">
                         <div class="approval-col-header">
                             <label class="check-item"><input type="checkbox" id="app-mode-call" onchange="toggleApprovalMode('call')"> <strong>Call</strong></label>
-                            <span class="approval-active-indicator" id="tag-call-active">ACTIVE IF CALL IS SELECTED</span>
                         </div>
                         <div class="approval-fields-row">
                             <div>
@@ -1219,16 +1209,16 @@
                             </div>
                         </div>
                         <div>
-                            <label style="font-size: 8pt; font-family: var(--font-sans); color: #991b1b; font-weight: bold;">Paired Doctor:</label>
                             <select id="call-approving-physician" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 3px; padding: 3px 6px; font-size: 8.5pt; font-family: inherit;">
                                 <option value="">Select Name of Approving Physician...</option>
                             </select>
+                            <span style="font-size: 7.5pt; color: #111827; font-family: var(--font-sans); font-weight: 600; display: block; margin-top: 3px; text-align: center;">Name of Approving Physician</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Red Dividing Line -->
+            <!-- Section Divider -->
             <div class="do-not-write-divider">
                 <span class="do-not-write-tag">DO NOT WRITE BELOW THIS LINE</span>
             </div>
@@ -1247,7 +1237,7 @@
                 <table class="clinical-records-table" id="table-recommendations" style="margin-bottom: 6px;">
                     <thead>
                         <tr>
-                            <th style="width: 44%;">Drugs<br><span style="font-weight: normal; font-size: 7.5pt;">(LIST OF RESTRICTED ANTIBIOTIC REQUESTED)</span></th>
+                            <th style="width: 44%;">Drugs</th>
                             <th style="width: 20%;">Dose/Frequency<br><span style="font-weight: normal; font-size: 7.5pt;">(q hour)</span></th>
                             <th style="width: 16%;">Duration<br><span style="font-weight: normal; font-size: 7.5pt;">(hrs/days)</span></th>
                             <th style="width: 20%;">Requested Quantity<br><span style="font-weight: normal; font-size: 7.5pt;">(tab/amp/vial)</span></th>
@@ -1263,11 +1253,10 @@
                 <div class="disapproved-section">
                     <div class="disapproved-title">
                         <label class="check-item" style="margin: 0;"><input type="checkbox" id="rec-disapproved-check"> <strong>Disapproved (State reason)</strong></label>
-                        <span style="font-size: 7.5pt; color: #dc2626; font-weight: normal;">(Auto-transfers items rejected with ✖)</span>
                     </div>
                     <div id="disapproved-reasons-container">
                         <div id="disapproved-empty-notice" style="font-size: 8pt; color: #64748b; font-style: italic; padding: 2px 0;">
-                            No items marked for disapproval. Click the red ✖ on any drug above to state rejection rationale.
+                            No items marked for disapproval.
                         </div>
                     </div>
                 </div>
@@ -1283,7 +1272,6 @@
                         <input type="text" id="rec-sig-time" placeholder="e.g. 11:45 AM" style="border: 1px solid #cbd5e1; border-radius: 3px; padding: 2px 4px; font-size: 8.5pt;">
                     </div>
                     <div style="flex: 2; min-width: 280px; text-align: right;">
-                        <span style="font-size: 8pt; font-family: var(--font-sans); color: #991b1b; font-weight: bold; display: block;">Paired Doctor:</span>
                         <select id="rec-approving-authority" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 3px; padding: 3px 6px; font-size: 8.5pt; font-family: inherit; font-weight: bold;">
                             <option value="">Select Approving Department Training Officer / Chairman / ID Consultant...</option>
                         </select>
@@ -1570,7 +1558,7 @@
             }
         }
 
-        // ── POPULATE PAIRED PHYSICIANS DROPDOWNS ──
+        // ── POPULATE PHYSICIANS DROPDOWNS ──
         function populatePhysiciansDirectories() {
             const selectSMS = document.getElementById("sms-approving-physician");
             const selectCall = document.getElementById("call-approving-physician");
@@ -1580,7 +1568,7 @@
                 ? window.HOSPITAL_PHYSICIANS_DIRECTORY.filter(d => !d.is_none && d.id !== 'NONE')
                 : [];
 
-            const optionsHtml = '<option value="">Select Paired Doctor...</option>' +
+            const optionsHtml = '<option value="">Select Approving Physician...</option>' +
                 dir.map(d => `<option value="${escapeHtml(d.id)}">${escapeHtml(d.name)} — ${escapeHtml(d.specialty || d.department)} (PRC: ${escapeHtml(d.prc_no || 'Verified')})</option>`).join('');
 
             if (selectSMS) selectSMS.innerHTML = optionsHtml;
@@ -1608,39 +1596,25 @@
         function toggleApprovalMode(mode) {
             const chkSMS = document.getElementById("app-mode-sms");
             const chkCall = document.getElementById("app-mode-call");
-            const tagSMS = document.getElementById("tag-sms-active");
-            const tagCall = document.getElementById("tag-call-active");
 
             const smsDate = document.getElementById("sms-ref-date");
             const smsTime = document.getElementById("sms-ref-time");
-            const smsDoc = document.getElementById("sms-approving-physician");
 
             const callDate = document.getElementById("call-ref-date");
             const callTime = document.getElementById("call-ref-time");
-            const callDoc = document.getElementById("call-approving-physician");
 
             const now = new Date();
             const todayIso = now.toISOString().split('T')[0];
             const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
             if (mode === 'sms' && chkSMS && chkSMS.checked) {
-                tagSMS.style.color = "#16a34a";
-                tagSMS.textContent = "ACTIVE (SMS SELECTED)";
+                if (chkCall) chkCall.checked = false;
                 if (smsDate && !smsDate.value) smsDate.value = todayIso;
                 if (smsTime && !smsTime.value) smsTime.value = timeStr;
-            } else if (chkSMS && !chkSMS.checked) {
-                tagSMS.style.color = "#dc2626";
-                tagSMS.textContent = "ACTIVE IF SMS IS SELECT";
-            }
-
-            if (mode === 'call' && chkCall && chkCall.checked) {
-                tagCall.style.color = "#16a34a";
-                tagCall.textContent = "ACTIVE (CALL SELECTED)";
+            } else if (mode === 'call' && chkCall && chkCall.checked) {
+                if (chkSMS) chkSMS.checked = false;
                 if (callDate && !callDate.value) callDate.value = todayIso;
                 if (callTime && !callTime.value) callTime.value = timeStr;
-            } else if (chkCall && !chkCall.checked) {
-                tagCall.style.color = "#dc2626";
-                tagCall.textContent = "ACTIVE IF CALL IS SELECTED";
             }
         }
 
@@ -1812,7 +1786,7 @@
                 if (chkDisapproved) chkDisapproved.checked = false;
                 container.innerHTML = `
                     <div id="disapproved-empty-notice" style="font-size: 8pt; color: #64748b; font-style: italic; padding: 2px 0;">
-                        No items marked for disapproval. Click the red ✖ on any drug above to state rejection rationale.
+                        No items marked for disapproval.
                     </div>
                 `;
             }
