@@ -56,8 +56,19 @@ if not CHROME_PATH:
     print("[ERROR] Could not locate a valid Chromium or Chrome executable.")
     sys.exit(1)
 
+async def robust_ws_connect(url, retries=5, delay=0.5):
+    for i in range(retries):
+        try:
+            return await websockets.connect(url)
+        except (ConnectionRefusedError, OSError):
+            if i < retries - 1:
+                await asyncio.sleep(delay)
+            else:
+                raise
+
 async def scan_single_target(browser_ws, file_url):
-    async with websockets.connect(browser_ws) as b_ws:
+    b_ws = await robust_ws_connect(browser_ws)
+    async with b_ws:
         msg_id = 1
         create_msg = {"id": msg_id, "method": "Target.createTarget", "params": {"url": "about:blank"}}
         await b_ws.send(json.dumps(create_msg))
@@ -67,7 +78,8 @@ async def scan_single_target(browser_ws, file_url):
     target_ws = f"ws://127.0.0.1:9222/devtools/page/{target_id}"
     errors = []
 
-    async with websockets.connect(target_ws) as p_ws:
+    p_ws = await robust_ws_connect(target_ws)
+    async with p_ws:
         p_id = 1
         async def send(method, params=None):
             nonlocal p_id
@@ -968,7 +980,8 @@ async def scan_single_target(browser_ws, file_url):
 
     # Close target
     try:
-        async with websockets.connect(browser_ws) as b_ws:
+        b_ws = await robust_ws_connect(browser_ws)
+        async with b_ws:
             close_msg = {"id": 1, "method": "Target.closeTarget", "params": {"targetId": target_id}}
             await b_ws.send(json.dumps(close_msg))
             await b_ws.recv()
