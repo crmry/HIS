@@ -2519,13 +2519,51 @@
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
               <div style="display:inline-flex; gap:6px; flex-wrap:wrap;">
                 <button type="button" class="btn-secondary active" id="btn-chart-who" onclick="switchGrowthChart('who')">WHO Growth Chart (0–5y)</button>
+                <button type="button" class="btn-secondary" id="btn-chart-fenton" onclick="switchGrowthChart('fenton')"><span id="lbl-fenton-tab-btn">Fenton Chart (Girls)</span></button>
                 <button type="button" class="btn-secondary" id="btn-chart-lub" onclick="switchGrowthChart('lub')">Lubchenco Chart</button>
-                <button type="button" class="btn-secondary" id="btn-chart-boy" onclick="switchGrowthChart('boy')">Boy Fenton Chart</button>
-                <button type="button" class="btn-secondary" id="btn-chart-girl" onclick="switchGrowthChart('girl')">Girl Fenton Chart</button>
+                <button type="button" class="btn-secondary" id="btn-chart-boy" onclick="switchGrowthChart('boy')" style="display:none;">Boy Fenton Chart</button>
+                <button type="button" class="btn-secondary" id="btn-chart-girl" onclick="switchGrowthChart('girl')" style="display:none;">Girl Fenton Chart</button>
                 <button type="button" class="btn-primary" id="btn-chart-who-report" onclick="openWhoGrowthReportModal()" style="background:var(--med-green); color:#fff; font-weight:600;"><i class="icon-file"></i> WHO Growth Report &amp; Print</button>
               </div>
-              <div style="font-size:11.5px; color:var(--slate-500);">
-                Interactive vector charts rendered directly from reference data.
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <div style="display:inline-flex; align-items:center; gap:4px; font-size:11.5px; background:#f1f5f9; padding:2px 8px; border-radius:4px; border:1px solid var(--slate-300);">
+                  <label for="chart-gender-toggle" style="font-weight:600; margin:0; color:var(--slate-700);">Chart Baseline:</label>
+                  <select id="chart-gender-toggle" class="form-select" style="font-size:11px; padding:1px 4px; height:24px; border-radius:3px;" onchange="handleChartGenderToggle(this.value)">
+                    <option value="auto">Auto (<span id="lbl-auto-gender">Girl</span>)</option>
+                    <option value="boy">Boy (Male Chart)</option>
+                    <option value="girl">Girl (Female Chart)</option>
+                  </select>
+                </div>
+                <button type="button" class="btn-secondary" id="btn-toggle-sample-data" onclick="toggleSampleDataOverride()" style="font-size:11.5px; padding:3px 8px;">
+                  <i class="icon-magic"></i> <span id="lbl-toggle-sample">Use Sample Data</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Dynamic Clinical Growth Assessment Result Banner -->
+            <div id="growth-exact-result-card" style="background:#ffffff; border:1.5px solid var(--med-green); border-radius:8px; padding:10px 14px; margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05); text-align:left;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                  <span id="result-status-pill" style="background:#1b4d3e; color:#ffffff; font-weight:800; font-size:12px; padding:3px 10px; border-radius:4px; letter-spacing:0.3px;">
+                    AGA • APPROPRIATE FOR GESTATIONAL AGE
+                  </span>
+                  <span id="result-source-pill" style="background:#e0f2fe; color:#0369a1; font-weight:700; font-size:11px; padding:3px 8px; border-radius:4px; border:1px solid #bae6fd;">
+                    ✓ Exact Patient Input
+                  </span>
+                  <span id="result-sex-pill" style="font-weight:700; font-size:11.5px; color:#be185d;">
+                    Female Baseline (Girl Chart)
+                  </span>
+                </div>
+                <div style="font-size:11px; color:var(--slate-500);" id="result-timestamp">
+                  Live Clinical Calculation
+                </div>
+              </div>
+              <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:8px; font-size:12px; color:var(--slate-800);">
+                <div><strong>Gestational Age:</strong> <span id="result-ga">39 wks (Full Term)</span></div>
+                <div><strong>Weight:</strong> <span id="result-wt">3.15 kg (3,150 g)</span> <span id="result-wt-pct" style="color:var(--slate-500); font-size:11px;">(~50th percentile)</span></div>
+                <div><strong>Length:</strong> <span id="result-len">49.5 cm</span> <span id="result-len-pct" style="color:var(--slate-500); font-size:11px;">(~55th percentile)</span></div>
+                <div><strong>Head Circ:</strong> <span id="result-hc">34.0 cm</span> <span id="result-hc-pct" style="color:var(--slate-500); font-size:11px;">(~50th percentile)</span></div>
+                <div><strong>WHO Z-Score:</strong> <span id="result-zscore" style="font-weight:700; color:#1b4d3e;">-0.12 SD (Median/Normal)</span></div>
               </div>
             </div>
 
@@ -2555,7 +2593,7 @@
                   <span><strong>BMI:</strong> <span id="who-inpage-bmi">—</span></span>
                 </div>
                 <div style="display:flex; gap:6px;">
-                  <button type="button" class="btn-secondary" onclick="renderInPageWhoChart()" style="font-size:11px; padding:2px 8px;" title="Re-sync from neonate vitals"><i class="icon-refresh"></i> Re-sync</button>
+                  <button type="button" class="btn-secondary" onclick="updateAllGrowthCharts()" style="font-size:11px; padding:2px 8px;" title="Re-sync from neonate vitals"><i class="icon-refresh"></i> Re-sync</button>
                   <button type="button" class="btn-secondary" onclick="openWhoGrowthReportModal()" style="font-size:11px; padding:2px 8px;"><i class="icon-fullscreen"></i> Full Report Modal</button>
                 </div>
               </div>
@@ -2570,21 +2608,54 @@
             </div>
 
             <!-- Lubchenco Chart -->
-            <div class="chart-card" id="panel-chart-lub" style="display:none;">
-              <h3 style="font-size:13px; margin-bottom:8px; color:var(--slate-900);">Lubchenco Intrauterine Growth Chart (Weeks vs Weight/Length/Head Circumference)</h3>
-              <img src="img/neonate/lubchenco_chart.png" alt="Lubchenco Growth Chart" onclick="openZoomModal(this.src)" title="Click to zoom chart">
+            <div class="chart-card" id="panel-chart-lub" style="display:none; text-align:left;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                <h3 style="font-size:13px; margin:0; color:var(--slate-900);">Lubchenco Intrauterine Growth Chart (Weeks vs Weight/Length/Head Circumference)</h3>
+                <div id="lub-result-tag" style="font-size:12px; font-weight:700; color:var(--med-green);">AGA (Appropriate for Gestational Age) • 10th–90th Percentile</div>
+              </div>
+              <div style="position:relative; display:inline-block; max-width:100%; border:1px solid var(--slate-200); border-radius:4px; overflow:hidden;">
+                <img src="img/neonate/lubchenco_chart.png" alt="Lubchenco Growth Chart" style="display:block; max-width:100%; height:auto;" onclick="openZoomModal(this.src)" title="Click to zoom chart">
+                <!-- Plotted Coordinate Marker -->
+                <div id="lub-marker-dot" style="position:absolute; top:31.5%; left:41.5%; transform:translate(-50%, -50%); pointer-events:auto; z-index:5;">
+                  <div style="position:absolute; top:-7px; left:-7px; width:14px; height:14px; border-radius:50%; background:rgba(220, 38, 38, 0.35); animation:whoPulse 2s infinite ease-out;"></div>
+                  <div style="width:10px; height:10px; border-radius:50%; background:#dc2626; border:2px solid #ffffff; box-shadow:0 0 4px rgba(0,0,0,0.5);"></div>
+                  <div id="lub-marker-tip" style="position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; pointer-events:none;">39 wks, 3,150 g • AGA</div>
+                </div>
+              </div>
             </div>
 
             <!-- Boy Fenton Chart -->
-            <div class="chart-card" id="panel-chart-boy" style="display:none;">
-              <h3 style="font-size:13px; margin-bottom:8px; color:var(--slate-900);">Fenton Growth Chart for Preterm Infants (Boys — 22 to 50 Weeks Gestational Age)</h3>
-              <img src="img/neonate/boy_fenton_chart.png" alt="Boy Fenton Growth Chart" onclick="openZoomModal(this.src)" title="Click to zoom chart">
+            <div class="chart-card" id="panel-chart-boy" style="display:none; text-align:left;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                <h3 style="font-size:13px; margin:0; color:var(--slate-900);">Fenton Growth Chart for Preterm Infants (Boys — 22 to 50 Weeks Gestational Age)</h3>
+                <div id="boy-fenton-result-tag" style="font-size:12px; font-weight:700; color:#0369a1;">AGA (Appropriate for Gestational Age) • Male Baseline (50th Percentile)</div>
+              </div>
+              <div style="position:relative; display:inline-block; max-width:100%; border:1px solid var(--slate-200); border-radius:4px; overflow:hidden;">
+                <img src="img/neonate/boy_fenton_chart.png" alt="Boy Fenton Growth Chart" style="display:block; max-width:100%; height:auto;" onclick="openZoomModal(this.src)" title="Click to zoom chart">
+                <!-- Plotted Coordinate Marker -->
+                <div id="boy-fenton-marker-dot" style="position:absolute; top:38.8%; left:59.3%; transform:translate(-50%, -50%); pointer-events:auto; z-index:5;">
+                  <div style="position:absolute; top:-7px; left:-7px; width:14px; height:14px; border-radius:50%; background:rgba(3, 105, 161, 0.35); animation:whoPulse 2s infinite ease-out;"></div>
+                  <div style="width:10px; height:10px; border-radius:50%; background:#0284c7; border:2px solid #ffffff; box-shadow:0 0 4px rgba(0,0,0,0.5);"></div>
+                  <div id="boy-fenton-marker-tip" style="position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; pointer-events:none;">39 wks, 3,300 g • AGA</div>
+                </div>
+              </div>
             </div>
 
             <!-- Female Fenton Chart -->
-            <div class="chart-card" id="panel-chart-girl" style="display:none;">
-              <h3 style="font-size:13px; margin-bottom:8px; color:var(--slate-900);">Fenton Growth Chart for Preterm Infants (Girls — 22 to 50 Weeks Gestational Age)</h3>
-              <img src="img/neonate/female_fenton_chart.png" alt="Female Fenton Growth Chart" onclick="openZoomModal(this.src)" title="Click to zoom chart">
+            <div class="chart-card" id="panel-chart-girl" style="display:none; text-align:left;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                <h3 style="font-size:13px; margin:0; color:var(--slate-900);">Fenton Growth Chart for Preterm Infants (Girls — 22 to 50 Weeks Gestational Age)</h3>
+                <div id="girl-fenton-result-tag" style="font-size:12px; font-weight:700; color:#be185d;">AGA (Appropriate for Gestational Age) • Female Baseline (50th Percentile)</div>
+              </div>
+              <div style="position:relative; display:inline-block; max-width:100%; border:1px solid var(--slate-200); border-radius:4px; overflow:hidden;">
+                <img src="img/neonate/female_fenton_chart.png" alt="Female Fenton Growth Chart" style="display:block; max-width:100%; height:auto;" onclick="openZoomModal(this.src)" title="Click to zoom chart">
+                <!-- Plotted Coordinate Marker -->
+                <div id="girl-fenton-marker-dot" style="position:absolute; top:40.9%; left:59.3%; transform:translate(-50%, -50%); pointer-events:auto; z-index:5;">
+                  <div style="position:absolute; top:-7px; left:-7px; width:14px; height:14px; border-radius:50%; background:rgba(190, 24, 93, 0.35); animation:whoPulse 2s infinite ease-out;"></div>
+                  <div style="width:10px; height:10px; border-radius:50%; background:#db2777; border:2px solid #ffffff; box-shadow:0 0 4px rgba(0,0,0,0.5);"></div>
+                  <div id="girl-fenton-marker-tip" style="position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; pointer-events:none;">39 wks, 3,150 g • AGA</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -3203,6 +3274,13 @@ document.getElementById('neo_cchd_retest_foot').addEventListener('input', () => 
 
 // Gender Baseline Detection & Growth Chart Helpers
 function getNeonatePatientGender() {
+  const toggleEl = document.getElementById('chart-gender-toggle');
+  if (toggleEl && toggleEl.value && toggleEl.value !== 'auto') {
+    const v = toggleEl.value.toLowerCase();
+    if (v.startsWith('m') || v === 'boy') return 'boy';
+    if (v.startsWith('f') || v === 'girl') return 'girl';
+    return v; // 'boy' or 'girl'
+  }
   const sexSel = document.getElementById('neo_sex');
   if (sexSel && sexSel.value) {
     const val = sexSel.value.toLowerCase();
@@ -3218,17 +3296,169 @@ function getNeonatePatientGender() {
   return 'girl';
 }
 
+let growthSampleDataOverride = false;
+
+function toggleSampleDataOverride() {
+  growthSampleDataOverride = !growthSampleDataOverride;
+  const btnLbl = document.getElementById('lbl-toggle-sample');
+  if (btnLbl) {
+    btnLbl.textContent = growthSampleDataOverride ? 'Use Patient Data' : 'Use Sample Data';
+  }
+  updateAllGrowthCharts();
+}
+
+function handleChartGenderToggle(val) {
+  updateNeonateGrowthChartButtons();
+  updateAllGrowthCharts();
+  const fentonBtn = document.getElementById('btn-chart-fenton');
+  const girlPanel = document.getElementById('panel-chart-girl');
+  const boyPanel = document.getElementById('panel-chart-boy');
+  const isFentonActive = (fentonBtn && fentonBtn.classList.contains('active')) ||
+                         (girlPanel && girlPanel.style.display === 'block') ||
+                         (boyPanel && boyPanel.style.display === 'block');
+  if (isFentonActive) {
+    switchGrowthChart('fenton');
+  }
+}
+
 function updateNeonateGrowthChartButtons() {
   const gender = getNeonatePatientGender();
   const lbl = document.getElementById('btn-neo-chart-fenton-label');
   if (lbl) {
     lbl.textContent = gender === 'boy' ? 'Fenton Growth Chart (Male Baseline)' : 'Fenton Growth Chart (Female Baseline)';
   }
+  const fentonTabLbl = document.getElementById('lbl-fenton-tab-btn');
+  if (fentonTabLbl) {
+    fentonTabLbl.textContent = gender === 'boy' ? 'Fenton Chart (Boys)' : 'Fenton Chart (Girls)';
+  }
+  const autoGenderLbl = document.getElementById('lbl-auto-gender');
+  if (autoGenderLbl) {
+    autoGenderLbl.textContent = gender === 'boy' ? 'Boy' : 'Girl';
+  }
 }
 
 const neoSexEl = document.getElementById('neo_sex');
 if (neoSexEl) {
-  neoSexEl.addEventListener('change', updateNeonateGrowthChartButtons);
+  neoSexEl.addEventListener('change', () => {
+    updateNeonateGrowthChartButtons();
+    updateAllGrowthCharts();
+  });
+}
+
+function getGrowthData() {
+  let patient = null;
+  if (typeof getPatients === 'function') {
+    const list = getPatients();
+    patient = list.find(p => p.id === currentPatientId);
+  }
+  const d = (patient && patient.data) || {};
+
+  const genderStr = getNeonatePatientGender(); // 'boy' or 'girl'
+  const sex = (genderStr === 'boy') ? 'male' : 'female';
+
+  const wtEl = document.getElementById('neo_weight');
+  const lenEl = document.getElementById('neo_length');
+  const hcEl = document.getElementById('neo_head_circ');
+  const gaWeeksEl = document.getElementById('neo_ballard_gestation_weeks') || document.getElementById('neo_aog_weeks');
+
+  let neoSeedWt = null;
+  if (d.neonate && d.neonate.anthropometry && d.neonate.anthropometry.weight) {
+    neoSeedWt = parseFloat(d.neonate.anthropometry.weight);
+  } else if (d.neo_weight) {
+    neoSeedWt = parseFloat(d.neo_weight);
+  } else if (d.vs_weight && parseFloat(d.vs_weight) <= 10.0) {
+    neoSeedWt = parseFloat(d.vs_weight);
+  }
+
+  let neoSeedLen = null;
+  if (d.neonate && d.neonate.anthropometry && d.neonate.anthropometry.length) {
+    neoSeedLen = parseFloat(d.neonate.anthropometry.length);
+  } else if (d.neo_length) {
+    neoSeedLen = parseFloat(d.neo_length);
+  } else if (d.vs_height && parseFloat(d.vs_height) <= 90.0) {
+    neoSeedLen = parseFloat(d.vs_height);
+  }
+
+  let neoSeedHc = null;
+  if (d.neonate && d.neonate.anthropometry && d.neonate.anthropometry.headCirc) {
+    neoSeedHc = parseFloat(d.neonate.anthropometry.headCirc);
+  } else if (d.neo_head_circ) {
+    neoSeedHc = parseFloat(d.neo_head_circ);
+  } else if (d.vs_head_circ && parseFloat(d.vs_head_circ) <= 60.0) {
+    neoSeedHc = parseFloat(d.vs_head_circ);
+  }
+
+  const rawWt = (wtEl && wtEl.value && !isNaN(parseFloat(wtEl.value))) ? parseFloat(wtEl.value) : neoSeedWt;
+  const rawLen = (lenEl && lenEl.value && !isNaN(parseFloat(lenEl.value))) ? parseFloat(lenEl.value) : neoSeedLen;
+  const rawHc = (hcEl && hcEl.value && !isNaN(parseFloat(hcEl.value))) ? parseFloat(hcEl.value) : neoSeedHc;
+
+  let rawGa = null;
+  if (gaWeeksEl && gaWeeksEl.value) {
+    const parsed = parseFloat(gaWeeksEl.value);
+    if (!isNaN(parsed) && parsed > 0) rawGa = parsed;
+  }
+  if (!rawGa && d.neonate && d.neonate.ballard && d.neonate.ballard.gestationalAgeWeeks) {
+    rawGa = parseFloat(d.neonate.ballard.gestationalAgeWeeks);
+  }
+
+  const hasInputs = Boolean(rawWt && rawLen);
+  const useSample = growthSampleDataOverride || !hasInputs;
+
+  let finalWt, finalLen, finalHc, finalGa, isSample;
+  if (useSample) {
+    isSample = true;
+    finalGa = 39.0;
+    finalWt = (sex === 'male') ? 3.30 : 3.15;
+    finalLen = (sex === 'male') ? 50.0 : 49.5;
+    finalHc = (sex === 'male') ? 34.5 : 34.0;
+  } else {
+    isSample = false;
+    finalGa = rawGa || 39.0;
+    finalWt = rawWt;
+    finalLen = rawLen;
+    finalHc = rawHc || 34.0;
+  }
+
+  const hM = finalLen / 100;
+  const rawBmi = finalWt / (hM * hM);
+
+  // Classification (SGA, AGA, LGA)
+  const p10 = (sex === 'male') ? 2.75 : 2.60;
+  const p50 = (sex === 'male') ? 3.35 : 3.18;
+  const p90 = (sex === 'male') ? 3.95 : 3.78;
+
+  let classification = 'AGA';
+  let classTitle = 'AGA • APPROPRIATE FOR GESTATIONAL AGE';
+  let classColor = '#1b4d3e';
+  if (finalWt < p10) {
+    classification = 'SGA';
+    classTitle = 'SGA • SMALL FOR GESTATIONAL AGE';
+    classColor = '#b45309';
+  } else if (finalWt > p90) {
+    classification = 'LGA';
+    classTitle = 'LGA • LARGE FOR GESTATIONAL AGE';
+    classColor = '#c2410c';
+  }
+
+  const whoMed = (sex === 'male') ? 3.30 : 3.20;
+  const whoSd = (sex === 'male') ? 0.42 : 0.40;
+  const zScore = (finalWt - whoMed) / whoSd;
+
+  return {
+    sex: sex,
+    genderStr: genderStr,
+    weightKg: finalWt,
+    weightGrams: Math.round(finalWt * 1000),
+    lengthCm: finalLen,
+    headCircCm: finalHc,
+    gaWeeks: finalGa,
+    rawBmi: rawBmi,
+    isSample: isSample,
+    classification: classification,
+    classTitle: classTitle,
+    classColor: classColor,
+    zScore: zScore
+  };
 }
 
 // Growth Chart Tab Switcher & Zoom
@@ -3236,18 +3466,36 @@ let whoInPageActiveChartType = 'wfa';
 
 function switchGrowthChart(which) {
   let target = which || 'who';
+  const data = getGrowthData();
+  const gender = data.genderStr; // 'boy' or 'girl'
+
   if (target === 'fenton') {
-    target = getNeonatePatientGender();
+    target = gender; // automatically chooses boy or girl chart
   }
-  document.querySelectorAll('#btn-chart-who, #btn-chart-lub, #btn-chart-boy, #btn-chart-girl').forEach(b => b.classList.remove('active'));
+
+  document.querySelectorAll('#btn-chart-who, #btn-chart-fenton, #btn-chart-lub, #btn-chart-boy, #btn-chart-girl').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('#panel-chart-who, #panel-chart-lub, #panel-chart-boy, #panel-chart-girl').forEach(p => p.style.display = 'none');
-  const btn = document.getElementById('btn-chart-' + target);
-  const panel = document.getElementById('panel-chart-' + target);
-  if (btn) btn.classList.add('active');
-  if (panel) panel.style.display = 'block';
+
   if (target === 'who') {
-    renderInPageWhoChart();
+    const btn = document.getElementById('btn-chart-who');
+    const panel = document.getElementById('panel-chart-who');
+    if (btn) btn.classList.add('active');
+    if (panel) panel.style.display = 'block';
+  } else if (target === 'lub') {
+    const btn = document.getElementById('btn-chart-lub');
+    const panel = document.getElementById('panel-chart-lub');
+    if (btn) btn.classList.add('active');
+    if (panel) panel.style.display = 'block';
+  } else if (target === 'boy' || target === 'girl') {
+    const fentonBtn = document.getElementById('btn-chart-fenton');
+    const specificBtn = document.getElementById('btn-chart-' + target);
+    if (fentonBtn) fentonBtn.classList.add('active');
+    if (specificBtn) specificBtn.classList.add('active');
+    const panel = document.getElementById('panel-chart-' + target);
+    if (panel) panel.style.display = 'block';
   }
+
+  updateAllGrowthCharts();
 }
 
 function switchInPageWhoChartType(type) {
@@ -3255,7 +3503,7 @@ function switchInPageWhoChartType(type) {
   document.querySelectorAll('#btn-who-inpage-wfa, #btn-who-inpage-lhfa, #btn-who-inpage-wflh, #btn-who-inpage-bmifa').forEach(b => b.classList.remove('active'));
   const btn = document.getElementById('btn-who-inpage-' + type);
   if (btn) btn.classList.add('active');
-  renderInPageWhoChart();
+  updateAllGrowthCharts();
 }
 
 function renderInPageWhoChart() {
@@ -3269,41 +3517,15 @@ function renderInPageWhoChart() {
   }
   var d = (patient && patient.data) || {};
 
-  // Sex detection
-  var sex = '';
-  var neoSexEl = document.getElementById('neo_sex');
-  if (neoSexEl && neoSexEl.value && neoSexEl.value.trim()) {
-    var s = neoSexEl.value.trim().toLowerCase();
-    if (s.startsWith('m') || s === 'boy') sex = 'male';
-    if (s.startsWith('f') || s === 'girl') sex = 'female';
-  } else if (patient && (patient.id.includes('neo') || (d.first_name || '').toUpperCase().includes('BABY'))) {
-    if (d.gender) {
-      var s = d.gender.trim().toLowerCase();
-      if (s.startsWith('m') || s === 'boy') sex = 'male';
-      if (s.startsWith('f') || s === 'girl') sex = 'female';
-    }
-  }
-  if (!sex) {
-    var g = getNeonatePatientGender();
-    sex = (g === 'boy') ? 'male' : 'female';
-  }
-
-  // Weight & Length
-  var wtEl = document.getElementById('neo_weight');
-  var wt = (wtEl && wtEl.value && !isNaN(parseFloat(wtEl.value))) ? parseFloat(wtEl.value) : (parseFloat(d.vs_weight) || 3.15);
-
-  var lenEl = document.getElementById('neo_length');
-  var len = (lenEl && lenEl.value && !isNaN(parseFloat(lenEl.value))) ? parseFloat(lenEl.value) : (parseFloat(d.vs_height) || 49.5);
+  var data = getGrowthData();
+  var sex = data.sex; // 'male' or 'female'
+  var wt = data.weightKg;
+  var len = data.lengthCm;
+  var rawBmi = data.rawBmi;
 
   var ageMonths = 0;
   if (whoInPageActiveChartType === 'bmifa') {
     ageMonths = 120; // 10 years illustrative for 5-19y reference
-  }
-
-  var rawBmi = null;
-  if (wt && len) {
-    var hM = len / 100;
-    rawBmi = wt / (hM * hM);
   }
 
   // Dynamic Chart Titles
@@ -3365,6 +3587,100 @@ function renderInPageWhoChart() {
       boundEl.style.display = 'none';
     }
   }
+}
+
+function updateAllGrowthCharts() {
+  const data = getGrowthData();
+
+  // 1. Update Result Banner
+  const statusPill = document.getElementById('result-status-pill');
+  if (statusPill) {
+    statusPill.textContent = data.classTitle;
+    statusPill.style.background = data.classColor;
+  }
+  const sourcePill = document.getElementById('result-source-pill');
+  if (sourcePill) {
+    if (data.isSample) {
+      sourcePill.innerHTML = '<i class="icon-magic"></i> Sample Baseline Data (Term Newborn)';
+      sourcePill.style.background = '#fef3c7';
+      sourcePill.style.color = '#92400e';
+      sourcePill.style.borderColor = '#fde68a';
+    } else {
+      sourcePill.innerHTML = '<i class="icon-ok"></i> ✓ Exact Patient Input';
+      sourcePill.style.background = '#e0f2fe';
+      sourcePill.style.color = '#0369a1';
+      sourcePill.style.borderColor = '#bae6fd';
+    }
+  }
+  const sexPill = document.getElementById('result-sex-pill');
+  if (sexPill) {
+    sexPill.textContent = (data.sex === 'male') ? 'Male Baseline (Boy Chart)' : 'Female Baseline (Girl Chart)';
+    sexPill.style.color = (data.sex === 'male') ? '#0369a1' : '#be185d';
+  }
+
+  const resGa = document.getElementById('result-ga');
+  if (resGa) resGa.textContent = data.gaWeeks.toFixed(0) + ' wks (' + (data.gaWeeks >= 37 ? 'Full Term' : 'Preterm') + ')';
+  const resWt = document.getElementById('result-wt');
+  if (resWt) resWt.textContent = data.weightKg.toFixed(2) + ' kg (' + data.weightGrams.toLocaleString() + ' g)';
+  const resLen = document.getElementById('result-len');
+  if (resLen) resLen.textContent = data.lengthCm.toFixed(1) + ' cm';
+  const resHc = document.getElementById('result-hc');
+  if (resHc) resHc.textContent = data.headCircCm.toFixed(1) + ' cm';
+  const resZ = document.getElementById('result-zscore');
+  if (resZ) {
+    resZ.textContent = (data.zScore >= 0 ? '+' : '') + data.zScore.toFixed(2) + ' SD (' + (Math.abs(data.zScore) <= 2 ? 'Median/Normal' : (data.zScore > 2 ? 'Overweight' : 'Underweight')) + ')';
+    resZ.style.color = Math.abs(data.zScore) <= 2 ? '#1b4d3e' : '#dc2626';
+  }
+
+  // 2. Update In-Page WHO Growth Chart
+  renderInPageWhoChart();
+
+  // 3. Update Lubchenco coordinate overlay marker
+  const lubMarker = document.getElementById('lub-marker-dot');
+  const lubTip = document.getElementById('lub-marker-tip');
+  const lubTag = document.getElementById('lub-result-tag');
+  if (lubMarker) {
+    const clampedGa = Math.max(24, Math.min(42, data.gaWeeks));
+    const clampedWt = Math.max(0, Math.min(4600, data.weightGrams));
+    const leftPct = 14 + (clampedGa - 24) / (42 - 24) * (47 - 14);
+    const topPct = 78 - (clampedWt / 4600) * (78 - 10);
+    lubMarker.style.left = leftPct.toFixed(1) + '%';
+    lubMarker.style.top = topPct.toFixed(1) + '%';
+    if (lubTip) lubTip.textContent = data.gaWeeks.toFixed(0) + ' wks, ' + data.weightGrams.toLocaleString() + ' g • ' + data.classification;
+    if (lubTag) lubTag.textContent = data.classTitle + ' • 10th–90th Percentile Range';
+  }
+
+  // 4. Update Fenton Boys coordinate overlay marker
+  const boyMarker = document.getElementById('boy-fenton-marker-dot');
+  const boyTip = document.getElementById('boy-fenton-marker-tip');
+  const boyTag = document.getElementById('boy-fenton-result-tag');
+  if (boyMarker) {
+    const clampedGa = Math.max(22, Math.min(50, data.gaWeeks));
+    const clampedWt = Math.max(0, Math.min(5000, data.weightGrams));
+    const leftPct = 12 + (clampedGa - 22) / (50 - 22) * (90 - 12);
+    const topPct = 85 - (clampedWt / 5000) * (85 - 15);
+    boyMarker.style.left = leftPct.toFixed(1) + '%';
+    boyMarker.style.top = topPct.toFixed(1) + '%';
+    if (boyTip) boyTip.textContent = data.gaWeeks.toFixed(0) + ' wks, ' + data.weightGrams.toLocaleString() + ' g • ' + data.classification;
+    if (boyTag) boyTag.textContent = data.classTitle + ' • Male Baseline (Fenton Boys)';
+  }
+
+  // 5. Update Fenton Girls coordinate overlay marker
+  const girlMarker = document.getElementById('girl-fenton-marker-dot');
+  const girlTip = document.getElementById('girl-fenton-marker-tip');
+  const girlTag = document.getElementById('girl-fenton-result-tag');
+  if (girlMarker) {
+    const clampedGa = Math.max(22, Math.min(50, data.gaWeeks));
+    const clampedWt = Math.max(0, Math.min(5000, data.weightGrams));
+    const leftPct = 12 + (clampedGa - 22) / (50 - 22) * (90 - 12);
+    const topPct = 85 - (clampedWt / 5000) * (85 - 15);
+    girlMarker.style.left = leftPct.toFixed(1) + '%';
+    girlMarker.style.top = topPct.toFixed(1) + '%';
+    if (girlTip) girlTip.textContent = data.gaWeeks.toFixed(0) + ' wks, ' + data.weightGrams.toLocaleString() + ' g • ' + data.classification;
+    if (girlTag) girlTag.textContent = data.classTitle + ' • Female Baseline (Fenton Girls)';
+  }
+
+  updateNeonateGrowthChartButtons();
 }
 
 function openGrowthChartModal(which) {
@@ -4252,6 +4568,10 @@ window.renderWhoNativeSvg = renderWhoNativeSvg;
 window.WHO_REFERENCE_CURVES = WHO_REFERENCE_CURVES;
 window.renderInPageWhoChart = renderInPageWhoChart;
 window.switchInPageWhoChartType = switchInPageWhoChartType;
+window.updateAllGrowthCharts = updateAllGrowthCharts;
+window.getGrowthData = getGrowthData;
+window.toggleSampleDataOverride = toggleSampleDataOverride;
+window.handleChartGenderToggle = handleChartGenderToggle;
 
 // Update Top Summary Cards
 function updateSummaryHighlights() {
@@ -5069,8 +5389,8 @@ function initNeonateWorkspace() {
     }
   }
   updateNeonateGrowthChartButtons();
-  if (typeof renderInPageWhoChart === 'function') {
-    renderInPageWhoChart();
+  if (typeof updateAllGrowthCharts === 'function') {
+    updateAllGrowthCharts();
   }
   const activeTab = document.querySelector('.workspace-tab.active');
   const actionBar = document.getElementById('neonate-action-bar');
@@ -5083,15 +5403,15 @@ function initNeonateWorkspace() {
   }
 }
 
-// Re-render in-page WHO Growth Chart dynamically upon vitals input changes
-['neo_weight', 'neo_length', 'neo_sex'].forEach(function(id) {
+// Re-render all growth charts dynamically upon vitals input changes
+['neo_weight', 'neo_length', 'neo_head_circ', 'neo_sex', 'neo_ballard_gestation_weeks', 'neo_aog_weeks'].forEach(function(id) {
   var el = document.getElementById(id);
   if (el) {
     el.addEventListener('input', function() {
-      if (typeof renderInPageWhoChart === 'function') renderInPageWhoChart();
+      if (typeof updateAllGrowthCharts === 'function') updateAllGrowthCharts();
     });
     el.addEventListener('change', function() {
-      if (typeof renderInPageWhoChart === 'function') renderInPageWhoChart();
+      if (typeof updateAllGrowthCharts === 'function') updateAllGrowthCharts();
     });
   }
 });

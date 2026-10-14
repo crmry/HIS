@@ -360,8 +360,113 @@ async def run_tests():
             assert baseline_status["saveBtn"], "Save neonate record button missing"
             print("  ✓ Ballard, Fenton, Lubchenco, and Neonate draft/save baseline 100% intact.")
 
+            # Test 14: Gender chart auto-routing, exact result calculation, and sample data fallback
+            print("[TEST 14] Verifying sex chart auto-routing, exact results, and sample data fallback...")
+            # Switch to Growth Charts tab (Tab 7)
+            await eval_js("document.querySelector('.workspace-tab[data-tab=\"tab-charts\"]').click()")
+            await asyncio.sleep(0.3)
+
+            # Check initial state for patient_op_carmela (female baby)
+            sex_test_init = await eval_js("""(() => {
+                const sexPill = document.getElementById('result-sex-pill');
+                const sourcePill = document.getElementById('result-source-pill');
+                const fentonLabel = document.getElementById('lbl-fenton-tab-btn');
+                const fentonBtn = document.getElementById('btn-chart-fenton');
+                fentonBtn.click();
+                const girlPanel = document.getElementById('panel-chart-girl');
+                const boyPanel = document.getElementById('panel-chart-boy');
+                const girlVisible = girlPanel && getComputedStyle(girlPanel).display !== 'none';
+                const boyVisible = boyPanel && getComputedStyle(boyPanel).display !== 'none';
+                const girlMarker = document.getElementById('girl-fenton-marker-dot');
+                const lubMarker = document.getElementById('lub-marker-dot');
+                return {
+                    sexText: sexPill ? sexPill.textContent : '',
+                    sourceText: sourcePill ? sourcePill.textContent : '',
+                    fentonLabel: fentonLabel ? fentonLabel.textContent : '',
+                    girlVisible,
+                    boyVisible,
+                    hasGirlMarker: Boolean(girlMarker && girlMarker.style.left),
+                    hasLubMarker: Boolean(lubMarker && lubMarker.style.left)
+                };
+            })()""")
+            print("  Initial female routing state:", sex_test_init)
+            assert "Girl" in sex_test_init["fentonLabel"] or "Female" in sex_test_init["sexText"], "Fenton label should reflect Girl for female patient"
+            assert sex_test_init["girlVisible"] and not sex_test_init["boyVisible"], "Girl Fenton chart must be active for female patient"
+            assert sex_test_init["hasGirlMarker"], "Girl Fenton chart must have plotted coordinate marker"
+            assert sex_test_init["hasLubMarker"], "Lubchenco chart must have plotted coordinate marker"
+
+            # Change sex to Male and verify dynamic auto-routing to Boy chart
+            boy_route_test = await eval_js("""(() => {
+                const toggle = document.getElementById('chart-gender-toggle');
+                toggle.value = 'boy';
+                handleChartGenderToggle('boy');
+                const fentonLabel = document.getElementById('lbl-fenton-tab-btn');
+                const girlPanel = document.getElementById('panel-chart-girl');
+                const boyPanel = document.getElementById('panel-chart-boy');
+                const girlVisible = girlPanel && getComputedStyle(girlPanel).display !== 'none';
+                const boyVisible = boyPanel && getComputedStyle(boyPanel).display !== 'none';
+                const boyMarker = document.getElementById('boy-fenton-marker-dot');
+                return {
+                    fentonLabel: fentonLabel ? fentonLabel.textContent : '',
+                    girlVisible,
+                    boyVisible,
+                    hasBoyMarker: Boolean(boyMarker && boyMarker.style.left)
+                };
+            })()""")
+            print("  Male switch routing state:", boy_route_test)
+            assert "Boy" in boy_route_test["fentonLabel"], "Fenton label should switch to Boy Chart"
+            assert boy_route_test["boyVisible"] and not boy_route_test["girlVisible"], "Boy Fenton chart must be active when sex is male"
+            assert boy_route_test["hasBoyMarker"], "Boy Fenton chart must have plotted coordinate marker"
+
+            # Test exact calculation upon entering custom measurements
+            exact_input_test = await eval_js("""(() => {
+                const wtInput = document.getElementById('neo_weight');
+                const lenInput = document.getElementById('neo_length');
+                const hcInput = document.getElementById('neo_head_circ');
+                wtInput.value = '4.20'; // Large baby
+                lenInput.value = '53.0';
+                hcInput.value = '36.5';
+                wtInput.dispatchEvent(new Event('input'));
+                lenInput.dispatchEvent(new Event('input'));
+                hcInput.dispatchEvent(new Event('input'));
+                const card = document.getElementById('growth-exact-result-card');
+                const sourcePill = document.getElementById('result-source-pill');
+                const statusPill = document.getElementById('result-status-pill');
+                const exactWt = document.getElementById('result-wt');
+                return {
+                    sourceText: sourcePill ? sourcePill.textContent : '',
+                    statusText: statusPill ? statusPill.textContent : '',
+                    exactWt: exactWt ? exactWt.textContent : ''
+                };
+            })()""")
+            print("  Exact input calculation state:", exact_input_test)
+            assert "Exact Patient Input" in exact_input_test["sourceText"], "Source pill should indicate Exact Patient Input"
+            assert "4.20" in exact_input_test["exactWt"], "Exact weight readout should be 4.20 kg"
+            assert "LGA" in exact_input_test["statusText"], "4.20kg at 39wks should classify as LGA"
+
+            # Test sample data fallback when inputs are cleared
+            sample_data_test = await eval_js("""(() => {
+                const wtInput = document.getElementById('neo_weight');
+                const lenInput = document.getElementById('neo_length');
+                const hcInput = document.getElementById('neo_head_circ');
+                wtInput.value = '';
+                lenInput.value = '';
+                hcInput.value = '';
+                wtInput.dispatchEvent(new Event('input'));
+                const sourcePill = document.getElementById('result-source-pill');
+                const exactWt = document.getElementById('result-wt');
+                return {
+                    sourceText: sourcePill ? sourcePill.textContent : '',
+                    exactWt: exactWt ? exactWt.textContent : ''
+                };
+            })()""")
+            print("  Sample data fallback state:", sample_data_test)
+            assert "Sample" in sample_data_test["sourceText"], "Empty inputs should trigger Sample Baseline Data fallback"
+            assert "3.30" in sample_data_test["exactWt"] or "3.15" in sample_data_test["exactWt"], "Fallback should generate standard sample baseline"
+            print("  ✓ Exact result computation, boy/girl chart routing, and sample data fallback verified.")
+
             print("\n=======================================================")
-            print(">>> ALL 13 WHO GROWTH ASSESSMENT TESTS PASSED CLEANLY <<<")
+            print(">>> ALL 14 WHO GROWTH ASSESSMENT TESTS PASSED CLEANLY <<<")
             print("=======================================================\n")
 
     finally:
