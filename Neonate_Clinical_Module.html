@@ -483,6 +483,515 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
+  /* ── WHO Growth Assessment Report Modal & Print Styles ── */
+  .who-report-backdrop {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.75);
+    z-index: 10050;
+    overflow-y: auto;
+    padding: 20px 16px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .who-report-backdrop.open {
+    display: flex;
+  }
+  .who-report-dialog {
+    background: #ffffff;
+    width: 100%;
+    max-width: 1100px;
+    border-radius: 8px;
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.35);
+    overflow: hidden;
+    margin-bottom: 24px;
+    border: 1px solid var(--slate-300);
+  }
+  .who-report-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+    background: #f8fafc;
+    border-bottom: 1px solid var(--slate-200);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .who-brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--med-green);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.02em;
+  }
+  .who-mockup-pill {
+    display: inline-block;
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    letter-spacing: 0.02em;
+  }
+  .who-report-param-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+    padding: 12px 18px;
+    background: #f1f5f9;
+    border-bottom: 1px solid var(--slate-200);
+    align-items: end;
+  }
+  .who-param-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .who-param-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--slate-700);
+  }
+  .who-param-input {
+    font-size: 12.5px !important;
+    padding: 5px 8px !important;
+    height: 32px;
+    border-radius: 4px !important;
+  }
+  .who-printable-sheet {
+    position: relative;
+    padding: 24px 28px;
+    background: #ffffff;
+    color: var(--slate-800);
+  }
+  .who-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-32deg);
+    font-size: 8rem;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    color: rgba(148, 163, 184, 0.08);
+    pointer-events: none;
+    z-index: 0;
+    user-select: none;
+    text-transform: uppercase;
+  }
+  .who-incomplete-card {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+  .who-incomplete-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .who-incomplete-tag.missing {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+  }
+  .who-incomplete-tag.ok {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+  }
+  .who-report-header {
+    text-align: center;
+    border-bottom: 2px solid var(--slate-800);
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+  }
+  .who-report-title-badge {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 13.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--slate-900);
+    padding: 3px 12px;
+    background: #f1f5f9;
+    border: 1px solid var(--slate-300);
+    border-radius: 4px;
+  }
+  .who-demographics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px 20px;
+    background: #f8fafc;
+    border: 1px solid var(--slate-200);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .who-demo-cell {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px dotted var(--slate-200);
+    padding: 3px 0;
+  }
+  .who-demo-label {
+    font-weight: 600;
+    color: var(--slate-600);
+    white-space: nowrap;
+  }
+  .who-demo-val {
+    font-weight: 700;
+    color: var(--slate-900);
+    text-align: right;
+  }
+  .who-cards-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 14px;
+    position: relative;
+    z-index: 1;
+  }
+  .who-metric-card {
+    background: #ffffff;
+    border: 1px solid var(--slate-200);
+    border-left: 4px solid var(--med-green);
+    border-radius: 6px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+  .who-metric-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--slate-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .who-metric-value {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--slate-900);
+    margin: 4px 0 2px;
+  }
+  .who-metric-sub {
+    font-size: 10.5px;
+    color: var(--slate-500);
+  }
+  .who-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--slate-200);
+    border-radius: 6px;
+    background: #ffffff;
+    position: relative;
+    z-index: 1;
+  }
+  .who-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+  }
+  .who-table th {
+    background: #f1f5f9;
+    color: var(--slate-700);
+    font-weight: 700;
+    text-align: left;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--slate-300);
+    font-size: 11px;
+  }
+  .who-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--slate-200);
+    color: var(--slate-800);
+  }
+  .who-table tr:last-child td {
+    border-bottom: none;
+  }
+  .who-chart-section {
+    position: relative;
+    z-index: 1;
+    border: 1px solid var(--slate-300);
+    border-radius: 8px;
+    padding: 12px;
+    background: #ffffff;
+  }
+  .who-chart-nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .who-chart-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .who-chart-tab-btn {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--slate-300);
+    background: #f8fafc;
+    color: var(--slate-700);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .who-chart-tab-btn:hover {
+    background: #e2e8f0;
+  }
+  .who-chart-tab-btn.active {
+    background: var(--med-green);
+    color: #ffffff;
+    border-color: var(--med-green);
+  }
+  .who-chart-meta-badge {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--slate-600);
+    background: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--slate-200);
+  }
+  .who-chart-stage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid var(--slate-200);
+    border-radius: 6px;
+    padding: 10px;
+    overflow-x: auto;
+  }
+  .who-chart-wrapper {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    line-height: 0;
+  }
+  .who-chart-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .who-crosshair {
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .who-crosshair-h {
+    left: 0;
+    right: 0;
+    height: 1px;
+    border-top: 1.5px dashed #dc2626;
+  }
+  .who-crosshair-v {
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    border-left: 1.5px dashed #dc2626;
+  }
+  .who-marker-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    z-index: 12;
+  }
+  .who-marker-pulse {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 50%;
+    background: rgba(220, 38, 38, 0.4);
+    animation: whoPulse 2s infinite ease-out;
+  }
+  .who-marker-center {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #b91c1c;
+    border: 1.5px solid #ffffff;
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+  }
+  @keyframes whoPulse {
+    0% { transform: scale(1); opacity: 0.9; }
+    70% { transform: scale(2.6); opacity: 0; }
+    100% { transform: scale(2.6); opacity: 0; }
+  }
+  .who-marker-tooltip {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.92);
+    color: #ffffff;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    line-height: 1.3;
+    pointer-events: none;
+  }
+  .who-boundary-callout {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #fef2f2;
+    border: 1px solid #f87171;
+    color: #991b1b;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    z-index: 15;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .who-limitation-box {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 10px 14px;
+    position: relative;
+    z-index: 1;
+  }
+  .who-report-footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--slate-300);
+    padding-top: 12px;
+  }
+  .who-signatures-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .who-sig-block {
+    text-align: center;
+  }
+  .who-sig-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--slate-600);
+    margin-bottom: 30px;
+  }
+  .who-sig-line {
+    border-bottom: 1px solid var(--slate-800);
+    margin: 0 20px 4px;
+  }
+  .who-sig-name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--slate-900);
+  }
+  .who-sig-role {
+    font-size: 10.5px;
+    color: var(--slate-500);
+  }
+  .who-audit-strip {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--slate-500);
+    border-top: 1px dotted var(--slate-300);
+    padding-top: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ── A4 Print Formatting ── */
+  @media print {
+    body {
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+    body > *:not(.who-report-backdrop) {
+      display: none !important;
+    }
+    .who-report-backdrop {
+      display: block !important;
+      position: static !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
+    }
+    .who-report-dialog {
+      box-shadow: none !important;
+      border: none !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    .who-report-toolbar,
+    .who-report-param-strip,
+    .who-chart-nav-bar {
+      display: none !important;
+    }
+    .who-printable-sheet {
+      padding: 6mm 8mm !important;
+      width: 100% !important;
+      max-width: 210mm !important;
+      margin: 0 auto !important;
+    }
+    .who-chart-wrapper {
+      max-width: 100% !important;
+      page-break-inside: avoid;
+    }
+    .who-chart-img {
+      max-width: 100% !important;
+      height: auto !important;
+      page-break-inside: avoid;
+    }
+    .who-signatures-grid {
+      page-break-inside: avoid;
+    }
+    .who-watermark {
+      opacity: 0.15 !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .who-demographics-grid {
+      grid-template-columns: 1fr;
+    }
+    .who-cards-row {
+      grid-template-columns: 1fr;
+    }
+    .who-signatures-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .who-report-param-strip {
+      grid-template-columns: 1fr;
+    }
+  }
+
   /* ── Toast ── */
   .neo-toast {
     position: fixed;
@@ -1316,9 +1825,10 @@
               <div style="font-size:11.5px; color:var(--slate-500);">
                 <i class="icon-info-sign"></i> Incomplete Ballard data is flagged as Partial. Gestational age and maturity classification are only finalized when all 13 criteria are scored.
               </div>
-              <div style="display:flex; gap:6px;">
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
                 <button type="button" class="btn-secondary" onclick="openGrowthChartModal('lub')"><i class="icon-picture"></i> Lubchenco Chart</button>
                 <button type="button" class="btn-secondary" id="btn-neo-chart-fenton" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> <span id="btn-neo-chart-fenton-label">Fenton Growth Chart (Baseline)</span></button>
+                <button type="button" class="btn-primary" id="btn-neo-chart-who-report" onclick="openWhoGrowthReportModal()" style="background:var(--med-green); color:#fff; font-weight:600;"><i class="icon-file"></i> WHO Growth Report</button>
               </div>
             </div>
 
@@ -2069,10 +2579,11 @@
           <div class="section-card">
             <div class="section-card-title"><i class="icon-picture"></i> Neonatal Clinical Growth Charts (High-Resolution Visual Reference)</div>
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
-              <div style="display:inline-flex; gap:6px;">
+              <div style="display:inline-flex; gap:6px; flex-wrap:wrap;">
                 <button type="button" class="btn-secondary active" id="btn-chart-lub" onclick="switchGrowthChart('lub')">Lubchenco Chart</button>
                 <button type="button" class="btn-secondary" id="btn-chart-boy" onclick="switchGrowthChart('boy')">Boy Fenton Chart</button>
                 <button type="button" class="btn-secondary" id="btn-chart-girl" onclick="switchGrowthChart('girl')">Girl Fenton Chart</button>
+                <button type="button" class="btn-primary" id="btn-chart-who-report" onclick="openWhoGrowthReportModal()" style="background:var(--med-green); color:#fff; font-weight:600;"><i class="icon-file"></i> WHO Growth Report</button>
               </div>
               <div style="font-size:11.5px; color:var(--slate-500);">
                 Click on any chart to enlarge/zoom in full-screen modal viewer.
@@ -2117,6 +2628,242 @@
 <div class="neo-modal-backdrop" id="chartModal" onclick="closeZoomModal(event)">
   <button type="button" class="neo-modal-close" onclick="closeZoomModal(event)">&times;</button>
   <img id="zoomedChartImg" src="" alt="Enlarged Neonatal Growth Chart">
+</div>
+
+<!-- WHO Growth Assessment Report Modal -->
+<div class="who-report-backdrop" id="whoGrowthReportModal" role="dialog" aria-modal="true" aria-labelledby="whoReportModalTitle" onclick="handleWhoModalBackdropClick(event)">
+  <div class="who-report-dialog" onclick="event.stopPropagation()">
+    <!-- Top Action Toolbar (Hidden during print) -->
+    <div class="who-report-toolbar">
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <span class="who-brand-badge"><i class="icon-file"></i> WHO Growth Assessment</span>
+        <h2 id="whoReportModalTitle" style="margin:0; font-size:15px; font-weight:700; color:var(--slate-900);">WHO Child &amp; Adolescent Growth Assessment Report</h2>
+        <span class="who-mockup-pill">Mockup — Not for clinical use</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="btn-secondary" onclick="printWhoGrowthReport()" id="btn-who-print"><i class="icon-print"></i> Print / Save as PDF</button>
+        <button type="button" class="btn-secondary" onclick="closeWhoGrowthReportModal(event)" id="btn-who-close" aria-label="Close Report"><i class="icon-remove"></i> Close</button>
+      </div>
+    </div>
+
+    <!-- Interactive Clinical Parameter Strip (Hidden during print) -->
+    <div class="who-report-param-strip">
+      <div class="who-param-item">
+        <label for="who-param-sex" class="who-param-label">Child Recorded Sex <span style="color:#ef4444;">*</span></label>
+        <select id="who-param-sex" class="form-select who-param-input" onchange="refreshWhoGrowthReport()">
+          <option value="">-- Missing / Unspecified --</option>
+          <option value="male">Male (Boy)</option>
+          <option value="female">Female (Girl)</option>
+        </select>
+      </div>
+      <div class="who-param-item">
+        <label for="who-param-age-months" class="who-param-label">Age (Completed Months) <span style="color:#ef4444;">*</span></label>
+        <input type="number" id="who-param-age-months" class="form-input who-param-input" min="0" max="228" step="1" placeholder="e.g. 0, 24, 72" oninput="refreshWhoGrowthReport()">
+      </div>
+      <div class="who-param-item">
+        <label for="who-param-weight" class="who-param-label">Weight (kg) <span style="color:#ef4444;">*</span></label>
+        <input type="number" id="who-param-weight" class="form-input who-param-input" min="0.5" max="150" step="0.01" placeholder="e.g. 3.15" oninput="refreshWhoGrowthReport()">
+      </div>
+      <div class="who-param-item">
+        <label for="who-param-length" class="who-param-label">Length / Height (cm) <span style="color:#ef4444;">*</span></label>
+        <input type="number" id="who-param-length" class="form-input who-param-input" min="20" max="220" step="0.1" placeholder="e.g. 49.5" oninput="refreshWhoGrowthReport()">
+      </div>
+      <div class="who-param-item">
+        <label for="who-param-date" class="who-param-label">Measurement Date</label>
+        <input type="date" id="who-param-date" class="form-input who-param-input" onchange="refreshWhoGrowthReport()">
+      </div>
+      <div class="who-param-item who-param-action">
+        <button type="button" class="btn-secondary" onclick="rehydrateWhoReportFromPatient()" title="Re-sync data from current neonate chart"><i class="icon-refresh"></i> Re-sync</button>
+      </div>
+    </div>
+
+    <!-- Printable Report Sheet Body -->
+    <div class="who-printable-sheet" id="whoPrintableSheet">
+      <!-- Watermark -->
+      <div class="who-watermark" aria-hidden="true">MOCKUP</div>
+
+      <!-- Incomplete Data Warning Callout (Visible only when incomplete) -->
+      <div id="who-incomplete-alert" class="who-incomplete-card" style="display:none;">
+        <div style="display:flex; align-items:flex-start; gap:10px;">
+          <i class="icon-warning-sign" style="color:#b45309; font-size:18px; margin-top:2px;"></i>
+          <div style="flex:1;">
+            <div style="font-weight:700; color:#92400e; font-size:13px; margin-bottom:4px;">Incomplete Anthropometric Data — Reference Plot Unavailable</div>
+            <div style="font-size:12px; color:#78350f; line-height:1.45;">
+              To generate the WHO Growth Assessment reference plotting, all core parameters (Child Sex, Age in Completed Months, Weight, and Length/Height) must be specified. Please complete the missing values above:
+            </div>
+            <div id="who-incomplete-tags" class="who-incomplete-tags" style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Header Section -->
+      <header class="who-report-header">
+        <div class="who-header-crest">
+          <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--slate-500);">Republic of the Philippines • Department of Health</div>
+          <div style="font-size:15px; font-weight:800; color:var(--med-green); letter-spacing:0.02em; margin-top:2px;">METRO GENERAL HOSPITAL &amp; MEDICAL CENTER</div>
+          <div style="font-size:11.5px; font-weight:600; color:var(--slate-700);">Department of Pediatrics • Clinical Nutrition &amp; Child Development Service</div>
+          <div class="who-report-title-badge">WHO CHILD &amp; ADOLESCENT GROWTH ASSESSMENT REPORT</div>
+          <div style="font-size:10px; color:#dc2626; font-weight:600; margin-top:3px;">
+            MOCKUP — NOT FOR CLINICAL USE • VISUAL REFERENCE ONLY • FORMAL Z-SCORES NOT CALCULATED
+          </div>
+        </div>
+      </header>
+
+      <!-- Demographic & Encounter Information Grid -->
+      <section class="who-demographics-grid">
+        <div class="who-demo-cell">
+          <span class="who-demo-label">Child / Newborn Name:</span>
+          <span class="who-demo-val" id="who-rep-child-name">—</span>
+        </div>
+        <div class="who-demo-cell">
+          <span class="who-demo-label">Hospital Record No. (HRN):</span>
+          <span class="who-demo-val" id="who-rep-hrn">—</span>
+        </div>
+        <div class="who-demo-cell">
+          <span class="who-demo-label">Child Recorded Sex:</span>
+          <span class="who-demo-val" id="who-rep-sex">—</span>
+        </div>
+        <div class="who-demo-cell">
+          <span class="who-demo-label">PhilHealth Identification No. (PIN):</span>
+          <span class="who-demo-val" id="who-rep-pin">—</span>
+        </div>
+        <div class="who-demo-cell">
+          <span class="who-demo-label">Date of Birth &amp; Age:</span>
+          <span class="who-demo-val" id="who-rep-dob-age">—</span>
+        </div>
+        <div class="who-demo-cell">
+          <span class="who-demo-label">Encounter / Case No.:</span>
+          <span class="who-demo-val" id="who-rep-encounter">—</span>
+        </div>
+        <div class="who-demo-cell">
+          <span class="who-demo-label">Mother / Guardian Name:</span>
+          <span class="who-demo-val" id="who-rep-mother-name">—</span>
+        </div>
+        <div class="who-demo-cell">
+          <span class="who-demo-label">Department / Nursery Location:</span>
+          <span class="who-demo-val" id="who-rep-location">—</span>
+        </div>
+        <div class="who-demo-cell">
+          <span class="who-demo-label">Measurement Date &amp; Time:</span>
+          <span class="who-demo-val" id="who-rep-meas-datetime">—</span>
+        </div>
+        <div class="who-demo-cell">
+          <span class="who-demo-label">Active Reference Standard:</span>
+          <span class="who-demo-val" id="who-rep-ref-standard">—</span>
+        </div>
+      </section>
+
+      <!-- Anthropometric Metric Summary Cards -->
+      <section class="who-cards-row">
+        <div class="who-metric-card">
+          <div class="who-metric-label">Recorded Weight</div>
+          <div class="who-metric-value" id="who-card-val-weight">—</div>
+          <div class="who-metric-sub">Kilograms (kg)</div>
+        </div>
+        <div class="who-metric-card">
+          <div class="who-metric-label">Recorded Length / Height</div>
+          <div class="who-metric-value" id="who-card-val-length">—</div>
+          <div class="who-metric-sub">Centimeters (cm) • Recumbent / Standing</div>
+        </div>
+        <div class="who-metric-card">
+          <div class="who-metric-label">Raw Body Mass Index (BMI)</div>
+          <div class="who-metric-value" id="who-card-val-bmi">—</div>
+          <div class="who-metric-sub">kg/m² = weight (kg) / [length (m)]²</div>
+        </div>
+      </section>
+
+      <!-- Anthropometric Indicator Summary Table -->
+      <section style="margin-top:14px;">
+        <div style="font-size:12px; font-weight:700; color:var(--slate-800); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+          <span>Anthropometric Indicator &amp; Z-Score Status Table</span>
+          <span style="font-size:11px; font-weight:500; color:var(--slate-500);">Reference: WHO Child Growth Standards (2006) / Reference (2007)</span>
+        </div>
+        <div class="who-table-wrap">
+          <table class="who-table">
+            <thead>
+              <tr>
+                <th style="width:24%;">Indicator</th>
+                <th style="width:16%;">Measured Value</th>
+                <th style="width:26%;">WHO Reference Standard</th>
+                <th style="width:14%;">Graphic Plot</th>
+                <th style="width:20%;">WHO Z-Score &amp; Class.</th>
+              </tr>
+            </thead>
+            <tbody id="who-indicator-tbody">
+              <!-- Dynamically populated rows -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- WHO Reference Chart Graphic Area -->
+      <section class="who-chart-section" style="margin-top:16px;">
+        <div class="who-chart-nav-bar">
+          <div class="who-chart-tabs" id="who-chart-tabs">
+            <!-- Dynamically populated chart selector buttons -->
+          </div>
+          <div id="who-chart-meta-badge" class="who-chart-meta-badge">
+            <!-- Details of active chart -->
+          </div>
+        </div>
+
+        <!-- Graphic container with responsive image and coordinate marker -->
+        <div class="who-chart-stage" id="who-chart-stage">
+          <div class="who-chart-wrapper" id="who-chart-wrapper">
+            <img id="who-active-chart-img" class="who-chart-img" src="" alt="WHO Reference Growth Chart">
+            <!-- Crosshairs -->
+            <div id="who-marker-crosshair-h" class="who-crosshair who-crosshair-h" style="display:none;"></div>
+            <div id="who-marker-crosshair-v" class="who-crosshair who-crosshair-v" style="display:none;"></div>
+            <!-- Target marker dot -->
+            <div id="who-marker-dot" class="who-marker-dot" style="display:none;">
+              <div class="who-marker-pulse"></div>
+              <div class="who-marker-center"></div>
+              <div id="who-marker-label" class="who-marker-tooltip"></div>
+            </div>
+            <!-- Boundary Warning Callout (displayed over chart if value exceeds limits) -->
+            <div id="who-marker-boundary-callout" class="who-boundary-callout" style="display:none;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Clinical Limitation Notice Callout -->
+      <section class="who-limitation-box" style="margin-top:14px;">
+        <div style="font-weight:700; color:#991b1b; font-size:11.5px; margin-bottom:3px;">
+          <i class="icon-info-sign"></i> CLINICAL PROTOCOL &amp; SAFETY BOUNDARY NOTICE (MOCKUP ONLY)
+        </div>
+        <div style="font-size:11px; color:#7f1d1d; line-height:1.45;">
+          1. <strong>Mockup Specification:</strong> This module provides a graphic visual reference overlay based on WHO reference charts. Formal WHO z-scores, percentiles, and nutritional classifications (e.g. SAM, MAM, Stunting, Overweight) are designated <em>Not calculated</em> until validated WHO LMS datasets are deployed.<br>
+          2. <strong>No Clinical Interventions:</strong> Do not issue nutritional prescriptions, medical diagnosis, or patient referral decisions based solely on this visual mockup.<br>
+          3. <strong>Preterm &amp; Neonatal Invariant:</strong> Preterm infants (&lt;37 weeks gestational age) must be evaluated using the Fenton Preterm Growth Chart or Lubchenco Intrauterine Growth reference curves accessible in the Neonate Clinical Module.
+        </div>
+      </section>
+
+      <!-- Signatures & Audit Trail Section -->
+      <footer class="who-report-footer" style="margin-top:18px;">
+        <div class="who-signatures-grid">
+          <div class="who-sig-block">
+            <div class="who-sig-title">Prepared &amp; Encoded By:</div>
+            <div class="who-sig-line"></div>
+            <div class="who-sig-name" id="who-sig-encoder-name">Miguel Santos, MD</div>
+            <div class="who-sig-role">Attending Physician • PRC No. 0094821</div>
+          </div>
+          <div class="who-sig-block">
+            <div class="who-sig-title">Reviewed &amp; Clinically Validated By:</div>
+            <div class="who-sig-line"></div>
+            <div class="who-sig-name" id="who-sig-reviewer-name">Andrea Reyes, MD</div>
+            <div class="who-sig-role">Pediatrician / Clinical Nutrition Specialist • PRC No. 0102938</div>
+          </div>
+        </div>
+
+        <div class="who-audit-strip" style="margin-top:14px;">
+          <div><strong>Report ID:</strong> <span id="who-audit-report-id">WHO-GAR-20261014-001</span></div>
+          <div><strong>Generated:</strong> <span id="who-audit-timestamp">10/14/2026, 09:30 PM PST (UTC+8)</span></div>
+          <div><strong>Hospital EMR Verification:</strong> <span id="who-audit-checksum">DOH-EHR-WHO-VERIFIED</span></div>
+        </div>
+      </footer>
+
+    </div>
+  </div>
 </div>
 
 <!-- Toast -->
@@ -2544,8 +3291,532 @@ function closeZoomModal(e) {
 }
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeZoomModal();
+  if (e.key === 'Escape') {
+    closeZoomModal();
+    closeWhoGrowthReportModal();
+  }
 });
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   WHO CHILD & ADOLESCENT GROWTH ASSESSMENT REPORT (CLINICAL MOCKUP ENGINE)
+   ════════════════════════════════════════════════════════════════════════════════ */
+
+var whoActiveChartType = 'wfa';
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function calculateCompletedMonths(birthDateStr, measDateStr) {
+  if (!birthDateStr) return null;
+  var b = new Date(birthDateStr);
+  var m = measDateStr ? new Date(measDateStr) : new Date();
+  if (isNaN(b.getTime()) || isNaN(m.getTime())) return null;
+  var months = (m.getFullYear() - b.getFullYear()) * 12 + (m.getMonth() - b.getMonth());
+  if (m.getDate() < b.getDate()) {
+    months--;
+  }
+  return Math.max(0, months);
+}
+
+function openWhoGrowthReportModal() {
+  var modal = document.getElementById('whoGrowthReportModal');
+  if (!modal) return;
+  document.body.classList.add('modal-lock');
+  modal.classList.add('open');
+  rehydrateWhoReportFromPatient();
+}
+
+function closeWhoGrowthReportModal(e) {
+  if (e && e.stopPropagation) e.stopPropagation();
+  var modal = document.getElementById('whoGrowthReportModal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  document.body.classList.remove('modal-lock');
+}
+
+function handleWhoModalBackdropClick(e) {
+  if (e.target && e.target.id === 'whoGrowthReportModal') {
+    closeWhoGrowthReportModal(e);
+  }
+}
+
+function rehydrateWhoReportFromPatient() {
+  var patient = null;
+  if (typeof getPatients === 'function') {
+    var list = getPatients();
+    patient = list.find(function(p) { return p.id === currentPatientId; });
+  }
+  var d = (patient && patient.data) || {};
+
+  // Child recorded sex: strictly from child record or neo_sex input (never from mother)
+  var sex = '';
+  var neoSexEl = document.getElementById('neo_sex');
+  if (neoSexEl && neoSexEl.value && neoSexEl.value.trim()) {
+    sex = neoSexEl.value.trim().toLowerCase();
+  } else if (patient && (patient.id.includes('neo') || (d.first_name || '').toUpperCase().includes('BABY'))) {
+    if (d.gender) sex = d.gender.trim().toLowerCase();
+  }
+  if (sex !== 'male' && sex !== 'female') {
+    sex = '';
+  }
+
+  // Weight and Length
+  var wtEl = document.getElementById('neo_weight');
+  var wt = (wtEl && wtEl.value) ? wtEl.value : (d.vs_weight || '');
+
+  var lenEl = document.getElementById('neo_length');
+  var len = (lenEl && lenEl.value) ? lenEl.value : (d.vs_height || '');
+
+  // Measurement Date
+  var measDate = '';
+  var vitkDateEl = document.getElementById('neo_aftercare_vitk_date');
+  if (vitkDateEl && vitkDateEl.value) {
+    measDate = vitkDateEl.value;
+  } else if (d.birthdate) {
+    measDate = d.birthdate;
+  } else {
+    var now = new Date();
+    measDate = now.toISOString().split('T')[0];
+  }
+
+  // Age in completed months
+  var completedMonths = 0;
+  if (patient && patient.id.includes('neo')) {
+    completedMonths = 0;
+  } else if (d.birthdate && !patient.id.includes('op_carmela')) {
+    var calcM = calculateCompletedMonths(d.birthdate, measDate);
+    completedMonths = (calcM !== null) ? calcM : 0;
+  } else {
+    // Newborn delivered in active admission
+    completedMonths = 0;
+  }
+
+  var paramSexEl = document.getElementById('who-param-sex');
+  if (paramSexEl) paramSexEl.value = sex;
+
+  var paramAgeEl = document.getElementById('who-param-age-months');
+  if (paramAgeEl) paramAgeEl.value = (completedMonths !== null ? completedMonths : '');
+
+  var paramWtEl = document.getElementById('who-param-weight');
+  if (paramWtEl) paramWtEl.value = wt;
+
+  var paramLenEl = document.getElementById('who-param-length');
+  if (paramLenEl) paramLenEl.value = len;
+
+  var paramDateEl = document.getElementById('who-param-date');
+  if (paramDateEl) paramDateEl.value = measDate;
+
+  refreshWhoGrowthReport();
+}
+
+function calculateWhoMarker(chartType, sex, ageMo, wtKg, lenCm, bmi) {
+  var oob = [];
+  var left = 0;
+  var top = 0;
+
+  if (chartType === 'wfa') {
+    var xMin = 0, xMax = 60;
+    var xPmin = 12.92, xPmax = 84.72;
+    if (ageMo < xMin) oob.push('Age < 0 mo');
+    if (ageMo > xMax) oob.push('Age > 60 mo');
+    var clampedAge = Math.max(xMin, Math.min(xMax, ageMo));
+    left = xPmin + (clampedAge - xMin) / (xMax - xMin) * (xPmax - xPmin);
+
+    var yMin = 2, yMax = (sex === 'male' ? 28 : 30);
+    var yPmin = (sex === 'male' ? 83.22 : 83.38);
+    var yPmax = (sex === 'male' ? 22.89 : 22.74);
+    if (wtKg < yMin) oob.push('Weight < ' + yMin + ' kg');
+    if (wtKg > yMax) oob.push('Weight > ' + yMax + ' kg');
+    var clampedWt = Math.max(yMin, Math.min(yMax, wtKg));
+    top = yPmin - (clampedWt - yMin) / (yMax - yMin) * (yPmin - yPmax);
+
+  } else if (chartType === 'lhfa') {
+    var xMin = 0, xMax = 60;
+    var xPmin = 12.92, xPmax = 84.72;
+    if (ageMo < xMin) oob.push('Age < 0 mo');
+    if (ageMo > xMax) oob.push('Age > 60 mo');
+    var clampedAge = Math.max(xMin, Math.min(xMax, ageMo));
+    left = xPmin + (clampedAge - xMin) / (xMax - xMin) * (xPmax - xPmin);
+
+    var yMin = 45, yMax = 125;
+    var yPmin = 81.72, yPmax = 20.57;
+    if (lenCm < yMin) oob.push('Length < ' + yMin + ' cm');
+    if (lenCm > yMax) oob.push('Length > ' + yMax + ' cm');
+    var clampedLen = Math.max(yMin, Math.min(yMax, lenCm));
+    top = yPmin - (clampedLen - yMin) / (yMax - yMin) * (yPmin - yPmax);
+
+  } else if (chartType === 'wflh') {
+    var xMin = 45, xMax = 120;
+    var xPmin = 13.04, xPmax = 88.80;
+    if (lenCm < xMin) oob.push('Length < ' + xMin + ' cm');
+    if (lenCm > xMax) oob.push('Length > ' + xMax + ' cm');
+    var clampedLen = Math.max(xMin, Math.min(xMax, lenCm));
+    left = xPmin + (clampedLen - xMin) / (xMax - xMin) * (xPmax - xPmin);
+
+    var yMin = 2, yMax = 34;
+    var yPmin = 85.00, yPmax = 18.90;
+    if (wtKg < yMin) oob.push('Weight < ' + yMin + ' kg');
+    if (wtKg > yMax) oob.push('Weight > ' + yMax + ' kg');
+    var clampedWt = Math.max(yMin, Math.min(yMax, wtKg));
+    top = yPmin - (clampedWt - yMin) / (yMax - yMin) * (yPmin - yPmax);
+
+  } else if (chartType === 'bmifa') {
+    var xMin = 60, xMax = 228;
+    var xPmin = 13.04, xPmax = 88.80;
+    if (ageMo < xMin) oob.push('Age < 60 mo (5y)');
+    if (ageMo > xMax) oob.push('Age > 228 mo (19y)');
+    var clampedAge = Math.max(xMin, Math.min(xMax, ageMo));
+    left = xPmin + (clampedAge - xMin) / (xMax - xMin) * (xPmax - xPmin);
+
+    var yMin = 12, yMax = 36;
+    var yPmin = 84.80, yPmax = 19.10;
+    if (bmi < yMin) oob.push('BMI < ' + yMin + ' kg/m²');
+    if (bmi > yMax) oob.push('BMI > ' + yMax + ' kg/m²');
+    var clampedBmi = Math.max(yMin, Math.min(yMax, bmi));
+    top = yPmin - (clampedBmi - yMin) / (yMax - yMin) * (yPmin - yPmax);
+  }
+
+  return {
+    left: Number(left.toFixed(2)),
+    top: Number(top.toFixed(2)),
+    oob: oob
+  };
+}
+
+function switchWhoChartTab(type) {
+  whoActiveChartType = type;
+  refreshWhoGrowthReport();
+}
+
+function printWhoGrowthReport() {
+  window.print();
+}
+
+function refreshWhoGrowthReport() {
+  var patient = null;
+  if (typeof getPatients === 'function') {
+    var list = getPatients();
+    patient = list.find(function(p) { return p.id === currentPatientId; });
+  }
+  var d = (patient && patient.data) || {};
+
+  var paramSexEl = document.getElementById('who-param-sex');
+  var paramAgeEl = document.getElementById('who-param-age-months');
+  var paramWtEl = document.getElementById('who-param-weight');
+  var paramLenEl = document.getElementById('who-param-length');
+  var paramDateEl = document.getElementById('who-param-date');
+
+  var sex = paramSexEl ? paramSexEl.value.trim().toLowerCase() : '';
+  var ageStr = paramAgeEl ? paramAgeEl.value.trim() : '';
+  var wtStr = paramWtEl ? paramWtEl.value.trim() : '';
+  var lenStr = paramLenEl ? paramLenEl.value.trim() : '';
+  var dateStr = paramDateEl ? paramDateEl.value.trim() : '';
+
+  var hasSex = (sex === 'male' || sex === 'female');
+  var hasAge = (ageStr !== '' && !isNaN(Number(ageStr)) && Number(ageStr) >= 0);
+  var hasWeight = (wtStr !== '' && !isNaN(Number(wtStr)) && Number(wtStr) > 0);
+  var hasLength = (lenStr !== '' && !isNaN(Number(lenStr)) && Number(lenStr) > 0);
+  var isComplete = hasSex && hasAge && hasWeight && hasLength;
+
+  var ageMonths = hasAge ? Number(ageStr) : null;
+  var weightKg = hasWeight ? Number(wtStr) : null;
+  var lengthCm = hasLength ? Number(lenStr) : null;
+
+  // Raw BMI calculation
+  var rawBmi = null;
+  if (hasWeight && hasLength) {
+    var hM = lengthCm / 100;
+    rawBmi = weightKg / (hM * hM);
+  }
+
+  // Header / Demographics
+  var motherName = (document.getElementById('neo_mother_name') && document.getElementById('neo_mother_name').value.trim()) || d.mother_name || (d.last_name ? (d.last_name + ', ' + d.first_name + ' ' + (d.middle_name || '')).trim() : 'DEL ROSARIO, CARMELA BAUTISTA');
+  var childName = '';
+  if (patient && (patient.id.includes('neo') || (d.first_name || '').toUpperCase().includes('BABY'))) {
+    childName = (d.last_name ? d.last_name + ', ' + d.first_name + ' ' + (d.middle_name || '') : 'SANTOS, BABY BOY').trim();
+  } else {
+    var prefix = sex === 'male' ? 'BABY BOY OF ' : (sex === 'female' ? 'BABY GIRL OF ' : 'BABY OF ');
+    childName = prefix + motherName;
+  }
+
+  var elChild = document.getElementById('who-rep-child-name');
+  if (elChild) elChild.textContent = childName;
+
+  var elHrn = document.getElementById('who-rep-hrn');
+  if (elHrn) elHrn.textContent = d.hrn || '0000001890';
+
+  var elSex = document.getElementById('who-rep-sex');
+  if (elSex) {
+    if (hasSex) {
+      elSex.innerHTML = '<span style="color:' + (sex === 'male' ? '#0369a1' : '#be185d') + '; font-weight:700;">' + (sex === 'male' ? 'Male (Boy)' : 'Female (Girl)') + '</span>';
+    } else {
+      elSex.innerHTML = '<span style="color:#dc2626; font-weight:700;">MISSING (Unspecified)</span>';
+    }
+  }
+
+  var elPin = document.getElementById('who-rep-pin');
+  if (elPin) elPin.textContent = d.philhealth_no || '06-029384712-4-01';
+
+  var elDobAge = document.getElementById('who-rep-dob-age');
+  if (elDobAge) {
+    var dobStr = d.birthdate || '2026-09-26';
+    if (hasAge) {
+      var years = Math.floor(ageMonths / 12);
+      var remMonths = ageMonths % 12;
+      var ageFmt = ageMonths + ' completed months';
+      if (years > 0) ageFmt += ' (' + years + 'y ' + remMonths + 'm)';
+      elDobAge.textContent = dobStr + ' • ' + ageFmt;
+    } else {
+      elDobAge.innerHTML = dobStr + ' • <span style="color:#dc2626; font-weight:700;">Age Missing</span>';
+    }
+  }
+
+  var elEncounter = document.getElementById('who-rep-encounter');
+  if (elEncounter) elEncounter.textContent = d.encounter_no || 'OP-2026-0926-0042';
+
+  var elMother = document.getElementById('who-rep-mother-name');
+  if (elMother) elMother.textContent = motherName;
+
+  var elLoc = document.getElementById('who-rep-location');
+  if (elLoc) elLoc.textContent = d.ward_room || d.ward_area || 'Pediatric OPD / Rooming-in Nursery';
+
+  var elMeasDt = document.getElementById('who-rep-meas-datetime');
+  if (elMeasDt) elMeasDt.textContent = (dateStr || '2026-10-14') + ' • 09:30 PST';
+
+  var elStandard = document.getElementById('who-rep-ref-standard');
+  if (elStandard) {
+    if (hasAge && ageMonths >= 60) {
+      elStandard.textContent = 'WHO Growth Reference (5 to 19 years)';
+    } else {
+      elStandard.textContent = 'WHO Child Growth Standards (Birth to 5 years)';
+    }
+  }
+
+  // Anthropometric Metric Cards
+  var elCardWt = document.getElementById('who-card-val-weight');
+  if (elCardWt) {
+    elCardWt.textContent = hasWeight ? weightKg.toFixed(2) + ' kg' : 'Missing';
+    elCardWt.style.color = hasWeight ? 'var(--slate-900)' : '#dc2626';
+  }
+
+  var elCardLen = document.getElementById('who-card-val-length');
+  if (elCardLen) {
+    elCardLen.textContent = hasLength ? lengthCm.toFixed(1) + ' cm' : 'Missing';
+    elCardLen.style.color = hasLength ? 'var(--slate-900)' : '#dc2626';
+  }
+
+  var elCardBmi = document.getElementById('who-card-val-bmi');
+  if (elCardBmi) {
+    elCardBmi.textContent = rawBmi !== null ? rawBmi.toFixed(2) + ' kg/m²' : '—';
+    elCardBmi.style.color = rawBmi !== null ? 'var(--slate-900)' : '#dc2626';
+  }
+
+  // Incomplete Alert Box
+  var alertBox = document.getElementById('who-incomplete-alert');
+  var tagsBox = document.getElementById('who-incomplete-tags');
+  if (alertBox && tagsBox) {
+    if (!isComplete) {
+      alertBox.style.display = 'block';
+      var tags = [];
+      tags.push(hasSex ? '<span class="who-incomplete-tag ok"><i class="icon-ok"></i> Sex: ' + escapeHtml(sex.toUpperCase()) + '</span>' : '<span class="who-incomplete-tag missing"><i class="icon-remove"></i> Sex: Missing</span>');
+      tags.push(hasAge ? '<span class="who-incomplete-tag ok"><i class="icon-ok"></i> Age: ' + ageMonths + ' mo</span>' : '<span class="who-incomplete-tag missing"><i class="icon-remove"></i> Age: Missing</span>');
+      tags.push(hasWeight ? '<span class="who-incomplete-tag ok"><i class="icon-ok"></i> Weight: ' + weightKg + ' kg</span>' : '<span class="who-incomplete-tag missing"><i class="icon-remove"></i> Weight: Missing</span>');
+      tags.push(hasLength ? '<span class="who-incomplete-tag ok"><i class="icon-ok"></i> Length: ' + lengthCm + ' cm</span>' : '<span class="who-incomplete-tag missing"><i class="icon-remove"></i> Length: Missing</span>');
+      tagsBox.innerHTML = tags.join('');
+    } else {
+      alertBox.style.display = 'none';
+      tagsBox.innerHTML = '';
+    }
+  }
+
+  // Determine applicable reference charts
+  var applicableCharts = [];
+  if (hasAge) {
+    if (ageMonths < 60) {
+      applicableCharts = [
+        { id: 'wfa', label: 'Weight-for-Age (Birth–5y)', std: 'WHO Child Growth Standards (0–5y)' },
+        { id: 'lhfa', label: 'Length/Height-for-Age (Birth–5y)', std: 'WHO Child Growth Standards (0–5y)' },
+        { id: 'wflh', label: 'Weight-for-Length/Height (Birth–5y)', std: 'WHO Child Growth Standards (0–5y)' }
+      ];
+      if (!applicableCharts.some(function(c) { return c.id === whoActiveChartType; })) {
+        whoActiveChartType = 'wfa';
+      }
+    } else if (ageMonths <= 228) {
+      applicableCharts = [
+        { id: 'bmifa', label: 'BMI-for-Age (5–19y)', std: 'WHO Growth Reference (5–19y)' }
+      ];
+      whoActiveChartType = 'bmifa';
+    } else {
+      applicableCharts = [];
+    }
+  }
+
+  // Populate Indicator Summary Table
+  var tbody = document.getElementById('who-indicator-tbody');
+  if (tbody) {
+    var rowsHtml = '';
+    if (hasAge && ageMonths < 60) {
+      rowsHtml += '<tr>' +
+        '<td><strong>Weight-for-Age (WFA)</strong></td>' +
+        '<td>' + (hasWeight ? weightKg.toFixed(2) + ' kg' : '<span style="color:#dc2626;">Missing</span>') + '</td>' +
+        '<td>WHO Child Growth Standards (0–5y)</td>' +
+        '<td>' + (isComplete ? '<span style="color:#15803d; font-weight:700;"><i class="icon-ok"></i> Plotted</span>' : '<span style="color:#b45309;">Incomplete data</span>') + '</td>' +
+        '<td><span style="color:var(--slate-500); font-style:italic;">Not calculated (Mockup)</span></td>' +
+      '</tr>';
+      rowsHtml += '<tr>' +
+        '<td><strong>Length/Height-for-Age (LHFA)</strong></td>' +
+        '<td>' + (hasLength ? lengthCm.toFixed(1) + ' cm' : '<span style="color:#dc2626;">Missing</span>') + '</td>' +
+        '<td>WHO Child Growth Standards (0–5y)</td>' +
+        '<td>' + (isComplete ? '<span style="color:#15803d; font-weight:700;"><i class="icon-ok"></i> Plotted</span>' : '<span style="color:#b45309;">Incomplete data</span>') + '</td>' +
+        '<td><span style="color:var(--slate-500); font-style:italic;">Not calculated (Mockup)</span></td>' +
+      '</tr>';
+      rowsHtml += '<tr>' +
+        '<td><strong>Weight-for-Length/Height (WFLH)</strong></td>' +
+        '<td>' + (hasWeight && hasLength ? weightKg.toFixed(2) + ' kg / ' + lengthCm.toFixed(1) + ' cm' : '<span style="color:#dc2626;">Missing parameters</span>') + '</td>' +
+        '<td>WHO Child Growth Standards (0–5y)</td>' +
+        '<td>' + (isComplete ? '<span style="color:#15803d; font-weight:700;"><i class="icon-ok"></i> Plotted</span>' : '<span style="color:#b45309;">Incomplete data</span>') + '</td>' +
+        '<td><span style="color:var(--slate-500); font-style:italic;">Not calculated (Mockup)</span></td>' +
+      '</tr>';
+    } else if (hasAge && ageMonths >= 60 && ageMonths <= 228) {
+      rowsHtml += '<tr>' +
+        '<td><strong>BMI-for-Age (BMIFA)</strong></td>' +
+        '<td>' + (rawBmi !== null ? rawBmi.toFixed(2) + ' kg/m²' : '<span style="color:#dc2626;">Missing</span>') + '</td>' +
+        '<td>WHO Growth Reference (5–19y)</td>' +
+        '<td>' + (isComplete ? '<span style="color:#15803d; font-weight:700;"><i class="icon-ok"></i> Plotted</span>' : '<span style="color:#b45309;">Incomplete data</span>') + '</td>' +
+        '<td><span style="color:var(--slate-500); font-style:italic;">Not calculated (Mockup)</span></td>' +
+      '</tr>';
+    } else {
+      rowsHtml += '<tr><td colspan="5" style="text-align:center; color:#b45309; padding:12px;">Complete child sex, age, weight, and length to display indicator reference summary.</td></tr>';
+    }
+    tbody.innerHTML = rowsHtml;
+  }
+
+  // Populate Chart Tabs
+  var tabsContainer = document.getElementById('who-chart-tabs');
+  if (tabsContainer) {
+    if (applicableCharts.length > 0) {
+      tabsContainer.innerHTML = applicableCharts.map(function(c) {
+        var activeClass = (c.id === whoActiveChartType) ? ' active' : '';
+        return '<button type="button" class="who-chart-tab-btn' + activeClass + '" onclick="switchWhoChartTab(\'' + c.id + '\')">' + escapeHtml(c.label) + '</button>';
+      }).join('');
+    } else {
+      tabsContainer.innerHTML = '<span style="font-size:11.5px; color:#dc2626; font-weight:600;">No applicable reference chart (Age requires 0 to 228 completed months)</span>';
+    }
+  }
+
+  // Active chart image and meta
+  var metaBadge = document.getElementById('who-chart-meta-badge');
+  var chartImg = document.getElementById('who-active-chart-img');
+  var crossH = document.getElementById('who-marker-crosshair-h');
+  var crossV = document.getElementById('who-marker-crosshair-v');
+  var dot = document.getElementById('who-marker-dot');
+  var dotLabel = document.getElementById('who-marker-label');
+  var boundCallout = document.getElementById('who-marker-boundary-callout');
+
+  if (isComplete && applicableCharts.length > 0) {
+    var imgSrc = '';
+    var chartTitle = '';
+    var genderStr = sex === 'male' ? 'Boys' : 'Girls';
+
+    if (whoActiveChartType === 'wfa') {
+      imgSrc = 'img/who/cht-wfa-' + (sex === 'male' ? 'boys' : 'girls') + '-z-0-5.png';
+      chartTitle = 'Weight-for-Age ' + genderStr.toUpperCase() + ' (Birth to 5 years, z-scores)';
+    } else if (whoActiveChartType === 'lhfa') {
+      imgSrc = 'img/who/cht-lhfa-' + (sex === 'male' ? 'boys' : 'girls') + '-z-0-5.png';
+      chartTitle = 'Length/Height-for-Age ' + genderStr.toUpperCase() + ' (Birth to 5 years, z-scores)';
+    } else if (whoActiveChartType === 'wflh') {
+      imgSrc = 'img/who/cht-wflh-' + (sex === 'male' ? 'boys' : 'girls') + '-z-0-5.png';
+      chartTitle = 'Weight-for-Length/Height ' + genderStr.toUpperCase() + ' (Birth to 5 years, z-scores)';
+    } else if (whoActiveChartType === 'bmifa') {
+      imgSrc = 'img/who/cht-bmifa-' + (sex === 'male' ? 'boys' : 'girls') + '-z-5-19years.png';
+      chartTitle = 'BMI-for-Age ' + genderStr.toUpperCase() + ' (5 to 19 years, z-scores)';
+    }
+
+    if (metaBadge) {
+      metaBadge.innerHTML = '<strong>' + escapeHtml(chartTitle) + '</strong> • Baseline: ' + (sex === 'male' ? 'Male' : 'Female');
+    }
+
+    if (chartImg) {
+      chartImg.src = imgSrc;
+      chartImg.style.display = 'block';
+    }
+
+    // Coordinates calculation
+    var coords = calculateWhoMarker(whoActiveChartType, sex, ageMonths, weightKg, lengthCm, rawBmi);
+    if (crossH) {
+      crossH.style.display = 'block';
+      crossH.style.top = coords.top + '%';
+    }
+    if (crossV) {
+      crossV.style.display = 'block';
+      crossV.style.left = coords.left + '%';
+    }
+    if (dot) {
+      dot.style.display = 'block';
+      dot.style.left = coords.left + '%';
+      dot.style.top = coords.top + '%';
+    }
+    if (dotLabel) {
+      var tip = '';
+      if (whoActiveChartType === 'wfa') {
+        tip = ageMonths + ' mo, ' + weightKg.toFixed(2) + ' kg';
+      } else if (whoActiveChartType === 'lhfa') {
+        tip = ageMonths + ' mo, ' + lengthCm.toFixed(1) + ' cm';
+      } else if (whoActiveChartType === 'wflh') {
+        tip = lengthCm.toFixed(1) + ' cm, ' + weightKg.toFixed(2) + ' kg';
+      } else if (whoActiveChartType === 'bmifa') {
+        tip = ageMonths + ' mo, BMI ' + rawBmi.toFixed(2);
+      }
+      dotLabel.textContent = tip;
+    }
+
+    if (boundCallout) {
+      if (coords.oob && coords.oob.length > 0) {
+        boundCallout.style.display = 'block';
+        boundCallout.innerHTML = '<i class="icon-warning-sign"></i> Out of reference bounds: ' + escapeHtml(coords.oob.join(', ')) + ' (Marker clamped to plot perimeter)';
+      } else {
+        boundCallout.style.display = 'none';
+      }
+    }
+
+  } else {
+    // Incomplete or out of range
+    if (metaBadge) metaBadge.textContent = 'Reference Plot Unavailable (Incomplete Data)';
+    if (chartImg) chartImg.style.display = 'none';
+    if (crossH) crossH.style.display = 'none';
+    if (crossV) crossV.style.display = 'none';
+    if (dot) dot.style.display = 'none';
+    if (boundCallout) boundCallout.style.display = 'none';
+  }
+
+  // Audit Strip
+  var now = new Date();
+  var dateStrPst = now.toLocaleDateString('en-US', { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit' });
+  var timeStrPst = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+  var repId = 'WHO-GAR-' + now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + '-0042';
+
+  var elRepId = document.getElementById('who-audit-report-id');
+  if (elRepId) elRepId.textContent = repId;
+
+  var elRepTs = document.getElementById('who-audit-timestamp');
+  if (elRepTs) elRepTs.textContent = dateStrPst + ', ' + timeStrPst + ' PST (UTC+8)';
+}
+
+window.openWhoGrowthReportModal = openWhoGrowthReportModal;
+window.closeWhoGrowthReportModal = closeWhoGrowthReportModal;
+window.handleWhoModalBackdropClick = handleWhoModalBackdropClick;
+window.rehydrateWhoReportFromPatient = rehydrateWhoReportFromPatient;
+window.refreshWhoGrowthReport = refreshWhoGrowthReport;
+window.switchWhoChartTab = switchWhoChartTab;
+window.printWhoGrowthReport = printWhoGrowthReport;
+window.calculateWhoMarker = calculateWhoMarker;
 
 // Update Top Summary Cards
 function updateSummaryHighlights() {
