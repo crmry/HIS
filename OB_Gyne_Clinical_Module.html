@@ -413,6 +413,8 @@
   .ob-field-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.3px; margin-bottom: 4px; display: block; }
   .ob-pill-group {
     display: inline-flex;
+    width: fit-content;
+    max-width: 240px;
     background: #e2e8f0;
     padding: 2px;
     border-radius: 5px;
@@ -518,15 +520,38 @@
   .ob-left select.form-control { appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); background-repeat:no-repeat; background-position:right 10px center; padding-right:28px; }
   
   .ob-inline-input-group { display:flex; align-items:center; gap:8px; }
-  .ob-input-sm { width:64px !important; text-align:center; }
-  .ob-inline-unit { font-size:12px; color:#888888; }
+  .ob-input-sm {
+    width: 84px !important;
+    min-width: 84px !important;
+    text-align: center;
+    font-weight: 600;
+    font-size: 13px;
+    box-sizing: border-box;
+    padding: 0 8px !important;
+  }
+  .ob-inline-unit { font-size:12px; color:#64748b; font-weight:600; margin-right:4px; }
+  .ob-preset-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .ob-preset-chip {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+  .ob-preset-chip:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+    border-color: #94a3b8;
+  }
   .ob-date-grid { display:grid; grid-template-columns:1fr 90px; gap:8px; }
   .ob-date-range-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .ob-display-val { font-size:13px; font-weight:400; color:#111827; padding:4px 0; }
-  
-  .ob-pill-group { display:flex; gap:6px; }
-  .ob-pill { background:transparent; color:#374151; font-weight:500; font-size:11px; padding:6px 14px; border-radius:4px; border:none; cursor:pointer; text-transform:uppercase; transition:all 0.15s; }
-  .ob-pill.active { background:#4b5563; color:#ffffff; font-weight:600; }
+
   
   .btn-ob-add, .btn-card-primary.btn-ob-add {
     background: var(--med-green, #1f7d45);
@@ -711,6 +736,12 @@
                         <input type="number" id="preg-ga-days" class="form-control ob-input-sm" min="0" max="6" step="1" placeholder="days">
                         <span class="ob-inline-unit">days</span>
                       </div>
+                      <div class="ob-preset-chips">
+                        <button type="button" class="ob-preset-chip" onclick="setGaPreset(39, 0)">39w (Term)</button>
+                        <button type="button" class="ob-preset-chip" onclick="setGaPreset(40, 0)">40w (Due Date)</button>
+                        <button type="button" class="ob-preset-chip" onclick="setGaPreset(38, 0)">38w (Early)</button>
+                        <button type="button" class="ob-preset-chip" onclick="setGaPreset(36, 0)">36w (Preterm)</button>
+                      </div>
                     </div>
 
                     <div id="grp-delivery">
@@ -832,7 +863,7 @@
                   </div>
                   <div class="modal-footer ob-form-footer">
                     <button type="button" class="btn-card-action" id="btn-cancel-preg" onclick="closePregnancyModal()">Cancel</button>
-                    <button type="submit" class="btn-card-primary btn-ob-add" id="btn-save-preg">ADD</button>
+                    <button type="submit" class="btn-card-primary btn-ob-add" id="btn-save-preg"><i class="icon-save"></i> <span id="btn-save-preg-label">SAVE PREGNANCY</span></button>
                   </div>
                 </form>
               </div>
@@ -901,7 +932,7 @@
                   <div class="modal-footer ob-form-footer">
                     <button type="button" class="btn-card-action" id="btn-remove-present" onclick="endPresentPregnancy()" style="margin-right:auto; display:none;">Mark as No Longer Pregnant</button>
                     <button type="button" class="btn-card-action" id="btn-cancel-present" onclick="closePresentModal()">Cancel</button>
-                    <button type="submit" class="btn-card-primary btn-ob-add" id="btn-add-present">ADD</button>
+                    <button type="submit" class="btn-card-primary btn-ob-add" id="btn-add-present"><i class="icon-save"></i> <span id="btn-add-present-label">SAVE PRESENT PREGNANCY</span></button>
                   </div>
                 </form>
               </div>
@@ -1737,7 +1768,7 @@ function handleBabyCountChange() {
 function babyRowHtml(i, b, totalCount) {
   b = b || {};
   const sex = (b.sex || '').toLowerCase();
-  const st = (b.status || '').toLowerCase();
+  const st = (b.status || 'living').toLowerCase();
   const isMale = sex === 'male';
   const isFemale = sex === 'female';
   const isLiving = st === 'living';
@@ -1764,7 +1795,7 @@ function babyRowHtml(i, b, totalCount) {
     </div>
     <div class="ob-field-group">
       <label class="ob-field-label">Current Status</label>
-      <input type="hidden" class="baby-status" value="${escapeHtml(b.status || '')}">
+      <input type="hidden" class="baby-status" value="${escapeHtml(b.status || 'living')}">
       <div class="ob-pill-group" data-target="baby-status">
         <button type="button" class="ob-pill-btn ${isLiving ? 'active' : ''}" onclick="obSelectPill(this, 'living')">LIVING</button>
         <button type="button" class="ob-pill-btn ${isDeceased ? 'active' : ''}" onclick="obSelectPill(this, 'deceased')">DECEASED</button>
@@ -1776,6 +1807,15 @@ function babyRowHtml(i, b, totalCount) {
     </div>
   </div>`;
 }
+
+function setGaPreset(weeks, days) {
+  const wEl = obEl('preg-ga-weeks');
+  const dEl = obEl('preg-ga-days');
+  if (wEl) wEl.value = weeks;
+  if (dEl) dEl.value = days !== undefined ? days : 0;
+  if (wEl) wEl.focus();
+}
+window.setGaPreset = setGaPreset;
 
 function obSelectPill(btn, val) {
   const group = btn.closest('.ob-pill-group');
@@ -1937,7 +1977,9 @@ window.setPlaceOfDelivery = setPlaceOfDelivery;
 /* ---- Open / close ---- */
 function openAddPregModal() {
   obEl('modal-pregnancy-title').textContent = 'Past Pregnancy';
-  obEl('btn-save-preg').textContent = 'ADD';
+  const saveLabel = obEl('btn-save-preg-label');
+  if (saveLabel) saveLabel.textContent = 'SAVE PREGNANCY';
+  else obEl('btn-save-preg').innerHTML = '<i class="icon-save"></i> <span id="btn-save-preg-label">SAVE PREGNANCY</span>';
   obEl('preg-index').value = '-1';
   obEl('preg-sequence').value = '';
   obEl('preg-type').value = 'singleton';
@@ -1999,7 +2041,9 @@ function openEditPregModal(index) {
   const norm = obCalc.normalizePregnancy(p, index);
   const type = norm.type || 'singleton';
   obEl('modal-pregnancy-title').textContent = 'Past Pregnancy';
-  obEl('btn-save-preg').textContent = 'UPDATE';
+  const saveLabel = obEl('btn-save-preg-label');
+  if (saveLabel) saveLabel.textContent = 'SAVE CHANGES';
+  else obEl('btn-save-preg').innerHTML = '<i class="icon-save"></i> <span id="btn-save-preg-label">SAVE CHANGES</span>';
   obEl('preg-index').value = index;
   obEl('preg-sequence').value = p.seq || '';
   obEl('preg-type').value = type;
@@ -2181,17 +2225,16 @@ function handlePregnancySubmit(event) {
 
   if (index >= 0) {
     patientState.pregnancies[index] = record;
-    showToast('Pregnancy record updated. Select Save to store changes.');
   } else {
     patientState.pregnancies.push(record);
-    showToast('Pregnancy record added. Select Save to store changes.');
   }
 
   closePregnancyModal();
-  markObDirty();
+  saveObHistory();
   renderPregnancyTable();
   renderSummaryCards();
   renderLongitudinalTimeline();
+  showToast(index >= 0 ? 'Pregnancy record updated and saved.' : 'Pregnancy record saved successfully to medical record.');
   submitBtn.disabled = false;
 }
 
@@ -2200,11 +2243,11 @@ function archivePregnancy(index) {
   if (!p) return;
   if (confirm(`Archive pregnancy record ${p.seq || ''} (${obDeliveryDateText(p)} • ${p.outcome})? This will update the auto-derived GP(TPAL) score.`)) {
     patientState.pregnancies.splice(index, 1);
-    markObDirty();
+    saveObHistory();
     renderPregnancyTable();
     renderSummaryCards();
     renderLongitudinalTimeline();
-    showToast(`Pregnancy record ${p.seq || ''} archived. Select Save to store changes.`);
+    showToast(`Pregnancy record ${p.seq || ''} archived and saved.`);
   }
 }
 
@@ -2233,7 +2276,9 @@ function openPresentModal() {
   obEl('pp-us-weeks').value = (pp.usWeeks === undefined || pp.usWeeks === null) ? '' : pp.usWeeks;
   obEl('pp-us-days').value = (pp.usDays === undefined || pp.usDays === null) ? '' : pp.usDays;
   obEl('modal-present-title').textContent = pp.active ? 'Present Pregnancy' : 'Add Present Pregnancy';
-  obEl('btn-add-present').textContent = pp.active ? 'UPDATE' : 'ADD';
+  const presentSaveLabel = obEl('btn-add-present-label');
+  if (presentSaveLabel) presentSaveLabel.textContent = pp.active ? 'SAVE CHANGES' : 'SAVE PRESENT PREGNANCY';
+  else obEl('btn-add-present').innerHTML = '<i class="icon-save"></i> <span id="btn-add-present-label">' + (pp.active ? 'SAVE CHANGES' : 'SAVE PRESENT PREGNANCY') + '</span>';
   obEl('btn-remove-present').style.display = pp.active ? '' : 'none';
   obShowFormError('pp-form-error', '');
   updatePresentPreview();
@@ -2364,10 +2409,10 @@ function handlePresentSubmit(event) {
     usDays: hasUs && ux !== '' ? +ux : (hasUs && uw !== '' ? 0 : null)
   };
   closePresentModal();
-  markObDirty();
+  saveObHistory();
   renderSummaryCards();
   renderObHistoryPanel();
-  showToast('Present pregnancy recorded. Select Save to store changes.');
+  showToast('Present pregnancy saved successfully to medical record.');
 }
 
 function endPresentPregnancy() {
@@ -2375,10 +2420,10 @@ function endPresentPregnancy() {
   if (!confirm('Mark the present pregnancy as ended? Dating entries are retained, and the pregnancy can then be recorded as a Past Pregnancy.')) return;
   patientState.presentPregnancy.active = false;
   closePresentModal();
-  markObDirty();
+  saveObHistory();
   renderSummaryCards();
   renderObHistoryPanel();
-  showToast('Present pregnancy marked as ended. Select Save to store changes.');
+  showToast('Present pregnancy marked as ended and saved.');
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

@@ -833,11 +833,12 @@ async def scan_single_target(browser_ws, file_url):
                         const countBefore = patientState.pregnancies.length;
                         document.getElementById('form-pregnancy').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
                         if (pm.classList.contains('open')) return 'Past pregnancy modal did not close after ADD: ' + (document.getElementById('preg-form-error').textContent || '');
-                        if (patientState.pregnancies.length !== countBefore + 1) return 'ADD did not stage exactly one pregnancy';
+                        if (patientState.pregnancies.length !== countBefore + 1) return 'ADD did not record exactly one pregnancy';
                         const rec = patientState.pregnancies[patientState.pregnancies.length - 1];
                         if (!rec.id || !rec.babies || rec.babies.length !== 2) return 'Twin record missing id or per-baby records';
                         if (window.computeGTPAL().G !== baseG + 1) return 'G did not increase by one after ADD';
-                        if (document.getElementById('ob-dirty-flag').textContent.indexOf('unsaved') === -1) return 'Unsaved indicator not shown after ADD';
+                        const autoSaved = JSON.parse(localStorage.getItem(obk) || 'null');
+                        if (!autoSaved || autoSaved.pregnancies.length !== countBefore + 1) return 'Form submit did not seamlessly persist pregnancy record to localStorage';
 
                         // Cancel button + Cesarean catalog search
                         document.getElementById('btn-open-past-preg').click();
