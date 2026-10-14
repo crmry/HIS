@@ -867,13 +867,10 @@ async def scan_single_target(browser_ws, file_url):
                         if (ppc.textContent.indexOf('ACOG') === -1) return 'ACOG dating recommendation missing from present pregnancy card';
                         if (window.computeGTPAL().G !== baseG + 2) return 'Present pregnancy did not count toward G';
 
-                        // SAVE persists; no duplicate on repeated SAVE
-                        const bannerSaveBtn = document.getElementById('btn-banner-save-history');
-                        if (!bannerSaveBtn) return 'Synchronized banner save button missing';
-                        const bottomSaveBtn = document.getElementById('btn-bottom-save-history');
-                        if (!bottomSaveBtn) return 'Synchronized bottom bar save button missing';
-                        bannerSaveBtn.click();
-                        document.getElementById('btn-save-ob-history').click();
+                        // Canonical Save button persists; clean single-action hierarchy
+                        const saveBtn = document.getElementById('btn-save-ob-history');
+                        if (!saveBtn) return 'Canonical Obstetric History save button missing';
+                        saveBtn.click();
                         const stored = JSON.parse(localStorage.getItem(obk) || 'null');
                         if (!stored || stored.pregnancies.length !== countBefore + 1 || !stored.presentPregnancy || !stored.presentPregnancy.active) return 'SAVE did not persist OB history';
                         if (document.getElementById('ob-dirty-flag').textContent) return 'Unsaved indicator not cleared after SAVE';

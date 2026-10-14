@@ -610,19 +610,6 @@
   .ob-menu-item { text-align:left; background:none; border:none; padding:14px 20px; font-size:14px; font-weight:500; color:#111827; cursor:pointer; display:block; width:100%; transition:background 0.15s; }
   .ob-menu-item:hover { background:#f8fafc; color:#000; }
   
-  .ob-unsaved-bar { display:none; position:fixed; left:0; right:0; bottom:0; z-index:1000; background:#c2410c; color:#ffffff; padding:8px 24px; box-shadow:0 -2px 10px rgba(0,0,0,0.15); }
-  .ob-unsaved-bar.show { display:block; }
-  .ob-unsaved-bar-inner { max-width:1280px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:16px; font-size:12px; font-weight:600; }
-  .btn-ob-save-bar {
-    background: #ffffff !important;
-    color: #c2410c !important;
-    border-color: #ffffff !important;
-    font-weight: 800;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
-  }
-  .btn-ob-save-bar:hover {
-    background: #ffedd5 !important;
-  }
   
   .ob-empty-state { margin-top:14px; padding:24px; border:1px dashed #cbd5e1; border-radius:8px; font-size:13px; color:#64748b; text-align:center; }
   
@@ -655,9 +642,7 @@
       <span>EDD: <strong id="val-edd" style="margin-left:4px;">—</strong></span>
     </div>
     <span id="val-pregnancy-count" style="display:none;">3</span>
-    <button type="button" id="btn-banner-save-history" class="btn-ob-save-action" onclick="saveObHistory()" title="Save changes to medical record &amp; sync to Physician Dashboard">
-      <i class="icon-save"></i> <span class="save-label">SAVE</span>
-    </button>
+
     <button type="button" id="btn-ob-header-save-draft" style="display:none;" onclick="saveGyneDraft()" aria-hidden="true"></button>
   </div>
 </header>
@@ -960,14 +945,7 @@
             </section>
           </main>
         </div>
-        <div class="ob-unsaved-bar" id="ob-unsaved-bar" role="status">
-          <div class="ob-unsaved-bar-inner">
-            <span><i class="icon-warning-sign"></i> You have unsaved changes staged in this session.</span>
-            <button type="button" class="btn-ob-save-action btn-ob-save-bar" id="btn-bottom-save-history" onclick="saveObHistory()" title="Save changes to medical record &amp; sync to Physician Dashboard">
-              <i class="icon-save"></i> <span class="save-label">SAVE NOW</span>
-            </button>
-          </div>
-        </div>
+
       </main>
 
 <!-- ════════════════ MODALS ════════════════ -->
@@ -1303,24 +1281,14 @@ function renderObHistoryPanel() {
   }
   const dirty = document.getElementById('ob-dirty-flag');
   if (dirty) dirty.textContent = obDirty ? 'You have unsaved changes' : '';
-  const bar = document.getElementById('ob-unsaved-bar');
-  if (bar) bar.classList.toggle('show', obDirty);
-  const saveButtons = [
-    document.getElementById('btn-save-ob-history'),
-    document.getElementById('btn-banner-save-history'),
-    document.getElementById('btn-bottom-save-history')
-  ].filter(Boolean);
-  saveButtons.forEach(btn => {
-    btn.classList.toggle('ob-save-dirty', !!obDirty);
-    if (!btn.classList.contains('ob-save-success')) {
-      const label = btn.querySelector('.save-label') || btn;
-      if (btn.id === 'btn-bottom-save-history') {
-        label.textContent = 'SAVE NOW';
-      } else {
-        label.textContent = 'SAVE';
-      }
+  const saveBtn = document.getElementById('btn-save-ob-history');
+  if (saveBtn) {
+    saveBtn.classList.toggle('ob-save-dirty', !!obDirty);
+    if (!saveBtn.classList.contains('ob-save-success')) {
+      const label = saveBtn.querySelector('.save-label') || saveBtn;
+      label.textContent = 'SAVE';
     }
-  });
+  }
   renderPresentCard();
 }
 
@@ -2455,28 +2423,18 @@ function saveObHistory() {
     window.dispatchEvent(new CustomEvent('his:obgyne-saved', { detail: { patientId: currentPatientId } }));
 
     obDirty = false;
-    const saveButtons = [
-      document.getElementById('btn-save-ob-history'),
-      document.getElementById('btn-banner-save-history'),
-      document.getElementById('btn-bottom-save-history')
-    ].filter(Boolean);
-    saveButtons.forEach(btn => {
-      btn.classList.remove('ob-save-dirty');
-      btn.classList.add('ob-save-success');
-      const label = btn.querySelector('.save-label') || btn;
+    const saveBtn = document.getElementById('btn-save-ob-history');
+    if (saveBtn) {
+      saveBtn.classList.remove('ob-save-dirty');
+      saveBtn.classList.add('ob-save-success');
+      const label = saveBtn.querySelector('.save-label') || saveBtn;
       label.textContent = 'SAVED \u2713';
-    });
-    setTimeout(() => {
-      saveButtons.forEach(btn => {
-        btn.classList.remove('ob-save-success');
-        const label = btn.querySelector('.save-label') || btn;
-        if (btn.id === 'btn-bottom-save-history') {
-          label.textContent = 'SAVE NOW';
-        } else {
-          label.textContent = 'SAVE';
-        }
-      });
-    }, 1500);
+      setTimeout(() => {
+        saveBtn.classList.remove('ob-save-success');
+        const l = saveBtn.querySelector('.save-label') || saveBtn;
+        l.textContent = 'SAVE';
+      }, 1500);
+    }
 
     renderObHistoryPanel();
     renderSummaryCards();
