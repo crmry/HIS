@@ -2515,7 +2515,7 @@
         <!-- TAB 7: GROWTH CHARTS -->
         <div class="tab-panel" id="tab-charts" role="tabpanel">
           <div class="section-card">
-            <div class="section-card-title"><i class="icon-picture"></i> Neonatal Clinical Growth Charts (Interactive Reference &amp; Vector Generation)</div>
+            <div class="section-card-title"><i class="icon-picture"></i> Neonatal Clinical Growth Charts</div>
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
               <div style="display:inline-flex; gap:6px; flex-wrap:wrap;">
                 <button type="button" class="btn-secondary active" id="btn-chart-who" onclick="switchGrowthChart('who')">WHO Growth Chart (0–5y)</button>
@@ -2552,19 +2552,17 @@
                     ✓ Live Patient Record
                   </span>
                   <span id="result-sex-pill" style="font-weight:700; font-size:11.5px; color:#be185d;">
-                    Female Baseline (Girl Chart)
+                    Female (Girl Chart)
                   </span>
                 </div>
-                <div style="font-size:11px; color:var(--slate-500);" id="result-timestamp">
-                  Live Clinical Calculation
-                </div>
+                <div style="font-size:11px; color:var(--slate-500);" id="result-timestamp"></div>
               </div>
               <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:8px; font-size:12px; color:var(--slate-800);">
                 <div><strong>Gestational Age:</strong> <span id="result-ga">39 wks (Full Term)</span></div>
                 <div><strong>Weight:</strong> <span id="result-wt">3.15 kg (3,150 g)</span> <span id="result-wt-pct" style="color:var(--slate-500); font-size:11px;">(~50th percentile)</span></div>
                 <div><strong>Length:</strong> <span id="result-len">49.5 cm</span> <span id="result-len-pct" style="color:var(--slate-500); font-size:11px;">(~55th percentile)</span></div>
                 <div><strong>Head Circ:</strong> <span id="result-hc">34.0 cm</span> <span id="result-hc-pct" style="color:var(--slate-500); font-size:11px;">(~50th percentile)</span></div>
-                <div><strong>WHO Z-Score:</strong> <span id="result-zscore" style="font-weight:700; color:#1b4d3e;">-0.12 SD (Median/Normal)</span></div>
+                <div><strong>WHO Z-Score:</strong> <span id="result-zscore" style="font-weight:700; color:#1b4d3e;">-0.12 SD</span></div>
               </div>
             </div>
 
@@ -2572,8 +2570,8 @@
             <div class="chart-card" id="panel-chart-who" style="text-align:left;">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--slate-200);">
                 <div>
-                  <h3 id="who-inpage-title" style="font-size:13px; font-weight:700; margin:0 0 4px 0; color:var(--slate-900);">WHO Child Growth Standards (0 to 5 Years — Native Data Vector Plot)</h3>
-                  <div id="who-inpage-subtitle" style="font-size:11px; color:var(--slate-500);">Interactive curve generation based on WHO 2006 reference percentiles (-3, -2, 0, 2, 3 SD) with live patient coordinates</div>
+                  <h3 id="who-inpage-title" style="font-size:14px; font-weight:700; margin:0 0 2px 0; color:var(--slate-900);">Weight-for-age GIRLS • Birth to 5 years (z-scores)</h3>
+                  <div id="who-inpage-subtitle" style="font-size:11px; color:var(--slate-500); display:none;"></div>
                 </div>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
                   <button type="button" class="btn-secondary active" id="btn-who-inpage-wfa" onclick="switchInPageWhoChartType('wfa')">Weight-for-Age (0–5y)</button>
@@ -2585,10 +2583,10 @@
 
               <!-- Measurement Readout Strip -->
               <div id="who-inpage-readout" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; background:#f1f5f9; border:1px solid var(--slate-200); border-radius:6px; padding:8px 12px; margin-bottom:12px; font-size:12px;">
-                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
                   <span><strong>Child:</strong> <span id="who-inpage-child-name">—</span></span>
-                  <span><strong>Sex Baseline:</strong> <span id="who-inpage-sex">—</span></span>
-                  <span><strong>Plotted Age:</strong> <span id="who-inpage-age">0 mo</span></span>
+                  <span><strong>Sex:</strong> <span id="who-inpage-sex">—</span></span>
+                  <span><strong>Age:</strong> <span id="who-inpage-age">0 mo</span></span>
                   <span><strong>Weight:</strong> <span id="who-inpage-wt">—</span></span>
                   <span><strong>Length:</strong> <span id="who-inpage-len">—</span></span>
                   <span><strong>BMI:</strong> <span id="who-inpage-bmi">—</span></span>
@@ -3560,7 +3558,7 @@ function renderInPageWhoChart() {
 
   var elSex = document.getElementById('who-inpage-sex');
   if (elSex) {
-    elSex.innerHTML = '<span style="color:' + (sex === 'male' ? '#0369a1' : '#be185d') + '; font-weight:700;">' + (sex === 'male' ? 'Male (Boy)' : 'Female (Girl)') + '</span>';
+    elSex.innerHTML = '<span style="color:' + (sex === 'male' ? '#0369a1' : '#be185d') + '; font-weight:700;">' + (sex === 'male' ? 'Male' : 'Female') + '</span>';
   }
 
   var elAge = document.getElementById('who-inpage-age');
@@ -3616,7 +3614,7 @@ function updateAllGrowthCharts() {
   }
   const sexPill = document.getElementById('result-sex-pill');
   if (sexPill) {
-    sexPill.textContent = (data.sex === 'male') ? 'Male Baseline (Boy Chart)' : 'Female Baseline (Girl Chart)';
+    sexPill.textContent = (data.sex === 'male') ? 'Male (Boy Chart)' : 'Female (Girl Chart)';
     sexPill.style.color = (data.sex === 'male') ? '#0369a1' : '#be185d';
   }
 
@@ -3630,7 +3628,7 @@ function updateAllGrowthCharts() {
   if (resHc) resHc.textContent = data.headCircCm.toFixed(1) + ' cm';
   const resZ = document.getElementById('result-zscore');
   if (resZ) {
-    resZ.textContent = (data.zScore >= 0 ? '+' : '') + data.zScore.toFixed(2) + ' SD (' + (Math.abs(data.zScore) <= 2 ? 'Median/Normal' : (data.zScore > 2 ? 'Overweight' : 'Underweight')) + ')';
+    resZ.textContent = (data.zScore >= 0 ? '+' : '') + data.zScore.toFixed(2) + ' SD';
     resZ.style.color = Math.abs(data.zScore) <= 2 ? '#1b4d3e' : '#dc2626';
   }
 
@@ -4069,7 +4067,7 @@ function renderWhoNativeSvg(chartType, sex, ageMonths, weightKg, lengthCm, rawBm
   var xMin = ref.xMin;
   var xMax = ref.xMax;
 
-  var gx = 65, gy = 55, gw = 720, gh = 430;
+  var gx = 65, gy = 68, gw = 705, gh = 425;
   var xRight = gx + gw;
   var yBottom = gy + gh;
 
@@ -4080,26 +4078,32 @@ function renderWhoNativeSvg(chartType, sex, ageMonths, weightKg, lengthCm, rawBm
     return yBottom - ((val - yMin) / (yMax - yMin)) * gh;
   }
 
-  var stdTitle = (chartType === 'bmifa') ? 'WHO Growth Reference (5 to 19 years)' : 'WHO Child Growth Standards';
   var genderStr = isMale ? 'BOYS' : 'GIRLS';
-  var chartTitle = '';
+  var mainTitle = '';
+  var subTitle = (chartType === 'bmifa') ? '5 to 19 years (z-scores)' : 'Birth to 5 years (z-scores)';
   if (chartType === 'wfa') {
-    chartTitle = 'Weight-for-age ' + genderStr + ' • Birth to 5 years (z-scores)';
+    mainTitle = 'Weight-for-age ' + genderStr;
   } else if (chartType === 'lhfa') {
-    chartTitle = 'Length/height-for-age ' + genderStr + ' • Birth to 5 years (z-scores)';
+    mainTitle = 'Length/height-for-age ' + genderStr;
   } else if (chartType === 'wflh') {
-    chartTitle = 'Weight-for-length/height ' + genderStr + ' • Birth to 5 years (z-scores)';
+    mainTitle = 'Weight-for-length/height ' + genderStr;
   } else if (chartType === 'bmifa') {
-    chartTitle = 'BMI-for-age ' + genderStr + ' • 5 to 19 years (z-scores)';
+    mainTitle = 'BMI-for-age ' + genderStr;
   }
+  var chartTitle = mainTitle + ' • ' + subTitle;
 
   var svg = [];
-  svg.push('<svg viewBox="0 0 850 540" xmlns="http://www.w3.org/2000/svg" class="who-native-svg" role="img" aria-label="' + escapeHtml(chartTitle) + '">');
-  svg.push('  <rect x="0" y="0" width="850" height="540" rx="6" fill="#ffffff" stroke="' + themeBorder + '" stroke-width="1.5"/>');
-  svg.push('  <path d="M 0 6 Q 0 0 6 0 L 844 0 Q 850 0 850 6 L 850 44 L 0 44 Z" fill="' + headerColor + '"/>');
-  svg.push('  <text x="16" y="27" fill="#ffffff" font-size="12.5" font-weight="700" font-family="system-ui, -apple-system, sans-serif" letter-spacing="0.3">' + escapeHtml(stdTitle) + '</text>');
-  svg.push('  <text x="834" y="27" text-anchor="end" fill="#ffffff" font-size="13" font-weight="800" font-family="system-ui, -apple-system, sans-serif">' + escapeHtml(chartTitle) + '</text>');
-  svg.push('  <rect x="' + gx + '" y="' + gy + '" width="' + gw + '" height="' + gh + '" fill="#fafbfc" stroke="#cbd5e1" stroke-width="1.2"/>');
+  svg.push('<svg viewBox="0 0 850 545" xmlns="http://www.w3.org/2000/svg" class="who-native-svg" role="img" aria-label="' + escapeHtml(chartTitle) + '">');
+  svg.push('  <rect x="0" y="0" width="850" height="545" rx="6" fill="#ffffff" stroke="' + themeBorder + '" stroke-width="1.5"/>');
+
+  // Authentic WHO Header
+  svg.push('  <text x="' + gx + '" y="32" fill="' + themeBorder + '" font-size="20" font-weight="800" font-family="system-ui, -apple-system, sans-serif" letter-spacing="0.2">' + escapeHtml(mainTitle) + '</text>');
+  svg.push('  <text x="' + gx + '" y="49" fill="#1e293b" font-size="12.5" font-weight="600" font-family="system-ui, -apple-system, sans-serif">' + escapeHtml(subTitle) + '</text>');
+  svg.push('  <line x1="' + gx + '" y1="56" x2="340" y2="56" stroke="' + themeBorder + '" stroke-width="1.2" opacity="0.6"/>');
+  svg.push('  <text x="' + (xRight + 55) + '" y="34" text-anchor="end" fill="#334155" font-size="12" font-weight="700" font-family="system-ui, -apple-system, sans-serif">World Health Organization</text>');
+
+  // Main Chart Frame
+  svg.push('  <rect x="' + gx + '" y="' + gy + '" width="' + gw + '" height="' + gh + '" fill="#fafbfc" stroke="' + themeBorder + '" stroke-width="1.8"/>');
 
   var yStep = (chartType === 'lhfa') ? 5 : 2;
   for (var yv = yMin; yv <= yMax; yv += yStep) {
@@ -4117,6 +4121,7 @@ function renderWhoNativeSvg(chartType, sex, ageMonths, weightKg, lengthCm, rawBm
       var sx = xToSvg(xv);
       svg.push('  <line x1="' + sx.toFixed(1) + '" y1="' + gy + '" x2="' + sx.toFixed(1) + '" y2="' + yBottom + '" stroke="#f1f5f9" stroke-width="0.8"/>');
     });
+    svg.push('  <text x="' + (gx - 8) + '" y="' + (yBottom + 16) + '" text-anchor="end" font-size="9.5" font-weight="700" fill="#64748b" font-family="system-ui, sans-serif">Months</text>');
   }
   if (ref.xTicksMajor && ref.xTicksMajor.length > 0) {
     ref.xTicksMajor.forEach(function(t) {
@@ -4126,7 +4131,8 @@ function renderWhoNativeSvg(chartType, sex, ageMonths, weightKg, lengthCm, rawBm
     });
   }
 
-  svg.push('  <text x="' + (gx + gw / 2) + '" y="' + (yBottom + 32) + '" text-anchor="middle" font-size="11" font-weight="700" fill="#1e293b" font-family="system-ui, sans-serif">' + escapeHtml(ref.xLabel) + '</text>');
+  svg.push('  <text x="' + (gx + gw / 2) + '" y="' + (yBottom + 33) + '" text-anchor="middle" font-size="11" font-weight="700" fill="#1e293b" font-family="system-ui, sans-serif">' + escapeHtml(ref.xLabel) + '</text>');
+  svg.push('  <text x="' + (xRight + 55) + '" y="' + (yBottom + 33) + '" text-anchor="end" font-size="10.5" font-weight="600" fill="#475569" font-family="system-ui, sans-serif">WHO Child Growth Standards</text>');
   svg.push('  <text x="20" y="' + (gy + gh / 2) + '" text-anchor="middle" font-size="11" font-weight="700" fill="#1e293b" font-family="system-ui, sans-serif" transform="rotate(-90 20 ' + (gy + gh / 2) + ')">' + escapeHtml(ref.yLabel) + '</text>');
 
   var sdMeta = [
@@ -4150,10 +4156,9 @@ function renderWhoNativeSvg(chartType, sex, ageMonths, weightKg, lengthCm, rawBm
     var m = sdMeta[s];
     svg.push('  <path d="' + pathD + '" fill="none" stroke="' + m.color + '" stroke-width="' + m.width + '" stroke-linecap="round" class="who-sd-curve who-sd-' + s + '"/>');
     var lastPt = pts[pts.length - 1];
-    var badgeX = Math.min(xRight + 18, lastPt[0] + 16);
-    var badgeY = lastPt[1];
-    svg.push('  <circle cx="' + badgeX.toFixed(1) + '" cy="' + badgeY.toFixed(1) + '" r="8" fill="' + m.color + '"/>');
-    svg.push('  <text x="' + badgeX.toFixed(1) + '" y="' + (badgeY + 3.5).toFixed(1) + '" text-anchor="middle" fill="#ffffff" font-size="9" font-weight="800" font-family="system-ui, sans-serif">' + m.label + '</text>');
+    var labelX = xRight + 22;
+    var labelY = lastPt[1] + 4.5;
+    svg.push('  <text x="' + labelX + '" y="' + labelY.toFixed(1) + '" text-anchor="start" fill="' + m.color + '" font-size="12.5" font-weight="800" font-family="system-ui, -apple-system, sans-serif">' + m.label + '</text>');
   }
 
   var hasPoint = false;
