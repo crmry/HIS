@@ -4060,7 +4060,7 @@ function renderWhoNativeSvg(chartType, sex, ageMonths, weightKg, lengthCm, rawBm
   var xMin = ref.xMin;
   var xMax = ref.xMax;
 
-  var gx = 65, gy = 68, gw = 705, gh = 425;
+  var gx = 65, gy = 24, gw = 705, gh = 430;
   var xRight = gx + gw;
   var yBottom = gy + gh;
 
@@ -4086,14 +4086,8 @@ function renderWhoNativeSvg(chartType, sex, ageMonths, weightKg, lengthCm, rawBm
   var chartTitle = mainTitle + ' • ' + subTitle;
 
   var svg = [];
-  svg.push('<svg viewBox="0 0 850 545" xmlns="http://www.w3.org/2000/svg" class="who-native-svg" role="img" aria-label="' + escapeHtml(chartTitle) + '">');
-  svg.push('  <rect x="0" y="0" width="850" height="545" rx="6" fill="#ffffff" stroke="' + themeBorder + '" stroke-width="1.5"/>');
-
-  // Authentic WHO Header
-  svg.push('  <text x="' + gx + '" y="32" fill="' + themeBorder + '" font-size="20" font-weight="800" font-family="system-ui, -apple-system, sans-serif" letter-spacing="0.2">' + escapeHtml(mainTitle) + '</text>');
-  svg.push('  <text x="' + gx + '" y="49" fill="#1e293b" font-size="12.5" font-weight="600" font-family="system-ui, -apple-system, sans-serif">' + escapeHtml(subTitle) + '</text>');
-  svg.push('  <line x1="' + gx + '" y1="56" x2="340" y2="56" stroke="' + themeBorder + '" stroke-width="1.2" opacity="0.6"/>');
-  svg.push('  <text x="' + (xRight + 55) + '" y="34" text-anchor="end" fill="#334155" font-size="12" font-weight="700" font-family="system-ui, -apple-system, sans-serif">World Health Organization</text>');
+  svg.push('<svg viewBox="0 0 850 495" xmlns="http://www.w3.org/2000/svg" class="who-native-svg" role="img" aria-label="' + escapeHtml(chartTitle) + '">');
+  svg.push('  <rect x="0" y="0" width="850" height="495" rx="6" fill="#ffffff" stroke="' + themeBorder + '" stroke-width="1.5"/>');
 
   // Main Chart Frame
   svg.push('  <rect x="' + gx + '" y="' + gy + '" width="' + gw + '" height="' + gh + '" fill="#fafbfc" stroke="' + themeBorder + '" stroke-width="1.8"/>');
