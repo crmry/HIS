@@ -828,7 +828,7 @@ async def scan_single_target(browser_ws, file_url):
                         setv('preg-type', 'multiple');
                         setv('preg-multitype', 'Twins');
                         setv('preg-year', '2022'); setv('preg-month', '3');
-                        setv('preg-ga-weeks', '38'); setv('preg-ga-days', '0');
+                        setv('preg-ga-weeks', '38'); setv('preg-ga-days', '');
                         document.querySelectorAll('#preg-babies .baby-status').forEach(s => { s.value = 'living'; });
                         const countBefore = patientState.pregnancies.length;
                         document.getElementById('form-pregnancy').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));

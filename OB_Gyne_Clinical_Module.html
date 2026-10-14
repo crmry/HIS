@@ -398,13 +398,101 @@
   .ob-baby-table th { text-align:left; font-size:10px; font-weight:500; text-transform:uppercase; color:#888888; letter-spacing:0.3px; padding:6px 12px 6px 0; border-bottom:1px solid #f1f5f9; }
   .ob-baby-table td { padding:8px 12px 8px 0; font-weight:600; color:#111827; border-bottom:1px solid #f8fafc; }
   
-  .ob-baby { border-top:1px solid #f1f5f9; padding-top:12px; margin-top:12px; }
-  .ob-baby-title { font-size:11px; font-weight:700; text-transform:uppercase; color:#475569; margin-bottom:8px; }
+  .ob-baby {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 3px solid #1f7d45;
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+  .ob-baby-title { font-size:11px; font-weight:700; text-transform:uppercase; color:#1e293b; letter-spacing:0.4px; margin-bottom:8px; }
+  .ob-field-group { margin-bottom: 10px; }
+  .ob-field-group:last-child { margin-bottom: 0; }
+  .ob-field-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.3px; margin-bottom: 4px; display: block; }
+  .ob-pill-group {
+    display: inline-flex;
+    background: #e2e8f0;
+    padding: 2px;
+    border-radius: 5px;
+    gap: 2px;
+    border: 1px solid #cbd5e1;
+  }
+  .ob-pill-btn {
+    border: none;
+    background: transparent;
+    color: #475569;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    padding: 4px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+  .ob-pill-btn:hover {
+    color: #0f172a;
+    background: rgba(255, 255, 255, 0.6);
+  }
+  .ob-pill-btn.active {
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+  .ob-pill-group[data-target="baby-sex"] .ob-pill-btn.active {
+    background: #1e3a8a;
+    color: #ffffff;
+  }
+  .ob-pill-group[data-target="baby-sex"] .ob-pill-btn[onclick*="'Female'"].active {
+    background: #9d174d;
+    color: #ffffff;
+  }
+  .ob-pill-group[data-target="baby-status"] .ob-pill-btn.active {
+    background: #15803d;
+    color: #ffffff;
+  }
+  .ob-pill-group[data-target="baby-status"] .ob-pill-btn[onclick*="'deceased'"].active {
+    background: #475569;
+    color: #ffffff;
+  }
+  .ob-field-input {
+    width: 100%;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 12.5px;
+    color: #0f172a;
+    background: #ffffff;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .ob-field-input:focus {
+    outline: none;
+    border-color: #1f7d45;
+    box-shadow: 0 0 0 2px rgba(31, 125, 69, 0.15);
+  }
+  .ob-inline-input-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ob-inline-input-wrap .baby-weight {
+    width: 100px;
+  }
+  .ob-inline-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+  }
   .ob-help { font-size:11px; color:#64748b; margin-top:4px; }
   .ob-sec-subhead { font-size:13px; font-weight:600; color:#111827; margin:8px 0 10px; }
   .ob-preview { font-size:12px; color:#334155; margin:2px 0 8px; }
   .ob-issue { color:#b91c1c; font-size:11.5px; margin-top:2px; }
-  .ob-form-error { margin-top:10px; padding:8px 12px; background:#fef2f2; border:1px solid #fecaca; border-radius:4px; color:#b91c1c; font-size:12px; font-weight:600; }
+  .ob-form-error { margin-top:10px; padding:8px 12px; background:#fef2f2; border:1px solid #fecaca; border-left:3px solid #dc2626; border-radius:4px; color:#b91c1c; font-size:12px; font-weight:600; }
   
   /* Obstetric History split layout: left editor, right history */
   .ob-split { display:grid; grid-template-columns:380px minmax(0, 1fr); gap:0; align-items:stretch; min-height:100vh; width:100%; }
@@ -618,9 +706,9 @@
                     <div class="form-field">
                       <label for="preg-ga-weeks">AGE OF GESTATION *</label>
                       <div class="ob-inline-input-group">
-                        <input type="number" id="preg-ga-weeks" class="form-control ob-input-sm" min="0" max="45" step="1" placeholder="0">
+                        <input type="number" id="preg-ga-weeks" class="form-control ob-input-sm" min="0" max="45" step="1" placeholder="weeks">
                         <span class="ob-inline-unit">weeks</span>
-                        <input type="number" id="preg-ga-days" class="form-control ob-input-sm" min="0" max="6" step="1" placeholder="0">
+                        <input type="number" id="preg-ga-days" class="form-control ob-input-sm" min="0" max="6" step="1" placeholder="days">
                         <span class="ob-inline-unit">days</span>
                       </div>
                     </div>
@@ -1984,8 +2072,9 @@ function handlePregnancySubmit(event) {
   if (requireMonth && !monthStr) return obShowFormError('preg-form-error', 'Select the month of delivery.');
   if (monthStr && +year === nowY && +monthStr > new Date().getMonth() + 1) return obShowFormError('preg-form-error', 'Delivery date cannot be in the future.');
   if (wStr === '' || isNaN(+wStr) || +wStr < 0 || Math.floor(+wStr) !== +wStr) return obShowFormError('preg-form-error', 'Enter the age of gestation in whole weeks.');
-  if (dStr === '' || isNaN(+dStr) || +dStr < 0 || +dStr > 6 || Math.floor(+dStr) !== +dStr) return obShowFormError('preg-form-error', 'Age of gestation days must be 0 to 6.');
-  const gaWeeks = +wStr, gaDays = +dStr, gaTotal = gaWeeks * 7 + gaDays;
+  const gaDays = dStr === '' ? 0 : +dStr;
+  if (isNaN(gaDays) || gaDays < 0 || gaDays > 6 || Math.floor(gaDays) !== gaDays) return obShowFormError('preg-form-error', 'Age of gestation days must be 0 to 6.');
+  const gaWeeks = +wStr, gaTotal = gaWeeks * 7 + gaDays;
   if (gaWeeks > 45) { if (!confirm('The age of gestation entered exceeds 45 weeks. Confirm this value is correct?')) return; }
 
   let mode = old ? old.mode : 'N/A';
