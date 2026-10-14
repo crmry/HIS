@@ -848,13 +848,20 @@ async def scan_single_target(browser_ws, file_url):
                         if (document.querySelectorAll('#preg-cs-indication optgroup').length < 2) return 'CS catalog groups missing';
                         window.closePregnancyModal();
 
-                        // Present pregnancy ADD with fixed dating
+                        // Present pregnancy ADD with fixed dating and flexible ultrasound inputs
                         window.openPresentModal();
                         setv('pp-lmp-start', '2026-06-01'); setv('pp-us-date', '2026-08-14');
+                        // Test ultrasound auto-fill from LMP
+                        if (typeof window.autofillUltrasoundGaFromLmp === 'function') {
+                            window.autofillUltrasoundGaFromLmp();
+                            if (!document.getElementById('pp-us-weeks').value) return 'Ultrasound auto-fill from LMP failed to set weeks';
+                        }
+                        // Set specific ultrasound dating
                         setv('pp-us-weeks', '11'); setv('pp-us-days', '1');
                         document.getElementById('form-present-preg').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
                         const ppc = document.getElementById('card-present-preg');
                         if (!ppc || ppc.textContent.indexOf('Mar 8, 2027') === -1 || ppc.textContent.indexOf('Mar 4, 2027') === -1) return 'Present pregnancy card EDDs incorrect';
+                        if (ppc.textContent.indexOf('ACOG') === -1) return 'ACOG dating recommendation missing from present pregnancy card';
                         if (window.computeGTPAL().G !== baseG + 2) return 'Present pregnancy did not count toward G';
 
                         // SAVE persists; no duplicate on repeated SAVE

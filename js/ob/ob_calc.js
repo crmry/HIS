@@ -74,23 +74,151 @@
     var issues = [];
     var scan = dayNumber(scanIso);
     if (scan === null) return { valid: false, issues: [scanIso ? 'Ultrasound date is not a valid date' : 'Ultrasound date is required'], edd: null, ga: null };
+    
     var w = gaWeeks, d = gaDays;
-    if (w === '' || w === null || w === undefined || isNaN(+w) || +w < 0 || Math.floor(+w) !== +w) issues.push('Ultrasound GA weeks must be a whole number of 0 or more');
-    if (d === '' || d === null || d === undefined || isNaN(+d) || +d < 0 || +d > 6 || Math.floor(+d) !== +d) issues.push('Ultrasound GA days must be 0 to 6');
+    // Default days to 0 if omitted/blank
+    if (d === '' || d === null || d === undefined) {
+      d = 0;
+    }
+    // If weeks is omitted, validate
+    if (w === '' || w === null || w === undefined) {
+      issues.push('Ultrasound GA weeks is required');
+    } else if (isNaN(+w) || +w < 0 || Math.floor(+w) !== +w) {
+      issues.push('Ultrasound GA weeks must be a whole number of 0 or more');
+    }
+    if (isNaN(+d) || +d < 0 || +d > 6 || Math.floor(+d) !== +d) {
+      issues.push('Ultrasound GA days must be 0 to 6');
+    }
     if (issues.length) return { valid: false, issues: issues, edd: null, ga: null };
+
     var scanGA = (+w) * 7 + (+d);
     var now = resolveAsOf(asOf);
     var elapsed = now - scan;
     var ga = null;
-    if (elapsed < 0) issues.push('Ultrasound date is after the as-of date');
-    else ga = splitGA(scanGA + elapsed);
-    return { valid: issues.length === 0, issues: issues, edd: isoFromDayNumber(scan + (FULL_DAYS - scanGA)), eddDay: scan + (FULL_DAYS - scanGA), ga: ga, scanGADays: scanGA };
+    if (elapsed < 0) {
+      // Future scan date: project GA today if scanGA was sufficient
+      var projected = scanGA + elapsed;
+      if (projected >= 0) ga = splitGA(projected);
+    } else {
+      ga = splitGA(scanGA + elapsed);
+    }
+    var eddDay = scan + (FULL_DAYS - scanGA);
+    var eddIso = isoFromDayNumber(eddDay);
+
+    return {
+      valid: true,
+      issues: issues,
+      edd: eddIso,
+      eddDay: eddDay,
+      ga: ga,
+      scanGADays: scanGA,
+      scanWeeks: +w,
+      scanDays: +d,
+      isFutureScan: elapsed < 0
+    };
+  }
+
+  /* Computes the gestational age that would be expected on a given scan date based on LMP */
+  function lmpGaAtScanDate(lmpStartIso, scanIso) {
+    var start = dayNumber(lmpStartIso);
+    var scan = dayNumber(scanIso);
+    if (start === null || scan === null) return null;
+    var days = scan - start;
+    if (days < 0) return null;
+    return splitGA(days);
   }
 
   /* Difference in days between ultrasound EDD and LMP EDD (informational only). */
   function eddDifferenceDays(lmpRes, usRes) {
     if (!lmpRes || !usRes || lmpRes.eddDay === undefined || usRes.eddDay === undefined) return null;
     return usRes.eddDay - lmpRes.eddDay;
+  }
+
+  /*
+   * ACOG Committee Opinion No. 700: Methods for Estimating the Due Date
+   * Compares LMP Naegele EDD with Ultrasound EDD based on gestational age at ultrasound.
+   */
+  function acogDatingRecommendation(lmpRes, usRes) {
+    if (!lmpRes && !usRes) return null;
+    var lmpValid = !!(lmpRes && lmpRes.valid && lmpRes.edd);
+    var usValid = !!(usRes && usRes.valid && usRes.edd);
+
+    if (lmpValid && !usValid) {
+      return {
+        hasBoth: false,
+        recommendedEdd: lmpRes.edd,
+        recommendedMethod: 'LMP',
+        title: 'Gestational Age & EDD Based on LMP',
+        category: 'LMP Dating (Naegele Rule)',
+        desc: 'Ultrasound dating not recorded. Clinical dating established using reliable LMP date.',
+        diffDays: null,
+        threshold: null
+      };
+    }
+    if (usValid && !lmpValid) {
+      return {
+        hasBoth: false,
+        recommendedEdd: usRes.edd,
+        recommendedMethod: 'Ultrasound',
+        title: 'Gestational Age & EDD Based on Ultrasound',
+        category: 'Ultrasound Biometry',
+        desc: 'LMP not recorded or uncertain. Clinical dating established using ultrasound biometry.',
+        diffDays: null,
+        threshold: null
+      };
+    }
+    if (!lmpValid || !usValid) return null;
+
+    var scanGA = usRes.scanGADays !== undefined ? usRes.scanGADays : ((usRes.scanWeeks || 0) * 7 + (usRes.scanDays || 0));
+    var diff = usRes.eddDay - lmpRes.eddDay;
+    var absDiff = Math.abs(diff);
+
+    var threshold = 7;
+    var category = '';
+
+    if (scanGA <= 62) { // <= 8 6/7 weeks
+      threshold = 5;
+      category = 'First-trimester ultrasound (≤ 8 6/7 weeks)';
+    } else if (scanGA <= 97) { // 9 0/7 to 13 6/7 weeks
+      threshold = 7;
+      category = 'First-trimester ultrasound (9 0/7 to 13 6/7 weeks)';
+    } else if (scanGA <= 111) { // 14 0/7 to 15 6/7 weeks
+      threshold = 7;
+      category = 'Second-trimester ultrasound (14 0/7 to 15 6/7 weeks)';
+    } else if (scanGA <= 153) { // 16 0/7 to 21 6/7 weeks
+      threshold = 10;
+      category = 'Second-trimester ultrasound (16 0/7 to 21 6/7 weeks)';
+    } else if (scanGA <= 195) { // 22 0/7 to 27 6/7 weeks
+      threshold = 14;
+      category = 'Second-trimester ultrasound (22 0/7 to 27 6/7 weeks)';
+    } else { // >= 28 0/7 weeks
+      threshold = 21;
+      category = 'Third-trimester ultrasound (≥ 28 0/7 weeks)';
+    }
+
+    var useUltrasound = absDiff > threshold;
+    var recommendedEdd = useUltrasound ? usRes.edd : lmpRes.edd;
+    var recommendedMethod = useUltrasound ? 'Ultrasound' : 'LMP';
+
+    var desc = '';
+    if (useUltrasound) {
+      desc = 'Ultrasound EDD differs from LMP EDD by ' + absDiff + ' day' + (absDiff === 1 ? '' : 's') + ' (threshold: >' + threshold + ' days). ACOG guidelines recommend establishing final EDD using ultrasound biometry.';
+    } else {
+      desc = 'Ultrasound EDD is within ' + threshold + ' days of LMP EDD (difference: ' + absDiff + ' day' + (absDiff === 1 ? '' : 's') + '). ACOG guidelines recommend retaining LMP EDD.';
+    }
+
+    return {
+      hasBoth: true,
+      recommendedEdd: recommendedEdd,
+      recommendedMethod: recommendedMethod,
+      title: category,
+      category: category,
+      desc: desc,
+      diffDays: diff,
+      absDiff: absDiff,
+      threshold: threshold,
+      useUltrasound: useUltrasound
+    };
   }
 
   /* ---------- Legacy normalization (read-time only; never rewrites stored data) ---------- */
@@ -204,6 +332,7 @@
     TERM_DAYS: TERM_DAYS, VIABLE_DAYS: VIABLE_DAYS, FULL_DAYS: FULL_DAYS,
     dayNumber: dayNumber, isoFromDayNumber: isoFromDayNumber, splitGA: splitGA, formatGA: formatGA,
     lmpDating: lmpDating, ultrasoundDating: ultrasoundDating, eddDifferenceDays: eddDifferenceDays,
+    lmpGaAtScanDate: lmpGaAtScanDate, acogDatingRecommendation: acogDatingRecommendation,
     normalizePregnancy: normalizePregnancy, calculateObstetricSummary: calculateObstetricSummary,
     chronologicalOrder: chronologicalOrder
   };

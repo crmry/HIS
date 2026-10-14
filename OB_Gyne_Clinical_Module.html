@@ -781,14 +781,18 @@
                     <div class="ob-sec-subhead" style="margin-top:16px;">Based on Ultrasound</div>
                     <div class="form-field">
                       <label for="pp-us-date">ULTRASOUND DATE</label>
-                      <input type="date" id="pp-us-date" class="form-control" oninput="schedulePresentPreview()">
+                      <input type="date" id="pp-us-date" class="form-control" oninput="schedulePresentPreview()" onchange="schedulePresentPreview()">
+                      <div id="pp-us-lmp-hint" style="display:none; font-size:11px; color:#15803d; margin-top:4px;">
+                        Expected GA at scan date: <strong id="pp-us-lmp-ga-text"></strong>
+                        <button type="button" class="btn-link" style="margin-left:6px; font-size:11px; text-decoration:underline; cursor:pointer; background:none; border:none; color:#15803d; font-weight:700; padding:0;" onclick="autofillUltrasoundGaFromLmp()">Auto-fill</button>
+                      </div>
                     </div>
                     <div class="form-field">
                       <label>AGE OF GESTATION (ULTRASOUND)</label>
                       <div class="ob-inline-input-group">
-                        <input type="number" id="pp-us-weeks" class="form-control ob-input-sm" min="0" step="1" placeholder="0" oninput="schedulePresentPreview()">
+                        <input type="number" id="pp-us-weeks" class="form-control ob-input-sm" min="0" step="1" placeholder="weeks" oninput="schedulePresentPreview()" onchange="schedulePresentPreview()">
                         <span class="ob-inline-unit">weeks</span>
-                        <input type="number" id="pp-us-days" class="form-control ob-input-sm" min="0" max="6" step="1" placeholder="0" oninput="schedulePresentPreview()">
+                        <input type="number" id="pp-us-days" class="form-control ob-input-sm" min="0" max="6" step="1" placeholder="days" oninput="schedulePresentPreview()" onchange="schedulePresentPreview()">
                         <span class="ob-inline-unit">days</span>
                       </div>
                     </div>
@@ -1232,17 +1236,28 @@ function renderPresentCard() {
   html += '<div class="ob-sec-title">BASED ON ULTRASOUND</div>';
   if (pp.usDate && us.edd) {
     html += obRow('ULTRASOUND DATE', obFmtLong(pp.usDate));
-    html += obRow('AGE OF GESTATION (ULTRASOUND)', `${pp.usWeeks} weeks ${pp.usDays} days`);
+    html += obRow('AGE OF GESTATION (ULTRASOUND)', `${pp.usWeeks || 0} weeks ${pp.usDays || 0} days`);
     html += obRow('EXPECTED DELIVERY DATE', obFmtLong(us.edd));
     html += obRow('AGE OF GESTATION', us.ga ? obCalc.formatGA(us.ga) : '—');
   } else html += '<div class="ob-empty">Not recorded</div>';
-  const diff = obCalc.eddDifferenceDays(lmp, us);
-  if (lmp.edd || us.edd) {
-    const recommendedEdd = obFmtLong(lmp.edd || us.edd);
-    html += `<div class="ob-acog-box">
-      <div class="ob-acog-title">First-trimester ultrasound (Up to 13 6/7 weeks of gestation)</div>
-      <div class="ob-acog-desc">ACOG guidelines recommend using EDD based on LMP date</div>
-      <div class="ob-acog-edd">Expected Delivery Date: ${recommendedEdd}</div>
+  
+  const acog = obCalc.acogDatingRecommendation(lmp, us);
+  if (acog) {
+    const isUltrasoundRecom = acog.recommendedMethod === 'Ultrasound';
+    const boxStyle = acog.hasBoth
+      ? (isUltrasoundRecom ? 'background:#eff6ff; border:1px solid #bfdbfe;' : 'background:#f0fdf4; border:1px solid #bbf7d0;')
+      : 'background:#f8fafc; border:1px solid #e2e8f0;';
+    const titleColor = acog.hasBoth
+      ? (isUltrasoundRecom ? '#1e40af;' : '#166534;')
+      : '#334155;';
+
+    html += `<div class="ob-acog-box" style="${boxStyle}">
+      <div class="ob-acog-title" style="color:${titleColor}; font-weight:700;">${escapeHtml(acog.title)}</div>
+      <div class="ob-acog-desc" style="color:#475569; margin:4px 0 6px;">${escapeHtml(acog.desc)}</div>
+      <div class="ob-acog-edd" style="color:#0f172a; font-size:12.5px; font-weight:700;">
+        Clinical EDD: <strong>${escapeHtml(obFmtLong(acog.recommendedEdd))}</strong> 
+        <span style="font-size:11px; font-weight:600; color:#64748b; margin-left:6px;">(${escapeHtml(acog.recommendedMethod)}-based)</span>
+      </div>
     </div>`;
   }
   html += '</article>';
@@ -1271,21 +1286,29 @@ function renderSummaryCards() {
 
   if (isPregnant) {
     const ppLmp = pp.lmpStart || pp.lmp || '';
-    if (ppLmp) {
-      const calc = computeEDD(ppLmp, pp.lmpEnd);
-      if (lmpEl) lmpEl.textContent = obFmtDateMmDdYyyy(ppLmp);
-      if (pmpSub) pmpSub.textContent = pp.lmpEnd ? `Menses End: ${obFmtLong(pp.lmpEnd)}` : 'Active Present Pregnancy';
-      if (eddEl) eddEl.textContent = calc.eddDisplay;
-      if (eddSub) eddSub.textContent = `AOG: ${calc.egaStr} (Naegele)`;
-    } else if (pp.usDate) {
-      const usCalc = obCalc.ultrasoundDating(pp.usDate, pp.usWeeks, pp.usDays);
-      if (lmpEl) lmpEl.textContent = 'US: ' + obFmtLong(pp.usDate);
-      if (pmpSub) pmpSub.textContent = 'Ultrasound-based dating';
-      if (eddEl) eddEl.textContent = usCalc.edd ? obFmtLong(usCalc.edd) : '—';
-      if (eddSub) eddSub.textContent = `AOG: ${usCalc.ga ? obCalc.formatGA(usCalc.ga) : '—'} (Ultrasound)`;
+    const lmpCalc = ppLmp ? obCalc.lmpDating(ppLmp, pp.lmpEnd) : null;
+    const usCalc = pp.usDate ? obCalc.ultrasoundDating(pp.usDate, pp.usWeeks, pp.usDays) : null;
+    const acog = obCalc.acogDatingRecommendation(lmpCalc, usCalc);
+
+    if (lmpEl) {
+      if (ppLmp) lmpEl.textContent = obFmtDateMmDdYyyy(ppLmp);
+      else if (pp.usDate) lmpEl.textContent = 'US: ' + obFmtLong(pp.usDate);
+      else lmpEl.textContent = 'Present Pregnancy';
+    }
+    if (pmpSub) {
+      if (pp.lmpEnd) pmpSub.textContent = `Menses End: ${obFmtLong(pp.lmpEnd)}`;
+      else if (pp.usDate && ppLmp) pmpSub.textContent = `US Scan: ${pp.usWeeks || 0}w ${pp.usDays || 0}d`;
+      else if (pp.usDate) pmpSub.textContent = 'Ultrasound-based dating';
+      else pmpSub.textContent = 'Active Present Pregnancy';
+    }
+
+    if (acog && acog.recommendedEdd) {
+      if (eddEl) eddEl.textContent = obFmtDateMmDdYyyy(acog.recommendedEdd);
+      const activeGa = (acog.recommendedMethod === 'Ultrasound' && usCalc && usCalc.ga)
+        ? usCalc.ga
+        : (lmpCalc && lmpCalc.ga ? lmpCalc.ga : (usCalc && usCalc.ga ? usCalc.ga : null));
+      if (eddSub) eddSub.textContent = `AOG: ${activeGa ? obCalc.formatGA(activeGa) : '—'} (${acog.recommendedMethod})`;
     } else {
-      if (lmpEl) lmpEl.textContent = 'Present Pregnancy';
-      if (pmpSub) pmpSub.textContent = 'Active Pregnancy';
       if (eddEl) eddEl.textContent = '—';
       if (eddSub) eddSub.textContent = 'Dating pending';
     }
@@ -2145,6 +2168,23 @@ function updatePresentPreview() {
   const usEddDisp = obEl('pp-us-edd-display');
   const usGaDisp = obEl('pp-us-ga-display');
 
+  // Hint for LMP-derived GA on ultrasound date
+  const hintEl = obEl('pp-us-lmp-hint');
+  const hintText = obEl('pp-us-lmp-ga-text');
+  if (hintEl && hintText) {
+    if (ls && ud) {
+      const expGa = obCalc.lmpGaAtScanDate(ls, ud);
+      if (expGa) {
+        hintText.textContent = `${expGa.weeks} weeks ${expGa.days} days`;
+        hintEl.style.display = 'block';
+      } else {
+        hintEl.style.display = 'none';
+      }
+    } else {
+      hintEl.style.display = 'none';
+    }
+  }
+
   let lmp = null, us = null;
   if (ls) {
     lmp = obCalc.lmpDating(ls, le);
@@ -2152,10 +2192,11 @@ function updatePresentPreview() {
     if (lp) {
       lp.innerHTML = lmp.edd ? `Expected Delivery Date: <strong>${escapeHtml(obFmtLong(lmp.edd))}</strong> &nbsp; Age of Gestation: <strong>${escapeHtml(lmp.ga ? obCalc.formatGA(lmp.ga) : '—')}</strong>` : '';
       if (lmp.issues.length) lp.innerHTML += `<div class="ob-issue">${escapeHtml(lmp.issues.join('; '))}</div>`;
+      lp.style.display = lp.innerHTML ? 'block' : 'none';
     }
   } else {
     if (lmpGaDisp) lmpGaDisp.textContent = '—';
-    if (lp) lp.innerHTML = '';
+    if (lp) { lp.innerHTML = ''; lp.style.display = 'none'; }
   }
 
   if (ud || uw !== '' || ux !== '') {
@@ -2164,17 +2205,37 @@ function updatePresentPreview() {
     if (usGaDisp) usGaDisp.textContent = us.ga ? obCalc.formatGA(us.ga) : '—';
     if (up) {
       up.innerHTML = us.edd ? `Expected Delivery Date: <strong>${escapeHtml(obFmtLong(us.edd))}</strong> &nbsp; Age of Gestation: <strong>${escapeHtml(us.ga ? obCalc.formatGA(us.ga) : '—')}</strong>` : '';
-      if (us.issues.length) up.innerHTML += `<div class="ob-issue">${escapeHtml(us.issues.join('; '))}</div>`;
+      if (us.issues && us.issues.length) up.innerHTML += `<div class="ob-issue" style="color:#dc2626; margin-top:4px;">${escapeHtml(us.issues.join('; '))}</div>`;
+      up.style.display = up.innerHTML ? 'block' : 'none';
     }
   } else {
     if (usEddDisp) usEddDisp.textContent = '—';
     if (usGaDisp) usGaDisp.textContent = '—';
-    if (up) up.innerHTML = '';
+    if (up) { up.innerHTML = ''; up.style.display = 'none'; }
   }
 
-  const diff = obCalc.eddDifferenceDays(lmp, us);
-  if (dn) dn.textContent = diff === null ? '' : `Ultrasound EDD differs from LMP EDD by ${Math.abs(diff)} day${Math.abs(diff) === 1 ? '' : 's'}. The final EDD is determined by the attending physician.`;
+  const acog = obCalc.acogDatingRecommendation(lmp, us);
+  if (dn) {
+    if (acog && acog.hasBoth) {
+      dn.innerHTML = `<strong>ACOG Recommendation:</strong> ${escapeHtml(acog.desc)} Estimated EDD: <strong>${escapeHtml(obFmtLong(acog.recommendedEdd))}</strong> (${escapeHtml(acog.recommendedMethod)}-based).`;
+    } else {
+      dn.innerHTML = '';
+    }
+  }
 }
+
+function autofillUltrasoundGaFromLmp() {
+  const ls = obEl('pp-lmp-start').value;
+  const ud = obEl('pp-us-date').value;
+  if (!ls || !ud) return;
+  const expGa = obCalc.lmpGaAtScanDate(ls, ud);
+  if (expGa) {
+    obEl('pp-us-weeks').value = expGa.weeks;
+    obEl('pp-us-days').value = expGa.days;
+    updatePresentPreview();
+  }
+}
+window.autofillUltrasoundGaFromLmp = autofillUltrasoundGaFromLmp;
 
 function handlePresentSubmit(event) {
   event.preventDefault();
@@ -2196,8 +2257,8 @@ function handlePresentSubmit(event) {
     lmp: ls || '',
     lmpEnd: le || '',
     usDate: hasUs ? ud : '',
-    usWeeks: hasUs ? +uw : null,
-    usDays: hasUs ? +ux : null
+    usWeeks: hasUs && uw !== '' ? +uw : (hasUs && ux !== '' ? 0 : null),
+    usDays: hasUs && ux !== '' ? +ux : (hasUs && uw !== '' ? 0 : null)
   };
   closePresentModal();
   markObDirty();
