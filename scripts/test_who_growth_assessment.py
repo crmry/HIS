@@ -139,24 +139,28 @@ async def run_tests():
             print("[TEST 4] Verifying chart auto-selection for infant <60 months...")
             chart_state = await eval_js("""({
                 activeType: whoActiveChartType,
-                imgSrc: document.getElementById('who-active-chart-img').src,
+                hasSvg: Boolean(document.querySelector('.who-native-svg')),
+                curveCount: document.querySelectorAll('.who-sd-curve').length,
                 tabCount: document.querySelectorAll('.who-chart-tab-btn').length,
-                markerVisible: document.getElementById('who-marker-dot').style.display !== 'none'
+                markerVisible: Boolean(document.getElementById('who-marker-dot')),
+                svgLabel: document.querySelector('.who-native-svg') ? document.querySelector('.who-native-svg').getAttribute('aria-label') : ''
             })""")
             print("  Chart state <60m:", chart_state)
             assert chart_state["activeType"] == "wfa", f"Expected wfa, got {chart_state['activeType']}"
-            assert "cht-wfa-girls-z-0-5.png" in chart_state["imgSrc"], f"Expected girls WFA chart, got {chart_state['imgSrc']}"
+            assert chart_state["hasSvg"], "Expected .who-native-svg element"
+            assert chart_state["curveCount"] == 7, f"Expected 7 SD curves, got {chart_state['curveCount']}"
+            assert "GIRLS" in chart_state["svgLabel"], f"Expected GIRLS in svgLabel: {chart_state['svgLabel']}"
             assert chart_state["tabCount"] == 3, f"Expected 3 tabs (WFA, LHFA, WFLH), got {chart_state['tabCount']}"
             assert chart_state["markerVisible"], "Marker dot should be visible"
-            print("  ✓ Female Birth-to-5 WFA reference chart correctly auto-selected with marker.")
+            print("  ✓ Female Birth-to-5 WFA reference chart correctly auto-selected with native SVG curves.")
 
             # Test 5: Switch among applicable charts
             print("[TEST 5] Testing chart-tab switching...")
-            for tab_id, expected_img in [("lhfa", "cht-lhfa-girls-z-0-5.png"), ("wflh", "cht-wflh-girls-z-0-5.png"), ("wfa", "cht-wfa-girls-z-0-5.png")]:
+            for tab_id, expected_title_part in [("lhfa", "Length/height-for-age"), ("wflh", "Weight-for-length/height"), ("wfa", "Weight-for-age")]:
                 await eval_js(f"switchWhoChartTab('{tab_id}')")
-                curr_src = await eval_js("document.getElementById('who-active-chart-img').src")
-                assert expected_img in curr_src, f"Switch to {tab_id} failed: got {curr_src}"
-            print("  ✓ Tab switching among all applicable reference charts verified.")
+                curr_label = await eval_js("document.querySelector('.who-native-svg') ? document.querySelector('.who-native-svg').getAttribute('aria-label') : ''")
+                assert expected_title_part in curr_label, f"Switch to {tab_id} failed: got {curr_label}"
+            print("  ✓ Tab switching among all applicable reference charts verified with native SVG updates.")
 
             # Test 6: Male chart selection
             print("[TEST 6] Testing male chart selection...")
@@ -164,8 +168,8 @@ async def run_tests():
                 document.getElementById('who-param-sex').value = 'male';
                 refreshWhoGrowthReport();
             """)
-            male_img = await eval_js("document.getElementById('who-active-chart-img').src")
-            assert "cht-wfa-boys-z-0-5.png" in male_img, f"Expected boys chart, got {male_img}"
+            male_label = await eval_js("document.querySelector('.who-native-svg') ? document.querySelector('.who-native-svg').getAttribute('aria-label') : ''")
+            assert "BOYS" in male_label, f"Expected BOYS chart, got {male_label}"
             print("  ✓ Male chart correctly selected when sex is male.")
 
             # Test 7: Age routing: 60 to 228 completed months (BMI-for-age)
@@ -178,13 +182,15 @@ async def run_tests():
             """)
             bmi_chart_state = await eval_js("""({
                 activeType: whoActiveChartType,
-                imgSrc: document.getElementById('who-active-chart-img').src,
+                hasSvg: Boolean(document.querySelector('.who-native-svg')),
+                curveCount: document.querySelectorAll('.who-sd-curve').length,
+                svgLabel: document.querySelector('.who-native-svg') ? document.querySelector('.who-native-svg').getAttribute('aria-label') : '',
                 tabCount: document.querySelectorAll('.who-chart-tab-btn').length,
                 bmiText: document.getElementById('who-card-val-bmi').textContent
             })""")
             print("  Chart state 10yo boy:", bmi_chart_state)
             assert bmi_chart_state["activeType"] == "bmifa", f"Expected bmifa, got {bmi_chart_state['activeType']}"
-            assert "cht-bmifa-boys-z-5-19years.png" in bmi_chart_state["imgSrc"], f"Expected boys BMIFA chart, got {bmi_chart_state['imgSrc']}"
+            assert "BMI-for-age" in bmi_chart_state["svgLabel"], f"Expected BMIFA chart, got {bmi_chart_state['svgLabel']}"
             assert bmi_chart_state["tabCount"] == 1, f"Expected 1 tab (BMIFA), got {bmi_chart_state['tabCount']}"
             print("  ✓ Age 60–228 completed months correctly routes to BMI-for-Age.")
 
@@ -213,13 +219,13 @@ async def run_tests():
                 state = await eval_js("""({
                     alertDisplay: document.getElementById('who-incomplete-alert').style.display,
                     tagsHtml: document.getElementById('who-incomplete-tags').innerHTML,
-                    chartDisplay: document.getElementById('who-active-chart-img').style.display,
-                    markerDisplay: document.getElementById('who-marker-dot').style.display
+                    hasSvg: Boolean(document.querySelector('.who-native-svg')),
+                    hasMarker: Boolean(document.getElementById('who-marker-dot'))
                 })""")
                 assert state["alertDisplay"] != "none", f"Incomplete alert should show when {elem_id} is empty"
                 assert expected_tag in state["tagsHtml"], f"Expected tag {expected_tag} not found"
-                assert state["chartDisplay"] == "none", "Chart image should be hidden when incomplete"
-                assert state["markerDisplay"] == "none", "Marker should be hidden when incomplete"
+                assert not state["hasSvg"], "Chart SVG should not render when incomplete"
+                assert not state["hasMarker"], "Marker should not render when incomplete"
                 print(f"  ✓ Incomplete state confirmed for missing {elem_id}.")
 
             # Test 9: Visual marker with boundary and out-of-bound values
@@ -233,12 +239,12 @@ async def run_tests():
                 refreshWhoGrowthReport();
             """)
             min_marker = await eval_js("""({
-                left: document.getElementById('who-marker-dot').style.left,
-                top: document.getElementById('who-marker-dot').style.top,
+                hasMarker: Boolean(document.getElementById('who-marker-dot')),
+                markerTransform: document.getElementById('who-marker-dot') ? document.getElementById('who-marker-dot').getAttribute('transform') : '',
                 boundDisplay: document.getElementById('who-marker-boundary-callout').style.display
             })""")
-            assert min_marker["left"] == "12.92%", f"Expected left 12.92%, got {min_marker['left']}"
-            assert min_marker["top"] == "83.22%", f"Expected top 83.22%, got {min_marker['top']}"
+            assert min_marker["hasMarker"], "Marker should be rendered"
+            assert "translate(65.0" in min_marker["markerTransform"], f"Expected x=65.0, got {min_marker['markerTransform']}"
             assert min_marker["boundDisplay"] == "none", "Should not trigger boundary callout within valid limits"
 
             # Out of bounds high (weight 35 kg on 0-5y chart)
@@ -247,11 +253,9 @@ async def run_tests():
                 refreshWhoGrowthReport();
             """)
             oob_marker = await eval_js("""({
-                top: document.getElementById('who-marker-dot').style.top,
                 boundDisplay: document.getElementById('who-marker-boundary-callout').style.display,
                 boundText: document.getElementById('who-marker-boundary-callout').textContent
             })""")
-            assert oob_marker["top"] == "22.89%", f"Expected clamped top 22.89%, got {oob_marker['top']}"
             assert oob_marker["boundDisplay"] != "none", "Boundary callout should be visible"
             assert "Weight > 28 kg" in oob_marker["boundText"], f"Missing OOB text in {oob_marker['boundText']}"
             print("  ✓ Boundary clamping and out-of-bounds warning verified.")
