@@ -622,23 +622,9 @@
 </head>
 <body>
 
-<!-- Hospital Patient Demographic Bar & Navigation -->
-<header class="patient-banner" id="ob-patient-banner" aria-label="Patient Demographic Banner">
-  <div class="patient-info-left">
-    <a href="dashboard.html" id="btn-ob-back-dashboard-header" class="btn-card-action" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-weight:600; padding:4px 10px; margin-right:8px;" title="Back to Physician Dashboard">&#10094; Back to Dashboard</a>
-    <span class="patient-name" id="banner-patient-name">SANTOS, MARIA CLARA E.</span>
-    <span class="patient-meta-pill">HRN: <strong id="banner-hrn" style="margin-left:4px;">0000001925</strong></span>
-    <span class="patient-meta-pill">Age/Sex: <strong id="banner-age" style="margin-left:4px;">28 / Female</strong></span>
-    <span class="patient-meta-pill">Case: <strong id="banner-encounter-no" style="margin-left:4px;">OB-2026-1011-0018</strong></span>
-  </div>
-  <div class="patient-info-right">
-    <span id="val-pregnancy-count" style="display:none;">3</span>
-
-    <button type="button" id="btn-ob-header-save-draft" style="display:none;" onclick="saveGyneDraft()" aria-hidden="true"></button>
-  </div>
-</header>
-
 <main id="ob-workspace-card" class="workspace-card ob-app-root">
+  <span id="val-pregnancy-count" style="display:none;">3</span>
+  <button type="button" id="btn-ob-header-save-draft" style="display:none;" onclick="saveGyneDraft()" aria-hidden="true"></button>
   <div class="ob-split">
     <aside class="ob-left" id="ob-left-panel" aria-label="Pregnancy editor">
       <div class="ob-view open" id="ob-view-menu">
