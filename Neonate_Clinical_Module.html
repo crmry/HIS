@@ -2526,14 +2526,7 @@
                 <button type="button" class="btn-primary" id="btn-chart-who-report" onclick="openWhoGrowthReportModal()" style="background:var(--med-green); color:#fff; font-weight:600;"><i class="icon-file"></i> WHO Growth Report &amp; Print</button>
               </div>
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <div style="display:inline-flex; align-items:center; gap:4px; font-size:11.5px; background:#f1f5f9; padding:2px 8px; border-radius:4px; border:1px solid var(--slate-300);">
-                  <label for="chart-gender-toggle" style="font-weight:600; margin:0; color:var(--slate-700);">Chart Baseline:</label>
-                  <select id="chart-gender-toggle" class="form-select" style="font-size:11px; padding:1px 4px; height:24px; border-radius:3px;" onchange="handleChartGenderToggle(this.value)">
-                    <option value="auto">Auto (<span id="lbl-auto-gender">Girl</span>)</option>
-                    <option value="boy">Boy (Male Chart)</option>
-                    <option value="girl">Girl (Female Chart)</option>
-                  </select>
-                </div>
+                <input type="hidden" id="chart-gender-toggle" value="auto">
                 <button type="button" class="btn-secondary" id="btn-sync-growth-vitals" onclick="syncPatientGrowthData()" style="font-size:11.5px; padding:3px 8px;" title="Synchronize live patient vitals across all growth curves">
                   <i class="icon-refresh"></i> Sync Patient Data
                 </button>
@@ -2600,7 +2593,7 @@
               <!-- Stage container for native generated SVG -->
               <div class="who-chart-stage" style="position:relative; min-height:460px; display:flex; flex-direction:column; align-items:center;">
                 <div id="who-inpage-boundary-callout" class="who-boundary-callout" style="display:none;"></div>
-                <div id="who-inpage-svg-container" class="who-svg-chart-container" style="width:100%; max-width:860px;">
+                <div id="who-inpage-svg-container" class="who-svg-chart-container" style="width:100%; max-width:760px; margin:0 auto;">
                   <!-- Dynamic SVG is rendered here -->
                 </div>
               </div>
@@ -4180,11 +4173,27 @@ function renderWhoNativeSvg(chartType, sex, ageMonths, weightKg, lengthCm, rawBm
     var mx = xToSvg(clampedX);
     var my = yToSvg(clampedY);
 
-    svg.push('  <line id="who-marker-crosshair-h" x1="' + gx + '" y1="' + my.toFixed(1) + '" x2="' + xRight + '" y2="' + my.toFixed(1) + '" stroke="#dc2626" stroke-dasharray="3,3" stroke-width="1.3" opacity="0.85"/>');
-    svg.push('  <line id="who-marker-crosshair-v" x1="' + mx.toFixed(1) + '" y1="' + gy + '" x2="' + mx.toFixed(1) + '" y2="' + yBottom + '" stroke="#dc2626" stroke-dasharray="3,3" stroke-width="1.3" opacity="0.85"/>');
+    // On-chart patient plotted coordinate badge
+    var summaryVal = '';
+    if (chartType === 'wfa') summaryVal = pyVal.toFixed(2) + ' kg • ' + pxVal + ' mo';
+    else if (chartType === 'lhfa') summaryVal = pyVal.toFixed(1) + ' cm • ' + pxVal + ' mo';
+    else if (chartType === 'wflh') summaryVal = pyVal.toFixed(2) + ' kg, ' + pxVal.toFixed(1) + ' cm';
+    else if (chartType === 'bmifa') summaryVal = 'BMI ' + pyVal.toFixed(2) + ' • ' + pxVal + ' mo';
+    
+    var summaryText = 'Patient Plotted: ' + summaryVal;
+    var badgeW = summaryText.length * 6.8 + 26;
+    svg.push('  <g id="who-chart-patient-badge" transform="translate(' + (gx + 12) + ', ' + (gy + 14) + ')">');
+    svg.push('    <rect x="0" y="0" width="' + badgeW.toFixed(0) + '" height="22" rx="4" fill="#ffffff" fill-opacity="0.95" stroke="#dc2626" stroke-width="1.2"/>');
+    svg.push('    <circle cx="11" cy="11" r="5" fill="#dc2626"/>');
+    svg.push('    <circle cx="11" cy="11" r="2.2" fill="#ffffff"/>');
+    svg.push('    <text x="22" y="14.5" fill="#991b1b" font-size="11" font-weight="700" font-family="system-ui, sans-serif">' + escapeHtml(summaryText) + '</text>');
+    svg.push('  </g>');
+
+    svg.push('  <line id="who-marker-crosshair-h" x1="' + gx + '" y1="' + my.toFixed(1) + '" x2="' + xRight + '" y2="' + my.toFixed(1) + '" stroke="#dc2626" stroke-dasharray="3,3" stroke-width="1.5" opacity="0.9"/>');
+    svg.push('  <line id="who-marker-crosshair-v" x1="' + mx.toFixed(1) + '" y1="' + gy + '" x2="' + mx.toFixed(1) + '" y2="' + yBottom + '" stroke="#dc2626" stroke-dasharray="3,3" stroke-width="1.5" opacity="0.9"/>');
     svg.push('  <g id="who-marker-dot" class="who-marker-point" transform="translate(' + mx.toFixed(1) + ',' + my.toFixed(1) + ')">');
-    svg.push('    <circle r="9" fill="rgba(220, 38, 38, 0.25)" stroke="#dc2626" stroke-width="1.5"/>');
-    svg.push('    <circle r="4.5" fill="#b91c1c" stroke="#ffffff" stroke-width="1.5"/>');
+    svg.push('    <circle r="12" fill="rgba(220, 38, 38, 0.22)" stroke="#dc2626" stroke-width="1.5"/>');
+    svg.push('    <circle r="5" fill="#b91c1c" stroke="#ffffff" stroke-width="2"/>');
     
     var tip = '';
     if (chartType === 'wfa') tip = pxVal + ' mo, ' + pyVal.toFixed(2) + ' kg';
@@ -4194,8 +4203,10 @@ function renderWhoNativeSvg(chartType, sex, ageMonths, weightKg, lengthCm, rawBm
     if (isOob) tip += ' [Clamped]';
 
     var tipWidth = tip.length * 6.5 + 14;
-    svg.push('    <g id="who-marker-label" transform="translate(0, -16)">');
-    svg.push('      <rect x="' + (-tipWidth / 2) + '" y="-14" width="' + tipWidth + '" height="18" rx="4" fill="#0f172a" fill-opacity="0.94"/>');
+    var labelShiftX = (mx < gx + 45) ? (tipWidth / 2 + 12) : 0;
+    var labelShiftY = (my > yBottom - 25) ? -18 : -16;
+    svg.push('    <g id="who-marker-label" transform="translate(' + labelShiftX + ', ' + labelShiftY + ')">');
+    svg.push('      <rect x="' + (-tipWidth / 2) + '" y="-14" width="' + tipWidth + '" height="18" rx="4" fill="#0f172a" fill-opacity="0.95" stroke="#ffffff" stroke-width="0.8"/>');
     svg.push('      <text x="0" y="-1.5" text-anchor="middle" fill="#ffffff" font-size="10.5" font-weight="700" font-family="system-ui, sans-serif">' + escapeHtml(tip) + '</text>');
     svg.push('    </g>');
     svg.push('  </g>');
