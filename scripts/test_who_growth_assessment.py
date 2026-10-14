@@ -103,6 +103,45 @@ async def run_tests():
             assert has_chart_btn, "Growth Charts tab WHO report button missing"
             print("  ✓ Action buttons present in both Anthropometry and Growth Charts areas.")
 
+            # Test 1b: Verify in-page WHO Growth Chart on Tab 7
+            print("[TEST 1b] Verifying in-page dynamic WHO Growth Chart on Tab 7...")
+            await eval_js("document.querySelector('.workspace-tab[data-tab=\"tab-charts\"]').click()")
+            await asyncio.sleep(0.5)
+
+            inpage_state = await eval_js("""({
+                hasWhoBtn: Boolean(document.getElementById('btn-chart-who')),
+                whoBtnActive: document.getElementById('btn-chart-who').classList.contains('active'),
+                panelWhoVisible: document.getElementById('panel-chart-who').style.display !== 'none',
+                hasSvg: Boolean(document.querySelector('#who-inpage-svg-container .who-native-svg')),
+                curveCount: document.querySelectorAll('#who-inpage-svg-container .who-sd-curve').length,
+                hasMarker: Boolean(document.querySelector('#who-inpage-svg-container #who-marker-dot')),
+                inpageChildName: document.getElementById('who-inpage-child-name').textContent,
+                inpageWt: document.getElementById('who-inpage-wt').textContent
+            })""")
+            print("  In-page state:", inpage_state)
+            assert inpage_state["hasWhoBtn"], "Missing #btn-chart-who"
+            assert inpage_state["whoBtnActive"], "#btn-chart-who should be active"
+            assert inpage_state["panelWhoVisible"], "#panel-chart-who should be visible"
+            assert inpage_state["hasSvg"], "Missing .who-native-svg in #who-inpage-svg-container"
+            assert inpage_state["curveCount"] == 7, f"Expected 7 curves in-page, got {inpage_state['curveCount']}"
+            assert inpage_state["hasMarker"], "Missing marker dot in in-page SVG"
+            assert "DEL ROSARIO" in inpage_state["inpageChildName"], "Child name mismatch in in-page readout"
+            assert "3.15" in inpage_state["inpageWt"], "Weight mismatch in in-page readout"
+            print("  ✓ In-page dynamic WHO Growth Chart on Tab 7 verified with active vector curves.")
+
+            # Test in-page sub-tab switching
+            print("  Testing in-page sub-tab switching among WHO chart indicators...")
+            await eval_js("switchInPageWhoChartType('lhfa')")
+            lhfa_label = await eval_js("document.querySelector('#who-inpage-svg-container .who-native-svg').getAttribute('aria-label')")
+            assert "Length/height-for-age" in lhfa_label, f"Expected LHFA in in-page SVG, got {lhfa_label}"
+
+            await eval_js("switchInPageWhoChartType('wflh')")
+            wflh_label = await eval_js("document.querySelector('#who-inpage-svg-container .who-native-svg').getAttribute('aria-label')")
+            assert "Weight-for-length/height" in wflh_label, f"Expected WFLH in in-page SVG, got {wflh_label}"
+
+            await eval_js("switchInPageWhoChartType('wfa')")
+            print("  ✓ In-page sub-tab switching verified cleanly.")
+
             # Test 2: Open WHO Growth Report Modal
             print("[TEST 2] Opening WHO Growth Report Modal...")
             await eval_js("document.getElementById('btn-chart-who-report').click()")
@@ -139,15 +178,15 @@ async def run_tests():
             print("[TEST 4] Verifying chart auto-selection for infant <60 months...")
             chart_state = await eval_js("""({
                 activeType: whoActiveChartType,
-                hasSvg: Boolean(document.querySelector('.who-native-svg')),
-                curveCount: document.querySelectorAll('.who-sd-curve').length,
+                hasSvg: Boolean(document.querySelector('#who-svg-chart-container .who-native-svg')),
+                curveCount: document.querySelectorAll('#who-svg-chart-container .who-sd-curve').length,
                 tabCount: document.querySelectorAll('.who-chart-tab-btn').length,
-                markerVisible: Boolean(document.getElementById('who-marker-dot')),
-                svgLabel: document.querySelector('.who-native-svg') ? document.querySelector('.who-native-svg').getAttribute('aria-label') : ''
+                markerVisible: Boolean(document.querySelector('#who-svg-chart-container #who-marker-dot')),
+                svgLabel: document.querySelector('#who-svg-chart-container .who-native-svg') ? document.querySelector('#who-svg-chart-container .who-native-svg').getAttribute('aria-label') : ''
             })""")
             print("  Chart state <60m:", chart_state)
             assert chart_state["activeType"] == "wfa", f"Expected wfa, got {chart_state['activeType']}"
-            assert chart_state["hasSvg"], "Expected .who-native-svg element"
+            assert chart_state["hasSvg"], "Expected .who-native-svg element in modal"
             assert chart_state["curveCount"] == 7, f"Expected 7 SD curves, got {chart_state['curveCount']}"
             assert "GIRLS" in chart_state["svgLabel"], f"Expected GIRLS in svgLabel: {chart_state['svgLabel']}"
             assert chart_state["tabCount"] == 3, f"Expected 3 tabs (WFA, LHFA, WFLH), got {chart_state['tabCount']}"
@@ -158,7 +197,7 @@ async def run_tests():
             print("[TEST 5] Testing chart-tab switching...")
             for tab_id, expected_title_part in [("lhfa", "Length/height-for-age"), ("wflh", "Weight-for-length/height"), ("wfa", "Weight-for-age")]:
                 await eval_js(f"switchWhoChartTab('{tab_id}')")
-                curr_label = await eval_js("document.querySelector('.who-native-svg') ? document.querySelector('.who-native-svg').getAttribute('aria-label') : ''")
+                curr_label = await eval_js("document.querySelector('#who-svg-chart-container .who-native-svg') ? document.querySelector('#who-svg-chart-container .who-native-svg').getAttribute('aria-label') : ''")
                 assert expected_title_part in curr_label, f"Switch to {tab_id} failed: got {curr_label}"
             print("  ✓ Tab switching among all applicable reference charts verified with native SVG updates.")
 
@@ -168,7 +207,7 @@ async def run_tests():
                 document.getElementById('who-param-sex').value = 'male';
                 refreshWhoGrowthReport();
             """)
-            male_label = await eval_js("document.querySelector('.who-native-svg') ? document.querySelector('.who-native-svg').getAttribute('aria-label') : ''")
+            male_label = await eval_js("document.querySelector('#who-svg-chart-container .who-native-svg') ? document.querySelector('#who-svg-chart-container .who-native-svg').getAttribute('aria-label') : ''")
             assert "BOYS" in male_label, f"Expected BOYS chart, got {male_label}"
             print("  ✓ Male chart correctly selected when sex is male.")
 
@@ -182,9 +221,9 @@ async def run_tests():
             """)
             bmi_chart_state = await eval_js("""({
                 activeType: whoActiveChartType,
-                hasSvg: Boolean(document.querySelector('.who-native-svg')),
-                curveCount: document.querySelectorAll('.who-sd-curve').length,
-                svgLabel: document.querySelector('.who-native-svg') ? document.querySelector('.who-native-svg').getAttribute('aria-label') : '',
+                hasSvg: Boolean(document.querySelector('#who-svg-chart-container .who-native-svg')),
+                curveCount: document.querySelectorAll('#who-svg-chart-container .who-sd-curve').length,
+                svgLabel: document.querySelector('#who-svg-chart-container .who-native-svg') ? document.querySelector('#who-svg-chart-container .who-native-svg').getAttribute('aria-label') : '',
                 tabCount: document.querySelectorAll('.who-chart-tab-btn').length,
                 bmiText: document.getElementById('who-card-val-bmi').textContent
             })""")
@@ -219,8 +258,8 @@ async def run_tests():
                 state = await eval_js("""({
                     alertDisplay: document.getElementById('who-incomplete-alert').style.display,
                     tagsHtml: document.getElementById('who-incomplete-tags').innerHTML,
-                    hasSvg: Boolean(document.querySelector('.who-native-svg')),
-                    hasMarker: Boolean(document.getElementById('who-marker-dot'))
+                    hasSvg: Boolean(document.querySelector('#who-svg-chart-container .who-native-svg')),
+                    hasMarker: Boolean(document.querySelector('#who-svg-chart-container #who-marker-dot'))
                 })""")
                 assert state["alertDisplay"] != "none", f"Incomplete alert should show when {elem_id} is empty"
                 assert expected_tag in state["tagsHtml"], f"Expected tag {expected_tag} not found"
@@ -239,8 +278,8 @@ async def run_tests():
                 refreshWhoGrowthReport();
             """)
             min_marker = await eval_js("""({
-                hasMarker: Boolean(document.getElementById('who-marker-dot')),
-                markerTransform: document.getElementById('who-marker-dot') ? document.getElementById('who-marker-dot').getAttribute('transform') : '',
+                hasMarker: Boolean(document.querySelector('#who-svg-chart-container #who-marker-dot')),
+                markerTransform: document.querySelector('#who-svg-chart-container #who-marker-dot') ? document.querySelector('#who-svg-chart-container #who-marker-dot').getAttribute('transform') : '',
                 boundDisplay: document.getElementById('who-marker-boundary-callout').style.display
             })""")
             assert min_marker["hasMarker"], "Marker should be rendered"

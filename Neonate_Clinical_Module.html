@@ -1763,6 +1763,7 @@
                 <i class="icon-info-sign"></i> Incomplete Ballard data is flagged as Partial. Gestational age and maturity classification are only finalized when all 13 criteria are scored.
               </div>
               <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button type="button" class="btn-secondary" onclick="openGrowthChartModal('who')"><i class="icon-picture"></i> WHO Growth Chart</button>
                 <button type="button" class="btn-secondary" onclick="openGrowthChartModal('lub')"><i class="icon-picture"></i> Lubchenco Chart</button>
                 <button type="button" class="btn-secondary" id="btn-neo-chart-fenton" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> <span id="btn-neo-chart-fenton-label">Fenton Growth Chart (Baseline)</span></button>
                 <button type="button" class="btn-primary" id="btn-neo-chart-who-report" onclick="openWhoGrowthReportModal()" style="background:var(--med-green); color:#fff; font-weight:600;"><i class="icon-file"></i> WHO Growth Report</button>
@@ -2514,21 +2515,62 @@
         <!-- TAB 7: GROWTH CHARTS -->
         <div class="tab-panel" id="tab-charts" role="tabpanel">
           <div class="section-card">
-            <div class="section-card-title"><i class="icon-picture"></i> Neonatal Clinical Growth Charts (High-Resolution Visual Reference)</div>
+            <div class="section-card-title"><i class="icon-picture"></i> Neonatal Clinical Growth Charts (Interactive Reference &amp; Vector Generation)</div>
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
               <div style="display:inline-flex; gap:6px; flex-wrap:wrap;">
-                <button type="button" class="btn-secondary active" id="btn-chart-lub" onclick="switchGrowthChart('lub')">Lubchenco Chart</button>
+                <button type="button" class="btn-secondary active" id="btn-chart-who" onclick="switchGrowthChart('who')">WHO Growth Chart (0–5y)</button>
+                <button type="button" class="btn-secondary" id="btn-chart-lub" onclick="switchGrowthChart('lub')">Lubchenco Chart</button>
                 <button type="button" class="btn-secondary" id="btn-chart-boy" onclick="switchGrowthChart('boy')">Boy Fenton Chart</button>
                 <button type="button" class="btn-secondary" id="btn-chart-girl" onclick="switchGrowthChart('girl')">Girl Fenton Chart</button>
-                <button type="button" class="btn-primary" id="btn-chart-who-report" onclick="openWhoGrowthReportModal()" style="background:var(--med-green); color:#fff; font-weight:600;"><i class="icon-file"></i> WHO Growth Report</button>
+                <button type="button" class="btn-primary" id="btn-chart-who-report" onclick="openWhoGrowthReportModal()" style="background:var(--med-green); color:#fff; font-weight:600;"><i class="icon-file"></i> WHO Growth Report &amp; Print</button>
               </div>
               <div style="font-size:11.5px; color:var(--slate-500);">
-                Click on any chart to enlarge/zoom in full-screen modal viewer.
+                Interactive vector charts rendered directly from reference data.
+              </div>
+            </div>
+
+            <!-- WHO Growth Chart (Dynamic In-Page Vector Generation) -->
+            <div class="chart-card" id="panel-chart-who" style="text-align:left;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--slate-200);">
+                <div>
+                  <h3 id="who-inpage-title" style="font-size:13px; font-weight:700; margin:0 0 4px 0; color:var(--slate-900);">WHO Child Growth Standards (0 to 5 Years — Native Data Vector Plot)</h3>
+                  <div id="who-inpage-subtitle" style="font-size:11px; color:var(--slate-500);">Interactive curve generation based on WHO 2006 reference percentiles (-3, -2, 0, 2, 3 SD) with live patient coordinates</div>
+                </div>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                  <button type="button" class="btn-secondary active" id="btn-who-inpage-wfa" onclick="switchInPageWhoChartType('wfa')">Weight-for-Age (0–5y)</button>
+                  <button type="button" class="btn-secondary" id="btn-who-inpage-lhfa" onclick="switchInPageWhoChartType('lhfa')">Length-for-Age (0–5y)</button>
+                  <button type="button" class="btn-secondary" id="btn-who-inpage-wflh" onclick="switchInPageWhoChartType('wflh')">Weight-for-Length (0–5y)</button>
+                  <button type="button" class="btn-secondary" id="btn-who-inpage-bmifa" onclick="switchInPageWhoChartType('bmifa')">BMI-for-Age (5–19y)</button>
+                </div>
+              </div>
+
+              <!-- Measurement Readout Strip -->
+              <div id="who-inpage-readout" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; background:#f1f5f9; border:1px solid var(--slate-200); border-radius:6px; padding:8px 12px; margin-bottom:12px; font-size:12px;">
+                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                  <span><strong>Child:</strong> <span id="who-inpage-child-name">—</span></span>
+                  <span><strong>Sex Baseline:</strong> <span id="who-inpage-sex">—</span></span>
+                  <span><strong>Plotted Age:</strong> <span id="who-inpage-age">0 mo</span></span>
+                  <span><strong>Weight:</strong> <span id="who-inpage-wt">—</span></span>
+                  <span><strong>Length:</strong> <span id="who-inpage-len">—</span></span>
+                  <span><strong>BMI:</strong> <span id="who-inpage-bmi">—</span></span>
+                </div>
+                <div style="display:flex; gap:6px;">
+                  <button type="button" class="btn-secondary" onclick="renderInPageWhoChart()" style="font-size:11px; padding:2px 8px;" title="Re-sync from neonate vitals"><i class="icon-refresh"></i> Re-sync</button>
+                  <button type="button" class="btn-secondary" onclick="openWhoGrowthReportModal()" style="font-size:11px; padding:2px 8px;"><i class="icon-fullscreen"></i> Full Report Modal</button>
+                </div>
+              </div>
+
+              <!-- Stage container for native generated SVG -->
+              <div class="who-chart-stage" style="position:relative; min-height:460px; display:flex; flex-direction:column; align-items:center;">
+                <div id="who-inpage-boundary-callout" class="who-boundary-callout" style="display:none;"></div>
+                <div id="who-inpage-svg-container" class="who-svg-chart-container" style="width:100%; max-width:860px;">
+                  <!-- Dynamic SVG is rendered here -->
+                </div>
               </div>
             </div>
 
             <!-- Lubchenco Chart -->
-            <div class="chart-card" id="panel-chart-lub">
+            <div class="chart-card" id="panel-chart-lub" style="display:none;">
               <h3 style="font-size:13px; margin-bottom:8px; color:var(--slate-900);">Lubchenco Intrauterine Growth Chart (Weeks vs Weight/Length/Head Circumference)</h3>
               <img src="img/neonate/lubchenco_chart.png" alt="Lubchenco Growth Chart" onclick="openZoomModal(this.src)" title="Click to zoom chart">
             </div>
@@ -2709,6 +2751,26 @@
         </div>
       </section>
 
+      <!-- WHO Reference Chart Graphic Area -->
+      <section class="who-chart-section" style="margin-top:16px;">
+        <div class="who-chart-nav-bar">
+          <div class="who-chart-tabs" id="who-chart-tabs">
+            <!-- Dynamically populated chart selector buttons -->
+          </div>
+          <div id="who-chart-meta-badge" class="who-chart-meta-badge">
+            <!-- Details of active chart -->
+          </div>
+        </div>
+
+        <!-- Native Data-Replicated SVG WHO Reference Chart -->
+        <div class="who-chart-stage" id="who-chart-stage" style="position:relative;">
+          <div id="who-marker-boundary-callout" class="who-boundary-callout" style="display:none;"></div>
+          <div id="who-svg-chart-container" class="who-svg-chart-container">
+            <!-- Native SVG chart rendered dynamically from data -->
+          </div>
+        </div>
+      </section>
+
       <!-- Anthropometric Indicator Summary Table -->
       <section style="margin-top:14px;">
         <div style="font-size:12px; font-weight:700; color:var(--slate-800); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
@@ -2730,26 +2792,6 @@
               <!-- Dynamically populated rows -->
             </tbody>
           </table>
-        </div>
-      </section>
-
-      <!-- WHO Reference Chart Graphic Area -->
-      <section class="who-chart-section" style="margin-top:16px;">
-        <div class="who-chart-nav-bar">
-          <div class="who-chart-tabs" id="who-chart-tabs">
-            <!-- Dynamically populated chart selector buttons -->
-          </div>
-          <div id="who-chart-meta-badge" class="who-chart-meta-badge">
-            <!-- Details of active chart -->
-          </div>
-        </div>
-
-        <!-- Native Data-Replicated SVG WHO Reference Chart -->
-        <div class="who-chart-stage" id="who-chart-stage" style="position:relative;">
-          <div id="who-marker-boundary-callout" class="who-boundary-callout" style="display:none;"></div>
-          <div id="who-svg-chart-container" class="who-svg-chart-container">
-            <!-- Native SVG chart rendered dynamically from data -->
-          </div>
         </div>
       </section>
 
@@ -2840,6 +2882,16 @@ document.querySelectorAll('.workspace-tab').forEach(btn => {
     btn.classList.add('active');
     const panel = document.getElementById(btn.dataset.tab);
     if (panel) panel.classList.add('active');
+
+    if (btn.dataset.tab === 'tab-charts') {
+      const activeChartBtn = document.querySelector('#btn-chart-who.active, #btn-chart-lub.active, #btn-chart-boy.active, #btn-chart-girl.active');
+      if (!activeChartBtn || activeChartBtn.id === 'btn-chart-who') {
+        switchGrowthChart('who');
+      } else {
+        const which = activeChartBtn.id.replace('btn-chart-', '');
+        switchGrowthChart(which);
+      }
+    }
 
     const actionBar = document.getElementById('neonate-action-bar');
     if (actionBar) {
@@ -3180,24 +3232,146 @@ if (neoSexEl) {
 }
 
 // Growth Chart Tab Switcher & Zoom
+let whoInPageActiveChartType = 'wfa';
+
 function switchGrowthChart(which) {
-  let target = which;
-  if (!target || target === 'fenton') {
+  let target = which || 'who';
+  if (target === 'fenton') {
     target = getNeonatePatientGender();
   }
-  document.querySelectorAll('#btn-chart-lub, #btn-chart-boy, #btn-chart-girl').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('#panel-chart-lub, #panel-chart-boy, #panel-chart-girl').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('#btn-chart-who, #btn-chart-lub, #btn-chart-boy, #btn-chart-girl').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#panel-chart-who, #panel-chart-lub, #panel-chart-boy, #panel-chart-girl').forEach(p => p.style.display = 'none');
   const btn = document.getElementById('btn-chart-' + target);
   const panel = document.getElementById('panel-chart-' + target);
   if (btn) btn.classList.add('active');
   if (panel) panel.style.display = 'block';
+  if (target === 'who') {
+    renderInPageWhoChart();
+  }
+}
+
+function switchInPageWhoChartType(type) {
+  whoInPageActiveChartType = type;
+  document.querySelectorAll('#btn-who-inpage-wfa, #btn-who-inpage-lhfa, #btn-who-inpage-wflh, #btn-who-inpage-bmifa').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('btn-who-inpage-' + type);
+  if (btn) btn.classList.add('active');
+  renderInPageWhoChart();
+}
+
+function renderInPageWhoChart() {
+  const container = document.getElementById('who-inpage-svg-container');
+  if (!container) return;
+
+  var patient = null;
+  if (typeof getPatients === 'function') {
+    var list = getPatients();
+    patient = list.find(function(p) { return p.id === currentPatientId; });
+  }
+  var d = (patient && patient.data) || {};
+
+  // Sex detection
+  var sex = '';
+  var neoSexEl = document.getElementById('neo_sex');
+  if (neoSexEl && neoSexEl.value && neoSexEl.value.trim()) {
+    var s = neoSexEl.value.trim().toLowerCase();
+    if (s.startsWith('m') || s === 'boy') sex = 'male';
+    if (s.startsWith('f') || s === 'girl') sex = 'female';
+  } else if (patient && (patient.id.includes('neo') || (d.first_name || '').toUpperCase().includes('BABY'))) {
+    if (d.gender) {
+      var s = d.gender.trim().toLowerCase();
+      if (s.startsWith('m') || s === 'boy') sex = 'male';
+      if (s.startsWith('f') || s === 'girl') sex = 'female';
+    }
+  }
+  if (!sex) {
+    var g = getNeonatePatientGender();
+    sex = (g === 'boy') ? 'male' : 'female';
+  }
+
+  // Weight & Length
+  var wtEl = document.getElementById('neo_weight');
+  var wt = (wtEl && wtEl.value && !isNaN(parseFloat(wtEl.value))) ? parseFloat(wtEl.value) : (parseFloat(d.vs_weight) || 3.15);
+
+  var lenEl = document.getElementById('neo_length');
+  var len = (lenEl && lenEl.value && !isNaN(parseFloat(lenEl.value))) ? parseFloat(lenEl.value) : (parseFloat(d.vs_height) || 49.5);
+
+  var ageMonths = 0;
+  if (whoInPageActiveChartType === 'bmifa') {
+    ageMonths = 120; // 10 years illustrative for 5-19y reference
+  }
+
+  var rawBmi = null;
+  if (wt && len) {
+    var hM = len / 100;
+    rawBmi = wt / (hM * hM);
+  }
+
+  // Dynamic Chart Titles
+  var titleEl = document.getElementById('who-inpage-title');
+  var genderStr = sex === 'male' ? 'Boys' : 'Girls';
+  if (titleEl) {
+    if (whoInPageActiveChartType === 'wfa') {
+      titleEl.textContent = 'Weight-for-Age ' + genderStr.toUpperCase() + ' (Birth to 5 years, z-scores)';
+    } else if (whoInPageActiveChartType === 'lhfa') {
+      titleEl.textContent = 'Length/Height-for-Age ' + genderStr.toUpperCase() + ' (Birth to 5 years, z-scores)';
+    } else if (whoInPageActiveChartType === 'wflh') {
+      titleEl.textContent = 'Weight-for-Length/Height ' + genderStr.toUpperCase() + ' (Birth to 5 years, z-scores)';
+    } else if (whoInPageActiveChartType === 'bmifa') {
+      titleEl.textContent = 'BMI-for-Age ' + genderStr.toUpperCase() + ' (5 to 19 years, z-scores)';
+    }
+  }
+
+  // Child name
+  var motherName = (document.getElementById('neo_mother_name') && document.getElementById('neo_mother_name').value.trim()) || d.mother_name || (d.last_name ? (d.last_name + ', ' + d.first_name + ' ' + (d.middle_name || '')).trim() : 'DEL ROSARIO, CARMELA BAUTISTA');
+  var childName = '';
+  if (patient && (patient.id.includes('neo') || (d.first_name || '').toUpperCase().includes('BABY'))) {
+    childName = (d.last_name ? d.last_name + ', ' + d.first_name + ' ' + (d.middle_name || '') : 'SANTOS, BABY BOY').trim();
+  } else {
+    var prefix = sex === 'male' ? 'BABY BOY OF ' : 'BABY GIRL OF ';
+    childName = prefix + motherName;
+  }
+
+  var elName = document.getElementById('who-inpage-child-name');
+  if (elName) elName.textContent = childName;
+
+  var elSex = document.getElementById('who-inpage-sex');
+  if (elSex) {
+    elSex.innerHTML = '<span style="color:' + (sex === 'male' ? '#0369a1' : '#be185d') + '; font-weight:700;">' + (sex === 'male' ? 'Male (Boy)' : 'Female (Girl)') + '</span>';
+  }
+
+  var elAge = document.getElementById('who-inpage-age');
+  if (elAge) elAge.textContent = ageMonths + ' mo';
+
+  var elWt = document.getElementById('who-inpage-wt');
+  if (elWt) elWt.textContent = wt.toFixed(2) + ' kg';
+
+  var elLen = document.getElementById('who-inpage-len');
+  if (elLen) elLen.textContent = len.toFixed(1) + ' cm';
+
+  var elBmi = document.getElementById('who-inpage-bmi');
+  if (elBmi) elBmi.textContent = rawBmi ? rawBmi.toFixed(2) + ' kg/m²' : '—';
+
+  // Render SVG into in-page container
+  container.innerHTML = renderWhoNativeSvg(whoInPageActiveChartType, sex, ageMonths, wt, len, rawBmi);
+
+  // Boundary callout
+  var coords = calculateWhoMarker(whoInPageActiveChartType, sex, ageMonths, wt, len, rawBmi);
+  var boundEl = document.getElementById('who-inpage-boundary-callout');
+  if (boundEl) {
+    if (coords.oob && coords.oob.length > 0) {
+      boundEl.style.display = 'block';
+      boundEl.innerHTML = '<i class="icon-warning-sign"></i> Out of reference bounds: ' + escapeHtml(coords.oob.join(', ')) + ' (Marker clamped to plot perimeter)';
+    } else {
+      boundEl.style.display = 'none';
+    }
+  }
 }
 
 function openGrowthChartModal(which) {
   const tabBtn = document.querySelector('.workspace-tab[data-tab="tab-charts"]');
   if (tabBtn) tabBtn.click();
-  let target = which;
-  if (!target || target === 'fenton') {
+  let target = which || 'who';
+  if (target === 'fenton') {
     target = getNeonatePatientGender();
   }
   switchGrowthChart(target);
@@ -4076,6 +4250,8 @@ window.printWhoGrowthReport = printWhoGrowthReport;
 window.calculateWhoMarker = calculateWhoMarker;
 window.renderWhoNativeSvg = renderWhoNativeSvg;
 window.WHO_REFERENCE_CURVES = WHO_REFERENCE_CURVES;
+window.renderInPageWhoChart = renderInPageWhoChart;
+window.switchInPageWhoChartType = switchInPageWhoChartType;
 
 // Update Top Summary Cards
 function updateSummaryHighlights() {
@@ -4893,6 +5069,9 @@ function initNeonateWorkspace() {
     }
   }
   updateNeonateGrowthChartButtons();
+  if (typeof renderInPageWhoChart === 'function') {
+    renderInPageWhoChart();
+  }
   const activeTab = document.querySelector('.workspace-tab.active');
   const actionBar = document.getElementById('neonate-action-bar');
   if (actionBar && activeTab) {
@@ -4903,6 +5082,19 @@ function initNeonateWorkspace() {
     }
   }
 }
+
+// Re-render in-page WHO Growth Chart dynamically upon vitals input changes
+['neo_weight', 'neo_length', 'neo_sex'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('input', function() {
+      if (typeof renderInPageWhoChart === 'function') renderInPageWhoChart();
+    });
+    el.addEventListener('change', function() {
+      if (typeof renderInPageWhoChart === 'function') renderInPageWhoChart();
+    });
+  }
+});
 
 window.addEventListener('DOMContentLoaded', () => {
   initNeonateWorkspace();
