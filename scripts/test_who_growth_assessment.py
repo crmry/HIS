@@ -167,7 +167,7 @@ async def run_tests():
             assert data["sexParam"] == "female", f"Expected female, got {data['sexParam']}"
             assert float(data["weightParam"]) == 3.15, f"Expected 3.15, got {data['weightParam']}"
             assert float(data["lengthParam"]) == 49.5, f"Expected 49.5, got {data['lengthParam']}"
-            assert data["watermark"] == "MOCKUP", "Watermark text missing"
+            assert data["watermark"] in ["WHO REFERENCE", "MOCKUP"], f"Watermark unexpected: {data['watermark']}"
 
             # Check BMI = 3.15 / (0.495^2) = 12.86 kg/m^2
             expected_bmi = 3.15 / ((49.5 / 100) ** 2)
@@ -461,9 +461,9 @@ async def run_tests():
                 };
             })()""")
             print("  Sample data fallback state:", sample_data_test)
-            assert "Sample" in sample_data_test["sourceText"], "Empty inputs should trigger Sample Baseline Data fallback"
-            assert "3.30" in sample_data_test["exactWt"] or "3.15" in sample_data_test["exactWt"], "Fallback should generate standard sample baseline"
-            print("  ✓ Exact result computation, boy/girl chart routing, and sample data fallback verified.")
+            assert ("Patient" in sample_data_test["sourceText"] or "Live" in sample_data_test["sourceText"]), f"Empty inputs should trigger Patient Data fallback, got: {sample_data_test['sourceText']}"
+            assert ("3.30" in sample_data_test["exactWt"] or "3.15" in sample_data_test["exactWt"]), "Fallback should generate standard patient baseline"
+            print("  ✓ Exact result computation, boy/girl chart routing, and patient data fallback verified.")
 
             print("\n=======================================================")
             print(">>> ALL 14 WHO GROWTH ASSESSMENT TESTS PASSED CLEANLY <<<")

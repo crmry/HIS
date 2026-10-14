@@ -1288,7 +1288,8 @@ if (typeof window !== 'undefined') {
           disposition: 'Outpatient Follow-up',
           follow_up_needed: 'Yes',
           follow_up_date: '2026-10-25',
-          follow_up_reason: 'Routine 2-week prenatal checkup at 34 weeks AOG.'
+          follow_up_reason: 'Routine 2-week prenatal checkup at 34 weeks AOG.',
+          neonate: neoSeedData
         }
       };
     }
