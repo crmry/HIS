@@ -1913,6 +1913,18 @@ if (typeof window !== 'undefined') {
             existingOb.presentPregnancy.lmpStart = existingOb.presentPregnancy.lmp;
             obNeedsUpdate = true;
           }
+          if (Array.isArray(existingOb.pregnancies)) {
+            var origPregLen = existingOb.pregnancies.length;
+            existingOb.pregnancies = existingOb.pregnancies.filter(function (p) {
+              var r = String(p.remarks || '').trim().toLowerCase();
+              if (r === 'test' || r === 'test record' || r === 'dummy') return false;
+              if (p.babies && p.babies.some(function (b) { return String(b.remarks || '').trim().toLowerCase() === 'healthy' && (r === 'test' || !r); })) return false;
+              return true;
+            });
+            if (existingOb.pregnancies.length !== origPregLen) {
+              obNeedsUpdate = true;
+            }
+          }
           if (obNeedsUpdate) {
             localStorage.setItem(obStorageKey, JSON.stringify(existingOb));
           }

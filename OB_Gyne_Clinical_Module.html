@@ -906,7 +906,7 @@
               <div class="ob-hist-head">
                 <div>
                   <h2 class="ob-hist-title">Obstetric History</h2>
-                  <div style="font-size:11.5px; color:var(--med-text-muted); margin-top:2px;">Obstetric Score — GP(TPAL): <strong id="val-obstetric-score" style="color:var(--med-green-dark, #1f7d45); font-weight:700;">G0P0(0000)</strong> &bull; Clinical Pregnancy Records</div>
+                  <div style="font-size:12px; color:var(--med-text-muted); margin-top:2px;">Obstetric Score — GP(TPAL): <strong id="val-obstetric-score" style="color:var(--med-green-dark, #1f7d45); font-weight:700;">G0P0(0000)</strong></div>
                 </div>
                 <div style="display:flex; align-items:center; gap:12px;">
                   <span class="ob-dirty-flag" id="ob-dirty-flag" aria-live="polite"></span>
@@ -1237,12 +1237,12 @@ function renderObHistoryPanel() {
   if (!tiles) return;
   const g = computeGTPAL();
   const defs = [
-    ['G', g.G, '# of Pregnancy', 'Gravida — Total pregnancies including current'],
-    ['P', g.totalPara, '# of Delivery', 'Para — Viable deliveries (>= parity threshold)'],
-    ['T', g.T, '# of Full term', 'Term — Deliveries >= 37 weeks', 'FT'],
-    ['P', g.P, '# of Preterm', 'Preterm — Deliveries 20-36 weeks', 'Pr'],
-    ['A', g.A, '# of Abortion', 'Abortion / Loss — Losses < 20 weeks', 'Ab'],
-    ['L', g.L, '# of Currently Living', 'Living — Currently living children', 'LB']
+    ['G', g.G, 'Gravida', 'Gravida — Total pregnancies including current'],
+    ['P', g.totalPara, 'Para', 'Para — Viable deliveries (>= parity threshold)'],
+    ['T', g.T, 'Full Term', 'Term — Deliveries >= 37 weeks', 'FT'],
+    ['P', g.P, 'Preterm', 'Preterm — Deliveries 20-36 weeks', 'Pr'],
+    ['A', g.A, 'Abortion / Loss', 'Abortion / Loss — Losses < 20 weeks', 'Ab'],
+    ['L', g.L, 'Living Children', 'Living — Currently living children', 'LB']
   ];
   tiles.innerHTML = defs.map(d => {
     const aliasAttr = d[4] ? ` data-alias="${d[4]}"` : '';
@@ -1306,14 +1306,10 @@ function renderPresentCard() {
   } else html += '<div class="ob-empty">Not recorded</div>';
   
   const acog = obCalc.acogDatingRecommendation(lmp, us);
-  if (acog) {
+  if (acog && acog.hasBoth) {
     const isUltrasoundRecom = acog.recommendedMethod === 'Ultrasound';
-    const boxStyle = acog.hasBoth
-      ? (isUltrasoundRecom ? 'background:#eff6ff; border:1px solid #bfdbfe;' : 'background:#f0fdf4; border:1px solid #bbf7d0;')
-      : 'background:#f8fafc; border:1px solid #e2e8f0;';
-    const titleColor = acog.hasBoth
-      ? (isUltrasoundRecom ? '#1e40af;' : '#166534;')
-      : '#334155;';
+    const boxStyle = isUltrasoundRecom ? 'background:#eff6ff; border:1px solid #bfdbfe;' : 'background:#f0fdf4; border:1px solid #bbf7d0;';
+    const titleColor = isUltrasoundRecom ? '#1e40af;' : '#166534;';
 
     html += `<div class="ob-acog-box" style="${boxStyle}">
       <div class="ob-acog-title" style="color:${titleColor}; font-weight:700;">${escapeHtml(acog.title)}</div>
@@ -1422,7 +1418,7 @@ function renderPregnancyTable() {
           <button type="button" class="ob-card-kebab" aria-label="Card actions" onclick="toggleCardMenu(this, event)">···</button>
           <div class="ob-dropdown-menu">
             <button type="button" class="ob-dropdown-item" onclick="openEditPregModal(${index})">Edit</button>
-            <button type="button" class="ob-dropdown-item ob-dropdown-danger" onclick="archivePregnancy(${index})">Archive</button>
+            <button type="button" class="ob-dropdown-item ob-dropdown-danger" onclick="archivePregnancy(${index})">Delete Record</button>
           </div>
         </div>
       </div>`;
@@ -1447,11 +1443,21 @@ function renderPregnancyTable() {
     if (p.remarks && p.remarks !== '-') h += obRow('PREGNANCY REMARKS', p.remarks);
     if (!loss) {
       const babies = Array.isArray(p.babies) ? p.babies : legacyBabiesFor(p, type);
-      h += '<table class="ob-baby-table"><thead><tr><th>NAME</th><th>SEX</th><th>BIRTH WEIGHT</th><th>CURRENT STATUS</th><th>REMARKS</th></tr></thead><tbody>' +
+      const hasBabyName = babies.some(b => b.name && b.name.trim());
+      const hasBabyRemarks = babies.some(b => b.remarks && b.remarks.trim());
+      h += '<table class="ob-baby-table"><thead><tr>' +
+        (hasBabyName ? '<th>NAME</th>' : '') +
+        '<th>SEX</th><th>BIRTH WEIGHT</th><th>CURRENT STATUS</th>' +
+        (hasBabyRemarks ? '<th>REMARKS</th>' : '') +
+        '</tr></thead><tbody>' +
         babies.map(b => {
           const wStr = (b.weightKg !== null && b.weightKg !== undefined && b.weightKg !== '') ? Number(b.weightKg).toFixed(2) + ' kgs' : '';
           const stStr = b.status ? (b.status.toLowerCase() === 'living' ? 'Living' : (b.status.toLowerCase() === 'deceased' ? 'Deceased' : b.status)) : '';
-          return `<tr><td>${escapeHtml(b.name || '')}</td><td>${escapeHtml(b.sex || '')}</td><td>${escapeHtml(wStr)}</td><td>${escapeHtml(stStr)}</td><td>${escapeHtml(b.remarks || '')}</td></tr>`;
+          return '<tr>' +
+            (hasBabyName ? `<td>${escapeHtml(b.name || '')}</td>` : '') +
+            `<td>${escapeHtml(b.sex || '')}</td><td>${escapeHtml(wStr)}</td><td>${escapeHtml(stStr)}</td>` +
+            (hasBabyRemarks ? `<td>${escapeHtml(b.remarks || '')}</td>` : '') +
+            '</tr>';
         }).join('') +
         '</tbody></table>';
     }
@@ -2186,13 +2192,14 @@ function handlePregnancySubmit(event) {
 function archivePregnancy(index) {
   const p = patientState.pregnancies[index];
   if (!p) return;
-  if (confirm(`Archive pregnancy record ${p.seq || ''} (${obDeliveryDateText(p)} • ${p.outcome})? This will update the auto-derived GP(TPAL) score.`)) {
+  if (confirm(`Remove pregnancy record ${p.seq || ''} (${obDeliveryDateText(p)} • ${p.outcome || ''})? This will update the auto-derived GP(TPAL) score.`)) {
     patientState.pregnancies.splice(index, 1);
     saveObHistory();
     renderPregnancyTable();
     renderSummaryCards();
+    renderObHistoryPanel();
     renderLongitudinalTimeline();
-    showToast(`Pregnancy record ${p.seq || ''} archived and saved.`);
+    showToast('Pregnancy record removed successfully.');
   }
 }
 
@@ -2427,6 +2434,21 @@ function loadSavedObHistory() {
     if (!raw) return false;
     const d = JSON.parse(raw);
     if (!d || !d.pregnancies || !d.lmpHistory) return false;
+
+    // Purge test / non-clinical dummy records
+    const initialLen = d.pregnancies.length;
+    d.pregnancies = d.pregnancies.filter(p => {
+      const rem = String(p.remarks || '').trim().toLowerCase();
+      if (rem === 'test' || rem === 'test record' || rem === 'dummy') return false;
+      if (p.babies && p.babies.some(b => String(b.remarks || '').trim().toLowerCase() === 'healthy' && (rem === 'test' || !rem))) return false;
+      return true;
+    });
+    if (d.pregnancies.length !== initialLen) {
+      try {
+        localStorage.setItem(obStorageKey(), JSON.stringify(d));
+      } catch (err) {}
+    }
+
     patientState.pregnancies = d.pregnancies;
     patientState.lmpHistory = d.lmpHistory;
     if (d.procedures) patientState.procedures = d.procedures;
