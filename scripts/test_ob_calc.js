@@ -83,6 +83,10 @@ t('Legacy seed records (outcome strings, living count)', () => {
   ];
   assert.strictEqual(sum(legacy), '3,2,2,0,1,2');
   assert.strictEqual(c.calculateObstetricSummary(legacy).isComplete, true);
+  // Physician reference scenario: 3 past pregnancies + 1 ongoing present pregnancy -> G4P2(2012)
+  const withPresent = c.calculateObstetricSummary(legacy, { hasPresent: true });
+  assert.strictEqual([withPresent.G, withPresent.P, withPresent.FT, withPresent.Pr, withPresent.Ab, withPresent.LB].join(','), '4,2,2,0,1,2');
+  assert.strictEqual(`G${withPresent.G}P${withPresent.P}(${withPresent.FT}${withPresent.Pr}${withPresent.Ab}${withPresent.LB})`, 'G4P2(2012)');
 });
 t('Chronological order with month/year', () => {
   const o = c.chronologicalOrder([{ deliveryYear: 2024, deliveryMonth: 5 }, { year: '2020' }, { deliveryYear: 2024, deliveryMonth: 1 }]);

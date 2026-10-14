@@ -808,6 +808,22 @@ async def scan_single_target(browser_ws, file_url):
                         const molarOpts = Array.from(document.getElementById('preg-intervention').options).map(o => o.value);
                         if (molarOpts.indexOf('TAHMIS') === -1 || molarOpts.indexOf('Suction') === -1) return 'Molar intervention options missing';
 
+                        // Verify standardized Place of Delivery dropdown and conditional input
+                        const placeSelect = document.getElementById('preg-place-select');
+                        if (!placeSelect) return 'Standardized Place of Delivery select missing';
+                        const placeOpts = Array.from(placeSelect.options).map(o => o.value);
+                        if (!placeOpts.includes('Hospital') || !placeOpts.includes('Home') || !placeOpts.includes('Birthing Clinic') || !placeOpts.includes('Others (Specify)')) {
+                            return 'Standardized Place of Delivery options missing';
+                        }
+                        setv('preg-place-select', 'Others (Specify)');
+                        if (document.getElementById('grp-place-other').style.display === 'none') return 'Others (Specify) did not reveal text input';
+                        setv('preg-place-select', 'Hospital');
+                        if (document.getElementById('grp-place-other').style.display !== 'none') return 'Others (Specify) group should hide for Hospital';
+
+                        // Verify GP(TPAL) score notation format
+                        const initialGtpal = window.computeGTPAL();
+                        if (!/^G\\d+P\\d+\\(\\d{4}\\)$/.test(initialGtpal.displayGP)) return 'Obstetric score displayGP not in standardized GP(TPAL) notation: ' + initialGtpal.displayGP;
+
                         // ADD a twin delivery (38w0d, both living) and verify canonical tiles
                         setv('preg-type', 'multiple');
                         setv('preg-multitype', 'Twins');

@@ -7,9 +7,25 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
 <style>
   :root {
-    --med-green: #1e7e34;
-    --med-green-dark: #155724;
-    --med-green-light: #28a745;
+    --med-green: #1f7d45;
+    --med-green-light: #2d9657;
+    --med-green-hover: #35a863;
+    --med-green-dark: #166436;
+    --med-green-pale: #eaf5ee;
+    --med-green-subtle: #f4f9f6;
+    --med-green-border: #9ec9ae;
+
+    --med-bg: #edf1f3;
+    --med-white: #ffffff;
+    --med-card-bg: #ffffff;
+    --med-border: #cfd8dc;
+    --med-border-light: #e3ebef;
+    --med-text-main: #1f2b30;
+    --med-text-muted: #5d6e75;
+    --med-text-light: #8999a0;
+    --med-slate-dark: #2f373b;
+    --med-slate-light: #475257;
+
     --primary-blue: #1967d2;
     --primary-blue-hover: #1558b0;
     --primary-blue-soft: #e8f0fe;
@@ -22,36 +38,78 @@
     --slate-200: #e2e8f0;
     --slate-100: #f1f5f9;
     --slate-50: #f8fafc;
-    --border-color: #d1d5db;
-    --card-border: #e5e7eb;
+    --border-color: #cfd8dc;
+    --card-border: #e3ebef;
     --danger-red: #dc2626;
     --danger-soft: #fee2e2;
     --warning-yellow: #d97706;
     --warning-soft: #fef3c7;
-    --success-green: #16a34a;
-    --success-soft: #dcfce7;
+    --success-green: #1f7d45;
+    --success-soft: #eaf5ee;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #ffffff;
-    color: var(--slate-800);
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--med-bg);
+    color: var(--med-text-main);
     line-height: 1.45;
-    font-size: 13px;
+    font-size: 12px;
     margin: 0;
     padding: 0;
     min-height: 100vh;
   }
 
+  /* ── Hospital Patient Demographic Bar ── */
+  .patient-banner {
+    background: #ffffff;
+    border-bottom: 1px solid var(--med-border);
+    padding: 8px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  .patient-info-left {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .patient-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--med-green-dark);
+    margin-right: 6px;
+  }
+  .patient-meta-pill {
+    font-size: 11.5px;
+    color: var(--med-text-main);
+    background: var(--slate-100);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--slate-200);
+    display: inline-flex;
+    align-items: center;
+  }
+  .patient-info-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
   .workspace-card.ob-app-root {
     background: #ffffff;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    margin: 0;
-    min-height: 100vh;
-    width: 100%;
+    border: 1px solid var(--med-border);
+    border-radius: 4px;
+    margin: 10px auto 26px;
+    width: calc(100% - 32px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    min-height: calc(100vh - 70px);
   }
 
   /* ── Modals / Dialogs ── */
@@ -259,9 +317,11 @@
   .ob-hist-panel { background:#fff; border:none; padding:0; margin:0 0 16px 0; }
   .ob-hist-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
   .ob-hist-title { font-size:18px; font-weight:600; color:#111827; margin:0; }
-  .ob-dirty-flag { font-size:11px; font-weight:600; color:#ea580c; display:none; }
-  #btn-save-ob-history { background:transparent; color:#cbd5e1; font-weight:700; font-size:11px; letter-spacing:0.5px; border:none; border-radius:4px; padding:6px 16px; cursor:default; transition:all 0.15s; }
-  #btn-save-ob-history.ob-save-dirty { background:#111827; color:#ffffff; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,0.1); }
+  .ob-dirty-flag { font-size:11.5px; font-weight:700; color:#ea580c; background:#fff7ed; border:1px solid #ffedd5; padding:4px 10px; border-radius:4px; letter-spacing:0.3px; }
+  .ob-dirty-flag:empty { display:none; }
+  #btn-save-ob-history { background:#e2e8f0; color:#64748b; font-weight:700; font-size:12px; letter-spacing:0.5px; border:1px solid #cbd5e1; border-radius:4px; padding:7px 18px; cursor:pointer; transition:all 0.15s; }
+  #btn-save-ob-history.ob-save-dirty { background:var(--med-green, #1f7d45); color:#ffffff; border-color:var(--med-green-dark, #166436); box-shadow:0 1px 3px rgba(31,125,69,0.25); cursor:pointer; }
+  #btn-save-ob-history:hover { opacity:0.92; }
   
   .ob-tiles { display:grid; grid-template-columns:repeat(6, 1fr); border:1px solid #e2e8f0; border-radius:8px; background:#ffffff; overflow:hidden; margin-bottom:20px; }
   .ob-tile { padding:12px 14px; display:flex; flex-direction:column; justify-content:space-between; border-right:1px solid #f1f5f9; }
@@ -371,18 +431,29 @@
 </head>
 <body>
 
-<!-- Hidden verification & test hooks for verify_site.py & patient state -->
-<div style="display:none;" aria-hidden="true">
-  <span id="banner-patient-name"></span>
-  <span id="banner-hrn"></span>
-  <span id="banner-age"></span>
-  <span id="banner-encounter-no"></span>
-  <span id="val-obstetric-score">G3P2 (2-0-1-2)</span>
-  <span id="val-current-lmp">09/05/2026</span>
-  <span id="val-edd">06/12/2027</span>
-  <span id="val-pregnancy-count">3</span>
-  <button type="button" id="btn-ob-header-save-draft" onclick="saveGyneDraft()"></button>
-</div>
+<!-- Hospital Patient Demographic Bar & Navigation -->
+<header class="patient-banner" id="ob-patient-banner" aria-label="Patient Demographic Banner">
+  <div class="patient-info-left">
+    <a href="dashboard.html" id="btn-ob-back-dashboard-header" class="btn-card-action" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-weight:600; padding:4px 10px; margin-right:8px;" title="Back to Physician Dashboard">&#10094; Back to Dashboard</a>
+    <span class="patient-name" id="banner-patient-name">SANTOS, MARIA CLARA E.</span>
+    <span class="patient-meta-pill">HRN: <strong id="banner-hrn" style="margin-left:4px;">0000001925</strong></span>
+    <span class="patient-meta-pill">Age/Sex: <strong id="banner-age" style="margin-left:4px;">28 / Female</strong></span>
+    <span class="patient-meta-pill">Case: <strong id="banner-encounter-no" style="margin-left:4px;">OB-2026-1011-0018</strong></span>
+  </div>
+  <div class="patient-info-right">
+    <div class="patient-meta-pill" style="background:var(--med-green-pale); border-color:var(--med-green-border); color:var(--med-green-dark); font-weight:700;">
+      <span>Obstetric Score — GP(TPAL): <strong id="val-obstetric-score" style="margin-left:4px;">G0P0(0000)</strong></span>
+    </div>
+    <div class="patient-meta-pill">
+      <span>LMP: <strong id="val-current-lmp" style="margin-left:4px;">—</strong></span>
+    </div>
+    <div class="patient-meta-pill">
+      <span>EDD: <strong id="val-edd" style="margin-left:4px;">—</strong></span>
+    </div>
+    <span id="val-pregnancy-count" style="display:none;">3</span>
+    <button type="button" id="btn-ob-header-save-draft" class="btn-card-action" onclick="saveGyneDraft()" title="Save working draft">Save Draft</button>
+  </div>
+</header>
 
 <main id="ob-workspace-card" class="workspace-card ob-app-root">
   <div class="ob-split">
@@ -435,17 +506,19 @@
                     </div>
 
                     <div class="form-field">
-                      <label for="preg-place">PLACE</label>
-                      <input type="text" id="preg-place" class="form-control" list="list-preg-places" placeholder="e.g. Regional Medical Center">
-                      <datalist id="list-preg-places">
-                        <option value="Regional Medical Center">Regional Medical Center</option>
-                        <option value="Tertiary Hospital (Government / Public)">Tertiary Hospital (Government / Public)</option>
-                        <option value="LGU / District Hospital">LGU / District Hospital</option>
-                        <option value="Private Hospital / Medical Center">Private Hospital / Medical Center</option>
-                        <option value="Birthing Home / Lying-In Clinic / RHU">Birthing Home / Lying-In Clinic / RHU</option>
-                        <option value="Home Delivery">Home Delivery</option>
-                        <option value="In Transit / Other">In Transit / Other</option>
-                      </datalist>
+                      <label for="preg-place-select">PLACE OF DELIVERY *</label>
+                      <select id="preg-place-select" class="form-control" onchange="handlePlaceOfDeliveryChange()">
+                        <option value="">Select Place of Delivery</option>
+                        <option value="Hospital">Hospital</option>
+                        <option value="Home">Home</option>
+                        <option value="Birthing Clinic">Birthing Clinic</option>
+                        <option value="Others (Specify)">Others (Specify)</option>
+                      </select>
+                      <input type="hidden" id="preg-place" value="Hospital">
+                    </div>
+                    <div class="form-field" id="grp-place-other" style="display:none;">
+                      <label for="preg-place-other">SPECIFY PLACE OF DELIVERY *</label>
+                      <input type="text" id="preg-place-other" class="form-control" placeholder="Specify facility or delivery location">
                     </div>
 
                     <div class="form-field">
@@ -594,10 +667,16 @@
                   <div class="modal-body">
                     <div class="ob-sec-subhead">Based on LMP</div>
                     <div class="form-field">
-                      <label for="pp-lmp-start">LAST NORMAL MENSTRUATION PERIOD (LMP)</label>
+                      <label>LAST NORMAL MENSTRUATION PERIOD (LMP)</label>
                       <div class="ob-date-range-grid">
-                        <input type="date" id="pp-lmp-start" class="form-control" oninput="handleLmpStartInput()" onchange="handleLmpStartInput()">
-                        <input type="date" id="pp-lmp-end" class="form-control" oninput="schedulePresentPreview()" onchange="schedulePresentPreview()">
+                        <div>
+                          <label for="pp-lmp-start" style="font-size:9.5px; margin-bottom:2px; font-weight:600;">1ST DAY OF LMP *</label>
+                          <input type="date" id="pp-lmp-start" class="form-control" oninput="handleLmpStartInput()" onchange="handleLmpStartInput()">
+                        </div>
+                        <div>
+                          <label for="pp-lmp-end" style="font-size:9.5px; margin-bottom:2px; font-weight:600;">MENSES END (OPTIONAL)</label>
+                          <input type="date" id="pp-lmp-end" class="form-control" oninput="schedulePresentPreview()" onchange="schedulePresentPreview()">
+                        </div>
                       </div>
                     </div>
                     <div class="form-field">
@@ -646,7 +725,10 @@
           <main class="ob-right">
             <section class="ob-hist-panel" id="ob-hist-panel" aria-label="Obstetric History dataset">
               <div class="ob-hist-head">
-                <h2 class="ob-hist-title">Obstetric History</h2>
+                <div>
+                  <h2 class="ob-hist-title">Obstetric History</h2>
+                  <div style="font-size:11.5px; color:var(--med-text-muted); margin-top:2px;">Obstetric Score — GP(TPAL) &bull; Clinical Pregnancy Records</div>
+                </div>
                 <div style="display:flex; align-items:center; gap:12px;">
                   <span class="ob-dirty-flag" id="ob-dirty-flag" aria-live="polite"></span>
                   <button type="button" id="btn-save-ob-history" onclick="saveObHistory()">SAVE</button>
@@ -914,10 +996,11 @@ function computeGTPAL() {
   return {
     G: s.G, T: s.FT, P: s.Pr, A: s.Ab, L: s.LB, totalPara: s.P,
     issues: s.issues, isComplete: s.isComplete,
-    displayGP: `G${s.G}P${s.P} (${s.FT}-${s.Pr}-${s.Ab}-${s.LB})`,
+    displayGP: `G${s.G}P${s.P}(${s.FT}${s.Pr}${s.Ab}${s.LB})`,
     scoreText: `G${s.G} T${s.FT} P${s.Pr} A${s.Ab} L${s.LB}`
   };
 }
+window.computeGTPAL = computeGTPAL;
 
 /* ─────────────────────────────────────────────────────────────────────────────
    OBSTETRIC CALCULATORS: EDD (Naegele's Rule), EGA & CYCLE DURATION
@@ -958,6 +1041,13 @@ function obDeliveryDateText(p) {
   return (m >= 1 && m <= 12) ? `${OB_MONTHS[m - 1].slice(0, 3)} ${y}` : String(y);
 }
 
+function obFmtDateMmDdYyyy(iso) {
+  if (!iso) return '—';
+  const p = String(iso).split('-');
+  if (p.length === 3) return `${p[1]}/${p[2]}/${p[0]}`;
+  return iso;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    OBSTETRIC HISTORY PANEL RENDERER (GP(TPAL) tiles, present card)
    ───────────────────────────────────────────────────────────────────────────── */
@@ -965,8 +1055,18 @@ function renderObHistoryPanel() {
   const tiles = document.getElementById('ob-tiles');
   if (!tiles) return;
   const g = computeGTPAL();
-  const defs = [['G', g.G, '# of Pregnancy'], ['P', g.totalPara, '# of Delivery'], ['FT', g.T, '# of Full term'], ['Pr', g.P, '# of Preterm'], ['Ab', g.A, '# of Abortion'], ['LB', g.L, '# of Currently Living']];
-  tiles.innerHTML = defs.map(d => `<div class="ob-tile"><div class="ob-tile-top"><span class="ob-tile-key">${d[0]}</span><span class="ob-tile-val" id="ob-tile-${d[0]}">${d[1]}</span></div><div class="ob-tile-sub">${d[2]}</div></div>`).join('');
+  const defs = [
+    ['G', g.G, '# of Pregnancy', 'Gravida — Total pregnancies including current'],
+    ['P', g.totalPara, '# of Delivery', 'Para — Viable deliveries (>= parity threshold)'],
+    ['T', g.T, '# of Full term', 'Term — Deliveries >= 37 weeks', 'FT'],
+    ['P', g.P, '# of Preterm', 'Preterm — Deliveries 20-36 weeks', 'Pr'],
+    ['A', g.A, '# of Abortion', 'Abortion / Loss — Losses < 20 weeks', 'Ab'],
+    ['L', g.L, '# of Currently Living', 'Living — Currently living children', 'LB']
+  ];
+  tiles.innerHTML = defs.map(d => {
+    const aliasAttr = d[4] ? ` data-alias="${d[4]}"` : '';
+    return `<div class="ob-tile"><div class="ob-tile-top"><span class="ob-tile-key">${d[0]}</span><span class="ob-tile-val" id="ob-tile-${d[0]}"${aliasAttr}>${d[1]}</span></div><div class="ob-tile-sub" title="${escapeHtml(d[3] || '')}">${d[2]}</div></div>`;
+  }).join('');
   const chip = document.getElementById('ob-review-chip');
   if (chip) {
     if (g.isComplete) { chip.style.display = 'none'; chip.innerHTML = ''; }
@@ -1037,43 +1137,57 @@ function obRow(k, v) { return `<div class="ob-row"><span class="ob-row-k">${esca
    TOP SUMMARY CARDS RENDERER
    ───────────────────────────────────────────────────────────────────────────── */
 function renderSummaryCards() {
-  // 1. Obstetric Score (DOH / POGS)
+  // 1. Obstetric Score — GP(TPAL)
   const gtpal = computeGTPAL();
   const scoreEl = document.getElementById('val-obstetric-score');
   if (scoreEl) scoreEl.textContent = gtpal.displayGP;
   const subEl = document.getElementById('val-obstetric-sub');
-  if (subEl) subEl.textContent = `Full GTPAL: ${gtpal.scoreText}` + (gtpal.isComplete ? '' : ' (needs review)');
+  if (subEl) subEl.textContent = `Full GP(TPAL): ${gtpal.scoreText}` + (gtpal.isComplete ? '' : ' (needs review)');
 
-  // 2. Current LMP & PMP
-  const currentLmpObj = patientState.lmpHistory.find(l => l.isCurrent) || patientState.lmpHistory[0];
-  const lmpVal = currentLmpObj ? currentLmpObj.dateFormatted : '—';
+  // 2. Dating (Present Pregnancy active dating vs longitudinal history)
+  const pp = patientState.presentPregnancy;
+  const isPregnant = !!(pp && pp.active);
   const lmpEl = document.getElementById('val-current-lmp');
-  if (lmpEl) lmpEl.textContent = lmpVal;
   const pmpSub = document.getElementById('val-pmp-sub');
-  if (pmpSub) {
-    if (currentLmpObj && currentLmpObj.pmpFormatted) {
-      pmpSub.textContent = `PMP: ${currentLmpObj.pmpFormatted} (${currentLmpObj.cycleInterval || '28d cycle'})`;
-    } else {
-      pmpSub.textContent = 'PMP: Not recorded';
-    }
-  }
-
-  // 3. EDD
   const eddEl = document.getElementById('val-edd');
-  if (eddEl) {
-    if (currentLmpObj && currentLmpObj.date) {
-      const calc = computeEDD(currentLmpObj.date, currentLmpObj.pmpDate);
-      eddEl.textContent = calc.eddDisplay;
-      const eddSub = document.getElementById('val-edd-sub');
-      if (eddSub) eddSub.textContent = `EGA: ${calc.egaStr} (Naegele)`;
+  const eddSub = document.getElementById('val-edd-sub');
+
+  if (isPregnant) {
+    const ppLmp = pp.lmpStart || pp.lmp || '';
+    if (ppLmp) {
+      const calc = computeEDD(ppLmp, pp.lmpEnd);
+      if (lmpEl) lmpEl.textContent = obFmtDateMmDdYyyy(ppLmp);
+      if (pmpSub) pmpSub.textContent = pp.lmpEnd ? `Menses End: ${obFmtLong(pp.lmpEnd)}` : 'Active Present Pregnancy';
+      if (eddEl) eddEl.textContent = calc.eddDisplay;
+      if (eddSub) eddSub.textContent = `AOG: ${calc.egaStr} (Naegele)`;
+    } else if (pp.usDate) {
+      const usCalc = obCalc.ultrasoundDating(pp.usDate, pp.usWeeks, pp.usDays);
+      if (lmpEl) lmpEl.textContent = 'US: ' + obFmtLong(pp.usDate);
+      if (pmpSub) pmpSub.textContent = 'Ultrasound-based dating';
+      if (eddEl) eddEl.textContent = usCalc.edd ? obFmtLong(usCalc.edd) : '—';
+      if (eddSub) eddSub.textContent = `AOG: ${usCalc.ga ? obCalc.formatGA(usCalc.ga) : '—'} (Ultrasound)`;
     } else {
-      eddEl.textContent = '—';
-      const eddSub = document.getElementById('val-edd-sub');
-      if (eddSub) eddSub.textContent = 'No active LMP';
+      if (lmpEl) lmpEl.textContent = 'Present Pregnancy';
+      if (pmpSub) pmpSub.textContent = 'Active Pregnancy';
+      if (eddEl) eddEl.textContent = '—';
+      if (eddSub) eddSub.textContent = 'Dating pending';
     }
+  } else {
+    // Non-pregnant patient: show longitudinal menstrual baseline
+    const currentLmpObj = (patientState.lmpHistory && patientState.lmpHistory.find(l => l.isCurrent)) || (patientState.lmpHistory && patientState.lmpHistory[0]);
+    if (lmpEl) lmpEl.textContent = currentLmpObj ? currentLmpObj.dateFormatted : '—';
+    if (pmpSub) {
+      if (currentLmpObj && currentLmpObj.pmpFormatted) {
+        pmpSub.textContent = `PMP: ${currentLmpObj.pmpFormatted} (${currentLmpObj.cycleInterval || '28d cycle'})`;
+      } else {
+        pmpSub.textContent = 'PMP: Not recorded';
+      }
+    }
+    if (eddEl) eddEl.textContent = '—';
+    if (eddSub) eddSub.textContent = 'Not Currently Pregnant';
   }
 
-  // 4. Pregnancy Records Count
+  // 3. Pregnancy Records Count
   const countEl = document.getElementById('val-pregnancy-count');
   if (countEl) countEl.textContent = `${patientState.pregnancies.length} Records`;
   renderObHistoryPanel();
@@ -1532,6 +1646,66 @@ function ensureBabyRows(count, confirmRemoval) {
   return true;
 }
 
+/* ---- Place of Delivery Standardization ---- */
+function handlePlaceOfDeliveryChange() {
+  const sel = obEl('preg-place-select');
+  const otherGrp = obEl('grp-place-other');
+  const otherInput = obEl('preg-place-other');
+  const hiddenPlace = obEl('preg-place');
+  const val = sel ? sel.value : '';
+
+  if (val === 'Others (Specify)') {
+    if (otherGrp) otherGrp.style.display = 'block';
+    if (otherInput) {
+      if (hiddenPlace && hiddenPlace.value && !['Hospital', 'Home', 'Birthing Clinic', 'Others (Specify)'].includes(hiddenPlace.value)) {
+        otherInput.value = hiddenPlace.value;
+      }
+      otherInput.focus();
+    }
+  } else {
+    if (otherGrp) otherGrp.style.display = 'none';
+    if (hiddenPlace) hiddenPlace.value = val;
+  }
+}
+window.handlePlaceOfDeliveryChange = handlePlaceOfDeliveryChange;
+
+function setPlaceOfDelivery(rawVal) {
+  const sel = obEl('preg-place-select');
+  const otherGrp = obEl('grp-place-other');
+  const otherInput = obEl('preg-place-other');
+  const hiddenPlace = obEl('preg-place');
+  const val = String(rawVal || '').trim();
+
+  if (!val) {
+    if (sel) sel.value = '';
+    if (otherGrp) otherGrp.style.display = 'none';
+    if (otherInput) otherInput.value = '';
+    if (hiddenPlace) hiddenPlace.value = '';
+    return;
+  }
+
+  if (hiddenPlace) hiddenPlace.value = val;
+
+  if (val === 'Hospital' || /^hospital/i.test(val) || /medical center/i.test(val)) {
+    if (sel) sel.value = 'Hospital';
+    if (otherGrp) otherGrp.style.display = 'none';
+    if (otherInput) otherInput.value = '';
+  } else if (val === 'Home' || /^home/i.test(val)) {
+    if (sel) sel.value = 'Home';
+    if (otherGrp) otherGrp.style.display = 'none';
+    if (otherInput) otherInput.value = '';
+  } else if (val === 'Birthing Clinic' || /birthing/i.test(val) || /lying-in/i.test(val) || /rhu/i.test(val)) {
+    if (sel) sel.value = 'Birthing Clinic';
+    if (otherGrp) otherGrp.style.display = 'none';
+    if (otherInput) otherInput.value = '';
+  } else {
+    if (sel) sel.value = 'Others (Specify)';
+    if (otherGrp) otherGrp.style.display = 'block';
+    if (otherInput) otherInput.value = (val === 'Others (Specify)' ? '' : val);
+  }
+}
+window.setPlaceOfDelivery = setPlaceOfDelivery;
+
 /* ---- Open / close ---- */
 function openAddPregModal() {
   obEl('modal-pregnancy-title').textContent = 'Past Pregnancy';
@@ -1541,7 +1715,7 @@ function openAddPregModal() {
   obEl('preg-type').value = 'singleton';
   obEl('preg-month').value = '';
   obEl('preg-year').value = '';
-  obEl('preg-place').value = 'Tertiary Hospital (Government / Public)';
+  setPlaceOfDelivery('Hospital');
   obEl('preg-attendant').value = 'OB-Gyne Specialist / Physician';
   obEl('preg-ga-weeks').value = '';
   obEl('preg-ga-days').value = '';
@@ -1603,7 +1777,7 @@ function openEditPregModal(index) {
   obEl('preg-type').value = type;
   obEl('preg-month').value = p.deliveryMonth ? String(parseInt(p.deliveryMonth, 10)) : '';
   obEl('preg-year').value = p.deliveryYear || ((/^\d{4}/.exec(String(p.year || '')) || [''])[0]);
-  obEl('preg-place').value = p.place || 'Tertiary Hospital (Government / Public)';
+  setPlaceOfDelivery(p.place || 'Hospital');
   obEl('preg-attendant').value = p.attendant || 'OB-Gyne Specialist / Physician';
   obEl('preg-ga-weeks').value = norm.gaDays === null ? '' : Math.floor(norm.gaDays / 7);
   obEl('preg-ga-days').value = norm.gaDays === null ? '' : (norm.gaDays % 7);
@@ -1717,6 +1891,18 @@ function handlePregnancySubmit(event) {
     }
     if (gaTotal < obCalc.VIABLE_DAYS && !confirm('A delivery recorded before 20 weeks is flagged for clinical review. Continue?')) return;
   }
+  const placeSel = obEl('preg-place-select') ? obEl('preg-place-select').value : '';
+  let finalPlace = '';
+  if (placeSel === 'Others (Specify)') {
+    finalPlace = obEl('preg-place-other') ? obEl('preg-place-other').value.trim() : '';
+    if (!finalPlace) return obShowFormError('preg-form-error', 'Specify the place of delivery.');
+  } else if (placeSel) {
+    finalPlace = placeSel;
+  } else {
+    finalPlace = (obEl('preg-place') && obEl('preg-place').value) || 'Hospital';
+  }
+  if (obEl('preg-place')) obEl('preg-place').value = finalPlace;
+
   obShowFormError('preg-form-error', '');
   submitBtn.disabled = true;
 
@@ -1740,7 +1926,7 @@ function handlePregnancySubmit(event) {
     gaWeeks: gaWeeks,
     gaDays: gaDays,
     ga: gaDays ? `${gaWeeks} weeks ${gaDays} days` : `${gaWeeks} weeks`,
-    place: obEl('preg-place').value,
+    place: finalPlace,
     attendant: loss ? ((old && old.attendant) || 'N/A') : obEl('preg-attendant').value,
     maternalComp: obEl('preg-maternal-comp').value,
     fetalOutcome: loss ? ((old && old.fetalOutcome) || 'Stillbirth / Non-viable') : obEl('preg-fetal-outcome').value,
@@ -1805,19 +1991,15 @@ function getLocalTodayIso() {
 }
 
 function handleLmpStartInput() {
-  const startEl = obEl('pp-lmp-start');
-  const endEl = obEl('pp-lmp-end');
-  if (startEl && startEl.value && endEl && !endEl.value) {
-    endEl.value = getLocalTodayIso();
-  }
   schedulePresentPreview();
 }
 window.handleLmpStartInput = handleLmpStartInput;
 
 function openPresentModal() {
   const pp = patientState.presentPregnancy || {};
-  obEl('pp-lmp-start').value = pp.lmpStart || '';
-  obEl('pp-lmp-end').value = pp.lmpEnd || getLocalTodayIso();
+  const startVal = pp.lmpStart || pp.lmp || '';
+  obEl('pp-lmp-start').value = startVal;
+  obEl('pp-lmp-end').value = pp.lmpEnd || '';
   obEl('pp-us-date').value = pp.usDate || '';
   obEl('pp-us-weeks').value = (pp.usWeeks === undefined || pp.usWeeks === null) ? '' : pp.usWeeks;
   obEl('pp-us-days').value = (pp.usDays === undefined || pp.usDays === null) ? '' : pp.usDays;
@@ -1894,6 +2076,7 @@ function handlePresentSubmit(event) {
   patientState.presentPregnancy = {
     active: true,
     lmpStart: ls || '',
+    lmp: ls || '',
     lmpEnd: le || '',
     usDate: hasUs ? ud : '',
     usWeeks: hasUs ? +uw : null,
@@ -1902,6 +2085,7 @@ function handlePresentSubmit(event) {
   closePresentModal();
   markObDirty();
   renderSummaryCards();
+  renderObHistoryPanel();
   showToast('Present pregnancy recorded. Select Save to store changes.');
 }
 
@@ -1912,6 +2096,8 @@ function endPresentPregnancy() {
   closePresentModal();
   markObDirty();
   renderSummaryCards();
+  renderObHistoryPanel();
+  showToast('Present pregnancy marked as ended. Select Save to store changes.');
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -1925,8 +2111,10 @@ function saveObHistory() {
   try {
     const existing = localStorage.getItem(key);
     if (existing && !localStorage.getItem(key + '__bak_v1')) localStorage.setItem(key + '__bak_v1', existing);
+    const nowIso = new Date().toISOString();
     const payload = {
       obSchemaVersion: OB_SCHEMA_VERSION,
+      savedAt: nowIso,
       pregnancies: patientState.pregnancies,
       lmpHistory: patientState.lmpHistory,
       procedures: patientState.procedures,
@@ -1934,9 +2122,16 @@ function saveObHistory() {
       presentPregnancy: patientState.presentPregnancy || null
     };
     localStorage.setItem(key, JSON.stringify(payload));
+    // Clear working draft once persisted
+    localStorage.removeItem('his_obgyne_draft_' + currentPatientId);
+    // Broadcast timestamp for cross-tab sync
+    localStorage.setItem('his_obgyne_last_saved', String(Date.now()));
+    window.dispatchEvent(new CustomEvent('his:obgyne-saved', { detail: { patientId: currentPatientId } }));
+
     obDirty = false;
     renderObHistoryPanel();
-    showToast('Obstetric history saved.');
+    renderSummaryCards();
+    showToast('Obstetric history saved successfully.');
   } catch (e) {
     showToast('Obstetric history could not be saved.', 'error');
   }
@@ -1952,7 +2147,16 @@ function loadSavedObHistory() {
     patientState.lmpHistory = d.lmpHistory;
     if (d.procedures) patientState.procedures = d.procedures;
     if (d.gynecologicHistory) patientState.gynecologicHistory = d.gynecologicHistory;
-    if (d.presentPregnancy) patientState.presentPregnancy = d.presentPregnancy;
+    if (d.presentPregnancy) {
+      patientState.presentPregnancy = d.presentPregnancy;
+      if (patientState.presentPregnancy.active === undefined && (patientState.presentPregnancy.lmpStart || patientState.presentPregnancy.lmp)) {
+        patientState.presentPregnancy.active = true;
+      }
+      if (!patientState.presentPregnancy.lmpStart && patientState.presentPregnancy.lmp) {
+        patientState.presentPregnancy.lmpStart = patientState.presentPregnancy.lmp;
+      }
+    }
+    patientState.savedAt = d.savedAt || null;
     return true;
   } catch (e) {
     console.warn('Could not read stored obstetric history', e);
@@ -2321,6 +2525,11 @@ window.saveGyneHistory = saveGyneHistory;
 window.filterTimeline = filterTimeline;
 window.toggleMenopauseFields = toggleMenopauseFields;
 window.acceptDeptCase = acceptDeptCase;
+window.computeGTPAL = computeGTPAL;
+window.renderSummaryCards = renderSummaryCards;
+window.renderObHistoryPanel = renderObHistoryPanel;
+window.setPlaceOfDelivery = setPlaceOfDelivery;
+window.handlePlaceOfDeliveryChange = handlePlaceOfDeliveryChange;
 
 let currentPatientId = window.OB_PATIENT_ID || 'patient_ob_maria';
 
@@ -2370,9 +2579,14 @@ function initObGyneWorkspace() {
     if (ageEl) ageEl.textContent = (d.age || '28') + ' / ' + (d.gender || 'Female');
     const encEl = document.getElementById('banner-encounter-no');
     if (encEl) encEl.textContent = d.encounter_no || 'OB-2026-1011-0018';
+    const targetUrl = (currentPatientId === 'patient_er_juan' ? 'dashboard_er_inpatient.html' : 'dashboard.html') + '?patient=' + encodeURIComponent(currentPatientId);
     const backBtn = document.getElementById('btn-ob-back-dashboard');
     if (backBtn) {
-      backBtn.href = (currentPatientId === 'patient_er_juan' ? 'dashboard_er_inpatient.html' : 'dashboard.html') + '?patient=' + encodeURIComponent(currentPatientId);
+      backBtn.href = targetUrl;
+    }
+    const backBtnHdr = document.getElementById('btn-ob-back-dashboard-header');
+    if (backBtnHdr) {
+      backBtnHdr.href = targetUrl;
     }
   }
 
@@ -2400,17 +2614,20 @@ function initObGyneWorkspace() {
   } else {
     if (maleNotice) maleNotice.remove();
     loadSavedObHistory();
-    // Restore draft if available for female patients
+    // Restore draft only if its timestamp is strictly newer than the saved record
     try {
       const draftStr = localStorage.getItem('his_obgyne_draft_' + currentPatientId);
       if (draftStr) {
         const draft = JSON.parse(draftStr);
-        if (draft && draft.data) {
+        const draftTime = draft && draft.timestamp ? new Date(draft.timestamp).getTime() : 0;
+        const savedTime = patientState.savedAt ? new Date(patientState.savedAt).getTime() : 0;
+        if (draft && draft.data && (!savedTime || draftTime > savedTime)) {
           if (draft.data.pregnancies) patientState.pregnancies = draft.data.pregnancies;
           if (draft.data.lmpHistory) patientState.lmpHistory = draft.data.lmpHistory;
           if (draft.data.procedures) patientState.procedures = draft.data.procedures;
           if (draft.data.gynecologicHistory) patientState.gynecologicHistory = draft.data.gynecologicHistory;
           if (draft.data.presentPregnancy) patientState.presentPregnancy = draft.data.presentPregnancy;
+          obDirty = true;
         }
       }
     } catch (e) {

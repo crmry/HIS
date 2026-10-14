@@ -1886,9 +1886,11 @@ if (typeof window !== 'undefined') {
               remarks: 'Obstetric and Gynecologic baseline documented at Hospital OB-Gyne OPD.'
             },
             presentPregnancy: {
+              active: true,
               gravida: 4,
               para: 2,
-              tpal: '2-0-1-2',
+              tpal: '2012',
+              lmpStart: '2026-02-28',
               lmp: '2026-02-28',
               edd: '2026-12-05',
               aog: '32 weeks',
@@ -1901,6 +1903,19 @@ if (typeof window !== 'undefined') {
             }
           };
           localStorage.setItem(obStorageKey, JSON.stringify(obSeedData));
+        } else if (existingOb && existingOb.presentPregnancy) {
+          var obNeedsUpdate = false;
+          if (existingOb.presentPregnancy.active === undefined) {
+            existingOb.presentPregnancy.active = true;
+            obNeedsUpdate = true;
+          }
+          if (!existingOb.presentPregnancy.lmpStart && existingOb.presentPregnancy.lmp) {
+            existingOb.presentPregnancy.lmpStart = existingOb.presentPregnancy.lmp;
+            obNeedsUpdate = true;
+          }
+          if (obNeedsUpdate) {
+            localStorage.setItem(obStorageKey, JSON.stringify(existingOb));
+          }
         }
       } catch (e) {}
 

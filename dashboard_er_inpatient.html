@@ -2117,8 +2117,8 @@
                       <!-- 4 Summary Highlight Cards -->
                       <div class="ob-view-cards-grid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin-bottom:16px;">
                         <div class="ob-view-card" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px; border-left:3px solid #16a34a;">
-                          <div style="font-size:10.5px; font-weight:700; text-transform:uppercase; color:#64748b; letter-spacing:0.3px;">Obstetric Score</div>
-                          <div id="ob-view-score-main" style="font-size:15px; font-weight:800; color:#15803d; margin-top:4px;">G0 P0 (0-0-0-0)</div>
+                          <div style="font-size:10.5px; font-weight:700; text-transform:uppercase; color:#64748b; letter-spacing:0.3px;">Obstetric Score — GP(TPAL)</div>
+                          <div id="ob-view-score-main" style="font-size:15px; font-weight:800; color:#15803d; margin-top:4px;">G0P0(0000)</div>
                           <div id="ob-view-score-gtpal" style="font-size:11px; color:#64748b; margin-top:2px;">Gravida 0, Para 0</div>
                         </div>
                         <div class="ob-view-card" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px; border-left:3px solid #0369a1;">
@@ -15744,7 +15744,17 @@
         var raw = localStorage.getItem('HIS_OB_GYNE_' + currentId);
         if (raw) {
           var parsed = JSON.parse(raw);
-          if (parsed && parsed.pregnancies && parsed.lmpHistory) {
+          if (parsed && (parsed.pregnancies || parsed.lmpHistory)) {
+            if (!parsed.pregnancies) parsed.pregnancies = [];
+            if (!parsed.lmpHistory) parsed.lmpHistory = [];
+            if (parsed.presentPregnancy) {
+              if (parsed.presentPregnancy.active === undefined) {
+                parsed.presentPregnancy.active = !!(parsed.presentPregnancy.lmpStart || parsed.presentPregnancy.lmp || parsed.presentPregnancy.edd);
+              }
+              if (!parsed.presentPregnancy.lmpStart && parsed.presentPregnancy.lmp) {
+                parsed.presentPregnancy.lmpStart = parsed.presentPregnancy.lmp;
+              }
+            }
             return parsed;
           }
         }
@@ -15766,19 +15776,21 @@
 
     function computeGTPAL() {
       if (!obPatientState || !obPatientState.pregnancies) {
-        return { G: 0, T: 0, P: 0, A: 0, L: 0, totalPara: 0, displayGP: 'G0P0 (0-0-0-0)', scoreText: 'G0 T0 P0 A0 L0' };
+        return { G: 0, T: 0, P: 0, A: 0, L: 0, totalPara: 0, displayGP: 'G0P0(0000)', scoreText: 'G0 T0 P0 A0 L0' };
       }
       if (obPatientState.isMaleNotApplicable) {
         return { G: 0, T: 0, P: 0, A: 0, L: 0, totalPara: 0, displayGP: 'Not Applicable', scoreText: 'Male Patient' };
       }
+      var pp = obPatientState.presentPregnancy;
+      var hasPresent = !!(pp && pp.active !== false && (pp.active || pp.lmpStart || pp.lmp || pp.usDate));
       var s = window.HIS.obCalc.calculateObstetricSummary(obPatientState.pregnancies, {
-        hasPresent: !!(obPatientState.presentPregnancy && obPatientState.presentPregnancy.active)
+        hasPresent: hasPresent
       });
       return {
         G: s.G, T: s.FT, P: s.Pr, A: s.Ab, L: s.LB, totalPara: s.P,
         issues: s.issues, isComplete: s.isComplete,
-        displayGP: 'G' + s.G + 'P' + s.P + ' (' + s.FT + '-' + s.Pr + '-' + s.Ab + '-' + s.LB + ')',
-        scoreText: 'G' + s.G + ' T' + s.FT + ' P' + s.Pr + ' A' + s.Ab + ' L' + s.LB
+        displayGP: 'G' + s.G + 'P' + s.P + '(' + s.FT + s.Pr + s.Ab + s.LB + ')',
+        scoreText: 'Gravida ' + s.G + ', Para ' + s.P + ' (Term: ' + s.FT + ', Preterm: ' + s.Pr + ', Abortion: ' + s.Ab + ', Living: ' + s.LB + ')'
       };
     }
 
@@ -15837,29 +15849,47 @@
       var viewScoreMain = document.getElementById('ob-view-score-main');
       if (viewScoreMain) viewScoreMain.textContent = gtpal.displayGP;
       var viewScoreGtpal = document.getElementById('ob-view-score-gtpal');
-      if (viewScoreGtpal) viewScoreGtpal.textContent = 'Gravida ' + gtpal.G + ', Para ' + gtpal.totalPara + ' (' + gtpal.scoreText + ')';
+      if (viewScoreGtpal) viewScoreGtpal.textContent = 'Gravida ' + gtpal.G + ', Para ' + gtpal.totalPara + ' (T' + gtpal.T + ' P' + gtpal.P + ' A' + gtpal.A + ' L' + gtpal.L + ')';
+
+      var pp = obPatientState.presentPregnancy;
+      var hasActivePresent = !!(pp && pp.active !== false && (pp.active || pp.lmpStart || pp.lmp || pp.usDate));
+      var viewEdcMain = document.getElementById('ob-view-edc-main');
+      var viewEdcSub = document.getElementById('ob-view-edc-sub');
+      var viewMenstrualMain = document.getElementById('ob-view-menstrual-main');
+      var viewMenstrualSub = document.getElementById('ob-view-menstrual-sub');
 
       var currentLmpObj = null;
       if (obPatientState.lmpHistory && obPatientState.lmpHistory.length) {
         currentLmpObj = obPatientState.lmpHistory.find(function (l) { return l.isCurrent; }) || obPatientState.lmpHistory[0];
       }
-      var lmpVal = currentLmpObj ? currentLmpObj.dateFormatted : '—';
+      var lmpVal = currentLmpObj ? (currentLmpObj.dateFormatted || currentLmpObj.date) : '—';
       var gh = obPatientState.gynecologicHistory || {};
 
-      var viewMenstrualMain = document.getElementById('ob-view-menstrual-main');
-      var viewMenstrualSub = document.getElementById('ob-view-menstrual-sub');
-      if (viewMenstrualMain) viewMenstrualMain.textContent = gh.interval || (currentLmpObj ? 'Active / Regular' : 'Not Recorded');
-      if (viewMenstrualSub) viewMenstrualSub.textContent = 'LMP: ' + lmpVal + (currentLmpObj && currentLmpObj.pmpFormatted ? ' • PMP: ' + currentLmpObj.pmpFormatted : '');
-
-      var viewEdcMain = document.getElementById('ob-view-edc-main');
-      var viewEdcSub = document.getElementById('ob-view-edc-sub');
-      if (currentLmpObj && currentLmpObj.date) {
-        var calc = computeEDD(currentLmpObj.date, currentLmpObj.pmpDate);
-        if (viewEdcMain) viewEdcMain.textContent = 'EDC: ' + calc.eddDisplay;
-        if (viewEdcSub) viewEdcSub.textContent = 'AOG: ' + calc.egaStr + ' (Naegele Rule)';
+      if (hasActivePresent) {
+        var ppLmp = pp.lmpStart || pp.lmp;
+        if (ppLmp) {
+          var calc = computeEDD(ppLmp, pp.lmpEnd || (currentLmpObj && currentLmpObj.pmpDate));
+          if (viewEdcMain) viewEdcMain.textContent = 'EDC: ' + calc.eddDisplay;
+          if (viewEdcSub) viewEdcSub.textContent = 'AOG: ' + calc.egaStr + ' (Naegele Rule)';
+          var pParts = ppLmp.split('-');
+          var formattedPpLmp = pParts.length === 3 ? (pParts[1] + '/' + pParts[2] + '/' + pParts[0]) : ppLmp;
+          if (viewMenstrualSub) viewMenstrualSub.textContent = 'LMP: ' + formattedPpLmp + ' • Current Gestation';
+        } else if (pp.usDate && pp.usWeeks !== undefined && pp.usWeeks !== null) {
+          var usCalc = window.HIS.obCalc.ultrasoundDating(pp.usDate, pp.usWeeks, pp.usDays || 0);
+          if (viewEdcMain) viewEdcMain.textContent = 'EDC: ' + (usCalc.edd ? usCalc.edd : '—');
+          if (viewEdcSub) viewEdcSub.textContent = 'AOG: ' + (usCalc.ga ? window.HIS.obCalc.formatGA(usCalc.ga) : '—') + ' (Ultrasound)';
+          if (viewMenstrualSub) viewMenstrualSub.textContent = 'US Date: ' + pp.usDate + ' • Current Gestation';
+        } else {
+          if (viewEdcMain) viewEdcMain.textContent = 'EDC: Pending Dating';
+          if (viewEdcSub) viewEdcSub.textContent = 'AOG: Present Pregnancy Active';
+          if (viewMenstrualSub) viewMenstrualSub.textContent = 'LMP: Pending Dating';
+        }
+        if (viewMenstrualMain) viewMenstrualMain.textContent = 'Pregnant (G' + gtpal.G + ')';
       } else {
         if (viewEdcMain) viewEdcMain.textContent = 'EDC: —';
         if (viewEdcSub) viewEdcSub.textContent = 'AOG: Not Currently Pregnant';
+        if (viewMenstrualMain) viewMenstrualMain.textContent = gh.interval || (currentLmpObj ? 'Active / Regular' : 'Not Recorded');
+        if (viewMenstrualSub) viewMenstrualSub.textContent = 'LMP: ' + lmpVal + (currentLmpObj && currentLmpObj.pmpFormatted ? ' • PMP: ' + currentLmpObj.pmpFormatted : '');
       }
 
       var viewScreenMain = document.getElementById('ob-view-screen-main');
@@ -15871,7 +15901,7 @@
       var scoreEl = document.getElementById('ob-val-obstetric-score');
       if (scoreEl) scoreEl.textContent = gtpal.displayGP;
       var scoreSubEl = document.getElementById('ob-val-obstetric-score-sub');
-      if (scoreSubEl) scoreSubEl.textContent = 'Full GTPAL: ' + gtpal.scoreText;
+      if (scoreSubEl) scoreSubEl.textContent = gtpal.scoreText;
     }
 
     function renderPregnancyTable() {
@@ -16063,6 +16093,28 @@
 
     // Run initialization
     initObGyneModule(activePatientId);
+
+    // Cross-tab and return navigation synchronization
+    window.addEventListener('storage', function (e) {
+      if (!e.key) return;
+      if (e.key === 'HIS_OB_GYNE_' + (activePatientId || '') || e.key === 'his_obgyne_last_saved') {
+        if (typeof initObGyneModule === 'function' && activePatientId) {
+          initObGyneModule(activePatientId);
+        }
+      }
+    });
+
+    window.addEventListener('pageshow', function () {
+      if (typeof initObGyneModule === 'function' && activePatientId) {
+        initObGyneModule(activePatientId);
+      }
+    });
+
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden && typeof initObGyneModule === 'function' && activePatientId) {
+        initObGyneModule(activePatientId);
+      }
+    });
 
     /* ══════════════════════════════════════════════════════════════════════
        NEONATE CLINICAL RECORD — JAVASCRIPT CONTROLLER
