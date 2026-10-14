@@ -858,7 +858,11 @@ async def scan_single_target(browser_ws, file_url):
                         if (window.computeGTPAL().G !== baseG + 2) return 'Present pregnancy did not count toward G';
 
                         // SAVE persists; no duplicate on repeated SAVE
-                        document.getElementById('btn-save-ob-history').click();
+                        const bannerSaveBtn = document.getElementById('btn-banner-save-history');
+                        if (!bannerSaveBtn) return 'Synchronized banner save button missing';
+                        const bottomSaveBtn = document.getElementById('btn-bottom-save-history');
+                        if (!bottomSaveBtn) return 'Synchronized bottom bar save button missing';
+                        bannerSaveBtn.click();
                         document.getElementById('btn-save-ob-history').click();
                         const stored = JSON.parse(localStorage.getItem(obk) || 'null');
                         if (!stored || stored.pregnancies.length !== countBefore + 1 || !stored.presentPregnancy || !stored.presentPregnancy.active) return 'SAVE did not persist OB history';
