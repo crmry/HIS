@@ -5290,12 +5290,14 @@
         var defaultDoc = getPatientPhysicianName(patientId);
         if (Array.isArray(ord.medications)) {
           meds = ord.medications.map(function(m, idx) {
-            var name = typeof m === 'string' ? m : (m.drug || m.text || '');
+            var rawName = typeof m === 'string' ? m : (m.genericName || m.drug || m.text || '');
+            var name = String(rawName).replace(/^\[(?:SCHEDULED|CONTINUOUS INFUSION|OXYGEN THERAPY|PRESCRIPTION|PRN|STAT|ROUTINE|MEDICATION)\]\s*/i, '').trim();
             var sig = typeof m === 'object' ? (m.sig || m.dosage || 'As directed') : 'As directed';
             var medDoc = (typeof m === 'object' && (m.doctor || m.physician)) || defaultDoc;
             return {
               id: 'med-auto-' + idx,
               name: name,
+              drug: name,
               route: sig,
               indication: pRec.data.admitting_diagnosis || 'Prescribed therapy',
               started: pRec.data.vs_date_time || '',
@@ -5325,7 +5327,14 @@
 
     function parseMedRxFields(item) {
       item = item || {};
-      var drug = item.name || item.drug || '—';
+      var rawDrug = item.genericName || item.drug || item.name || item.medication || '—';
+      var drug = String(rawDrug).replace(/^\[(?:SCHEDULED|CONTINUOUS INFUSION|OXYGEN THERAPY|PRESCRIPTION|PRN|STAT|ROUTINE|MEDICATION)\]\s*/i, '').trim();
+      if (drug.indexOf(' - ') !== -1) {
+        var drugParts = drug.split(' - ');
+        if (drugParts.length > 1 && /(?:oral|iv|im|sc|sublingual|topical|inhalation|once\s*daily|twice\s*daily|every\s*\d|prn|od|bid|tid|qid|hs|q\d+h)/i.test(drugParts[1])) {
+          drug = drugParts[0].trim();
+        }
+      }
       var quantity = item.quantity || item.qty || '';
       var dosage = item.dosage || item.dose || '';
       var frequency = item.frequency || item.freq || '';
@@ -10394,7 +10403,7 @@
         var note = item.precautions || item.remarks;
         text += (text ? ' | Precautions: ' : 'Precautions: ') + String(note).trim();
       }
-      return text ? '[SCHEDULED] ' + text : '';
+      return text ? text.replace(/^\[SCHEDULED\]\s*/i, '').trim() : '';
     }
 
     function isMedicationRowActive(row) {

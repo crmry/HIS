@@ -658,6 +658,14 @@ async def scan_single_target(browser_ws, file_url):
                                 return 'Summary of medications doctor column contains generic Attending Physician placeholder: ' + cell.textContent.trim();
                             }
                         }
+
+                        // Verify that Drug name column never displays [SCHEDULED] or bracketed prefix tags
+                        const drugCells = Array.from(document.querySelectorAll('#med-summary-rows tr td:first-child'));
+                        for (const cell of drugCells) {
+                            if (/\\[(?:SCHEDULED|CONTINUOUS INFUSION|OXYGEN THERAPY)\\]/i.test(cell.textContent.trim())) {
+                                return 'Summary of medications Drug name column contains bracketed order prefix: ' + cell.textContent.trim();
+                            }
+                        }
                     }
                 }
 
