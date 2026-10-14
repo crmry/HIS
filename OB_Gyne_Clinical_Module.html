@@ -781,10 +781,10 @@
                     <div class="ob-sec-subhead" style="margin-top:16px;">Based on Ultrasound</div>
                     <div class="form-field">
                       <label for="pp-us-date">ULTRASOUND DATE</label>
-                      <input type="date" id="pp-us-date" class="form-control" oninput="schedulePresentPreview()" onchange="schedulePresentPreview()">
+                      <input type="date" id="pp-us-date" class="form-control" oninput="handleUltrasoundDateChange()" onchange="handleUltrasoundDateChange()">
                       <div id="pp-us-lmp-hint" style="display:none; font-size:11px; color:#15803d; margin-top:4px;">
                         Expected GA at scan date: <strong id="pp-us-lmp-ga-text"></strong>
-                        <button type="button" class="btn-link" style="margin-left:6px; font-size:11px; text-decoration:underline; cursor:pointer; background:none; border:none; color:#15803d; font-weight:700; padding:0;" onclick="autofillUltrasoundGaFromLmp()">Auto-fill</button>
+                        <span id="pp-us-lmp-auto-tag" style="color:#15803d; font-weight:600; margin-left:4px;">(Auto-populated from LMP)</span>
                       </div>
                     </div>
                     <div class="form-field">
@@ -2155,6 +2155,20 @@ function closePresentModal() {
   obShowView('menu');
 }
 
+function handleUltrasoundDateChange() {
+  const ls = obEl('pp-lmp-start').value;
+  const ud = obEl('pp-us-date').value;
+  if (ls && ud) {
+    const expGa = obCalc.lmpGaAtScanDate(ls, ud);
+    if (expGa) {
+      obEl('pp-us-weeks').value = expGa.weeks;
+      obEl('pp-us-days').value = expGa.days;
+    }
+  }
+  schedulePresentPreview();
+}
+window.handleUltrasoundDateChange = handleUltrasoundDateChange;
+
 function schedulePresentPreview() {
   if (presentPreviewFrame) return;
   presentPreviewFrame = window.requestAnimationFrame(() => { presentPreviewFrame = null; updatePresentPreview(); });
@@ -2190,8 +2204,7 @@ function updatePresentPreview() {
     lmp = obCalc.lmpDating(ls, le);
     if (lmpGaDisp) lmpGaDisp.textContent = lmp.ga ? obCalc.formatGA(lmp.ga) : '—';
     if (lp) {
-      lp.innerHTML = lmp.edd ? `Expected Delivery Date: <strong>${escapeHtml(obFmtLong(lmp.edd))}</strong> &nbsp; Age of Gestation: <strong>${escapeHtml(lmp.ga ? obCalc.formatGA(lmp.ga) : '—')}</strong>` : '';
-      if (lmp.issues.length) lp.innerHTML += `<div class="ob-issue">${escapeHtml(lmp.issues.join('; '))}</div>`;
+      lp.innerHTML = (lmp.issues && lmp.issues.length) ? `<div class="ob-issue">${escapeHtml(lmp.issues.join('; '))}</div>` : '';
       lp.style.display = lp.innerHTML ? 'block' : 'none';
     }
   } else {
@@ -2204,8 +2217,7 @@ function updatePresentPreview() {
     if (usEddDisp) usEddDisp.textContent = us.edd ? obFmtLong(us.edd) : '—';
     if (usGaDisp) usGaDisp.textContent = us.ga ? obCalc.formatGA(us.ga) : '—';
     if (up) {
-      up.innerHTML = us.edd ? `Expected Delivery Date: <strong>${escapeHtml(obFmtLong(us.edd))}</strong> &nbsp; Age of Gestation: <strong>${escapeHtml(us.ga ? obCalc.formatGA(us.ga) : '—')}</strong>` : '';
-      if (us.issues && us.issues.length) up.innerHTML += `<div class="ob-issue" style="color:#dc2626; margin-top:4px;">${escapeHtml(us.issues.join('; '))}</div>`;
+      up.innerHTML = (us.issues && us.issues.length) ? `<div class="ob-issue" style="color:#dc2626; margin-top:4px;">${escapeHtml(us.issues.join('; '))}</div>` : '';
       up.style.display = up.innerHTML ? 'block' : 'none';
     }
   } else {
@@ -2218,8 +2230,10 @@ function updatePresentPreview() {
   if (dn) {
     if (acog && acog.hasBoth) {
       dn.innerHTML = `<strong>ACOG Recommendation:</strong> ${escapeHtml(acog.desc)} Estimated EDD: <strong>${escapeHtml(obFmtLong(acog.recommendedEdd))}</strong> (${escapeHtml(acog.recommendedMethod)}-based).`;
+      dn.style.display = 'block';
     } else {
       dn.innerHTML = '';
+      dn.style.display = 'none';
     }
   }
 }

@@ -850,11 +850,13 @@ async def scan_single_target(browser_ws, file_url):
 
                         // Present pregnancy ADD with fixed dating and flexible ultrasound inputs
                         window.openPresentModal();
-                        setv('pp-lmp-start', '2026-06-01'); setv('pp-us-date', '2026-08-14');
-                        // Test ultrasound auto-fill from LMP
-                        if (typeof window.autofillUltrasoundGaFromLmp === 'function') {
-                            window.autofillUltrasoundGaFromLmp();
-                            if (!document.getElementById('pp-us-weeks').value) return 'Ultrasound auto-fill from LMP failed to set weeks';
+                        setv('pp-lmp-start', '2026-06-01');
+                        // Changing ultrasound date directly triggers handleUltrasoundDateChange and auto-populates weeks and days from LMP
+                        const usDateInput = document.getElementById('pp-us-date');
+                        usDateInput.value = '2026-08-14';
+                        if (typeof window.handleUltrasoundDateChange === 'function') {
+                            window.handleUltrasoundDateChange();
+                            if (!document.getElementById('pp-us-weeks').value) return 'handleUltrasoundDateChange failed to auto-populate weeks';
                         }
                         // Set specific ultrasound dating
                         setv('pp-us-weeks', '11'); setv('pp-us-days', '1');
