@@ -632,15 +632,6 @@
     <span class="patient-meta-pill">Case: <strong id="banner-encounter-no" style="margin-left:4px;">OB-2026-1011-0018</strong></span>
   </div>
   <div class="patient-info-right">
-    <div class="patient-meta-pill" style="background:var(--med-green-pale); border-color:var(--med-green-border); color:var(--med-green-dark); font-weight:700;">
-      <span>Obstetric Score — GP(TPAL): <strong id="val-obstetric-score" style="margin-left:4px;">G0P0(0000)</strong></span>
-    </div>
-    <div class="patient-meta-pill">
-      <span>LMP: <strong id="val-current-lmp" style="margin-left:4px;">—</strong></span>
-    </div>
-    <div class="patient-meta-pill">
-      <span>EDD: <strong id="val-edd" style="margin-left:4px;">—</strong></span>
-    </div>
     <span id="val-pregnancy-count" style="display:none;">3</span>
 
     <button type="button" id="btn-ob-header-save-draft" style="display:none;" onclick="saveGyneDraft()" aria-hidden="true"></button>
@@ -929,7 +920,7 @@
               <div class="ob-hist-head">
                 <div>
                   <h2 class="ob-hist-title">Obstetric History</h2>
-                  <div style="font-size:11.5px; color:var(--med-text-muted); margin-top:2px;">Obstetric Score — GP(TPAL) &bull; Clinical Pregnancy Records</div>
+                  <div style="font-size:11.5px; color:var(--med-text-muted); margin-top:2px;">Obstetric Score — GP(TPAL): <strong id="val-obstetric-score" style="color:var(--med-green-dark, #1f7d45); font-weight:700;">G0P0(0000)</strong> &bull; Clinical Pregnancy Records</div>
                 </div>
                 <div style="display:flex; align-items:center; gap:12px;">
                   <span class="ob-dirty-flag" id="ob-dirty-flag" aria-live="polite"></span>
