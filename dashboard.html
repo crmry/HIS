@@ -11786,6 +11786,27 @@
     });
 
     function buildOrders(savedOrders) {
+      if (savedOrders && typeof savedOrders === 'object') {
+        if (typeof savedOrders.diet === 'string' && savedOrders.diet.trim()) {
+          savedOrders.diet = [{ text: savedOrders.diet.trim() }];
+        }
+        if (!savedOrders.iv && savedOrders.ivf) {
+          savedOrders.iv = typeof savedOrders.ivf === 'string' ? [{ text: savedOrders.ivf.trim() }] : savedOrders.ivf;
+        }
+        if (!savedOrders.clinicalRequests) {
+          savedOrders.clinicalRequests = { laboratory: [], radiology: [], respiratory: [], heart: [], eeg: [] };
+          if (Array.isArray(savedOrders.labs)) {
+            savedOrders.clinicalRequests.laboratory = savedOrders.labs.map(function (item) {
+              return { description: (typeof item === 'string' ? item : (item.lab || item.description || '')), priority: 'Routine' };
+            });
+          }
+          if (Array.isArray(savedOrders.diagnostics)) {
+            savedOrders.clinicalRequests.radiology = savedOrders.diagnostics.map(function (item) {
+              return { description: (typeof item === 'string' ? item : (item.name || item.description || '')), priority: 'Routine' };
+            });
+          }
+        }
+      }
       ordersBody.innerHTML = '';
       copySavedRequests(savedOrders && savedOrders.clinicalRequests);
       ORDERS.forEach(function (o) {

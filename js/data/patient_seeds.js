@@ -1045,7 +1045,7 @@ if (typeof window !== 'undefined') {
     function obPatientRecord() {
       return {
         id: OB_PATIENT_ID,
-        seedVersion: 2,
+        seedVersion: 3,
         createdAt: '2026-08-15T08:30:00+08:00',
         updatedAt: '2026-10-11T09:15:00+08:00',
         data: {
@@ -1208,7 +1208,17 @@ if (typeof window !== 'undefined') {
                 { dateTime: '2026-08-15T08:30:00+08:00', bp: '112/70', hr: '74', rr: '16', temp: '36.7', wt: '54', ht: '158', weight: '54', height: '158', bmi: '21.6', spo2: '99', o2: '99' }
               ],
               medications: [],
-              orders: [],
+              orders: [
+                { text: 'Regular prenatal diet, high-fiber, adequate hydration (8-10 glasses of water daily).', dateTime: '2026-10-11T09:15:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 09:15 AM' },
+                { text: 'Oral hydration adequate; maintain daily oral fluid intake; no IV line indicated.', dateTime: '2026-10-11T09:15:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 09:15 AM' },
+                { text: 'Laboratory Request: Complete Blood Count (CBC) with Platelet Count — Routine', dateTime: '2026-10-11T09:15:00+08:00', cared: ['R'], timeSignature: 'R - 09:15 AM doctor' },
+                { text: 'Laboratory Request: Routine Urinalysis (midstream clean catch) — Routine', dateTime: '2026-10-11T09:15:00+08:00', cared: ['R'], timeSignature: 'R - 09:15 AM doctor' },
+                { text: 'Diagnostics Request: Obstetric Ultrasound for Biophysical Profile (BPP) and Fetal Biometry — Routine', dateTime: '2026-10-11T09:15:00+08:00', cared: ['R'], timeSignature: 'R - 09:15 AM doctor' },
+                { text: 'Ferrous Sulfate + Folic Acid 600 mg / 400 mcg tablet - 1 tablet - Oral (PO) - Once daily (OD) - Morning - Remarks: Take on empty stomach or with citrus juice', dateTime: '2026-10-11T09:15:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 09:20 AM' },
+                { text: 'Calcium Carbonate 500 mg tablet - 1 tablet - Oral (PO) - Once daily (OD) - With meals - Remarks: Take 2 hours apart from iron supplement', dateTime: '2026-10-11T09:15:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 09:20 AM' },
+                { text: 'Advise on danger signs of pregnancy (severe headache, epigastric pain, visual blurring, vaginal bleeding, leaking fluid, decreased fetal movements). Report to ER immediately if noted.', dateTime: '2026-10-11T09:15:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 09:15 AM' },
+                { text: 'Daily fetal movement counting (kick charts); return to clinic in 2 weeks for follow-up prenatal visit.', dateTime: '2026-10-11T09:15:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 09:15 AM' }
+              ],
               clinical_record: {
                 chief_complaint: 'Initial prenatal visit at Hospital OB-Gyne OPD',
                 history: 'Transferred prenatal care to Regional Medical Center for hospital delivery planning.',
@@ -1218,18 +1228,46 @@ if (typeof window !== 'undefined') {
             }
           ],
           orders: {
-            diet: 'Regular prenatal diet, high-fiber, adequate hydration (8-10 glasses water/day)',
-            ivf: 'None (Oral hydration adequate)',
+            plans: [
+              { text: 'Continue routine prenatal surveillance; monitor maternal blood pressure and weight gain.' },
+              { text: 'Daily fetal movement counting (kick chart); advise on danger signs of pregnancy.' },
+              { text: 'Next prenatal follow-up in 2 weeks (October 25, 2026) with ultrasound BPP and laboratory results.' }
+            ],
+            diet: [
+              { text: 'Regular prenatal diet, high-fiber, adequate hydration (8-10 glasses of water daily).' }
+            ],
+            iv: [
+              { text: 'Oral hydration adequate; maintain daily oral fluid intake; no IV line indicated.' }
+            ],
             medications: [
-              { drug: 'Ferrous Sulfate + Folic Acid 600 mg / 400 mcg tablet', dosage: '1 tablet PO OD (morning)', sig: '1 tablet PO OD (morning)' },
-              { drug: 'Calcium Carbonate 500 mg tablet', dosage: '1 tablet PO OD with meals', sig: '1 tablet PO OD with meals' }
+              { drug: 'Ferrous Sulfate + Folic Acid', name: 'Ferrous Sulfate + Folic Acid 600 mg / 400 mcg tablet', dose: '1 tablet', unit: 'tablet', route: 'Oral (PO)', frequency: 'Once daily (OD)', instructions: 'Take in the morning on an empty stomach' },
+              { drug: 'Calcium Carbonate', name: 'Calcium Carbonate 500 mg tablet', dose: '1 tablet', unit: 'tablet', route: 'Oral (PO)', frequency: 'Once daily (OD)', instructions: 'Take with meals (separate by 2 hours from iron)' }
             ],
-            labs: [
-              { lab: 'Complete Blood Count (CBC)', status: 'Pending' },
-              { lab: 'Routine Urinalysis', status: 'Pending' },
-              { lab: 'Obstetric Ultrasound (Biophysical Profile)', status: 'Scheduled' }
+            special: [
+              { text: 'Advise on danger signs of pregnancy: severe headache, visual disturbance, epigastric pain, vaginal bleeding, fluid loss, decreased fetal movement.' },
+              { text: 'Instruct patient to report immediately to Obstetrics Emergency Triage if danger signs occur.' }
             ],
-            diagnostics: []
+            procedures: [
+              { text: 'Fundic height measurement and fetal heart tone auscultation.' }
+            ],
+            clinicalRequests: {
+              laboratory: [
+                { description: 'Complete Blood Count (CBC) with Platelets', code: 'LAB0001', priority: 'Routine', remarks: 'Mid-trimester routine repeat' },
+                { description: 'Routine Urinalysis', code: 'LAB0002', priority: 'Routine', remarks: 'Screen for asymptomatic bacteriuria / proteinuria' }
+              ],
+              radiology: [
+                { description: 'Obstetric Ultrasound (Biophysical Profile & Fetal Biometry)', code: 'RAD-OB-BPP', priority: 'Routine', remarks: 'Assess fetal growth, amniotic fluid, and fetal well-being' }
+              ],
+              respiratory: [],
+              heart: [],
+              eeg: []
+            },
+            prescriptions: {
+              items: [
+                { drug: 'Ferrous Sulfate + Folic Acid 600 mg / 400 mcg tablet', sig: 'Take 1 tablet by mouth once daily in the morning', qty: '30 tablets' },
+                { drug: 'Calcium Carbonate 500 mg tablet', sig: 'Take 1 tablet by mouth once daily with meals', qty: '30 tablets' }
+              ]
+            }
           },
           savedOrders: [
             {
@@ -1420,7 +1458,7 @@ if (typeof window !== 'undefined') {
     function neoPatientRecord() {
       return {
         id: NEO_PATIENT_ID,
-        seedVersion: 1,
+        seedVersion: 2,
         createdAt: '2026-10-11T08:30:00+08:00',
         updatedAt: '2026-10-13T09:00:00+08:00',
         data: {
@@ -1513,7 +1551,19 @@ if (typeof window !== 'undefined') {
                 { id: 'med-neo-3', name: 'Hepatitis B Vaccine (Recombinant) 10 mcg / 0.5 mL', quantity: '1 dose', dosage: '0.5 mL', frequency: 'Single dose', timing: 'At birth', period: 'Dose', duration: '1 dose', route: 'Intramuscular (IM) Left vastus lateralis', indication: 'Newborn immunization birth dose', started: '2026-10-11T09:00:00+08:00', doses24h: '1 dose', status: 'Completed / Given', doctor: 'Andrea Reyes, MD', nurse: 'Andrea Reyes, MD' },
                 { id: 'med-neo-4', name: 'BCG Vaccine (Bacille Calmette-Guérin) 0.05 mL', quantity: '1 dose', dosage: '0.05 mL', frequency: 'Single dose', timing: 'At birth', period: 'Dose', duration: '1 dose', route: 'Intradermal (ID) Right deltoid', indication: 'Newborn tuberculosis immunization', started: '2026-10-11T09:00:00+08:00', doses24h: '1 dose', status: 'Completed / Given', doctor: 'Andrea Reyes, MD', nurse: 'Andrea Reyes, MD' }
               ],
-              orders: [],
+              orders: [
+                { text: 'Rooming-in with mother; continue exclusive breastfeeding on demand every 2-3 hours; maintain warm chain and thermal protection.', dateTime: '2026-10-11T08:35:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 08:35 AM' },
+                { text: 'Exclusive breastfeeding on demand (every 2-3 hours); strictly no water, glucose water, or formula supplementation.', dateTime: '2026-10-11T08:35:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 08:35 AM' },
+                { text: 'No IV fluids required (Enteral feeding well established on breast milk).', dateTime: '2026-10-11T08:35:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 08:35 AM' },
+                { text: 'Laboratory Request: Expanded Newborn Screening (ENBS) via heel prick at 24-48 hours of life prior to discharge — Routine', dateTime: '2026-10-11T08:35:00+08:00', cared: ['R'], timeSignature: 'R - 08:35 AM doctor' },
+                { text: 'Diagnostics Request: Newborn Hearing Screening Test (Automated ABR / OAE) and CCHD pulse oximetry screening — Routine', dateTime: '2026-10-11T08:35:00+08:00', cared: ['R'], timeSignature: 'R - 08:35 AM doctor' },
+                { text: 'Phytomenadione (Vitamin K1) 1 mg / 0.5 mL ampule - 1 mg - Intramuscular (IM) Right vastus lateralis - Single dose - At birth - Remarks: Hemorrhagic disease of the newborn prophylaxis', dateTime: '2026-10-11T08:35:00+08:00', cared: ['C', 'A'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 08:40 AM' },
+                { text: 'Erythromycin 0.5% ophthalmic ointment - 1 cm ribbon per eye - Ophthalmic (OU) both eyes - Single dose - At birth - Remarks: Neonatal ophthalmia prophylaxis within 1 hour of birth', dateTime: '2026-10-11T08:40:00+08:00', cared: ['C', 'A'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 08:45 AM' },
+                { text: 'Hepatitis B Vaccine (Recombinant) 10 mcg / 0.5 mL - 0.5 mL - Intramuscular (IM) Left vastus lateralis - Single dose - At birth - Remarks: Newborn immunization birth dose', dateTime: '2026-10-11T09:00:00+08:00', cared: ['C', 'A'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 09:05 AM' },
+                { text: 'BCG Vaccine (Bacille Calmette-Guérin) 0.05 mL - 0.05 mL - Intradermal (ID) Right deltoid - Single dose - At birth - Remarks: Newborn tuberculosis immunization', dateTime: '2026-10-11T09:00:00+08:00', cared: ['C', 'A'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 09:10 AM' },
+                { text: 'Essential Intrapartum and Newborn Care (EINC) protocol completion; uninterrupted skin-to-skin contact; dry umbilical cord care (keep clean and exposed to air without applying antiseptics/bandages).', dateTime: '2026-10-11T08:35:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 08:35 AM' },
+                { text: 'Newborn clinical anthropometrics and physical maturity assessment (Ballard Score 38, AGA).', dateTime: '2026-10-11T08:35:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 08:35 AM' }
+              ],
               clinical_record: {
                 chief_complaint: 'Routine newborn clinical care and rooming-in surveillance',
                 history: 'Male infant delivered at 39 weeks AOG via uncomplicated vaginal delivery to Maria Clara Santos.',
@@ -1523,20 +1573,47 @@ if (typeof window !== 'undefined') {
             }
           ],
           orders: {
-            diet: 'Exclusive breastfeeding on demand (every 2-3 hours)',
-            ivf: 'None (Enteral feeding well established)',
+            plans: [
+              { text: 'Rooming-in with mother; continue exclusive breastfeeding on demand every 2-3 hours; maintain warm chain and thermal protection.' },
+              { text: 'Schedule routine discharge home with mother upon pediatrician clearance and completion of 48-hour ENBS.' }
+            ],
+            diet: [
+              { text: 'Exclusive breastfeeding on demand (every 2-3 hours); strictly no water, glucose water, or formula supplementation.' }
+            ],
+            iv: [
+              { text: 'No IV fluids required (Enteral feeding well established on breast milk).' }
+            ],
             medications: [
-              { drug: 'Phytomenadione (Vitamin K1) 1 mg IM', dosage: '1 mg IM single dose', sig: 'Given at birth (Right vastus lateralis)' },
-              { drug: 'Erythromycin 0.5% eye ointment OU', dosage: '1 ribbon OU single application', sig: 'Given at birth' },
-              { drug: 'Hepatitis B Vaccine 0.5 mL IM', dosage: '0.5 mL IM single dose', sig: 'Given at birth (Left vastus lateralis)' },
-              { drug: 'BCG Vaccine 0.05 mL ID', dosage: '0.05 mL ID single dose', sig: 'Given at birth (Right deltoid)' }
+              { drug: 'Phytomenadione (Vitamin K1)', name: 'Phytomenadione (Vitamin K1)', dose: '1 mg', unit: 'mg', route: 'Intramuscular (IM) Right vastus lateralis', frequency: 'Single dose', instructions: 'Hemorrhagic disease of the newborn prophylaxis at birth' },
+              { drug: 'Erythromycin 0.5% ophthalmic ointment', name: 'Erythromycin 0.5% ophthalmic ointment', dose: '1 cm ribbon per eye', unit: 'ribbon', route: 'Ophthalmic (OU) both eyes', frequency: 'Single dose', instructions: 'Neonatal ophthalmia prophylaxis within 1 hour of birth' },
+              { drug: 'Hepatitis B Vaccine (Recombinant)', name: 'Hepatitis B Vaccine (Recombinant)', dose: '0.5 mL', unit: 'mL', route: 'Intramuscular (IM) Left vastus lateralis', frequency: 'Single dose', instructions: 'Newborn immunization birth dose' },
+              { drug: 'BCG Vaccine (Bacille Calmette-Guérin)', name: 'BCG Vaccine (Bacille Calmette-Guérin)', dose: '0.05 mL', unit: 'mL', route: 'Intradermal (ID) Right deltoid', frequency: 'Single dose', instructions: 'Newborn tuberculosis immunization' }
             ],
-            labs: [
-              { lab: 'Expanded Newborn Screening (ENBS)', status: 'Pending / Scheduled at 48 hours' },
-              { lab: 'Critical Congenital Heart Disease (CCHD) Screening', status: 'Completed (Pass)' },
-              { lab: 'Newborn Hearing Screening Test (NHST)', status: 'Completed (Pass)' }
+            special: [
+              { text: 'Essential Intrapartum and Newborn Care (EINC) completion; uninterrupted skin-to-skin contact with mother; rooming-in.' },
+              { text: 'Dry umbilical cord care: keep clean, dry, and exposed to air; do not apply alcohol, povidone-iodine, or binder.' },
+              { text: 'Monitor neonatal temperature, feeding vigor, and urine/stool output every shift.' }
             ],
-            diagnostics: []
+            procedures: [
+              { text: 'Perform Essential Intrapartum and Newborn Care (EINC) steps.' },
+              { text: 'Newborn clinical anthropometrics and physical maturity assessment (Ballard Score).' }
+            ],
+            clinicalRequests: {
+              laboratory: [
+                { description: 'Expanded Newborn Screening (ENBS)', code: 'LAB-ENBS', priority: 'Routine', remarks: 'Filter paper blood spot collection at 24-48 hours of life prior to discharge' }
+              ],
+              radiology: [],
+              respiratory: [
+                { description: 'Critical Congenital Heart Disease (CCHD) Screening', code: 'RT-CCHD', priority: 'Routine', remarks: 'Pre-ductal and post-ductal pulse oximetry protocol' }
+              ],
+              heart: [
+                { description: 'Newborn Hearing Screening Test (NHST)', code: 'HC-NHST', priority: 'Routine', remarks: 'Automated ABR / OAE screening before discharge' }
+              ],
+              eeg: []
+            },
+            prescriptions: {
+              items: []
+            }
           },
           savedOrders: [
             {
@@ -1765,14 +1842,14 @@ if (typeof window !== 'undefined') {
       var obIndex = records.findIndex(function (record) { return record.id === OB_PATIENT_ID; });
       if (obIndex < 0) {
         records.splice(2, 0, obPatientRecord());
-      } else if (Number(records[obIndex].seedVersion || 0) < 2) {
+      } else if (Number(records[obIndex].seedVersion || 0) < 3) {
         records[obIndex] = obPatientRecord();
       }
 
       var neoIndex = records.findIndex(function (record) { return record.id === NEO_PATIENT_ID; });
       if (neoIndex < 0) {
         records.splice(3, 0, neoPatientRecord());
-      } else if (Number(records[neoIndex].seedVersion || 0) < 1) {
+      } else if (Number(records[neoIndex].seedVersion || 0) < 2) {
         records[neoIndex] = neoPatientRecord();
       }
       try {

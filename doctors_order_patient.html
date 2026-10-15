@@ -783,6 +783,25 @@
         // matching the sample form. Category names such as Plans/Diet/IV are not printed.
         function doctorOrderEntries(data) {
             const orders = data?.orders || {};
+            if (typeof orders.diet === "string" && orders.diet.trim()) {
+                orders.diet = [{ text: orders.diet.trim() }];
+            }
+            if (!orders.iv && orders.ivf) {
+                orders.iv = typeof orders.ivf === "string" ? [{ text: orders.ivf.trim() }] : orders.ivf;
+            }
+            if (!orders.clinicalRequests) {
+                orders.clinicalRequests = {};
+                if (Array.isArray(orders.labs)) {
+                    orders.clinicalRequests.laboratory = orders.labs.map(l => ({
+                        description: typeof l === "string" ? l : (l.lab || l.description || l.text || "")
+                    }));
+                }
+                if (Array.isArray(orders.diagnostics)) {
+                    orders.clinicalRequests.radiology = orders.diagnostics.map(d => ({
+                        description: typeof d === "string" ? d : (d.name || d.description || d.text || "")
+                    }));
+                }
+            }
             const keys = [
                 "plans",
                 "diet",
@@ -799,7 +818,7 @@
             keys.forEach(key => {
                 const values = Array.isArray(orders?.[key]) ? orders[key] : [];
                 values.forEach(item => {
-                    const text = key === "medications" ? medicationOrderText(item) : String(item?.text || "").trim();
+                    let text = key === "medications" ? medicationOrderText(item) : String(item?.text || item?.lab || item?.name || item?.description || "").trim();
                     if (text) {
                         entries.push({
                             text,
@@ -1876,11 +1895,10 @@
                     });
                 }
 
-                // Check if this encounter represents the admission that holds data.orders.
-                // If enc.orders was explicitly provided as an empty array, it represents a clinical note without orders.
-                const isAdmission = !primaryAssigned && !Array.isArray(enc?.orders) && (
+                // Check if this encounter represents the admission or primary note that holds data.orders.
+                const isAdmission = !primaryAssigned && (!Array.isArray(enc?.orders) || enc.orders.length === 0) && (
                     (encDate && admitDt && encDate === admitDt) ||
-                    (!isPrevious && (enc.status_tag === "Initial Visit (ER)" || enc.registry === "ER"))
+                    (!isPrevious && (enc.status_tag === "Initial Visit (ER)" || enc.registry === "ER" || enc.registry === "IP" || enc.is_current))
                 );
 
                 if (!orders.length && isAdmission && primaryOrders.length > 0) {
