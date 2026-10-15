@@ -404,13 +404,20 @@ async def scan_single_target(browser_ws, file_url):
                         return 'syncEncounterDocumentationSections not defined on window in dashboard.html';
                     }
 
-                    // For initial encounter state: OPD encounter has Progress Notes visible and collapsible
-                    const clinEvalDashlet = document.getElementById('dashlet-clinical-evaluation');
-                    if (!clinEvalDashlet) {
-                        return 'dashlet-clinical-evaluation unified group box missing in dashboard.html';
+                    // Verify Review of Systems and Physical Examination independent dashlets
+                    const rosDashlet = document.getElementById('dashlet-review-of-systems');
+                    if (!rosDashlet) {
+                        return 'dashlet-review-of-systems independent dashlet missing in dashboard.html';
                     }
-                    if (clinEvalDashlet.classList.contains('is-collapsed')) {
-                        return 'dashlet-clinical-evaluation should be open/maximized by default';
+                    const peDashlet = document.getElementById('dashlet-physical-exam');
+                    if (!peDashlet) {
+                        return 'dashlet-physical-exam independent dashlet missing in dashboard.html';
+                    }
+                    if (rosDashlet.classList.contains('is-collapsed')) {
+                        return 'dashlet-review-of-systems should be open/maximized by default';
+                    }
+                    if (peDashlet.classList.contains('is-collapsed')) {
+                        return 'dashlet-physical-exam should be open/maximized by default';
                     }
 
                     const rosRow = document.getElementById('row-review-of-systems');

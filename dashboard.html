@@ -2368,21 +2368,14 @@
         </div>
 
 
-        <!-- Unified Clinical Evaluation Group: Pertinent Signs & Symptoms, Physical Examination, and Initial Diagnosis -->
-        <div class="row-fluid" id="row-clinical-evaluation">
+        <!-- Review of Systems -->
+        <div class="row-fluid" id="row-review-of-systems">
           <div class="span12">
-            <div class="dashlet" id="dashlet-clinical-evaluation">
-              <div class="bootstrap-widget-header" style="cursor:pointer;" title="Click to collapse / expand Clinical Evaluation">
-                <h3 id="clinical-eval-header-title">Pertinent Signs and Symptoms &amp; Physical Examination</h3>
+            <div class="dashlet">
+              <div class="bootstrap-widget-header">
+                <h3>Pertinent Signs and Symptoms (Review of Systems)</h3>
               </div>
-              <div class="bootstrap-widget-content" id="dashlet-clinical-evaluation-content" style="padding:14px 16px;">
-                
-                <!-- Section 1: Pertinent Signs and Symptoms (Review of Systems) -->
-                <div class="clinical-eval-group-section" id="row-review-of-systems">
-                  <div class="clinical-eval-section-title" style="font-size:11px; font-weight:700; color:#334155; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; padding-bottom:4px; border-bottom:1px solid #e2e8f0;">
-                    Pertinent Signs and Symptoms (Review of Systems)
-                  </div>
-                  <div class="clinical-eval-section-body" id="dashlet-review-of-systems">
+              <div class="bootstrap-widget-content" id="dashlet-review-of-systems">
                 <div class="ros-alphabetical-grid">
                   <label><input type="checkbox" name="pertinent_signs[]" value="Abdominal pain"> Abdominal
                     cramp/pain</label>
@@ -2433,14 +2426,19 @@
                   class="input-block-level"
                   style="display:none;"
                   placeholder="Document other review of systems findings, symptoms, onset, severity, and relevant information..."></textarea>
-                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                <!-- Section 2: Physical Examination -->
-                <div class="clinical-eval-group-section" id="row-physical-exam" style="margin-top:18px;">
-                  <div class="clinical-eval-section-title" style="font-size:11px; font-weight:700; color:#334155; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; padding-bottom:4px; border-bottom:1px solid #e2e8f0;">
-                    Physical Examination
-                  </div>
-                  <div class="clinical-eval-section-body" id="dashlet-physical-exam">
+        <!-- Physical Examination -->
+        <div class="row-fluid" id="row-physical-exam">
+          <div class="span12">
+            <div class="dashlet">
+              <div class="bootstrap-widget-header">
+                <h3>Physical Examination</h3>
+              </div>
+              <div class="bootstrap-widget-content" id="dashlet-physical-exam">
                 <div class="pe-reference">
 
                   <!-- GENERAL SURVEY -->
@@ -2727,9 +2725,6 @@
                     <label><button type="button" class="btn btn-small" id="btn-open-ent-exam" onclick="openSpecializedPEForm('Otoscopic &amp; Hearing Exam')"><i class="icon-headphones"></i> Otoscopic &amp; Hearing Exam</button></label>
                   </div>
                 </div>
-                  </div>
-                </div>
-
               </div>
             </div>
           </div>
@@ -4589,9 +4584,6 @@
 
           var collapsed =
             state[id] === true || (id === 'dashlet-review-of-systems' && state['dashlet-pertinent-signs'] === true);
-          if (id === 'dashlet-clinical-evaluation-content' || id === 'dashlet-clinical-evaluation') {
-            collapsed = state['dashlet-clinical-evaluation-content'] === true || state['dashlet-clinical-evaluation'] === true;
-          }
           if (id === 'physician-s-orders-plans' || id === 'dashlet-physician-orders') {
             collapsed = state['dashlet-physician-orders'] === true;
           }
@@ -4670,16 +4662,15 @@
     }
 
     function toggleClinicalEvaluationCollapse(forceCollapsed) {
-      var dashlet = document.getElementById('dashlet-clinical-evaluation');
-      if (!dashlet) return;
-      var toggle = dashlet.querySelector('.dashlet-toggle');
-      var shouldCollapse = (typeof forceCollapsed === 'boolean') ? forceCollapsed : !dashlet.classList.contains('is-collapsed');
-      setDashletCollapsed(dashlet, shouldCollapse, toggle);
-      var currentState = getDashletState();
-      currentState['dashlet-clinical-evaluation-content'] = shouldCollapse;
-      try {
-        localStorage.setItem(DASHLET_STATE_KEY, JSON.stringify(currentState));
-      } catch (e) {}
+      ['dashlet-review-of-systems', 'dashlet-physical-exam'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var dash = el.closest('.dashlet');
+        if (!dash) return;
+        var toggle = dash.querySelector('.dashlet-toggle');
+        var shouldCollapse = (typeof forceCollapsed === 'boolean') ? forceCollapsed : !dash.classList.contains('is-collapsed');
+        setDashletCollapsed(dash, shouldCollapse, toggle);
+      });
     }
     window.toggleClinicalEvaluationCollapse = toggleClinicalEvaluationCollapse;
 
