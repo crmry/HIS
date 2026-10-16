@@ -471,11 +471,11 @@ async def scan_single_target(browser_ws, file_url):
                     if (!aVal || !aVal.includes('Acute Gastritis')) {
                         return 'Progress notes assessment not populated correctly for ER encounter';
                     }
-                    if (rosRow && rosRow.style.display === 'none') {
-                        return 'Review of Systems should remain visible on ER encounters as generic clinical requirement';
+                    if (rosRow && rosRow.style.display !== 'none') {
+                        return 'Review of Systems should be hidden on ER encounters';
                     }
-                    if (peRow && peRow.style.display === 'none') {
-                        return 'Physical Exam should remain visible on ER encounters as generic clinical requirement';
+                    if (peRow && peRow.style.display !== 'none') {
+                        return 'Physical Exam should be hidden on ER encounters';
                     }
                     if (hpiTabLi && hpiTabLi.style.display === 'none') {
                         return 'HPI tab should be visible on ER encounters';
