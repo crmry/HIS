@@ -690,6 +690,16 @@ async def scan_single_target(browser_ws, file_url):
                     if (sheetCosigSelect.value !== 'NONE') {
                         return 'sheet-enc-cosig-doctor default value is not NONE';
                     }
+                    const btnToEnd = document.getElementById('btn-move-to-end');
+                    const btnToTop = document.getElementById('btn-move-to-top');
+                    if (!btnToEnd || !btnToTop) {
+                        return 'doctors_order_patient.html quick nav move to end/top buttons missing';
+                    }
+                    if (typeof window.scrollToSheetEnd !== 'function' || typeof window.scrollToSheetTop !== 'function') {
+                        return 'doctors_order_patient.html scrollToSheetEnd or scrollToSheetTop missing';
+                    }
+                    btnToEnd.click();
+                    btnToTop.click();
                 }
 
                 if (window.location.href.includes('forms_localstorage.html')) {
@@ -731,6 +741,16 @@ async def scan_single_target(browser_ws, file_url):
                     if (!btnEr || !btnAdm || !btnTmpl || !btnAll) {
                         return 'doctors_order_er_admission.html view buttons missing';
                     }
+                    const btnToEndEr = document.getElementById('btn-move-to-end');
+                    const btnToTopEr = document.getElementById('btn-move-to-top');
+                    if (!btnToEndEr || !btnToTopEr) {
+                        return 'doctors_order_er_admission.html quick nav move to end/top buttons missing';
+                    }
+                    if (typeof window.scrollToSheetEnd !== 'function' || typeof window.scrollToSheetTop !== 'function') {
+                        return 'doctors_order_er_admission.html scrollToSheetEnd or scrollToSheetTop missing';
+                    }
+                    btnToEndEr.click();
+                    btnToTopEr.click();
                     btnAdm.click();
                     if (window.currentViewMode() !== 'admission') return 'Failed to switch to admission view';
                     btnTmpl.click();
