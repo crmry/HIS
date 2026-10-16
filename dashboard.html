@@ -6455,12 +6455,12 @@
         el.disabled = isRo;
       });
 
+      // Review of Systems and Physical Examination are generic across all patient services (OP, ER, IP) per PHIC standards
+      if (rosRow) rosRow.style.display = 'block';
+      if (peRow) peRow.style.display = 'block';
+
       if (isErOrIp) {
         // ER and Inpatient encounters:
-        // Do not use OPD-style ROS, and PE sections
-        if (rosRow) rosRow.style.display = 'none';
-        if (peRow) peRow.style.display = 'none';
-
         // Display Intake & Output (I&O)
         var ioTabLi = document.getElementById('tab-li-io');
         if (ioTabLi) ioTabLi.style.display = '';
@@ -6490,8 +6490,6 @@
             if (vsPane) vsPane.classList.add('active');
           }
         }
-        if (rosRow) rosRow.style.display = 'block';
-        if (peRow) peRow.style.display = 'block';
         if (hpiTabLi) {
           hpiTabLi.style.display = '';
           hpiTabLi.classList.add('active');
