@@ -2553,34 +2553,86 @@
 
             <!-- Boy Fenton Chart -->
             <div class="chart-card" id="panel-chart-boy" style="display:none; text-align:left;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
                 <h3 style="font-size:13px; margin:0; color:var(--slate-900);">Fenton Growth Chart for Preterm Infants (Boys — 22 to 50 Weeks Gestational Age)</h3>
                 <div id="boy-fenton-result-tag" style="font-size:12px; font-weight:700; color:#0369a1;">AGA (Appropriate for Gestational Age) • Male Baseline (50th Percentile)</div>
               </div>
+              <div style="display:flex; align-items:center; gap:16px; margin-bottom:10px; font-size:11.5px; flex-wrap:wrap; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 12px;">
+                <span style="display:inline-flex; align-items:center; gap:6px; font-weight:600; color:#0284c7;">
+                  <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#0284c7; border:2px solid #fff; box-shadow:0 0 2px rgba(0,0,0,0.3);"></span>
+                  Weight: <strong id="boy-legend-wt">—</strong>
+                </span>
+                <span style="display:inline-flex; align-items:center; gap:6px; font-weight:600; color:#0d9488;">
+                  <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#0d9488; border:2px solid #fff; box-shadow:0 0 2px rgba(0,0,0,0.3);"></span>
+                  Length: <strong id="boy-legend-len">—</strong>
+                </span>
+                <span style="display:inline-flex; align-items:center; gap:6px; font-weight:600; color:#7c3aed;">
+                  <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#7c3aed; border:2px solid #fff; box-shadow:0 0 2px rgba(0,0,0,0.3);"></span>
+                  Head Circ: <strong id="boy-legend-hc">—</strong>
+                </span>
+              </div>
               <div style="position:relative; display:inline-block; max-width:100%; border:1px solid var(--slate-200); border-radius:4px; overflow:hidden;">
                 <img src="img/neonate/boy_fenton_chart.png" alt="Boy Fenton Growth Chart" style="display:block; max-width:100%; height:auto;" onclick="openZoomModal(this.src)" title="Click to zoom chart">
-                <!-- Plotted Coordinate Marker -->
-                <div id="boy-fenton-marker-dot" style="position:absolute; top:38.8%; left:59.3%; transform:translate(-50%, -50%); pointer-events:auto; z-index:5;">
+                <!-- Plotted Coordinate Marker: Weight -->
+                <div id="boy-fenton-marker-dot" style="position:absolute; top:59.2%; left:56.6%; transform:translate(-50%, -50%); pointer-events:auto; z-index:5;" title="Fenton Plotted Weight">
                   <div style="position:absolute; top:-7px; left:-7px; width:14px; height:14px; border-radius:50%; background:rgba(3, 105, 161, 0.35); animation:whoPulse 2s infinite ease-out;"></div>
                   <div style="width:10px; height:10px; border-radius:50%; background:#0284c7; border:2px solid #ffffff; box-shadow:0 0 4px rgba(0,0,0,0.5);"></div>
                   <div id="boy-fenton-marker-tip" style="position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; pointer-events:none;">39 wks, 3,300 g • AGA</div>
+                </div>
+                <!-- Plotted Coordinate Marker: Length -->
+                <div id="boy-fenton-len-dot" style="position:absolute; top:13.2%; left:56.6%; transform:translate(-50%, -50%); pointer-events:auto; z-index:5;" title="Fenton Plotted Length">
+                  <div style="position:absolute; top:-7px; left:-7px; width:14px; height:14px; border-radius:50%; background:rgba(13, 148, 136, 0.35); animation:whoPulse 2s infinite ease-out;"></div>
+                  <div style="width:10px; height:10px; border-radius:50%; background:#0d9488; border:2px solid #ffffff; box-shadow:0 0 4px rgba(0,0,0,0.5);"></div>
+                  <div id="boy-fenton-len-tip" style="position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; pointer-events:none;">Length: 50.0 cm</div>
+                </div>
+                <!-- Plotted Coordinate Marker: Head Circumference -->
+                <div id="boy-fenton-hc-dot" style="position:absolute; top:28.9%; left:56.6%; transform:translate(-50%, -50%); pointer-events:auto; z-index:5;" title="Fenton Plotted Head Circumference">
+                  <div style="position:absolute; top:-7px; left:-7px; width:14px; height:14px; border-radius:50%; background:rgba(124, 58, 237, 0.35); animation:whoPulse 2s infinite ease-out;"></div>
+                  <div style="width:10px; height:10px; border-radius:50%; background:#7c3aed; border:2px solid #ffffff; box-shadow:0 0 4px rgba(0,0,0,0.5);"></div>
+                  <div id="boy-fenton-hc-tip" style="position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; pointer-events:none;">Head Circ: 34.5 cm</div>
                 </div>
               </div>
             </div>
 
             <!-- Female Fenton Chart -->
             <div class="chart-card" id="panel-chart-girl" style="display:none; text-align:left;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
                 <h3 style="font-size:13px; margin:0; color:var(--slate-900);">Fenton Growth Chart for Preterm Infants (Girls — 22 to 50 Weeks Gestational Age)</h3>
                 <div id="girl-fenton-result-tag" style="font-size:12px; font-weight:700; color:#be185d;">AGA (Appropriate for Gestational Age) • Female Baseline (50th Percentile)</div>
               </div>
+              <div style="display:flex; align-items:center; gap:16px; margin-bottom:10px; font-size:11.5px; flex-wrap:wrap; background:#fdf2f8; border:1px solid #fbcfe8; border-radius:6px; padding:6px 12px;">
+                <span style="display:inline-flex; align-items:center; gap:6px; font-weight:600; color:#db2777;">
+                  <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#db2777; border:2px solid #fff; box-shadow:0 0 2px rgba(0,0,0,0.3);"></span>
+                  Weight: <strong id="girl-legend-wt">—</strong>
+                </span>
+                <span style="display:inline-flex; align-items:center; gap:6px; font-weight:600; color:#0d9488;">
+                  <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#0d9488; border:2px solid #fff; box-shadow:0 0 2px rgba(0,0,0,0.3);"></span>
+                  Length: <strong id="girl-legend-len">—</strong>
+                </span>
+                <span style="display:inline-flex; align-items:center; gap:6px; font-weight:600; color:#7c3aed;">
+                  <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#7c3aed; border:2px solid #fff; box-shadow:0 0 2px rgba(0,0,0,0.3);"></span>
+                  Head Circ: <strong id="girl-legend-hc">—</strong>
+                </span>
+              </div>
               <div style="position:relative; display:inline-block; max-width:100%; border:1px solid var(--slate-200); border-radius:4px; overflow:hidden;">
                 <img src="img/neonate/female_fenton_chart.png" alt="Female Fenton Growth Chart" style="display:block; max-width:100%; height:auto;" onclick="openZoomModal(this.src)" title="Click to zoom chart">
-                <!-- Plotted Coordinate Marker -->
-                <div id="girl-fenton-marker-dot" style="position:absolute; top:40.9%; left:59.3%; transform:translate(-50%, -50%); pointer-events:auto; z-index:5;">
+                <!-- Plotted Coordinate Marker: Weight -->
+                <div id="girl-fenton-marker-dot" style="position:absolute; top:60.7%; left:55.7%; transform:translate(-50%, -50%); pointer-events:auto; z-index:5;" title="Fenton Plotted Weight">
                   <div style="position:absolute; top:-7px; left:-7px; width:14px; height:14px; border-radius:50%; background:rgba(190, 24, 93, 0.35); animation:whoPulse 2s infinite ease-out;"></div>
                   <div style="width:10px; height:10px; border-radius:50%; background:#db2777; border:2px solid #ffffff; box-shadow:0 0 4px rgba(0,0,0,0.5);"></div>
-                  <div id="girl-fenton-marker-tip" style="position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; pointer-events:none;">39 wks, 3,150 g • AGA</div>
+                  <div id="girl-fenton-marker-tip" style="position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; pointer-events:none;">38 wks, 3,150 g • AGA</div>
+                </div>
+                <!-- Plotted Coordinate Marker: Length -->
+                <div id="girl-fenton-len-dot" style="position:absolute; top:13.4%; left:55.7%; transform:translate(-50%, -50%); pointer-events:auto; z-index:5;" title="Fenton Plotted Length">
+                  <div style="position:absolute; top:-7px; left:-7px; width:14px; height:14px; border-radius:50%; background:rgba(13, 148, 136, 0.35); animation:whoPulse 2s infinite ease-out;"></div>
+                  <div style="width:10px; height:10px; border-radius:50%; background:#0d9488; border:2px solid #ffffff; box-shadow:0 0 4px rgba(0,0,0,0.5);"></div>
+                  <div id="girl-fenton-len-tip" style="position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; pointer-events:none;">Length: 49.5 cm</div>
+                </div>
+                <!-- Plotted Coordinate Marker: Head Circumference -->
+                <div id="girl-fenton-hc-dot" style="position:absolute; top:28.7%; left:55.7%; transform:translate(-50%, -50%); pointer-events:auto; z-index:5;" title="Fenton Plotted Head Circumference">
+                  <div style="position:absolute; top:-7px; left:-7px; width:14px; height:14px; border-radius:50%; background:rgba(124, 58, 237, 0.35); animation:whoPulse 2s infinite ease-out;"></div>
+                  <div style="width:10px; height:10px; border-radius:50%; background:#7c3aed; border:2px solid #ffffff; box-shadow:0 0 4px rgba(0,0,0,0.5);"></div>
+                  <div id="girl-fenton-hc-tip" style="position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap; pointer-events:none;">Head Circ: 34.0 cm</div>
                 </div>
               </div>
             </div>
@@ -3356,34 +3408,100 @@ function updateAllGrowthCharts() {
     if (lubTag) lubTag.textContent = data.classTitle + ' • 10th–90th Percentile Range';
   }
 
-  // 4. Update Fenton Boys coordinate overlay marker
+  // 4. Update Fenton Boys coordinate overlay markers (Weight, Length, Head Circumference)
   const boyMarker = document.getElementById('boy-fenton-marker-dot');
   const boyTip = document.getElementById('boy-fenton-marker-tip');
   const boyTag = document.getElementById('boy-fenton-result-tag');
+  const boyLenMarker = document.getElementById('boy-fenton-len-dot');
+  const boyLenTip = document.getElementById('boy-fenton-len-tip');
+  const boyHcMarker = document.getElementById('boy-fenton-hc-dot');
+  const boyHcTip = document.getElementById('boy-fenton-hc-tip');
+  const boyLegWt = document.getElementById('boy-legend-wt');
+  const boyLegLen = document.getElementById('boy-legend-len');
+  const boyLegHc = document.getElementById('boy-legend-hc');
+
   if (boyMarker) {
     const clampedGa = Math.max(22, Math.min(50, data.gaWeeks));
     const clampedWt = Math.max(0, Math.min(5000, data.weightGrams));
-    const leftPct = 12 + (clampedGa - 22) / (50 - 22) * (90 - 12);
-    const topPct = 85 - (clampedWt / 5000) * (85 - 15);
+    const clampedLen = Math.max(20, Math.min(60, data.lengthCm));
+    const clampedHc = Math.max(20, Math.min(40, data.headCircCm));
+
+    // X-axis: 22 to 50 weeks (grid col 45 to 488 on 533px width => 8.44% to 91.56%)
+    const leftPct = 8.44 + (clampedGa - 22) / (50 - 22) * (91.56 - 8.44);
+
+    // Y-axis Weight: 0 kg at 91.36%, 5 kg at 42.66% (span = 48.70%)
+    const topWtPct = 91.36 - (clampedWt / 5000) * 48.70;
     boyMarker.style.left = leftPct.toFixed(1) + '%';
-    boyMarker.style.top = topPct.toFixed(1) + '%';
+    boyMarker.style.top = topWtPct.toFixed(1) + '%';
     if (boyTip) boyTip.textContent = data.gaWeeks.toFixed(0) + ' wks, ' + data.weightGrams.toLocaleString() + ' g • ' + data.classification;
     if (boyTag) boyTag.textContent = data.classTitle + ' • Male Baseline (Fenton Boys)';
+    if (boyLegWt) boyLegWt.textContent = data.weightKg.toFixed(2) + ' kg (' + data.weightGrams.toLocaleString() + ' g)';
+
+    // Y-axis Length: 60 cm at 3.43%, 20 cm at 42.66% (span = 39.23%)
+    if (boyLenMarker) {
+      const topLenPct = 3.43 + ((60 - clampedLen) / 40.0) * 39.23;
+      boyLenMarker.style.left = leftPct.toFixed(1) + '%';
+      boyLenMarker.style.top = topLenPct.toFixed(1) + '%';
+      if (boyLenTip) boyLenTip.textContent = 'Length: ' + data.lengthCm.toFixed(1) + ' cm';
+      if (boyLegLen) boyLegLen.textContent = data.lengthCm.toFixed(1) + ' cm';
+    }
+
+    // Y-axis Head Circumference: 60 cm at 3.43%, 20 cm at 42.66% (shared cm scale)
+    if (boyHcMarker) {
+      const topHcPct = 3.43 + ((60 - clampedHc) / 40.0) * 39.23;
+      boyHcMarker.style.left = leftPct.toFixed(1) + '%';
+      boyHcMarker.style.top = topHcPct.toFixed(1) + '%';
+      if (boyHcTip) boyHcTip.textContent = 'Head Circ: ' + data.headCircCm.toFixed(1) + ' cm';
+      if (boyLegHc) boyLegHc.textContent = data.headCircCm.toFixed(1) + ' cm';
+    }
   }
 
-  // 5. Update Fenton Girls coordinate overlay marker
+  // 5. Update Fenton Girls coordinate overlay markers (Weight, Length, Head Circumference)
   const girlMarker = document.getElementById('girl-fenton-marker-dot');
   const girlTip = document.getElementById('girl-fenton-marker-tip');
   const girlTag = document.getElementById('girl-fenton-result-tag');
+  const girlLenMarker = document.getElementById('girl-fenton-len-dot');
+  const girlLenTip = document.getElementById('girl-fenton-len-tip');
+  const girlHcMarker = document.getElementById('girl-fenton-hc-dot');
+  const girlHcTip = document.getElementById('girl-fenton-hc-tip');
+  const girlLegWt = document.getElementById('girl-legend-wt');
+  const girlLegLen = document.getElementById('girl-legend-len');
+  const girlLegHc = document.getElementById('girl-legend-hc');
+
   if (girlMarker) {
     const clampedGa = Math.max(22, Math.min(50, data.gaWeeks));
     const clampedWt = Math.max(0, Math.min(5000, data.weightGrams));
-    const leftPct = 12 + (clampedGa - 22) / (50 - 22) * (90 - 12);
-    const topPct = 85 - (clampedWt / 5000) * (85 - 15);
+    const clampedLen = Math.max(20, Math.min(60, data.lengthCm));
+    const clampedHc = Math.max(20, Math.min(40, data.headCircCm));
+
+    // X-axis: 22 to 50 weeks (grid col 47 to 490 on 539px width => 8.72% to 90.91%)
+    const leftPct = 8.72 + (clampedGa - 22) / (50 - 22) * (90.91 - 8.72);
+
+    // Y-axis Weight: 0 kg at 91.57%, 5 kg at 42.54% (span = 49.03%)
+    const topWtPct = 91.57 - (clampedWt / 5000) * 49.03;
     girlMarker.style.left = leftPct.toFixed(1) + '%';
-    girlMarker.style.top = topPct.toFixed(1) + '%';
+    girlMarker.style.top = topWtPct.toFixed(1) + '%';
     if (girlTip) girlTip.textContent = data.gaWeeks.toFixed(0) + ' wks, ' + data.weightGrams.toLocaleString() + ' g • ' + data.classification;
     if (girlTag) girlTag.textContent = data.classTitle + ' • Female Baseline (Fenton Girls)';
+    if (girlLegWt) girlLegWt.textContent = data.weightKg.toFixed(2) + ' kg (' + data.weightGrams.toLocaleString() + ' g)';
+
+    // Y-axis Length: 60 cm at 3.04%, 20 cm at 42.54% (span = 39.50%)
+    if (girlLenMarker) {
+      const topLenPct = 3.04 + ((60 - clampedLen) / 40.0) * 39.50;
+      girlLenMarker.style.left = leftPct.toFixed(1) + '%';
+      girlLenMarker.style.top = topLenPct.toFixed(1) + '%';
+      if (girlLenTip) girlLenTip.textContent = 'Length: ' + data.lengthCm.toFixed(1) + ' cm';
+      if (girlLegLen) girlLegLen.textContent = data.lengthCm.toFixed(1) + ' cm';
+    }
+
+    // Y-axis Head Circumference: 60 cm at 3.04%, 20 cm at 42.54% (shared cm scale)
+    if (girlHcMarker) {
+      const topHcPct = 3.04 + ((60 - clampedHc) / 40.0) * 39.50;
+      girlHcMarker.style.left = leftPct.toFixed(1) + '%';
+      girlHcMarker.style.top = topHcPct.toFixed(1) + '%';
+      if (girlHcTip) girlHcTip.textContent = 'Head Circ: ' + data.headCircCm.toFixed(1) + ' cm';
+      if (girlLegHc) girlLegHc.textContent = data.headCircCm.toFixed(1) + ' cm';
+    }
   }
 
   updateNeonateGrowthChartButtons();
