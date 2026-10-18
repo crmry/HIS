@@ -934,8 +934,7 @@ async def scan_single_target(browser_ws, file_url):
                     const sumType = document.getElementById('neo-view-sum-type');
                     if (!sumType || !sumType.textContent.trim()) return 'Neonate classification element empty or missing in #hx-neo';
                     const neoAddBtn = document.getElementById('btn-add-neo-record');
-                    if (!neoAddBtn) return 'Neonate Add button (#btn-add-neo-record) missing in #hx-neo';
-                    if (!neoAddBtn.getAttribute('href') || !neoAddBtn.getAttribute('href').includes('Neonate_Clinical_Module.html')) return 'Neonate Add button does not link to Neonate_Clinical_Module.html';
+                    if (neoAddBtn) return 'Neonate preview container should not contain an Add button (#btn-add-neo-record)';
                 }
 
                 // Test Neonate Growth Chart Modal with Patient Gender Baseline
