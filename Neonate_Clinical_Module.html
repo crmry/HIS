@@ -1763,10 +1763,9 @@
                 <i class="icon-info-sign"></i> Incomplete Ballard data is flagged as Partial. Gestational age and maturity classification are only finalized when all 13 criteria are scored.
               </div>
               <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                <button type="button" class="btn-secondary" onclick="openGrowthChartModal('who')"><i class="icon-picture"></i> WHO Growth Chart</button>
                 <button type="button" class="btn-secondary" onclick="openGrowthChartModal('lub')"><i class="icon-picture"></i> Lubchenco Chart</button>
                 <button type="button" class="btn-secondary" id="btn-neo-chart-fenton" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> <span id="btn-neo-chart-fenton-label">Fenton Growth Chart (Baseline)</span></button>
-                <button type="button" class="btn-primary" id="btn-neo-chart-who-report" onclick="openWhoGrowthReportModal()" style="background:var(--med-green); color:#fff; font-weight:600;"><i class="icon-file"></i> Growth Chart</button>
+                <a href="Growth_Charts_Module.html" id="btn-neo-chart-growth-module" class="btn-primary" style="background:var(--med-green); color:#fff; font-weight:600; text-decoration:none; padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px; border-radius:4px;"><i class="icon-share-alt"></i> Growth Charts Module</a>
               </div>
             </div>
 
@@ -2484,25 +2483,30 @@
 
         </div>
 
-        <!-- TAB 7: GROWTH CHARTS -->
+        <!-- TAB 7: NEONATAL GROWTH CHARTS (LUBCHENCO & FENTON) -->
         <div class="tab-panel" id="tab-charts" role="tabpanel">
           <div class="section-card">
-            <div class="section-card-title"><i class="icon-picture"></i> Neonatal Clinical Growth Charts</div>
+            <div class="section-card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <span><i class="icon-picture"></i> Neonatal Clinical Growth Charts (Lubchenco &amp; Fenton)</span>
+              <a href="Growth_Charts_Module.html" id="btn-open-growth-charts-module" class="btn-primary" style="background:var(--med-green); color:#fff; font-weight:600; text-decoration:none; padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:5px; border-radius:4px;">
+                <i class="icon-share-alt"></i> Open Growth Charts Module
+              </a>
+            </div>
+            <div style="font-size:11.5px; color:var(--slate-500); margin-bottom:12px;">
+              Preterm and neonatal intrauterine growth reference curves (Lubchenco &amp; Fenton). For WHO pediatric growth curves (0–5y &amp; 5–19y), visit the Growth Charts Module.
+            </div>
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
               <div style="display:inline-flex; gap:6px; flex-wrap:wrap;">
-                <button type="button" class="btn-secondary active" id="btn-chart-who" onclick="switchGrowthChart('who')">WHO Growth Chart (0–5y)</button>
-                <button type="button" class="btn-secondary" id="btn-chart-fenton" onclick="switchGrowthChart('fenton')"><span id="lbl-fenton-tab-btn">Fenton Chart (Girls)</span></button>
                 <button type="button" class="btn-secondary" id="btn-chart-lub" onclick="switchGrowthChart('lub')">Lubchenco Chart</button>
+                <button type="button" class="btn-secondary active" id="btn-chart-fenton" onclick="switchGrowthChart('fenton')"><span id="lbl-fenton-tab-btn">Fenton Chart (Girls)</span></button>
                 <button type="button" class="btn-secondary" id="btn-chart-boy" onclick="switchGrowthChart('boy')" style="display:none;">Boy Fenton Chart</button>
                 <button type="button" class="btn-secondary" id="btn-chart-girl" onclick="switchGrowthChart('girl')" style="display:none;">Girl Fenton Chart</button>
-                <button type="button" class="btn-primary" id="btn-chart-who-report" onclick="openWhoGrowthReportModal()" style="background:var(--med-green); color:#fff; font-weight:600;"><i class="icon-file"></i> Growth Chart</button>
               </div>
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                 <input type="hidden" id="chart-gender-toggle" value="auto">
                 <button type="button" class="btn-secondary" id="btn-sync-growth-vitals" onclick="syncPatientGrowthData()" style="font-size:11.5px; padding:3px 8px;" title="Synchronize live patient vitals across all growth curves">
                   <i class="icon-refresh"></i> Sync Patient Data
                 </button>
-                <span id="btn-toggle-sample-data" style="display:none;" onclick="syncPatientGrowthData()"><span id="lbl-toggle-sample">Patient Data Active</span></span>
               </div>
             </div>
 
@@ -2527,47 +2531,6 @@
                 <div><strong>Weight:</strong> <span id="result-wt">3.15 kg (3,150 g)</span> <span id="result-wt-pct" style="color:var(--slate-500); font-size:11px;">(~50th percentile)</span></div>
                 <div><strong>Length:</strong> <span id="result-len">49.5 cm</span> <span id="result-len-pct" style="color:var(--slate-500); font-size:11px;">(~55th percentile)</span></div>
                 <div><strong>Head Circ:</strong> <span id="result-hc">34.0 cm</span> <span id="result-hc-pct" style="color:var(--slate-500); font-size:11px;">(~50th percentile)</span></div>
-                <div><strong>WHO Z-Score:</strong> <span id="result-zscore" style="font-weight:700; color:#1b4d3e;">-0.12 SD</span></div>
-              </div>
-            </div>
-
-            <!-- WHO Growth Chart (Dynamic In-Page Vector Generation) -->
-            <div class="chart-card" id="panel-chart-who" style="text-align:left;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--slate-200);">
-                <div>
-                  <h3 id="who-inpage-title" style="font-size:14px; font-weight:700; margin:0 0 2px 0; color:var(--slate-900);">Weight-for-age GIRLS • Birth to 5 years (z-scores)</h3>
-                  <div id="who-inpage-subtitle" style="font-size:11px; color:var(--slate-500); display:none;"></div>
-                </div>
-                <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                  <button type="button" class="btn-secondary active" id="btn-who-inpage-wfa" onclick="switchInPageWhoChartType('wfa')">Weight-for-Age (0–5y)</button>
-                  <button type="button" class="btn-secondary" id="btn-who-inpage-lhfa" onclick="switchInPageWhoChartType('lhfa')">Length-for-Age (0–5y)</button>
-                  <button type="button" class="btn-secondary" id="btn-who-inpage-wflh" onclick="switchInPageWhoChartType('wflh')">Weight-for-Length (0–5y)</button>
-                  <button type="button" class="btn-secondary" id="btn-who-inpage-bmifa" onclick="switchInPageWhoChartType('bmifa')">BMI-for-Age (5–19y)</button>
-                </div>
-              </div>
-
-              <!-- Measurement Readout Strip -->
-              <div id="who-inpage-readout" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; background:#f1f5f9; border:1px solid var(--slate-200); border-radius:6px; padding:8px 12px; margin-bottom:12px; font-size:12px;">
-                <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
-                  <span><strong>Child:</strong> <span id="who-inpage-child-name">—</span></span>
-                  <span><strong>Sex:</strong> <span id="who-inpage-sex">—</span></span>
-                  <span><strong>Age:</strong> <span id="who-inpage-age">0 mo</span></span>
-                  <span><strong>Weight:</strong> <span id="who-inpage-wt">—</span></span>
-                  <span><strong>Length:</strong> <span id="who-inpage-len">—</span></span>
-                  <span><strong>BMI:</strong> <span id="who-inpage-bmi">—</span></span>
-                </div>
-                <div style="display:flex; gap:6px;">
-                  <button type="button" class="btn-secondary" onclick="updateAllGrowthCharts()" style="font-size:11px; padding:2px 8px;" title="Re-sync from neonate vitals"><i class="icon-refresh"></i> Re-sync</button>
-                  <button type="button" class="btn-secondary" onclick="openWhoGrowthReportModal()" style="font-size:11px; padding:2px 8px;"><i class="icon-fullscreen"></i> Full Report Modal</button>
-                </div>
-              </div>
-
-              <!-- Stage container for native generated SVG -->
-              <div class="who-chart-stage" style="position:relative; min-height:460px; display:flex; flex-direction:column; align-items:center;">
-                <div id="who-inpage-boundary-callout" class="who-boundary-callout" style="display:none;"></div>
-                <div id="who-inpage-svg-container" class="who-svg-chart-container" style="width:100%; max-width:760px; margin:0 auto;">
-                  <!-- Dynamic SVG is rendered here -->
-                </div>
               </div>
             </div>
 
@@ -2644,231 +2607,7 @@
   <img id="zoomedChartImg" src="" alt="Enlarged Neonatal Growth Chart">
 </div>
 
-<!-- WHO Growth Assessment Report Modal -->
-<div class="who-report-backdrop" id="whoGrowthReportModal" role="dialog" aria-modal="true" aria-labelledby="whoReportModalTitle" onclick="handleWhoModalBackdropClick(event)">
-  <div class="who-report-dialog" onclick="event.stopPropagation()">
-    <!-- Top Action Toolbar (Hidden during print) -->
-    <div class="who-report-toolbar">
-      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-        <span class="who-brand-badge"><i class="icon-file"></i> WHO Growth Assessment</span>
-        <h2 id="whoReportModalTitle" style="margin:0; font-size:15px; font-weight:700; color:var(--slate-900);">WHO Child &amp; Adolescent Growth Assessment Report</h2>
-        <span class="who-mockup-pill" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;">WHO Growth Standards</span>
-      </div>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <button type="button" class="btn-secondary" onclick="printWhoGrowthReport()" id="btn-who-print"><i class="icon-print"></i> Print / Save as PDF</button>
-        <button type="button" class="btn-secondary" onclick="closeWhoGrowthReportModal(event)" id="btn-who-close" aria-label="Close Report"><i class="icon-remove"></i> Close</button>
-      </div>
-    </div>
 
-    <!-- Interactive Clinical Parameter Strip (Hidden during print) -->
-    <div class="who-report-param-strip">
-      <div class="who-param-item">
-        <label for="who-param-sex" class="who-param-label">Child Recorded Sex <span style="color:#ef4444;">*</span></label>
-        <select id="who-param-sex" class="form-select who-param-input" onchange="refreshWhoGrowthReport()">
-          <option value="">-- Missing / Unspecified --</option>
-          <option value="male">Male (Boy)</option>
-          <option value="female">Female (Girl)</option>
-        </select>
-      </div>
-      <div class="who-param-item">
-        <label for="who-param-age-months" class="who-param-label">Age (Completed Months) <span style="color:#ef4444;">*</span></label>
-        <input type="number" id="who-param-age-months" class="form-input who-param-input" min="0" max="228" step="1" placeholder="e.g. 0, 24, 72" oninput="refreshWhoGrowthReport()">
-      </div>
-      <div class="who-param-item">
-        <label for="who-param-weight" class="who-param-label">Weight (kg) <span style="color:#ef4444;">*</span></label>
-        <input type="number" id="who-param-weight" class="form-input who-param-input" min="0.5" max="150" step="0.01" placeholder="e.g. 3.15" oninput="refreshWhoGrowthReport()">
-      </div>
-      <div class="who-param-item">
-        <label for="who-param-length" class="who-param-label">Length / Height (cm) <span style="color:#ef4444;">*</span></label>
-        <input type="number" id="who-param-length" class="form-input who-param-input" min="20" max="220" step="0.1" placeholder="e.g. 49.5" oninput="refreshWhoGrowthReport()">
-      </div>
-      <div class="who-param-item">
-        <label for="who-param-date" class="who-param-label">Measurement Date</label>
-        <input type="date" id="who-param-date" class="form-input who-param-input" onchange="refreshWhoGrowthReport()">
-      </div>
-      <div class="who-param-item who-param-action">
-        <button type="button" class="btn-secondary" onclick="rehydrateWhoReportFromPatient()" title="Re-sync data from current neonate chart"><i class="icon-refresh"></i> Re-sync</button>
-      </div>
-    </div>
-
-    <!-- Printable Report Sheet Body -->
-    <div class="who-printable-sheet" id="whoPrintableSheet">
-      <!-- Watermark -->
-      <div class="who-watermark" aria-hidden="true">WHO REFERENCE</div>
-
-      <!-- Incomplete Data Warning Callout (Visible only when incomplete) -->
-      <div id="who-incomplete-alert" class="who-incomplete-card" style="display:none;">
-        <div style="display:flex; align-items:flex-start; gap:10px;">
-          <i class="icon-warning-sign" style="color:#b45309; font-size:18px; margin-top:2px;"></i>
-          <div style="flex:1;">
-            <div style="font-weight:700; color:#92400e; font-size:13px; margin-bottom:4px;">Incomplete Anthropometric Data — Reference Plot Unavailable</div>
-            <div style="font-size:12px; color:#78350f; line-height:1.45;">
-              To generate the WHO Growth Assessment reference plotting, all core parameters (Child Sex, Age in Completed Months, Weight, and Length/Height) must be specified. Please complete the missing values above:
-            </div>
-            <div id="who-incomplete-tags" class="who-incomplete-tags" style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Header Section -->
-      <header class="who-report-header">
-        <div class="who-header-crest">
-          <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--slate-500);">Republic of the Philippines • Department of Health</div>
-          <div style="font-size:15px; font-weight:800; color:var(--med-green); letter-spacing:0.02em; margin-top:2px;">METRO GENERAL HOSPITAL &amp; MEDICAL CENTER</div>
-          <div style="font-size:11.5px; font-weight:600; color:var(--slate-700);">Department of Pediatrics • Clinical Nutrition &amp; Child Development Service</div>
-          <div class="who-report-title-badge">WHO CHILD &amp; ADOLESCENT GROWTH ASSESSMENT REPORT</div>
-          <div style="font-size:10.5px; color:var(--med-green); font-weight:700; margin-top:3px;">
-            OFFICIAL WHO CHILD GROWTH STANDARDS (0–5 YEARS) &amp; WHO REFERENCE 2007 (5–19 YEARS)
-          </div>
-        </div>
-      </header>
-
-      <!-- Demographic & Encounter Information Grid -->
-      <section class="who-demographics-grid">
-        <div class="who-demo-cell">
-          <span class="who-demo-label">Child / Newborn Name:</span>
-          <span class="who-demo-val" id="who-rep-child-name">—</span>
-        </div>
-        <div class="who-demo-cell">
-          <span class="who-demo-label">Hospital Record No. (HRN):</span>
-          <span class="who-demo-val" id="who-rep-hrn">—</span>
-        </div>
-        <div class="who-demo-cell">
-          <span class="who-demo-label">Child Recorded Sex:</span>
-          <span class="who-demo-val" id="who-rep-sex">—</span>
-        </div>
-        <div class="who-demo-cell">
-          <span class="who-demo-label">PhilHealth Identification No. (PIN):</span>
-          <span class="who-demo-val" id="who-rep-pin">—</span>
-        </div>
-        <div class="who-demo-cell">
-          <span class="who-demo-label">Date of Birth &amp; Age:</span>
-          <span class="who-demo-val" id="who-rep-dob-age">—</span>
-        </div>
-        <div class="who-demo-cell">
-          <span class="who-demo-label">Encounter / Case No.:</span>
-          <span class="who-demo-val" id="who-rep-encounter">—</span>
-        </div>
-        <div class="who-demo-cell">
-          <span class="who-demo-label">Mother / Guardian Name:</span>
-          <span class="who-demo-val" id="who-rep-mother-name">—</span>
-        </div>
-        <div class="who-demo-cell">
-          <span class="who-demo-label">Department / Nursery Location:</span>
-          <span class="who-demo-val" id="who-rep-location">—</span>
-        </div>
-        <div class="who-demo-cell">
-          <span class="who-demo-label">Measurement Date &amp; Time:</span>
-          <span class="who-demo-val" id="who-rep-meas-datetime">—</span>
-        </div>
-        <div class="who-demo-cell">
-          <span class="who-demo-label">Active Reference Standard:</span>
-          <span class="who-demo-val" id="who-rep-ref-standard">—</span>
-        </div>
-      </section>
-
-      <!-- Anthropometric Metric Summary Cards -->
-      <section class="who-cards-row">
-        <div class="who-metric-card">
-          <div class="who-metric-label">Recorded Weight</div>
-          <div class="who-metric-value" id="who-card-val-weight">—</div>
-          <div class="who-metric-sub">Kilograms (kg)</div>
-        </div>
-        <div class="who-metric-card">
-          <div class="who-metric-label">Recorded Length / Height</div>
-          <div class="who-metric-value" id="who-card-val-length">—</div>
-          <div class="who-metric-sub">Centimeters (cm) • Recumbent / Standing</div>
-        </div>
-        <div class="who-metric-card">
-          <div class="who-metric-label">Raw Body Mass Index (BMI)</div>
-          <div class="who-metric-value" id="who-card-val-bmi">—</div>
-          <div class="who-metric-sub">kg/m² = weight (kg) / [length (m)]²</div>
-        </div>
-      </section>
-
-      <!-- WHO Reference Chart Graphic Area -->
-      <section class="who-chart-section" style="margin-top:16px;">
-        <div class="who-chart-nav-bar">
-          <div class="who-chart-tabs" id="who-chart-tabs">
-            <!-- Dynamically populated chart selector buttons -->
-          </div>
-          <div id="who-chart-meta-badge" class="who-chart-meta-badge">
-            <!-- Details of active chart -->
-          </div>
-        </div>
-
-        <!-- Native Data-Replicated SVG WHO Reference Chart -->
-        <div class="who-chart-stage" id="who-chart-stage" style="position:relative;">
-          <div id="who-marker-boundary-callout" class="who-boundary-callout" style="display:none;"></div>
-          <div id="who-svg-chart-container" class="who-svg-chart-container">
-            <!-- Native SVG chart rendered dynamically from data -->
-          </div>
-        </div>
-      </section>
-
-      <!-- Anthropometric Indicator Summary Table -->
-      <section style="margin-top:14px;">
-        <div style="font-size:12px; font-weight:700; color:var(--slate-800); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-          <span>Anthropometric Indicator &amp; Z-Score Status Table</span>
-          <span style="font-size:11px; font-weight:500; color:var(--slate-500);">Reference: WHO Child Growth Standards (2006) / Reference (2007)</span>
-        </div>
-        <div class="who-table-wrap">
-          <table class="who-table">
-            <thead>
-              <tr>
-                <th style="width:24%;">Indicator</th>
-                <th style="width:16%;">Measured Value</th>
-                <th style="width:26%;">WHO Reference Standard</th>
-                <th style="width:14%;">Graphic Plot</th>
-                <th style="width:20%;">WHO Z-Score &amp; Class.</th>
-              </tr>
-            </thead>
-            <tbody id="who-indicator-tbody">
-              <!-- Dynamically populated rows -->
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Clinical Limitation Notice Callout -->
-      <section class="who-limitation-box" style="margin-top:14px;">
-        <div style="font-weight:700; color:#991b1b; font-size:11.5px; margin-bottom:3px;">
-          <i class="icon-info-sign"></i> CLINICAL PROTOCOL &amp; SAFETY BOUNDARY NOTICE (MOCKUP ONLY)
-        </div>
-        <div style="font-size:11px; color:#7f1d1d; line-height:1.45;">
-          1. <strong>Mockup Specification:</strong> This module provides a graphic visual reference overlay based on WHO reference charts. Formal WHO z-scores, percentiles, and nutritional classifications (e.g. SAM, MAM, Stunting, Overweight) are designated <em>Not calculated</em> until validated WHO LMS datasets are deployed.<br>
-          2. <strong>No Clinical Interventions:</strong> Do not issue nutritional prescriptions, medical diagnosis, or patient referral decisions based solely on this visual mockup.<br>
-          3. <strong>Preterm &amp; Neonatal Invariant:</strong> Preterm infants (&lt;37 weeks gestational age) must be evaluated using the Fenton Preterm Growth Chart or Lubchenco Intrauterine Growth reference curves accessible in the Neonate Clinical Module.
-        </div>
-      </section>
-
-      <!-- Signatures & Audit Trail Section -->
-      <footer class="who-report-footer" style="margin-top:18px;">
-        <div class="who-signatures-grid">
-          <div class="who-sig-block">
-            <div class="who-sig-title">Prepared &amp; Encoded By:</div>
-            <div class="who-sig-line"></div>
-            <div class="who-sig-name" id="who-sig-encoder-name">Miguel Santos, MD</div>
-            <div class="who-sig-role">Attending Physician • PRC No. 0094821</div>
-          </div>
-          <div class="who-sig-block">
-            <div class="who-sig-title">Reviewed &amp; Clinically Validated By:</div>
-            <div class="who-sig-line"></div>
-            <div class="who-sig-name" id="who-sig-reviewer-name">Andrea Reyes, MD</div>
-            <div class="who-sig-role">Pediatrician / Clinical Nutrition Specialist • PRC No. 0102938</div>
-          </div>
-        </div>
-
-        <div class="who-audit-strip" style="margin-top:14px;">
-          <div><strong>Report ID:</strong> <span id="who-audit-report-id">WHO-GAR-20261014-001</span></div>
-          <div><strong>Generated:</strong> <span id="who-audit-timestamp">10/14/2026, 09:30 PM PST (UTC+8)</span></div>
-          <div><strong>Hospital EMR Verification:</strong> <span id="who-audit-checksum">DOH-EHR-WHO-VERIFIED</span></div>
-        </div>
-      </footer>
-
-    </div>
-  </div>
-</div>
 
 <!-- Toast -->
 <div class="neo-toast" id="neoToast">Neonate record saved successfully.</div>
@@ -2919,9 +2658,9 @@ document.querySelectorAll('.workspace-tab').forEach(btn => {
     if (panel) panel.classList.add('active');
 
     if (btn.dataset.tab === 'tab-charts') {
-      const activeChartBtn = document.querySelector('#btn-chart-who.active, #btn-chart-lub.active, #btn-chart-boy.active, #btn-chart-girl.active');
-      if (!activeChartBtn || activeChartBtn.id === 'btn-chart-who') {
-        switchGrowthChart('who');
+      const activeChartBtn = document.querySelector('#btn-chart-fenton.active, #btn-chart-lub.active, #btn-chart-boy.active, #btn-chart-girl.active');
+      if (!activeChartBtn) {
+        switchGrowthChart('fenton');
       } else {
         const which = activeChartBtn.id.replace('btn-chart-', '');
         switchGrowthChart(which);
@@ -3430,23 +3169,23 @@ function getGrowthData() {
 let whoInPageActiveChartType = 'wfa';
 
 function switchGrowthChart(which) {
-  let target = which || 'who';
+  let target = which || 'fenton';
   const data = getGrowthData();
   const gender = data.genderStr; // 'boy' or 'girl'
+
+  if (target === 'who') {
+    window.location.href = 'Growth_Charts_Module.html?patient=' + currentPatientId;
+    return;
+  }
 
   if (target === 'fenton') {
     target = gender; // automatically chooses boy or girl chart
   }
 
-  document.querySelectorAll('#btn-chart-who, #btn-chart-fenton, #btn-chart-lub, #btn-chart-boy, #btn-chart-girl').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('#panel-chart-who, #panel-chart-lub, #panel-chart-boy, #panel-chart-girl').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('#btn-chart-fenton, #btn-chart-lub, #btn-chart-boy, #btn-chart-girl').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#panel-chart-lub, #panel-chart-boy, #panel-chart-girl').forEach(p => p.style.display = 'none');
 
-  if (target === 'who') {
-    const btn = document.getElementById('btn-chart-who');
-    const panel = document.getElementById('panel-chart-who');
-    if (btn) btn.classList.add('active');
-    if (panel) panel.style.display = 'block';
-  } else if (target === 'lub') {
+  if (target === 'lub') {
     const btn = document.getElementById('btn-chart-lub');
     const panel = document.getElementById('panel-chart-lub');
     if (btn) btn.classList.add('active');
@@ -3597,8 +3336,10 @@ function updateAllGrowthCharts() {
     resZ.style.color = Math.abs(data.zScore) <= 2 ? '#1b4d3e' : '#dc2626';
   }
 
-  // 2. Update In-Page WHO Growth Chart
-  renderInPageWhoChart();
+  // 2. In-Page WHO Growth Chart (Managed in Growth Charts Module)
+  if (typeof renderInPageWhoChart === 'function' && document.getElementById('who-inpage-svg-container')) {
+    renderInPageWhoChart();
+  }
 
   // 3. Update Lubchenco coordinate overlay marker
   const lubMarker = document.getElementById('lub-marker-dot');
@@ -3649,13 +3390,21 @@ function updateAllGrowthCharts() {
 }
 
 function openGrowthChartModal(which) {
+  if (which === 'who') {
+    window.location.href = 'Growth_Charts_Module.html?patient=' + currentPatientId;
+    return;
+  }
   const tabBtn = document.querySelector('.workspace-tab[data-tab="tab-charts"]');
   if (tabBtn) tabBtn.click();
-  let target = which || 'who';
+  let target = which || 'fenton';
   if (target === 'fenton') {
     target = getNeonatePatientGender();
   }
   switchGrowthChart(target);
+}
+
+function openWhoGrowthReportModal() {
+  window.location.href = 'Growth_Charts_Module.html?patient=' + currentPatientId;
 }
 
 function openZoomModal(src) {

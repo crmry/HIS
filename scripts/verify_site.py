@@ -1081,6 +1081,43 @@ async def scan_single_target(browser_ws, file_url):
                             return 'Neonatal Diagnosis save did not reflect in Progress Notes list';
                         }
                     }
+
+                    // Verify Only Lubchenco and Fenton charts inside Neonate Module
+                    if (document.getElementById('btn-chart-who') || document.getElementById('panel-chart-who')) {
+                        return 'WHO Growth Chart should not be inside Neonate Clinical Module';
+                    }
+                    const lubBtn = document.getElementById('btn-chart-lub');
+                    const fentonBtn = document.getElementById('btn-chart-fenton');
+                    if (!lubBtn || !fentonBtn) {
+                        return 'Lubchenco or Fenton Chart button missing in Neonate Clinical Module';
+                    }
+                    const openGrowthModBtn = document.getElementById('btn-open-growth-charts-module');
+                    if (!openGrowthModBtn || !openGrowthModBtn.getAttribute('href').includes('Growth_Charts_Module.html')) {
+                        return 'Link to Growth Charts Module missing in Neonate Clinical Module';
+                    }
+                }
+
+                // Test Growth Charts Module (on Growth_Charts_Module.html)
+                if (window.location.href.includes('Growth_Charts_Module.html')) {
+                    const wfaBtn = document.getElementById('btn-who-wfa');
+                    const lhfaBtn = document.getElementById('btn-who-lhfa');
+                    const wflhBtn = document.getElementById('btn-who-wflh');
+                    const bmifaBtn = document.getElementById('btn-who-bmifa');
+                    if (!wfaBtn || !lhfaBtn || !wflhBtn || !bmifaBtn) {
+                        return 'Growth Charts Module indicator buttons missing';
+                    }
+                    const svgContainer = document.getElementById('module-svg-container');
+                    if (!svgContainer || !svgContainer.querySelector('.who-native-svg')) {
+                        return 'Growth Charts Module native SVG missing';
+                    }
+                    const reportModalBtn = document.getElementById('btn-open-report-modal');
+                    const reportModal = document.getElementById('whoGrowthReportModal');
+                    if (reportModalBtn && reportModal) {
+                        reportModalBtn.click();
+                        if (!reportModal.classList.contains('open')) return 'Growth Assessment Report modal failed to open';
+                        window.closeWhoGrowthReportModal();
+                        if (reportModal.classList.contains('open')) return 'Growth Assessment Report modal failed to close';
+                    }
                 }
 
                 return 'OK';
@@ -1150,7 +1187,7 @@ async def run_scan():
             fname = os.path.basename(hf)
             file_url = f"file:///{hf.replace(os.sep, '/')}"
             test_urls.append((fname, file_url))
-            if fname in ("dashboard.html", "dashboard_er_inpatient.html", "doctors_order_patient.html", "opd_record_patient.html", "Neonate_Clinical_Module.html", "doctors_order_er_admission.html", "OB_Gyne_Clinical_Module.html", "ams_restricted_antimicrobial.html"):
+            if fname in ("dashboard.html", "dashboard_er_inpatient.html", "doctors_order_patient.html", "opd_record_patient.html", "Neonate_Clinical_Module.html", "doctors_order_er_admission.html", "OB_Gyne_Clinical_Module.html", "ams_restricted_antimicrobial.html", "Growth_Charts_Module.html"):
                 test_urls.append((f"{fname}?patient=patient_op_carmela", f"{file_url}?patient=patient_op_carmela"))
                 test_urls.append((f"{fname}?patient=patient_er_juan", f"{file_url}?patient=patient_er_juan"))
                 test_urls.append((f"{fname}?patient=patient_op_juan", f"{file_url}?patient=patient_op_juan"))
