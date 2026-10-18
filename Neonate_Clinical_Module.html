@@ -1082,7 +1082,7 @@
         <button type="button" class="workspace-tab active" data-tab="tab-maternal" role="tab"><i class="icon-user"></i> Patient &amp; Maternal</button>
         <button type="button" class="workspace-tab" data-tab="tab-delivery" role="tab"><i class="icon-time"></i> Delivery / APGAR / EINC</button>
         <button type="button" class="workspace-tab" data-tab="tab-ballard" role="tab"><i class="icon-bar-chart"></i> Ballard Score</button>
-        <button type="button" class="workspace-tab" data-tab="tab-exam" role="tab"><i class="icon-stethoscope"></i> Physical Exam &amp; Aftercare</button>
+        <button type="button" class="workspace-tab" data-tab="tab-exam" role="tab"><i class="icon-medkit"></i> Newborn Aftercare Administration</button>
         <button type="button" class="workspace-tab" data-tab="tab-screening" role="tab"><i class="icon-eye-open"></i> Screening</button>
         <button type="button" class="workspace-tab" data-tab="tab-diagnosis" role="tab"><i class="icon-medkit"></i> Diagnosis &amp; KMC</button>
         <button type="button" class="workspace-tab" data-tab="tab-charts" role="tab"><i class="icon-picture"></i> Growth Charts</button>
@@ -1741,7 +1741,7 @@
                 <div class="summary-card-value" id="ballard-physical-subtotal">—</div>
               </div>
               <div class="summary-card">
-                <div class="summary-card-title">Total Ballard Score</div>
+                <div class="summary-card-title">Total Score</div>
                 <div class="summary-card-value" id="ballard-total-score">—</div>
               </div>
               <div class="summary-card">
@@ -1749,7 +1749,7 @@
                 <div class="summary-card-value" id="ballard-completed-count">0 / 13</div>
               </div>
               <div class="summary-card">
-                <div class="summary-card-title">Ballard Weeks</div>
+                <div class="summary-card-title">Ballard Score</div>
                 <div class="summary-card-value" id="ballard-weeks-display" style="color:var(--med-green);">—</div>
               </div>
               <div class="summary-card">
@@ -1816,66 +1816,10 @@
         <!-- TAB 4: PHYSICAL EXAM & AFTERCARE -->
         <div class="tab-panel" id="tab-exam" role="tabpanel">
 
+          <!-- Reason for Admission -->
           <div class="section-card">
-            <div class="section-card-title"><i class="icon-stethoscope"></i> Structured Physical Examination</div>
+            <div class="section-card-title"><i class="icon-hospital"></i> Reason for Admission</div>
             <div class="form-grid-3">
-              <div class="form-group">
-                <label class="form-label" for="neo_pe_general">General Survey</label>
-                <textarea class="form-textarea" id="neo_pe_general" name="neo_pe_general"></textarea>
-                <label class="form-label" for="neo_pe_general_others" style="margin-top:6px;">Others (specify)</label>
-                <input class="form-input" type="text" id="neo_pe_general_others" name="neo_pe_general_others" placeholder="Additional general survey findings not listed above">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="neo_pe_color">Color</label>
-                <textarea class="form-textarea" id="neo_pe_color" name="neo_pe_color"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="neo_pe_head">HEAD</label>
-                <textarea class="form-textarea" id="neo_pe_head" name="neo_pe_head"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="neo_pe_eent">EENT</label>
-                <textarea class="form-textarea" id="neo_pe_eent" name="neo_pe_eent"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="neo_pe_neck">Neck</label>
-                <textarea class="form-textarea" id="neo_pe_neck" name="neo_pe_neck"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="neo_pe_heart">Heart</label>
-                <textarea class="form-textarea" id="neo_pe_heart" name="neo_pe_heart"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="neo_pe_chest_lungs">Chest and Lungs</label>
-                <textarea class="form-textarea" id="neo_pe_chest_lungs" name="neo_pe_chest_lungs"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="neo_pe_abdomen">Abdomen</label>
-                <textarea class="form-textarea" id="neo_pe_abdomen" name="neo_pe_abdomen"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="neo_pe_genitalia">Genitalia</label>
-                <textarea class="form-textarea" id="neo_pe_genitalia" name="neo_pe_genitalia"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="neo_pe_anus">Anus</label>
-                <textarea class="form-textarea" id="neo_pe_anus" name="neo_pe_anus"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="neo_pe_skin">Skin</label>
-                <textarea class="form-textarea" id="neo_pe_skin" name="neo_pe_skin"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="neo_pe_extremities">Extremities</label>
-                <textarea class="form-textarea" id="neo_pe_extremities" name="neo_pe_extremities"></textarea>
-              </div>
-              <div class="form-group col-span-3">
-                <label class="form-label" for="neo_pe_other_findings">Other Findings</label>
-                <textarea class="form-textarea" id="neo_pe_other_findings" name="neo_pe_other_findings"></textarea>
-              </div>
-            </div>
-
-            <div class="form-grid-3" style="margin-top:12px;">
               <div class="form-group">
                 <label class="form-label" for="neo_sex">Sex</label>
                 <select class="form-select" id="neo_sex" name="neo_sex">
@@ -2322,6 +2266,19 @@
               </div>
             </div>
           </div>
+
+          <!-- Screening Progress Notes (Auto-Reflected per Saved Date & Time) -->
+          <div class="section-card" id="screening-progress-notes-card" style="margin-top:16px;">
+            <div class="section-card-title" style="display:flex; justify-content:space-between; align-items:center;">
+              <span><i class="icon-file-text"></i> G. Screening Progress Notes (Auto-Reflected per Saved Date &amp; Time)</span>
+              <span id="screening-pn-badge" style="font-size:11px; font-weight:600; color:var(--med-green); background:#e6f4ea; padding:2px 8px; border-radius:10px;">Synced with Patient Progress Notes</span>
+            </div>
+            <div style="font-size:11.5px; color:var(--slate-500); margin-bottom:10px;">
+              Screening data saved in this tab is automatically synthesized into chronological clinical Progress Notes stamped with the exact saved date and time, reflecting directly across the bedside chart and Doctor's Orders sheet.
+            </div>
+            <div id="screening-progress-notes-list" style="display:flex; flex-direction:column; gap:8px; max-height:260px; overflow-y:auto; padding:8px; background:#f8fafc; border:1px solid var(--slate-200); border-radius:6px;">
+              <!-- Dynamically populated per saved date & time -->
+            </div>
           </div>
 
         </div>
@@ -4633,9 +4590,22 @@ function collectNeonateData() {
     if (s10) apgarData.m10[sign] = s10.value;
   });
 
+  // Preserve existing screening progress notes
+  let currentScreeningNotes = [];
+  try {
+    const rawPrev = localStorage.getItem('HIS_NEONATE_' + currentPatientId);
+    if (rawPrev) {
+      const prev = JSON.parse(rawPrev);
+      if (prev && Array.isArray(prev.screeningProgressNotes)) {
+        currentScreeningNotes = prev.screeningProgressNotes;
+      }
+    }
+  } catch (e) {}
+
   return {
     patientId: currentPatientId,
     updatedAt: new Date().toISOString(),
+    screeningProgressNotes: currentScreeningNotes,
     classification: {
       inborn: inbornSel.value,
       outborn: outbornSel.value,
@@ -4708,23 +4678,23 @@ function collectNeonateData() {
       maturity: document.getElementById('ballard-maturity-display').textContent
     },
     physicalExam: {
-      general: document.getElementById('neo_pe_general').value,
-      generalOthers: document.getElementById('neo_pe_general_others').value,
-      color: document.getElementById('neo_pe_color').value,
-      head: document.getElementById('neo_pe_head').value,
-      eent: document.getElementById('neo_pe_eent').value,
-      neck: document.getElementById('neo_pe_neck').value,
-      heart: document.getElementById('neo_pe_heart').value,
-      chestLungs: document.getElementById('neo_pe_chest_lungs').value,
-      abdomen: document.getElementById('neo_pe_abdomen').value,
-      genitalia: document.getElementById('neo_pe_genitalia').value,
-      anus: document.getElementById('neo_pe_anus').value,
-      skin: document.getElementById('neo_pe_skin').value,
-      extremities: document.getElementById('neo_pe_extremities').value,
-      otherFindings: document.getElementById('neo_pe_other_findings').value,
-      sex: document.getElementById('neo_sex').value,
-      nicuReason: document.getElementById('neo_nicu_reason').value,
-      nicuOthers: document.getElementById('neo_nicu_others').value
+      general: document.getElementById('neo_pe_general') ? document.getElementById('neo_pe_general').value : '',
+      generalOthers: document.getElementById('neo_pe_general_others') ? document.getElementById('neo_pe_general_others').value : '',
+      color: document.getElementById('neo_pe_color') ? document.getElementById('neo_pe_color').value : '',
+      head: document.getElementById('neo_pe_head') ? document.getElementById('neo_pe_head').value : '',
+      eent: document.getElementById('neo_pe_eent') ? document.getElementById('neo_pe_eent').value : '',
+      neck: document.getElementById('neo_pe_neck') ? document.getElementById('neo_pe_neck').value : '',
+      heart: document.getElementById('neo_pe_heart') ? document.getElementById('neo_pe_heart').value : '',
+      chestLungs: document.getElementById('neo_pe_chest_lungs') ? document.getElementById('neo_pe_chest_lungs').value : '',
+      abdomen: document.getElementById('neo_pe_abdomen') ? document.getElementById('neo_pe_abdomen').value : '',
+      genitalia: document.getElementById('neo_pe_genitalia') ? document.getElementById('neo_pe_genitalia').value : '',
+      anus: document.getElementById('neo_pe_anus') ? document.getElementById('neo_pe_anus').value : '',
+      skin: document.getElementById('neo_pe_skin') ? document.getElementById('neo_pe_skin').value : '',
+      extremities: document.getElementById('neo_pe_extremities') ? document.getElementById('neo_pe_extremities').value : '',
+      otherFindings: document.getElementById('neo_pe_other_findings') ? document.getElementById('neo_pe_other_findings').value : '',
+      sex: document.getElementById('neo_sex') ? document.getElementById('neo_sex').value : '',
+      nicuReason: document.getElementById('neo_nicu_reason') ? document.getElementById('neo_nicu_reason').value : '',
+      nicuOthers: document.getElementById('neo_nicu_others') ? document.getElementById('neo_nicu_others').value : ''
     },
     aftercare: {
       vitk: { date: document.getElementById('neo_aftercare_vitk_date').value, remarks: document.getElementById('neo_aftercare_vitk_remarks').value },
@@ -4922,25 +4892,29 @@ function populateNeonateData(data) {
   restoreBallardSelections();
       recalcBallard();
 
-  // Physical Exam
+  // Reason for Admission / Physical Exam
   const pe = data.physicalExam || {};
-  document.getElementById('neo_pe_general').value = pe.general || '';
-  document.getElementById('neo_pe_general_others').value = pe.generalOthers || '';
-  document.getElementById('neo_pe_color').value = pe.color || '';
-  document.getElementById('neo_pe_head').value = pe.head || '';
-  document.getElementById('neo_pe_eent').value = pe.eent || '';
-  document.getElementById('neo_pe_neck').value = pe.neck || '';
-  document.getElementById('neo_pe_heart').value = pe.heart || '';
-  document.getElementById('neo_pe_chest_lungs').value = pe.chestLungs || '';
-  document.getElementById('neo_pe_abdomen').value = pe.abdomen || '';
-  document.getElementById('neo_pe_genitalia').value = pe.genitalia || '';
-  document.getElementById('neo_pe_anus').value = pe.anus || '';
-  document.getElementById('neo_pe_skin').value = pe.skin || '';
-  document.getElementById('neo_pe_extremities').value = pe.extremities || '';
-  document.getElementById('neo_pe_other_findings').value = pe.otherFindings || '';
-  document.getElementById('neo_sex').value = pe.sex || '';
-  document.getElementById('neo_nicu_reason').value = pe.nicuReason || '';
-  document.getElementById('neo_nicu_others').value = pe.nicuOthers || '';
+  const setElVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val || '';
+  };
+  setElVal('neo_pe_general', pe.general);
+  setElVal('neo_pe_general_others', pe.generalOthers);
+  setElVal('neo_pe_color', pe.color);
+  setElVal('neo_pe_head', pe.head);
+  setElVal('neo_pe_eent', pe.eent);
+  setElVal('neo_pe_neck', pe.neck);
+  setElVal('neo_pe_heart', pe.heart);
+  setElVal('neo_pe_chest_lungs', pe.chestLungs);
+  setElVal('neo_pe_abdomen', pe.abdomen);
+  setElVal('neo_pe_genitalia', pe.genitalia);
+  setElVal('neo_pe_anus', pe.anus);
+  setElVal('neo_pe_skin', pe.skin);
+  setElVal('neo_pe_extremities', pe.extremities);
+  setElVal('neo_pe_other_findings', pe.otherFindings);
+  setElVal('neo_sex', pe.sex);
+  setElVal('neo_nicu_reason', pe.nicuReason);
+  setElVal('neo_nicu_others', pe.nicuOthers);
 
   // Aftercare
   const ac = data.aftercare || {};
@@ -5061,6 +5035,25 @@ function populateNeonateData(data) {
   document.getElementById('neo_kmc_futility').value = kmc.futility || '';
   document.getElementById('neo_kmc_encoded_by').value = kmc.encodedBy || getFormattedEncoderCredentials('nurse');
 
+  // Hydrate screening progress notes timeline
+  if (Array.isArray(data.screeningProgressNotes) && data.screeningProgressNotes.length > 0) {
+    renderScreeningProgressNotes(data.screeningProgressNotes);
+  } else {
+    const initNotes = [];
+    if (data.screening) {
+      const initSummary = formatScreeningSummaryLine(data.screening, 'all');
+      if (initSummary) {
+        initNotes.push({
+          id: 'spn_seed',
+          displayTime: 'Recorded Entry',
+          title: 'Initial Screening Assessment',
+          summary: initSummary
+        });
+      }
+    }
+    renderScreeningProgressNotes(initNotes);
+  }
+
   updateSummaryHighlights();
   updateNeonateGrowthChartButtons();
 }
@@ -5122,9 +5115,209 @@ function saveKmcNutrition() {
   }
 }
 
+function formatScreeningSummaryLine(sc, subKey) {
+  if (!sc) return '';
+  const lines = [];
+
+  // ROR
+  if (!subKey || subKey === 'ror' || subKey === 'all') {
+    if (sc.ror && (sc.ror.findings || sc.ror.date)) {
+      let r = 'Red Orange Reflex Screening: ' + (sc.ror.findings || 'Done');
+      if (sc.ror.findings === '-/abnormal' && sc.ror.abnormal) r += ' (' + sc.ror.abnormal + ')';
+      if (sc.ror.date) r += ' • Done: ' + sc.ror.date;
+      if (sc.ror.refDate) r += ' • Ref: ' + sc.ror.refDate;
+      if (sc.ror.physician) r += ' • MD: ' + sc.ror.physician;
+      lines.push(r);
+    }
+  }
+
+  // ROP
+  if (!subKey || subKey === 'rop' || subKey === 'all') {
+    if (sc.rop && (sc.rop.applicable || (sc.rop.init && sc.rop.init.findings))) {
+      let r = 'Retinopathy of Prematurity (ROP): ' + (sc.rop.applicable ? 'Applicable: ' + sc.rop.applicable : 'Done');
+      if (sc.rop.schedule) r += ' • Sched: ' + sc.rop.schedule;
+      if (sc.rop.init && sc.rop.init.findings) r += ' • Initial Exam: ' + sc.rop.init.findings + (sc.rop.init.date ? ' (' + sc.rop.init.date + ')' : '');
+      if (sc.rop.second && sc.rop.second.findings) r += ' • 2nd: ' + sc.rop.second.findings;
+      if (sc.rop.third && sc.rop.third.findings) r += ' • 3rd: ' + sc.rop.third.findings;
+      if (sc.rop.physician) r += ' • MD: ' + sc.rop.physician;
+      lines.push(r);
+    }
+  }
+
+  // ENBS
+  if (!subKey || subKey === 'enbs' || subKey === 'all') {
+    if (sc.enbs && (sc.enbs.remarks || sc.enbs.date || sc.enbs.sticker)) {
+      let r = 'Expanded Newborn Metabolic Screening (ENBS): ' + (sc.enbs.remarks || 'Done');
+      if (sc.enbs.date) r += ' • Done: ' + sc.enbs.date;
+      if (sc.enbs.sticker) r += ' • Sticker #: ' + sc.enbs.sticker;
+      if (sc.enbs.repeatReason) r += ' • Repeat: ' + sc.enbs.repeatReason + (sc.enbs.repeatSched ? ' on ' + sc.enbs.repeatSched : '');
+      if (sc.enbs.physician) r += ' • MD: ' + sc.enbs.physician;
+      lines.push(r);
+    }
+  }
+
+  // Hearing
+  if (!subKey || subKey === 'hearing' || subKey === 'all') {
+    if (sc.hearing && (sc.hearing.remarks || sc.hearing.date || sc.hearing.findings)) {
+      let r = 'Newborn Hearing Screening (NHST): ' + (sc.hearing.remarks || 'Done');
+      if (sc.hearing.findings) r += ' (' + sc.hearing.findings + ')';
+      if (sc.hearing.date) r += ' • Done: ' + sc.hearing.date;
+      if (sc.hearing.remarks === 'Fail' && sc.hearing.repeatDate) r += ' • Repeat: ' + sc.hearing.repeatDate;
+      if (sc.hearing.outside === 'Yes') r += ' • Done Outside';
+      if (sc.hearing.physician) r += ' • MD: ' + sc.hearing.physician;
+      lines.push(r);
+    }
+  }
+
+  // Cranial UTZ
+  if (!subKey || subKey === 'cranialUtz' || subKey === 'all') {
+    if (sc.cranialUtz && (sc.cranialUtz.findings || sc.cranialUtz.date || sc.cranialUtz.applicable)) {
+      let r = 'Cranial Ultrasound (UTZ): ' + (sc.cranialUtz.findings || 'Done');
+      if (sc.cranialUtz.applicable) r += ' • Applicable: ' + sc.cranialUtz.applicable;
+      if (sc.cranialUtz.date) r += ' • Done: ' + sc.cranialUtz.date;
+      if (sc.cranialUtz.remarks) r += ' • Remarks: ' + sc.cranialUtz.remarks;
+      if (sc.cranialUtz.physician) r += ' • MD: ' + sc.cranialUtz.physician;
+      lines.push(r);
+    }
+  }
+
+  // CCHD
+  if (!subKey || subKey === 'cchd' || subKey === 'all') {
+    if (sc.cchd && (sc.cchd.remarks || sc.cchd.date || (sc.cchd.init && sc.cchd.init.hand))) {
+      let r = 'Critical Congenital Heart Disease (CCHD): ' + (sc.cchd.remarks || 'Done');
+      if (sc.cchd.date) r += ' • Done: ' + sc.cchd.date;
+      if (sc.cchd.init && (sc.cchd.init.hand || sc.cchd.init.foot)) {
+        r += ' • Pulse Ox: Hand ' + (sc.cchd.init.hand || '—') + '%, Foot ' + (sc.cchd.init.foot || '—') + '% (Diff: ' + (sc.cchd.init.diff || '—') + '%)';
+      }
+      if (sc.cchd.retest && (sc.cchd.retest.hand || sc.cchd.retest.foot)) {
+        r += ' • Retest: Hand ' + sc.cchd.retest.hand + '%, Foot ' + sc.cchd.retest.foot + '%';
+      }
+      if (sc.cchd.screener) r += ' • Screener: ' + sc.cchd.screener;
+      if (sc.cchd.physician) r += ' • MD: ' + sc.cchd.physician;
+      lines.push(r);
+    }
+  }
+
+  return lines.join('; ');
+}
+
+function renderScreeningProgressNotes(notes) {
+  const container = document.getElementById('screening-progress-notes-list');
+  if (!container) return;
+  if (!Array.isArray(notes) || notes.length === 0) {
+    container.innerHTML = '<div style="font-size:12px; color:var(--slate-400); font-style:italic; padding:8px;">No screening progress notes recorded yet. Entering data and clicking SAVE will automatically generate timestamped progress notes.</div>';
+    return;
+  }
+  container.innerHTML = notes.slice(-15).reverse().map(n => `
+    <div style="background:#ffffff; border:1px solid var(--slate-200); border-left:3px solid var(--med-green); border-radius:4px; padding:8px 12px; font-size:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+        <strong style="color:var(--med-green);">${escapeHtml(n.title || 'Screening Note')}</strong>
+        <span style="font-size:11px; color:var(--slate-500); background:#f1f5f9; padding:1px 6px; border-radius:10px;">${escapeHtml(n.displayTime || n.time || '')}</span>
+      </div>
+      <div style="color:var(--slate-700); line-height:1.4;">${escapeHtml(n.summary || '')}</div>
+    </div>
+  `).join('');
+}
+
+function syncScreeningToProgressNotes(payload, subKey, title) {
+  if (!payload || !payload.screening) return;
+  const now = new Date();
+  const dateStr = now.toISOString().split('T')[0];
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const dateTimeStr = dateStr + ' ' + timeStr;
+
+  const summary = formatScreeningSummaryLine(payload.screening, subKey);
+  if (!summary) return;
+
+  const noteEntry = {
+    id: 'spn_' + Date.now(),
+    date: dateStr,
+    time: timeStr,
+    dateTime: now.toISOString(),
+    displayTime: dateTimeStr,
+    subKey: subKey || 'screening',
+    title: title || 'Newborn Screening',
+    summary: summary
+  };
+
+  // 1. Maintain in payload.screeningProgressNotes
+  payload.screeningProgressNotes = payload.screeningProgressNotes || [];
+  payload.screeningProgressNotes.push(noteEntry);
+
+  // 2. Render in the Screening tab progress notes list
+  renderScreeningProgressNotes(payload.screeningProgressNotes);
+
+  // 3. Sync to his_patients_v1
+  if (typeof getPatients === 'function' && typeof savePatients === 'function') {
+    try {
+      const records = getPatients();
+      const idx = records.findIndex(r => r.id === currentPatientId);
+      if (idx >= 0) {
+        const patient = records[idx];
+        patient.data = patient.data || {};
+        patient.data.neonate = payload;
+
+        // Build formatted progress note string
+        const stampedLine = `[${dateTimeStr}] ${title || 'Screening'}: ${summary}`;
+
+        // Objective progress notes
+        const existingObj = String(patient.data.progress_notes_objective || '').trim();
+        if (!existingObj.includes(summary)) {
+          patient.data.progress_notes_objective = existingObj ? existingObj + '\n' + stampedLine : stampedLine;
+        }
+
+        // Full progress notes
+        const existingPn = String(patient.data.progress_notes || '').trim();
+        if (!existingPn.includes(summary)) {
+          patient.data.progress_notes = existingPn ? existingPn + '\n' + stampedLine : stampedLine;
+        }
+
+        // Sync into encounters & rounds
+        if (Array.isArray(patient.data.encounters) && patient.data.encounters.length > 0) {
+          const enc = patient.data.encounters.find(e => e.is_current || e.isCurrent) || patient.data.encounters[patient.data.encounters.length - 1];
+          if (enc) {
+            const encObj = String(enc.progress_notes_objective || '').trim();
+            if (!encObj.includes(summary)) {
+              enc.progress_notes_objective = encObj ? encObj + '\n' + stampedLine : stampedLine;
+            }
+            const encPn = String(enc.progress_notes || '').trim();
+            if (!encPn.includes(summary)) {
+              enc.progress_notes = encPn ? encPn + '\n' + stampedLine : stampedLine;
+            }
+            enc.results = enc.results ? enc.results + '; ' + summary : summary;
+
+            enc.rounds = enc.rounds || [];
+            enc.rounds.push({
+              date: dateStr,
+              time: timeStr,
+              dateTime: now.toISOString(),
+              registry: enc.registry || 'IP',
+              service: 'Pediatrics / Neonatology',
+              physician: (payload.screening[subKey] && payload.screening[subKey].physician) || enc.physician || 'Andrea Reyes, MD',
+              prc_license: enc.prc_license || '0102938',
+              status_tag: 'Screening Round',
+              diagnosis: enc.diagnosis || 'Z38.0 - Single liveborn infant, born in hospital (vaginal delivery)',
+              progress_notes_subjective: 'Routine neonatal screening surveillance and clinical compliance.',
+              progress_notes_objective: summary,
+              progress_notes_assessment: 'Term neonate; screening protocol completed per hospital standards.',
+              progress_notes: stampedLine,
+              orders: []
+            });
+          }
+        }
+
+        savePatients(records);
+      }
+    } catch (e) {
+      console.warn('Could not sync screening to EHR progress notes', e);
+    }
+  }
+}
+
 function saveScreeningSub(subKey, title) {
   const payload = collectNeonateData();
   try {
+    syncScreeningToProgressNotes(payload, subKey, title || 'Screening');
     localStorage.setItem('HIS_NEONATE_' + currentPatientId, JSON.stringify(payload));
     if (typeof getPatients === 'function' && typeof savePatients === 'function') {
       const records = getPatients();
@@ -5135,7 +5328,7 @@ function saveScreeningSub(subKey, title) {
         savePatients(records);
       }
     }
-    showNeonateToast((title || 'Screening') + ' saved successfully.');
+    showNeonateToast((title || 'Screening') + ' saved & reflected in Progress Notes.');
   } catch (e) {
     console.error('Error saving screening section ' + subKey, e);
     showNeonateToast('Failed to save ' + (title || 'Screening') + '.');
@@ -5147,11 +5340,15 @@ if (typeof window !== 'undefined') {
   window.saveKmcNutrition = saveKmcNutrition;
   window.saveScreeningSub = saveScreeningSub;
   window.getFormattedEncoderCredentials = getFormattedEncoderCredentials;
+  window.formatScreeningSummaryLine = formatScreeningSummaryLine;
+  window.renderScreeningProgressNotes = renderScreeningProgressNotes;
+  window.syncScreeningToProgressNotes = syncScreeningToProgressNotes;
 }
 
 function saveNeonateRecord() {
   const payload = collectNeonateData();
   try {
+    syncScreeningToProgressNotes(payload, 'all', 'Newborn Screening Evaluation');
     localStorage.setItem('HIS_NEONATE_' + currentPatientId, JSON.stringify(payload));
     
     // Also sync to his_patients_v1
@@ -5176,6 +5373,7 @@ function saveNeonateDraft() {
   const now = new Date();
   const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   try {
+    syncScreeningToProgressNotes(payload, 'all', 'Draft Screening Documentation');
     const draft = {
       patientId: currentPatientId,
       timestamp: now.toISOString(),

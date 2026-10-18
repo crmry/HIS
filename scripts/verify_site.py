@@ -1023,6 +1023,44 @@ async def scan_single_target(browser_ws, file_url):
                         vlookupDetails.open = true;
                         vlookupDetails.open = false;
                     }
+
+                    // Verify Ballard Score titles
+                    const bTotalTitle = document.getElementById('ballard-total-score')?.previousElementSibling;
+                    if (!bTotalTitle || !bTotalTitle.textContent.includes('Total Score')) {
+                        return 'Ballard Total Score title not updated to Total Score';
+                    }
+                    const bWeeksTitle = document.getElementById('ballard-weeks-display')?.previousElementSibling;
+                    if (!bWeeksTitle || !bWeeksTitle.textContent.includes('Ballard Score')) {
+                        return 'Ballard Weeks title not updated to Ballard Score';
+                    }
+
+                    // Verify tab renamed to Newborn Aftercare Administration
+                    const tabExamBtn = document.querySelector('.workspace-tab[data-tab="tab-exam"]');
+                    if (!tabExamBtn || !tabExamBtn.textContent.includes('Newborn Aftercare Administration')) {
+                        return 'Physical Exam & Aftercare tab not renamed to Newborn Aftercare Administration';
+                    }
+
+                    // Verify Structured PE removed and Reason for Admission retained
+                    if (document.getElementById('neo_pe_general')) {
+                        return 'Structured Physical Exam General Survey was not removed';
+                    }
+                    if (!document.getElementById('neo_nicu_reason') || !document.getElementById('neo_sex')) {
+                        return 'Reason for Admission fields missing';
+                    }
+
+                    // Verify Screening Progress Notes card exists and saveScreeningSub reflects note
+                    const spCard = document.getElementById('screening-progress-notes-card');
+                    const spList = document.getElementById('screening-progress-notes-list');
+                    if (!spCard || !spList) {
+                        return 'Screening Progress Notes card or list missing';
+                    }
+                    const saveRorBtn = document.getElementById('btn-save-ror');
+                    if (saveRorBtn) {
+                        saveRorBtn.click();
+                        if (!spList.textContent.includes('Red Orange Reflex')) {
+                            return 'Screening save did not reflect in Progress Notes list';
+                        }
+                    }
                 }
 
                 return 'OK';
