@@ -2473,9 +2473,9 @@
                 <label class="form-label" for="neo_kmc_weight_discharge">Weight on Discharge (kg)</label>
                 <input class="form-input" type="number" step="0.01" min="0" id="neo_kmc_weight_discharge" name="neo_kmc_weight_discharge" placeholder="kg">
               </div>
-              <div class="form-group">
+              <div class="form-group" id="group-kmc-futility">
                 <label class="form-label" for="neo_kmc_futility">Medical Futility Data</label>
-                <select class="form-select" id="neo_kmc_futility" name="neo_kmc_futility">
+                <select class="form-select" id="neo_kmc_futility" name="neo_kmc_futility" onchange="toggleKmcFutilityOthers()">
                   <option value="">Select</option>
                   <option value="DNR / DNI">DNR / DNI</option>
                   <option value="Neurologic">Neurologic</option>
@@ -2484,6 +2484,7 @@
                   <option value="Shock">Shock</option>
                   <option value="Others">Others</option>
                 </select>
+                <input class="form-input" type="text" id="neo_kmc_futility_others" name="neo_kmc_futility_others" placeholder="Specify other medical futility data..." style="display:none; margin-top:6px;">
               </div>
 
               <!-- Accountability: Encoded by Physician or Nurse & Save KMC -->
@@ -4681,6 +4682,7 @@ function collectNeonateData() {
       surfactant: document.getElementById('neo_kmc_surfactant').value,
       weightDischarge: document.getElementById('neo_kmc_weight_discharge').value,
       futility: document.getElementById('neo_kmc_futility').value,
+      futilityOthers: document.getElementById('neo_kmc_futility_others') ? document.getElementById('neo_kmc_futility_others').value : '',
       encodedBy: document.getElementById('neo_kmc_encoded_by').value
     }
   };
@@ -4936,6 +4938,11 @@ function populateNeonateData(data) {
   document.getElementById('neo_kmc_surfactant').value = kmc.surfactant || '';
   document.getElementById('neo_kmc_weight_discharge').value = kmc.weightDischarge || '';
   document.getElementById('neo_kmc_futility').value = kmc.futility || '';
+  const futOthersEl = document.getElementById('neo_kmc_futility_others');
+  if (futOthersEl) {
+    futOthersEl.value = kmc.futilityOthers || '';
+    futOthersEl.style.display = kmc.futility === 'Others' ? 'block' : 'none';
+  }
   document.getElementById('neo_kmc_encoded_by').value = kmc.encodedBy || getFormattedEncoderCredentials('nurse');
 
   // Hydrate screening progress notes timeline
@@ -5093,13 +5100,13 @@ function syncDiagnosisToProgressNotes(payload, title) {
 
         // Assessment progress notes
         const existingAssessment = String(patient.data.progress_notes_assessment || '').trim();
-        if (!existingAssessment.includes(summary)) {
+        if (!existingAssessment.includes(stampedLine)) {
           patient.data.progress_notes_assessment = existingAssessment ? existingAssessment + '\n' + stampedLine : stampedLine;
         }
 
         // Full progress notes
         const existingPn = String(patient.data.progress_notes || '').trim();
-        if (!existingPn.includes(summary)) {
+        if (!existingPn.includes(stampedLine)) {
           patient.data.progress_notes = existingPn ? existingPn + '\n' + stampedLine : stampedLine;
         }
 
@@ -5108,14 +5115,14 @@ function syncDiagnosisToProgressNotes(payload, title) {
           const enc = patient.data.encounters.find(e => e.is_current || e.isCurrent) || patient.data.encounters[patient.data.encounters.length - 1];
           if (enc) {
             const encAssessment = String(enc.progress_notes_assessment || '').trim();
-            if (!encAssessment.includes(summary)) {
+            if (!encAssessment.includes(stampedLine)) {
               enc.progress_notes_assessment = encAssessment ? encAssessment + '\n' + stampedLine : stampedLine;
             }
             const encPn = String(enc.progress_notes || '').trim();
-            if (!encPn.includes(summary)) {
+            if (!encPn.includes(stampedLine)) {
               enc.progress_notes = encPn ? encPn + '\n' + stampedLine : stampedLine;
             }
-            enc.diagnosis = enc.diagnosis ? enc.diagnosis + '; ' + summary : summary;
+            enc.diagnosis = enc.diagnosis ? (enc.diagnosis.includes(summary) ? enc.diagnosis : enc.diagnosis + '; ' + summary) : summary;
 
             enc.rounds = enc.rounds || [];
             enc.rounds.push({
@@ -5166,6 +5173,18 @@ function saveNeonatalDx() {
   } catch (e) {
     console.error('Error saving neonatal diagnosis', e);
     showNeonateToast('Failed to save Neonatal Diagnosis.');
+  }
+}
+
+function toggleKmcFutilityOthers() {
+  const futilitySelect = document.getElementById('neo_kmc_futility');
+  const othersInput = document.getElementById('neo_kmc_futility_others');
+  if (!futilitySelect || !othersInput) return;
+  if (futilitySelect.value === 'Others') {
+    othersInput.style.display = 'block';
+    othersInput.focus();
+  } else {
+    othersInput.style.display = 'none';
   }
 }
 
@@ -5465,6 +5484,7 @@ function openRopScreeningModule() {
 if (typeof window !== 'undefined') {
   window.saveNeonatalDx = saveNeonatalDx;
   window.saveKmcNutrition = saveKmcNutrition;
+  window.toggleKmcFutilityOthers = toggleKmcFutilityOthers;
   window.saveScreeningSub = saveScreeningSub;
   window.openRopScreeningModule = openRopScreeningModule;
   window.getFormattedEncoderCredentials = getFormattedEncoderCredentials;
