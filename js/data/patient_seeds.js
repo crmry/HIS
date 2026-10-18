@@ -747,7 +747,7 @@ if (typeof window !== 'undefined') {
     function erPatientRecord() {
       return {
         id: ER_PATIENT_ID,
-        seedVersion: 79,
+        seedVersion: 80,
         createdAt: '2026-06-12T08:30:00+08:00',
         updatedAt: '2026-06-14T09:30:00+08:00',
         data: {
@@ -792,7 +792,7 @@ if (typeof window !== 'undefined') {
               status: 'Active / Home Med'
             }
           ],
-          pertinent_signs: ['Productive cough', 'Fever', 'Dyspnea'],
+          pertinent_signs: ['Cough', 'Fever', 'Dyspnea', 'Others'],
           pertinent_signs_information: 'Resolved following inpatient antimicrobial therapy; no current chest pain or dyspnea.',
           pe_general: 'Conscious, coherent, ambulatory, afebrile, in no respiratory distress.',
           pe_general_survey: 'Awake and Alert',
@@ -1473,7 +1473,7 @@ if (typeof window !== 'undefined') {
     function neoPatientRecord() {
       return {
         id: NEO_PATIENT_ID,
-        seedVersion: 4,
+        seedVersion: 5,
         createdAt: '2026-10-11T08:30:00+08:00',
         updatedAt: '2026-10-13T09:00:00+08:00',
         data: {
@@ -1509,8 +1509,8 @@ if (typeof window !== 'undefined') {
           hx_social: 'Cohabiting with mother in Rooming-in Nursery under exclusive breastfeeding care.',
           hx_allergy: 'No known drug or environmental allergies.',
           interview_medications: [],
-          pertinent_signs: ['Active cry and good suck', 'Pink skin and mucous membranes', 'Normal neonatal reflexes'],
-          pertinent_signs_information: 'Vigorous cry, spontaneous movement, sucking actively on breast, no respiratory distress or cyanosis.',
+          pertinent_signs: ['Others'],
+          pertinent_signs_information: 'Active cry, good suck and latch; pink skin and mucous membranes; normal neonatal reflexes (robust Moro, symmetric grasp, intact sucking and rooting); spontaneous movement in room air, afebrile, no cyanosis or respiratory distress.',
           pe_general: 'Active, alert, vigorous neonate in no cardiopulmonary distress. Pink skin, good neonatal tone and spontaneous symmetric movements.',
           pe_general_survey: 'Awake and Alert',
           pe_general_survey_other: 'Active, alert, vigorous neonate in no cardiopulmonary distress. Pink skin, good neonatal tone and spontaneous symmetric movements.',

@@ -6536,14 +6536,11 @@
         el.disabled = isRo;
       });
 
-      // Physical Examination is standard across all encounters (OPD, ER, Inpatient / Newborn)
+      // Review of Systems and Physical Examination are standard across all encounters (OPD, ER, Inpatient / Newborn)
+      if (rosRow) rosRow.style.display = 'block';
       if (peRow) peRow.style.display = 'block';
 
       if (isErOrIp) {
-        // ER and Inpatient encounters:
-        // Do not use OPD-style ROS section
-        if (rosRow) rosRow.style.display = 'none';
-
         // Display Intake & Output (I&O)
         var ioTabLi = document.getElementById('tab-li-io');
         if (ioTabLi) ioTabLi.style.display = '';
