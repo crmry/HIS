@@ -1061,6 +1061,26 @@ async def scan_single_target(browser_ws, file_url):
                             return 'Screening save did not reflect in Progress Notes list';
                         }
                     }
+
+                    // Verify Medical Futility dropdown has "Others" option
+                    const futilitySel = document.getElementById('neo_kmc_futility');
+                    if (!futilitySel) return 'neo_kmc_futility dropdown missing';
+                    const hasOthers = Array.from(futilitySel.options).some(o => o.value === 'Others' || o.text === 'Others');
+                    if (!hasOthers) return 'neo_kmc_futility does not include Others option';
+
+                    // Verify Neonatal Diagnosis Progress Notes card exists and save reflects note
+                    const dpCard = document.getElementById('diagnosis-progress-notes-card');
+                    const dpList = document.getElementById('diagnosis-progress-notes-list');
+                    if (!dpCard || !dpList) {
+                        return 'Diagnosis Progress Notes card or list missing';
+                    }
+                    const saveDxBtn = document.getElementById('btn-save-neonatal-dx');
+                    if (saveDxBtn) {
+                        saveDxBtn.click();
+                        if (!dpList.textContent.includes('Neonatal Diagnostic Assessment') && !dpList.textContent.includes('Initial Diagnostic Assessment') && !dpList.textContent.includes('Diagnosis')) {
+                            return 'Neonatal Diagnosis save did not reflect in Progress Notes list';
+                        }
+                    }
                 }
 
                 return 'OK';

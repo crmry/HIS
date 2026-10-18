@@ -2377,6 +2377,20 @@
             </div>
           </div>
 
+          <!-- Neonatal Diagnosis Progress Notes (Auto-Reflected per Saved Date & Time) -->
+          <div class="section-card" id="diagnosis-progress-notes-card" style="margin-top:16px;">
+            <div class="section-card-title" style="display:flex; justify-content:space-between; align-items:center;">
+              <span><i class="icon-file-text"></i> Neonatal Diagnosis Progress Notes (Auto-Reflected per Saved Date &amp; Time)</span>
+              <span id="diagnosis-pn-badge" style="font-size:11px; font-weight:600; color:var(--med-green); background:#e6f4ea; padding:2px 8px; border-radius:10px;">Synced with Patient Progress Notes</span>
+            </div>
+            <div style="font-size:11.5px; color:var(--slate-500); margin-bottom:10px;">
+              Neonatal diagnostic assessments saved in this tab are automatically synthesized into chronological clinical Progress Notes stamped with the exact saved date and time, reflecting directly across the bedside chart and Doctor's Orders sheet.
+            </div>
+            <div id="diagnosis-progress-notes-list" style="display:flex; flex-direction:column; gap:8px; max-height:260px; overflow-y:auto; padding:8px; background:#f8fafc; border:1px solid var(--slate-200); border-radius:6px;">
+              <!-- Dynamically populated per saved date & time -->
+            </div>
+          </div>
+
           <div class="section-card">
             <div class="section-card-title"><i class="icon-user-md"></i> Kangaroo Mother Care (KMC) &amp; Discharge Nutrition</div>
             <div class="form-grid-3">
@@ -2451,6 +2465,7 @@
                   <option value="Respiratory failure refractory to high ventilator settings">Respiratory failure refractory to high ventilator settings</option>
                   <option value="Severe Acidosis">Severe Acidosis</option>
                   <option value="Shock">Shock</option>
+                  <option value="Others">Others</option>
                 </select>
               </div>
 
@@ -4590,14 +4605,18 @@ function collectNeonateData() {
     if (s10) apgarData.m10[sign] = s10.value;
   });
 
-  // Preserve existing screening progress notes
+  // Preserve existing screening and diagnosis progress notes
   let currentScreeningNotes = [];
+  let currentDiagnosisNotes = [];
   try {
     const rawPrev = localStorage.getItem('HIS_NEONATE_' + currentPatientId);
     if (rawPrev) {
       const prev = JSON.parse(rawPrev);
       if (prev && Array.isArray(prev.screeningProgressNotes)) {
         currentScreeningNotes = prev.screeningProgressNotes;
+      }
+      if (prev && Array.isArray(prev.diagnosisProgressNotes)) {
+        currentDiagnosisNotes = prev.diagnosisProgressNotes;
       }
     }
   } catch (e) {}
@@ -4606,6 +4625,7 @@ function collectNeonateData() {
     patientId: currentPatientId,
     updatedAt: new Date().toISOString(),
     screeningProgressNotes: currentScreeningNotes,
+    diagnosisProgressNotes: currentDiagnosisNotes,
     classification: {
       inborn: inbornSel.value,
       outborn: outbornSel.value,
@@ -5054,6 +5074,25 @@ function populateNeonateData(data) {
     renderScreeningProgressNotes(initNotes);
   }
 
+  // Hydrate diagnosis progress notes timeline
+  if (Array.isArray(data.diagnosisProgressNotes) && data.diagnosisProgressNotes.length > 0) {
+    renderDiagnosisProgressNotes(data.diagnosisProgressNotes);
+  } else {
+    const initDxNotes = [];
+    if (data.diagnosis) {
+      const initDxSummary = formatDiagnosisSummaryLine(data.diagnosis);
+      if (initDxSummary) {
+        initDxNotes.push({
+          id: 'dpn_seed',
+          displayTime: 'Recorded Entry',
+          title: 'Initial Diagnostic Assessment',
+          summary: initDxSummary
+        });
+      }
+    }
+    renderDiagnosisProgressNotes(initDxNotes);
+  }
+
   updateSummaryHighlights();
   updateNeonateGrowthChartButtons();
 }
@@ -5069,12 +5108,167 @@ function getFormattedEncoderCredentials(role) {
   }
 }
 
+function formatDiagnosisSummaryLine(dx) {
+  if (!dx) return '';
+  const lines = [];
+
+  // Hyperbilirubinemia
+  if (dx.biliClass || dx.biliLevel || dx.biliOther) {
+    let r = 'Hyperbilirubinemia: ' + (dx.biliClass || 'Evaluated');
+    if (dx.biliOther) r += ' (' + dx.biliOther + ')';
+    if (dx.biliLevel) r += ' • Level: ' + dx.biliLevel + ' mg/dL';
+    lines.push(r);
+  }
+
+  // Respiratory Diagnosis & Support
+  if (dx.respStatus || dx.respSupport) {
+    let r = 'Respiratory: ' + (dx.respStatus || 'Evaluated');
+    if (dx.respSupport) r += ' • Support: ' + dx.respSupport;
+    lines.push(r);
+  }
+
+  // Sepsis
+  if (dx.sepsisStatus || dx.sepsisCulture) {
+    let r = 'Sepsis Status: ' + (dx.sepsisStatus || 'Evaluated');
+    if (dx.sepsisCulture) r += ' • Culture: ' + dx.sepsisCulture;
+    lines.push(r);
+  }
+
+  // Asphyxia
+  if (dx.asphyxia) {
+    lines.push('Perinatal Asphyxia: ' + dx.asphyxia);
+  }
+
+  // Congenital Disease
+  if (dx.congenital) {
+    lines.push('Congenital Disease/Anomaly: ' + dx.congenital);
+  }
+
+  if (lines.length === 0) {
+    return 'Neonatal diagnostic assessment completed; no abnormal pathology recorded.';
+  }
+  return lines.join('; ');
+}
+
+function renderDiagnosisProgressNotes(notes) {
+  const container = document.getElementById('diagnosis-progress-notes-list');
+  if (!container) return;
+  if (!Array.isArray(notes) || notes.length === 0) {
+    container.innerHTML = '<div style="font-size:12px; color:var(--slate-400); font-style:italic; padding:8px;">No neonatal diagnosis progress notes recorded yet. Entering diagnosis data and clicking SAVE NEONATAL DX will automatically generate timestamped progress notes.</div>';
+    return;
+  }
+  container.innerHTML = notes.slice(-15).reverse().map(n => `
+    <div style="background:#ffffff; border:1px solid var(--slate-200); border-left:3px solid var(--med-green); border-radius:4px; padding:8px 12px; font-size:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+        <strong style="color:var(--med-green);">${escapeHtml(n.title || 'Neonatal Diagnosis Note')}</strong>
+        <span style="font-size:11px; color:var(--slate-500); background:#f1f5f9; padding:1px 6px; border-radius:10px;">${escapeHtml(n.displayTime || n.time || '')}</span>
+      </div>
+      <div style="color:var(--slate-700); line-height:1.4;">${escapeHtml(n.summary || '')}</div>
+    </div>
+  `).join('');
+}
+
+function syncDiagnosisToProgressNotes(payload, title) {
+  if (!payload || !payload.diagnosis) return;
+  const now = new Date();
+  const dateStr = now.toISOString().split('T')[0];
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const dateTimeStr = dateStr + ' ' + timeStr;
+
+  const summary = formatDiagnosisSummaryLine(payload.diagnosis);
+  if (!summary) return;
+
+  const noteEntry = {
+    id: 'dpn_' + Date.now(),
+    date: dateStr,
+    time: timeStr,
+    dateTime: now.toISOString(),
+    displayTime: dateTimeStr,
+    title: title || 'Neonatal Diagnostic Assessment',
+    summary: summary
+  };
+
+  // 1. Maintain in payload.diagnosisProgressNotes
+  payload.diagnosisProgressNotes = payload.diagnosisProgressNotes || [];
+  payload.diagnosisProgressNotes.push(noteEntry);
+
+  // 2. Render in the Diagnosis tab progress notes list
+  renderDiagnosisProgressNotes(payload.diagnosisProgressNotes);
+
+  // 3. Sync to his_patients_v1
+  if (typeof getPatients === 'function' && typeof savePatients === 'function') {
+    try {
+      const records = getPatients();
+      const idx = records.findIndex(r => r.id === currentPatientId);
+      if (idx >= 0) {
+        const patient = records[idx];
+        patient.data = patient.data || {};
+        patient.data.neonate = payload;
+
+        // Build formatted progress note string
+        const stampedLine = `[${dateTimeStr}] ${title || 'Neonatal Diagnosis'}: ${summary}`;
+
+        // Assessment progress notes
+        const existingAssessment = String(patient.data.progress_notes_assessment || '').trim();
+        if (!existingAssessment.includes(summary)) {
+          patient.data.progress_notes_assessment = existingAssessment ? existingAssessment + '\n' + stampedLine : stampedLine;
+        }
+
+        // Full progress notes
+        const existingPn = String(patient.data.progress_notes || '').trim();
+        if (!existingPn.includes(summary)) {
+          patient.data.progress_notes = existingPn ? existingPn + '\n' + stampedLine : stampedLine;
+        }
+
+        // Sync into encounters & rounds
+        if (Array.isArray(patient.data.encounters) && patient.data.encounters.length > 0) {
+          const enc = patient.data.encounters.find(e => e.is_current || e.isCurrent) || patient.data.encounters[patient.data.encounters.length - 1];
+          if (enc) {
+            const encAssessment = String(enc.progress_notes_assessment || '').trim();
+            if (!encAssessment.includes(summary)) {
+              enc.progress_notes_assessment = encAssessment ? encAssessment + '\n' + stampedLine : stampedLine;
+            }
+            const encPn = String(enc.progress_notes || '').trim();
+            if (!encPn.includes(summary)) {
+              enc.progress_notes = encPn ? encPn + '\n' + stampedLine : stampedLine;
+            }
+            enc.diagnosis = enc.diagnosis ? enc.diagnosis + '; ' + summary : summary;
+
+            enc.rounds = enc.rounds || [];
+            enc.rounds.push({
+              date: dateStr,
+              time: timeStr,
+              dateTime: now.toISOString(),
+              registry: enc.registry || 'IP',
+              service: 'Pediatrics / Neonatology',
+              physician: (payload.diagnosis && payload.diagnosis.encodedBy && payload.diagnosis.encodedBy.split('|')[0].trim()) || enc.physician || 'Miguel Santos, MD',
+              prc_license: enc.prc_license || '0094821',
+              status_tag: 'Diagnosis Round',
+              diagnosis: summary,
+              progress_notes_subjective: 'Neonatal clinical diagnostic review and specialty assessment.',
+              progress_notes_objective: `Resp: ${payload.diagnosis.respStatus || 'Normal'}; Sepsis: ${payload.diagnosis.sepsisStatus || 'None'}; Bili: ${payload.diagnosis.biliLevel || 'Normal'} mg/dL.`,
+              progress_notes_assessment: summary,
+              progress_notes: stampedLine,
+              orders: []
+            });
+          }
+        }
+
+        savePatients(records);
+      }
+    } catch (e) {
+      console.warn('Could not sync neonatal diagnosis to EHR progress notes', e);
+    }
+  }
+}
+
 function saveNeonatalDx() {
   const creds = getFormattedEncoderCredentials('physician');
   document.getElementById('neo_dx_encoded_by').value = creds;
   const payload = collectNeonateData();
   payload.diagnosis.encodedBy = creds;
   try {
+    syncDiagnosisToProgressNotes(payload, 'Neonatal Diagnostic Assessment');
     localStorage.setItem('HIS_NEONATE_' + currentPatientId, JSON.stringify(payload));
     if (typeof getPatients === 'function' && typeof savePatients === 'function') {
       const records = getPatients();
@@ -5085,7 +5279,7 @@ function saveNeonatalDx() {
         savePatients(records);
       }
     }
-    showNeonateToast('Neonatal Diagnosis saved successfully.');
+    showNeonateToast('Neonatal Diagnosis saved & reflected in Progress Notes.');
   } catch (e) {
     console.error('Error saving neonatal diagnosis', e);
     showNeonateToast('Failed to save Neonatal Diagnosis.');
@@ -5343,12 +5537,16 @@ if (typeof window !== 'undefined') {
   window.formatScreeningSummaryLine = formatScreeningSummaryLine;
   window.renderScreeningProgressNotes = renderScreeningProgressNotes;
   window.syncScreeningToProgressNotes = syncScreeningToProgressNotes;
+  window.formatDiagnosisSummaryLine = formatDiagnosisSummaryLine;
+  window.renderDiagnosisProgressNotes = renderDiagnosisProgressNotes;
+  window.syncDiagnosisToProgressNotes = syncDiagnosisToProgressNotes;
 }
 
 function saveNeonateRecord() {
   const payload = collectNeonateData();
   try {
     syncScreeningToProgressNotes(payload, 'all', 'Newborn Screening Evaluation');
+    syncDiagnosisToProgressNotes(payload, 'Neonatal Diagnostic Assessment');
     localStorage.setItem('HIS_NEONATE_' + currentPatientId, JSON.stringify(payload));
     
     // Also sync to his_patients_v1
@@ -5374,6 +5572,7 @@ function saveNeonateDraft() {
   const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   try {
     syncScreeningToProgressNotes(payload, 'all', 'Draft Screening Documentation');
+    syncDiagnosisToProgressNotes(payload, 'Draft Neonatal Diagnostic Assessment');
     const draft = {
       patientId: currentPatientId,
       timestamp: now.toISOString(),
