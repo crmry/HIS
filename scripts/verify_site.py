@@ -363,7 +363,9 @@ async def scan_single_target(browser_ws, file_url):
                     if (!growthBtn) return 'btn-open-growth-chart missing in specialized forms';
                     if (!growthBtn.getAttribute('onclick') || !growthBtn.getAttribute('onclick').includes('openGrowthChartsModule')) return 'btn-open-growth-chart onclick should be openGrowthChartsModule';
                     if (typeof window.openGrowthChartsModule !== 'function') return 'openGrowthChartsModule is not defined on window';
-                    if (dashletForms.querySelector('#btn-open-rop-screening')) return 'btn-open-rop-screening should not be in dashlet-specialized-forms';
+                    const ropSpecialBtn = document.getElementById('btn-open-rop-screening');
+                    if (!ropSpecialBtn) return 'btn-open-rop-screening missing in specialized forms';
+                    if (!ropSpecialBtn.getAttribute('onclick') || !ropSpecialBtn.getAttribute('onclick').includes('ROP Screening')) return 'btn-open-rop-screening onclick should call openSpecializedPEForm';
                 }
                 const openModBtn = document.getElementById('btn-open-obgyne-module');
                 if (openModBtn) {

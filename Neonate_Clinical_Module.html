@@ -1950,7 +1950,7 @@
           <!-- Retinopathy of Prematurity -->
           <div class="section-card" id="section-card-rop">
             <div class="section-card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-              <span><i class="icon-eye-close"></i> B. Retinopathy of Prematurity (ROP)</span>
+              <span><i class="icon-eye-close"></i> B. Retinopathy of Prematurity (ROP) &mdash; ROP Screening Module</span>
               <button type="button" class="btn btn-small" id="btn-open-rop-screening" onclick="openRopScreeningModule()" title="Launch / Focus ROP Screening Module" style="font-size:11.5px; padding:4px 10px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; color:#1b4d3e; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.04);">
                 <i class="icon-search"></i> ROP Screening
               </button>
@@ -5472,13 +5472,13 @@ function syncScreeningToProgressNotes(payload, subKey, title) {
 
         // Objective progress notes
         const existingObj = String(patient.data.progress_notes_objective || '').trim();
-        if (!existingObj.includes(summary)) {
+        if (!existingObj.includes(stampedLine)) {
           patient.data.progress_notes_objective = existingObj ? existingObj + '\n' + stampedLine : stampedLine;
         }
 
         // Full progress notes
         const existingPn = String(patient.data.progress_notes || '').trim();
-        if (!existingPn.includes(summary)) {
+        if (!existingPn.includes(stampedLine)) {
           patient.data.progress_notes = existingPn ? existingPn + '\n' + stampedLine : stampedLine;
         }
 
@@ -5487,14 +5487,14 @@ function syncScreeningToProgressNotes(payload, subKey, title) {
           const enc = patient.data.encounters.find(e => e.is_current || e.isCurrent) || patient.data.encounters[patient.data.encounters.length - 1];
           if (enc) {
             const encObj = String(enc.progress_notes_objective || '').trim();
-            if (!encObj.includes(summary)) {
+            if (!encObj.includes(stampedLine)) {
               enc.progress_notes_objective = encObj ? encObj + '\n' + stampedLine : stampedLine;
             }
             const encPn = String(enc.progress_notes || '').trim();
-            if (!encPn.includes(summary)) {
+            if (!encPn.includes(stampedLine)) {
               enc.progress_notes = encPn ? encPn + '\n' + stampedLine : stampedLine;
             }
-            enc.results = enc.results ? enc.results + '; ' + summary : summary;
+            enc.results = enc.results ? (enc.results.includes(summary) ? enc.results : enc.results + '; ' + summary) : summary;
 
             enc.rounds = enc.rounds || [];
             enc.rounds.push({
