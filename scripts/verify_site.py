@@ -1045,6 +1045,36 @@ async def scan_single_target(browser_ws, file_url):
                         return 'Ballard Weeks title not updated to Ballard Score';
                     }
 
+                    // Verify Ballard Genitals criteria visibility based on sex
+                    const rowGenMale = document.getElementById('ballard-row-genitals-male');
+                    const rowGenFemale = document.getElementById('ballard-row-genitals-female');
+                    if (!rowGenMale || !rowGenFemale) {
+                        return 'Ballard genitals criteria rows missing';
+                    }
+                    if (typeof window.updateBallardGenitalsVisibility === 'function') {
+                        const sexInput = document.getElementById('neo_sex');
+                        const origSex = sexInput ? sexInput.value : '';
+                        if (sexInput) {
+                            sexInput.value = 'Male';
+                            window.updateBallardGenitalsVisibility();
+                            if (rowGenMale.style.display === 'none' || rowGenFemale.style.display !== 'none') {
+                                return 'Ballard male genitals visibility toggle failed';
+                            }
+                            sexInput.value = 'Female';
+                            window.updateBallardGenitalsVisibility();
+                            if (rowGenFemale.style.display === 'none' || rowGenMale.style.display !== 'none') {
+                                return 'Ballard female genitals visibility toggle failed';
+                            }
+                            sexInput.value = 'undetermined';
+                            window.updateBallardGenitalsVisibility();
+                            if (rowGenFemale.style.display === 'none' || rowGenMale.style.display === 'none') {
+                                return 'Ballard unknown genitals visibility failed to reflect both';
+                            }
+                            sexInput.value = origSex;
+                            window.updateBallardGenitalsVisibility();
+                        }
+                    }
+
                     // Verify tab renamed to Newborn Aftercare Administration
                     const tabExamBtn = document.querySelector('.workspace-tab[data-tab="tab-exam"]');
                     if (!tabExamBtn || !tabExamBtn.textContent.includes('Newborn Aftercare Administration')) {
