@@ -649,13 +649,22 @@ async def scan_single_target(browser_ws, file_url):
                         const amBtn = document.querySelector('#meds-filter-group button[data-filter="antimicrobial"]');
                         if (amBtn) {
                             amBtn.click();
-                            const rows = document.getElementById('med-summary-rows');
-                            if (!rows || !rows.textContent.includes('No anti-microbial medicines on record')) {
-                                return 'Anti-microbial medicines filter did not render expected blank/awaiting AMS message';
+                            const amThs = Array.from(medTable.querySelectorAll('thead th')).map(th => th.textContent.trim());
+                            const expectedAmHeaders = ['Drug name', 'Quantity', 'Dosage', 'Frequency', 'Timing', 'Period', 'Duration', 'First Dose Date&Time', '7th Day Review Date&Time', 'Actual Last Dose Date&Time', 'Remarks', 'Doctor'];
+                            if (amThs.length !== 12 || !expectedAmHeaders.every((h, i) => amThs[i] === h)) {
+                                return 'Anti-microbial medicines table headers do not match expected 12-column schema: ' + amThs.join(', ');
                             }
+                            const rows = document.getElementById('med-summary-rows');
+                            if (!rows) return 'med-summary-rows element missing';
                             // Restore 'all' filter
                             const allBtn = document.querySelector('#meds-filter-group button[data-filter="all"]');
-                            if (allBtn) allBtn.click();
+                            if (allBtn) {
+                                allBtn.click();
+                                const restoredThs = Array.from(medTable.querySelectorAll('thead th')).map(th => th.textContent.trim());
+                                if (restoredThs.length !== 10 || !expectedHeaders.every((h, i) => restoredThs[i] === h)) {
+                                    return 'med-summary-table headers failed to restore to standard 10-column schema: ' + restoredThs.join(', ');
+                                }
+                            }
                         }
 
                         // Verify that Doctor column never displays generic 'Attending Physician' placeholder

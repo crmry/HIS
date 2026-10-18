@@ -1946,7 +1946,7 @@
                       </div>
                     </div>
                     <table class="table table-bordered table-condensed" id="med-summary-table" style="margin-bottom:0;">
-                      <thead>
+                      <thead id="med-summary-thead">
                         <tr style="background:#f9f9f9;">
                           <th>Drug name</th>
                           <th style="width:75px;">Quantity</th>
@@ -5401,6 +5401,75 @@
       };
     }
 
+    function isAntimicrobialMedicine(item) {
+      if (!item) return false;
+      if (item.is_antimicrobial === true || item.category === 'antimicrobial' || item.type === 'antimicrobial') return true;
+      var text = ((item.name || '') + ' ' + (item.drug || '') + ' ' + (item.indication || '') + ' ' + (item.route || '') + ' ' + (item.remarks || '')).toLowerCase();
+      return /ceftriaxone|azithromycin|co-amoxiclav|amoxicillin|ampicillin|meropenem|piperacillin|tazobactam|vancomycin|ceftazidime|cefepime|ciprofloxacin|levofloxacin|metronidazole|amikacin|gentamicin|clindamycin|clarithromycin|doxycycline|cotrimoxazole|trimethoprim|colistin|linezolid|cefuroxime|cefixime|penicillin|oxacillin|cloxacillin|fluconazole|acyclovir|antimicrobial|antibiotic|anti-infective/i.test(text);
+    }
+
+    function getFirstDoseDateTime(item) {
+      var raw = item.first_dose || item.firstDose || item.started || item.date_started || item.dateTime;
+      if (!raw) return '—';
+      return formatDateTime(raw) || formatDate(raw) || String(raw);
+    }
+
+    function get7thDayReviewDateTime(item) {
+      var raw = item.seventh_day_review || item.review7thDay || item.day7Review || item.review_7th_day;
+      if (raw) return formatDateTime(raw) || formatDate(raw) || String(raw);
+      var started = item.first_dose || item.firstDose || item.started || item.date_started || item.dateTime;
+      if (!started) return '—';
+      var d = new Date(started);
+      if (isNaN(d.getTime())) return '—';
+      var r7 = new Date(d.getTime() + (7 * 24 * 60 * 60 * 1000));
+      return formatDateTime(r7);
+    }
+
+    function getActualLastDoseDateTime(item) {
+      var raw = item.actual_last_dose || item.actualLastDose || item.lastDose || item.last_dose || item.ended;
+      if (raw) return formatDateTime(raw) || formatDate(raw) || String(raw);
+      if (/completed|shifted|discontinued|stopped/i.test(item.status || '')) {
+        return 'Completed';
+      }
+      return 'Ongoing (Pending)';
+    }
+
+    function updateMedSummaryThead(filter) {
+      var medTable = document.getElementById('med-summary-table');
+      if (!medTable) return;
+      var medThead = document.getElementById('med-summary-thead') || medTable.querySelector('thead');
+      if (!medThead) return;
+      if (filter === 'antimicrobial') {
+        medThead.innerHTML = '<tr style="background:#f9f9f9;">' +
+          '<th>Drug name</th>' +
+          '<th style="width:75px;">Quantity</th>' +
+          '<th style="width:90px;">Dosage</th>' +
+          '<th style="width:130px;">Frequency</th>' +
+          '<th style="width:110px;">Timing</th>' +
+          '<th style="width:70px;">Period</th>' +
+          '<th style="width:80px;">Duration</th>' +
+          '<th style="width:145px;">First Dose Date&amp;Time</th>' +
+          '<th style="width:145px;">7th Day Review Date&amp;Time</th>' +
+          '<th style="width:145px;">Actual Last Dose Date&amp;Time</th>' +
+          '<th style="width:115px;">Remarks</th>' +
+          '<th style="width:130px;">Doctor</th>' +
+          '</tr>';
+      } else {
+        medThead.innerHTML = '<tr style="background:#f9f9f9;">' +
+          '<th>Drug name</th>' +
+          '<th style="width:75px;">Quantity</th>' +
+          '<th style="width:90px;">Dosage</th>' +
+          '<th style="width:130px;">Frequency</th>' +
+          '<th style="width:110px;">Timing</th>' +
+          '<th style="width:70px;">Period</th>' +
+          '<th style="width:80px;">Duration</th>' +
+          '<th style="width:95px;">Date Started</th>' +
+          '<th style="width:115px;">Remarks</th>' +
+          '<th style="width:130px;">Doctor</th>' +
+          '</tr>';
+      }
+    }
+
     function renderClinicalMonitoring(record) {
       var patientId = (record && record.id) || activePatientId;
       var data = getPatientChartMonitoring(patientId);
@@ -5574,17 +5643,17 @@
             });
           });
         }
+        updateMedSummaryThead(activeMedsFilter);
         var filteredMeds = allMeds.filter(function(item) {
           if (activeMedsFilter === 'active') return /active/i.test(item.status || '') && !/prn/i.test(item.status || '');
-          if (activeMedsFilter === 'antimicrobial' || activeMedsFilter === 'prn') {
-            // Anti-Microbial Medicines: left blank awaiting AMS dataset specification
-            return false;
-          }
+          if (activeMedsFilter === 'antimicrobial') return isAntimicrobialMedicine(item);
+          if (activeMedsFilter === 'prn') return /prn/i.test(item.status || '');
           return true;
         });
 
         var activeCount = allMeds.filter(function(m) { return /active/i.test(m.status || ''); }).length;
         var activeSchedCount = allMeds.filter(function(m) { return /active/i.test(m.status || '') && !/prn/i.test(m.status || ''); }).length;
+        var antiCount = allMeds.filter(isAntimicrobialMedicine).length;
         var prnCount = allMeds.filter(function(m) { return /prn/i.test(m.status || ''); }).length;
 
         var countMedAll = document.getElementById('count-meds-all');
@@ -5592,7 +5661,7 @@
         var countMedAct = document.getElementById('count-meds-active');
         if (countMedAct) countMedAct.textContent = activeSchedCount;
         var countMedAnti = document.getElementById('count-meds-antimicrobial') || document.getElementById('count-meds-prn');
-        if (countMedAnti) countMedAnti.textContent = '0';
+        if (countMedAnti) countMedAnti.textContent = antiCount;
 
         var tabBadgeMeds = document.getElementById('tab-badge-meds');
         if (tabBadgeMeds) tabBadgeMeds.textContent = activeCount + ' Active';
@@ -5614,7 +5683,8 @@
           var emptyMsg = (activeMedsFilter === 'antimicrobial' || activeMedsFilter === 'prn')
             ? 'No anti-microbial medicines on record.'
             : 'No medications found for this filter.';
-          medRows.innerHTML = '<tr><td colspan="10" class="muted text-center" style="padding:15px;">' + emptyMsg + '</td></tr>';
+          var emptyColspan = activeMedsFilter === 'antimicrobial' ? 12 : 10;
+          medRows.innerHTML = '<tr><td colspan="' + emptyColspan + '" class="muted text-center" style="padding:15px;">' + emptyMsg + '</td></tr>';
         } else {
           medRows.innerHTML = filteredMeds.map(function(item) {
             var rxFields = parseMedRxFields(item);
@@ -5635,6 +5705,22 @@
             var docName = typeof rawDoc === 'object' && rawDoc !== null ? (rawDoc.name || '—') : String(rawDoc).trim();
             if (/^Dr\.?\s+/i.test(docName) && /,\s*M\.?D\.?/i.test(docName)) {
               docName = docName.replace(/^Dr\.?\s+/i, '');
+            }
+            if (activeMedsFilter === 'antimicrobial') {
+              return '<tr>' +
+                '<td><strong>' + esc(rxFields.drug) + '</strong></td>' +
+                '<td>' + esc(rxFields.quantity) + '</td>' +
+                '<td>' + esc(rxFields.dosage) + '</td>' +
+                '<td>' + esc(rxFields.frequency) + '</td>' +
+                '<td>' + esc(rxFields.timing) + '</td>' +
+                '<td>' + esc(rxFields.period) + '</td>' +
+                '<td>' + esc(rxFields.duration) + '</td>' +
+                '<td>' + esc(getFirstDoseDateTime(item)) + '</td>' +
+                '<td>' + esc(get7thDayReviewDateTime(item)) + '</td>' +
+                '<td>' + esc(getActualLastDoseDateTime(item)) + '</td>' +
+                '<td>' + remarksContent + '</td>' +
+                '<td>' + esc(docName) + '</td>' +
+                '</tr>';
             }
             return '<tr>' +
               '<td><strong>' + esc(rxFields.drug) + '</strong></td>' +
@@ -7318,17 +7404,17 @@
         });
       }
 
+      updateMedSummaryThead(activeMedsFilter);
       var filteredMeds = allMeds.filter(function(item) {
         if (activeMedsFilter === 'active') return /active/i.test(item.status || '') && !/prn/i.test(item.status || '');
-        if (activeMedsFilter === 'antimicrobial' || activeMedsFilter === 'prn') {
-          // Anti-Microbial Medicines: left blank awaiting AMS dataset specification
-          return false;
-        }
+        if (activeMedsFilter === 'antimicrobial') return isAntimicrobialMedicine(item);
+        if (activeMedsFilter === 'prn') return /prn/i.test(item.status || '');
         return true;
       });
 
       var activeCount = allMeds.filter(function(m) { return /active/i.test(m.status || ''); }).length;
       var activeSchedCount = allMeds.filter(function(m) { return /active/i.test(m.status || '') && !/prn/i.test(m.status || ''); }).length;
+      var antiCount = allMeds.filter(isAntimicrobialMedicine).length;
       var prnCount = allMeds.filter(function(m) { return /prn/i.test(m.status || ''); }).length;
 
       var countMedAll = document.getElementById('count-meds-all');
@@ -7336,7 +7422,7 @@
       var countMedAct = document.getElementById('count-meds-active');
       if (countMedAct) countMedAct.textContent = activeSchedCount;
       var countMedAnti = document.getElementById('count-meds-antimicrobial') || document.getElementById('count-meds-prn');
-      if (countMedAnti) countMedAnti.textContent = '0';
+      if (countMedAnti) countMedAnti.textContent = antiCount;
 
       var tabBadgeMeds = document.getElementById('tab-badge-meds');
       if (tabBadgeMeds) tabBadgeMeds.textContent = activeCount + ' Active';
@@ -7358,7 +7444,8 @@
         var emptyMsg = (activeMedsFilter === 'antimicrobial' || activeMedsFilter === 'prn')
           ? 'No anti-microbial medicines on record.'
           : 'No active medications ordered for this encounter.';
-        medRows.innerHTML = '<tr><td colspan="10" class="muted text-center" style="padding:15px;">' + emptyMsg + '</td></tr>';
+        var emptyColspan = activeMedsFilter === 'antimicrobial' ? 12 : 10;
+        medRows.innerHTML = '<tr><td colspan="' + emptyColspan + '" class="muted text-center" style="padding:15px;">' + emptyMsg + '</td></tr>';
       } else {
         medRows.innerHTML = filteredMeds.map(function(item) {
           var rxFields = parseMedRxFields(item);
@@ -7379,6 +7466,22 @@
           var docName = typeof rawDoc === 'object' && rawDoc !== null ? (rawDoc.name || '—') : String(rawDoc).trim();
           if (/^Dr\.?\s+/i.test(docName) && /,\s*M\.?D\.?/i.test(docName)) {
             docName = docName.replace(/^Dr\.?\s+/i, '');
+          }
+          if (activeMedsFilter === 'antimicrobial') {
+            return '<tr>' +
+              '<td><strong>' + esc(rxFields.drug) + '</strong></td>' +
+              '<td>' + esc(rxFields.quantity) + '</td>' +
+              '<td>' + esc(rxFields.dosage) + '</td>' +
+              '<td>' + esc(rxFields.frequency) + '</td>' +
+              '<td>' + esc(rxFields.timing) + '</td>' +
+              '<td>' + esc(rxFields.period) + '</td>' +
+              '<td>' + esc(rxFields.duration) + '</td>' +
+              '<td>' + esc(getFirstDoseDateTime(item)) + '</td>' +
+              '<td>' + esc(get7thDayReviewDateTime(item)) + '</td>' +
+              '<td>' + esc(getActualLastDoseDateTime(item)) + '</td>' +
+              '<td>' + remarksContent + '</td>' +
+              '<td>' + esc(docName) + '</td>' +
+              '</tr>';
           }
           return '<tr>' +
             '<td><strong>' + esc(rxFields.drug) + '</strong></td>' +
