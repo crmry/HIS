@@ -2710,7 +2710,7 @@
                   <div class="other-form-list" id="group-physical-exam-forms" style="display:flex; flex-wrap:wrap; gap:8px;">
                     <label><button type="button" class="btn btn-small" id="btn-open-obgyne-module" onclick="openModuleActionModal('obgyne')"><i class="icon-female"></i> OB-Gyne Module</button></label>
                     <label><button type="button" class="btn btn-small" id="btn-open-neonate-module" onclick="openModuleActionModal('neonate')"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
-                    <label><button type="button" class="btn btn-small" id="btn-open-growth-chart" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> Growth Chart</button></label>
+                    <label><button type="button" class="btn btn-small" id="btn-open-growth-chart" onclick="openGrowthChartsModule()"><i class="icon-picture"></i> Growth Chart</button></label>
                     <label><button type="button" class="btn btn-small" id="btn-open-eye-record" onclick="openSpecializedPEForm('Eye Record')"><i class="icon-eye-open"></i> Eye Record</button></label>
                     <label><button type="button" class="btn btn-small" id="btn-open-oral-health" onclick="openSpecializedPEForm('Oral Health Record')"><i class="icon-smile"></i> Oral Health Record</button></label>
                     <label><button type="button" class="btn btn-small" id="btn-open-breast-exam" onclick="openSpecializedPEForm('Clinical Breast Examination')"><i class="icon-heart"></i> Clinical Breast Examination</button></label>
@@ -16399,12 +16399,23 @@
       if (btnGirl) btnGirl.className = chartKey === 'girl' ? 'btn btn-mini btn-primary' : 'btn btn-mini';
     }
 
+    function openGrowthChartsModule() {
+      var pid = activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : 'seed_patient');
+      var url = 'Growth_Charts_Module.html?patient=' + encodeURIComponent(pid);
+      window.open(url, '_blank');
+    }
+
     function openGrowthChartModal(which) {
+      if (!which || which === 'who' || which === 'module' || which === 'growth_charts') {
+        openGrowthChartsModule();
+        return;
+      }
       if (which && typeof which === 'object') {
-        which = 'fenton';
+        openGrowthChartsModule();
+        return;
       }
       var targetChart = which;
-      if (!targetChart || targetChart === 'fenton') {
+      if (targetChart === 'fenton') {
         targetChart = getActivePatientGender();
       }
       switchZoomChart(targetChart);
@@ -16443,6 +16454,7 @@
       if (e.key === 'Escape') closeZoomModal();
     });
 
+    window.openGrowthChartsModule = openGrowthChartsModule;
     window.openGrowthChartModal = openGrowthChartModal;
     window.openZoomModal = openZoomModal;
     window.closeZoomModal = closeZoomModal;
