@@ -14147,9 +14147,13 @@
       if (!data.pe_general_survey && data.pe_general) {
 
         data.pe_general_survey =
-          /awake/i.test(String(data.pe_general))
+          /awake|alert|conscious/i.test(String(data.pe_general))
             ? 'Awake and Alert'
             : String(data.pe_general);
+      }
+
+      if (typeof data.pe_general === 'string' && data.pe_general.trim() && !data.pe_general_survey_other) {
+        data.pe_general_survey_other = data.pe_general.trim();
       }
 
 
@@ -14223,20 +14227,31 @@
 
 
       /*
-       Old pe_heent / pe_chest_lungs / pe_abdomen were text.
-       New versions are arrays.
+       Checkboxes: if array not provided but normal findings/text present, check 'Essentially normal'
       */
 
       if (!Array.isArray(data.pe_heent)) {
-        data.pe_heent = [];
+        data.pe_heent = Array.isArray(source.pe_heent) ? source.pe_heent : (data.pe_heent_other ? ['Essentially Normal'] : []);
       }
 
       if (!Array.isArray(data.pe_chest_lungs)) {
-        data.pe_chest_lungs = [];
+        data.pe_chest_lungs = Array.isArray(source.pe_chest_lungs) ? source.pe_chest_lungs : (data.pe_chest_lungs_other ? ['Essentially normal'] : []);
+      }
+
+      if (!Array.isArray(data.pe_cvs)) {
+        data.pe_cvs = Array.isArray(source.pe_cvs) ? source.pe_cvs : (data.pe_cvs_other ? ['Essentially normal'] : []);
       }
 
       if (!Array.isArray(data.pe_abdomen)) {
-        data.pe_abdomen = [];
+        data.pe_abdomen = Array.isArray(source.pe_abdomen) ? source.pe_abdomen : (data.pe_abdomen_other ? ['Essentially normal'] : []);
+      }
+
+      if (!Array.isArray(data.pe_neuro_exam)) {
+        data.pe_neuro_exam = Array.isArray(source.pe_neuro_exam) ? source.pe_neuro_exam : (data.pe_neuro_exam_other ? ['Essentially normal'] : []);
+      }
+
+      if (!Array.isArray(data.pe_skin_extremities)) {
+        data.pe_skin_extremities = Array.isArray(source.pe_skin_extremities) ? source.pe_skin_extremities : (data.pe_skin_extremities_other ? ['Essentially normal'] : []);
       }
 
 

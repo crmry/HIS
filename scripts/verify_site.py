@@ -474,8 +474,8 @@ async def scan_single_target(browser_ws, file_url):
                     if (rosRow && rosRow.style.display !== 'none') {
                         return 'Review of Systems should be hidden on ER encounters';
                     }
-                    if (peRow && peRow.style.display !== 'none') {
-                        return 'Physical Exam should be hidden on ER encounters';
+                    if (peRow && peRow.style.display === 'none') {
+                        return 'Physical Exam should remain visible on ER encounters as generic clinical requirement';
                     }
                     if (hpiTabLi && hpiTabLi.style.display === 'none') {
                         return 'HPI tab should be visible on ER encounters';
