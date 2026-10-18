@@ -2498,7 +2498,7 @@
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
               <div style="display:inline-flex; gap:6px; flex-wrap:wrap;">
                 <button type="button" class="btn-secondary" id="btn-chart-lub" onclick="switchGrowthChart('lub')">Lubchenco Chart</button>
-                <button type="button" class="btn-secondary active" id="btn-chart-fenton" onclick="switchGrowthChart('fenton')"><span id="lbl-fenton-tab-btn">Fenton Chart (Girls)</span></button>
+                <button type="button" class="btn-secondary active" id="btn-chart-fenton" onclick="switchGrowthChart('fenton')"><span id="lbl-fenton-tab-btn">Fenton Chart</span></button>
                 <button type="button" class="btn-secondary" id="btn-chart-boy" onclick="switchGrowthChart('boy')" style="display:none;">Boy Fenton Chart</button>
                 <button type="button" class="btn-secondary" id="btn-chart-girl" onclick="switchGrowthChart('girl')" style="display:none;">Girl Fenton Chart</button>
               </div>
@@ -2520,9 +2520,7 @@
                   <span id="result-source-pill" style="background:#e0f2fe; color:#0369a1; font-weight:700; font-size:11px; padding:3px 8px; border-radius:4px; border:1px solid #bae6fd;">
                     ✓ Live Patient Record
                   </span>
-                  <span id="result-sex-pill" style="font-weight:700; font-size:11.5px; color:#be185d;">
-                    Female (Girl Chart)
-                  </span>
+                  <span id="result-sex-pill" style="display:none;"></span>
                 </div>
                 <div style="font-size:11px; color:var(--slate-500);" id="result-timestamp"></div>
               </div>
@@ -2554,8 +2552,8 @@
             <!-- Boy Fenton Chart -->
             <div class="chart-card" id="panel-chart-boy" style="display:none; text-align:left;">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-                <h3 style="font-size:13px; margin:0; color:var(--slate-900);">Fenton Growth Chart for Preterm Infants (Boys — 22 to 50 Weeks Gestational Age)</h3>
-                <div id="boy-fenton-result-tag" style="font-size:12px; font-weight:700; color:#0369a1;">AGA (Appropriate for Gestational Age) • Male Baseline (50th Percentile)</div>
+                <h3 style="font-size:13px; margin:0; color:var(--slate-900);">Fenton Growth Chart for Preterm Infants (22 to 50 Weeks Gestational Age)</h3>
+                <div id="boy-fenton-result-tag" style="font-size:12px; font-weight:700; color:#0369a1;">AGA (Appropriate for Gestational Age)</div>
               </div>
               <div style="display:flex; align-items:center; gap:16px; margin-bottom:10px; font-size:11.5px; flex-wrap:wrap; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 12px;">
                 <span style="display:inline-flex; align-items:center; gap:6px; font-weight:600; color:#0284c7;">
@@ -2597,8 +2595,8 @@
             <!-- Female Fenton Chart -->
             <div class="chart-card" id="panel-chart-girl" style="display:none; text-align:left;">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-                <h3 style="font-size:13px; margin:0; color:var(--slate-900);">Fenton Growth Chart for Preterm Infants (Girls — 22 to 50 Weeks Gestational Age)</h3>
-                <div id="girl-fenton-result-tag" style="font-size:12px; font-weight:700; color:#be185d;">AGA (Appropriate for Gestational Age) • Female Baseline (50th Percentile)</div>
+                <h3 style="font-size:13px; margin:0; color:var(--slate-900);">Fenton Growth Chart for Preterm Infants (22 to 50 Weeks Gestational Age)</h3>
+                <div id="girl-fenton-result-tag" style="font-size:12px; font-weight:700; color:#be185d;">AGA (Appropriate for Gestational Age)</div>
               </div>
               <div style="display:flex; align-items:center; gap:16px; margin-bottom:10px; font-size:11.5px; flex-wrap:wrap; background:#fdf2f8; border:1px solid #fbcfe8; border-radius:6px; padding:6px 12px;">
                 <span style="display:inline-flex; align-items:center; gap:6px; font-weight:600; color:#db2777;">
@@ -3077,11 +3075,11 @@ function updateNeonateGrowthChartButtons() {
   const gender = getNeonatePatientGender();
   const lbl = document.getElementById('btn-neo-chart-fenton-label');
   if (lbl) {
-    lbl.textContent = gender === 'boy' ? 'Fenton Growth Chart (Male Baseline)' : 'Fenton Growth Chart (Female Baseline)';
+    lbl.textContent = 'Fenton Growth Chart';
   }
   const fentonTabLbl = document.getElementById('lbl-fenton-tab-btn');
   if (fentonTabLbl) {
-    fentonTabLbl.textContent = gender === 'boy' ? 'Fenton Chart (Boys)' : 'Fenton Chart (Girls)';
+    fentonTabLbl.textContent = 'Fenton Chart';
   }
   const autoGenderLbl = document.getElementById('lbl-auto-gender');
   if (autoGenderLbl) {
@@ -3370,8 +3368,8 @@ function updateAllGrowthCharts() {
   }
   const sexPill = document.getElementById('result-sex-pill');
   if (sexPill) {
-    sexPill.textContent = (data.sex === 'male') ? 'Male (Boy Chart)' : 'Female (Girl Chart)';
-    sexPill.style.color = (data.sex === 'male') ? '#0369a1' : '#be185d';
+    sexPill.style.display = 'none';
+    sexPill.textContent = '';
   }
 
   const resGa = document.getElementById('result-ga');
@@ -3434,7 +3432,7 @@ function updateAllGrowthCharts() {
     boyMarker.style.left = leftPct.toFixed(1) + '%';
     boyMarker.style.top = topWtPct.toFixed(1) + '%';
     if (boyTip) boyTip.textContent = data.gaWeeks.toFixed(0) + ' wks, ' + data.weightGrams.toLocaleString() + ' g • ' + data.classification;
-    if (boyTag) boyTag.textContent = data.classTitle + ' • Male Baseline (Fenton Boys)';
+    if (boyTag) boyTag.textContent = data.classTitle;
     if (boyLegWt) boyLegWt.textContent = data.weightKg.toFixed(2) + ' kg (' + data.weightGrams.toLocaleString() + ' g)';
 
     // Y-axis Length: 60 cm at 3.43%, 20 cm at 42.66% (span = 39.23%)
@@ -3482,7 +3480,7 @@ function updateAllGrowthCharts() {
     girlMarker.style.left = leftPct.toFixed(1) + '%';
     girlMarker.style.top = topWtPct.toFixed(1) + '%';
     if (girlTip) girlTip.textContent = data.gaWeeks.toFixed(0) + ' wks, ' + data.weightGrams.toLocaleString() + ' g • ' + data.classification;
-    if (girlTag) girlTag.textContent = data.classTitle + ' • Female Baseline (Fenton Girls)';
+    if (girlTag) girlTag.textContent = data.classTitle;
     if (girlLegWt) girlLegWt.textContent = data.weightKg.toFixed(2) + ' kg (' + data.weightGrams.toLocaleString() + ' g)';
 
     // Y-axis Length: 60 cm at 3.04%, 20 cm at 42.54% (span = 39.50%)
