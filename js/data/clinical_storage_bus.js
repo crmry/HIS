@@ -199,7 +199,7 @@
         civil_status: 'Child',
         address: mData.address || 'Brgy. San Jose, Medical District',
         ward_room: 'Neonatal Care Unit / Room-In',
-        ward_area: 'Pediatrics / Neonatology',
+        ward_area: 'Newborn',
         case_no: babyCaseNo,
         encounter_no: babyCaseNo,
         case_type: 'Inpatient (Neonate)',

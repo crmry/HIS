@@ -16886,7 +16886,7 @@
         if (nameEl) nameEl.textContent = (pData.last_name + ', ' + pData.first_name + ' ' + (pData.middle_name || '')).trim();
         if (hrnEl) hrnEl.textContent = pData.hrn || pid;
         if (encEl) encEl.textContent = pData.encounter_no || 'OP-2026-0926-0042';
-        if (srvEl) srvEl.textContent = pData.service || (moduleKey === 'obgyne' ? 'OB-Gyne OPD' : 'Pediatrics / Neonatology');
+        if (srvEl) srvEl.textContent = pData.service || (moduleKey === 'obgyne' ? 'OB-Gyne OPD' : 'Newborn');
       }
 
       if (moduleKey === 'obgyne') {

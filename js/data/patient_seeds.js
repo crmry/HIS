@@ -1458,7 +1458,7 @@ if (typeof window !== 'undefined') {
     function neoPatientRecord() {
       return {
         id: NEO_PATIENT_ID,
-        seedVersion: 2,
+        seedVersion: 3,
         createdAt: '2026-10-11T08:30:00+08:00',
         updatedAt: '2026-10-13T09:00:00+08:00',
         data: {
@@ -1534,7 +1534,7 @@ if (typeof window !== 'undefined') {
               date: '2026-10-13',
               time: '08:00 AM',
               registry: 'IP',
-              service: 'Pediatrics / Neonatology',
+              service: 'Newborn',
               physician: 'Andrea Reyes, MD',
               prc_license: '0102938',
               is_current: true,
@@ -1849,7 +1849,7 @@ if (typeof window !== 'undefined') {
       var neoIndex = records.findIndex(function (record) { return record.id === NEO_PATIENT_ID; });
       if (neoIndex < 0) {
         records.splice(3, 0, neoPatientRecord());
-      } else if (Number(records[neoIndex].seedVersion || 0) < 2) {
+      } else if (Number(records[neoIndex].seedVersion || 0) < 3) {
         records[neoIndex] = neoPatientRecord();
       }
       try {

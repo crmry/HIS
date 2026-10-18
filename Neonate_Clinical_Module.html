@@ -1023,7 +1023,7 @@
       <div class="patient-meta-pill">HRN: <strong id="banner-hrn">0000001890</strong></div>
       <div class="patient-meta-pill">DOB: <strong id="banner-bdate">09/10/1986</strong> (<span id="banner-age">48</span> / <span id="banner-sex">Female</span>)</div>
       <div class="patient-meta-pill">Address: <strong id="banner-address">Brgy. San Jose, Medical District</strong></div>
-      <div class="patient-meta-pill">Service: <strong>Pediatrics / Neonatology</strong></div>
+      <div class="patient-meta-pill">Service: <strong>Newborn</strong></div>
     </div>
     <div style="display:flex; align-items:center; gap:8px;">
       <div class="patient-encounter-badge" id="banner-encounter-badge">
@@ -5105,7 +5105,7 @@ function syncDiagnosisToProgressNotes(payload, title) {
               time: timeStr,
               dateTime: now.toISOString(),
               registry: enc.registry || 'IP',
-              service: 'Pediatrics / Neonatology',
+              service: 'Newborn',
               physician: (payload.diagnosis && payload.diagnosis.encodedBy && payload.diagnosis.encodedBy.split('|')[0].trim()) || enc.physician || 'Miguel Santos, MD',
               prc_license: enc.prc_license || '0094821',
               status_tag: 'Diagnosis Round',
@@ -5351,7 +5351,7 @@ function syncScreeningToProgressNotes(payload, subKey, title) {
               time: timeStr,
               dateTime: now.toISOString(),
               registry: enc.registry || 'IP',
-              service: 'Pediatrics / Neonatology',
+              service: 'Newborn',
               physician: (payload.screening[subKey] && payload.screening[subKey].physician) || enc.physician || 'Andrea Reyes, MD',
               prc_license: enc.prc_license || '0102938',
               status_tag: 'Screening Round',
