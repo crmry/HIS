@@ -2712,7 +2712,6 @@
                     <label><button type="button" class="btn btn-small" id="btn-open-neonate-module" onclick="openModuleActionModal('neonate')"><i class="icon-stethoscope"></i> Neonate Clinical Module</button></label>
                     <label><button type="button" class="btn btn-small" id="btn-open-growth-chart" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> Growth Chart</button></label>
                     <label><button type="button" class="btn btn-small" id="btn-open-eye-record" onclick="openSpecializedPEForm('Eye Record')"><i class="icon-eye-open"></i> Eye Record</button></label>
-                    <label><button type="button" class="btn btn-small" id="btn-open-rop-screening" onclick="openSpecializedPEForm('ROP Screening')"><i class="icon-search"></i> ROP Screening</button></label>
                     <label><button type="button" class="btn btn-small" id="btn-open-oral-health" onclick="openSpecializedPEForm('Oral Health Record')"><i class="icon-smile"></i> Oral Health Record</button></label>
                     <label><button type="button" class="btn btn-small" id="btn-open-breast-exam" onclick="openSpecializedPEForm('Clinical Breast Examination')"><i class="icon-heart"></i> Clinical Breast Examination</button></label>
                     <label><button type="button" class="btn btn-small" id="btn-open-ophthalmology" onclick="openSpecializedPEForm('Ophthalmology Form')"><i class="icon-eye-open"></i> Ophthalmology Form</button></label>
@@ -16894,6 +16893,11 @@
     });
 
     function openSpecializedPEForm(formTitle) {
+      if (formTitle === 'ROP Screening') {
+        var pid = activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : 'seed_patient');
+        window.open('Neonate_Clinical_Module.html?patient=' + encodeURIComponent(pid) + '&tab=screening&section=rop', '_blank');
+        return;
+      }
       if (typeof showHospitalToast === 'function') {
         showHospitalToast(formTitle + ' initiated for clinical physical examination documentation.', '#1b4d3e');
       }

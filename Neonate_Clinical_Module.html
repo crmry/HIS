@@ -1976,6 +1976,19 @@
         <!-- TAB 5: SCREENING -->
         <div class="tab-panel" id="tab-screening" role="tabpanel">
 
+          <!-- Screening Panel Header & Bulk Save -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px 14px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <div style="font-size:13px; font-weight:700; color:#1b4d3e; display:flex; align-items:center; gap:6px;">
+                <i class="icon-stethoscope"></i> Newborn Clinical Screening Protocols
+              </div>
+              <div style="font-size:11px; color:#64748b;">All screening inputs are timestamped and automatically reflected in bedside Progress Notes per saved date and time.</div>
+            </div>
+            <button type="button" class="btn-primary" id="btn-save-all-screening" onclick="saveScreeningSub('all', 'Complete Screening Panel')" style="font-size:12px; font-weight:700; padding:6px 14px; background:#1b4d3e; border:1px solid #14382d; border-radius:4px; color:#ffffff; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.06);">
+              <i class="icon-ok icon-white"></i> SAVE ALL SCREENING
+            </button>
+          </div>
+
           <!-- Red Orange Reflex -->
           <div class="section-card">
             <div class="section-card-title"><i class="icon-eye-open"></i> A. Red Orange Reflex Screening</div>
@@ -2014,8 +2027,13 @@
           </div>
 
           <!-- Retinopathy of Prematurity -->
-          <div class="section-card">
-            <div class="section-card-title"><i class="icon-eye-close"></i> B. Retinopathy of Prematurity (ROP)</div>
+          <div class="section-card" id="section-card-rop">
+            <div class="section-card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <span><i class="icon-eye-close"></i> B. Retinopathy of Prematurity (ROP)</span>
+              <button type="button" class="btn btn-small" id="btn-open-rop-screening" onclick="openRopScreeningModule()" title="Launch / Focus ROP Screening Module" style="font-size:11.5px; padding:4px 10px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; color:#1b4d3e; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.04);">
+                <i class="icon-search"></i> ROP Screening
+              </button>
+            </div>
             <div class="form-grid-4" style="margin-bottom:10px;">
               <div class="form-group">
                 <label class="form-label" for="neo_rop_applicable">Applicable</label>
@@ -5259,7 +5277,7 @@ function formatScreeningSummaryLine(sc, subKey) {
 
   // ROR
   if (!subKey || subKey === 'ror' || subKey === 'all') {
-    if (sc.ror && (sc.ror.findings || sc.ror.date)) {
+    if (sc.ror && (sc.ror.findings || sc.ror.date || sc.ror.abnormal || sc.ror.refDate || sc.ror.physician)) {
       let r = 'Red Orange Reflex Screening: ' + (sc.ror.findings || 'Done');
       if (sc.ror.findings === '-/abnormal' && sc.ror.abnormal) r += ' (' + sc.ror.abnormal + ')';
       if (sc.ror.date) r += ' • Done: ' + sc.ror.date;
@@ -5271,12 +5289,30 @@ function formatScreeningSummaryLine(sc, subKey) {
 
   // ROP
   if (!subKey || subKey === 'rop' || subKey === 'all') {
-    if (sc.rop && (sc.rop.applicable || (sc.rop.init && sc.rop.init.findings))) {
-      let r = 'Retinopathy of Prematurity (ROP): ' + (sc.rop.applicable ? 'Applicable: ' + sc.rop.applicable : 'Done');
+    if (sc.rop && (sc.rop.applicable || sc.rop.schedule || sc.rop.physician ||
+        (sc.rop.init && (sc.rop.init.findings || sc.rop.init.date || sc.rop.init.remarks)) ||
+        (sc.rop.second && (sc.rop.second.findings || sc.rop.second.date || sc.rop.second.remarks)) ||
+        (sc.rop.third && (sc.rop.third.findings || sc.rop.third.date || sc.rop.third.remarks)))) {
+      let r = 'Retinopathy of Prematurity (ROP): ' + (sc.rop.applicable ? 'Applicable: ' + sc.rop.applicable : 'Evaluated');
       if (sc.rop.schedule) r += ' • Sched: ' + sc.rop.schedule;
-      if (sc.rop.init && sc.rop.init.findings) r += ' • Initial Exam: ' + sc.rop.init.findings + (sc.rop.init.date ? ' (' + sc.rop.init.date + ')' : '');
-      if (sc.rop.second && sc.rop.second.findings) r += ' • 2nd: ' + sc.rop.second.findings;
-      if (sc.rop.third && sc.rop.third.findings) r += ' • 3rd: ' + sc.rop.third.findings;
+      if (sc.rop.init && (sc.rop.init.findings || sc.rop.init.date || sc.rop.init.remarks)) {
+        let initStr = 'Initial: ' + (sc.rop.init.findings || 'Done');
+        if (sc.rop.init.date) initStr += ' (' + sc.rop.init.date + ')';
+        if (sc.rop.init.remarks) initStr += ' [' + sc.rop.init.remarks + ']';
+        r += ' • ' + initStr;
+      }
+      if (sc.rop.second && (sc.rop.second.findings || sc.rop.second.date || sc.rop.second.remarks)) {
+        let secStr = '2nd: ' + (sc.rop.second.findings || 'Done');
+        if (sc.rop.second.date) secStr += ' (' + sc.rop.second.date + ')';
+        if (sc.rop.second.remarks) secStr += ' [' + sc.rop.second.remarks + ']';
+        r += ' • ' + secStr;
+      }
+      if (sc.rop.third && (sc.rop.third.findings || sc.rop.third.date || sc.rop.third.remarks)) {
+        let thirdStr = '3rd: ' + (sc.rop.third.findings || 'Done');
+        if (sc.rop.third.date) thirdStr += ' (' + sc.rop.third.date + ')';
+        if (sc.rop.third.remarks) thirdStr += ' [' + sc.rop.third.remarks + ']';
+        r += ' • ' + thirdStr;
+      }
       if (sc.rop.physician) r += ' • MD: ' + sc.rop.physician;
       lines.push(r);
     }
@@ -5284,11 +5320,12 @@ function formatScreeningSummaryLine(sc, subKey) {
 
   // ENBS
   if (!subKey || subKey === 'enbs' || subKey === 'all') {
-    if (sc.enbs && (sc.enbs.remarks || sc.enbs.date || sc.enbs.sticker)) {
+    if (sc.enbs && (sc.enbs.remarks || sc.enbs.date || sc.enbs.sticker || sc.enbs.repeatReason || sc.enbs.repeatSched || sc.enbs.others || sc.enbs.physician)) {
       let r = 'Expanded Newborn Metabolic Screening (ENBS): ' + (sc.enbs.remarks || 'Done');
       if (sc.enbs.date) r += ' • Done: ' + sc.enbs.date;
       if (sc.enbs.sticker) r += ' • Sticker #: ' + sc.enbs.sticker;
       if (sc.enbs.repeatReason) r += ' • Repeat: ' + sc.enbs.repeatReason + (sc.enbs.repeatSched ? ' on ' + sc.enbs.repeatSched : '');
+      if (sc.enbs.others) r += ' • Others: ' + sc.enbs.others;
       if (sc.enbs.physician) r += ' • MD: ' + sc.enbs.physician;
       lines.push(r);
     }
@@ -5296,7 +5333,7 @@ function formatScreeningSummaryLine(sc, subKey) {
 
   // Hearing
   if (!subKey || subKey === 'hearing' || subKey === 'all') {
-    if (sc.hearing && (sc.hearing.remarks || sc.hearing.date || sc.hearing.findings)) {
+    if (sc.hearing && (sc.hearing.remarks || sc.hearing.date || sc.hearing.findings || sc.hearing.repeatDate || sc.hearing.outside || sc.hearing.physician)) {
       let r = 'Newborn Hearing Screening (NHST): ' + (sc.hearing.remarks || 'Done');
       if (sc.hearing.findings) r += ' (' + sc.hearing.findings + ')';
       if (sc.hearing.date) r += ' • Done: ' + sc.hearing.date;
@@ -5309,7 +5346,7 @@ function formatScreeningSummaryLine(sc, subKey) {
 
   // Cranial UTZ
   if (!subKey || subKey === 'cranialUtz' || subKey === 'all') {
-    if (sc.cranialUtz && (sc.cranialUtz.findings || sc.cranialUtz.date || sc.cranialUtz.applicable)) {
+    if (sc.cranialUtz && (sc.cranialUtz.findings || sc.cranialUtz.date || sc.cranialUtz.applicable || sc.cranialUtz.remarks || sc.cranialUtz.physician)) {
       let r = 'Cranial Ultrasound (UTZ): ' + (sc.cranialUtz.findings || 'Done');
       if (sc.cranialUtz.applicable) r += ' • Applicable: ' + sc.cranialUtz.applicable;
       if (sc.cranialUtz.date) r += ' • Done: ' + sc.cranialUtz.date;
@@ -5321,7 +5358,7 @@ function formatScreeningSummaryLine(sc, subKey) {
 
   // CCHD
   if (!subKey || subKey === 'cchd' || subKey === 'all') {
-    if (sc.cchd && (sc.cchd.remarks || sc.cchd.date || (sc.cchd.init && sc.cchd.init.hand))) {
+    if (sc.cchd && (sc.cchd.remarks || sc.cchd.date || sc.cchd.notDone || sc.cchd.others || sc.cchd.screener || sc.cchd.physician || (sc.cchd.init && (sc.cchd.init.hand || sc.cchd.init.foot)) || (sc.cchd.retest && (sc.cchd.retest.hand || sc.cchd.retest.foot)))) {
       let r = 'Critical Congenital Heart Disease (CCHD): ' + (sc.cchd.remarks || 'Done');
       if (sc.cchd.date) r += ' • Done: ' + sc.cchd.date;
       if (sc.cchd.init && (sc.cchd.init.hand || sc.cchd.init.foot)) {
@@ -5330,6 +5367,8 @@ function formatScreeningSummaryLine(sc, subKey) {
       if (sc.cchd.retest && (sc.cchd.retest.hand || sc.cchd.retest.foot)) {
         r += ' • Retest: Hand ' + sc.cchd.retest.hand + '%, Foot ' + sc.cchd.retest.foot + '%';
       }
+      if (sc.cchd.notDone) r += ' • Reason Not Done: ' + sc.cchd.notDone;
+      if (sc.cchd.others) r += ' • Others: ' + sc.cchd.others;
       if (sc.cchd.screener) r += ' • Screener: ' + sc.cchd.screener;
       if (sc.cchd.physician) r += ' • MD: ' + sc.cchd.physician;
       lines.push(r);
@@ -5473,10 +5512,40 @@ function saveScreeningSub(subKey, title) {
   }
 }
 
+function openRopScreeningModule() {
+  const card = document.getElementById('section-card-rop') || (document.getElementById('rop-exam-table') ? document.getElementById('rop-exam-table').closest('.section-card') : null);
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.style.transition = 'box-shadow 0.3s ease, border-color 0.3s ease';
+    card.style.boxShadow = '0 0 0 3px rgba(27, 77, 62, 0.25)';
+    card.style.borderColor = '#1b4d3e';
+    setTimeout(() => {
+      card.style.boxShadow = '';
+      card.style.borderColor = '';
+    }, 2000);
+  }
+  const appSel = document.getElementById('neo_rop_applicable');
+  if (appSel && !appSel.value) {
+    appSel.value = 'Yes';
+    appSel.dispatchEvent(new Event('change'));
+  }
+  const initDate = document.getElementById('neo_rop_init_date');
+  if (initDate && !initDate.value) {
+    initDate.focus();
+  } else {
+    const initFind = document.getElementById('neo_rop_init_findings');
+    if (initFind) initFind.focus();
+  }
+  if (typeof showNeonateToast === 'function') {
+    showNeonateToast('ROP Screening Module: Retinal examination documentation ready.');
+  }
+}
+
 if (typeof window !== 'undefined') {
   window.saveNeonatalDx = saveNeonatalDx;
   window.saveKmcNutrition = saveKmcNutrition;
   window.saveScreeningSub = saveScreeningSub;
+  window.openRopScreeningModule = openRopScreeningModule;
   window.getFormattedEncoderCredentials = getFormattedEncoderCredentials;
   window.formatScreeningSummaryLine = formatScreeningSummaryLine;
   window.renderScreeningProgressNotes = renderScreeningProgressNotes;
@@ -5765,6 +5834,17 @@ function initNeonateWorkspace() {
   if (typeof updateAllGrowthCharts === 'function') {
     updateAllGrowthCharts();
   }
+  const tabParam = params.get('tab');
+  if (tabParam === 'screening' || tabParam === 'tab-screening') {
+    const scrTabBtn = document.querySelector('.workspace-tab[data-tab="tab-screening"]');
+    if (scrTabBtn) scrTabBtn.click();
+    if (params.get('section') === 'rop') {
+      setTimeout(() => {
+        if (typeof openRopScreeningModule === 'function') openRopScreeningModule();
+      }, 250);
+    }
+  }
+
   const activeTab = document.querySelector('.workspace-tab.active');
   const actionBar = document.getElementById('neonate-action-bar');
   if (actionBar && activeTab) {

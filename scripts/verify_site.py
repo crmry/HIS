@@ -361,6 +361,7 @@ async def scan_single_target(browser_ws, file_url):
                     if (!obModBtn) return 'btn-open-obgyne-module missing in specialized forms';
                     if (!neoModBtn) return 'btn-open-neonate-module missing in specialized forms';
                     if (!growthBtn) return 'btn-open-growth-chart missing in specialized forms';
+                    if (dashletForms.querySelector('#btn-open-rop-screening')) return 'btn-open-rop-screening should not be in dashlet-specialized-forms';
                 }
                 const openModBtn = document.getElementById('btn-open-obgyne-module');
                 if (openModBtn) {
@@ -1067,6 +1068,20 @@ async def scan_single_target(browser_ws, file_url):
                         saveRorBtn.click();
                         if (!spList.textContent.includes('Red Orange Reflex')) {
                             return 'Screening save did not reflect in Progress Notes list';
+                        }
+                    }
+
+                    // Verify ROP button under B. Retinopathy of Prematurity (ROP) and reflection in Progress Notes
+                    const ropCard = document.getElementById('section-card-rop');
+                    if (!ropCard) return 'Section card for ROP missing in Screening tab';
+                    const ropBtn = document.getElementById('btn-open-rop-screening');
+                    if (!ropBtn) return 'btn-open-rop-screening missing under B. Retinopathy of Prematurity';
+                    ropBtn.click();
+                    const saveRopBtn = document.getElementById('btn-save-rop');
+                    if (saveRopBtn) {
+                        saveRopBtn.click();
+                        if (!spList.textContent.includes('Retinopathy of Prematurity')) {
+                            return 'ROP screening save did not reflect in Progress Notes list';
                         }
                     }
 
