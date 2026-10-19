@@ -677,7 +677,7 @@
                 <i class="icon-user-md"></i> Tanner Staging Assessment (Sexual Maturity Rating &mdash; SMR)
               </div>
               <div style="font-size:11px; color:var(--slate-500); margin-top:2px;">
-                Sex-synchronized pubertal evaluation &bull; For undetermined sex, multiple scales (Female &amp; Male) are assessed concurrently &bull; Click any cell to score
+                Pediatric &amp; adolescent pubertal maturity assessment (Ages 8–18y) &bull; Synchronized with patient sex &bull; Click any cell to score
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
@@ -689,22 +689,7 @@
                 <button type="button" class="btn-secondary" id="btn-tanner-scale-male" onclick="setTannerActiveScale('male')">
                   <i class="icon-male"></i> Male Protocol
                 </button>
-                <button type="button" class="btn-secondary" id="btn-tanner-scale-undetermined" onclick="setTannerActiveScale('undetermined')">
-                  <i class="icon-adjust"></i> Multiple / Undetermined (Both Scales)
-                </button>
               </div>
-            </div>
-          </div>
-
-          <!-- Undetermined Sex Multiple-Phenotype Quick Nav Banner -->
-          <div id="tanner-undetermined-notice" style="display:none; margin-bottom:12px; padding:7px 12px; background:#fef3c7; border:1px solid #fde68a; border-radius:4px; font-size:11.5px; color:#92400e; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-            <div style="display:flex; align-items:center; gap:6px;">
-              <i class="icon-info-sign" style="font-size:13px;"></i>
-              <span><strong>Multiple Phenotype Protocol:</strong> Patient sex is designated as Undetermined (Ambiguous Genitalia). Both Female and Male pubertal scales are displayed below for comprehensive clinical staging.</span>
-            </div>
-            <div style="display:flex; gap:6px;">
-              <button type="button" class="btn-secondary" onclick="scrollToTannerGroup('female')" style="font-size:10.5px; padding:2px 8px; background:#ffffff; color:#92400e; border-color:#fde68a;"><i class="icon-female"></i> Jump to Female Criteria</button>
-              <button type="button" class="btn-secondary" onclick="scrollToTannerGroup('male')" style="font-size:10.5px; padding:2px 8px; background:#ffffff; color:#92400e; border-color:#fde68a;"><i class="icon-male"></i> Jump to Male Criteria</button>
             </div>
           </div>
 
@@ -1160,43 +1145,22 @@
       enumerable: true
     });
 
-    function scrollToTannerGroup(grp) {
-      var targetId = grp === 'male' ? 'tanner-group-male' : 'tanner-group-female';
-      var el = document.getElementById(targetId);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    window.scrollToTannerGroup = scrollToTannerGroup;
-
     function setTannerActiveScale(scaleType, preventReset) {
       if (scaleType === 'male') {
         tannerState.scaleType = 'male';
-      } else if (scaleType === 'undetermined') {
-        tannerState.scaleType = 'undetermined';
       } else {
         tannerState.scaleType = 'female';
       }
 
       var btnF = document.getElementById('btn-tanner-scale-female');
       var btnM = document.getElementById('btn-tanner-scale-male');
-      var btnU = document.getElementById('btn-tanner-scale-undetermined');
 
       if (btnF) btnF.classList.toggle('active', tannerState.scaleType === 'female');
       if (btnM) btnM.classList.toggle('active', tannerState.scaleType === 'male');
-      if (btnU) btnU.classList.toggle('active', tannerState.scaleType === 'undetermined');
-
-      var undetNotice = document.getElementById('tanner-undetermined-notice');
-      if (undetNotice) {
-        undetNotice.style.display = tannerState.scaleType === 'undetermined' ? 'flex' : 'none';
-      }
 
       var sexBadge = document.getElementById('tanner-patient-sex-badge');
       if (sexBadge) {
-        if (tannerState.scaleType === 'undetermined') {
-          sexBadge.textContent = 'Multiple Phenotype Protocol (Both Scales)';
-          sexBadge.style.background = '#fef3c7';
-          sexBadge.style.color = '#92400e';
-          sexBadge.style.borderColor = '#fde68a';
-        } else if (tannerState.scaleType === 'male') {
+        if (tannerState.scaleType === 'male') {
           sexBadge.textContent = 'Male Protocol (Genitalia & Pubic Hair)';
           sexBadge.style.background = '#e0f2fe';
           sexBadge.style.color = '#0369a1';
@@ -1213,7 +1177,7 @@
         if (tannerState.scaleType === 'female') {
           tannerState.male_genitalia = null;
           tannerState.male_pubic = null;
-        } else if (tannerState.scaleType === 'male') {
+        } else {
           tannerState.female_breast = null;
           tannerState.female_pubic = null;
         }
@@ -1229,17 +1193,7 @@
       if (!tbody) return;
 
       var rows = [];
-      if (tannerState.scaleType === 'undetermined') {
-        // Dual view: Both Female and Male pubertal scales
-        rows = [
-          { groupHeader: 'Female Pubertal Criteria (Breast & Pubic Hair)', icon: 'icon-female', id: 'tanner-group-female' },
-          { key: 'female_breast', def: TANNER_DATA.female_breast, scaleAttr: 'scale_fb', badgeId: 'tanner-badge-female_breast' },
-          { key: 'female_pubic', def: TANNER_DATA.female_pubic, scaleAttr: 'scale_fph', badgeId: 'tanner-badge-female_pubic' },
-          { groupHeader: 'Male Pubertal Criteria (Genitalia & Pubic Hair)', icon: 'icon-male', id: 'tanner-group-male' },
-          { key: 'male_genitalia', def: TANNER_DATA.male_genitalia, scaleAttr: 'scale_mg', badgeId: 'tanner-badge-male_genitalia' },
-          { key: 'male_pubic', def: TANNER_DATA.male_pubic, scaleAttr: 'scale_mph', badgeId: 'tanner-badge-male_pubic' }
-        ];
-      } else if (tannerState.scaleType === 'male') {
+      if (tannerState.scaleType === 'male') {
         rows = [
           { key: 'male_genitalia', def: TANNER_DATA.male_genitalia, scaleAttr: 'scale1', badgeId: 'tanner-badge-scale1' },
           { key: 'male_pubic', def: TANNER_DATA.male_pubic, scaleAttr: 'scale2', badgeId: 'tanner-badge-scale2' }
@@ -1252,15 +1206,6 @@
       }
 
       var html = rows.map(function(item) {
-        if (item.groupHeader) {
-          var anchorAttr = item.id ? (' id="' + item.id + '"') : '';
-          return '<tr class="tanner-group-header-row"' + anchorAttr + '><td colspan="7">' +
-            '<div style="display:flex; justify-content:space-between; align-items:center;">' +
-              '<span><i class="' + item.icon + '"></i> ' + item.groupHeader + '</span>' +
-              '<span style="font-size:10px; font-weight:normal; opacity:0.85; text-transform:none;">Multiple Phenotype Undetermined Protocol</span>' +
-            '</div>' +
-            '</td></tr>';
-        }
 
         var key = item.key;
         var def = item.def;
@@ -1341,91 +1286,56 @@
       var maturityBadge = document.getElementById('tanner-maturity-rating');
       var sexBadge = document.getElementById('tanner-patient-sex-badge');
 
-      if (tannerState.scaleType === 'undetermined') {
-        if (sexBadge) sexBadge.textContent = 'Undetermined Protocol (Both Scales)';
-        var scoredList = [];
-        var maxStage = 0;
+      var isMale = tannerState.scaleType === 'male';
+      if (sexBadge) {
+        sexBadge.textContent = isMale ? 'Male Protocol (Genitalia & Pubic Hair)' : 'Female Protocol (Breast & Pubic Hair)';
+        sexBadge.style.background = isMale ? '#e0f2fe' : '#fce7f3';
+        sexBadge.style.color = isMale ? '#0369a1' : '#9d174d';
+        sexBadge.style.borderColor = isMale ? '#bae6fd' : '#fbcfe8';
+      }
 
-        if (tannerState.female_breast !== null) {
-          var itemB = TANNER_DATA.female_breast.stages.find(function(s) { return s.stage === tannerState.female_breast; });
-          if (itemB) descriptions.push(itemB.desc);
-          scoredList.push('B' + tannerState.female_breast);
-          if (tannerState.female_breast > maxStage) maxStage = tannerState.female_breast;
-        }
-        if (tannerState.female_pubic !== null) {
-          var itemFPH = TANNER_DATA.female_pubic.stages.find(function(s) { return s.stage === tannerState.female_pubic; });
-          if (itemFPH) descriptions.push(itemFPH.desc);
-          scoredList.push('fPH' + tannerState.female_pubic);
-          if (tannerState.female_pubic > maxStage) maxStage = tannerState.female_pubic;
-        }
-        if (tannerState.male_genitalia !== null) {
-          var itemG = TANNER_DATA.male_genitalia.stages.find(function(s) { return s.stage === tannerState.male_genitalia; });
-          if (itemG) descriptions.push(itemG.desc);
-          scoredList.push('G' + tannerState.male_genitalia);
-          if (tannerState.male_genitalia > maxStage) maxStage = tannerState.male_genitalia;
-        }
-        if (tannerState.male_pubic !== null) {
-          var itemMPH = TANNER_DATA.male_pubic.stages.find(function(s) { return s.stage === tannerState.male_pubic; });
-          if (itemMPH) descriptions.push(itemMPH.desc);
-          scoredList.push('mPH' + tannerState.male_pubic);
-          if (tannerState.male_pubic > maxStage) maxStage = tannerState.male_pubic;
-        }
+      var s1Key = isMale ? 'male_genitalia' : 'female_breast';
+      var s2Key = isMale ? 'male_pubic' : 'female_pubic';
+      var s1Def = isMale ? TANNER_DATA.male_genitalia : TANNER_DATA.female_breast;
+      var s2Def = isMale ? TANNER_DATA.male_pubic : TANNER_DATA.female_pubic;
 
-        if (scoredList.length > 0) {
-          if (overallBadge) overallBadge.textContent = 'TANNER STAGE: ' + scoredList.join(', ');
-          if (maturityBadge) maturityBadge.textContent = ratings[maxStage] || ('Pubertal Stage ' + maxStage);
-        } else {
-          if (overallBadge) overallBadge.textContent = 'TANNER STAGE: NOT YET SCORED';
-          if (maturityBadge) maturityBadge.textContent = 'Awaiting Selection';
-        }
+      var s1Val = tannerState[s1Key];
+      var s2Val = tannerState[s2Key];
 
+      if (s1Val !== null) {
+        var s1Item = s1Def.stages.find(function(s) { return s.stage === s1Val; });
+        if (s1Item) descriptions.push(s1Item.desc);
+      }
+      if (s2Val !== null) {
+        var s2Item = s2Def.stages.find(function(s) { return s.stage === s2Val; });
+        if (s2Item) descriptions.push(s2Item.desc);
+      }
+
+      var s1Code = s1Val !== null ? (s1Def.codePrefix + s1Val) : '—';
+      var s2Code = s2Val !== null ? (s2Def.codePrefix + s2Val) : '—';
+
+      var b1Badge = document.getElementById('tanner-badge-scale1');
+      if (b1Badge) {
+        b1Badge.textContent = s1Code;
+        b1Badge.classList.toggle('scored', s1Val !== null);
+      }
+      var b2Badge = document.getElementById('tanner-badge-scale2');
+      if (b2Badge) {
+        b2Badge.textContent = s2Code;
+        b2Badge.classList.toggle('scored', s2Val !== null);
+      }
+
+      if (s1Val !== null && s2Val !== null) {
+        if (overallBadge) overallBadge.textContent = 'TANNER STAGE: ' + s1Code + ', ' + s2Code;
+        var maxStage = Math.max(s1Val, s2Val);
+        if (maturityBadge) maturityBadge.textContent = ratings[maxStage] || ('Pubertal Stage ' + maxStage);
+      } else if (s1Val !== null || s2Val !== null) {
+        var activeCode = s1Val !== null ? s1Code : s2Code;
+        if (overallBadge) overallBadge.textContent = 'TANNER STAGE: ' + activeCode + ' (Partial)';
+        if (maturityBadge) maturityBadge.textContent = 'Partially Scored (1/2 Scales)';
       } else {
-        var isMale = tannerState.scaleType === 'male';
-        if (sexBadge) sexBadge.textContent = isMale ? 'Male Scale (G & PH)' : 'Female Scale (B & PH)';
-
-        var s1Key = isMale ? 'male_genitalia' : 'female_breast';
-        var s2Key = isMale ? 'male_pubic' : 'female_pubic';
-        var s1Def = isMale ? TANNER_DATA.male_genitalia : TANNER_DATA.female_breast;
-        var s2Def = isMale ? TANNER_DATA.male_pubic : TANNER_DATA.female_pubic;
-
-        var s1Val = tannerState[s1Key];
-        var s2Val = tannerState[s2Key];
-
-        if (s1Val !== null) {
-          var s1Item = s1Def.stages.find(function(s) { return s.stage === s1Val; });
-          if (s1Item) descriptions.push(s1Item.desc);
-        }
-        if (s2Val !== null) {
-          var s2Item = s2Def.stages.find(function(s) { return s.stage === s2Val; });
-          if (s2Item) descriptions.push(s2Item.desc);
-        }
-
-        var s1Code = s1Val !== null ? (s1Def.codePrefix + s1Val) : '—';
-        var s2Code = s2Val !== null ? (s2Def.codePrefix + s2Val) : '—';
-
-        var b1Badge = document.getElementById('tanner-badge-scale1');
-        if (b1Badge) {
-          b1Badge.textContent = s1Code;
-          b1Badge.classList.toggle('scored', s1Val !== null);
-        }
-        var b2Badge = document.getElementById('tanner-badge-scale2');
-        if (b2Badge) {
-          b2Badge.textContent = s2Code;
-          b2Badge.classList.toggle('scored', s2Val !== null);
-        }
-
-        if (s1Val !== null && s2Val !== null) {
-          if (overallBadge) overallBadge.textContent = 'TANNER STAGE: ' + s1Code + ', ' + s2Code;
-          var maxStage = Math.max(s1Val, s2Val);
-          if (maturityBadge) maturityBadge.textContent = ratings[maxStage] || ('Pubertal Stage ' + maxStage);
-        } else if (s1Val !== null || s2Val !== null) {
-          var activeCode = s1Val !== null ? s1Code : s2Code;
-          if (overallBadge) overallBadge.textContent = 'TANNER STAGE: ' + activeCode + ' (Partial)';
-          if (maturityBadge) maturityBadge.textContent = 'Partially Scored (1/2 Scales)';
-        } else {
-          if (overallBadge) overallBadge.textContent = 'TANNER STAGE: NOT YET SCORED';
-          if (maturityBadge) maturityBadge.textContent = 'Awaiting Selection';
-        }
+        if (overallBadge) overallBadge.textContent = 'TANNER STAGE: NOT YET SCORED';
+        if (maturityBadge) maturityBadge.textContent = 'Awaiting Selection';
       }
 
       var fullText = descriptions.join('; ');
@@ -1489,23 +1399,14 @@
       var s2Code = null;
       var overall = '';
 
-      if (tannerState.scaleType === 'female') {
-        s1Code = tannerState.female_breast !== null ? ('B' + tannerState.female_breast) : null;
-        s2Code = tannerState.female_pubic !== null ? ('PH' + tannerState.female_pubic) : null;
-        overall = (s1Code && s2Code) ? (s1Code + ', ' + s2Code) : (s1Code || s2Code || '');
-      } else if (tannerState.scaleType === 'male') {
+      if (tannerState.scaleType === 'male') {
         s1Code = tannerState.male_genitalia !== null ? ('G' + tannerState.male_genitalia) : null;
         s2Code = tannerState.male_pubic !== null ? ('PH' + tannerState.male_pubic) : null;
         overall = (s1Code && s2Code) ? (s1Code + ', ' + s2Code) : (s1Code || s2Code || '');
       } else {
-        var scoredList = [];
-        if (tannerState.female_breast !== null) scoredList.push('B' + tannerState.female_breast);
-        if (tannerState.female_pubic !== null) scoredList.push('fPH' + tannerState.female_pubic);
-        if (tannerState.male_genitalia !== null) scoredList.push('G' + tannerState.male_genitalia);
-        if (tannerState.male_pubic !== null) scoredList.push('mPH' + tannerState.male_pubic);
-        overall = scoredList.join(', ');
-        s1Code = tannerState.female_breast !== null ? ('B' + tannerState.female_breast) : (tannerState.male_genitalia !== null ? ('G' + tannerState.male_genitalia) : null);
-        s2Code = tannerState.female_pubic !== null ? ('PH' + tannerState.female_pubic) : (tannerState.male_pubic !== null ? ('PH' + tannerState.male_pubic) : null);
+        s1Code = tannerState.female_breast !== null ? ('B' + tannerState.female_breast) : null;
+        s2Code = tannerState.female_pubic !== null ? ('PH' + tannerState.female_pubic) : null;
+        overall = (s1Code && s2Code) ? (s1Code + ', ' + s2Code) : (s1Code || s2Code || '');
       }
 
       var dataToSave = {
@@ -1550,11 +1451,9 @@
 
       var sexInput = document.getElementById('growth-input-sex');
       var sexVal = (sexInput ? sexInput.value : 'female').toLowerCase();
-      var defaultScale = 'female';
-      if (sexVal === 'male') defaultScale = 'male';
-      else if (sexVal === 'undetermined') defaultScale = 'undetermined';
+      // Tanner staging is strictly binary pediatric male or female protocol
+      var defaultScale = (sexVal === 'male') ? 'male' : 'female';
 
-      // Tanner scale is strictly driven by the active patient sex (for undetermined sex, it is multiple/dual protocol)
       tannerState.scaleType = defaultScale;
 
       if (saved) {
@@ -1601,13 +1500,8 @@
       var sex = document.getElementById('growth-input-sex').value;
       var patSexEl = document.getElementById('growth-pat-sex');
       if (patSexEl) patSexEl.textContent = sex === 'male' ? 'Male' : (sex === 'undetermined' ? 'Undetermined' : 'Female');
-      if (sex === 'undetermined') {
-        setTannerActiveScale('undetermined');
-      } else if (sex === 'male') {
-        setTannerActiveScale('male');
-      } else {
-        setTannerActiveScale('female');
-      }
+      // For pediatric Tanner Staging, sex is strictly male or female
+      setTannerActiveScale(sex === 'male' ? 'male' : 'female');
       updateGrowthChartsModule();
     }
     window.handleSexChange = handleSexChange;
@@ -1843,9 +1737,7 @@
       var tannerDescEl = document.getElementById('rep-tanner-desc');
       if (tannerStageEl && tannerDescEl) {
         if (tannerProtoEl) {
-          if (tannerState.scaleType === 'male') tannerProtoEl.textContent = 'Male Protocol (G & PH)';
-          else if (tannerState.scaleType === 'undetermined') tannerProtoEl.textContent = 'Undetermined Protocol (Both Scales)';
-          else tannerProtoEl.textContent = 'Female Protocol (B & PH)';
+          tannerProtoEl.textContent = tannerState.scaleType === 'male' ? 'Male Protocol (G & PH)' : 'Female Protocol (B & PH)';
         }
         var desc = document.getElementById('tanner-output-text-display') ? document.getElementById('tanner-output-text-display').textContent.trim() : '';
         if (desc && desc.indexOf('Click any stage') === -1) {
