@@ -351,6 +351,30 @@ async def scan_single_target(browser_ws, file_url):
                     }
                 }
 
+                // Test Personal & Social History (HEADS Assessment)
+                if (isDashboardPage) {
+                    const socTabLink = document.querySelector('a[href="#hx-social"]');
+                    if (!socTabLink) return 'Social history tab link a[href="#hx-social"] missing';
+                    socTabLink.click();
+                    const headsGridView = document.getElementById('heads-grid-view');
+                    if (!headsGridView) return 'heads-grid-view container missing in #hx-social';
+                    const headsFields = ['hx_social_home', 'hx_social_education_employment', 'hx_social_activities', 'hx_social_drugs', 'hx_social_sexuality', 'hx_social_suicide_mood'];
+                    for (let hf of headsFields) {
+                        const el = document.getElementById(hf);
+                        if (!el) return 'HEADS field #' + hf + ' missing in #hx-social';
+                    }
+                    const btnNarrative = document.getElementById('btn-view-heads-narrative');
+                    const btnGrid = document.getElementById('btn-view-heads-grid');
+                    if (!btnNarrative || !btnGrid) return 'HEADS view toggle buttons missing';
+                    btnNarrative.click();
+                    const narrativeView = document.getElementById('heads-narrative-view');
+                    if (!narrativeView || narrativeView.style.display === 'none') return 'heads-narrative-view not displayed after toggle';
+                    btnGrid.click();
+                    if (!headsGridView || headsGridView.style.display === 'none') return 'heads-grid-view not displayed after toggle';
+                    if (typeof window.applyHeadsChip !== 'function') return 'applyHeadsChip function not exposed on window';
+                    if (typeof window.syncHeadsToSocialSummary !== 'function') return 'syncHeadsToSocialSummary function not exposed on window';
+                }
+
                 // Test Specialized Clinical Forms unified launcher list
                 if (isDashboardPage) {
                     const dashletForms = document.getElementById('dashlet-specialized-forms');

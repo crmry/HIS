@@ -133,7 +133,13 @@ if (typeof window !== 'undefined') {
           hx_surgical: 'No previous surgical procedures.',
           hx_past: 'Type 2 Diabetes Mellitus diagnosed 2020; Essential Hypertension Stage 1 diagnosed 2020; Mild Primary Osteoarthritis, Right Knee diagnosed 2025. Hospitalized at Regional Medical Ward (June 12-14, 2026) for Community-Acquired Pneumonia, moderate risk, resolved with IV antibiotics.',
           hx_family: 'Mother with Type 2 Diabetes Mellitus; Father with Hypertension.',
-          hx_social: 'Non-smoker, non-alcoholic beverage drinker. Works as an office clerk.',
+          hx_social: '[Home]: Lives with parents and family in suburban residential home.\n[Education/Employment]: Works as an office clerk, regular daytime schedule.\n[Activities]: Sedentary office work, light walking on weekends.\n[Drugs/Substance]: Non-smoker, non-alcoholic beverage drinker, denies illicit drug use.\n[Sexuality]: Denies history of sexually transmitted infections.\n[Suicide/Mood]: Euthymic, denies depression, anxiety, or suicidal ideation.',
+          hx_social_home: 'Lives with parents and family in suburban residential home.',
+          hx_social_education_employment: 'Works as an office clerk, regular daytime schedule.',
+          hx_social_activities: 'Sedentary office work, light walking on weekends.',
+          hx_social_drugs: 'Non-smoker, non-alcoholic beverage drinker, denies illicit drug use.',
+          hx_social_sexuality: 'Denies history of sexually transmitted infections.',
+          hx_social_suicide_mood: 'Euthymic, denies depression, anxiety, or suicidal ideation.',
           hx_allergy: 'No known food or drug allergies (NKFDA).',
           interview_medications: [
             {
@@ -774,7 +780,13 @@ if (typeof window !== 'undefined') {
           hx_surgical: 'No previous surgical operations.',
           hx_past: 'Essential Hypertension Stage 1 (diagnosed 2021); Type 2 Diabetes Mellitus (diagnosed 2022). No prior adverse drug events.',
           hx_family: 'Father with history of cerebrovascular disease; Mother living with hypertension.',
-          hx_social: 'Non-smoker, denies alcohol intake. Logistics coordinator.',
+          hx_social: '[Home]: Resides in two-storey residential home with spouse.\n[Education/Employment]: Logistics coordinator; active warehouse supervisor.\n[Activities]: Moderate physical activity at work.\n[Drugs/Substance]: Non-smoker, denies alcohol intake, denies illicit drug use.\n[Sexuality]: Married, long-term monogamous relationship.\n[Suicide/Mood]: Denies mood disturbances, anxiety, or suicidal ideation.',
+          hx_social_home: 'Resides in two-storey residential home with spouse.',
+          hx_social_education_employment: 'Logistics coordinator; active warehouse supervisor.',
+          hx_social_activities: 'Moderate physical activity at work.',
+          hx_social_drugs: 'Non-smoker, denies alcohol intake, denies illicit drug use.',
+          hx_social_sexuality: 'Married, long-term monogamous relationship.',
+          hx_social_suicide_mood: 'Denies mood disturbances, anxiety, or suicidal ideation.',
           hx_allergy: 'No known drug or food allergies (NKDA).',
           interview_medications: [
             {
@@ -1087,7 +1099,13 @@ if (typeof window !== 'undefined') {
           hx_surgical: 'Low Segment Cesarean Section (LSCS) 2021 (Regional Medical Center); Dilatation and Curettage (D&C) 2025 (Regional Medical Center).',
           hx_past: 'Uncomplicated medical history. No bronchial asthma, cardiac disease, chronic hypertension, or diabetes mellitus.',
           hx_family: 'Mother with hypertension. Denies family history of preeclampsia, diabetes mellitus, or multiple gestations.',
-          hx_social: 'High school teacher. Non-smoker, non-alcoholic drinker. Cohabiting with husband in concrete single-family home.',
+          hx_social: '[Home]: Cohabiting with husband in concrete single-family home.\n[Education/Employment]: High school teacher, active classroom schedule.\n[Activities]: Light daily activities, walking.\n[Drugs/Substance]: Non-smoker, non-alcoholic drinker, no recreational drug exposure.\n[Sexuality]: Sexually active with husband, planned pregnancy.\n[Suicide/Mood]: Stable mood, excited for delivery, denies depression or anxiety.',
+          hx_social_home: 'Cohabiting with husband in concrete single-family home.',
+          hx_social_education_employment: 'High school teacher, active classroom schedule.',
+          hx_social_activities: 'Light daily activities, walking.',
+          hx_social_drugs: 'Non-smoker, non-alcoholic drinker, no recreational drug exposure.',
+          hx_social_sexuality: 'Sexually active with husband, planned pregnancy.',
+          hx_social_suicide_mood: 'Stable mood, excited for delivery, denies depression or anxiety.',
           hx_allergy: 'No known food or drug allergies (NKFDA).',
           interview_medications: [
             {
@@ -1473,9 +1491,9 @@ if (typeof window !== 'undefined') {
     function neoPatientRecord() {
       return {
         id: NEO_PATIENT_ID,
-        seedVersion: 6,
+        seedVersion: 7,
         createdAt: '2026-10-11T08:30:00+08:00',
-        updatedAt: '2026-10-19T12:50:00+08:00',
+        updatedAt: '2026-10-19T13:30:00+08:00',
         data: {
           hrn: '0000001926',
           philhealth_no: '06-029384712-4-01',
@@ -1506,7 +1524,13 @@ if (typeof window !== 'undefined') {
           hx_surgical: 'No previous surgical procedures.',
           hx_past: 'Birth Weight: 3.15 kg (3,150 g), Length: 50 cm, Head Circumference: 34.5 cm. Ballard Score 38 corresponding to 39 weeks gestational maturity (Full Term, AGA). Uncomplicated immediate neonatal adaptation.',
           hx_family: 'Mother with well-managed prenatal course (Blood Type O+); Father in good health. No known congenital disorders or hereditary metabolic anomalies.',
-          hx_social: 'Cohabiting with mother in Rooming-in Nursery under exclusive breastfeeding care.',
+          hx_social: '[Home]: Cohabiting with mother in Rooming-in Nursery under exclusive breastfeeding care.\n[Education/Employment]: Inapplicable (Neonate / newborn inpatient).\n[Activities]: Active neonatal reflexes, resting calmly between feeds.\n[Drugs/Substance]: No maternal substance exposure or prenatal toxic exposure.\n[Sexuality]: Inapplicable (Neonate / newborn inpatient).\n[Suicide/Mood]: Normal neonatal behavioral adaptation, responsive to comfort.',
+          hx_social_home: 'Cohabiting with mother in Rooming-in Nursery under exclusive breastfeeding care.',
+          hx_social_education_employment: 'Inapplicable (Neonate / newborn inpatient).',
+          hx_social_activities: 'Active neonatal reflexes, resting calmly between feeds.',
+          hx_social_drugs: 'No maternal substance exposure or prenatal toxic exposure.',
+          hx_social_sexuality: 'Inapplicable (Neonate / newborn inpatient).',
+          hx_social_suicide_mood: 'Normal neonatal behavioral adaptation, responsive to comfort.',
           hx_allergy: 'No known drug or environmental allergies.',
           interview_medications: [],
           pertinent_signs: ['Others'],
@@ -1879,7 +1903,7 @@ if (typeof window !== 'undefined') {
       var neoIndex = records.findIndex(function (record) { return record.id === NEO_PATIENT_ID; });
       if (neoIndex < 0) {
         records.splice(3, 0, neoPatientRecord());
-      } else if (Number(records[neoIndex].seedVersion || 0) < 6) {
+      } else if (Number(records[neoIndex].seedVersion || 0) < 7 || !records[neoIndex].data.hx_social_home) {
         records[neoIndex] = neoPatientRecord();
       }
       try {

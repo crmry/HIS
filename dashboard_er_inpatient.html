@@ -15,6 +15,70 @@
   <link rel="stylesheet" href="css/dashboard.css">
   <style>
     /* ══════════════════════════════════════════════════════════════════════
+       PERSONAL & SOCIAL HISTORY — HEADS ASSESSMENT STYLES
+       ══════════════════════════════════════════════════════════════════════ */
+    .heads-grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .heads-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .heads-card:focus-within {
+      border-color: #1b4d3e;
+      box-shadow: 0 0 0 1px #1b4d3e, 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+    .heads-quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+    .heads-chip {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      border-radius: 12px;
+      padding: 1px 8px;
+      font-size: 10.5px;
+      font-weight: 500;
+      cursor: pointer;
+      line-height: 1.4;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .heads-chip:hover {
+      background: #e2e8f0;
+      border-color: #94a3b8;
+      color: #0f172a;
+    }
+    .heads-chip:active {
+      background: #1b4d3e;
+      border-color: #1b4d3e;
+      color: #ffffff;
+    }
+    .heads-domain-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
        ANCILLARY STATIONS HORIZONTAL SEGMENTED TABS (CPOE & CLINICAL REQUESTS)
        ══════════════════════════════════════════════════════════════════════ */
     .clinical-tabs,
@@ -2091,8 +2155,163 @@
                     <div id="hx-family-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-social">
-                    <textarea id="hx_social" name="hx_social" rows="4" class="input-block-level"
-                      placeholder="Social history..."></textarea>
+                    <!-- HEADS Psychosocial History Toolbar & Header -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px;">
+                      <div>
+                        <div style="font-size:12px; font-weight:700; color:#1b4d3e; display:flex; align-items:center; gap:6px;">
+                          <span style="display:inline-block; padding:1px 6px; background:#1b4d3e; color:#fff; border-radius:3px; font-size:10px; font-weight:800; letter-spacing:0.5px;">HEADS</span>
+                          <span>Personal &amp; Social Psychosocial Assessment</span>
+                        </div>
+                        <div style="font-size:11px; color:#64748b; margin-top:2px;">
+                          Standard clinical psychosocial domains: Home &bull; Education/Employment &bull; Activities &bull; Drugs &bull; Sexuality &bull; Suicide/Mood
+                        </div>
+                      </div>
+                      <div class="btn-group" data-toggle="buttons-radio" style="margin:0;">
+                        <button type="button" class="btn btn-mini active" id="btn-view-heads-grid" onclick="setHeadsViewMode('grid')">
+                          <i class="icon-th-large"></i> Structured HEADS
+                        </button>
+                        <button type="button" class="btn btn-mini" id="btn-view-heads-narrative" onclick="setHeadsViewMode('narrative')">
+                          <i class="icon-align-left"></i> Combined Summary
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- 1. Structured HEADS Grid View -->
+                    <div id="heads-grid-view" style="display:block;">
+                      <div class="heads-grid-container">
+                        
+                        <!-- H: Home & Living Environment -->
+                        <div class="heads-card" style="border-top:3px solid #0284c7;">
+                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label for="hx_social_home" style="margin:0; font-weight:700; font-size:12px; color:#0f172a; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                              <span class="heads-domain-badge" style="background:#e0f2fe; color:#0284c7;">H</span>
+                              <span>Home &amp; Living Environment</span>
+                            </label>
+                            <span style="font-size:10px; color:#64748b; font-weight:500;">Living setup, safety</span>
+                          </div>
+                          <!-- Quick Chips for H -->
+                          <div class="heads-quick-chips">
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_home', 'Lives with parents and family in stable residence.')">Lives with family</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_home', 'Safe, stable home environment; denies domestic conflict.')">Safe home</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_home', 'Concrete house in urban community with clean running water.')">Urban housing</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_home', 'Cohabiting with mother in Rooming-in Nursery under exclusive breastfeeding care.')">Rooming-in (Neonate)</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_home', 'Lives independently / alone.')">Lives alone</button>
+                          </div>
+                          <textarea id="hx_social_home" name="hx_social_home" rows="3" class="input-block-level" oninput="syncHeadsToSocialSummary()" style="font-size:12px; margin-bottom:0; resize:vertical;" placeholder="Living arrangements, family relationships, safety at home, housing condition..."></textarea>
+                        </div>
+
+                        <!-- E: Education / Employment -->
+                        <div class="heads-card" style="border-top:3px solid #059669;">
+                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label for="hx_social_education_employment" style="margin:0; font-weight:700; font-size:12px; color:#0f172a; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                              <span class="heads-domain-badge" style="background:#d1fae5; color:#059669;">E</span>
+                              <span>Education / Employment</span>
+                            </label>
+                            <span style="font-size:10px; color:#64748b; font-weight:500;">Work, school, finances</span>
+                          </div>
+                          <!-- Quick Chips for E -->
+                          <div class="heads-quick-chips">
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_education_employment', 'Office clerk / administrative staff; daytime shift.')">Office / Admin</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_education_employment', 'Employed full-time; denies occupational hazards.')">Full-time employed</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_education_employment', 'Attending school with good academic standing.')">Attending school</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_education_employment', 'Retired; receiving pension.')">Retired</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_education_employment', 'Age-appropriate dependent infant / child.')">Pediatric / Infant</button>
+                          </div>
+                          <textarea id="hx_social_education_employment" name="hx_social_education_employment" rows="3" class="input-block-level" oninput="syncHeadsToSocialSummary()" style="font-size:12px; margin-bottom:0; resize:vertical;" placeholder="School level, academic performance, occupation, working hours, occupational exposures..."></textarea>
+                        </div>
+
+                        <!-- A: Activities & Lifestyle -->
+                        <div class="heads-card" style="border-top:3px solid #d97706;">
+                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label for="hx_social_activities" style="margin:0; font-weight:700; font-size:12px; color:#0f172a; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                              <span class="heads-domain-badge" style="background:#fef3c7; color:#d97706;">A</span>
+                              <span>Activities &amp; Peer Relations</span>
+                            </label>
+                            <span style="font-size:10px; color:#64748b; font-weight:500;">Hobbies, exercise, peers</span>
+                          </div>
+                          <!-- Quick Chips for A -->
+                          <div class="heads-quick-chips">
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_activities', 'Engages in regular moderate physical exercise 3x/week.')">Regular exercise</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_activities', 'Sedentary lifestyle with minimal outdoor recreation.')">Sedentary</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_activities', 'Healthy peer relationships and active social support.')">Good peer circle</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_activities', 'Active neonatal reflexes, resting calmly between feeds.')">Neonate activity</button>
+                          </div>
+                          <textarea id="hx_social_activities" name="hx_social_activities" rows="3" class="input-block-level" oninput="syncHeadsToSocialSummary()" style="font-size:12px; margin-bottom:0; resize:vertical;" placeholder="Exercise, sports, hobbies, peer interactions, screen time, social engagement..."></textarea>
+                        </div>
+
+                        <!-- D: Drugs & Substance Use -->
+                        <div class="heads-card" style="border-top:3px solid #dc2626;">
+                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label for="hx_social_drugs" style="margin:0; font-weight:700; font-size:12px; color:#0f172a; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                              <span class="heads-domain-badge" style="background:#fee2e2; color:#dc2626;">D</span>
+                              <span>Drugs &amp; Substance Use</span>
+                            </label>
+                            <span style="font-size:10px; color:#64748b; font-weight:500;">Tobacco, alcohol, drugs</span>
+                          </div>
+                          <!-- Quick Chips for D -->
+                          <div class="heads-quick-chips">
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_drugs', 'Non-smoker, non-alcoholic beverage drinker, denies illicit drug use.')">Non-smoker / Non-drinker</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_drugs', 'Occasional social alcoholic beverage drinker; non-smoker.')">Social drinker</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_drugs', 'Denies illicit drug and recreational substance use.')">Denies illicit drugs</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_drugs', 'Previous smoker; quit >5 years ago.')">Ex-smoker</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_drugs', 'No maternal drug or alcohol exposure during pregnancy.')">No prenatal exposure</button>
+                          </div>
+                          <textarea id="hx_social_drugs" name="hx_social_drugs" rows="3" class="input-block-level" oninput="syncHeadsToSocialSummary()" style="font-size:12px; margin-bottom:0; resize:vertical;" placeholder="Tobacco/smoking history (pack-years), alcohol use, vaping, recreational substances, prescription misuse..."></textarea>
+                        </div>
+
+                        <!-- S: Sexuality & Intimacy -->
+                        <div class="heads-card" style="border-top:3px solid #7c3aed;">
+                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label for="hx_social_sexuality" style="margin:0; font-weight:700; font-size:12px; color:#0f172a; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                              <span class="heads-domain-badge" style="background:#ede9fe; color:#7c3aed;">S</span>
+                              <span>Sexuality &amp; Relationships</span>
+                            </label>
+                            <span style="font-size:10px; color:#64748b; font-weight:500;">Activity, contraception, STIs</span>
+                          </div>
+                          <!-- Quick Chips for S -->
+                          <div class="heads-quick-chips">
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_sexuality', 'Sexually active with single long-term partner; uses contraception.')">Single partner / Contraception</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_sexuality', 'Not sexually active; denies history of sexually transmitted infections.')">Not sexually active</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_sexuality', 'Denies dyspareunia, abnormal discharge, or history of STIs.')">No STIs / Discharge</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_sexuality', 'Inapplicable for neonatal / infant patient.')">Pediatric / Infant</button>
+                          </div>
+                          <textarea id="hx_social_sexuality" name="hx_social_sexuality" rows="3" class="input-block-level" oninput="syncHeadsToSocialSummary()" style="font-size:12px; margin-bottom:0; resize:vertical;" placeholder="Sexual activity, partners, contraception/protection method, STI history, concerns..."></textarea>
+                        </div>
+
+                        <!-- S: Suicide, Depression & Mood -->
+                        <div class="heads-card" style="border-top:3px solid #0891b2;">
+                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label for="hx_social_suicide_mood" style="margin:0; font-weight:700; font-size:12px; color:#0f172a; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                              <span class="heads-domain-badge" style="background:#cffafe; color:#0891b2;">S</span>
+                              <span>Suicide, Depression &amp; Mood</span>
+                            </label>
+                            <span style="font-size:10px; color:#64748b; font-weight:500;">Mood, anxiety, safety</span>
+                          </div>
+                          <!-- Quick Chips for S (Mood) -->
+                          <div class="heads-quick-chips">
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_suicide_mood', 'Euthymic mood, good affect. Denies depression, anxiety, or sleep disturbances.')">Euthymic / Denies depression</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_suicide_mood', 'Explicitly denies suicidal ideation, intent, plan, or history of self-harm.')">Denies suicidal ideation</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_suicide_mood', 'Reports mild situational stress related to work/illness; coping well.')">Mild situational stress</button>
+                            <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_suicide_mood', 'Normal neonatal behavioral adaptation, responsive to comfort.')">Normal infant behavior</button>
+                          </div>
+                          <textarea id="hx_social_suicide_mood" name="hx_social_suicide_mood" rows="3" class="input-block-level" oninput="syncHeadsToSocialSummary()" style="font-size:12px; margin-bottom:0; resize:vertical;" placeholder="Depressive symptoms, anxiety, mood stability, sleep disturbances, self-harm, suicidal ideation..."></textarea>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <!-- 2. Combined Narrative / Legacy Summary View (Always kept in sync) -->
+                    <div id="heads-narrative-view" style="display:none; margin-bottom:12px;">
+                      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <label for="hx_social" style="margin:0; font-weight:700; font-size:12px; color:#334155;">
+                          Combined Personal &amp; Social Narrative Summary
+                        </label>
+                        <span style="font-size:11px; color:#64748b;">Auto-synthesized from HEADS fields (or editable directly)</span>
+                      </div>
+                      <textarea id="hx_social" name="hx_social" rows="5" class="input-block-level"
+                        placeholder="Combined social history narrative summary..."></textarea>
+                    </div>
+
                     <div id="hx-social-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-gyn">
@@ -6623,6 +6842,71 @@
       updateTimelineDisplay(timelineId);
     }
     window.changeHxPageSize = changeHxPageSize;
+
+    /* ══════════════════════════════════════════════════════════════════════
+       PERSONAL & SOCIAL HISTORY — HEADS ASSESSMENT CONTROLLER
+       ══════════════════════════════════════════════════════════════════════ */
+    function setHeadsViewMode(mode) {
+      var grid = document.getElementById('heads-grid-view');
+      var narrative = document.getElementById('heads-narrative-view');
+      var btnGrid = document.getElementById('btn-view-heads-grid');
+      var btnNarrative = document.getElementById('btn-view-heads-narrative');
+      if (mode === 'narrative') {
+        if (grid) grid.style.display = 'none';
+        if (narrative) narrative.style.display = 'block';
+        if (btnGrid) btnGrid.classList.remove('active');
+        if (btnNarrative) btnNarrative.classList.add('active');
+      } else {
+        if (grid) grid.style.display = 'block';
+        if (narrative) narrative.style.display = 'none';
+        if (btnGrid) btnGrid.classList.add('active');
+        if (btnNarrative) btnNarrative.classList.remove('active');
+      }
+    }
+    window.setHeadsViewMode = setHeadsViewMode;
+
+    function applyHeadsChip(textareaId, text) {
+      var el = document.getElementById(textareaId);
+      if (!el) return;
+      var current = (el.value || '').trim();
+      if (!current) {
+        el.value = text;
+      } else if (current.indexOf(text) === -1) {
+        if (/[.;!?]$/.test(current)) {
+          el.value = current + ' ' + text;
+        } else {
+          el.value = current + '. ' + text;
+        }
+      }
+      syncHeadsToSocialSummary();
+      if (typeof schedulePhysicianAutosave === 'function') {
+        schedulePhysicianAutosave();
+      }
+    }
+    window.applyHeadsChip = applyHeadsChip;
+
+    function syncHeadsToSocialSummary() {
+      var h = (document.getElementById('hx_social_home') || {}).value || '';
+      var e = (document.getElementById('hx_social_education_employment') || {}).value || '';
+      var a = (document.getElementById('hx_social_activities') || {}).value || '';
+      var d = (document.getElementById('hx_social_drugs') || {}).value || '';
+      var s1 = (document.getElementById('hx_social_sexuality') || {}).value || '';
+      var s2 = (document.getElementById('hx_social_suicide_mood') || {}).value || '';
+
+      var parts = [];
+      if (h.trim()) parts.push('[Home]: ' + h.trim());
+      if (e.trim()) parts.push('[Education/Employment]: ' + e.trim());
+      if (a.trim()) parts.push('[Activities]: ' + a.trim());
+      if (d.trim()) parts.push('[Drugs/Substance]: ' + d.trim());
+      if (s1.trim()) parts.push('[Sexuality]: ' + s1.trim());
+      if (s2.trim()) parts.push('[Suicide/Mood]: ' + s2.trim());
+
+      var socEl = document.getElementById('hx_social');
+      if (socEl && parts.length > 0) {
+        socEl.value = parts.join('\n');
+      }
+    }
+    window.syncHeadsToSocialSummary = syncHeadsToSocialSummary;
 
     function toggleHxCard(headerEl) {
       var card = headerEl.closest('.encounter-hx-card');
@@ -14130,6 +14414,34 @@
         var hxAllergyEl = document.getElementById('hx_allergy');
         if (hxAllergyEl) hxAllergyEl.value = data.allergy_notes;
       }
+
+      // ── Restore Structured HEADS Psychosocial History ──
+      var headsKeys = ['hx_social_home', 'hx_social_education_employment', 'hx_social_activities', 'hx_social_drugs', 'hx_social_sexuality', 'hx_social_suicide_mood'];
+      var hasAnyStructuredHeads = headsKeys.some(function (k) {
+        return typeof data[k] === 'string' && data[k].trim().length > 0;
+      });
+
+      if (!hasAnyStructuredHeads && typeof data.hx_social === 'string' && data.hx_social.trim().length > 0) {
+        var socText = data.hx_social.trim();
+        var mHome = socText.match(/\[Home(?:\/Living)?\]:\s*([^\n\r]+)/i);
+        var mEd = socText.match(/\[Education(?:\/Employment)?\]:\s*([^\n\r]+)/i);
+        var mAct = socText.match(/\[Activities\]:\s*([^\n\r]+)/i);
+        var mDrug = socText.match(/\[Drugs(?:\/Substance)?\]:\s*([^\n\r]+)/i);
+        var mSex = socText.match(/\[Sexuality\]:\s*([^\n\r]+)/i);
+        var mMood = socText.match(/\[Suicide(?:\/Mood)?\]:\s*([^\n\r]+)/i);
+
+        if (mHome || mEd || mAct || mDrug || mSex || mMood) {
+          if (mHome && document.getElementById('hx_social_home')) document.getElementById('hx_social_home').value = mHome[1].trim();
+          if (mEd && document.getElementById('hx_social_education_employment')) document.getElementById('hx_social_education_employment').value = mEd[1].trim();
+          if (mAct && document.getElementById('hx_social_activities')) document.getElementById('hx_social_activities').value = mAct[1].trim();
+          if (mDrug && document.getElementById('hx_social_drugs')) document.getElementById('hx_social_drugs').value = mDrug[1].trim();
+          if (mSex && document.getElementById('hx_social_sexuality')) document.getElementById('hx_social_sexuality').value = mSex[1].trim();
+          if (mMood && document.getElementById('hx_social_suicide_mood')) document.getElementById('hx_social_suicide_mood').value = mMood[1].trim();
+        } else {
+          var hHomeEl = document.getElementById('hx_social_home');
+          if (hHomeEl) hHomeEl.value = socText;
+        }
+      }
     }
 
 
@@ -14353,6 +14665,14 @@
           return Object.assign({}, referral);
         });
 
+      if (typeof syncHeadsToSocialSummary === 'function') {
+        syncHeadsToSocialSummary();
+        var socEl = document.getElementById('hx_social');
+        if (socEl && socEl.value) {
+          data.hx_social = socEl.value;
+          if (curEncForSave) curEncForSave.hx_social = socEl.value;
+        }
+      }
 
       return data;
     }
