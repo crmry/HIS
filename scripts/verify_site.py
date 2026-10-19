@@ -1066,10 +1066,22 @@ async def scan_single_target(browser_ws, file_url):
                             if (rowGenFemale.style.display === 'none' || rowGenMale.style.display !== 'none') {
                                 return 'Ballard female genitals visibility toggle failed';
                             }
-                            sexInput.value = 'undetermined';
+                            sexInput.value = 'Undetermined';
                             window.updateBallardGenitalsVisibility();
                             if (rowGenFemale.style.display === 'none' || rowGenMale.style.display === 'none') {
-                                return 'Ballard unknown genitals visibility failed to reflect both';
+                                return 'Ballard undetermined genitals visibility failed to reflect both';
+                            }
+                            if (!rowGenMale.classList.contains('ballard-disabled-row') || !rowGenFemale.classList.contains('ballard-disabled-row')) {
+                                return 'Ballard undetermined genitals rows should have disabled styling';
+                            }
+                            const compCount = document.getElementById('ballard-completed-count');
+                            if (!compCount || !compCount.textContent.includes('/ 11')) {
+                                return 'Ballard completed count should have target 11 for Undetermined sex';
+                            }
+                            const maleCell = rowGenMale.querySelector('.ballard-ref-cell');
+                            if (maleCell) maleCell.click();
+                            if (document.getElementById('ballard-input-genitals_male').value !== '') {
+                                return 'Ballard male genitals should not be selectable when sex is Undetermined';
                             }
                             sexInput.value = origSex;
                             window.updateBallardGenitalsVisibility();

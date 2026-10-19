@@ -1009,6 +1009,21 @@
       background: #f8fafc !important;
       outline: none !important;
     }
+    .ballard-disabled-row .ballard-ref-cell {
+      cursor: not-allowed !important;
+      background: #f8fafc !important;
+      color: #94a3b8 !important;
+      opacity: 0.65;
+    }
+    .ballard-disabled-row .ballard-ref-cell:hover {
+      background: #f8fafc !important;
+      outline: none !important;
+    }
+    .ballard-disabled-row .ballard-score-badge {
+      background: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+      color: #64748b !important;
+    }
 
 </style>
 </head>
@@ -1825,7 +1840,7 @@
                   <option value="">Select</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
-                  <option value="undetermined">undetermined</option>
+                  <option value="Undetermined">Undetermined</option>
                 </select>
               </div>
               <div class="form-group">
@@ -2883,14 +2898,14 @@ function getNeonateBallardSex() {
     const val = sexEl.value.trim().toLowerCase();
     if (val === 'male' || val === 'boy' || val === 'm') return 'Male';
     if (val === 'female' || val === 'girl' || val === 'f') return 'Female';
-    if (val === 'undetermined' || val === 'unknown') return 'Unknown';
+    if (val === 'undetermined' || val === 'unknown' || val === 'ambiguous') return 'Undetermined';
   }
   const bannerSex = document.getElementById('banner-sex') || document.getElementById('patient-sex');
   if (bannerSex && bannerSex.textContent) {
     const val = bannerSex.textContent.trim().toLowerCase();
     if (val === 'male' || val === 'boy' || val === 'm') return 'Male';
     if (val === 'female' || val === 'girl' || val === 'f') return 'Female';
-    if (val === 'undetermined' || val === 'unknown') return 'Unknown';
+    if (val === 'undetermined' || val === 'unknown' || val === 'ambiguous') return 'Undetermined';
   }
   if (typeof getPatients === 'function' && typeof currentPatientId !== 'undefined') {
     try {
@@ -2903,10 +2918,11 @@ function getNeonateBallardSex() {
         const s = peSex.trim().toLowerCase();
         if (s === 'male' || s === 'boy' || s === 'm') return 'Male';
         if (s === 'female' || s === 'girl' || s === 'f') return 'Female';
+        if (s === 'undetermined' || s === 'unknown' || s === 'ambiguous') return 'Undetermined';
       }
     } catch (e) {}
   }
-  return 'Unknown';
+  return 'Undetermined';
 }
 
 function updateBallardGenitalsVisibility() {
@@ -2915,16 +2931,51 @@ function updateBallardGenitalsVisibility() {
   const rowFemale = document.getElementById('ballard-row-genitals-female');
   if (!rowMale || !rowFemale) return;
 
+  const maleInput = document.getElementById('ballard-input-genitals_male');
+  const femaleInput = document.getElementById('ballard-input-genitals_female');
+  const maleBadge = document.getElementById('ballard-badge-genitals_male');
+  const femaleBadge = document.getElementById('ballard-badge-genitals_female');
+
   if (sex === 'Male') {
     rowMale.style.display = '';
+    rowMale.classList.remove('ballard-disabled-row');
     rowFemale.style.display = 'none';
+    rowFemale.classList.remove('ballard-disabled-row');
+    if (femaleInput) femaleInput.value = '';
+    if (femaleBadge) {
+      femaleBadge.innerHTML = '&#8212;';
+      femaleBadge.classList.remove('scored');
+    }
+    rowFemale.querySelectorAll('.ballard-ref-cell').forEach(c => c.classList.remove('ballard-selected'));
   } else if (sex === 'Female') {
     rowMale.style.display = 'none';
+    rowMale.classList.remove('ballard-disabled-row');
     rowFemale.style.display = '';
+    rowFemale.classList.remove('ballard-disabled-row');
+    if (maleInput) maleInput.value = '';
+    if (maleBadge) {
+      maleBadge.innerHTML = '&#8212;';
+      maleBadge.classList.remove('scored');
+    }
+    rowMale.querySelectorAll('.ballard-ref-cell').forEach(c => c.classList.remove('ballard-selected'));
   } else {
-    // Both will be reflected if Genitals is Unknown
+    // Undetermined: Both appear but cannot be selected; 11 criteria is valid
     rowMale.style.display = '';
+    rowMale.classList.add('ballard-disabled-row');
     rowFemale.style.display = '';
+    rowFemale.classList.add('ballard-disabled-row');
+    if (maleInput) maleInput.value = '';
+    if (femaleInput) femaleInput.value = '';
+    if (maleBadge) {
+      maleBadge.textContent = 'N/A';
+      maleBadge.classList.remove('scored');
+    }
+    if (femaleBadge) {
+      femaleBadge.textContent = 'N/A';
+      femaleBadge.classList.remove('scored');
+    }
+    rowMale.querySelectorAll('.ballard-ref-cell').forEach(c => c.classList.remove('ballard-selected'));
+    rowFemale.querySelectorAll('.ballard-ref-cell').forEach(c => c.classList.remove('ballard-selected'));
   }
   recalcBallard();
 }
@@ -2935,27 +2986,21 @@ function recalcBallard() {
     const tr = inp.closest('tr');
     return !tr || tr.style.display !== 'none';
   };
-  const neuroSelects = [...document.querySelectorAll('.neo-neuro-score')].filter(isRowVisible);
-  const physicalSelects = [...document.querySelectorAll('.neo-physical-score')].filter(isRowVisible);
-  const allSelects = [...document.querySelectorAll('.neo-ballard-score')].filter(isRowVisible);
-
+  const isUndetermined = getNeonateBallardSex() === 'Undetermined';
   const maleInput = document.getElementById('ballard-input-genitals_male');
   const femaleInput = document.getElementById('ballard-input-genitals_female');
-  const bothGenitalsVisible = maleInput && femaleInput && isRowVisible(maleInput) && isRowVisible(femaleInput);
 
-  let targetTotal = allSelects.length;
-  if (bothGenitalsVisible) {
-    const maleVal = maleInput.value;
-    const femaleVal = femaleInput.value;
-    if ((maleVal !== '' && femaleVal === '') || (maleVal === '' && femaleVal !== '')) {
-      targetTotal = 12;
-    } else if (maleVal !== '' && femaleVal !== '') {
-      targetTotal = 13;
-    } else {
-      targetTotal = 12;
-    }
-  }
+  const isInputApplicable = inp => {
+    if (!isRowVisible(inp)) return false;
+    if (isUndetermined && (inp === maleInput || inp === femaleInput)) return false;
+    return true;
+  };
 
+  const neuroSelects = [...document.querySelectorAll('.neo-neuro-score')].filter(isInputApplicable);
+  const physicalSelects = [...document.querySelectorAll('.neo-physical-score')].filter(isInputApplicable);
+  const allSelects = [...document.querySelectorAll('.neo-ballard-score')].filter(isInputApplicable);
+
+  const targetTotal = isUndetermined ? 11 : 12;
   const scoredCount = allSelects.filter(s => s.value !== '').length;
   document.getElementById('ballard-completed-count').textContent = `${scoredCount} / ${targetTotal}`;
 
@@ -2963,22 +3008,16 @@ function recalcBallard() {
   const physicalComplete = physicalSelects.filter(s => s.value !== '');
 
   const neuroSum = neuroComplete.reduce((acc, s) => acc + parseInt(s.value, 10), 0);
-  let physicalSum = 0;
-  if (bothGenitalsVisible && maleInput && femaleInput && maleInput.value !== '' && femaleInput.value !== '') {
-    const otherPhysicalSum = physicalComplete
-      .filter(s => s !== maleInput && s !== femaleInput)
-      .reduce((acc, s) => acc + parseInt(s.value, 10), 0);
-    physicalSum = otherPhysicalSum + parseInt(femaleInput.value, 10);
-  } else {
-    physicalSum = physicalComplete.reduce((acc, s) => acc + parseInt(s.value, 10), 0);
-  }
+  const physicalSum = physicalComplete.reduce((acc, s) => acc + parseInt(s.value, 10), 0);
+
+  const neuroTarget = 6;
+  const physicalTarget = isUndetermined ? 5 : 6;
 
   document.getElementById('ballard-neuro-subtotal').textContent =
-    neuroComplete.length === neuroSelects.length ? neuroSum : (neuroComplete.length ? `${neuroSum} (partial)` : '—');
+    neuroComplete.length === neuroTarget ? neuroSum : (neuroComplete.length ? `${neuroSum} (partial)` : '—');
 
-  const physicalTarget = bothGenitalsVisible ? (maleInput.value !== '' && femaleInput.value !== '' ? 7 : 6) : physicalSelects.length;
   document.getElementById('ballard-physical-subtotal').textContent =
-    physicalComplete.length >= physicalTarget ? physicalSum : (physicalComplete.length ? `${physicalSum} (partial)` : '—');
+    physicalComplete.length === physicalTarget ? physicalSum : (physicalComplete.length ? `${physicalSum} (partial)` : '—');
 
   const totalEl = document.getElementById('ballard-total-score');
   const weeksEl = document.getElementById('ballard-weeks-display');
@@ -2987,9 +3026,13 @@ function recalcBallard() {
   const sumWeeksEl = document.getElementById('sum-weeks');
 
   if (scoredCount >= targetTotal && targetTotal > 0) {
-    const total = neuroSum + physicalSum;
-    totalEl.textContent = total;
-    const weeks = SCORE_TO_WEEKS[String(total)];
+    const rawTotal = neuroSum + physicalSum;
+    const total = isUndetermined ? Math.round((rawTotal * 12) / 11) : rawTotal;
+    let clampedTotal = total;
+    if (clampedTotal < -10) clampedTotal = -10;
+    if (clampedTotal > 50) clampedTotal = 50;
+    totalEl.textContent = isUndetermined ? `${total} (prorated)` : total;
+    const weeks = SCORE_TO_WEEKS[String(clampedTotal)];
     if (weeks !== undefined) {
       const mat = WEEKS_TO_MATURITY[String(weeks)] || 'Unknown';
       weeksEl.textContent = `${weeks} weeks`;
@@ -3018,6 +3061,15 @@ document.querySelectorAll('.neo-ballard-score').forEach(s => {
 function ballardCellClick(cell) {
   const row = cell.closest('tr');
   if (!row) return;
+
+  if (row.classList.contains('ballard-disabled-row') ||
+      (getNeonateBallardSex() === 'Undetermined' && (row.id === 'ballard-row-genitals-male' || row.id === 'ballard-row-genitals-female'))) {
+    if (typeof showNeonateToast === 'function') {
+      showNeonateToast('Genitals criteria is non-applicable for Undetermined sex. Evaluating 11 non-genital criteria.', '#78350f');
+    }
+    return;
+  }
+
   const input = row.querySelector('input.neo-ballard-score');
   const badge = row.querySelector('.ballard-score-badge');
   const val = cell.getAttribute('data-score-val');
@@ -4908,9 +4960,20 @@ function populateNeonateData(data) {
   setElVal('neo_pe_anus', pe.anus);
   setElVal('neo_pe_skin', pe.skin);
   setElVal('neo_pe_extremities', pe.extremities);
-  setElVal('neo_pe_other_findings', pe.otherFindings);
-  setElVal('neo_sex', pe.sex);
-  setElVal('neo_nicu_reason', pe.nicuReason);
+  if (pe.sex) {
+    const sNorm = pe.sex.trim().toLowerCase();
+    if (sNorm === 'undetermined' || sNorm === 'unknown' || sNorm === 'ambiguous') {
+      setElVal('neo_sex', 'Undetermined');
+    } else if (sNorm === 'male' || sNorm === 'boy' || sNorm === 'm') {
+      setElVal('neo_sex', 'Male');
+    } else if (sNorm === 'female' || sNorm === 'girl' || sNorm === 'f') {
+      setElVal('neo_sex', 'Female');
+    } else {
+      setElVal('neo_sex', pe.sex);
+    }
+  } else {
+    setElVal('neo_sex', '');
+  }
   setElVal('neo_nicu_others', pe.nicuOthers);
 
   // Aftercare
