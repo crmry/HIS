@@ -168,8 +168,8 @@
     background: #f8fafc;
     border-bottom: 1px solid var(--slate-200);
     padding: 12px 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     align-items: flex-end;
   }
@@ -177,6 +177,13 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    min-width: 110px;
+    flex: 1;
+  }
+  .param-group-sex,
+  .param-group:first-child {
+    min-width: 195px;
+    flex: 1.5;
   }
   .param-label {
     font-size: 11px;
@@ -198,6 +205,10 @@
     outline: none;
     border-color: var(--med-green);
     box-shadow: 0 0 0 2px rgba(27, 77, 62, 0.15);
+  }
+  #growth-input-sex {
+    min-width: 190px;
+    font-weight: 600;
   }
 
   /* ── Chart Stage & Controls ── */
@@ -282,19 +293,19 @@
   .tanner-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 11.5px;
+    font-size: 11px;
     min-width: 900px;
   }
   .tanner-table th {
     background: #f1f5f9;
     color: var(--slate-800);
     font-weight: 700;
-    padding: 10px 12px;
+    padding: 6px 10px;
     border: 1px solid var(--slate-200);
     text-align: left;
   }
   .tanner-table th.tanner-crit-col {
-    width: 180px;
+    width: 170px;
     background: #e2e8f0;
     color: var(--slate-900);
   }
@@ -303,12 +314,12 @@
     text-align: center;
   }
   .tanner-table th.tanner-score-col {
-    width: 100px;
+    width: 90px;
     text-align: center;
     background: #e2e8f0;
   }
   .tanner-table td {
-    padding: 10px 12px;
+    padding: 5px 6px;
     border: 1px solid var(--slate-200);
     vertical-align: top;
   }
@@ -323,7 +334,7 @@
     transition: all 0.15s ease;
     user-select: none;
     position: relative;
-    padding: 8px 10px;
+    padding: 5px 6px;
   }
   .tanner-ref-cell:hover {
     background: #f0fdf4 !important;
@@ -336,14 +347,14 @@
   }
   .tanner-cell-img-wrap {
     width: 100%;
-    height: 74px;
+    height: 52px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #ffffff;
     border: 1px solid var(--slate-200);
     border-radius: 4px;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     overflow: hidden;
     padding: 2px;
     box-sizing: border-box;
@@ -359,7 +370,7 @@
     box-shadow: 0 1px 2px rgba(22, 163, 74, 0.12);
   }
   .tanner-cell-img {
-    max-height: 68px;
+    max-height: 48px;
     max-width: 100%;
     width: auto;
     height: auto;
@@ -375,13 +386,13 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 800;
     color: #1b4d3e;
     background: #e6f4ea;
-    padding: 2px 6px;
+    padding: 1px 5px;
     border-radius: 3px;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
     text-transform: uppercase;
     letter-spacing: 0.3px;
   }
@@ -390,22 +401,22 @@
     color: #ffffff;
   }
   .tanner-cell-desc {
-    font-size: 11px;
-    line-height: 1.4;
-    color: var(--slate-700);
+    font-size: 10px;
+    line-height: 1.3;
+    color: var(--slate-600);
   }
   .tanner-selected .tanner-cell-desc {
     color: #064e3b;
     font-weight: 600;
   }
   .tanner-group-header-row td {
-    background: #f1f5f9;
-    padding: 7px 12px;
+    background: #0f3d32;
+    padding: 5px 12px;
     font-weight: 800;
     font-size: 11px;
-    color: #1e293b;
-    border-top: 2px solid var(--slate-300);
-    border-bottom: 1px solid var(--slate-200);
+    color: #ffffff;
+    border-top: 2px solid var(--slate-400);
+    border-bottom: 1px solid var(--slate-300);
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -659,29 +670,41 @@
         <!-- 2. TANNER STAGING SECTION (SEXUAL MATURITY RATING) -->
         <div id="section-tanner-staging" style="display:none;" class="tanner-section">
 
-          <!-- Scale Protocol Selector Toolbar -->
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding:10px 14px; background:#f8fafc; border:1px solid var(--slate-200); border-radius:6px;">
+          <!-- Scale Protocol Selector Toolbar (Sex-Synchronized) -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding:10px 14px; background:#f8fafc; border:1px solid var(--slate-200); border-radius:6px;">
             <div>
               <div style="font-size:12.5px; font-weight:700; color:var(--med-green-dark); display:flex; align-items:center; gap:6px;">
                 <i class="icon-user-md"></i> Tanner Staging Assessment (Sexual Maturity Rating &mdash; SMR)
               </div>
               <div style="font-size:11px; color:var(--slate-500); margin-top:2px;">
-                Standardized 5-Stage Pubertal Maturity Protocol &bull; Click any reference cell to score pubertal stage
+                Sex-synchronized pubertal evaluation &bull; For undetermined sex, multiple scales (Female &amp; Male) are assessed concurrently &bull; Click any cell to score
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="font-size:11px; font-weight:700; color:var(--slate-600); text-transform:uppercase;">Protocol Scale:</span>
-              <div class="btn-group" style="display:inline-flex; gap:4px;">
+              <div class="btn-group" style="display:inline-flex; gap:4px;" id="tanner-protocol-switchers">
                 <button type="button" class="btn-secondary active" id="btn-tanner-scale-female" onclick="setTannerActiveScale('female')">
-                  <i class="icon-female"></i> Female Scale (Breast &amp; Pubic Hair)
+                  <i class="icon-female"></i> Female Protocol
                 </button>
                 <button type="button" class="btn-secondary" id="btn-tanner-scale-male" onclick="setTannerActiveScale('male')">
-                  <i class="icon-male"></i> Male Scale (Genitalia &amp; Pubic Hair)
+                  <i class="icon-male"></i> Male Protocol
                 </button>
                 <button type="button" class="btn-secondary" id="btn-tanner-scale-undetermined" onclick="setTannerActiveScale('undetermined')">
-                  <i class="icon-adjust"></i> Undetermined (Both Female &amp; Male)
+                  <i class="icon-adjust"></i> Multiple / Undetermined (Both Scales)
                 </button>
               </div>
+            </div>
+          </div>
+
+          <!-- Undetermined Sex Multiple-Phenotype Quick Nav Banner -->
+          <div id="tanner-undetermined-notice" style="display:none; margin-bottom:12px; padding:7px 12px; background:#fef3c7; border:1px solid #fde68a; border-radius:4px; font-size:11.5px; color:#92400e; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <i class="icon-info-sign" style="font-size:13px;"></i>
+              <span><strong>Multiple Phenotype Protocol:</strong> Patient sex is designated as Undetermined (Ambiguous Genitalia). Both Female and Male pubertal scales are displayed below for comprehensive clinical staging.</span>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button type="button" class="btn-secondary" onclick="scrollToTannerGroup('female')" style="font-size:10.5px; padding:2px 8px; background:#ffffff; color:#92400e; border-color:#fde68a;"><i class="icon-female"></i> Jump to Female Criteria</button>
+              <button type="button" class="btn-secondary" onclick="scrollToTannerGroup('male')" style="font-size:10.5px; padding:2px 8px; background:#ffffff; color:#92400e; border-color:#fde68a;"><i class="icon-male"></i> Jump to Male Criteria</button>
             </div>
           </div>
 
@@ -1137,6 +1160,13 @@
       enumerable: true
     });
 
+    function scrollToTannerGroup(grp) {
+      var targetId = grp === 'male' ? 'tanner-group-male' : 'tanner-group-female';
+      var el = document.getElementById(targetId);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    window.scrollToTannerGroup = scrollToTannerGroup;
+
     function setTannerActiveScale(scaleType, preventReset) {
       if (scaleType === 'male') {
         tannerState.scaleType = 'male';
@@ -1153,6 +1183,31 @@
       if (btnF) btnF.classList.toggle('active', tannerState.scaleType === 'female');
       if (btnM) btnM.classList.toggle('active', tannerState.scaleType === 'male');
       if (btnU) btnU.classList.toggle('active', tannerState.scaleType === 'undetermined');
+
+      var undetNotice = document.getElementById('tanner-undetermined-notice');
+      if (undetNotice) {
+        undetNotice.style.display = tannerState.scaleType === 'undetermined' ? 'flex' : 'none';
+      }
+
+      var sexBadge = document.getElementById('tanner-patient-sex-badge');
+      if (sexBadge) {
+        if (tannerState.scaleType === 'undetermined') {
+          sexBadge.textContent = 'Multiple Phenotype Protocol (Both Scales)';
+          sexBadge.style.background = '#fef3c7';
+          sexBadge.style.color = '#92400e';
+          sexBadge.style.borderColor = '#fde68a';
+        } else if (tannerState.scaleType === 'male') {
+          sexBadge.textContent = 'Male Protocol (Genitalia & Pubic Hair)';
+          sexBadge.style.background = '#e0f2fe';
+          sexBadge.style.color = '#0369a1';
+          sexBadge.style.borderColor = '#bae6fd';
+        } else {
+          sexBadge.textContent = 'Female Protocol (Breast & Pubic Hair)';
+          sexBadge.style.background = '#fce7f3';
+          sexBadge.style.color = '#9d174d';
+          sexBadge.style.borderColor = '#fbcfe8';
+        }
+      }
 
       if (!preventReset) {
         if (tannerState.scaleType === 'female') {
@@ -1177,10 +1232,10 @@
       if (tannerState.scaleType === 'undetermined') {
         // Dual view: Both Female and Male pubertal scales
         rows = [
-          { groupHeader: 'Female Pubertal Criteria (Breast & Pubic Hair)', icon: 'icon-female' },
+          { groupHeader: 'Female Pubertal Criteria (Breast & Pubic Hair)', icon: 'icon-female', id: 'tanner-group-female' },
           { key: 'female_breast', def: TANNER_DATA.female_breast, scaleAttr: 'scale_fb', badgeId: 'tanner-badge-female_breast' },
           { key: 'female_pubic', def: TANNER_DATA.female_pubic, scaleAttr: 'scale_fph', badgeId: 'tanner-badge-female_pubic' },
-          { groupHeader: 'Male Pubertal Criteria (Genitalia & Pubic Hair)', icon: 'icon-male' },
+          { groupHeader: 'Male Pubertal Criteria (Genitalia & Pubic Hair)', icon: 'icon-male', id: 'tanner-group-male' },
           { key: 'male_genitalia', def: TANNER_DATA.male_genitalia, scaleAttr: 'scale_mg', badgeId: 'tanner-badge-male_genitalia' },
           { key: 'male_pubic', def: TANNER_DATA.male_pubic, scaleAttr: 'scale_mph', badgeId: 'tanner-badge-male_pubic' }
         ];
@@ -1198,8 +1253,12 @@
 
       var html = rows.map(function(item) {
         if (item.groupHeader) {
-          return '<tr class="tanner-group-header-row"><td colspan="7">' +
-            '<i class="' + item.icon + '"></i> ' + item.groupHeader +
+          var anchorAttr = item.id ? (' id="' + item.id + '"') : '';
+          return '<tr class="tanner-group-header-row"' + anchorAttr + '><td colspan="7">' +
+            '<div style="display:flex; justify-content:space-between; align-items:center;">' +
+              '<span><i class="' + item.icon + '"></i> ' + item.groupHeader + '</span>' +
+              '<span style="font-size:10px; font-weight:normal; opacity:0.85; text-transform:none;">Multiple Phenotype Undetermined Protocol</span>' +
+            '</div>' +
             '</td></tr>';
         }
 
@@ -1495,14 +1554,15 @@
       if (sexVal === 'male') defaultScale = 'male';
       else if (sexVal === 'undetermined') defaultScale = 'undetermined';
 
-      if (saved && saved.scaleType) {
-        tannerState.scaleType = saved.scaleType;
+      // Tanner scale is strictly driven by the active patient sex (for undetermined sex, it is multiple/dual protocol)
+      tannerState.scaleType = defaultScale;
+
+      if (saved) {
         tannerState.female_breast = saved.female_breast !== undefined ? saved.female_breast : (saved.scaleType === 'female' ? saved.scale1Stage : null);
         tannerState.female_pubic = saved.female_pubic !== undefined ? saved.female_pubic : (saved.scaleType === 'female' ? saved.scale2Stage : null);
         tannerState.male_genitalia = saved.male_genitalia !== undefined ? saved.male_genitalia : (saved.scaleType === 'male' ? saved.scale1Stage : null);
         tannerState.male_pubic = saved.male_pubic !== undefined ? saved.male_pubic : (saved.scaleType === 'male' ? saved.scale2Stage : null);
       } else {
-        tannerState.scaleType = defaultScale;
         tannerState.female_breast = null;
         tannerState.female_pubic = null;
         tannerState.male_genitalia = null;
