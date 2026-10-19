@@ -388,7 +388,7 @@ async def scan_single_target(browser_ws, file_url):
                     if (!growthBtn.getAttribute('onclick') || !growthBtn.getAttribute('onclick').includes('openGrowthChartsModule')) return 'btn-open-growth-chart onclick should be openGrowthChartsModule';
                     if (typeof window.openGrowthChartsModule !== 'function') return 'openGrowthChartsModule is not defined on window';
                     const tannerBtn = document.getElementById('btn-open-tanner-staging');
-                    if (!tannerBtn) return 'btn-open-tanner-staging missing in specialized forms';
+                    if (tannerBtn) return 'btn-open-tanner-staging should be removed from specialized forms (consolidated into Growth Chart)';
                     const ropSpecialBtn = document.getElementById('btn-open-rop-screening');
                     if (ropSpecialBtn) return 'btn-open-rop-screening should not be present in specialized forms dashlet';
                 }
