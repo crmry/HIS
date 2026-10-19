@@ -1222,6 +1222,10 @@ async def scan_single_target(browser_ws, file_url):
                     }
                     const tannerTable = document.getElementById('tanner-matrix-table');
                     if (!tannerTable) return 'Tanner matrix table missing';
+
+                    // Verify clinical illustrations exist in cells
+                    const cellImgs = tannerTable.querySelectorAll('.tanner-cell-img');
+                    if (!cellImgs || cellImgs.length < 10) return 'Tanner matrix cells must contain clinical illustrations';
                     
                     // Click Female Breast Stage 3 and Pubic Hair Stage 3
                     window.setTannerActiveScale('female');
@@ -1247,6 +1251,30 @@ async def scan_single_target(browser_ws, file_url):
                     outputText = document.getElementById('tanner-output-text-display').textContent;
                     if (!outputText.includes('testicular volume between 1.6 and 6 ml') || !outputText.includes('No hair')) {
                         return 'Synthesized male Tanner description mismatch: ' + outputText;
+                    }
+
+                    // Test Undetermined Dual-Scale Protocol
+                    const undetScaleBtn = document.getElementById('btn-tanner-scale-undetermined');
+                    if (!undetScaleBtn) return 'btn-tanner-scale-undetermined missing';
+                    undetScaleBtn.click();
+                    const dualRows = tannerTable.querySelectorAll('tbody tr');
+                    if (dualRows.length < 4) return 'Undetermined protocol must render both female and male scales';
+                    const fbCell = document.querySelector('td.tanner-ref-cell[data-scale-id="female_breast"][data-stage="1"]');
+                    const mgCell = document.querySelector('td.tanner-ref-cell[data-scale-id="male_genitalia"][data-stage="2"]');
+                    if (!fbCell || !mgCell) return 'Undetermined dual scale cells missing';
+                    fbCell.click();
+                    mgCell.click();
+                    outputText = document.getElementById('tanner-output-text-display').textContent;
+                    if (!outputText.includes('no glandular tissue') || !outputText.includes('testicular volume between 1.6 and 6 ml')) {
+                        return 'Synthesized undetermined dual description mismatch: ' + outputText;
+                    }
+
+                    // If loaded patient is patient_neo_santos, verify sex is Undetermined
+                    if (window.location.search.includes('patient=patient_neo_santos')) {
+                        const sexInput = document.getElementById('growth-input-sex');
+                        if (!sexInput || sexInput.value !== 'undetermined') {
+                            return 'patient_neo_santos should automatically resolve sex to undetermined';
+                        }
                     }
 
                     // Switch back to WFA curve

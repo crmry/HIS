@@ -323,6 +323,7 @@
     transition: all 0.15s ease;
     user-select: none;
     position: relative;
+    padding: 8px 10px;
   }
   .tanner-ref-cell:hover {
     background: #f0fdf4 !important;
@@ -333,17 +334,54 @@
     border: 2px solid #16a34a !important;
     box-shadow: 0 0 0 1px #16a34a, 0 1px 3px rgba(22, 163, 74, 0.15) !important;
   }
+  .tanner-cell-img-wrap {
+    width: 100%;
+    height: 74px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid var(--slate-200);
+    border-radius: 4px;
+    margin-bottom: 6px;
+    overflow: hidden;
+    padding: 2px;
+    box-sizing: border-box;
+    transition: all 0.15s ease;
+  }
+  .tanner-ref-cell:hover .tanner-cell-img-wrap {
+    border-color: #86efac;
+    background: #fafffc;
+  }
+  .tanner-selected .tanner-cell-img-wrap {
+    border-color: #16a34a;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(22, 163, 74, 0.12);
+  }
+  .tanner-cell-img {
+    max-height: 68px;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    transition: transform 0.15s ease;
+  }
+  .tanner-ref-cell:hover .tanner-cell-img {
+    transform: scale(1.04);
+  }
   .tanner-cell-stage-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    font-size: 10.5px;
+    font-size: 10px;
     font-weight: 800;
     color: #1b4d3e;
     background: #e6f4ea;
-    padding: 2px 7px;
+    padding: 2px 6px;
     border-radius: 3px;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
     text-transform: uppercase;
     letter-spacing: 0.3px;
   }
@@ -352,13 +390,24 @@
     color: #ffffff;
   }
   .tanner-cell-desc {
-    font-size: 11.5px;
-    line-height: 1.45;
+    font-size: 11px;
+    line-height: 1.4;
     color: var(--slate-700);
   }
   .tanner-selected .tanner-cell-desc {
     color: #064e3b;
     font-weight: 600;
+  }
+  .tanner-group-header-row td {
+    background: #f1f5f9;
+    padding: 7px 12px;
+    font-weight: 800;
+    font-size: 11px;
+    color: #1e293b;
+    border-top: 2px solid var(--slate-300);
+    border-bottom: 1px solid var(--slate-200);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   .tanner-score-cell {
     text-align: center;
@@ -522,9 +571,10 @@
       <div class="param-strip">
         <div class="param-group">
           <label class="param-label" for="growth-input-sex">Sex</label>
-          <select id="growth-input-sex" class="param-select" onchange="updateGrowthChartsModule()">
+          <select id="growth-input-sex" class="param-select" onchange="handleSexChange()">
             <option value="female">Female (Girl)</option>
             <option value="male">Male (Boy)</option>
+            <option value="undetermined">Undetermined (Ambiguous Genitalia)</option>
           </select>
         </div>
         <div class="param-group">
@@ -627,6 +677,9 @@
                 </button>
                 <button type="button" class="btn-secondary" id="btn-tanner-scale-male" onclick="setTannerActiveScale('male')">
                   <i class="icon-male"></i> Male Scale (Genitalia &amp; Pubic Hair)
+                </button>
+                <button type="button" class="btn-secondary" id="btn-tanner-scale-undetermined" onclick="setTannerActiveScale('undetermined')">
+                  <i class="icon-adjust"></i> Undetermined (Both Female &amp; Male)
                 </button>
               </div>
             </div>
@@ -945,9 +998,14 @@
       document.getElementById('growth-pat-hrn').textContent = d.hrn || 'HRN-2026-08472';
       document.getElementById('growth-pat-pin').textContent = d.phic_pin || '12-094837261-4';
 
-      var sex = (d.gender || 'female').toLowerCase();
-      if (sex !== 'male' && sex !== 'female') sex = 'female';
-      document.getElementById('growth-pat-sex').textContent = sex === 'male' ? 'Male' : 'Female';
+      var rawSex = (d.gender || 'female').toLowerCase();
+      var sex = 'female';
+      if (rawSex.indexOf('male') !== -1 && rawSex.indexOf('female') === -1) {
+        sex = 'male';
+      } else if (rawSex.indexOf('undetermined') !== -1 || rawSex.indexOf('ambiguous') !== -1 || rawSex.indexOf('intersex') !== -1) {
+        sex = 'undetermined';
+      }
+      document.getElementById('growth-pat-sex').textContent = sex === 'male' ? 'Male' : (sex === 'undetermined' ? 'Undetermined' : 'Female');
       document.getElementById('growth-input-sex').value = sex;
 
       var wt = parseFloat(d.vs_weight || d.weight || 3.15) || 3.15;
@@ -968,88 +1026,144 @@
     /* ══════════════════════════════════════════════════════════════════════
        TANNER STAGING (SEXUAL MATURITY RATING — SMR) CONTROLLER
        ══════════════════════════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════════════════════════
+       TANNER STAGING (SEXUAL MATURITY RATING — SMR) CONTROLLER
+       ══════════════════════════════════════════════════════════════════════ */
     var TANNER_DATA = {
-      female: {
-        scale1: {
-          id: 'female_breast',
-          codePrefix: 'B',
-          name: 'Female Breast Development Scale',
-          subtitle: 'Glandular tissue, areolar diameter & papilla contour',
-          stages: [
-            { stage: 1, label: 'Stage 1 (B1)', desc: 'no glandular tissue: areola follows the skin contours of the chest' },
-            { stage: 2, label: 'Stage 2 (B2)', desc: 'breast bud forms, with small area of surrounding glandular tissue; areola begins to widen' },
-            { stage: 3, label: 'Stage 3 (B3)', desc: 'breast begins to become more elevated, and extends beyond the borders of the areola, which continues to widen but remains in contour with surrounding breast' },
-            { stage: 4, label: 'Stage 4 (B4)', desc: 'increased breast sizing and elevation; areola and papilla form a secondary mound projecting from the contour of the surrounding breast' },
-            { stage: 5, label: 'Stage 5 (B5)', desc: 'breast reaches final adult size; areola returns to contour of the surrounding breast, with a projecting central papilla' }
-          ]
-        },
-        scale2: {
-          id: 'female_pubic_hair',
-          codePrefix: 'PH',
-          name: 'Pubic Hair Scale (Female)',
-          subtitle: 'Escutcheon distribution, texture & thigh extension',
-          stages: [
-            { stage: 1, label: 'Stage 1 (PH1)', desc: 'No hair' },
-            { stage: 2, label: 'Stage 2 (PH2)', desc: 'small amount of long, downy hair with slight pigmentation at the base on the labia majora' },
-            { stage: 3, label: 'Stage 3 (PH3)', desc: 'hair becomes more coarse and curly, and begins to extend laterally' },
-            { stage: 4, label: 'Stage 4 (PH4)', desc: 'adult-like hair quality, extending across pubis but sparing medial thighs' },
-            { stage: 5, label: 'Stage 5 (PH5)', desc: 'hair extends to medial surface of the thighs' }
-          ]
-        }
+      female_breast: {
+        id: 'female_breast',
+        scaleKey: 'female_breast',
+        codePrefix: 'B',
+        name: 'Female Breast Development Scale',
+        subtitle: 'Glandular tissue, areolar diameter & papilla contour',
+        category: 'Female Criteria',
+        stages: [
+          { stage: 1, label: 'Stage 1 (B1)', img: 'img/tanner/tanner_female_breast_1.png', desc: 'no glandular tissue: areola follows the skin contours of the chest' },
+          { stage: 2, label: 'Stage 2 (B2)', img: 'img/tanner/tanner_female_breast_2.png', desc: 'breast bud forms, with small area of surrounding glandular tissue; areola begins to widen' },
+          { stage: 3, label: 'Stage 3 (B3)', img: 'img/tanner/tanner_female_breast_3.png', desc: 'breast begins to become more elevated, and extends beyond the borders of the areola, which continues to widen but remains in contour with surrounding breast' },
+          { stage: 4, label: 'Stage 4 (B4)', img: 'img/tanner/tanner_female_breast_4.png', desc: 'increased breast sizing and elevation; areola and papilla form a secondary mound projecting from the contour of the surrounding breast' },
+          { stage: 5, label: 'Stage 5 (B5)', img: 'img/tanner/tanner_female_breast_5.png', desc: 'breast reaches final adult size; areola returns to contour of the surrounding breast, with a projecting central papilla' }
+        ]
       },
-      male: {
-        scale1: {
-          id: 'male_genitalia',
-          codePrefix: 'G',
-          name: 'Male External Genitalia Scale',
-          subtitle: 'Testicular volume, scrotal skin, penile length & breadth',
-          stages: [
-            { stage: 1, label: 'Stage 1 (G1)', desc: 'testicular volume less than 1.5 ml; small penis' },
-            { stage: 2, label: 'Stage 2 (G2)', desc: 'testicular volume between 1.6 and 6 ml; skin on scrotum thins, reddens and enlarges; penis length unchanged' },
-            { stage: 3, label: 'Stage 3 (G3)', desc: 'testicular volume between 6 and 12 ml; scrotum enlarges further; penis begins to lengthen' },
-            { stage: 4, label: 'Stage 4 (G4)', desc: 'testicular volume between 12 and 20 ml; scrotum becomes larger and darkens; penis further increases in length and starts to increase in breadth' },
-            { stage: 5, label: 'Stage 5 (G5)', desc: 'testicular volume at least 20 ml; adult scrotum and penis' }
-          ]
-        },
-        scale2: {
-          id: 'male_pubic_hair',
-          codePrefix: 'PH',
-          name: 'Pubic Hair Scale (Male)',
-          subtitle: 'Escutcheon distribution, texture & thigh extension',
-          stages: [
-            { stage: 1, label: 'Stage 1 (PH1)', desc: 'No hair' },
-            { stage: 2, label: 'Stage 2 (PH2)', desc: 'small amount of long, downy hair with slight pigmentation at the base of the penis and scrotum' },
-            { stage: 3, label: 'Stage 3 (PH3)', desc: 'hair becomes more coarse and curly, and begins to extend laterally' },
-            { stage: 4, label: 'Stage 4 (PH4)', desc: 'adult-like hair quality, extending across pubis but sparing medial thighs' },
-            { stage: 5, label: 'Stage 5 (PH5)', desc: 'hair extends to medial surface of the thighs' }
-          ]
-        }
+      female_pubic: {
+        id: 'female_pubic_hair',
+        scaleKey: 'female_pubic',
+        codePrefix: 'PH',
+        name: 'Pubic Hair Scale (Female)',
+        subtitle: 'Escutcheon distribution, texture & thigh extension',
+        category: 'Female Criteria',
+        stages: [
+          { stage: 1, label: 'Stage 1 (PH1)', img: 'img/tanner/tanner_female_pubic_1.png', desc: 'No hair' },
+          { stage: 2, label: 'Stage 2 (PH2)', img: 'img/tanner/tanner_female_pubic_2.png', desc: 'small amount of long, downy hair with slight pigmentation at the base on the labia majora' },
+          { stage: 3, label: 'Stage 3 (PH3)', img: 'img/tanner/tanner_female_pubic_3.png', desc: 'hair becomes more coarse and curly, and begins to extend laterally' },
+          { stage: 4, label: 'Stage 4 (PH4)', img: 'img/tanner/tanner_female_pubic_4.png', desc: 'adult-like hair quality, extending across pubis but sparing medial thighs' },
+          { stage: 5, label: 'Stage 5 (PH5)', img: 'img/tanner/tanner_female_pubic_5.png', desc: 'hair extends to medial surface of the thighs' }
+        ]
+      },
+      male_genitalia: {
+        id: 'male_genitalia',
+        scaleKey: 'male_genitalia',
+        codePrefix: 'G',
+        name: 'Male External Genitalia Scale',
+        subtitle: 'Testicular volume, scrotal skin, penile length & breadth',
+        category: 'Male Criteria',
+        stages: [
+          { stage: 1, label: 'Stage 1 (G1)', img: 'img/tanner/tanner_male_genitalia_1.png', desc: 'testicular volume less than 1.5 ml; small penis' },
+          { stage: 2, label: 'Stage 2 (G2)', img: 'img/tanner/tanner_male_genitalia_2.png', desc: 'testicular volume between 1.6 and 6 ml; skin on scrotum thins, reddens and enlarges; penis length unchanged' },
+          { stage: 3, label: 'Stage 3 (G3)', img: 'img/tanner/tanner_male_genitalia_3.png', desc: 'testicular volume between 6 and 12 ml; scrotum enlarges further; penis begins to lengthen' },
+          { stage: 4, label: 'Stage 4 (G4)', img: 'img/tanner/tanner_male_genitalia_4.png', desc: 'testicular volume between 12 and 20 ml; scrotum becomes larger and darkens; penis further increases in length and starts to increase in breadth' },
+          { stage: 5, label: 'Stage 5 (G5)', img: 'img/tanner/tanner_male_genitalia_5.png', desc: 'testicular volume at least 20 ml; adult scrotum and penis' }
+        ]
+      },
+      male_pubic: {
+        id: 'male_pubic_hair',
+        scaleKey: 'male_pubic',
+        codePrefix: 'PH',
+        name: 'Pubic Hair Scale (Male)',
+        subtitle: 'Escutcheon distribution, texture & thigh extension',
+        category: 'Male Criteria',
+        stages: [
+          { stage: 1, label: 'Stage 1 (PH1)', img: 'img/tanner/tanner_male_pubic_1.png', desc: 'No hair' },
+          { stage: 2, label: 'Stage 2 (PH2)', img: 'img/tanner/tanner_male_pubic_2.png', desc: 'small amount of long, downy hair with slight pigmentation at the base of the penis and scrotum' },
+          { stage: 3, label: 'Stage 3 (PH3)', img: 'img/tanner/tanner_male_pubic_3.png', desc: 'hair becomes more coarse and curly, and begins to extend laterally' },
+          { stage: 4, label: 'Stage 4 (PH4)', img: 'img/tanner/tanner_male_pubic_4.png', desc: 'adult-like hair quality, extending across pubis but sparing medial thighs' },
+          { stage: 5, label: 'Stage 5 (PH5)', img: 'img/tanner/tanner_male_pubic_5.png', desc: 'hair extends to medial surface of the thighs' }
+        ]
       }
+    };
+
+    // Protocols mapping
+    TANNER_DATA.female = {
+      scale1: TANNER_DATA.female_breast,
+      scale2: TANNER_DATA.female_pubic
+    };
+    TANNER_DATA.male = {
+      scale1: TANNER_DATA.male_genitalia,
+      scale2: TANNER_DATA.male_pubic
     };
 
     var tannerState = {
       scaleType: 'female',
-      scale1: null,
-      scale2: null
+      female_breast: null,
+      female_pubic: null,
+      male_genitalia: null,
+      male_pubic: null
     };
 
+    // Backwards-compatible getters and setters
+    Object.defineProperty(tannerState, 'scale1', {
+      get: function() {
+        if (this.scaleType === 'male') return this.male_genitalia;
+        return this.female_breast;
+      },
+      set: function(val) {
+        if (this.scaleType === 'male') this.male_genitalia = val;
+        else this.female_breast = val;
+      },
+      configurable: true,
+      enumerable: true
+    });
+
+    Object.defineProperty(tannerState, 'scale2', {
+      get: function() {
+        if (this.scaleType === 'male') return this.male_pubic;
+        return this.female_pubic;
+      },
+      set: function(val) {
+        if (this.scaleType === 'male') this.male_pubic = val;
+        else this.female_pubic = val;
+      },
+      configurable: true,
+      enumerable: true
+    });
+
     function setTannerActiveScale(scaleType, preventReset) {
-      tannerState.scaleType = scaleType === 'male' ? 'male' : 'female';
+      if (scaleType === 'male') {
+        tannerState.scaleType = 'male';
+      } else if (scaleType === 'undetermined') {
+        tannerState.scaleType = 'undetermined';
+      } else {
+        tannerState.scaleType = 'female';
+      }
+
       var btnF = document.getElementById('btn-tanner-scale-female');
       var btnM = document.getElementById('btn-tanner-scale-male');
-      if (btnF && btnM) {
+      var btnU = document.getElementById('btn-tanner-scale-undetermined');
+
+      if (btnF) btnF.classList.toggle('active', tannerState.scaleType === 'female');
+      if (btnM) btnM.classList.toggle('active', tannerState.scaleType === 'male');
+      if (btnU) btnU.classList.toggle('active', tannerState.scaleType === 'undetermined');
+
+      if (!preventReset) {
         if (tannerState.scaleType === 'female') {
-          btnF.classList.add('active');
-          btnM.classList.remove('active');
-        } else {
-          btnM.classList.add('active');
-          btnF.classList.remove('active');
+          tannerState.male_genitalia = null;
+          tannerState.male_pubic = null;
+        } else if (tannerState.scaleType === 'male') {
+          tannerState.female_breast = null;
+          tannerState.female_pubic = null;
         }
       }
-      if (!preventReset) {
-        tannerState.scale1 = null;
-        tannerState.scale2 = null;
-      }
+
       renderTannerMatrix();
       updateTannerOutput();
     }
@@ -1058,23 +1172,51 @@
     function renderTannerMatrix() {
       var tbody = document.getElementById('tanner-table-body');
       if (!tbody) return;
-      var proto = TANNER_DATA[tannerState.scaleType] || TANNER_DATA.female;
 
-      var scales = [
-        { key: 'scale1', def: proto.scale1 },
-        { key: 'scale2', def: proto.scale2 }
-      ];
+      var rows = [];
+      if (tannerState.scaleType === 'undetermined') {
+        // Dual view: Both Female and Male pubertal scales
+        rows = [
+          { groupHeader: 'Female Pubertal Criteria (Breast & Pubic Hair)', icon: 'icon-female' },
+          { key: 'female_breast', def: TANNER_DATA.female_breast, scaleAttr: 'scale_fb', badgeId: 'tanner-badge-female_breast' },
+          { key: 'female_pubic', def: TANNER_DATA.female_pubic, scaleAttr: 'scale_fph', badgeId: 'tanner-badge-female_pubic' },
+          { groupHeader: 'Male Pubertal Criteria (Genitalia & Pubic Hair)', icon: 'icon-male' },
+          { key: 'male_genitalia', def: TANNER_DATA.male_genitalia, scaleAttr: 'scale_mg', badgeId: 'tanner-badge-male_genitalia' },
+          { key: 'male_pubic', def: TANNER_DATA.male_pubic, scaleAttr: 'scale_mph', badgeId: 'tanner-badge-male_pubic' }
+        ];
+      } else if (tannerState.scaleType === 'male') {
+        rows = [
+          { key: 'male_genitalia', def: TANNER_DATA.male_genitalia, scaleAttr: 'scale1', badgeId: 'tanner-badge-scale1' },
+          { key: 'male_pubic', def: TANNER_DATA.male_pubic, scaleAttr: 'scale2', badgeId: 'tanner-badge-scale2' }
+        ];
+      } else {
+        rows = [
+          { key: 'female_breast', def: TANNER_DATA.female_breast, scaleAttr: 'scale1', badgeId: 'tanner-badge-scale1' },
+          { key: 'female_pubic', def: TANNER_DATA.female_pubic, scaleAttr: 'scale2', badgeId: 'tanner-badge-scale2' }
+        ];
+      }
 
-      var html = scales.map(function(item) {
-        var scaleKey = item.key;
+      var html = rows.map(function(item) {
+        if (item.groupHeader) {
+          return '<tr class="tanner-group-header-row"><td colspan="7">' +
+            '<i class="' + item.icon + '"></i> ' + item.groupHeader +
+            '</td></tr>';
+        }
+
+        var key = item.key;
         var def = item.def;
-        var curStage = tannerState[scaleKey];
+        var scaleAttr = item.scaleAttr;
+        var badgeId = item.badgeId;
+        var curStage = tannerState[key];
         var curCode = curStage !== null ? (def.codePrefix + curStage) : '—';
 
         var cellsHtml = def.stages.map(function(st) {
           var isSelected = curStage === st.stage;
-          return '<td class="tanner-ref-cell' + (isSelected ? ' tanner-selected' : '') + '" data-scale="' + scaleKey + '" data-stage="' + st.stage + '" onclick="tannerCellClick(this)" title="Click to select ' + st.label + '">' +
+          return '<td class="tanner-ref-cell' + (isSelected ? ' tanner-selected' : '') + '" data-scale="' + scaleAttr + '" data-scale-id="' + def.scaleKey + '" data-stage="' + st.stage + '" onclick="tannerCellClick(this)" title="Click to select ' + st.label + '">' +
             '<span class="tanner-check-pill"><i class="icon-ok"></i> Selected</span>' +
+            '<div class="tanner-cell-img-wrap">' +
+              '<img src="' + st.img + '" alt="' + st.label + '" class="tanner-cell-img" loading="lazy" />' +
+            '</div>' +
             '<div class="tanner-cell-stage-badge">' + st.label + '</div>' +
             '<div class="tanner-cell-desc">' + st.desc + '</div>' +
             '</td>';
@@ -1087,7 +1229,7 @@
           '</td>' +
           cellsHtml +
           '<td class="tanner-score-cell">' +
-            '<span class="tanner-score-badge' + (curStage !== null ? ' scored' : '') + '" id="tanner-badge-' + scaleKey + '">' + curCode + '</span>' +
+            '<span class="tanner-score-badge' + (curStage !== null ? ' scored' : '') + '" id="' + badgeId + '">' + curCode + '</span>' +
           '</td>' +
           '</tr>';
       }).join('');
@@ -1097,14 +1239,27 @@
     window.renderTannerMatrix = renderTannerMatrix;
 
     function tannerCellClick(cell) {
-      var scale = cell.getAttribute('data-scale');
+      var scaleAttr = cell.getAttribute('data-scale');
+      var scaleId = cell.getAttribute('data-scale-id');
       var stage = parseInt(cell.getAttribute('data-stage'), 10);
-      if (!scale || isNaN(stage)) return;
+      if (isNaN(stage)) return;
 
-      if (tannerState[scale] === stage) {
-        tannerState[scale] = null;
+      var key = scaleId;
+      if (!key) {
+        if (scaleAttr === 'scale1') key = (tannerState.scaleType === 'male') ? 'male_genitalia' : 'female_breast';
+        else if (scaleAttr === 'scale2') key = (tannerState.scaleType === 'male') ? 'male_pubic' : 'female_pubic';
+        else if (scaleAttr === 'scale_fb') key = 'female_breast';
+        else if (scaleAttr === 'scale_fph') key = 'female_pubic';
+        else if (scaleAttr === 'scale_mg') key = 'male_genitalia';
+        else if (scaleAttr === 'scale_mph') key = 'male_pubic';
+      }
+
+      if (!key || tannerState[key] === undefined) return;
+
+      if (tannerState[key] === stage) {
+        tannerState[key] = null;
       } else {
-        tannerState[scale] = stage;
+        tannerState[key] = stage;
       }
 
       renderTannerMatrix();
@@ -1114,24 +1269,107 @@
     window.tannerCellClick = tannerCellClick;
 
     function updateTannerOutput() {
-      var proto = TANNER_DATA[tannerState.scaleType] || TANNER_DATA.female;
-      var s1Desc = '';
-      var s2Desc = '';
+      var descriptions = [];
+      var ratings = {
+        1: 'Prepubertal (Stage 1)',
+        2: 'Early Puberty (Stage 2)',
+        3: 'Mid-Puberty (Stage 3)',
+        4: 'Late Puberty (Stage 4)',
+        5: 'Post-pubertal / Adult Maturity (Stage 5)'
+      };
 
-      if (tannerState.scale1 !== null) {
-        var s1Item = proto.scale1.stages.find(function(s) { return s.stage === tannerState.scale1; });
-        if (s1Item) s1Desc = s1Item.desc;
+      var overallBadge = document.getElementById('tanner-overall-badge');
+      var maturityBadge = document.getElementById('tanner-maturity-rating');
+      var sexBadge = document.getElementById('tanner-patient-sex-badge');
+
+      if (tannerState.scaleType === 'undetermined') {
+        if (sexBadge) sexBadge.textContent = 'Undetermined Protocol (Both Scales)';
+        var scoredList = [];
+        var maxStage = 0;
+
+        if (tannerState.female_breast !== null) {
+          var itemB = TANNER_DATA.female_breast.stages.find(function(s) { return s.stage === tannerState.female_breast; });
+          if (itemB) descriptions.push(itemB.desc);
+          scoredList.push('B' + tannerState.female_breast);
+          if (tannerState.female_breast > maxStage) maxStage = tannerState.female_breast;
+        }
+        if (tannerState.female_pubic !== null) {
+          var itemFPH = TANNER_DATA.female_pubic.stages.find(function(s) { return s.stage === tannerState.female_pubic; });
+          if (itemFPH) descriptions.push(itemFPH.desc);
+          scoredList.push('fPH' + tannerState.female_pubic);
+          if (tannerState.female_pubic > maxStage) maxStage = tannerState.female_pubic;
+        }
+        if (tannerState.male_genitalia !== null) {
+          var itemG = TANNER_DATA.male_genitalia.stages.find(function(s) { return s.stage === tannerState.male_genitalia; });
+          if (itemG) descriptions.push(itemG.desc);
+          scoredList.push('G' + tannerState.male_genitalia);
+          if (tannerState.male_genitalia > maxStage) maxStage = tannerState.male_genitalia;
+        }
+        if (tannerState.male_pubic !== null) {
+          var itemMPH = TANNER_DATA.male_pubic.stages.find(function(s) { return s.stage === tannerState.male_pubic; });
+          if (itemMPH) descriptions.push(itemMPH.desc);
+          scoredList.push('mPH' + tannerState.male_pubic);
+          if (tannerState.male_pubic > maxStage) maxStage = tannerState.male_pubic;
+        }
+
+        if (scoredList.length > 0) {
+          if (overallBadge) overallBadge.textContent = 'TANNER STAGE: ' + scoredList.join(', ');
+          if (maturityBadge) maturityBadge.textContent = ratings[maxStage] || ('Pubertal Stage ' + maxStage);
+        } else {
+          if (overallBadge) overallBadge.textContent = 'TANNER STAGE: NOT YET SCORED';
+          if (maturityBadge) maturityBadge.textContent = 'Awaiting Selection';
+        }
+
+      } else {
+        var isMale = tannerState.scaleType === 'male';
+        if (sexBadge) sexBadge.textContent = isMale ? 'Male Scale (G & PH)' : 'Female Scale (B & PH)';
+
+        var s1Key = isMale ? 'male_genitalia' : 'female_breast';
+        var s2Key = isMale ? 'male_pubic' : 'female_pubic';
+        var s1Def = isMale ? TANNER_DATA.male_genitalia : TANNER_DATA.female_breast;
+        var s2Def = isMale ? TANNER_DATA.male_pubic : TANNER_DATA.female_pubic;
+
+        var s1Val = tannerState[s1Key];
+        var s2Val = tannerState[s2Key];
+
+        if (s1Val !== null) {
+          var s1Item = s1Def.stages.find(function(s) { return s.stage === s1Val; });
+          if (s1Item) descriptions.push(s1Item.desc);
+        }
+        if (s2Val !== null) {
+          var s2Item = s2Def.stages.find(function(s) { return s.stage === s2Val; });
+          if (s2Item) descriptions.push(s2Item.desc);
+        }
+
+        var s1Code = s1Val !== null ? (s1Def.codePrefix + s1Val) : '—';
+        var s2Code = s2Val !== null ? (s2Def.codePrefix + s2Val) : '—';
+
+        var b1Badge = document.getElementById('tanner-badge-scale1');
+        if (b1Badge) {
+          b1Badge.textContent = s1Code;
+          b1Badge.classList.toggle('scored', s1Val !== null);
+        }
+        var b2Badge = document.getElementById('tanner-badge-scale2');
+        if (b2Badge) {
+          b2Badge.textContent = s2Code;
+          b2Badge.classList.toggle('scored', s2Val !== null);
+        }
+
+        if (s1Val !== null && s2Val !== null) {
+          if (overallBadge) overallBadge.textContent = 'TANNER STAGE: ' + s1Code + ', ' + s2Code;
+          var maxStage = Math.max(s1Val, s2Val);
+          if (maturityBadge) maturityBadge.textContent = ratings[maxStage] || ('Pubertal Stage ' + maxStage);
+        } else if (s1Val !== null || s2Val !== null) {
+          var activeCode = s1Val !== null ? s1Code : s2Code;
+          if (overallBadge) overallBadge.textContent = 'TANNER STAGE: ' + activeCode + ' (Partial)';
+          if (maturityBadge) maturityBadge.textContent = 'Partially Scored (1/2 Scales)';
+        } else {
+          if (overallBadge) overallBadge.textContent = 'TANNER STAGE: NOT YET SCORED';
+          if (maturityBadge) maturityBadge.textContent = 'Awaiting Selection';
+        }
       }
-      if (tannerState.scale2 !== null) {
-        var s2Item = proto.scale2.stages.find(function(s) { return s.stage === tannerState.scale2; });
-        if (s2Item) s2Desc = s2Item.desc;
-      }
 
-      var parts = [];
-      if (s1Desc) parts.push(s1Desc);
-      if (s2Desc) parts.push(s2Desc);
-
-      var fullText = parts.join('; ');
+      var fullText = descriptions.join('; ');
       var displayEl = document.getElementById('tanner-output-text-display');
       if (displayEl) {
         if (fullText) {
@@ -1143,49 +1381,6 @@
           displayEl.style.color = 'var(--slate-500)';
           displayEl.style.fontWeight = 'normal';
         }
-      }
-
-      var overallBadge = document.getElementById('tanner-overall-badge');
-      var maturityBadge = document.getElementById('tanner-maturity-rating');
-      var sexBadge = document.getElementById('tanner-patient-sex-badge');
-      if (sexBadge) {
-        sexBadge.textContent = tannerState.scaleType === 'male' ? 'Male Scale (G & PH)' : 'Female Scale (B & PH)';
-      }
-
-      var s1Code = tannerState.scale1 !== null ? (proto.scale1.codePrefix + tannerState.scale1) : '—';
-      var s2Code = tannerState.scale2 !== null ? (proto.scale2.codePrefix + tannerState.scale2) : '—';
-
-      var b1Badge = document.getElementById('tanner-badge-scale1');
-      if (b1Badge) {
-        b1Badge.textContent = s1Code;
-        if (tannerState.scale1 !== null) b1Badge.classList.add('scored');
-        else b1Badge.classList.remove('scored');
-      }
-      var b2Badge = document.getElementById('tanner-badge-scale2');
-      if (b2Badge) {
-        b2Badge.textContent = s2Code;
-        if (tannerState.scale2 !== null) b2Badge.classList.add('scored');
-        else b2Badge.classList.remove('scored');
-      }
-
-      if (tannerState.scale1 !== null && tannerState.scale2 !== null) {
-        if (overallBadge) overallBadge.textContent = 'TANNER STAGE: ' + s1Code + ', ' + s2Code;
-        var maxStage = Math.max(tannerState.scale1, tannerState.scale2);
-        var ratings = {
-          1: 'Prepubertal (Stage 1)',
-          2: 'Early Puberty (Stage 2)',
-          3: 'Mid-Puberty (Stage 3)',
-          4: 'Late Puberty (Stage 4)',
-          5: 'Post-pubertal / Adult Maturity (Stage 5)'
-        };
-        if (maturityBadge) maturityBadge.textContent = ratings[maxStage] || ('Pubertal Stage ' + maxStage);
-      } else if (tannerState.scale1 !== null || tannerState.scale2 !== null) {
-        var activeCode = tannerState.scale1 !== null ? s1Code : s2Code;
-        if (overallBadge) overallBadge.textContent = 'TANNER STAGE: ' + activeCode + ' (Partial)';
-        if (maturityBadge) maturityBadge.textContent = 'Partially Scored (1/2 Scales)';
-      } else {
-        if (overallBadge) overallBadge.textContent = 'TANNER STAGE: NOT YET SCORED';
-        if (maturityBadge) maturityBadge.textContent = 'Awaiting Selection';
       }
     }
     window.updateTannerOutput = updateTannerOutput;
@@ -1216,8 +1411,10 @@
     window.copyTannerOutputToClipboard = copyTannerOutputToClipboard;
 
     function clearTannerStaging() {
-      tannerState.scale1 = null;
-      tannerState.scale2 = null;
+      tannerState.female_breast = null;
+      tannerState.female_pubic = null;
+      tannerState.male_genitalia = null;
+      tannerState.male_pubic = null;
       renderTannerMatrix();
       updateTannerOutput();
       autoSaveTannerAssessment();
@@ -1226,20 +1423,44 @@
 
     function autoSaveTannerAssessment() {
       var key = 'HIS_TANNER_' + activePatientId;
-      var proto = TANNER_DATA[tannerState.scaleType] || TANNER_DATA.female;
-      var s1Code = tannerState.scale1 !== null ? (proto.scale1.codePrefix + tannerState.scale1) : null;
-      var s2Code = tannerState.scale2 !== null ? (proto.scale2.codePrefix + tannerState.scale2) : null;
       var desc = document.getElementById('tanner-output-text-display') ? document.getElementById('tanner-output-text-display').textContent.trim() : '';
       if (desc.indexOf('Click any stage') === 0) desc = '';
+
+      var s1Code = null;
+      var s2Code = null;
+      var overall = '';
+
+      if (tannerState.scaleType === 'female') {
+        s1Code = tannerState.female_breast !== null ? ('B' + tannerState.female_breast) : null;
+        s2Code = tannerState.female_pubic !== null ? ('PH' + tannerState.female_pubic) : null;
+        overall = (s1Code && s2Code) ? (s1Code + ', ' + s2Code) : (s1Code || s2Code || '');
+      } else if (tannerState.scaleType === 'male') {
+        s1Code = tannerState.male_genitalia !== null ? ('G' + tannerState.male_genitalia) : null;
+        s2Code = tannerState.male_pubic !== null ? ('PH' + tannerState.male_pubic) : null;
+        overall = (s1Code && s2Code) ? (s1Code + ', ' + s2Code) : (s1Code || s2Code || '');
+      } else {
+        var scoredList = [];
+        if (tannerState.female_breast !== null) scoredList.push('B' + tannerState.female_breast);
+        if (tannerState.female_pubic !== null) scoredList.push('fPH' + tannerState.female_pubic);
+        if (tannerState.male_genitalia !== null) scoredList.push('G' + tannerState.male_genitalia);
+        if (tannerState.male_pubic !== null) scoredList.push('mPH' + tannerState.male_pubic);
+        overall = scoredList.join(', ');
+        s1Code = tannerState.female_breast !== null ? ('B' + tannerState.female_breast) : (tannerState.male_genitalia !== null ? ('G' + tannerState.male_genitalia) : null);
+        s2Code = tannerState.female_pubic !== null ? ('PH' + tannerState.female_pubic) : (tannerState.male_pubic !== null ? ('PH' + tannerState.male_pubic) : null);
+      }
 
       var dataToSave = {
         patientId: activePatientId,
         scaleType: tannerState.scaleType,
+        female_breast: tannerState.female_breast,
+        female_pubic: tannerState.female_pubic,
+        male_genitalia: tannerState.male_genitalia,
+        male_pubic: tannerState.male_pubic,
         scale1Stage: tannerState.scale1,
         scale2Stage: tannerState.scale2,
         scale1Code: s1Code,
         scale2Code: s2Code,
-        overallStage: (s1Code && s2Code) ? (s1Code + ', ' + s2Code) : (s1Code || s2Code || ''),
+        overallStage: overall,
         narrativeOutput: desc,
         updatedAt: new Date().toISOString()
       };
@@ -1268,17 +1489,24 @@
         saved = JSON.parse(localStorage.getItem(key));
       } catch (e) { saved = null; }
 
-      var sex = (document.getElementById('growth-input-sex').value || 'female').toLowerCase();
-      var defaultScale = (sex === 'male') ? 'male' : 'female';
+      var sexInput = document.getElementById('growth-input-sex');
+      var sexVal = (sexInput ? sexInput.value : 'female').toLowerCase();
+      var defaultScale = 'female';
+      if (sexVal === 'male') defaultScale = 'male';
+      else if (sexVal === 'undetermined') defaultScale = 'undetermined';
 
       if (saved && saved.scaleType) {
         tannerState.scaleType = saved.scaleType;
-        tannerState.scale1 = saved.scale1Stage !== undefined ? saved.scale1Stage : null;
-        tannerState.scale2 = saved.scale2Stage !== undefined ? saved.scale2Stage : null;
+        tannerState.female_breast = saved.female_breast !== undefined ? saved.female_breast : (saved.scaleType === 'female' ? saved.scale1Stage : null);
+        tannerState.female_pubic = saved.female_pubic !== undefined ? saved.female_pubic : (saved.scaleType === 'female' ? saved.scale2Stage : null);
+        tannerState.male_genitalia = saved.male_genitalia !== undefined ? saved.male_genitalia : (saved.scaleType === 'male' ? saved.scale1Stage : null);
+        tannerState.male_pubic = saved.male_pubic !== undefined ? saved.male_pubic : (saved.scaleType === 'male' ? saved.scale2Stage : null);
       } else {
         tannerState.scaleType = defaultScale;
-        tannerState.scale1 = null;
-        tannerState.scale2 = null;
+        tannerState.female_breast = null;
+        tannerState.female_pubic = null;
+        tannerState.male_genitalia = null;
+        tannerState.male_pubic = null;
       }
 
       setTannerActiveScale(tannerState.scaleType, true);
@@ -1309,6 +1537,21 @@
       }
     }
 
+    function handleSexChange() {
+      var sex = document.getElementById('growth-input-sex').value;
+      var patSexEl = document.getElementById('growth-pat-sex');
+      if (patSexEl) patSexEl.textContent = sex === 'male' ? 'Male' : (sex === 'undetermined' ? 'Undetermined' : 'Female');
+      if (sex === 'undetermined') {
+        setTannerActiveScale('undetermined');
+      } else if (sex === 'male') {
+        setTannerActiveScale('male');
+      } else {
+        setTannerActiveScale('female');
+      }
+      updateGrowthChartsModule();
+    }
+    window.handleSexChange = handleSexChange;
+
     function updateGrowthChartsModule() {
       var sex = document.getElementById('growth-input-sex').value;
       var ageMonths = parseFloat(document.getElementById('growth-input-age').value) || 0;
@@ -1325,17 +1568,21 @@
       if (bmiEl) bmiEl.value = bmi > 0 ? bmi.toFixed(1) + ' kg/m²' : '—';
 
       // Update titles
+      var sexLabel = (sex === 'male' ? 'BOYS' : (sex === 'undetermined' ? 'UNDETERMINED' : 'GIRLS'));
       var titles = {
-        wfa: 'Weight-for-Age ' + (sex === 'male' ? 'BOYS' : 'GIRLS') + ' • Birth to 5 years (z-scores)',
-        lhfa: 'Length/Height-for-Age ' + (sex === 'male' ? 'BOYS' : 'GIRLS') + ' • Birth to 5 years (z-scores)',
-        wflh: 'Weight-for-Length/Height ' + (sex === 'male' ? 'BOYS' : 'GIRLS') + ' • Birth to 5 years (z-scores)',
-        bmifa: 'BMI-for-Age ' + (sex === 'male' ? 'BOYS' : 'GIRLS') + ' • 5 to 19 years (z-scores)'
+        wfa: 'Weight-for-Age ' + sexLabel + ' • Birth to 5 years (z-scores)',
+        lhfa: 'Length/Height-for-Age ' + sexLabel + ' • Birth to 5 years (z-scores)',
+        wflh: 'Weight-for-Length/Height ' + sexLabel + ' • Birth to 5 years (z-scores)',
+        bmifa: 'BMI-for-Age ' + sexLabel + ' • 5 to 19 years (z-scores)'
       };
-      document.getElementById('chart-indicator-title').textContent = titles[currentModuleChartType] || '';
+      if (currentModuleChartType !== 'tanner') {
+        document.getElementById('chart-indicator-title').textContent = titles[currentModuleChartType] || '';
+      }
       document.getElementById('module-curve-name').textContent = titles[currentModuleChartType] || '';
 
-      // Calculate Z-Score & assessment
-      var zScore = calculateWhoZ(currentModuleChartType, sex, ageMonths, wt, len, bmi);
+      // Calculate Z-Score & assessment (use female curve reference as clinical baseline if undetermined)
+      var curveSex = (sex === 'male') ? 'male' : 'female';
+      var zScore = calculateWhoZ(currentModuleChartType, curveSex, ageMonths, wt, len, bmi);
       var zEl = document.getElementById('module-zscore-val');
       if (zEl) {
         zEl.textContent = (zScore >= 0 ? '+' : '') + zScore.toFixed(2) + ' SD';
@@ -1535,15 +1782,16 @@
       var tannerProtoEl = document.getElementById('rep-tanner-protocol');
       var tannerDescEl = document.getElementById('rep-tanner-desc');
       if (tannerStageEl && tannerDescEl) {
-        var proto = TANNER_DATA[tannerState.scaleType] || TANNER_DATA.female;
-        if (tannerProtoEl) tannerProtoEl.textContent = tannerState.scaleType === 'male' ? 'Male Protocol (G & PH)' : 'Female Protocol (B & PH)';
+        if (tannerProtoEl) {
+          if (tannerState.scaleType === 'male') tannerProtoEl.textContent = 'Male Protocol (G & PH)';
+          else if (tannerState.scaleType === 'undetermined') tannerProtoEl.textContent = 'Undetermined Protocol (Both Scales)';
+          else tannerProtoEl.textContent = 'Female Protocol (B & PH)';
+        }
         var desc = document.getElementById('tanner-output-text-display') ? document.getElementById('tanner-output-text-display').textContent.trim() : '';
         if (desc && desc.indexOf('Click any stage') === -1) {
           tannerDescEl.textContent = desc;
-          var s1Code = tannerState.scale1 !== null ? (proto.scale1.codePrefix + tannerState.scale1) : '—';
-          var s2Code = tannerState.scale2 !== null ? (proto.scale2.codePrefix + tannerState.scale2) : '—';
-          var maturity = document.getElementById('tanner-maturity-rating') ? document.getElementById('tanner-maturity-rating').textContent.trim() : '';
-          tannerStageEl.textContent = s1Code + ', ' + s2Code + (maturity ? (' (' + maturity + ')') : '');
+          var overallBadge = document.getElementById('tanner-overall-badge');
+          tannerStageEl.textContent = overallBadge ? overallBadge.textContent.replace('TANNER STAGE: ', '') : 'Scored';
         } else {
           tannerStageEl.textContent = 'Not Scored';
           tannerDescEl.textContent = 'No pubertal assessment recorded during this encounter.';
