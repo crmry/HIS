@@ -15,27 +15,13 @@
   <link rel="stylesheet" href="css/dashboard.css">
   <style>
     /* ══════════════════════════════════════════════════════════════════════
-       PERSONAL & SOCIAL HISTORY — HEADS ASSESSMENT STYLES
+       PERSONAL & SOCIAL HISTORY — HEADS ASSESSMENT (PROGRESS NOTES STYLE)
        ══════════════════════════════════════════════════════════════════════ */
     .heads-grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    .heads-card {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-    .heads-card:focus-within {
-      border-color: #1b4d3e;
-      box-shadow: 0 0 0 1px #1b4d3e, 0 1px 3px rgba(0, 0, 0, 0.06);
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 14px 20px;
+      margin-bottom: 14px;
     }
     .heads-quick-chips {
       display: flex;
@@ -44,38 +30,28 @@
       margin-bottom: 6px;
     }
     .heads-chip {
-      background: #f1f5f9;
-      border: 1px solid #cbd5e1;
-      color: #334155;
-      border-radius: 12px;
-      padding: 1px 8px;
-      font-size: 10.5px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+      border-radius: 3px;
+      padding: 2px 7px;
+      font-size: 11px;
       font-weight: 500;
       cursor: pointer;
-      line-height: 1.4;
+      line-height: 1.35;
       transition: all 0.15s ease;
       white-space: nowrap;
       user-select: none;
     }
     .heads-chip:hover {
-      background: #e2e8f0;
-      border-color: #94a3b8;
-      color: #0f172a;
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #1b4d3e;
     }
     .heads-chip:active {
       background: #1b4d3e;
       border-color: #1b4d3e;
       color: #ffffff;
-    }
-    .heads-domain-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      font-size: 11px;
-      font-weight: 800;
     }
 
     /* ══════════════════════════════════════════════════════════════════════
@@ -2155,20 +2131,15 @@
                     <div id="hx-family-timeline" class="encounter-hx-timeline"></div>
                   </div>
                   <div class="tab-pane" id="hx-social">
-                    <!-- HEADS Psychosocial History Toolbar & Header -->
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px;">
+                    <!-- HEADS Psychosocial History Toolbar & Header (Progress Notes Style) -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid #e2e8f0;">
                       <div>
-                        <div style="font-size:12px; font-weight:700; color:#1b4d3e; display:flex; align-items:center; gap:6px;">
-                          <span style="display:inline-block; padding:1px 6px; background:#1b4d3e; color:#fff; border-radius:3px; font-size:10px; font-weight:800; letter-spacing:0.5px;">HEADS</span>
-                          <span>Personal &amp; Social Psychosocial Assessment</span>
-                        </div>
-                        <div style="font-size:11px; color:#64748b; margin-top:2px;">
-                          Standard clinical psychosocial domains: Home &bull; Education/Employment &bull; Activities &bull; Drugs &bull; Sexuality &bull; Suicide/Mood
-                        </div>
+                        <span class="progress-note-title" style="font-size:12.5px; text-transform:uppercase; letter-spacing:0.4px; color:#1b4d3e;">Personal &amp; Social History (HEADS Assessment)</span>
+                        <span class="progress-note-destinations" style="margin-left:8px;">H &ndash; Home &bull; E &ndash; Education/Employment &bull; A &ndash; Activities &bull; D &ndash; Drugs &bull; S &ndash; Sexuality &bull; S &ndash; Suicide/Mood</span>
                       </div>
                       <div class="btn-group" data-toggle="buttons-radio" style="margin:0;">
                         <button type="button" class="btn btn-mini active" id="btn-view-heads-grid" onclick="setHeadsViewMode('grid')">
-                          <i class="icon-th-large"></i> Structured HEADS
+                          <i class="icon-th-list"></i> Structured HEADS
                         </button>
                         <button type="button" class="btn btn-mini" id="btn-view-heads-narrative" onclick="setHeadsViewMode('narrative')">
                           <i class="icon-align-left"></i> Combined Summary
@@ -2176,20 +2147,16 @@
                       </div>
                     </div>
 
-                    <!-- 1. Structured HEADS Grid View -->
+                    <!-- 1. Structured HEADS Grid View (Progress Notes Style) -->
                     <div id="heads-grid-view" style="display:block;">
                       <div class="heads-grid-container">
                         
                         <!-- H: Home & Living Environment -->
-                        <div class="heads-card" style="border-top:3px solid #0284c7;">
-                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                            <label for="hx_social_home" style="margin:0; font-weight:700; font-size:12px; color:#0f172a; display:flex; align-items:center; gap:6px; cursor:pointer;">
-                              <span class="heads-domain-badge" style="background:#e0f2fe; color:#0284c7;">H</span>
-                              <span>Home &amp; Living Environment</span>
-                            </label>
-                            <span style="font-size:10px; color:#64748b; font-weight:500;">Living setup, safety</span>
-                          </div>
-                          <!-- Quick Chips for H -->
+                        <div class="progress-note-box">
+                          <label class="progress-note-header" for="hx_social_home">
+                            <span class="progress-note-title">H &ndash; Home &amp; Living Environment:</span>
+                            <span class="progress-note-destinations">Living setup, household dynamics, home safety</span>
+                          </label>
                           <div class="heads-quick-chips">
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_home', 'Lives with parents and family in stable residence.')">Lives with family</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_home', 'Safe, stable home environment; denies domestic conflict.')">Safe home</button>
@@ -2197,19 +2164,15 @@
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_home', 'Cohabiting with mother in Rooming-in Nursery under exclusive breastfeeding care.')">Rooming-in (Neonate)</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_home', 'Lives independently / alone.')">Lives alone</button>
                           </div>
-                          <textarea id="hx_social_home" name="hx_social_home" rows="3" class="input-block-level" oninput="syncHeadsToSocialSummary()" style="font-size:12px; margin-bottom:0; resize:vertical;" placeholder="Living arrangements, family relationships, safety at home, housing condition..."></textarea>
+                          <textarea id="hx_social_home" name="hx_social_home" rows="3" class="input-block-level progress-note-input" oninput="syncHeadsToSocialSummary()" placeholder="Document living arrangements, household members, home safety, housing condition..."></textarea>
                         </div>
 
                         <!-- E: Education / Employment -->
-                        <div class="heads-card" style="border-top:3px solid #059669;">
-                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                            <label for="hx_social_education_employment" style="margin:0; font-weight:700; font-size:12px; color:#0f172a; display:flex; align-items:center; gap:6px; cursor:pointer;">
-                              <span class="heads-domain-badge" style="background:#d1fae5; color:#059669;">E</span>
-                              <span>Education / Employment</span>
-                            </label>
-                            <span style="font-size:10px; color:#64748b; font-weight:500;">Work, school, finances</span>
-                          </div>
-                          <!-- Quick Chips for E -->
+                        <div class="progress-note-box">
+                          <label class="progress-note-header" for="hx_social_education_employment">
+                            <span class="progress-note-title">E &ndash; Education / Employment:</span>
+                            <span class="progress-note-destinations">Work schedule, occupation, school standing, finances</span>
+                          </label>
                           <div class="heads-quick-chips">
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_education_employment', 'Office clerk / administrative staff; daytime shift.')">Office / Admin</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_education_employment', 'Employed full-time; denies occupational hazards.')">Full-time employed</button>
@@ -2217,38 +2180,30 @@
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_education_employment', 'Retired; receiving pension.')">Retired</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_education_employment', 'Age-appropriate dependent infant / child.')">Pediatric / Infant</button>
                           </div>
-                          <textarea id="hx_social_education_employment" name="hx_social_education_employment" rows="3" class="input-block-level" oninput="syncHeadsToSocialSummary()" style="font-size:12px; margin-bottom:0; resize:vertical;" placeholder="School level, academic performance, occupation, working hours, occupational exposures..."></textarea>
+                          <textarea id="hx_social_education_employment" name="hx_social_education_employment" rows="3" class="input-block-level progress-note-input" oninput="syncHeadsToSocialSummary()" placeholder="Document school level, academic performance, occupation, working hours, occupational exposures..."></textarea>
                         </div>
 
-                        <!-- A: Activities & Lifestyle -->
-                        <div class="heads-card" style="border-top:3px solid #d97706;">
-                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                            <label for="hx_social_activities" style="margin:0; font-weight:700; font-size:12px; color:#0f172a; display:flex; align-items:center; gap:6px; cursor:pointer;">
-                              <span class="heads-domain-badge" style="background:#fef3c7; color:#d97706;">A</span>
-                              <span>Activities &amp; Peer Relations</span>
-                            </label>
-                            <span style="font-size:10px; color:#64748b; font-weight:500;">Hobbies, exercise, peers</span>
-                          </div>
-                          <!-- Quick Chips for A -->
+                        <!-- A: Activities & Peer Relations -->
+                        <div class="progress-note-box">
+                          <label class="progress-note-header" for="hx_social_activities">
+                            <span class="progress-note-title">A &ndash; Activities &amp; Peer Relations:</span>
+                            <span class="progress-note-destinations">Exercise, sports, hobbies, peer interactions, recreation</span>
+                          </label>
                           <div class="heads-quick-chips">
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_activities', 'Engages in regular moderate physical exercise 3x/week.')">Regular exercise</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_activities', 'Sedentary lifestyle with minimal outdoor recreation.')">Sedentary</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_activities', 'Healthy peer relationships and active social support.')">Good peer circle</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_activities', 'Active neonatal reflexes, resting calmly between feeds.')">Neonate activity</button>
                           </div>
-                          <textarea id="hx_social_activities" name="hx_social_activities" rows="3" class="input-block-level" oninput="syncHeadsToSocialSummary()" style="font-size:12px; margin-bottom:0; resize:vertical;" placeholder="Exercise, sports, hobbies, peer interactions, screen time, social engagement..."></textarea>
+                          <textarea id="hx_social_activities" name="hx_social_activities" rows="3" class="input-block-level progress-note-input" oninput="syncHeadsToSocialSummary()" placeholder="Document physical exercise, recreation, peer relationships, screen time, social engagement..."></textarea>
                         </div>
 
                         <!-- D: Drugs & Substance Use -->
-                        <div class="heads-card" style="border-top:3px solid #dc2626;">
-                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                            <label for="hx_social_drugs" style="margin:0; font-weight:700; font-size:12px; color:#0f172a; display:flex; align-items:center; gap:6px; cursor:pointer;">
-                              <span class="heads-domain-badge" style="background:#fee2e2; color:#dc2626;">D</span>
-                              <span>Drugs &amp; Substance Use</span>
-                            </label>
-                            <span style="font-size:10px; color:#64748b; font-weight:500;">Tobacco, alcohol, drugs</span>
-                          </div>
-                          <!-- Quick Chips for D -->
+                        <div class="progress-note-box">
+                          <label class="progress-note-header" for="hx_social_drugs">
+                            <span class="progress-note-title">D &ndash; Drugs &amp; Substance Use:</span>
+                            <span class="progress-note-destinations">Tobacco, smoking (pack-years), alcohol, vaping, substances</span>
+                          </label>
                           <div class="heads-quick-chips">
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_drugs', 'Non-smoker, non-alcoholic beverage drinker, denies illicit drug use.')">Non-smoker / Non-drinker</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_drugs', 'Occasional social alcoholic beverage drinker; non-smoker.')">Social drinker</button>
@@ -2256,45 +2211,37 @@
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_drugs', 'Previous smoker; quit >5 years ago.')">Ex-smoker</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_drugs', 'No maternal drug or alcohol exposure during pregnancy.')">No prenatal exposure</button>
                           </div>
-                          <textarea id="hx_social_drugs" name="hx_social_drugs" rows="3" class="input-block-level" oninput="syncHeadsToSocialSummary()" style="font-size:12px; margin-bottom:0; resize:vertical;" placeholder="Tobacco/smoking history (pack-years), alcohol use, vaping, recreational substances, prescription misuse..."></textarea>
+                          <textarea id="hx_social_drugs" name="hx_social_drugs" rows="3" class="input-block-level progress-note-input" oninput="syncHeadsToSocialSummary()" placeholder="Document tobacco use (pack-years), alcohol frequency, vaping, recreational substances, prescription misuse..."></textarea>
                         </div>
 
-                        <!-- S: Sexuality & Intimacy -->
-                        <div class="heads-card" style="border-top:3px solid #7c3aed;">
-                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                            <label for="hx_social_sexuality" style="margin:0; font-weight:700; font-size:12px; color:#0f172a; display:flex; align-items:center; gap:6px; cursor:pointer;">
-                              <span class="heads-domain-badge" style="background:#ede9fe; color:#7c3aed;">S</span>
-                              <span>Sexuality &amp; Relationships</span>
-                            </label>
-                            <span style="font-size:10px; color:#64748b; font-weight:500;">Activity, contraception, STIs</span>
-                          </div>
-                          <!-- Quick Chips for S -->
+                        <!-- S: Sexuality & Relationships -->
+                        <div class="progress-note-box">
+                          <label class="progress-note-header" for="hx_social_sexuality">
+                            <span class="progress-note-title">S &ndash; Sexuality &amp; Relationships:</span>
+                            <span class="progress-note-destinations">Sexual activity, contraception/protection, STI history</span>
+                          </label>
                           <div class="heads-quick-chips">
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_sexuality', 'Sexually active with single long-term partner; uses contraception.')">Single partner / Contraception</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_sexuality', 'Not sexually active; denies history of sexually transmitted infections.')">Not sexually active</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_sexuality', 'Denies dyspareunia, abnormal discharge, or history of STIs.')">No STIs / Discharge</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_sexuality', 'Inapplicable for neonatal / infant patient.')">Pediatric / Infant</button>
                           </div>
-                          <textarea id="hx_social_sexuality" name="hx_social_sexuality" rows="3" class="input-block-level" oninput="syncHeadsToSocialSummary()" style="font-size:12px; margin-bottom:0; resize:vertical;" placeholder="Sexual activity, partners, contraception/protection method, STI history, concerns..."></textarea>
+                          <textarea id="hx_social_sexuality" name="hx_social_sexuality" rows="3" class="input-block-level progress-note-input" oninput="syncHeadsToSocialSummary()" placeholder="Document sexual activity, partners, contraception/protection method, STI history, concerns..."></textarea>
                         </div>
 
                         <!-- S: Suicide, Depression & Mood -->
-                        <div class="heads-card" style="border-top:3px solid #0891b2;">
-                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                            <label for="hx_social_suicide_mood" style="margin:0; font-weight:700; font-size:12px; color:#0f172a; display:flex; align-items:center; gap:6px; cursor:pointer;">
-                              <span class="heads-domain-badge" style="background:#cffafe; color:#0891b2;">S</span>
-                              <span>Suicide, Depression &amp; Mood</span>
-                            </label>
-                            <span style="font-size:10px; color:#64748b; font-weight:500;">Mood, anxiety, safety</span>
-                          </div>
-                          <!-- Quick Chips for S (Mood) -->
+                        <div class="progress-note-box">
+                          <label class="progress-note-header" for="hx_social_suicide_mood">
+                            <span class="progress-note-title">S &ndash; Suicide, Depression &amp; Mood:</span>
+                            <span class="progress-note-destinations">Affect, mood stability, depressive symptoms, anxiety, suicide risk</span>
+                          </label>
                           <div class="heads-quick-chips">
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_suicide_mood', 'Euthymic mood, good affect. Denies depression, anxiety, or sleep disturbances.')">Euthymic / Denies depression</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_suicide_mood', 'Explicitly denies suicidal ideation, intent, plan, or history of self-harm.')">Denies suicidal ideation</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_suicide_mood', 'Reports mild situational stress related to work/illness; coping well.')">Mild situational stress</button>
                             <button type="button" class="heads-chip" onclick="applyHeadsChip('hx_social_suicide_mood', 'Normal neonatal behavioral adaptation, responsive to comfort.')">Normal infant behavior</button>
                           </div>
-                          <textarea id="hx_social_suicide_mood" name="hx_social_suicide_mood" rows="3" class="input-block-level" oninput="syncHeadsToSocialSummary()" style="font-size:12px; margin-bottom:0; resize:vertical;" placeholder="Depressive symptoms, anxiety, mood stability, sleep disturbances, self-harm, suicidal ideation..."></textarea>
+                          <textarea id="hx_social_suicide_mood" name="hx_social_suicide_mood" rows="3" class="input-block-level progress-note-input" oninput="syncHeadsToSocialSummary()" placeholder="Document depressive symptoms, anxiety, mood stability, sleep disturbances, self-harm, suicidal ideation..."></textarea>
                         </div>
 
                       </div>
@@ -2303,12 +2250,12 @@
                     <!-- 2. Combined Narrative / Legacy Summary View (Always kept in sync) -->
                     <div id="heads-narrative-view" style="display:none; margin-bottom:12px;">
                       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <label for="hx_social" style="margin:0; font-weight:700; font-size:12px; color:#334155;">
-                          Combined Personal &amp; Social Narrative Summary
+                        <label class="progress-note-header" for="hx_social" style="margin:0;">
+                          <span class="progress-note-title">Combined Personal &amp; Social Narrative Summary:</span>
+                          <span class="progress-note-destinations">Auto-synthesized from HEADS fields (or editable directly)</span>
                         </label>
-                        <span style="font-size:11px; color:#64748b;">Auto-synthesized from HEADS fields (or editable directly)</span>
                       </div>
-                      <textarea id="hx_social" name="hx_social" rows="5" class="input-block-level"
+                      <textarea id="hx_social" name="hx_social" rows="5" class="input-block-level progress-note-input"
                         placeholder="Combined social history narrative summary..."></textarea>
                     </div>
 
