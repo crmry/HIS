@@ -1491,7 +1491,7 @@ if (typeof window !== 'undefined') {
     function neoPatientRecord() {
       return {
         id: NEO_PATIENT_ID,
-        seedVersion: 7,
+        seedVersion: 9,
         createdAt: '2026-10-11T08:30:00+08:00',
         updatedAt: '2026-10-19T13:30:00+08:00',
         data: {
@@ -1504,7 +1504,7 @@ if (typeof window !== 'undefined') {
           middle_name: 'ESPINOSA',
           birthdate: '2026-10-11',
           birth_time: '08:30',
-          gender: 'Undetermined',
+          gender: 'Male',
           age: '2 days (Neonate)',
           civil_status: 'Child',
           mother_patient_id: 'patient_ob_maria',
@@ -1581,8 +1581,8 @@ if (typeof window !== 'undefined') {
           final_diagnosis: 'Z38.0 - Single liveborn infant, born in hospital, term, appropriate for gestational age (AGA)',
           progress_notes_subjective: 'Day 2 of life; breastfeeding well every 2-3 hours on demand with good latch; passed meconium x 3 and voided clear urine x 4; no fever, no vomiting, no lethargy.',
           progress_notes_objective: 'Temp 36.8°C, HR 140 bpm, RR 44 cpm, SpO2 99% in room air. Weight 3.08 kg (physiological 2.2% weight loss, normal). Anicteric sclerae, pink skin. Umbilicus clean and dry. Normal neonatal reflexes.',
-          progress_notes_assessment: 'Day 2 of Life Male Neonate; Term (39 weeks AOG) Appropriate for Gestational Age (AGA); Stable Rooming-In Course on Exclusive Breastfeeding.',
-          progress_notes: 'Day 2 of Life Male Neonate; Term (39 weeks AOG) Appropriate for Gestational Age (AGA); Stable Rooming-In Course on Exclusive Breastfeeding. Continue rooming-in with exclusive breastfeeding on demand; maintain dry umbilical cord care; schedule Expanded Newborn Screening (ENBS) at 48 hours; anticipate routine discharge home with mother upon pediatrician clearance.',
+          progress_notes_assessment: 'Day 2 of Life Male Neonate; Term (39 weeks AOG) Appropriate for Gestational Age (AGA); Stable Rooming-In Course on Exclusive Breastfeeding. Anatomical male phenotype confirmed.',
+          progress_notes: 'Day 2 of Life Male Neonate; Term (39 weeks AOG) AGA; Stable Rooming-In Course on Exclusive Breastfeeding. [Diagnostic Confirmation]: External genitalia examination confirms normal male phenotype (bilateral descended testes within rugated scrotum, normal penile dimensions, orthotopic urethral meatus). Initial delivery ambiguous/unconfirmed notation resolved to confirmed Male (Boy). For pediatric growth charts, WHO Boys standards apply; Tanner staging evaluated via Male Protocol (Genitalia & Pubic Hair). Continue rooming-in with exclusive breastfeeding on demand; maintain dry umbilical cord care; complete ENBS at 48 hours; routine discharge home upon pediatrician clearance.',
           encounters: [
             {
               date: '2026-10-13',
@@ -1593,9 +1593,9 @@ if (typeof window !== 'undefined') {
               prc_license: '0102938',
               is_current: true,
               status_tag: 'Inpatient Rounding',
-              diagnosis: 'Z38.0 - Single liveborn infant, born in hospital (vaginal delivery)',
-              patient_record: 'Day 2 neonatal surveillance and rooming-in progress evaluation',
-              results: 'Newborn Hearing Screening Test: Pass bilaterally; CCHD Pulse Oximetry: Pass (pre-ductal 99%, post-ductal 98%); ENBS filter paper scheduled.',
+              diagnosis: 'Z38.0 - Single liveborn infant, term, AGA • Confirmed Male infant',
+              patient_record: 'Day 2 neonatal surveillance and rooming-in progress evaluation. Diagnostic confirmation of male phenotype.',
+              results: 'Diagnostic Confirmation: Male external genitalia verified with descended bilateral testes. Newborn Hearing Screening Test: Pass bilaterally; CCHD Pulse Oximetry: Pass (pre-ductal 99%, post-ductal 98%); ENBS filter paper scheduled.',
               vital_signs: [
                 { dateTime: '2026-10-13T08:00:00+08:00', bp: '68/42', hr: '140', rr: '44', temp: '36.8', wt: '3.08', ht: '50', weight: '3.08', height: '50', spo2: '99', o2: '99' }
               ],
@@ -1622,6 +1622,36 @@ if (typeof window !== 'undefined') {
                 chief_complaint: 'Routine newborn clinical care and rooming-in surveillance',
                 history: 'Male infant delivered at 39 weeks AOG via uncomplicated vaginal delivery to Maria Clara Santos.',
                 final_diagnosis: 'Z38.0 - Single liveborn infant, born in hospital, term, AGA'
+              },
+              examinations: []
+            },
+            {
+              date: '2026-10-11',
+              time: '08:30 AM',
+              registry: 'IP',
+              service: 'Delivery Room / Nursery',
+              physician: 'Andrea Reyes, MD',
+              prc_license: '0102938',
+              is_current: false,
+              status_tag: 'Delivery / Immediate Newborn Care',
+              diagnosis: 'Z38.0 - Single liveborn infant, born in hospital • Initial unconfirmed phenotype (transient marked perineal edema)',
+              patient_record: 'Immediate newborn care following vaginal delivery. Initial delivery room staging notation: external genitalia obscured by transient marked physiological perineal edema; sex unconfirmed at birth pending resolution and pediatric re-evaluation.',
+              results: 'APGAR Scores: 8 at 1 min, 9 at 5 mins, 10 at 10 mins. Ballard Score: 38 (39 weeks AOG, AGA). Initial external genitalia evaluation deferred pending resolution of tissue edema.',
+              vital_signs: [
+                { dateTime: '2026-10-11T08:30:00+08:00', bp: '65/40', hr: '144', rr: '46', temp: '36.7', wt: '3.15', ht: '50', weight: '3.15', height: '50', spo2: '98', o2: '98' }
+              ],
+              medications: [
+                { id: 'med-neo-del-1', name: 'Phytomenadione (Vitamin K1) 1 mg / 0.5 mL ampule', quantity: '1 ampule', dosage: '1 mg', frequency: 'Single dose', timing: 'At birth', period: 'Dose', duration: '1 dose', route: 'Intramuscular (IM) Right vastus lateralis', indication: 'Hemorrhagic disease of the newborn prophylaxis', started: '2026-10-11T08:35:00+08:00', doses24h: '1 dose', status: 'Completed / Given', doctor: 'Andrea Reyes, MD', nurse: 'Andrea Reyes, MD' },
+                { id: 'med-neo-del-2', name: 'Erythromycin 0.5% ophthalmic ointment', quantity: '1 tube', dosage: '1 cm ribbon per eye', frequency: 'Single dose', timing: 'At birth', period: 'Dose', duration: '1 dose', route: 'Ophthalmic (OU) both eyes', indication: 'Neonatal ophthalmia prophylaxis', started: '2026-10-11T08:40:00+08:00', doses24h: '1 dose', status: 'Completed / Given', doctor: 'Andrea Reyes, MD', nurse: 'Andrea Reyes, MD' }
+              ],
+              orders: [
+                { text: 'Immediate newborn care: initiate EINC protocol, dry thoroughly, provide warmth, promote early latching.', dateTime: '2026-10-11T08:30:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 08:30 AM' },
+                { text: 'Transfer mother and baby to Rooming-in Nursery for ongoing surveillance; re-evaluate external genitalia once perineal edema resolves.', dateTime: '2026-10-11T08:35:00+08:00', cared: ['C'], timeSignature: 'Elena M. Ramos, RN\nPRC Lic. No.: 0084512\n10/11/2026 08:35 AM' }
+              ],
+              clinical_record: {
+                chief_complaint: 'Immediate newborn delivery care and neonatal stabilization',
+                history: 'Infant delivered at 39 weeks AOG via uncomplicated spontaneous vaginal delivery to Maria Clara Santos.',
+                final_diagnosis: 'Z38.0 - Single liveborn infant, born in hospital'
               },
               examinations: []
             }
@@ -1903,7 +1933,7 @@ if (typeof window !== 'undefined') {
       var neoIndex = records.findIndex(function (record) { return record.id === NEO_PATIENT_ID; });
       if (neoIndex < 0) {
         records.splice(3, 0, neoPatientRecord());
-      } else if (Number(records[neoIndex].seedVersion || 0) < 7 || !records[neoIndex].data.hx_social_home) {
+      } else if (Number(records[neoIndex].seedVersion || 0) < 9 || !records[neoIndex].data.hx_social_home) {
         records[neoIndex] = neoPatientRecord();
       }
       try {

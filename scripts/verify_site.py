@@ -1263,11 +1263,11 @@ async def scan_single_target(browser_ws, file_url):
                     const fRows = tannerTable.querySelectorAll('tbody tr');
                     if (fRows.length !== 2) return 'Female protocol must render exactly 2 rows (breast and pubic hair)';
 
-                    // If loaded patient is patient_neo_santos, verify sex is Undetermined
+                    // If loaded patient is patient_neo_santos, verify sex is Male (Boy)
                     if (window.location.search.includes('patient=patient_neo_santos')) {
                         const sexInput = document.getElementById('growth-input-sex');
-                        if (!sexInput || sexInput.value !== 'undetermined') {
-                            return 'patient_neo_santos should automatically resolve sex to undetermined';
+                        if (!sexInput || sexInput.value !== 'male') {
+                            return 'patient_neo_santos should resolve sex to male';
                         }
                     }
 

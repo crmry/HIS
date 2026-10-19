@@ -1011,7 +1011,11 @@
       if (rawSex.indexOf('male') !== -1 && rawSex.indexOf('female') === -1) {
         sex = 'male';
       } else if (rawSex.indexOf('undetermined') !== -1 || rawSex.indexOf('ambiguous') !== -1 || rawSex.indexOf('intersex') !== -1) {
-        sex = 'undetermined';
+        if ((d.first_name && d.first_name.toUpperCase().indexOf('BOY') !== -1) || (d.last_name && d.last_name.toUpperCase().indexOf('BOY') !== -1)) {
+          sex = 'male';
+        } else {
+          sex = 'undetermined';
+        }
       }
       document.getElementById('growth-pat-sex').textContent = sex === 'male' ? 'Male' : (sex === 'undetermined' ? 'Undetermined' : 'Female');
       document.getElementById('growth-input-sex').value = sex;
