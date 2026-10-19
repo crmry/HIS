@@ -358,6 +358,12 @@ async def scan_single_target(browser_ws, file_url):
                     socTabLink.click();
                     const headsGridView = document.getElementById('heads-grid-view');
                     if (!headsGridView) return 'heads-grid-view container missing in #hx-social';
+                    const headsContainer = headsGridView.querySelector('.heads-grid-container');
+                    if (!headsContainer) return '.heads-grid-container missing in heads-grid-view';
+                    const compStyle = window.getComputedStyle(headsContainer);
+                    if (compStyle.flexDirection !== 'column' && compStyle.display !== 'flex') {
+                        return 'heads-grid-container should use full-width flex column layout matching progress notes';
+                    }
                     const headsFields = ['hx_social_home', 'hx_social_education_employment', 'hx_social_activities', 'hx_social_drugs', 'hx_social_sexuality', 'hx_social_suicide_mood'];
                     for (let hf of headsFields) {
                         const el = document.getElementById(hf);

@@ -1055,7 +1055,8 @@
     #dashlet-progress-notes {
       margin-bottom: 20px;
     }
-    .dashlet-progress-notes-container {
+    .dashlet-progress-notes-container,
+    .heads-grid-container {
       display: flex;
       flex-direction: column;
       gap: 12px;
