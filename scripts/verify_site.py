@@ -387,6 +387,8 @@ async def scan_single_target(browser_ws, file_url):
                     if (!growthBtn) return 'btn-open-growth-chart missing in specialized forms';
                     if (!growthBtn.getAttribute('onclick') || !growthBtn.getAttribute('onclick').includes('openGrowthChartsModule')) return 'btn-open-growth-chart onclick should be openGrowthChartsModule';
                     if (typeof window.openGrowthChartsModule !== 'function') return 'openGrowthChartsModule is not defined on window';
+                    const tannerBtn = document.getElementById('btn-open-tanner-staging');
+                    if (!tannerBtn) return 'btn-open-tanner-staging missing in specialized forms';
                     const ropSpecialBtn = document.getElementById('btn-open-rop-screening');
                     if (ropSpecialBtn) return 'btn-open-rop-screening should not be present in specialized forms dashlet';
                 }
@@ -1195,7 +1197,8 @@ async def scan_single_target(browser_ws, file_url):
                     const lhfaBtn = document.getElementById('btn-who-lhfa');
                     const wflhBtn = document.getElementById('btn-who-wflh');
                     const bmifaBtn = document.getElementById('btn-who-bmifa');
-                    if (!wfaBtn || !lhfaBtn || !wflhBtn || !bmifaBtn) {
+                    const tannerTabBtn = document.getElementById('btn-tab-tanner');
+                    if (!wfaBtn || !lhfaBtn || !wflhBtn || !bmifaBtn || !tannerTabBtn) {
                         return 'Growth Charts Module indicator buttons missing';
                     }
                     const svgContainer = document.getElementById('module-svg-container');
@@ -1210,6 +1213,45 @@ async def scan_single_target(browser_ws, file_url):
                         window.closeWhoGrowthReportModal();
                         if (reportModal.classList.contains('open')) return 'Growth Assessment Report modal failed to close';
                     }
+
+                    // Test Tanner Staging Interactive Functionality
+                    tannerTabBtn.click();
+                    const tannerSection = document.getElementById('section-tanner-staging');
+                    if (!tannerSection || tannerSection.style.display === 'none') {
+                        return 'Tanner Staging section not visible after clicking tab';
+                    }
+                    const tannerTable = document.getElementById('tanner-matrix-table');
+                    if (!tannerTable) return 'Tanner matrix table missing';
+                    
+                    // Click Female Breast Stage 3 and Pubic Hair Stage 3
+                    window.setTannerActiveScale('female');
+                    const fCellB3 = document.querySelector('td.tanner-ref-cell[data-scale="scale1"][data-stage="3"]');
+                    const fCellPH3 = document.querySelector('td.tanner-ref-cell[data-scale="scale2"][data-stage="3"]');
+                    if (!fCellB3 || !fCellPH3) return 'Female Tanner stage 3 cells missing';
+                    fCellB3.click();
+                    fCellPH3.click();
+                    let outputText = document.getElementById('tanner-output-text-display').textContent;
+                    if (!outputText.includes('breast begins to become more elevated') || !outputText.includes('hair becomes more coarse and curly')) {
+                        return 'Synthesized female Tanner description mismatch: ' + outputText;
+                    }
+
+                    // Test Male Scale Toggle and Scoring
+                    const maleScaleBtn = document.getElementById('btn-tanner-scale-male');
+                    if (!maleScaleBtn) return 'btn-tanner-scale-male missing';
+                    maleScaleBtn.click();
+                    const mCellG2 = document.querySelector('td.tanner-ref-cell[data-scale="scale1"][data-stage="2"]');
+                    const mCellPH1 = document.querySelector('td.tanner-ref-cell[data-scale="scale2"][data-stage="1"]');
+                    if (!mCellG2 || !mCellPH1) return 'Male Tanner cells missing';
+                    mCellG2.click();
+                    mCellPH1.click();
+                    outputText = document.getElementById('tanner-output-text-display').textContent;
+                    if (!outputText.includes('testicular volume between 1.6 and 6 ml') || !outputText.includes('No hair')) {
+                        return 'Synthesized male Tanner description mismatch: ' + outputText;
+                    }
+
+                    // Switch back to WFA curve
+                    wfaBtn.click();
+                    if (tannerSection.style.display !== 'none') return 'Tanner section should be hidden when switching to WFA';
                 }
 
                 return 'OK';

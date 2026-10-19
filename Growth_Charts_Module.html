@@ -266,6 +266,138 @@
     100% { transform: scale(2.2); opacity: 0; }
   }
 
+  /* ── Tanner Staging (Sexual Maturity Rating) Ballard Style Table ── */
+  .tanner-section {
+    margin-top: 10px;
+  }
+  .tanner-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--slate-200);
+    border-radius: 6px;
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    margin-bottom: 16px;
+  }
+  .tanner-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    min-width: 900px;
+  }
+  .tanner-table th {
+    background: #f1f5f9;
+    color: var(--slate-800);
+    font-weight: 700;
+    padding: 10px 12px;
+    border: 1px solid var(--slate-200);
+    text-align: left;
+  }
+  .tanner-table th.tanner-crit-col {
+    width: 180px;
+    background: #e2e8f0;
+    color: var(--slate-900);
+  }
+  .tanner-table th.tanner-stage-col {
+    width: 16%;
+    text-align: center;
+  }
+  .tanner-table th.tanner-score-col {
+    width: 100px;
+    text-align: center;
+    background: #e2e8f0;
+  }
+  .tanner-table td {
+    padding: 10px 12px;
+    border: 1px solid var(--slate-200);
+    vertical-align: top;
+  }
+  .tanner-table td.tanner-crit-cell {
+    background: #f8fafc;
+    font-weight: 700;
+    color: var(--slate-800);
+  }
+  .tanner-ref-cell {
+    cursor: pointer;
+    background: #ffffff;
+    transition: all 0.15s ease;
+    user-select: none;
+    position: relative;
+  }
+  .tanner-ref-cell:hover {
+    background: #f0fdf4 !important;
+    border-color: #86efac !important;
+  }
+  .tanner-ref-cell.tanner-selected {
+    background: #ecfdf5 !important;
+    border: 2px solid #16a34a !important;
+    box-shadow: 0 0 0 1px #16a34a, 0 1px 3px rgba(22, 163, 74, 0.15) !important;
+  }
+  .tanner-cell-stage-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10.5px;
+    font-weight: 800;
+    color: #1b4d3e;
+    background: #e6f4ea;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .tanner-selected .tanner-cell-stage-badge {
+    background: #16a34a;
+    color: #ffffff;
+  }
+  .tanner-cell-desc {
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: var(--slate-700);
+  }
+  .tanner-selected .tanner-cell-desc {
+    color: #064e3b;
+    font-weight: 600;
+  }
+  .tanner-score-cell {
+    text-align: center;
+    vertical-align: middle !important;
+    background: #f8fafc;
+  }
+  .tanner-score-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 800;
+    background: var(--slate-100);
+    color: var(--slate-400);
+    border: 1px solid var(--slate-200);
+    min-width: 48px;
+    text-align: center;
+  }
+  .tanner-score-badge.scored {
+    background: #1b4d3e;
+    color: #ffffff;
+    border-color: #14382d;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  }
+  .tanner-check-pill {
+    display: none;
+    font-size: 9.5px;
+    font-weight: 800;
+    color: #16a34a;
+    background: #ffffff;
+    border: 1px solid #86efac;
+    padding: 1px 5px;
+    border-radius: 10px;
+    float: right;
+  }
+  .tanner-selected .tanner-check-pill {
+    display: inline-block;
+  }
+
   /* ── WHO Growth Report Modal ── */
   .who-report-backdrop {
     display: none;
@@ -432,42 +564,141 @@
             <button type="button" class="btn-secondary" id="btn-who-lhfa" onclick="switchModuleChartType('lhfa')">Length-for-Age (0–5y)</button>
             <button type="button" class="btn-secondary" id="btn-who-wflh" onclick="switchModuleChartType('wflh')">Weight-for-Length (0–5y)</button>
             <button type="button" class="btn-secondary" id="btn-who-bmifa" onclick="switchModuleChartType('bmifa')">BMI-for-Age (5–19y)</button>
+            <button type="button" class="btn-secondary" id="btn-tab-tanner" onclick="switchModuleChartType('tanner')"><i class="icon-user-md"></i> Tanner Staging (SMR)</button>
           </div>
           <div style="display:flex; align-items:center; gap:8px;">
             <span id="chart-indicator-title" style="font-weight:700; color:var(--slate-800); font-size:12.5px;">Weight-for-Age GIRLS • Birth to 5 years (z-scores)</span>
           </div>
         </div>
 
-        <!-- Clinical Assessment Result Banner -->
-        <div class="assessment-card" id="module-assessment-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span id="module-status-badge" class="status-badge">NORMAL • APPROPRIATE NUTRITIONAL STATUS</span>
-              <span id="module-curve-source" style="background:#e0f2fe; color:#0369a1; font-weight:700; font-size:11px; padding:2px 8px; border-radius:4px; border:1px solid #bae6fd;">
-                WHO Growth Standards
-              </span>
+        <!-- 1. WHO GROWTH CURVES SECTION -->
+        <div id="section-who-curves">
+          <!-- Clinical Assessment Result Banner -->
+          <div class="assessment-card" id="module-assessment-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span id="module-status-badge" class="status-badge">NORMAL • APPROPRIATE NUTRITIONAL STATUS</span>
+                <span id="module-curve-source" style="background:#e0f2fe; color:#0369a1; font-weight:700; font-size:11px; padding:2px 8px; border-radius:4px; border:1px solid #bae6fd;">
+                  WHO Growth Standards
+                </span>
+              </div>
+              <div style="font-size:11px; color:var(--slate-500);" id="module-audit-time">Recorded Entry</div>
             </div>
-            <div style="font-size:11px; color:var(--slate-500);" id="module-audit-time">Recorded Entry</div>
+            <div style="display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--slate-700);">
+              <div><strong>Active Curve:</strong> <span id="module-curve-name">Weight-for-Age (0–5y)</span></div>
+              <div><strong>Recorded Z-Score:</strong> <span id="module-zscore-val" style="font-weight:700; color:var(--med-green);">-0.12 SD</span></div>
+              <div><strong>Percentile:</strong> <span id="module-percentile-val">~45th Percentile</span></div>
+              <div><strong>Clinical Interpretation:</strong> <span id="module-interp-val">Normal weight within standard healthy range (-2 SD to +1 SD).</span></div>
+            </div>
           </div>
-          <div style="display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--slate-700);">
-            <div><strong>Active Curve:</strong> <span id="module-curve-name">Weight-for-Age (0–5y)</span></div>
-            <div><strong>Recorded Z-Score:</strong> <span id="module-zscore-val" style="font-weight:700; color:var(--med-green);">-0.12 SD</span></div>
-            <div><strong>Percentile:</strong> <span id="module-percentile-val">~45th Percentile</span></div>
-            <div><strong>Clinical Interpretation:</strong> <span id="module-interp-val">Normal weight within standard healthy range (-2 SD to +1 SD).</span></div>
+
+          <!-- Dynamic SVG Vector Graph Stage -->
+          <div class="who-svg-container" id="module-svg-container">
+            <!-- Dynamically generated SVG with WHO curves & patient dot -->
+          </div>
+
+          <!-- Preterm / Neonate Reference Notice -->
+          <div style="margin-top:16px; padding:10px 14px; background:#f8fafc; border:1px solid var(--slate-200); border-radius:4px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div style="font-size:11.5px; color:var(--slate-600);">
+              <i class="icon-info-sign"></i> <strong>Preterm &amp; Intrauterine Notice:</strong> For preterm neonates (&lt;37 weeks gestational age) assessed prior to term corrected age, utilize the <strong>Lubchenco</strong> and <strong>Fenton Preterm Growth Charts</strong> inside the Neonatal Clinical Module.
+            </div>
+            <a href="Neonate_Clinical_Module.html" class="btn-secondary" style="font-size:11px; padding:3px 8px;"><i class="icon-arrow-right"></i> Open Lubchenco &amp; Fenton in Neonate Module</a>
           </div>
         </div>
 
-        <!-- Dynamic SVG Vector Graph Stage -->
-        <div class="who-svg-container" id="module-svg-container">
-          <!-- Dynamically generated SVG with WHO curves & patient dot -->
-        </div>
+        <!-- 2. TANNER STAGING SECTION (SEXUAL MATURITY RATING) -->
+        <div id="section-tanner-staging" style="display:none;" class="tanner-section">
 
-        <!-- Preterm / Neonate Reference Notice -->
-        <div style="margin-top:16px; padding:10px 14px; background:#f8fafc; border:1px solid var(--slate-200); border-radius:4px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-          <div style="font-size:11.5px; color:var(--slate-600);">
-            <i class="icon-info-sign"></i> <strong>Preterm &amp; Intrauterine Notice:</strong> For preterm neonates (&lt;37 weeks gestational age) assessed prior to term corrected age, utilize the <strong>Lubchenco</strong> and <strong>Fenton Preterm Growth Charts</strong> inside the Neonatal Clinical Module.
+          <!-- Scale Protocol Selector Toolbar -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding:10px 14px; background:#f8fafc; border:1px solid var(--slate-200); border-radius:6px;">
+            <div>
+              <div style="font-size:12.5px; font-weight:700; color:var(--med-green-dark); display:flex; align-items:center; gap:6px;">
+                <i class="icon-user-md"></i> Tanner Staging Assessment (Sexual Maturity Rating &mdash; SMR)
+              </div>
+              <div style="font-size:11px; color:var(--slate-500); margin-top:2px;">
+                Standardized 5-Stage Pubertal Maturity Protocol &bull; Click any reference cell to score pubertal stage
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:11px; font-weight:700; color:var(--slate-600); text-transform:uppercase;">Protocol Scale:</span>
+              <div class="btn-group" style="display:inline-flex; gap:4px;">
+                <button type="button" class="btn-secondary active" id="btn-tanner-scale-female" onclick="setTannerActiveScale('female')">
+                  <i class="icon-female"></i> Female Scale (Breast &amp; Pubic Hair)
+                </button>
+                <button type="button" class="btn-secondary" id="btn-tanner-scale-male" onclick="setTannerActiveScale('male')">
+                  <i class="icon-male"></i> Male Scale (Genitalia &amp; Pubic Hair)
+                </button>
+              </div>
+            </div>
           </div>
-          <a href="Neonate_Clinical_Module.html" class="btn-secondary" style="font-size:11px; padding:3px 8px;"><i class="icon-arrow-right"></i> Open Lubchenco &amp; Fenton in Neonate Module</a>
+
+          <!-- Tanner Output & Narrative Synthesis Summary Card -->
+          <div class="assessment-card" id="tanner-output-card" style="border-left:4px solid var(--med-green); margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--slate-200);">
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <span class="status-badge" id="tanner-overall-badge">TANNER STAGE: NOT YET SCORED</span>
+                <span id="tanner-maturity-rating" style="background:#f1f5f9; color:var(--slate-700); font-weight:700; font-size:11.5px; padding:3px 10px; border-radius:4px; border:1px solid var(--slate-300);">
+                  Awaiting Selection
+                </span>
+                <span id="tanner-patient-sex-badge" style="background:#e0f2fe; color:#0369a1; font-weight:700; font-size:11px; padding:2px 8px; border-radius:4px; border:1px solid #bae6fd;">
+                  Female Scale
+                </span>
+              </div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button type="button" class="btn-secondary" id="btn-copy-tanner-output" onclick="copyTannerOutputToClipboard()" style="font-size:11.5px; padding:4px 10px;">
+                  <i class="icon-copy"></i> Copy Description
+                </button>
+                <button type="button" class="btn-secondary" id="btn-clear-tanner" onclick="clearTannerStaging()" style="font-size:11.5px; padding:4px 10px;">
+                  <i class="icon-remove"></i> Clear
+                </button>
+                <button type="button" class="btn-primary" id="btn-save-tanner" onclick="saveTannerAssessment()" style="font-size:11.5px; padding:4px 12px;">
+                  <i class="icon-save"></i> Save Assessment
+                </button>
+              </div>
+            </div>
+
+            <!-- Dynamic Synthesized Clinical Narrative Output -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <label style="font-size:11.5px; font-weight:700; color:var(--slate-800); margin:0;">
+                  Clinical Narrative Description (Synthesized Output):
+                </label>
+                <span id="tanner-copy-feedback" style="display:none; font-size:11px; color:#15803d; font-weight:700;">
+                  <i class="icon-ok"></i> Copied to clipboard!
+                </span>
+              </div>
+              <div id="tanner-output-text-display" style="padding:10px 14px; background:#f8fafc; border:1.5px solid var(--med-green); border-radius:4px; font-family:Arial, sans-serif; font-size:12.5px; color:#0f172a; line-height:1.5; min-height:46px;">
+                Click any stage cell below in the Breast Development / External Genitalia scale and Pubic Hair scale to generate description.
+              </div>
+            </div>
+          </div>
+
+          <!-- Ballard-Style Clickable Matrix Table -->
+          <div class="tanner-table-wrap">
+            <table class="tanner-table" id="tanner-matrix-table">
+              <thead>
+                <tr>
+                  <th class="tanner-crit-col">Pubertal Criterion</th>
+                  <th class="tanner-stage-col">Stage 1 (Prepubertal)</th>
+                  <th class="tanner-stage-col">Stage 2 (Early Puberty)</th>
+                  <th class="tanner-stage-col">Stage 3 (Mid-Puberty)</th>
+                  <th class="tanner-stage-col">Stage 4 (Late Puberty)</th>
+                  <th class="tanner-stage-col">Stage 5 (Adult Maturity)</th>
+                  <th class="tanner-score-col">Recorded Stage</th>
+                </tr>
+              </thead>
+              <tbody id="tanner-table-body">
+                <!-- Dynamically populated via renderTannerMatrix() -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Clinical Maturity Protocol Guidelines -->
+          <div style="padding:10px 14px; background:#f8fafc; border:1px solid var(--slate-200); border-radius:4px; font-size:11.5px; color:var(--slate-600); display:flex; gap:16px; flex-wrap:wrap;">
+            <div><strong>Clinical Reference:</strong> J.M. Tanner (1962) Sexual Maturity Rating. Assessment is based on distinct somatic development of primary and secondary sex characteristics.</div>
+            <div><strong>Documentation Note:</strong> Scores are recorded separately for breast/genital development and pubic hair distribution (e.g., B2 PH1 or G3 PH3).</div>
+          </div>
+
         </div>
 
       </div>
@@ -518,6 +749,17 @@
             <!-- Dynamically populated -->
           </tbody>
         </table>
+
+        <!-- Tanner Staging Report Block -->
+        <div id="rep-tanner-box" style="margin-top:14px; margin-bottom:14px; padding:10px 14px; background:#f8fafc; border:1px solid var(--slate-200); border-radius:4px; font-size:11.5px;">
+          <div style="font-weight:700; color:var(--med-green-dark); margin-bottom:4px; display:flex; justify-content:space-between;">
+            <span><i class="icon-user-md"></i> Sexual Maturity Rating (Tanner Staging): <strong id="rep-tanner-stage" style="color:#0f172a;">Prepubertal (Stage 1)</strong></span>
+            <span id="rep-tanner-protocol" style="font-weight:600; color:var(--slate-500);">Female Scale</span>
+          </div>
+          <div style="color:var(--slate-700); line-height:1.45;" id="rep-tanner-desc">
+            No pubertal assessment recorded.
+          </div>
+        </div>
 
         <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:flex-end;">
           <div style="font-size:11px; color:var(--slate-500);">
@@ -667,6 +909,11 @@
       if (backDash) backDash.href = 'dashboard.html?patient=' + pid;
 
       syncPatientVitalsIntoModule();
+
+      var tabParam = params.get('tab') || params.get('section');
+      if (tabParam === 'tanner' || tabParam === 'tanner_staging') {
+        switchModuleChartType('tanner');
+      }
     }
 
     function handlePatientSwitch(pid) {
@@ -715,16 +962,351 @@
       document.getElementById('growth-pat-age').textContent = ageMonths + ' mo';
 
       updateGrowthChartsModule();
+      loadTannerAssessment();
     }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       TANNER STAGING (SEXUAL MATURITY RATING — SMR) CONTROLLER
+       ══════════════════════════════════════════════════════════════════════ */
+    var TANNER_DATA = {
+      female: {
+        scale1: {
+          id: 'female_breast',
+          codePrefix: 'B',
+          name: 'Female Breast Development Scale',
+          subtitle: 'Glandular tissue, areolar diameter & papilla contour',
+          stages: [
+            { stage: 1, label: 'Stage 1 (B1)', desc: 'no glandular tissue: areola follows the skin contours of the chest' },
+            { stage: 2, label: 'Stage 2 (B2)', desc: 'breast bud forms, with small area of surrounding glandular tissue; areola begins to widen' },
+            { stage: 3, label: 'Stage 3 (B3)', desc: 'breast begins to become more elevated, and extends beyond the borders of the areola, which continues to widen but remains in contour with surrounding breast' },
+            { stage: 4, label: 'Stage 4 (B4)', desc: 'increased breast sizing and elevation; areola and papilla form a secondary mound projecting from the contour of the surrounding breast' },
+            { stage: 5, label: 'Stage 5 (B5)', desc: 'breast reaches final adult size; areola returns to contour of the surrounding breast, with a projecting central papilla' }
+          ]
+        },
+        scale2: {
+          id: 'female_pubic_hair',
+          codePrefix: 'PH',
+          name: 'Pubic Hair Scale (Female)',
+          subtitle: 'Escutcheon distribution, texture & thigh extension',
+          stages: [
+            { stage: 1, label: 'Stage 1 (PH1)', desc: 'No hair' },
+            { stage: 2, label: 'Stage 2 (PH2)', desc: 'small amount of long, downy hair with slight pigmentation at the base on the labia majora' },
+            { stage: 3, label: 'Stage 3 (PH3)', desc: 'hair becomes more coarse and curly, and begins to extend laterally' },
+            { stage: 4, label: 'Stage 4 (PH4)', desc: 'adult-like hair quality, extending across pubis but sparing medial thighs' },
+            { stage: 5, label: 'Stage 5 (PH5)', desc: 'hair extends to medial surface of the thighs' }
+          ]
+        }
+      },
+      male: {
+        scale1: {
+          id: 'male_genitalia',
+          codePrefix: 'G',
+          name: 'Male External Genitalia Scale',
+          subtitle: 'Testicular volume, scrotal skin, penile length & breadth',
+          stages: [
+            { stage: 1, label: 'Stage 1 (G1)', desc: 'testicular volume less than 1.5 ml; small penis' },
+            { stage: 2, label: 'Stage 2 (G2)', desc: 'testicular volume between 1.6 and 6 ml; skin on scrotum thins, reddens and enlarges; penis length unchanged' },
+            { stage: 3, label: 'Stage 3 (G3)', desc: 'testicular volume between 6 and 12 ml; scrotum enlarges further; penis begins to lengthen' },
+            { stage: 4, label: 'Stage 4 (G4)', desc: 'testicular volume between 12 and 20 ml; scrotum becomes larger and darkens; penis further increases in length and starts to increase in breadth' },
+            { stage: 5, label: 'Stage 5 (G5)', desc: 'testicular volume at least 20 ml; adult scrotum and penis' }
+          ]
+        },
+        scale2: {
+          id: 'male_pubic_hair',
+          codePrefix: 'PH',
+          name: 'Pubic Hair Scale (Male)',
+          subtitle: 'Escutcheon distribution, texture & thigh extension',
+          stages: [
+            { stage: 1, label: 'Stage 1 (PH1)', desc: 'No hair' },
+            { stage: 2, label: 'Stage 2 (PH2)', desc: 'small amount of long, downy hair with slight pigmentation at the base of the penis and scrotum' },
+            { stage: 3, label: 'Stage 3 (PH3)', desc: 'hair becomes more coarse and curly, and begins to extend laterally' },
+            { stage: 4, label: 'Stage 4 (PH4)', desc: 'adult-like hair quality, extending across pubis but sparing medial thighs' },
+            { stage: 5, label: 'Stage 5 (PH5)', desc: 'hair extends to medial surface of the thighs' }
+          ]
+        }
+      }
+    };
+
+    var tannerState = {
+      scaleType: 'female',
+      scale1: null,
+      scale2: null
+    };
+
+    function setTannerActiveScale(scaleType, preventReset) {
+      tannerState.scaleType = scaleType === 'male' ? 'male' : 'female';
+      var btnF = document.getElementById('btn-tanner-scale-female');
+      var btnM = document.getElementById('btn-tanner-scale-male');
+      if (btnF && btnM) {
+        if (tannerState.scaleType === 'female') {
+          btnF.classList.add('active');
+          btnM.classList.remove('active');
+        } else {
+          btnM.classList.add('active');
+          btnF.classList.remove('active');
+        }
+      }
+      if (!preventReset) {
+        tannerState.scale1 = null;
+        tannerState.scale2 = null;
+      }
+      renderTannerMatrix();
+      updateTannerOutput();
+    }
+    window.setTannerActiveScale = setTannerActiveScale;
+
+    function renderTannerMatrix() {
+      var tbody = document.getElementById('tanner-table-body');
+      if (!tbody) return;
+      var proto = TANNER_DATA[tannerState.scaleType] || TANNER_DATA.female;
+
+      var scales = [
+        { key: 'scale1', def: proto.scale1 },
+        { key: 'scale2', def: proto.scale2 }
+      ];
+
+      var html = scales.map(function(item) {
+        var scaleKey = item.key;
+        var def = item.def;
+        var curStage = tannerState[scaleKey];
+        var curCode = curStage !== null ? (def.codePrefix + curStage) : '—';
+
+        var cellsHtml = def.stages.map(function(st) {
+          var isSelected = curStage === st.stage;
+          return '<td class="tanner-ref-cell' + (isSelected ? ' tanner-selected' : '') + '" data-scale="' + scaleKey + '" data-stage="' + st.stage + '" onclick="tannerCellClick(this)" title="Click to select ' + st.label + '">' +
+            '<span class="tanner-check-pill"><i class="icon-ok"></i> Selected</span>' +
+            '<div class="tanner-cell-stage-badge">' + st.label + '</div>' +
+            '<div class="tanner-cell-desc">' + st.desc + '</div>' +
+            '</td>';
+        }).join('');
+
+        return '<tr>' +
+          '<td class="tanner-crit-cell">' +
+            '<div style="font-size:12px; font-weight:700; color:var(--med-green-dark);">' + def.name + '</div>' +
+            '<div style="font-size:10.5px; color:var(--slate-500); margin-top:2px; font-weight:normal;">' + def.subtitle + '</div>' +
+          '</td>' +
+          cellsHtml +
+          '<td class="tanner-score-cell">' +
+            '<span class="tanner-score-badge' + (curStage !== null ? ' scored' : '') + '" id="tanner-badge-' + scaleKey + '">' + curCode + '</span>' +
+          '</td>' +
+          '</tr>';
+      }).join('');
+
+      tbody.innerHTML = html;
+    }
+    window.renderTannerMatrix = renderTannerMatrix;
+
+    function tannerCellClick(cell) {
+      var scale = cell.getAttribute('data-scale');
+      var stage = parseInt(cell.getAttribute('data-stage'), 10);
+      if (!scale || isNaN(stage)) return;
+
+      if (tannerState[scale] === stage) {
+        tannerState[scale] = null;
+      } else {
+        tannerState[scale] = stage;
+      }
+
+      renderTannerMatrix();
+      updateTannerOutput();
+      autoSaveTannerAssessment();
+    }
+    window.tannerCellClick = tannerCellClick;
+
+    function updateTannerOutput() {
+      var proto = TANNER_DATA[tannerState.scaleType] || TANNER_DATA.female;
+      var s1Desc = '';
+      var s2Desc = '';
+
+      if (tannerState.scale1 !== null) {
+        var s1Item = proto.scale1.stages.find(function(s) { return s.stage === tannerState.scale1; });
+        if (s1Item) s1Desc = s1Item.desc;
+      }
+      if (tannerState.scale2 !== null) {
+        var s2Item = proto.scale2.stages.find(function(s) { return s.stage === tannerState.scale2; });
+        if (s2Item) s2Desc = s2Item.desc;
+      }
+
+      var parts = [];
+      if (s1Desc) parts.push(s1Desc);
+      if (s2Desc) parts.push(s2Desc);
+
+      var fullText = parts.join('; ');
+      var displayEl = document.getElementById('tanner-output-text-display');
+      if (displayEl) {
+        if (fullText) {
+          displayEl.textContent = fullText;
+          displayEl.style.color = '#0f172a';
+          displayEl.style.fontWeight = '600';
+        } else {
+          displayEl.textContent = 'Click any stage cell below in the Breast Development / External Genitalia scale and Pubic Hair scale to generate description.';
+          displayEl.style.color = 'var(--slate-500)';
+          displayEl.style.fontWeight = 'normal';
+        }
+      }
+
+      var overallBadge = document.getElementById('tanner-overall-badge');
+      var maturityBadge = document.getElementById('tanner-maturity-rating');
+      var sexBadge = document.getElementById('tanner-patient-sex-badge');
+      if (sexBadge) {
+        sexBadge.textContent = tannerState.scaleType === 'male' ? 'Male Scale (G & PH)' : 'Female Scale (B & PH)';
+      }
+
+      var s1Code = tannerState.scale1 !== null ? (proto.scale1.codePrefix + tannerState.scale1) : '—';
+      var s2Code = tannerState.scale2 !== null ? (proto.scale2.codePrefix + tannerState.scale2) : '—';
+
+      var b1Badge = document.getElementById('tanner-badge-scale1');
+      if (b1Badge) {
+        b1Badge.textContent = s1Code;
+        if (tannerState.scale1 !== null) b1Badge.classList.add('scored');
+        else b1Badge.classList.remove('scored');
+      }
+      var b2Badge = document.getElementById('tanner-badge-scale2');
+      if (b2Badge) {
+        b2Badge.textContent = s2Code;
+        if (tannerState.scale2 !== null) b2Badge.classList.add('scored');
+        else b2Badge.classList.remove('scored');
+      }
+
+      if (tannerState.scale1 !== null && tannerState.scale2 !== null) {
+        if (overallBadge) overallBadge.textContent = 'TANNER STAGE: ' + s1Code + ', ' + s2Code;
+        var maxStage = Math.max(tannerState.scale1, tannerState.scale2);
+        var ratings = {
+          1: 'Prepubertal (Stage 1)',
+          2: 'Early Puberty (Stage 2)',
+          3: 'Mid-Puberty (Stage 3)',
+          4: 'Late Puberty (Stage 4)',
+          5: 'Post-pubertal / Adult Maturity (Stage 5)'
+        };
+        if (maturityBadge) maturityBadge.textContent = ratings[maxStage] || ('Pubertal Stage ' + maxStage);
+      } else if (tannerState.scale1 !== null || tannerState.scale2 !== null) {
+        var activeCode = tannerState.scale1 !== null ? s1Code : s2Code;
+        if (overallBadge) overallBadge.textContent = 'TANNER STAGE: ' + activeCode + ' (Partial)';
+        if (maturityBadge) maturityBadge.textContent = 'Partially Scored (1/2 Scales)';
+      } else {
+        if (overallBadge) overallBadge.textContent = 'TANNER STAGE: NOT YET SCORED';
+        if (maturityBadge) maturityBadge.textContent = 'Awaiting Selection';
+      }
+    }
+    window.updateTannerOutput = updateTannerOutput;
+
+    function copyTannerOutputToClipboard() {
+      var displayEl = document.getElementById('tanner-output-text-display');
+      if (!displayEl) return;
+      var text = displayEl.textContent.trim();
+      if (!text || text.indexOf('Click any stage') === 0) return;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text);
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+
+      var feedback = document.getElementById('tanner-copy-feedback');
+      if (feedback) {
+        feedback.style.display = 'inline-block';
+        setTimeout(function() { feedback.style.display = 'none'; }, 2500);
+      }
+    }
+    window.copyTannerOutputToClipboard = copyTannerOutputToClipboard;
+
+    function clearTannerStaging() {
+      tannerState.scale1 = null;
+      tannerState.scale2 = null;
+      renderTannerMatrix();
+      updateTannerOutput();
+      autoSaveTannerAssessment();
+    }
+    window.clearTannerStaging = clearTannerStaging;
+
+    function autoSaveTannerAssessment() {
+      var key = 'HIS_TANNER_' + activePatientId;
+      var proto = TANNER_DATA[tannerState.scaleType] || TANNER_DATA.female;
+      var s1Code = tannerState.scale1 !== null ? (proto.scale1.codePrefix + tannerState.scale1) : null;
+      var s2Code = tannerState.scale2 !== null ? (proto.scale2.codePrefix + tannerState.scale2) : null;
+      var desc = document.getElementById('tanner-output-text-display') ? document.getElementById('tanner-output-text-display').textContent.trim() : '';
+      if (desc.indexOf('Click any stage') === 0) desc = '';
+
+      var dataToSave = {
+        patientId: activePatientId,
+        scaleType: tannerState.scaleType,
+        scale1Stage: tannerState.scale1,
+        scale2Stage: tannerState.scale2,
+        scale1Code: s1Code,
+        scale2Code: s2Code,
+        overallStage: (s1Code && s2Code) ? (s1Code + ', ' + s2Code) : (s1Code || s2Code || ''),
+        narrativeOutput: desc,
+        updatedAt: new Date().toISOString()
+      };
+      localStorage.setItem(key, JSON.stringify(dataToSave));
+    }
+
+    function saveTannerAssessment() {
+      autoSaveTannerAssessment();
+      var btn = document.getElementById('btn-save-tanner');
+      if (btn) {
+        var orig = btn.innerHTML;
+        btn.innerHTML = '<i class="icon-ok"></i> Saved!';
+        btn.style.background = '#15803d';
+        setTimeout(function() {
+          btn.innerHTML = orig;
+          btn.style.background = '';
+        }, 2000);
+      }
+    }
+    window.saveTannerAssessment = saveTannerAssessment;
+
+    function loadTannerAssessment() {
+      var key = 'HIS_TANNER_' + activePatientId;
+      var saved = null;
+      try {
+        saved = JSON.parse(localStorage.getItem(key));
+      } catch (e) { saved = null; }
+
+      var sex = (document.getElementById('growth-input-sex').value || 'female').toLowerCase();
+      var defaultScale = (sex === 'male') ? 'male' : 'female';
+
+      if (saved && saved.scaleType) {
+        tannerState.scaleType = saved.scaleType;
+        tannerState.scale1 = saved.scale1Stage !== undefined ? saved.scale1Stage : null;
+        tannerState.scale2 = saved.scale2Stage !== undefined ? saved.scale2Stage : null;
+      } else {
+        tannerState.scaleType = defaultScale;
+        tannerState.scale1 = null;
+        tannerState.scale2 = null;
+      }
+
+      setTannerActiveScale(tannerState.scaleType, true);
+    }
+    window.loadTannerAssessment = loadTannerAssessment;
 
     function switchModuleChartType(type) {
       currentModuleChartType = type;
-      document.querySelectorAll('#btn-who-wfa, #btn-who-lhfa, #btn-who-wflh, #btn-who-bmifa').forEach(function(b) {
+      document.querySelectorAll('#btn-who-wfa, #btn-who-lhfa, #btn-who-wflh, #btn-who-bmifa, #btn-tab-tanner').forEach(function(b) {
         b.classList.remove('active');
       });
-      var activeBtn = document.getElementById('btn-who-' + type);
+      var activeBtn = document.getElementById(type === 'tanner' ? 'btn-tab-tanner' : ('btn-who-' + type));
       if (activeBtn) activeBtn.classList.add('active');
-      updateGrowthChartsModule();
+
+      var whoSection = document.getElementById('section-who-curves');
+      var tannerSection = document.getElementById('section-tanner-staging');
+
+      if (type === 'tanner') {
+        if (whoSection) whoSection.style.display = 'none';
+        if (tannerSection) tannerSection.style.display = 'block';
+        document.getElementById('chart-indicator-title').textContent = 'Tanner Staging (Sexual Maturity Rating — SMR)';
+        renderTannerMatrix();
+        updateTannerOutput();
+      } else {
+        if (whoSection) whoSection.style.display = 'block';
+        if (tannerSection) tannerSection.style.display = 'none';
+        updateGrowthChartsModule();
+      }
     }
 
     function updateGrowthChartsModule() {
@@ -947,6 +1529,26 @@
           '<td>' + status + '</td>' +
           '</tr>';
       }).join('');
+
+      // Populate Tanner Staging Report Block
+      var tannerStageEl = document.getElementById('rep-tanner-stage');
+      var tannerProtoEl = document.getElementById('rep-tanner-protocol');
+      var tannerDescEl = document.getElementById('rep-tanner-desc');
+      if (tannerStageEl && tannerDescEl) {
+        var proto = TANNER_DATA[tannerState.scaleType] || TANNER_DATA.female;
+        if (tannerProtoEl) tannerProtoEl.textContent = tannerState.scaleType === 'male' ? 'Male Protocol (G & PH)' : 'Female Protocol (B & PH)';
+        var desc = document.getElementById('tanner-output-text-display') ? document.getElementById('tanner-output-text-display').textContent.trim() : '';
+        if (desc && desc.indexOf('Click any stage') === -1) {
+          tannerDescEl.textContent = desc;
+          var s1Code = tannerState.scale1 !== null ? (proto.scale1.codePrefix + tannerState.scale1) : '—';
+          var s2Code = tannerState.scale2 !== null ? (proto.scale2.codePrefix + tannerState.scale2) : '—';
+          var maturity = document.getElementById('tanner-maturity-rating') ? document.getElementById('tanner-maturity-rating').textContent.trim() : '';
+          tannerStageEl.textContent = s1Code + ', ' + s2Code + (maturity ? (' (' + maturity + ')') : '');
+        } else {
+          tannerStageEl.textContent = 'Not Scored';
+          tannerDescEl.textContent = 'No pubertal assessment recorded during this encounter.';
+        }
+      }
     }
 
     function closeWhoGrowthReportModal() {
