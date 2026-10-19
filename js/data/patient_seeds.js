@@ -1444,12 +1444,12 @@ if (typeof window !== 'undefined') {
         heart: 'Normal rate and regular rhythm, no murmurs',
         chestLungs: 'Clear breath sounds throughout, symmetric expansion',
         abdomen: 'Soft, non-distended, normoactive bowel sounds',
-        genitalia: 'Testes bilaterally descended in scrotum, rugae well formed',
+        genitalia: 'Ambiguous genitalia: atypical phallic structure, gonads not palpable in labioscrotal folds',
         anus: 'Patent, passed meconium within 12 hours',
         skin: 'Pink, warm, good turgor, mild vernix caseosa',
         extremities: 'Intact, normal range of motion, symmetrical movement',
         otherFindings: 'Active neonatal reflexes (Moro, sucking, rooting, grasp positive)',
-        sex: 'Male',
+        sex: 'Undetermined',
         nicuReason: '',
         nicuOthers: ''
       },
@@ -1473,9 +1473,9 @@ if (typeof window !== 'undefined') {
     function neoPatientRecord() {
       return {
         id: NEO_PATIENT_ID,
-        seedVersion: 5,
+        seedVersion: 6,
         createdAt: '2026-10-11T08:30:00+08:00',
-        updatedAt: '2026-10-13T09:00:00+08:00',
+        updatedAt: '2026-10-19T12:50:00+08:00',
         data: {
           hrn: '0000001926',
           philhealth_no: '06-029384712-4-01',
@@ -1486,7 +1486,7 @@ if (typeof window !== 'undefined') {
           middle_name: 'ESPINOSA',
           birthdate: '2026-10-11',
           birth_time: '08:30',
-          gender: 'Male',
+          gender: 'Undetermined',
           age: '2 days (Neonate)',
           civil_status: 'Child',
           mother_patient_id: 'patient_ob_maria',
@@ -1879,13 +1879,13 @@ if (typeof window !== 'undefined') {
       var neoIndex = records.findIndex(function (record) { return record.id === NEO_PATIENT_ID; });
       if (neoIndex < 0) {
         records.splice(3, 0, neoPatientRecord());
-      } else if (Number(records[neoIndex].seedVersion || 0) < 3) {
+      } else if (Number(records[neoIndex].seedVersion || 0) < 6) {
         records[neoIndex] = neoPatientRecord();
       }
       try {
         var neoStorageKey = 'HIS_NEONATE_' + NEO_PATIENT_ID;
         var existingNeo = safeParse(localStorage.getItem(neoStorageKey), null);
-        if (!existingNeo || !existingNeo.measurements) {
+        if (!existingNeo || !existingNeo.measurements || !existingNeo.physicalExam || existingNeo.physicalExam.sex !== 'Undetermined') {
           localStorage.setItem(neoStorageKey, JSON.stringify(neoSeedData));
         }
       } catch (e) {}
