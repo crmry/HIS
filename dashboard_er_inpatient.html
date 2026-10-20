@@ -10432,10 +10432,29 @@
     ];
 
     var MED_FREQUENCIES = [
-      'Once daily (OD)', 'Twice daily (BID)', 'Three times daily (TID)', 'Four times daily (QID)',
-      'Every 4 hours (Q4H)', 'Every 6 hours (Q6H)', 'Every 8 hours (Q8H)', 'Every 12 hours (Q12H)',
-      'At bedtime (HS)', 'Before meals (AC)', 'After meals (PC)', 'Every other day (QOD)',
-      'PRN (As needed)', 'NOW (Immediately / Once)', 'Others (Specify)'
+      'OD (8AM)',
+      'ODAC (6AM)',
+      'ODPC (9AM)',
+      'ODAM (8AM)',
+      'ODPM (8PM)',
+      'ODHS (8PM)',
+      'BID (8AM, 8PM)',
+      'BIDAC (6AM, 6PM)',
+      'BIDPC (9AM, 9PM)',
+      'TID (8AM, 1PM, 8PM)',
+      'TIDAC (6AM, 11AM, 6PM)',
+      'TIDPC (9AM, 2PM, 9PM)',
+      'QID (8AM, 12NN, 4PM, 8PM)',
+      '- (As specified by Attending Physician)',
+      'Q4H (4AM, 8AM, 12NN, 4PM, 8PM, 12AM)',
+      'Q6H (12AM, 6AM, 12PM, 6PM)',
+      'Q8H (8AM, 4PM, 12AM)',
+      'Q12H (12 hours after initial dose)',
+      'Q24H (24 hours after initial dose)',
+      'Q48H (48 hours after initial dose)',
+      'Q72H (72 hours after initial dose)',
+      'PRN (As needed)',
+      'Others (Specify)'
     ];
 
     var MED_DURATIONS = [
@@ -10872,7 +10891,7 @@
         '<td><input type="text" data-medication-field="preparation" value="' + esc((data && (data.preparation || data.dosageForm)) || '') + '" placeholder="e.g. 500 mg tablet, 250 mg/5 mL susp, 1 g vial" aria-label="Preparation"></td>' +
         '<td><div style="display:flex; gap:3px;"><input type="text" data-medication-field="dose" value="' + esc(doseVal) + '" placeholder="500" style="width:55%;" aria-label="Dose"><select data-medication-field="doseUnit" style="width:45%;" aria-label="Dose unit">' + renderSelectOptions(DOSE_UNITS, doseUnit || 'mg') + '</select></div></td>' +
         '<td><input type="text" data-medication-field="route" list="med-sample-routes" value="' + esc((data && data.route) || '') + '" placeholder="e.g. Oral (PO), Airway Inhalation" aria-label="Route"></td>' +
-        '<td><input type="text" data-medication-field="frequency" list="med-sample-frequencies" value="' + esc((data && (data.frequency || data.frequencyCustom)) || '') + '" placeholder="e.g. Once daily (OD), q20min nebulization" aria-label="Frequency"></td>' +
+        '<td><input type="text" data-medication-field="frequency" list="med-sample-frequencies" value="' + esc((data && (data.frequency || data.frequencyCustom)) || '') + '" placeholder="e.g. OD (8AM), Q8H (8AM, 4PM, 12AM)" aria-label="Frequency"></td>' +
         '<td><select data-medication-field="duration" aria-label="Duration">' + renderSelectOptions(MED_DURATIONS, data && data.duration, '-- Duration --') + '</select></td>' +
         '<td><input type="text" data-medication-field="precautions" value="' + esc((data && (data.precautions || data.remarks)) || '') + '" placeholder="Safety, monitoring, withholding..." aria-label="Drug Precautions / Safety Instructions"></td>' +
         '<td class="medication-remove"><button type="button" class="btn btn-danger btn-mini rm-medication" aria-label="Remove medication">&times;</button></td>';
