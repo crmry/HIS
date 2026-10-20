@@ -2551,9 +2551,7 @@
                   <span id="result-status-pill" style="background:#1b4d3e; color:#ffffff; font-weight:800; font-size:12px; padding:3px 10px; border-radius:4px; letter-spacing:0.3px;">
                     AGA • APPROPRIATE FOR GESTATIONAL AGE
                   </span>
-                  <span id="result-source-pill" style="background:#e0f2fe; color:#0369a1; font-weight:700; font-size:11px; padding:3px 8px; border-radius:4px; border:1px solid #bae6fd;">
-                    ✓ Live Patient Record
-                  </span>
+                  <span id="result-source-pill" style="display:none;"></span>
                   <span id="result-sex-pill" style="display:none;"></span>
                 </div>
                 <div style="font-size:11px; color:var(--slate-500);" id="result-timestamp"></div>
@@ -3517,17 +3515,8 @@ function updateAllGrowthCharts() {
   }
   const sourcePill = document.getElementById('result-source-pill');
   if (sourcePill) {
-    if (data.isExactInput) {
-      sourcePill.innerHTML = '<i class="icon-ok"></i> ✓ Exact Patient Input';
-      sourcePill.style.background = '#e0f2fe';
-      sourcePill.style.color = '#0369a1';
-      sourcePill.style.borderColor = '#bae6fd';
-    } else {
-      sourcePill.innerHTML = '<i class="icon-ok"></i> ✓ Live Patient Record';
-      sourcePill.style.background = '#ecfdf5';
-      sourcePill.style.color = '#047857';
-      sourcePill.style.borderColor = '#a7f3d0';
-    }
+    sourcePill.style.display = 'none';
+    sourcePill.textContent = data.isExactInput ? 'Exact Patient Input' : 'Live Patient Record';
   }
   const sexPill = document.getElementById('result-sex-pill');
   if (sexPill) {
