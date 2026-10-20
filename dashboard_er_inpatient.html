@@ -10874,7 +10874,7 @@
         '<td><input type="text" data-medication-field="route" list="med-sample-routes" value="' + esc((data && data.route) || '') + '" placeholder="e.g. Oral (PO), Airway Inhalation" aria-label="Route"></td>' +
         '<td><input type="text" data-medication-field="frequency" list="med-sample-frequencies" value="' + esc((data && (data.frequency || data.frequencyCustom)) || '') + '" placeholder="e.g. Once daily (OD), q20min nebulization" aria-label="Frequency"></td>' +
         '<td><select data-medication-field="duration" aria-label="Duration">' + renderSelectOptions(MED_DURATIONS, data && data.duration, '-- Duration --') + '</select></td>' +
-        '<td><input type="text" data-medication-field="precautions" list="med-sample-precautions" value="' + esc((data && (data.precautions || data.remarks)) || '') + '" placeholder="Safety, monitoring, withholding..." aria-label="Precautions"></td>' +
+        '<td><input type="text" data-medication-field="precautions" value="' + esc((data && (data.precautions || data.remarks)) || '') + '" placeholder="Safety, monitoring, withholding..." aria-label="Drug Precautions / Safety Instructions"></td>' +
         '<td class="medication-remove"><button type="button" class="btn btn-danger btn-mini rm-medication" aria-label="Remove medication">&times;</button></td>';
 
       attachMedicationRowListeners(row);
