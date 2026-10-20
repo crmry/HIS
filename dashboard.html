@@ -10532,7 +10532,7 @@
       'TIDAC (6AM, 11AM, 6PM)',
       'TIDPC (9AM, 2PM, 9PM)',
       'QID (8AM, 12NN, 4PM, 8PM)',
-      '- (Free Text)',
+      '- (Please specify)',
       'Q4H (4AM, 8AM, 12NN, 4PM, 8PM, 12AM)',
       'Q6H (12AM, 6AM, 12PM, 6PM)',
       'Q8H (8AM, 4PM, 12AM)',
@@ -10953,6 +10953,36 @@
           renderOrderSummary();
         });
       }
+
+      var freqInput = row.querySelector('[data-medication-field="frequency"]');
+      if (freqInput) {
+        var handleFreqCustom = function () {
+          var val = freqInput.value;
+          if (val === '- (Please specify)' || val === '-' || val === '- ') {
+            freqInput.value = '- ';
+            freqInput.placeholder = '(Please specify)';
+            freqInput.dataset.customMode = 'true';
+            try {
+              freqInput.focus();
+              freqInput.setSelectionRange(2, 2);
+            } catch (_) {}
+          } else if (val.startsWith('-')) {
+            freqInput.placeholder = '(Please specify)';
+            freqInput.dataset.customMode = 'true';
+          } else if (!val) {
+            if (freqInput.dataset.customMode === 'true') {
+              freqInput.placeholder = '(Please specify)';
+            } else {
+              freqInput.placeholder = 'e.g. OD (8AM), Q8H (8AM, 4PM, 12AM)';
+            }
+          } else {
+            freqInput.dataset.customMode = '';
+            freqInput.placeholder = 'e.g. OD (8AM), Q8H (8AM, 4PM, 12AM)';
+          }
+        };
+        freqInput.addEventListener('input', handleFreqCustom);
+        freqInput.addEventListener('change', handleFreqCustom);
+      }
     }
 
     function addScheduledMedRow(body, data) {
@@ -10972,12 +11002,17 @@
         if (m) { doseVal = m[1]; doseUnit = m[2]; }
       }
 
+      var rawFreq = (data && (data.frequency || data.frequencyCustom)) || '';
+      var isCustomFreq = rawFreq.startsWith('-') || rawFreq === '- (Please specify)';
+      var freqPlaceholder = isCustomFreq ? '(Please specify)' : 'e.g. OD (8AM), Q8H (8AM, 4PM, 12AM)';
+      var initialFreq = rawFreq === '- (Please specify)' ? '- ' : rawFreq;
+
       row.innerHTML =
         '<td><input type="text" data-medication-field="genericName" list="med-sample-generics" value="' + esc((data && (data.genericName || data.medication || data.drug)) || '') + '" placeholder="e.g. Paracetamol" aria-label="Generic name"></td>' +
         '<td><input type="text" data-medication-field="preparation" value="' + esc((data && (data.preparation || data.dosageForm)) || '') + '" placeholder="e.g. 500 mg tablet, 250 mg/5 mL susp, 1 g vial" aria-label="Preparation"></td>' +
         '<td><div style="display:flex; gap:3px;"><input type="text" data-medication-field="dose" value="' + esc(doseVal) + '" placeholder="500" style="width:55%;" aria-label="Dose"><select data-medication-field="doseUnit" style="width:45%;" aria-label="Dose unit">' + renderSelectOptions(DOSE_UNITS, doseUnit || 'mg') + '</select></div></td>' +
         '<td><input type="text" data-medication-field="route" list="med-sample-routes" value="' + esc((data && data.route) || '') + '" placeholder="e.g. Oral (PO), Airway Inhalation" aria-label="Route"></td>' +
-        '<td><input type="text" data-medication-field="frequency" list="med-sample-frequencies" value="' + esc((data && (data.frequency || data.frequencyCustom)) || '') + '" placeholder="e.g. OD (8AM), Q8H (8AM, 4PM, 12AM)" aria-label="Frequency"></td>' +
+        '<td><input type="text" data-medication-field="frequency" list="med-sample-frequencies" value="' + esc(initialFreq) + '" placeholder="' + esc(freqPlaceholder) + '"' + (isCustomFreq ? ' data-custom-mode="true"' : '') + ' aria-label="Frequency"></td>' +
         '<td><select data-medication-field="duration" aria-label="Duration">' + renderSelectOptions(MED_DURATIONS, data && data.duration, '-- Duration --') + '</select></td>' +
         '<td><input type="text" data-medication-field="precautions" value="' + esc((data && (data.precautions || data.remarks)) || '') + '" placeholder="Safety, monitoring, withholding..." aria-label="Drug Precautions / Safety Instructions"></td>' +
         '<td class="medication-remove"><button type="button" class="btn btn-danger btn-mini rm-medication" aria-label="Remove medication">&times;</button></td>';
