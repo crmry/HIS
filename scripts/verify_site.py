@@ -1134,6 +1134,11 @@ async def scan_single_target(browser_ws, file_url):
                         return 'Reason for Admission fields missing';
                     }
 
+                    // Verify Patient Master Context field is cleanly removed
+                    if (document.getElementById('neo_patient_demographics_display')) {
+                        return 'neo_patient_demographics_display was not removed';
+                    }
+
                     // Verify Screening Progress Notes card is cleanly removed
                     if (document.getElementById('screening-progress-notes-card')) {
                         return 'Screening Progress Notes card was not removed';
