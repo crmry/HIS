@@ -2041,8 +2041,9 @@
                   <div style="display:flex; gap:8px; align-items:center; height:32px; font-size:11.5px; flex-wrap:wrap;">
                     <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:3px;"><input type="radio" name="neo_rop_patient_type" id="neo_rop_type_ip" value="In-patient" checked> In-patient</label>
                     <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:3px;"><input type="radio" name="neo_rop_patient_type" id="neo_rop_type_op" value="Out-Patient"> Out-Patient</label>
-                    <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:3px;"><input type="radio" name="neo_rop_patient_type" id="neo_rop_type_new" value="New" checked> New</label>
-                    <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:3px;"><input type="radio" name="neo_rop_patient_type" id="neo_rop_type_fu" value="Follow-up"> Follow-up</label>
+                    <span style="color:#cbd5e1; margin:0 2px;">|</span>
+                    <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:3px;"><input type="radio" name="neo_rop_visit_type" id="neo_rop_type_new" value="New" checked> New</label>
+                    <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:3px;"><input type="radio" name="neo_rop_visit_type" id="neo_rop_type_fu" value="Follow-up"> Follow-up</label>
                   </div>
                 </div>
                 <div class="form-group">
@@ -3336,6 +3337,12 @@ document.querySelectorAll('.workspace-tab').forEach(btn => {
     if (btn.dataset.tab === 'tab-ballard') {
       if (typeof updateBallardGenitalsVisibility === 'function') {
         updateBallardGenitalsVisibility();
+      }
+    }
+
+    if (btn.dataset.tab === 'tab-screening') {
+      if (typeof syncPatientDataIntoRopForm === 'function') {
+        syncPatientDataIntoRopForm();
       }
     }
 
@@ -5339,6 +5346,7 @@ function collectNeonateData() {
         physician: document.getElementById('neo_rop_physician') ? document.getElementById('neo_rop_physician').value : '',
         examDate: document.getElementById('neo_rop_exam_date') ? document.getElementById('neo_rop_exam_date').value : '',
         patientType: (document.querySelector('input[name="neo_rop_patient_type"]:checked') || {}).value || 'In-patient',
+        visitType: (document.querySelector('input[name="neo_rop_visit_type"]:checked') || {}).value || 'New',
         dilatingDrops: document.getElementById('neo_rop_dilating_drops') ? document.getElementById('neo_rop_dilating_drops').value : '',
         timeStarted: document.getElementById('neo_rop_time_started') ? document.getElementById('neo_rop_time_started').value : '',
         history: {
@@ -5621,6 +5629,10 @@ function populateNeonateData(data) {
       const r = document.querySelector(`input[name="neo_rop_patient_type"][value="${sc.rop.patientType}"]`);
       if (r) r.checked = true;
     }
+    if (sc.rop.visitType) {
+      const rv = document.querySelector(`input[name="neo_rop_visit_type"][value="${sc.rop.visitType}"]`);
+      if (rv) rv.checked = true;
+    }
     if (document.getElementById('neo_rop_dilating_drops')) document.getElementById('neo_rop_dilating_drops').value = sc.rop.dilatingDrops || 'Tropicamide 0.5% + Phenylephrine 0.5%';
     if (document.getElementById('neo_rop_time_started')) document.getElementById('neo_rop_time_started').value = sc.rop.timeStarted || '09:00';
 
@@ -5649,9 +5661,8 @@ function populateNeonateData(data) {
       if (document.getElementById('neo_rop_ga')) document.getElementById('neo_rop_ga').value = sc.rop.metrics.ga || '';
       if (document.getElementById('neo_rop_bw')) document.getElementById('neo_rop_bw').value = sc.rop.metrics.bw || '';
       if (document.getElementById('neo_rop_pma')) document.getElementById('neo_rop_pma').value = sc.rop.metrics.pma || '';
-    } else {
-      syncPatientDataIntoRopForm();
     }
+    syncPatientDataIntoRopForm();
 
     // Staging table
     if (sc.rop.staging) {
@@ -6307,10 +6318,11 @@ function openRopScreeningModule() {
     }, 2000);
   }
   const appSel = document.getElementById('neo_rop_applicable');
-  if (appSel && !appSel.value) {
+  if (appSel && (!appSel.value || appSel.value === '')) {
     appSel.value = 'Yes';
     appSel.dispatchEvent(new Event('change'));
   }
+  syncPatientDataIntoRopForm();
   const initDate = document.getElementById('neo_rop_init_date');
   if (initDate && !initDate.value) {
     initDate.focus();
@@ -6325,28 +6337,172 @@ function openRopScreeningModule() {
 
 function syncPatientDataIntoRopForm() {
   const patient = (typeof getPatients === 'function' ? getPatients().find(p => p.id === currentPatientId) : null) || {};
+  const d = patient.data || {};
   const todayStr = new Date().toISOString().split('T')[0];
-  
+
+  // 1. Examination Date
   const examDateEl = document.getElementById('neo_rop_exam_date');
   if (examDateEl && !examDateEl.value) examDateEl.value = todayStr;
 
+  // 2. Patient Status (In-patient vs Out-Patient, New vs Follow-up)
+  const isIp = (d.case_type || '').toLowerCase().includes('inpatient') ||
+               (d.registration_type || '').toLowerCase().includes('inpatient') ||
+               (d.registration_type || '').toLowerCase().includes('newborn') ||
+               (d.ward_room || '').length > 0 ||
+               (currentPatientId && (currentPatientId.includes('neo') || currentPatientId.includes('er')));
+  const ipEl = document.getElementById('neo_rop_type_ip');
+  const opEl = document.getElementById('neo_rop_type_op');
+  if (ipEl && opEl) {
+    if (isIp) {
+      ipEl.checked = true;
+      opEl.checked = false;
+    } else {
+      opEl.checked = true;
+      ipEl.checked = false;
+    }
+  }
+
+  const newEl = document.getElementById('neo_rop_type_new');
+  const fuEl = document.getElementById('neo_rop_type_fu');
+  if (newEl && fuEl && !newEl.checked && !fuEl.checked) {
+    newEl.checked = true;
+  }
+
+  // 3. Date of Birth (DOB)
   const dobEl = document.getElementById('neo_rop_dob');
-  const dobVal = patient.dob || document.getElementById('neo_delivery_time')?.value?.split('T')[0] || '';
-  if (dobEl) dobEl.value = dobVal;
+  if (dobEl) {
+    let rawDob = d.birthdate || patient.birthdate || patient.dob || '';
+    if (!rawDob && document.getElementById('banner-bdate')) {
+      const bannerBdate = document.getElementById('banner-bdate').textContent.trim();
+      if (bannerBdate && bannerBdate !== '—') rawDob = bannerBdate;
+    }
+    if (!rawDob) {
+      const vitkDate = document.getElementById('neo_aftercare_vitk_date')?.value;
+      if (vitkDate) rawDob = vitkDate;
+    }
+    let isoDob = '';
+    if (rawDob) {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(rawDob)) {
+        isoDob = rawDob;
+      } else {
+        const parsed = new Date(rawDob);
+        if (!isNaN(parsed.getTime())) {
+          isoDob = parsed.toISOString().split('T')[0];
+        }
+      }
+    }
+    if (isoDob) {
+      dobEl.value = isoDob;
+    } else if (!dobEl.value) {
+      dobEl.value = todayStr;
+    }
+  }
 
+  // 4. Gestational Age (GA)
   const gaEl = document.getElementById('neo_rop_ga');
-  const gaVal = patient.gestationalAge || document.getElementById('neo_aog_weeks')?.value || document.getElementById('ballard-weeks-display')?.textContent || '29 wks';
-  if (gaEl) gaEl.value = gaVal.includes('wks') ? gaVal : (gaVal + ' wks');
+  if (gaEl) {
+    let rawGa = '';
+    if (d.aog_weeks) rawGa = String(d.aog_weeks);
+    else if (d.gestational_age) rawGa = String(d.gestational_age);
+    else if (d.gestationalAge) rawGa = String(d.gestationalAge);
+    else if (patient.gestationalAge) rawGa = String(patient.gestationalAge);
 
+    if (!rawGa) {
+      const maternalAog = document.getElementById('neo_aog_weeks')?.value;
+      if (maternalAog && maternalAog.trim()) rawGa = maternalAog.trim();
+    }
+    if (!rawGa) {
+      const ballardWeeks = document.getElementById('ballard-weeks-display')?.textContent || '';
+      if (ballardWeeks && !ballardWeeks.includes('Incomplete') && !ballardWeeks.includes('—')) {
+        const m = ballardWeeks.match(/(\d+(\.\d+)?)/);
+        if (m) rawGa = m[1];
+      }
+    }
+    if (!rawGa) {
+      const hxText = `${d.hx_present || ''} ${d.hx_past || ''}`;
+      const m = hxText.match(/(\d{2})\s*(?:weeks|wks|\s*wk\b)/i) || hxText.match(/at\s*(\d{2})\s*weeks\s*AOG/i);
+      if (m) rawGa = m[1];
+    }
+    if (!rawGa) {
+      rawGa = '29';
+    }
+    const cleanGa = rawGa.includes('wks') ? rawGa : (rawGa.trim() + ' wks');
+    gaEl.value = cleanGa;
+  }
+
+  // 5. Birth Weight (BW)
   const bwEl = document.getElementById('neo_rop_bw');
-  const wtVal = document.getElementById('neo_weight')?.value || patient.birthWeight || '1,250';
-  if (bwEl) bwEl.value = wtVal.includes('g') || wtVal.includes('kg') ? wtVal : (wtVal + ' g');
+  if (bwEl) {
+    let rawWt = document.getElementById('neo_weight')?.value || d.vs_weight || d.birth_weight || patient.birthWeight || '';
+    if (!rawWt) {
+      const hxPast = d.hx_past || '';
+      const m = hxPast.match(/Birth\s*Weight:\s*([0-9.,]+)\s*(kg|g)/i);
+      if (m) rawWt = m[1] + (m[2] ? ' ' + m[2] : '');
+    }
+    if (!rawWt) rawWt = '1,250 g';
 
+    let wtStr = String(rawWt).trim();
+    if (wtStr.toLowerCase().includes('kg')) {
+      const num = parseFloat(wtStr.replace(/[^0-9.]/g, ''));
+      if (!isNaN(num) && num > 0) wtStr = Math.round(num * 1000).toLocaleString() + ' g';
+    } else {
+      const num = parseFloat(wtStr.replace(/[^0-9.]/g, ''));
+      if (!isNaN(num) && num > 0) {
+        if (num < 10) {
+          wtStr = Math.round(num * 1000).toLocaleString() + ' g';
+        } else {
+          wtStr = Math.round(num).toLocaleString() + ' g';
+        }
+      }
+    }
+    bwEl.value = wtStr;
+  }
+
+  // 6. Age Postconception (PMA)
   calcRopPma();
 
+  // 7. Clinical History Checkboxes (Anemia, Sepsis, NEC, IVH)
+  const allDxText = `${d.chief_complaint || ''} ${d.hx_present || ''} ${d.hx_past || ''} ${JSON.stringify(d.diagnoses || [])} ${document.getElementById('neo_complications')?.value || ''}`.toLowerCase();
+  const sepsisStat = (document.getElementById('neo_dx_sepsis_status')?.value || '').toLowerCase();
+
+  if (document.getElementById('neo_rop_hx_anemia_curr')) {
+    if (allDxText.includes('anemia')) document.getElementById('neo_rop_hx_anemia_curr').checked = true;
+  }
+  if (document.getElementById('neo_rop_hx_sepsis_curr')) {
+    if (allDxText.includes('sepsis') || (sepsisStat && sepsisStat !== 'none' && sepsisStat !== '')) {
+      document.getElementById('neo_rop_hx_sepsis_curr').checked = true;
+    }
+  }
+  if (document.getElementById('neo_rop_hx_nec_curr')) {
+    if (allDxText.includes('nec') || allDxText.includes('enterocolitis')) document.getElementById('neo_rop_hx_nec_curr').checked = true;
+  }
+  if (document.getElementById('neo_rop_hx_ivh_curr')) {
+    if (allDxText.includes('ivh') || allDxText.includes('intraventricular')) document.getElementById('neo_rop_hx_ivh_curr').checked = true;
+  }
+
+  // 8. Applicable & OPD ROP Schedule
+  const appSel = document.getElementById('neo_rop_applicable');
+  if (appSel && (!appSel.value || appSel.value === '')) {
+    appSel.value = 'Yes';
+    appSel.dispatchEvent(new Event('change'));
+  }
+
+  const schedEl = document.getElementById('neo_rop_schedule');
+  if (schedEl && !schedEl.value) {
+    const dobVal = dobEl?.value;
+    if (dobVal) {
+      const dDate = new Date(dobVal);
+      if (!isNaN(dDate.getTime())) {
+        dDate.setDate(dDate.getDate() + 28);
+        schedEl.value = dDate.toISOString().split('T')[0];
+      }
+    }
+  }
+
+  // 9. Attending Physicians
   const docEl = document.getElementById('neo_rop_physician');
   const resEl = document.getElementById('neo_rop_resident');
-  const attendingVal = patient.attendingPhysician || docEl?.value || 'Dr. Andrea Reyes, MD';
+  const attendingVal = (d.attending_physician && d.attending_physician.name) || patient.attendingPhysician || docEl?.value || 'Dr. Andrea Reyes, MD';
   if (docEl && !docEl.value) docEl.value = attendingVal;
   if (resEl && !resEl.value) resEl.value = attendingVal;
 }
@@ -6355,7 +6511,12 @@ function calcRopPma() {
   const dobStr = document.getElementById('neo_rop_dob')?.value;
   const examStr = document.getElementById('neo_rop_exam_date')?.value || new Date().toISOString().split('T')[0];
   const gaStr = document.getElementById('neo_rop_ga')?.value || '';
-  const gaWeeks = parseFloat(gaStr.replace(/[^0-9.]/g, '')) || 29;
+
+  let gaWeeks = 29;
+  if (gaStr && !gaStr.includes('Incomplete') && !gaStr.includes('—')) {
+    const m = gaStr.match(/(\d+(\.\d+)?)/);
+    if (m) gaWeeks = parseFloat(m[1]);
+  }
 
   let chronWeeks = 0;
   if (dobStr && examStr) {
@@ -6367,7 +6528,7 @@ function calcRopPma() {
   const pmaTotal = Math.round(gaWeeks + chronWeeks);
   const pmaEl = document.getElementById('neo_rop_pma');
   if (pmaEl) {
-    pmaEl.value = pmaTotal > 0 ? (pmaTotal + ' wks') : (gaWeeks + ' wks');
+    pmaEl.value = pmaTotal > 0 ? (pmaTotal + ' wks') : (Math.round(gaWeeks) + ' wks');
   }
 }
 
@@ -6833,6 +6994,7 @@ function initNeonateWorkspace() {
       const baseline = buildPatientNeonateBaseline(patient);
       populateNeonateData(baseline);
     }
+    syncPatientDataIntoRopForm();
   }
   updateNeonateGrowthChartButtons();
   updateBallardGenitalsVisibility();

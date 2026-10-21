@@ -1491,7 +1491,7 @@ if (typeof window !== 'undefined') {
     function neoPatientRecord() {
       return {
         id: NEO_PATIENT_ID,
-        seedVersion: 9,
+        seedVersion: 10,
         createdAt: '2026-10-11T08:30:00+08:00',
         updatedAt: '2026-10-19T13:30:00+08:00',
         data: {
@@ -1506,6 +1506,9 @@ if (typeof window !== 'undefined') {
           birth_time: '08:30',
           gender: 'Male',
           age: '2 days (Neonate)',
+          aog_weeks: 39,
+          gestational_age: '39 weeks',
+          birth_weight: '3,150 g',
           civil_status: 'Child',
           mother_patient_id: 'patient_ob_maria',
           mother_name: 'MARIA CLARA ESPINOSA SANTOS',
@@ -1933,7 +1936,7 @@ if (typeof window !== 'undefined') {
       var neoIndex = records.findIndex(function (record) { return record.id === NEO_PATIENT_ID; });
       if (neoIndex < 0) {
         records.splice(3, 0, neoPatientRecord());
-      } else if (Number(records[neoIndex].seedVersion || 0) < 9 || !records[neoIndex].data.hx_social_home) {
+      } else if (Number(records[neoIndex].seedVersion || 0) < 10 || !records[neoIndex].data.hx_social_home) {
         records[neoIndex] = neoPatientRecord();
       }
       try {
