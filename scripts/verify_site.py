@@ -1134,21 +1134,16 @@ async def scan_single_target(browser_ws, file_url):
                         return 'Reason for Admission fields missing';
                     }
 
-                    // Verify Screening Progress Notes card exists and saveScreeningSub reflects note
-                    const spCard = document.getElementById('screening-progress-notes-card');
-                    const spList = document.getElementById('screening-progress-notes-list');
-                    if (!spCard || !spList) {
-                        return 'Screening Progress Notes card or list missing';
+                    // Verify Screening Progress Notes card is cleanly removed
+                    if (document.getElementById('screening-progress-notes-card')) {
+                        return 'Screening Progress Notes card was not removed';
                     }
                     const saveRorBtn = document.getElementById('btn-save-ror');
                     if (saveRorBtn) {
                         saveRorBtn.click();
-                        if (!spList.textContent.includes('Red Orange Reflex')) {
-                            return 'Screening save did not reflect in Progress Notes list';
-                        }
                     }
 
-                    // Verify ROP button under B. Retinopathy of Prematurity (ROP) and reflection in Progress Notes
+                    // Verify ROP button under B. Retinopathy of Prematurity (ROP) and click save
                     const ropCard = document.getElementById('section-card-rop');
                     if (!ropCard) return 'Section card for ROP missing in Screening tab';
                     const ropBtn = document.getElementById('btn-open-rop-screening');
@@ -1157,9 +1152,6 @@ async def scan_single_target(browser_ws, file_url):
                     const saveRopBtn = document.getElementById('btn-save-rop');
                     if (saveRopBtn) {
                         saveRopBtn.click();
-                        if (!spList.textContent.includes('Retinopathy of Prematurity')) {
-                            return 'ROP screening save did not reflect in Progress Notes list';
-                        }
                     }
 
                     // Verify Medical Futility dropdown has "Others" option
