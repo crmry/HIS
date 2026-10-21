@@ -1158,6 +1158,22 @@ async def scan_single_target(browser_ws, file_url):
                         saveRopBtn.click();
                     }
 
+                    // Verify ROP PDF Report Modal open and close
+                    const ropReportBtn = document.getElementById('btn-open-rop-report');
+                    const ropModal = document.getElementById('ropScreeningReportModal');
+                    if (ropReportBtn && ropModal) {
+                        ropReportBtn.click();
+                        if (window.getComputedStyle(ropModal).display === 'none') {
+                            return 'ropScreeningReportModal failed to open on clicking btn-open-rop-report';
+                        }
+                        if (typeof window.closeRopReportModal === 'function') {
+                            window.closeRopReportModal();
+                            if (window.getComputedStyle(ropModal).display !== 'none') {
+                                return 'ropScreeningReportModal failed to close';
+                            }
+                        }
+                    }
+
                     // Verify Medical Futility dropdown has "Others" option
                     const futilitySel = document.getElementById('neo_kmc_futility');
                     if (!futilitySel) return 'neo_kmc_futility dropdown missing';

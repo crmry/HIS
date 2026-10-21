@@ -865,13 +865,55 @@
     gap: 8px;
   }
 
+  /* ── ROP Screening Form Modal & PDF Print Styles ── */
+  .rop-report-backdrop {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.85);
+    z-index: 10000;
+    padding: 20px;
+    overflow-y: auto;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .rop-report-backdrop.open {
+    display: flex;
+  }
+  .rop-report-dialog {
+    background: #ffffff;
+    width: 100%;
+    max-width: 860px;
+    border-radius: 8px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    margin: 20px auto;
+    overflow: hidden;
+  }
+  .rop-report-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    background: #f1f5f9;
+    border-bottom: 1px solid #cbd5e1;
+  }
+  .rop-printable-sheet {
+    background: #ffffff;
+    padding: 24px 32px;
+    color: #0f172a;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  }
+
   /* ── A4 Print Formatting ── */
   @media print {
     body {
       background: #ffffff !important;
       color: #000000 !important;
     }
-    body > *:not(.who-report-backdrop) {
+    body:not(.printing-rop) > *:not(.who-report-backdrop) {
+      display: none !important;
+    }
+    body.printing-rop > *:not(.rop-report-backdrop) {
       display: none !important;
     }
     .who-report-backdrop {
@@ -910,6 +952,38 @@
     }
     .who-watermark {
       opacity: 0.15 !important;
+    }
+
+    .rop-report-backdrop {
+      display: block !important;
+      position: static !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
+    }
+    .rop-report-dialog {
+      box-shadow: none !important;
+      border: none !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    .rop-report-toolbar {
+      display: none !important;
+    }
+    .rop-printable-sheet {
+      padding: 4mm 6mm !important;
+      width: 100% !important;
+      max-width: 210mm !important;
+      margin: 0 auto !important;
+      box-shadow: none !important;
+      border: none !important;
+      font-size: 11px !important;
+    }
+    @page {
+      size: A4 portrait;
+      margin: 8mm 6mm;
     }
   }
 
@@ -1912,12 +1986,19 @@
           <!-- Retinopathy of Prematurity -->
           <div class="section-card" id="section-card-rop">
             <div class="section-card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-              <span><i class="icon-eye-close"></i> B. Retinopathy of Prematurity (ROP) &mdash; ROP Screening Module</span>
-              <button type="button" class="btn btn-small" id="btn-open-rop-screening" onclick="openRopScreeningModule()" title="Launch / Focus ROP Screening Module" style="font-size:11.5px; padding:4px 10px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; color:#1b4d3e; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.04);">
-                <i class="icon-search"></i> ROP Screening
-              </button>
+              <span><i class="icon-eye-close"></i> B. Retinopathy of Prematurity (ROP) &mdash; ROP Screening Module (CLMMRH-OPH.F.001)</span>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+                <button type="button" class="btn btn-small" id="btn-open-rop-screening" onclick="openRopScreeningModule()" title="Launch / Focus ROP Screening Module" style="font-size:11.5px; padding:4px 10px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; color:#1b4d3e; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.04);">
+                  <i class="icon-search"></i> ROP Screening
+                </button>
+                <button type="button" class="btn btn-small btn-primary" id="btn-open-rop-report" onclick="openRopReportModal()" title="View and Print Official Hospital ROP Form (PDF)" style="font-size:11.5px; padding:4px 12px; background:#1b4d3e; border:1px solid #14382d; border-radius:4px; color:#ffffff; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08);">
+                  <i class="icon-print"></i> Generate ROP Form (PDF)
+                </button>
+              </div>
             </div>
-            <div class="form-grid-4" style="margin-bottom:10px;">
+
+            <!-- Primary Parameters Strip -->
+            <div class="form-grid-4" style="margin-bottom:12px;">
               <div class="form-group">
                 <label class="form-label" for="neo_rop_applicable">Applicable</label>
                 <select class="form-select" id="neo_rop_applicable" name="neo_rop_applicable">
@@ -1940,6 +2021,301 @@
                   <i class="icon-ok icon-white"></i> SAVE
                 </button>
               </div>
+            </div>
+
+            <!-- Official CLMMRH-OPH.F.001 Clinical Assessment Panel -->
+            <div style="border:1.5px solid #cbd5e1; border-radius:8px; padding:14px; background:#ffffff; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #e2e8f0;">
+                <div>
+                  <strong style="color:#0f172a; font-size:13px;">Official ROP Examination Documentation</strong>
+                  <div style="font-size:11px; color:#64748b;">Corazon Locsin Montelibano Memorial Regional Hospital &bull; Department of Ophthalmology &bull; Form CLMMRH-OPH.F.001</div>
+                </div>
+                <div style="display:flex; gap:6px;">
+                  <button type="button" class="btn btn-secondary" onclick="syncPatientDataIntoRopForm()" style="font-size:11px; padding:3px 8px;" title="Synchronize patient demographics, DOB, GA, and PMA">
+                    <i class="icon-refresh"></i> Sync Patient Data
+                  </button>
+                  <button type="button" class="btn-primary" onclick="openRopReportModal()" style="font-size:11px; font-weight:700; padding:3px 10px; background:#1b4d3e; border:1px solid #14382d; color:#fff; border-radius:4px; cursor:pointer;">
+                    <i class="icon-file-text"></i> PDF Preview
+                  </button>
+                </div>
+              </div>
+
+              <!-- Examination & Dilating Drops Strip -->
+              <div class="form-grid-4" style="margin-bottom:12px;">
+                <div class="form-group">
+                  <label class="form-label" for="neo_rop_exam_date">Date of Examination</label>
+                  <input class="form-input" type="date" id="neo_rop_exam_date" name="neo_rop_exam_date" onchange="calcRopPma()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Patient Status</label>
+                  <div style="display:flex; gap:8px; align-items:center; height:32px; font-size:11.5px; flex-wrap:wrap;">
+                    <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:3px;"><input type="radio" name="neo_rop_patient_type" id="neo_rop_type_ip" value="In-patient" checked> In-patient</label>
+                    <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:3px;"><input type="radio" name="neo_rop_patient_type" id="neo_rop_type_op" value="Out-Patient"> Out-Patient</label>
+                    <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:3px;"><input type="radio" name="neo_rop_patient_type" id="neo_rop_type_new" value="New" checked> New</label>
+                    <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:3px;"><input type="radio" name="neo_rop_patient_type" id="neo_rop_type_fu" value="Follow-up"> Follow-up</label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="neo_rop_dilating_drops">Dilating Drops</label>
+                  <input class="form-input" type="text" id="neo_rop_dilating_drops" name="neo_rop_dilating_drops" value="Tropicamide 0.5% + Phenylephrine 0.5%">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="neo_rop_time_started">Time Started</label>
+                  <input class="form-input" type="time" id="neo_rop_time_started" name="neo_rop_time_started" value="09:00">
+                </div>
+              </div>
+
+              <!-- History & Anterior Segment -->
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:12px;">
+                <!-- History Checkbox Grid -->
+                <div style="border:1px solid #e2e8f0; border-radius:6px; padding:8px 12px; background:#f8fafc;">
+                  <div style="font-weight:700; font-size:11.5px; color:#1e293b; margin-bottom:6px;">CLINICAL HISTORY (Current / Resolved)</div>
+                  <table style="width:100%; font-size:11px; border-collapse:collapse;">
+                    <thead>
+                      <tr style="border-bottom:1px solid #cbd5e1;">
+                        <th style="text-align:left; padding:3px 4px;">Status</th>
+                        <th style="text-align:center; padding:3px 4px;">Anemia</th>
+                        <th style="text-align:center; padding:3px 4px;">Sepsis</th>
+                        <th style="text-align:center; padding:3px 4px;">NEC</th>
+                        <th style="text-align:center; padding:3px 4px;">IVH</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style="border-bottom:1px solid #e2e8f0;">
+                        <td style="font-weight:600; padding:4px;">Current</td>
+                        <td style="text-align:center;"><input type="checkbox" id="neo_rop_hx_anemia_curr"></td>
+                        <td style="text-align:center;"><input type="checkbox" id="neo_rop_hx_sepsis_curr"></td>
+                        <td style="text-align:center;"><input type="checkbox" id="neo_rop_hx_nec_curr"></td>
+                        <td style="text-align:center;"><input type="checkbox" id="neo_rop_hx_ivh_curr"></td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight:600; padding:4px;">Resolved</td>
+                        <td style="text-align:center;"><input type="checkbox" id="neo_rop_hx_anemia_res"></td>
+                        <td style="text-align:center;"><input type="checkbox" id="neo_rop_hx_sepsis_res"></td>
+                        <td style="text-align:center;"><input type="checkbox" id="neo_rop_hx_nec_res"></td>
+                        <td style="text-align:center;"><input type="checkbox" id="neo_rop_hx_ivh_res"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Anterior Segment -->
+                <div style="border:1px solid #e2e8f0; border-radius:6px; padding:8px 12px; background:#f8fafc;">
+                  <div style="font-weight:700; font-size:11.5px; color:#1e293b; margin-bottom:8px;">ANTERIOR SEGMENT</div>
+                  <div style="display:flex; flex-direction:column; gap:8px; font-size:11.5px;">
+                    <div>
+                      <strong>Reaction to Light:</strong> &nbsp;&nbsp;
+                      <label style="margin:0 8px 0 0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;">
+                        <input type="checkbox" id="neo_rop_ant_rxn_od" checked> OD (Right Eye)
+                      </label>
+                      <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;">
+                        <input type="checkbox" id="neo_rop_ant_rxn_os" checked> OS (Left Eye)
+                      </label>
+                    </div>
+                    <div>
+                      <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;">
+                        <input type="checkbox" id="neo_rop_ant_age_app" checked> <strong>Age Appropriate</strong>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4 Perinatal Summary Parameter Strip -->
+              <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin-bottom:14px; background:#f1f5f9; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+                <div class="form-group">
+                  <label class="form-label" style="font-size:10.5px; color:#475569;" for="neo_rop_dob">DATE OF BIRTH</label>
+                  <input class="form-input" type="date" id="neo_rop_dob" name="neo_rop_dob" onchange="calcRopPma()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" style="font-size:10.5px; color:#475569;" for="neo_rop_ga">GESTATIONAL AGE</label>
+                  <input class="form-input" type="text" id="neo_rop_ga" name="neo_rop_ga" placeholder="e.g. 29 wks" oninput="calcRopPma()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" style="font-size:10.5px; color:#475569;" for="neo_rop_bw">BIRTH WEIGHT</label>
+                  <input class="form-input" type="text" id="neo_rop_bw" name="neo_rop_bw" placeholder="e.g. 1,250 g">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" style="font-size:10.5px; color:#475569;" for="neo_rop_pma">AGE POSTCONCEPTION (PMA)</label>
+                  <input class="form-input" type="text" id="neo_rop_pma" name="neo_rop_pma" placeholder="e.g. 33 wks" style="font-weight:700; color:#1b4d3e;">
+                </div>
+              </div>
+
+              <!-- Retinal Concentric Diagrams (RIGHT EYE & LEFT EYE) -->
+              <div style="display:flex; justify-content:space-around; align-items:center; margin-bottom:14px; padding:10px; background:#ffffff; border:1px solid #e2e8f0; border-radius:6px;">
+                <div style="text-align:center;">
+                  <div style="font-weight:800; font-size:12px; color:#0f172a; margin-bottom:4px;">RIGHT EYE (OD)</div>
+                  <svg width="170" height="170" viewBox="0 0 200 200" style="display:block; margin:0 auto; background:#ffffff;">
+                    <line x1="100" y1="5" x2="100" y2="195" stroke="#000000" stroke-width="1.2"/>
+                    <line x1="5" y1="100" x2="195" y2="100" stroke="#000000" stroke-width="1.2"/>
+                    <circle cx="100" cy="100" r="85" fill="none" stroke="#000000" stroke-width="1.8"/>
+                    <circle cx="100" cy="100" r="56" fill="none" stroke="#000000" stroke-width="1.5"/>
+                    <circle cx="100" cy="100" r="28" fill="none" stroke="#000000" stroke-width="1.5"/>
+                    <circle cx="100" cy="100" r="7" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+                    <text x="100" y="16" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">12</text>
+                    <text x="186" y="104" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">3</text>
+                    <text x="100" y="192" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">6</text>
+                    <text x="14" y="104" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">9</text>
+                    <text x="100" y="78" text-anchor="middle" font-size="7.5" fill="#64748b">Zone I</text>
+                    <text x="100" y="52" text-anchor="middle" font-size="7.5" fill="#64748b">Zone II</text>
+                    <text x="100" y="26" text-anchor="middle" font-size="7.5" fill="#64748b">Zone III</text>
+                  </svg>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-weight:800; font-size:12px; color:#0f172a; margin-bottom:4px;">LEFT EYE (OS)</div>
+                  <svg width="170" height="170" viewBox="0 0 200 200" style="display:block; margin:0 auto; background:#ffffff;">
+                    <line x1="100" y1="5" x2="100" y2="195" stroke="#000000" stroke-width="1.2"/>
+                    <line x1="5" y1="100" x2="195" y2="100" stroke="#000000" stroke-width="1.2"/>
+                    <circle cx="100" cy="100" r="85" fill="none" stroke="#000000" stroke-width="1.8"/>
+                    <circle cx="100" cy="100" r="56" fill="none" stroke="#000000" stroke-width="1.5"/>
+                    <circle cx="100" cy="100" r="28" fill="none" stroke="#000000" stroke-width="1.5"/>
+                    <circle cx="100" cy="100" r="7" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+                    <text x="100" y="16" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">12</text>
+                    <text x="186" y="104" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">3</text>
+                    <text x="100" y="192" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">6</text>
+                    <text x="14" y="104" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">9</text>
+                    <text x="100" y="78" text-anchor="middle" font-size="7.5" fill="#64748b">Zone I</text>
+                    <text x="100" y="52" text-anchor="middle" font-size="7.5" fill="#64748b">Zone II</text>
+                    <text x="100" y="26" text-anchor="middle" font-size="7.5" fill="#64748b">Zone III</text>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Retinal Findings & Disease Staging Matrix Table -->
+              <div class="table-responsive" style="margin-bottom:12px;">
+                <table class="neo-table" id="rop-staging-table" style="font-size:11.5px;">
+                  <thead>
+                    <tr style="background:#f1f5f9; text-align:center;">
+                      <th colspan="3" style="border-right:1.5px solid #cbd5e1; width:25%;">RIGHT EYE (OD)</th>
+                      <th rowspan="2" style="border-right:1.5px solid #cbd5e1; vertical-align:middle; width:28%;">Disease Stage / Category</th>
+                      <th colspan="3" style="border-right:1.5px solid #cbd5e1; width:25%;">LEFT EYE (OS)</th>
+                      <th rowspan="2" style="vertical-align:middle; width:22%;">RECOMMENDATION</th>
+                    </tr>
+                    <tr style="background:#f1f5f9; font-size:11px;">
+                      <th style="padding:4px 6px;">Zone</th>
+                      <th style="padding:4px 6px;">Clock</th>
+                      <th style="border-right:1.5px solid #cbd5e1; padding:4px 4px;">+</th>
+                      <th style="padding:4px 6px;">Zone</th>
+                      <th style="padding:4px 6px;">Clock</th>
+                      <th style="border-right:1.5px solid #cbd5e1; padding:4px 4px;">+</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Row 1: Normal -->
+                    <tr>
+                      <td><select class="form-select rop-zone-sel" id="rop_norm_rz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_norm_rc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_norm_rp"></td>
+                      <td style="font-weight:600; color:#0f172a;">Normal <span style="font-size:10px; color:#64748b; font-weight:normal;">(Incomplete Vascularization)</span></td>
+                      <td><select class="form-select rop-zone-sel" id="rop_norm_lz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_norm_lc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_norm_lp"></td>
+                      <td rowspan="7" style="vertical-align:top; background:#f8fafc; padding:10px; font-size:11px;">
+                        <strong style="color:#0f172a; display:block; margin-bottom:6px; border-bottom:1px solid #cbd5e1; padding-bottom:3px;">NEXT EXAMINATION</strong>
+                        <div style="display:flex; flex-direction:column; gap:5px;">
+                          <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;"><input type="radio" name="neo_rop_next_exam" id="neo_rop_next_1w" value="One week"> One week</label>
+                          <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;"><input type="radio" name="neo_rop_next_exam" id="neo_rop_next_2w" value="Two weeks" checked> Two weeks</label>
+                          <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;"><input type="radio" name="neo_rop_next_exam" id="neo_rop_next_4w" value="Four weeks"> Four weeks</label>
+                          <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;"><input type="radio" name="neo_rop_next_exam" id="neo_rop_next_4m" value="Four months"> Four months</label>
+                          <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;"><input type="radio" name="neo_rop_next_exam" id="neo_rop_next_other" value="Other"> Other:</label>
+                          <input type="text" id="neo_rop_next_other_text" class="form-input" placeholder="Custom interval" style="font-size:10.5px; padding:2px 6px; margin-top:2px;">
+                        </div>
+                      </td>
+                    </tr>
+                    <!-- Row 2: Stage 1 -->
+                    <tr>
+                      <td><select class="form-select rop-zone-sel" id="rop_s1_rz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_s1_rc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_s1_rp"></td>
+                      <td style="font-weight:600; color:#0f172a;">Stage 1 &ndash; Demarcation Line</td>
+                      <td><select class="form-select rop-zone-sel" id="rop_s1_lz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_s1_lc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_s1_lp"></td>
+                    </tr>
+                    <!-- Row 3: Stage 2 -->
+                    <tr>
+                      <td><select class="form-select rop-zone-sel" id="rop_s2_rz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_s2_rc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_s2_rp"></td>
+                      <td style="font-weight:600; color:#0f172a;">Stage 2 &ndash; Ridge</td>
+                      <td><select class="form-select rop-zone-sel" id="rop_s2_lz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_s2_lc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_s2_lp"></td>
+                    </tr>
+                    <!-- Row 4: Stage 3 -->
+                    <tr>
+                      <td><select class="form-select rop-zone-sel" id="rop_s3_rz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_s3_rc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_s3_rp"></td>
+                      <td style="font-weight:600; color:#0f172a;">Stage 3 &ndash; Fibrovascular Proliferation</td>
+                      <td><select class="form-select rop-zone-sel" id="rop_s3_lz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_s3_lc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_s3_lp"></td>
+                    </tr>
+                    <!-- Row 5: Stage 4 -->
+                    <tr>
+                      <td><select class="form-select rop-zone-sel" id="rop_s4_rz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_s4_rc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_s4_rp"></td>
+                      <td style="font-weight:600; color:#0f172a;">Stage 4 &ndash; Subtotal Retinal Detachment</td>
+                      <td><select class="form-select rop-zone-sel" id="rop_s4_lz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_s4_lc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_s4_lp"></td>
+                    </tr>
+                    <!-- Row 6: Stage 5 -->
+                    <tr>
+                      <td><select class="form-select rop-zone-sel" id="rop_s5_rz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_s5_rc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_s5_rp"></td>
+                      <td style="font-weight:600; color:#0f172a;">Stage 5 &ndash; Total Retinal Detachment</td>
+                      <td><select class="form-select rop-zone-sel" id="rop_s5_lz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_s5_lc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_s5_lp"></td>
+                    </tr>
+                    <!-- Row 7: Regression -->
+                    <tr>
+                      <td><select class="form-select rop-zone-sel" id="rop_reg_rz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_reg_rc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_reg_rp"></td>
+                      <td style="font-weight:600; color:#0f172a;">Regression</td>
+                      <td><select class="form-select rop-zone-sel" id="rop_reg_lz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
+                      <td><input type="text" class="form-input rop-clock-inp" id="rop_reg_lc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
+                      <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_reg_lp"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Incidental Findings, Resident-in-Charge & DateTime -->
+              <div class="form-grid-3" style="margin-bottom:10px;">
+                <div class="form-group col-span-2">
+                  <label class="form-label" for="neo_rop_incidental_findings">Incidental Findings</label>
+                  <input type="text" class="form-input" id="neo_rop_incidental_findings" name="neo_rop_incidental_findings" placeholder="Note any vitreous haze, retinal hemorrhage, tunica vasculosa lentis, etc.">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="neo_rop_resident">Resident-In-Charge</label>
+                  <input type="text" class="form-input" id="neo_rop_resident" name="neo_rop_resident" placeholder="Physician Full Name, MD">
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <div style="font-size:11px; color:#64748b;">
+                  * Form CLMMRH-OPH.F.001 auto-compiles all findings into the official hospital PDF report.
+                </div>
+                <div style="display:flex; gap:6px;">
+                  <button type="button" class="btn btn-secondary" onclick="syncPatientDataIntoRopForm()" style="font-size:11.5px; padding:4px 10px;">
+                    <i class="icon-refresh"></i> Re-sync
+                  </button>
+                  <button type="button" class="btn-primary" onclick="openRopReportModal()" style="font-size:11.5px; font-weight:700; padding:4px 12px; background:#1b4d3e; border:1px solid #14382d; color:#ffffff; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+                    <i class="icon-print"></i> Generate / Print PDF Form
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Historical Examination Rounds Log -->
+            <div style="font-weight:700; font-size:12px; color:#1e293b; margin-bottom:6px;">
+              Examination Rounds Tracking (Initial &amp; Follow-up Sessions)
             </div>
             <div class="table-responsive">
               <table class="neo-table" id="rop-exam-table">
@@ -2623,6 +2999,291 @@
 </div>
 
 
+
+<!-- Official ROP Screening Form Modal (CLMMRH-OPH.F.001) -->
+<div class="rop-report-backdrop" id="ropScreeningReportModal" role="dialog" aria-modal="true" style="display:none;" onclick="handleRopReportBackdrop(event)">
+  <div class="rop-report-dialog" onclick="event.stopPropagation()">
+    <div class="rop-report-toolbar no-print">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-weight:700; color:#1b4d3e; font-size:13px;">
+          <i class="icon-file-text"></i> Retinopathy of Prematurity Screening Form (CLMMRH-OPH.F.001)
+        </span>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn-primary" id="btn-print-rop-sheet" onclick="printRopReportPdf()" style="background:#1b4d3e; border:1px solid #14382d; color:#ffffff; font-weight:700; padding:5px 14px; font-size:12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+          <i class="icon-print"></i> Print / Save as PDF
+        </button>
+        <button type="button" class="btn-secondary" id="btn-close-rop-modal" onclick="closeRopReportModal()" style="font-size:12px; padding:5px 12px; border-radius:4px; cursor:pointer;">
+          <i class="icon-remove"></i> Close
+        </button>
+      </div>
+    </div>
+    
+    <div class="rop-printable-sheet" id="ropPrintableSheet">
+      <!-- Hospital & Form Header -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+        <div style="font-size:9.5px; line-height:1.3; color:#334155; font-family:Arial, sans-serif;">
+          <strong>ROP Screening Form</strong><br>
+          CLMMRH-OPH.F.001<br>
+          Issued: 01/15/16<br>
+          Issue No.: 001
+        </div>
+        <div style="text-align:center; flex:1; margin:0 10px;">
+          <div style="font-size:12px; font-weight:700; color:#0f172a; text-transform:uppercase; letter-spacing:0.02em;">Corazon Locsin Montelibano Memorial Regional Hospital</div>
+          <div style="font-size:13px; font-weight:800; color:#0f172a; margin-top:1px;">Department of Ophthalmology</div>
+          <div style="font-size:11px; color:#475569;">Bacolod City, Negros</div>
+          <div style="font-size:13px; font-weight:800; color:#0f172a; margin-top:6px; letter-spacing:0.04em;">RETINOPATHY OF PREMATURITY SCREENING FORM</div>
+        </div>
+        <div style="width:90px; text-align:right;"></div>
+      </div>
+
+      <!-- Patient Demographics & Exam Info Strip -->
+      <div style="border-top:1.5px solid #000; padding-top:8px; font-size:11.5px; line-height:1.7;">
+        <div style="display:flex; justify-content:space-between; gap:16px;">
+          <div style="flex:2;"><strong>NAME OF PATIENT:</strong> <span id="pdf-rop-patient-name" style="border-bottom:1px solid #000; display:inline-block; min-width:280px; padding:0 4px; font-weight:700;">—</span></div>
+          <div style="flex:1;"><strong>HOSPITAL NUMBER:</strong> <span id="pdf-rop-hospital-num" style="border-bottom:1px solid #000; display:inline-block; min-width:140px; padding:0 4px; font-weight:700;">—</span></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; margin-top:4px;">
+          <div><strong>DATE OF EXAMINATION:</strong> <span id="pdf-rop-exam-date" style="border-bottom:1px solid #000; display:inline-block; min-width:150px; padding:0 4px;">—</span></div>
+          <div style="display:flex; gap:14px; align-items:center;">
+            <label style="display:inline-flex; align-items:center; gap:4px; margin:0;"><span id="pdf-rop-type-ip">&#x25CB;</span> In-patient</label>
+            <label style="display:inline-flex; align-items:center; gap:4px; margin:0;"><span id="pdf-rop-type-op">&#x25CB;</span> Out-Patient</label>
+            <label style="display:inline-flex; align-items:center; gap:4px; margin:0;"><span id="pdf-rop-type-new">&#x25CB;</span> New</label>
+            <label style="display:inline-flex; align-items:center; gap:4px; margin:0;"><span id="pdf-rop-type-fu">&#x25CB;</span> Follow-up</label>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; gap:16px; margin-top:4px;">
+          <div style="flex:2;"><strong>Dilating Drops:</strong> <span id="pdf-rop-dilating-drops" style="border-bottom:1px solid #000; display:inline-block; min-width:260px; padding:0 4px;">—</span></div>
+          <div style="flex:1;"><strong>Time Started:</strong> <span id="pdf-rop-time-started" style="border-bottom:1px solid #000; display:inline-block; min-width:120px; padding:0 4px;">—</span></div>
+        </div>
+      </div>
+
+      <!-- History & Anterior Segment Table -->
+      <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:11px; border:1px solid #000;">
+        <thead>
+          <tr style="border-bottom:1px solid #000; background:#f8fafc;">
+            <th style="border-right:1px solid #000; padding:4px 8px; text-align:left; width:90px;">HISTORY</th>
+            <th style="border-right:1px solid #000; padding:4px 6px; text-align:center; width:65px;">Anemia</th>
+            <th style="border-right:1px solid #000; padding:4px 6px; text-align:center; width:65px;">Sepsis</th>
+            <th style="border-right:1px solid #000; padding:4px 6px; text-align:center; width:65px;">NEC</th>
+            <th style="border-right:1px solid #000; padding:4px 6px; text-align:center; width:65px;">IVH</th>
+            <th style="padding:4px 8px; text-align:left;" colspan="2">Anterior Segment:</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #000;">
+            <td style="border-right:1px solid #000; padding:4px 8px;">Current</td>
+            <td style="border-right:1px solid #000; text-align:center;"><span id="pdf-rop-hx-anemia-curr">&#x25CB;</span></td>
+            <td style="border-right:1px solid #000; text-align:center;"><span id="pdf-rop-hx-sepsis-curr">&#x25CB;</span></td>
+            <td style="border-right:1px solid #000; text-align:center;"><span id="pdf-rop-hx-nec-curr">&#x25CB;</span></td>
+            <td style="border-right:1px solid #000; text-align:center;"><span id="pdf-rop-hx-ivh-curr">&#x25CB;</span></td>
+            <td style="padding:4px 8px; width:130px;">Reaction to Light:</td>
+            <td style="padding:4px 8px;">
+              <span id="pdf-rop-rxn-od">&#x25CB;</span> OD &nbsp;&nbsp;&nbsp;&nbsp;
+              <span id="pdf-rop-rxn-os">&#x25CB;</span> OS
+            </td>
+          </tr>
+          <tr>
+            <td style="border-right:1px solid #000; padding:4px 8px;">Resolved</td>
+            <td style="border-right:1px solid #000; text-align:center;"><span id="pdf-rop-hx-anemia-res">&#x25CB;</span></td>
+            <td style="border-right:1px solid #000; text-align:center;"><span id="pdf-rop-hx-sepsis-res">&#x25CB;</span></td>
+            <td style="border-right:1px solid #000; text-align:center;"><span id="pdf-rop-hx-nec-res">&#x25CB;</span></td>
+            <td style="border-right:1px solid #000; text-align:center;"><span id="pdf-rop-hx-ivh-res">&#x25CB;</span></td>
+            <td style="padding:4px 8px;" colspan="2">
+              <span id="pdf-rop-age-app">&#x25CB;</span> Age Appropriate
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 4 Summary Perinatal Boxes -->
+      <table style="width:100%; border-collapse:collapse; margin-top:8px; font-size:11px; text-align:center; border:1.5px solid #000;">
+        <thead>
+          <tr style="border-bottom:1px solid #000; background:#f8fafc; font-weight:700;">
+            <th style="border-right:1px solid #000; padding:4px; width:25%;">DATE OF BIRTH</th>
+            <th style="border-right:1px solid #000; padding:4px; width:25%;">GESTATIONAL AGE</th>
+            <th style="border-right:1px solid #000; padding:4px; width:25%;">BIRTH WEIGHT</th>
+            <th style="padding:4px; width:25%;">AGE POSTCONCEPTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="font-weight:700; font-size:12px;">
+            <td style="border-right:1px solid #000; padding:6px 4px;" id="pdf-rop-dob">—</td>
+            <td style="border-right:1px solid #000; padding:6px 4px;" id="pdf-rop-ga">—</td>
+            <td style="border-right:1px solid #000; padding:6px 4px;" id="pdf-rop-bw">—</td>
+            <td style="padding:6px 4px;" id="pdf-rop-pma">—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Retinal Concentric Diagrams (RIGHT EYE & LEFT EYE) -->
+      <div style="display:flex; justify-content:space-around; align-items:center; margin:12px 0 8px;">
+        <div style="text-align:center;">
+          <div style="font-size:13px; font-weight:800; letter-spacing:0.04em; margin-bottom:4px;">RIGHT EYE</div>
+          <svg width="180" height="180" viewBox="0 0 200 200" style="display:block; margin:0 auto;" id="pdf-svg-od">
+            <line x1="100" y1="5" x2="100" y2="195" stroke="#000000" stroke-width="1.2"/>
+            <line x1="5" y1="100" x2="195" y2="100" stroke="#000000" stroke-width="1.2"/>
+            <circle cx="100" cy="100" r="85" fill="none" stroke="#000000" stroke-width="1.8"/>
+            <circle cx="100" cy="100" r="56" fill="none" stroke="#000000" stroke-width="1.5"/>
+            <circle cx="100" cy="100" r="28" fill="none" stroke="#000000" stroke-width="1.5"/>
+            <circle cx="100" cy="100" r="7" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+            <text x="100" y="16" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">12</text>
+            <text x="186" y="104" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">3</text>
+            <text x="100" y="192" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">6</text>
+            <text x="14" y="104" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">9</text>
+            <text x="100" y="78" text-anchor="middle" font-size="7.5" fill="#64748b">Zone I</text>
+            <text x="100" y="52" text-anchor="middle" font-size="7.5" fill="#64748b">Zone II</text>
+            <text x="100" y="26" text-anchor="middle" font-size="7.5" fill="#64748b">Zone III</text>
+          </svg>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:13px; font-weight:800; letter-spacing:0.04em; margin-bottom:4px;">LEFT EYE</div>
+          <svg width="180" height="180" viewBox="0 0 200 200" style="display:block; margin:0 auto;" id="pdf-svg-os">
+            <line x1="100" y1="5" x2="100" y2="195" stroke="#000000" stroke-width="1.2"/>
+            <line x1="5" y1="100" x2="195" y2="100" stroke="#000000" stroke-width="1.2"/>
+            <circle cx="100" cy="100" r="85" fill="none" stroke="#000000" stroke-width="1.8"/>
+            <circle cx="100" cy="100" r="56" fill="none" stroke="#000000" stroke-width="1.5"/>
+            <circle cx="100" cy="100" r="28" fill="none" stroke="#000000" stroke-width="1.5"/>
+            <circle cx="100" cy="100" r="7" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+            <text x="100" y="16" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">12</text>
+            <text x="186" y="104" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">3</text>
+            <text x="100" y="192" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">6</text>
+            <text x="14" y="104" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">9</text>
+            <text x="100" y="78" text-anchor="middle" font-size="7.5" fill="#64748b">Zone I</text>
+            <text x="100" y="52" text-anchor="middle" font-size="7.5" fill="#64748b">Zone II</text>
+            <text x="100" y="26" text-anchor="middle" font-size="7.5" fill="#64748b">Zone III</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Staging Matrix Table with Recommendations -->
+      <table style="width:100%; border-collapse:collapse; font-size:10.5px; border:1px solid #000;">
+        <thead>
+          <tr style="border-bottom:1px solid #000; background:#f8fafc; text-align:center; font-weight:700;">
+            <th colspan="3" style="border-right:1px solid #000; padding:3px;">RIGHT</th>
+            <th rowspan="2" style="border-right:1px solid #000; padding:3px; vertical-align:middle; width:200px;">Disease Stage / Category</th>
+            <th colspan="3" style="border-right:1px solid #000; padding:3px;">LEFT</th>
+            <th rowspan="2" style="padding:3px; vertical-align:middle; width:180px;">RECOMMENDATION</th>
+          </tr>
+          <tr style="border-bottom:1px solid #000; background:#f8fafc; font-size:10px;">
+            <th style="border-right:1px solid #000; width:45px; padding:2px;">zone</th>
+            <th style="border-right:1px solid #000; width:45px; padding:2px;">clock</th>
+            <th style="border-right:1px solid #000; width:30px; padding:2px;">+</th>
+            <th style="border-right:1px solid #000; width:45px; padding:2px;">zone</th>
+            <th style="border-right:1px solid #000; width:45px; padding:2px;">clock</th>
+            <th style="border-right:1px solid #000; width:30px; padding:2px;">+</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Row 1: Normal -->
+          <tr style="border-bottom:1px solid #000;">
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-normal-rz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-normal-rc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-normal-rp">—</td>
+            <td style="border-right:1px solid #000; padding:3px 6px; font-weight:600;">Normal<br><span style="font-size:9.5px; font-weight:normal;">(Incomplete Vascularization)</span></td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-normal-lz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-normal-lc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-normal-lp">—</td>
+            <td rowspan="7" style="vertical-align:top; padding:8px; font-size:11px; line-height:1.6;">
+              <div style="font-weight:700; margin-bottom:4px; text-decoration:underline;">NEXT EXAMINATION</div>
+              <div><span id="pdf-rop-next-1w">&#x25CB;</span> One week</div>
+              <div><span id="pdf-rop-next-2w">&#x25CB;</span> Two weeks</div>
+              <div><span id="pdf-rop-next-4w">&#x25CB;</span> Four weeks</div>
+              <div><span id="pdf-rop-next-4m">&#x25CB;</span> Four months</div>
+              <div style="margin-top:4px;">
+                <span id="pdf-rop-next-other-chk">&#x25CB;</span> Other: <span id="pdf-rop-next-other-val" style="border-bottom:1px solid #000; min-width:80px; display:inline-block;"></span>
+              </div>
+            </td>
+          </tr>
+          <!-- Row 2: Stage 1 -->
+          <tr style="border-bottom:1px solid #000;">
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s1-rz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s1-rc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s1-rp">—</td>
+            <td style="border-right:1px solid #000; padding:3px 6px;">Stage 1 &ndash; Demarcation Line</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s1-lz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s1-lc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s1-lp">—</td>
+          </tr>
+          <!-- Row 3: Stage 2 -->
+          <tr style="border-bottom:1px solid #000;">
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s2-rz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s2-rc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s2-rp">—</td>
+            <td style="border-right:1px solid #000; padding:3px 6px;">Stage 2 &ndash; Ridge</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s2-lz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s2-lc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s2-lp">—</td>
+          </tr>
+          <!-- Row 4: Stage 3 -->
+          <tr style="border-bottom:1px solid #000;">
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s3-rz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s3-rc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s3-rp">—</td>
+            <td style="border-right:1px solid #000; padding:3px 6px;">Stage 3 &ndash; Fibrovascular Proliferation</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s3-lz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s3-lc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s3-lp">—</td>
+          </tr>
+          <!-- Row 5: Stage 4 -->
+          <tr style="border-bottom:1px solid #000;">
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s4-rz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s4-rc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s4-rp">—</td>
+            <td style="border-right:1px solid #000; padding:3px 6px;">Stage 4 &ndash; Subtotal Retinal Detachment</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s4-lz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s4-lc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s4-lp">—</td>
+          </tr>
+          <!-- Row 6: Stage 5 -->
+          <tr style="border-bottom:1px solid #000;">
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s5-rz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s5-rc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s5-rp">—</td>
+            <td style="border-right:1px solid #000; padding:3px 6px;">Stage 5 &ndash; Total Retinal Detachment</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s5-lz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s5-lc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-s5-lp">—</td>
+          </tr>
+          <!-- Row 7: Regression -->
+          <tr>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-reg-rz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-reg-rc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-reg-rp">—</td>
+            <td style="border-right:1px solid #000; padding:3px 6px;">Regression</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-reg-lz">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-reg-lc">—</td>
+            <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-reg-lp">—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Incidental Findings -->
+      <div style="margin-top:10px; font-size:11px; line-height:1.6;">
+        <div>
+          <strong>Incidental Findings:</strong>
+          <span id="pdf-rop-incidental-findings" style="display:inline-block; border-bottom:1px solid #000; width:calc(100% - 130px); min-height:18px; vertical-align:bottom; padding-left:6px;">None</span>
+        </div>
+        <div style="border-bottom:1px solid #000; height:18px; width:100%; margin-top:2px;"></div>
+      </div>
+
+      <!-- Signature & DateTime Strip -->
+      <div style="display:flex; justify-content:flex-end; gap:36px; margin-top:24px; font-size:11.5px;">
+        <div style="text-align:center; min-width:220px;">
+          <div style="border-bottom:1px solid #000; height:30px; margin-bottom:4px;" id="pdf-rop-resident-signature"></div>
+          <strong>Resident-In-Charge</strong>
+          <div style="font-size:11px; color:#334155;" id="pdf-rop-resident-name">—</div>
+        </div>
+        <div style="text-align:center; min-width:140px;">
+          <div style="border-bottom:1px solid #000; height:30px; margin-bottom:4px;" id="pdf-rop-datetime-signature"></div>
+          <strong>Date/Time</strong>
+          <div style="font-size:11px; color:#334155;" id="pdf-rop-datetime-display">—</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- Toast -->
 <div class="neo-toast" id="neoToast">Neonate record saved successfully.</div>
@@ -4683,12 +5344,52 @@ function collectNeonateData() {
         physician: document.getElementById('neo_ror_physician').value
       },
       rop: {
-        applicable: ropApplicableSel.value,
-        schedule: document.getElementById('neo_rop_schedule').value,
-        physician: document.getElementById('neo_rop_physician').value,
-        init: { date: document.getElementById('neo_rop_init_date').value, findings: document.getElementById('neo_rop_init_findings').value, remarks: document.getElementById('neo_rop_init_remarks').value },
-        second: { date: document.getElementById('neo_rop_2nd_date').value, findings: document.getElementById('neo_rop_2nd_findings').value, remarks: document.getElementById('neo_rop_2nd_remarks').value },
-        third: { date: document.getElementById('neo_rop_3rd_date').value, findings: document.getElementById('neo_rop_3rd_findings').value, remarks: document.getElementById('neo_rop_3rd_remarks').value }
+        applicable: ropApplicableSel ? ropApplicableSel.value : '',
+        schedule: document.getElementById('neo_rop_schedule') ? document.getElementById('neo_rop_schedule').value : '',
+        physician: document.getElementById('neo_rop_physician') ? document.getElementById('neo_rop_physician').value : '',
+        examDate: document.getElementById('neo_rop_exam_date') ? document.getElementById('neo_rop_exam_date').value : '',
+        patientType: (document.querySelector('input[name="neo_rop_patient_type"]:checked') || {}).value || 'In-patient',
+        dilatingDrops: document.getElementById('neo_rop_dilating_drops') ? document.getElementById('neo_rop_dilating_drops').value : '',
+        timeStarted: document.getElementById('neo_rop_time_started') ? document.getElementById('neo_rop_time_started').value : '',
+        history: {
+          anemiaCurr: Boolean(document.getElementById('neo_rop_hx_anemia_curr')?.checked),
+          anemiaRes: Boolean(document.getElementById('neo_rop_hx_anemia_res')?.checked),
+          sepsisCurr: Boolean(document.getElementById('neo_rop_hx_sepsis_curr')?.checked),
+          sepsisRes: Boolean(document.getElementById('neo_rop_hx_sepsis_res')?.checked),
+          necCurr: Boolean(document.getElementById('neo_rop_hx_nec_curr')?.checked),
+          necRes: Boolean(document.getElementById('neo_rop_hx_nec_res')?.checked),
+          ivhCurr: Boolean(document.getElementById('neo_rop_hx_ivh_curr')?.checked),
+          ivhRes: Boolean(document.getElementById('neo_rop_hx_ivh_res')?.checked)
+        },
+        anteriorSegment: {
+          rxnOd: Boolean(document.getElementById('neo_rop_ant_rxn_od')?.checked),
+          rxnOs: Boolean(document.getElementById('neo_rop_ant_rxn_os')?.checked),
+          ageApp: Boolean(document.getElementById('neo_rop_ant_age_app')?.checked)
+        },
+        metrics: {
+          dob: document.getElementById('neo_rop_dob') ? document.getElementById('neo_rop_dob').value : '',
+          ga: document.getElementById('neo_rop_ga') ? document.getElementById('neo_rop_ga').value : '',
+          bw: document.getElementById('neo_rop_bw') ? document.getElementById('neo_rop_bw').value : '',
+          pma: document.getElementById('neo_rop_pma') ? document.getElementById('neo_rop_pma').value : ''
+        },
+        staging: {
+          normal: { rz: document.getElementById('rop_norm_rz')?.value || '', rc: document.getElementById('rop_norm_rc')?.value || '', rp: Boolean(document.getElementById('rop_norm_rp')?.checked), lz: document.getElementById('rop_norm_lz')?.value || '', lc: document.getElementById('rop_norm_lc')?.value || '', lp: Boolean(document.getElementById('rop_norm_lp')?.checked) },
+          s1: { rz: document.getElementById('rop_s1_rz')?.value || '', rc: document.getElementById('rop_s1_rc')?.value || '', rp: Boolean(document.getElementById('rop_s1_rp')?.checked), lz: document.getElementById('rop_s1_lz')?.value || '', lc: document.getElementById('rop_s1_lc')?.value || '', lp: Boolean(document.getElementById('rop_s1_lp')?.checked) },
+          s2: { rz: document.getElementById('rop_s2_rz')?.value || '', rc: document.getElementById('rop_s2_rc')?.value || '', rp: Boolean(document.getElementById('rop_s2_rp')?.checked), lz: document.getElementById('rop_s2_lz')?.value || '', lc: document.getElementById('rop_s2_lc')?.value || '', lp: Boolean(document.getElementById('rop_s2_lp')?.checked) },
+          s3: { rz: document.getElementById('rop_s3_rz')?.value || '', rc: document.getElementById('rop_s3_rc')?.value || '', rp: Boolean(document.getElementById('rop_s3_rp')?.checked), lz: document.getElementById('rop_s3_lz')?.value || '', lc: document.getElementById('rop_s3_lc')?.value || '', lp: Boolean(document.getElementById('rop_s3_lp')?.checked) },
+          s4: { rz: document.getElementById('rop_s4_rz')?.value || '', rc: document.getElementById('rop_s4_rc')?.value || '', rp: Boolean(document.getElementById('rop_s4_rp')?.checked), lz: document.getElementById('rop_s4_lz')?.value || '', lc: document.getElementById('rop_s4_lc')?.value || '', lp: Boolean(document.getElementById('rop_s4_lp')?.checked) },
+          s5: { rz: document.getElementById('rop_s5_rz')?.value || '', rc: document.getElementById('rop_s5_rc')?.value || '', rp: Boolean(document.getElementById('rop_s5_rp')?.checked), lz: document.getElementById('rop_s5_lz')?.value || '', lc: document.getElementById('rop_s5_lc')?.value || '', lp: Boolean(document.getElementById('rop_s5_lp')?.checked) },
+          reg: { rz: document.getElementById('rop_reg_rz')?.value || '', rc: document.getElementById('rop_reg_rc')?.value || '', rp: Boolean(document.getElementById('rop_reg_rp')?.checked), lz: document.getElementById('rop_reg_lz')?.value || '', lc: document.getElementById('rop_reg_lc')?.value || '', lp: Boolean(document.getElementById('rop_reg_lp')?.checked) }
+        },
+        recommendation: {
+          nextExam: (document.querySelector('input[name="neo_rop_next_exam"]:checked') || {}).value || 'Two weeks',
+          nextExamOther: document.getElementById('neo_rop_next_other_text')?.value || ''
+        },
+        incidentalFindings: document.getElementById('neo_rop_incidental_findings')?.value || '',
+        residentInCharge: document.getElementById('neo_rop_resident')?.value || '',
+        init: { date: document.getElementById('neo_rop_init_date') ? document.getElementById('neo_rop_init_date').value : '', findings: document.getElementById('neo_rop_init_findings') ? document.getElementById('neo_rop_init_findings').value : '', remarks: document.getElementById('neo_rop_init_remarks') ? document.getElementById('neo_rop_init_remarks').value : '' },
+        second: { date: document.getElementById('neo_rop_2nd_date') ? document.getElementById('neo_rop_2nd_date').value : '', findings: document.getElementById('neo_rop_2nd_findings') ? document.getElementById('neo_rop_2nd_findings').value : '', remarks: document.getElementById('neo_rop_2nd_remarks') ? document.getElementById('neo_rop_2nd_remarks').value : '' },
+        third: { date: document.getElementById('neo_rop_3rd_date') ? document.getElementById('neo_rop_3rd_date').value : '', findings: document.getElementById('neo_rop_3rd_findings') ? document.getElementById('neo_rop_3rd_findings').value : '', remarks: document.getElementById('neo_rop_3rd_remarks') ? document.getElementById('neo_rop_3rd_remarks').value : '' }
       },
       enbs: {
         date: document.getElementById('neo_enbs_date').value,
@@ -4920,26 +5621,99 @@ function populateNeonateData(data) {
     document.getElementById('neo_ror_physician').value = sc.ror.physician || '';
   }
   if (sc.rop) {
-    ropApplicableSel.value = sc.rop.applicable || '';
-    document.getElementById('neo_rop_schedule').value = sc.rop.schedule || '';
-    document.getElementById('neo_rop_physician').value = sc.rop.physician || '';
+    if (ropApplicableSel) ropApplicableSel.value = sc.rop.applicable || '';
+    if (document.getElementById('neo_rop_schedule')) document.getElementById('neo_rop_schedule').value = sc.rop.schedule || '';
+    if (document.getElementById('neo_rop_physician')) document.getElementById('neo_rop_physician').value = sc.rop.physician || '';
+    
+    // Examination & Dilating
+    if (document.getElementById('neo_rop_exam_date')) document.getElementById('neo_rop_exam_date').value = sc.rop.examDate || '';
+    if (sc.rop.patientType) {
+      const r = document.querySelector(`input[name="neo_rop_patient_type"][value="${sc.rop.patientType}"]`);
+      if (r) r.checked = true;
+    }
+    if (document.getElementById('neo_rop_dilating_drops')) document.getElementById('neo_rop_dilating_drops').value = sc.rop.dilatingDrops || 'Tropicamide 0.5% + Phenylephrine 0.5%';
+    if (document.getElementById('neo_rop_time_started')) document.getElementById('neo_rop_time_started').value = sc.rop.timeStarted || '09:00';
+
+    // History
+    if (sc.rop.history) {
+      if (document.getElementById('neo_rop_hx_anemia_curr')) document.getElementById('neo_rop_hx_anemia_curr').checked = Boolean(sc.rop.history.anemiaCurr);
+      if (document.getElementById('neo_rop_hx_anemia_res')) document.getElementById('neo_rop_hx_anemia_res').checked = Boolean(sc.rop.history.anemiaRes);
+      if (document.getElementById('neo_rop_hx_sepsis_curr')) document.getElementById('neo_rop_hx_sepsis_curr').checked = Boolean(sc.rop.history.sepsisCurr);
+      if (document.getElementById('neo_rop_hx_sepsis_res')) document.getElementById('neo_rop_hx_sepsis_res').checked = Boolean(sc.rop.history.sepsisRes);
+      if (document.getElementById('neo_rop_hx_nec_curr')) document.getElementById('neo_rop_hx_nec_curr').checked = Boolean(sc.rop.history.necCurr);
+      if (document.getElementById('neo_rop_hx_nec_res')) document.getElementById('neo_rop_hx_nec_res').checked = Boolean(sc.rop.history.necRes);
+      if (document.getElementById('neo_rop_hx_ivh_curr')) document.getElementById('neo_rop_hx_ivh_curr').checked = Boolean(sc.rop.history.ivhCurr);
+      if (document.getElementById('neo_rop_hx_ivh_res')) document.getElementById('neo_rop_hx_ivh_res').checked = Boolean(sc.rop.history.ivhRes);
+    }
+
+    // Anterior Segment
+    if (sc.rop.anteriorSegment) {
+      if (document.getElementById('neo_rop_ant_rxn_od')) document.getElementById('neo_rop_ant_rxn_od').checked = sc.rop.anteriorSegment.rxnOd !== false;
+      if (document.getElementById('neo_rop_ant_rxn_os')) document.getElementById('neo_rop_ant_rxn_os').checked = sc.rop.anteriorSegment.rxnOs !== false;
+      if (document.getElementById('neo_rop_ant_age_app')) document.getElementById('neo_rop_ant_age_app').checked = sc.rop.anteriorSegment.ageApp !== false;
+    }
+
+    // Metrics
+    if (sc.rop.metrics) {
+      if (document.getElementById('neo_rop_dob')) document.getElementById('neo_rop_dob').value = sc.rop.metrics.dob || '';
+      if (document.getElementById('neo_rop_ga')) document.getElementById('neo_rop_ga').value = sc.rop.metrics.ga || '';
+      if (document.getElementById('neo_rop_bw')) document.getElementById('neo_rop_bw').value = sc.rop.metrics.bw || '';
+      if (document.getElementById('neo_rop_pma')) document.getElementById('neo_rop_pma').value = sc.rop.metrics.pma || '';
+    } else {
+      syncPatientDataIntoRopForm();
+    }
+
+    // Staging table
+    if (sc.rop.staging) {
+      const popRow = (prefix, data) => {
+        if (!data) return;
+        if (document.getElementById(`rop_${prefix}_rz`)) document.getElementById(`rop_${prefix}_rz`).value = data.rz || '';
+        if (document.getElementById(`rop_${prefix}_rc`)) document.getElementById(`rop_${prefix}_rc`).value = data.rc || '';
+        if (document.getElementById(`rop_${prefix}_rp`)) document.getElementById(`rop_${prefix}_rp`).checked = Boolean(data.rp);
+        if (document.getElementById(`rop_${prefix}_lz`)) document.getElementById(`rop_${prefix}_lz`).value = data.lz || '';
+        if (document.getElementById(`rop_${prefix}_lc`)) document.getElementById(`rop_${prefix}_lc`).value = data.lc || '';
+        if (document.getElementById(`rop_${prefix}_lp`)) document.getElementById(`rop_${prefix}_lp`).checked = Boolean(data.lp);
+      };
+      popRow('norm', sc.rop.staging.normal);
+      popRow('s1', sc.rop.staging.s1);
+      popRow('s2', sc.rop.staging.s2);
+      popRow('s3', sc.rop.staging.s3);
+      popRow('s4', sc.rop.staging.s4);
+      popRow('s5', sc.rop.staging.s5);
+      popRow('reg', sc.rop.staging.reg);
+    }
+
+    // Recommendation
+    if (sc.rop.recommendation) {
+      const r = document.querySelector(`input[name="neo_rop_next_exam"][value="${sc.rop.recommendation.nextExam}"]`);
+      if (r) r.checked = true;
+      if (document.getElementById('neo_rop_next_other_text')) document.getElementById('neo_rop_next_other_text').value = sc.rop.recommendation.nextExamOther || '';
+    }
+
+    // Incidental & Resident
+    if (document.getElementById('neo_rop_incidental_findings')) document.getElementById('neo_rop_incidental_findings').value = sc.rop.incidentalFindings || '';
+    if (document.getElementById('neo_rop_resident')) document.getElementById('neo_rop_resident').value = sc.rop.residentInCharge || '';
+
+    // Legacy rounds
     const isNo = sc.rop.applicable === 'No';
     if (sc.rop.init) {
-      document.getElementById('neo_rop_init_date').value = sc.rop.init.date || '';
-      document.getElementById('neo_rop_init_findings').value = sc.rop.init.findings || '';
-      document.getElementById('neo_rop_init_remarks').value = sc.rop.init.remarks || '';
+      if (document.getElementById('neo_rop_init_date')) document.getElementById('neo_rop_init_date').value = sc.rop.init.date || '';
+      if (document.getElementById('neo_rop_init_findings')) document.getElementById('neo_rop_init_findings').value = sc.rop.init.findings || '';
+      if (document.getElementById('neo_rop_init_remarks')) document.getElementById('neo_rop_init_remarks').value = sc.rop.init.remarks || '';
     }
     if (sc.rop.second) {
-      document.getElementById('neo_rop_2nd_date').value = sc.rop.second.date || '';
-      document.getElementById('neo_rop_2nd_findings').value = sc.rop.second.findings || '';
-      document.getElementById('neo_rop_2nd_remarks').value = sc.rop.second.remarks || '';
+      if (document.getElementById('neo_rop_2nd_date')) document.getElementById('neo_rop_2nd_date').value = sc.rop.second.date || '';
+      if (document.getElementById('neo_rop_2nd_findings')) document.getElementById('neo_rop_2nd_findings').value = sc.rop.second.findings || '';
+      if (document.getElementById('neo_rop_2nd_remarks')) document.getElementById('neo_rop_2nd_remarks').value = sc.rop.second.remarks || '';
     }
     if (sc.rop.third) {
-      document.getElementById('neo_rop_3rd_date').value = sc.rop.third.date || '';
-      document.getElementById('neo_rop_3rd_findings').value = sc.rop.third.findings || '';
-      document.getElementById('neo_rop_3rd_remarks').value = sc.rop.third.remarks || '';
+      if (document.getElementById('neo_rop_3rd_date')) document.getElementById('neo_rop_3rd_date').value = sc.rop.third.date || '';
+      if (document.getElementById('neo_rop_3rd_findings')) document.getElementById('neo_rop_3rd_findings').value = sc.rop.third.findings || '';
+      if (document.getElementById('neo_rop_3rd_remarks')) document.getElementById('neo_rop_3rd_remarks').value = sc.rop.third.remarks || '';
     }
     document.querySelectorAll('#rop-exam-table input, #rop-exam-table select, #neo_rop_schedule').forEach(el => { el.disabled = isNo; });
+  } else {
+    syncPatientDataIntoRopForm();
   }
   if (sc.enbs) {
     document.getElementById('neo_enbs_date').value = sc.enbs.date || '';
@@ -5559,12 +6333,233 @@ function openRopScreeningModule() {
   }
 }
 
+function syncPatientDataIntoRopForm() {
+  const patient = (typeof getPatients === 'function' ? getPatients().find(p => p.id === currentPatientId) : null) || {};
+  const todayStr = new Date().toISOString().split('T')[0];
+  
+  const examDateEl = document.getElementById('neo_rop_exam_date');
+  if (examDateEl && !examDateEl.value) examDateEl.value = todayStr;
+
+  const dobEl = document.getElementById('neo_rop_dob');
+  const dobVal = patient.dob || document.getElementById('neo_delivery_time')?.value?.split('T')[0] || '';
+  if (dobEl) dobEl.value = dobVal;
+
+  const gaEl = document.getElementById('neo_rop_ga');
+  const gaVal = patient.gestationalAge || document.getElementById('neo_aog_weeks')?.value || document.getElementById('ballard-weeks-display')?.textContent || '29 wks';
+  if (gaEl) gaEl.value = gaVal.includes('wks') ? gaVal : (gaVal + ' wks');
+
+  const bwEl = document.getElementById('neo_rop_bw');
+  const wtVal = document.getElementById('neo_weight')?.value || patient.birthWeight || '1,250';
+  if (bwEl) bwEl.value = wtVal.includes('g') || wtVal.includes('kg') ? wtVal : (wtVal + ' g');
+
+  calcRopPma();
+
+  const docEl = document.getElementById('neo_rop_physician');
+  const resEl = document.getElementById('neo_rop_resident');
+  const attendingVal = patient.attendingPhysician || docEl?.value || 'Dr. Andrea Reyes, MD';
+  if (docEl && !docEl.value) docEl.value = attendingVal;
+  if (resEl && !resEl.value) resEl.value = attendingVal;
+}
+
+function calcRopPma() {
+  const dobStr = document.getElementById('neo_rop_dob')?.value;
+  const examStr = document.getElementById('neo_rop_exam_date')?.value || new Date().toISOString().split('T')[0];
+  const gaStr = document.getElementById('neo_rop_ga')?.value || '';
+  const gaWeeks = parseFloat(gaStr.replace(/[^0-9.]/g, '')) || 29;
+
+  let chronWeeks = 0;
+  if (dobStr && examStr) {
+    const diffMs = new Date(examStr) - new Date(dobStr);
+    if (!isNaN(diffMs) && diffMs > 0) {
+      chronWeeks = Math.floor(diffMs / (7 * 24 * 3600 * 1000));
+    }
+  }
+  const pmaTotal = Math.round(gaWeeks + chronWeeks);
+  const pmaEl = document.getElementById('neo_rop_pma');
+  if (pmaEl) {
+    pmaEl.value = pmaTotal > 0 ? (pmaTotal + ' wks') : (gaWeeks + ' wks');
+  }
+}
+
+function syncRopModalData() {
+  const patient = (typeof getPatients === 'function' ? getPatients().find(p => p.id === currentPatientId) : null) || {};
+  const patientName = patient.name || document.getElementById('neo_patient_banner_name')?.textContent || 'Santos, Baby Boy';
+  const hospitalNum = patient.hrn || patient.id || 'HRN-2026-NEO-001';
+
+  // Demographics
+  const elName = document.getElementById('pdf-rop-patient-name');
+  if (elName) elName.textContent = patientName;
+  const elHrn = document.getElementById('pdf-rop-hospital-num');
+  if (elHrn) elHrn.textContent = hospitalNum;
+
+  const examDate = document.getElementById('neo_rop_exam_date')?.value || new Date().toISOString().split('T')[0];
+  const elDate = document.getElementById('pdf-rop-exam-date');
+  if (elDate) elDate.textContent = examDate;
+
+  // Patient Status Radios
+  const typeChecked = (document.querySelector('input[name="neo_rop_patient_type"]:checked') || {}).value || 'In-patient';
+  const isNew = Boolean(document.getElementById('neo_rop_type_new')?.checked);
+  const isFu = Boolean(document.getElementById('neo_rop_type_fu')?.checked);
+  const elIp = document.getElementById('pdf-rop-type-ip');
+  const elOp = document.getElementById('pdf-rop-type-op');
+  const elNew = document.getElementById('pdf-rop-type-new');
+  const elFu = document.getElementById('pdf-rop-type-fu');
+  if (elIp) elIp.innerHTML = typeChecked === 'In-patient' ? '&#x25CF;' : '&#x25CB;';
+  if (elOp) elOp.innerHTML = typeChecked === 'Out-Patient' ? '&#x25CF;' : '&#x25CB;';
+  if (elNew) elNew.innerHTML = isNew ? '&#x25CF;' : '&#x25CB;';
+  if (elFu) elFu.innerHTML = isFu ? '&#x25CF;' : '&#x25CB;';
+
+  // Dilating drops & time
+  const elDrops = document.getElementById('pdf-rop-dilating-drops');
+  if (elDrops) elDrops.textContent = document.getElementById('neo_rop_dilating_drops')?.value || 'Tropicamide 0.5% + Phenylephrine 0.5%';
+  const elTime = document.getElementById('pdf-rop-time-started');
+  if (elTime) elTime.textContent = document.getElementById('neo_rop_time_started')?.value || '09:00 AM';
+
+  // History Checkboxes
+  const setCircle = (id, chkId) => {
+    const span = document.getElementById(id);
+    const cb = document.getElementById(chkId);
+    if (span) span.innerHTML = (cb && cb.checked) ? '&#x25CF;' : '&#x25CB;';
+  };
+  setCircle('pdf-rop-hx-anemia-curr', 'neo_rop_hx_anemia_curr');
+  setCircle('pdf-rop-hx-anemia-res', 'neo_rop_hx_anemia_res');
+  setCircle('pdf-rop-hx-sepsis-curr', 'neo_rop_hx_sepsis_curr');
+  setCircle('pdf-rop-hx-sepsis-res', 'neo_rop_hx_sepsis_res');
+  setCircle('pdf-rop-hx-nec-curr', 'neo_rop_hx_nec_curr');
+  setCircle('pdf-rop-hx-nec-res', 'neo_rop_hx_nec_res');
+  setCircle('pdf-rop-hx-ivh-curr', 'neo_rop_hx_ivh_curr');
+  setCircle('pdf-rop-hx-ivh-res', 'neo_rop_hx_ivh_res');
+
+  // Anterior Segment
+  setCircle('pdf-rop-rxn-od', 'neo_rop_ant_rxn_od');
+  setCircle('pdf-rop-rxn-os', 'neo_rop_ant_rxn_os');
+  setCircle('pdf-rop-age-app', 'neo_rop_ant_age_app');
+
+  // 4 Metric Boxes
+  const elDob = document.getElementById('pdf-rop-dob');
+  if (elDob) elDob.textContent = document.getElementById('neo_rop_dob')?.value || '—';
+  const elGa = document.getElementById('pdf-rop-ga');
+  if (elGa) elGa.textContent = document.getElementById('neo_rop_ga')?.value || '—';
+  const elBw = document.getElementById('pdf-rop-bw');
+  if (elBw) elBw.textContent = document.getElementById('neo_rop_bw')?.value || '—';
+  const elPma = document.getElementById('pdf-rop-pma');
+  if (elPma) elPma.textContent = document.getElementById('neo_rop_pma')?.value || '—';
+
+  // Staging Matrix (7 rows)
+  const syncRow = (prefix, rzId, rcId, rpId, lzId, lcId, lpId) => {
+    const elRz = document.getElementById(`pdf-stage-${prefix}-rz`);
+    const elRc = document.getElementById(`pdf-stage-${prefix}-rc`);
+    const elRp = document.getElementById(`pdf-stage-${prefix}-rp`);
+    const elLz = document.getElementById(`pdf-stage-${prefix}-lz`);
+    const elLc = document.getElementById(`pdf-stage-${prefix}-lc`);
+    const elLp = document.getElementById(`pdf-stage-${prefix}-lp`);
+
+    const rzVal = document.getElementById(rzId)?.value || '';
+    const rcVal = document.getElementById(rcId)?.value || '';
+    const rpChecked = Boolean(document.getElementById(rpId)?.checked);
+    const lzVal = document.getElementById(lzId)?.value || '';
+    const lcVal = document.getElementById(lcId)?.value || '';
+    const lpChecked = Boolean(document.getElementById(lpId)?.checked);
+
+    if (elRz) elRz.textContent = rzVal || '—';
+    if (elRc) elRc.textContent = rcVal || '—';
+    if (elRp) elRp.textContent = rpChecked ? '+' : '—';
+    if (elLz) elLz.textContent = lzVal || '—';
+    if (elLc) elLc.textContent = lcVal || '—';
+    if (elLp) elLp.textContent = lpChecked ? '+' : '—';
+  };
+  syncRow('normal', 'rop_norm_rz', 'rop_norm_rc', 'rop_norm_rp', 'rop_norm_lz', 'rop_norm_lc', 'rop_norm_lp');
+  syncRow('s1', 'rop_s1_rz', 'rop_s1_rc', 'rop_s1_rp', 'rop_s1_lz', 'rop_s1_lc', 'rop_s1_lp');
+  syncRow('s2', 'rop_s2_rz', 'rop_s2_rc', 'rop_s2_rp', 'rop_s2_lz', 'rop_s2_lc', 'rop_s2_lp');
+  syncRow('s3', 'rop_s3_rz', 'rop_s3_rc', 'rop_s3_rp', 'rop_s3_lz', 'rop_s3_lc', 'rop_s3_lp');
+  syncRow('s4', 'rop_s4_rz', 'rop_s4_rc', 'rop_s4_rp', 'rop_s4_lz', 'rop_s4_lc', 'rop_s4_lp');
+  syncRow('s5', 'rop_s5_rz', 'rop_s5_rc', 'rop_s5_rp', 'rop_s5_lz', 'rop_s5_lc', 'rop_s5_lp');
+  syncRow('reg', 'rop_reg_rz', 'rop_reg_rc', 'rop_reg_rp', 'rop_reg_lz', 'rop_reg_lc', 'rop_reg_lp');
+
+  // Next Examination Recommendations
+  const nextChecked = (document.querySelector('input[name="neo_rop_next_exam"]:checked') || {}).value || 'Two weeks';
+  const el1w = document.getElementById('pdf-rop-next-1w');
+  const el2w = document.getElementById('pdf-rop-next-2w');
+  const el4w = document.getElementById('pdf-rop-next-4w');
+  const el4m = document.getElementById('pdf-rop-next-4m');
+  const elOth = document.getElementById('pdf-rop-next-other-chk');
+  const elOthVal = document.getElementById('pdf-rop-next-other-val');
+
+  if (el1w) el1w.innerHTML = nextChecked === 'One week' ? '&#x25CF;' : '&#x25CB;';
+  if (el2w) el2w.innerHTML = nextChecked === 'Two weeks' ? '&#x25CF;' : '&#x25CB;';
+  if (el4w) el4w.innerHTML = nextChecked === 'Four weeks' ? '&#x25CF;' : '&#x25CB;';
+  if (el4m) el4m.innerHTML = nextChecked === 'Four months' ? '&#x25CF;' : '&#x25CB;';
+  if (elOth) elOth.innerHTML = nextChecked === 'Other' ? '&#x25CF;' : '&#x25CB;';
+  if (elOthVal) elOthVal.textContent = document.getElementById('neo_rop_next_other_text')?.value || '';
+
+  // Incidental Findings
+  const elInc = document.getElementById('pdf-rop-incidental-findings');
+  if (elInc) elInc.textContent = document.getElementById('neo_rop_incidental_findings')?.value || 'None';
+
+  // Resident & Timestamp
+  const residentVal = document.getElementById('neo_rop_resident')?.value || document.getElementById('neo_rop_physician')?.value || 'Andrea Reyes, MD';
+  const elResName = document.getElementById('pdf-rop-resident-name');
+  if (elResName) elResName.textContent = residentVal;
+
+  const nowDtStr = examDate + ' ' + (document.getElementById('neo_rop_time_started')?.value || '09:00 AM');
+  const elDtDisplay = document.getElementById('pdf-rop-datetime-display');
+  if (elDtDisplay) elDtDisplay.textContent = nowDtStr;
+}
+
+function openRopReportModal() {
+  syncRopModalData();
+  const m = document.getElementById('ropScreeningReportModal');
+  if (m) {
+    m.style.display = 'flex';
+    m.classList.add('open');
+  }
+}
+
+function closeRopReportModal() {
+  const m = document.getElementById('ropScreeningReportModal');
+  if (m) {
+    m.style.display = 'none';
+    m.classList.remove('open');
+  }
+}
+
+function handleRopReportBackdrop(e) {
+  if (e && e.target && e.target.id === 'ropScreeningReportModal') {
+    closeRopReportModal();
+  }
+}
+
+function printRopReportPdf() {
+  syncRopModalData();
+  document.body.classList.add('printing-rop');
+  window.print();
+  setTimeout(() => {
+    document.body.classList.remove('printing-rop');
+  }, 1000);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const m = document.getElementById('ropScreeningReportModal');
+    if (m && (m.classList.contains('open') || m.style.display === 'flex')) {
+      closeRopReportModal();
+    }
+  }
+});
+
 if (typeof window !== 'undefined') {
   window.saveNeonatalDx = saveNeonatalDx;
   window.saveKmcNutrition = saveKmcNutrition;
   window.toggleKmcFutilityOthers = toggleKmcFutilityOthers;
   window.saveScreeningSub = saveScreeningSub;
   window.openRopScreeningModule = openRopScreeningModule;
+  window.openRopReportModal = openRopReportModal;
+  window.closeRopReportModal = closeRopReportModal;
+  window.handleRopReportBackdrop = handleRopReportBackdrop;
+  window.printRopReportPdf = printRopReportPdf;
+  window.syncRopModalData = syncRopModalData;
+  window.syncPatientDataIntoRopForm = syncPatientDataIntoRopForm;
+  window.calcRopPma = calcRopPma;
   window.getFormattedEncoderCredentials = getFormattedEncoderCredentials;
   window.formatScreeningSummaryLine = formatScreeningSummaryLine;
   window.renderScreeningProgressNotes = renderScreeningProgressNotes;
