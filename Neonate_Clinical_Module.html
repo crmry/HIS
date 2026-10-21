@@ -1769,55 +1769,6 @@
               </div>
             </div>
 
-            <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-              <div style="font-size:11.5px; color:var(--slate-500);">
-                <i class="icon-info-sign"></i> Incomplete Ballard data is flagged as Partial. Gestational age and maturity classification are only finalized when all 13 criteria are scored.
-              </div>
-              <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                <button type="button" class="btn-secondary" onclick="openGrowthChartModal('lub')"><i class="icon-picture"></i> Lubchenco Chart</button>
-                <button type="button" class="btn-secondary" id="btn-neo-chart-fenton" onclick="openGrowthChartModal('fenton')"><i class="icon-picture"></i> <span id="btn-neo-chart-fenton-label">Fenton Growth Chart (Baseline)</span></button>
-                <a href="Growth_Charts_Module.html" id="btn-neo-chart-growth-module" class="btn-primary" style="background:var(--med-green); color:#fff; font-weight:600; text-decoration:none; padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px; border-radius:4px;"><i class="icon-share-alt"></i> Growth Charts Module</a>
-              </div>
-            </div>
-
-            <!-- Workbook VLOOKUP Reference Tables (Collapsible) -->
-            <details class="neo-vlookup-details" style="margin-top:16px; border:1px solid var(--slate-200); border-radius:8px; padding:10px 14px; background:#f8fafc;">
-              <summary style="cursor:pointer; font-weight:700; color:var(--med-green); font-size:12.5px; user-select:none;">
-                <i class="icon-table"></i> View Workbook VLOOKUP Reference Tables (Score &rarr; Weeks &amp; Weeks &rarr; Maturity)
-              </summary>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:12px;">
-                <div>
-                  <div style="font-weight:700; font-size:12px; margin-bottom:6px; color:var(--slate-700);">Table 1: Total Score &rarr; Gestational Age (Weeks)</div>
-                  <div style="max-height:280px; overflow-y:auto; border:1px solid var(--slate-200); border-radius:6px; background:#fff;">
-                    <table class="neo-table" style="font-size:11.5px; margin:0;">
-                      <thead><tr><th style="padding:4px 8px; width:50%;">Score</th><th style="padding:4px 8px; width:50%;">Weeks</th></tr></thead>
-                      <tbody>
-                        <tr><td>-10</td><td>20</td></tr><tr><td>-9</td><td>21</td></tr><tr><td>-8</td><td>21</td></tr><tr><td>-7</td><td>21</td></tr><tr><td>-6</td><td>21</td></tr><tr><td>-5</td><td>22</td></tr><tr><td>-4</td><td>23</td></tr><tr><td>-3</td><td>23</td></tr><tr><td>-2</td><td>23</td></tr><tr><td>-1</td><td>23</td></tr><tr><td>0</td><td>24</td></tr><tr><td>1</td><td>25</td></tr><tr><td>2</td><td>25</td></tr><tr><td>3</td><td>25</td></tr><tr><td>4</td><td>25</td></tr><tr><td>5</td><td>26</td></tr><tr><td>6</td><td>27</td></tr><tr><td>7</td><td>27</td></tr><tr><td>8</td><td>27</td></tr><tr><td>9</td><td>27</td></tr><tr><td>10</td><td>28</td></tr><tr><td>11</td><td>29</td></tr><tr><td>12</td><td>29</td></tr><tr><td>13</td><td>29</td></tr><tr><td>14</td><td>29</td></tr><tr><td>15</td><td>30</td></tr><tr><td>16</td><td>31</td></tr><tr><td>17</td><td>31</td></tr><tr><td>18</td><td>31</td></tr><tr><td>19</td><td>31</td></tr><tr><td>20</td><td>32</td></tr><tr><td>21</td><td>33</td></tr><tr><td>22</td><td>33</td></tr><tr><td>23</td><td>33</td></tr><tr><td>24</td><td>33</td></tr><tr><td>25</td><td>34</td></tr><tr><td>26</td><td>35</td></tr><tr><td>27</td><td>35</td></tr><tr><td>28</td><td>35</td></tr><tr><td>29</td><td>35</td></tr><tr><td>30</td><td>36</td></tr><tr><td>31</td><td>37</td></tr><tr><td>32</td><td>37</td></tr><tr><td>33</td><td>37</td></tr><tr><td>34</td><td>37</td></tr><tr><td>35</td><td>38</td></tr><tr><td>36</td><td>39</td></tr><tr><td>37</td><td>39</td></tr><tr><td>38</td><td>39</td></tr><tr><td>39</td><td>39</td></tr><tr><td>40</td><td>40</td></tr><tr><td>41</td><td>41</td></tr><tr><td>42</td><td>41</td></tr><tr><td>43</td><td>41</td></tr><tr><td>44</td><td>41</td></tr><tr><td>45</td><td>42</td></tr><tr><td>46</td><td>43</td></tr><tr><td>47</td><td>43</td></tr><tr><td>48</td><td>43</td></tr><tr><td>49</td><td>43</td></tr><tr><td>50</td><td>44</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div>
-                  <div style="font-weight:700; font-size:12px; margin-bottom:6px; color:var(--slate-700);">Table 2: Gestational Age &rarr; Maturity Classification</div>
-                  <div style="max-height:280px; overflow-y:auto; border:1px solid var(--slate-200); border-radius:6px; background:#fff;">
-                    <table class="neo-table" style="font-size:11.5px; margin:0;">
-                      <thead><tr><th style="padding:4px 8px; width:40%;">Weeks</th><th style="padding:4px 8px; width:60%;">Maturity</th></tr></thead>
-                      <tbody>
-                        <tr><td>20&ndash;27</td><td>Exteremely Preterm</td></tr>
-                        <tr><td>28&ndash;31</td><td>Very Pretem</td></tr>
-                        <tr><td>32&ndash;33</td><td>Moderate Preterm</td></tr>
-                        <tr><td>34&ndash;36</td><td>Late Preterm</td></tr>
-                        <tr><td>37&ndash;38</td><td>Early Term</td></tr>
-                        <tr><td>39&ndash;40</td><td>Full Term</td></tr>
-                        <tr><td>41</td><td>Late Term</td></tr>
-                        <tr><td>42&ndash;50</td><td>Post Term</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </details>
-
 
           </div>
 

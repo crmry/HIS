@@ -991,15 +991,14 @@ async def scan_single_target(browser_ws, file_url):
                     }
                 }
 
-                // Test Fenton baseline button on Neonate_Clinical_Module.html
+                // Test Growth Charts tab switching on Neonate_Clinical_Module.html
                 if (window.location.href.includes('Neonate_Clinical_Module.html')) {
-                    const neoFentonBtn = document.getElementById('btn-neo-chart-fenton');
-                    const fentonLabel = document.getElementById('btn-neo-chart-fenton-label');
-                    if (neoFentonBtn && fentonLabel) {
-                        neoFentonBtn.click();
+                    const tabChartsBtn = document.querySelector('button[data-tab="tab-charts"]');
+                    if (tabChartsBtn) {
+                        tabChartsBtn.click();
                         const tabCharts = document.getElementById('tab-charts');
                         if (!tabCharts || window.getComputedStyle(tabCharts).display === 'none') {
-                            return 'Clicking btn-neo-chart-fenton did not switch to tab-charts';
+                            return 'Clicking tab-charts button did not switch to tab-charts';
                         }
                     }
                 }

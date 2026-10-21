@@ -350,7 +350,7 @@ async def run_tests():
             print("[TEST 13] Verifying Ballard, Fenton, and Lubchenco baseline functions...")
             baseline_status = await eval_js("""({
                 lubBtn: Boolean(document.getElementById('btn-chart-lub')),
-                fentonBtn: Boolean(document.getElementById('btn-neo-chart-fenton')),
+                fentonBtn: Boolean(document.getElementById('btn-chart-fenton')),
                 ballardMaturity: document.getElementById('ballard-maturity-display').textContent,
                 saveBtn: Boolean(document.getElementById('btn-save-neonate-record'))
             })""")
