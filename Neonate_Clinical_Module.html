@@ -2005,7 +2005,6 @@
                   <option value="">Select</option>
                   <option value="Yes">Yes</option>
                   <option value="No">No</option>
-                  <option value="Not Done">Not Done</option>
                 </select>
               </div>
               <div class="form-group">
@@ -2022,6 +2021,15 @@
                 </button>
               </div>
             </div>
+
+            <!-- Inapplicable / Frozen Notice Banner -->
+            <div id="neo_rop_disabled_banner" style="display:none; padding:10px 14px; margin-bottom:14px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; font-size:12px; color:#475569; font-weight:600; align-items:center; gap:8px;">
+              <i class="icon-ban-circle" style="color:#64748b; font-size:14px;"></i>
+              <span>ROP Screening Module is marked as <strong>Not Applicable (No)</strong>. Clinical examination documentation and orders are disabled/frozen.</span>
+            </div>
+
+            <!-- ROP Freezable Content Container -->
+            <div id="neo_rop_content_body" style="transition: opacity 0.2s ease, filter 0.2s ease;">
 
             <!-- Official CLMMRH-OPH.F.001 Clinical Assessment Panel -->
             <div style="border:1.5px solid #cbd5e1; border-radius:8px; padding:14px; background:#ffffff; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
@@ -2382,6 +2390,7 @@
                 </tbody>
               </table>
             </div>
+            </div><!-- /#neo_rop_content_body -->
           </div>
 
           <!-- Newborn Metabolic Screening -->
@@ -2493,7 +2502,6 @@
                   <option value="">Select</option>
                   <option value="Yes">Yes</option>
                   <option value="No">No</option>
-                  <option value="Not Done">Not Done</option>
                 </select>
               </div>
               <div class="form-group">
@@ -3733,15 +3741,72 @@ rorFindingsSel.addEventListener('change', () => {
   }
 });
 
+function updateRopApplicableState(isNo) {
+  const banner = document.getElementById('neo_rop_disabled_banner');
+  const body = document.getElementById('neo_rop_content_body');
+  if (banner) banner.style.display = isNo ? 'flex' : 'none';
+  if (body) {
+    body.style.opacity = isNo ? '0.45' : '';
+    body.style.pointerEvents = isNo ? 'none' : '';
+    body.style.filter = isNo ? 'grayscale(0.5)' : '';
+    body.querySelectorAll('input, select, textarea, button').forEach(el => {
+      el.disabled = isNo;
+    });
+  }
+  const schedEl = document.getElementById('neo_rop_schedule');
+  if (schedEl) {
+    schedEl.disabled = isNo;
+    if (isNo) schedEl.value = '';
+  }
+  const docEl = document.getElementById('neo_rop_physician');
+  if (docEl) docEl.disabled = isNo;
+  const saveBtn = document.getElementById('btn-save-rop');
+  if (saveBtn) saveBtn.disabled = isNo;
+  const launchBtn = document.getElementById('btn-open-rop-screening');
+  if (launchBtn) launchBtn.disabled = isNo;
+  const reportBtn = document.getElementById('btn-open-rop-report');
+  if (reportBtn) reportBtn.disabled = isNo;
+}
+window.updateRopApplicableState = updateRopApplicableState;
+
+function updateCranialApplicableState(isNo) {
+  const cranialDate = document.getElementById('neo_cranial_date');
+  if (cranialDate) {
+    cranialDate.disabled = isNo;
+    if (isNo) cranialDate.value = '';
+  }
+  const cranialFindings = document.getElementById('neo_cranial_findings');
+  if (cranialFindings) {
+    cranialFindings.disabled = isNo;
+    if (isNo) cranialFindings.value = '';
+  }
+  const cranialRemarks = document.getElementById('neo_cranial_remarks');
+  if (cranialRemarks) {
+    cranialRemarks.disabled = isNo;
+    if (isNo) cranialRemarks.value = '';
+  }
+  const cranialPhysician = document.getElementById('neo_cranial_physician');
+  if (cranialPhysician) cranialPhysician.disabled = isNo;
+  const saveBtn = document.getElementById('btn-save-cranial');
+  if (saveBtn) saveBtn.disabled = isNo;
+}
+window.updateCranialApplicableState = updateCranialApplicableState;
+
 const ropApplicableSel = document.getElementById('neo_rop_applicable');
-ropApplicableSel.addEventListener('change', () => {
-  const isNo = ropApplicableSel.value === 'No';
-  document.querySelectorAll('#rop-exam-table input, #rop-exam-table select, #neo_rop_schedule').forEach(el => {
-    el.disabled = isNo;
-    if (isNo && el.tagName === 'SELECT') el.value = '';
-    else if (isNo) el.value = '';
+if (ropApplicableSel) {
+  ropApplicableSel.addEventListener('change', () => {
+    const isNo = ropApplicableSel.value === 'No';
+    updateRopApplicableState(isNo);
   });
-});
+}
+
+const cranialApplicableSel = document.getElementById('neo_cranial_applicable');
+if (cranialApplicableSel) {
+  cranialApplicableSel.addEventListener('change', () => {
+    const isNo = cranialApplicableSel.value === 'No';
+    updateCranialApplicableState(isNo);
+  });
+}
 
 const hearingRemarksSel = document.getElementById('neo_hearing_remarks');
 hearingRemarksSel.addEventListener('change', () => {
@@ -5718,7 +5783,7 @@ function populateNeonateData(data) {
       if (document.getElementById('neo_rop_3rd_findings')) document.getElementById('neo_rop_3rd_findings').value = sc.rop.third.findings || '';
       if (document.getElementById('neo_rop_3rd_remarks')) document.getElementById('neo_rop_3rd_remarks').value = sc.rop.third.remarks || '';
     }
-    document.querySelectorAll('#rop-exam-table input, #rop-exam-table select, #neo_rop_schedule').forEach(el => { el.disabled = isNo; });
+    updateRopApplicableState(isNo);
   } else {
     syncPatientDataIntoRopForm();
   }
@@ -5747,6 +5812,7 @@ function populateNeonateData(data) {
     document.getElementById('neo_cranial_findings').value = sc.cranialUtz.findings || '';
     document.getElementById('neo_cranial_remarks').value = sc.cranialUtz.remarks || '';
     document.getElementById('neo_cranial_physician').value = sc.cranialUtz.physician || '';
+    updateCranialApplicableState(sc.cranialUtz.applicable === 'No');
   }
   if (sc.cchd) {
     document.getElementById('neo_cchd_date').value = sc.cchd.date || '';
@@ -6536,6 +6602,8 @@ function syncPatientDataIntoRopForm() {
   if (appSel && (!appSel.value || appSel.value === '')) {
     appSel.value = 'Yes';
     appSel.dispatchEvent(new Event('change'));
+  } else if (appSel) {
+    updateRopApplicableState(appSel.value === 'No');
   }
 
   const schedEl = document.getElementById('neo_rop_schedule');

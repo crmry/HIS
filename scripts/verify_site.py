@@ -1153,7 +1153,24 @@ async def scan_single_target(browser_ws, file_url):
                     const ropBtn = document.getElementById('btn-open-rop-screening');
                     if (!ropBtn) return 'btn-open-rop-screening missing under B. Retinopathy of Prematurity';
                     ropBtn.click();
+                    // Verify Applicable select options (strictly Yes/No, no "Not Done") and freeze behavior
+                    const ropAppSel = document.getElementById('neo_rop_applicable');
+                    if (!ropAppSel) return 'neo_rop_applicable select missing';
+                    const hasNotDone = Array.from(ropAppSel.options).some(o => o.value === 'Not Done' || o.text === 'Not Done');
+                    if (hasNotDone) return 'neo_rop_applicable must not contain Not Done option';
+
+                    // Verify freeze on "No"
+                    ropAppSel.value = 'No';
+                    ropAppSel.dispatchEvent(new Event('change'));
                     const saveRopBtn = document.getElementById('btn-save-rop');
+                    if (saveRopBtn && !saveRopBtn.disabled) return 'btn-save-rop must be disabled when neo_rop_applicable is No';
+                    const examDateInput = document.getElementById('neo_rop_exam_date');
+                    if (examDateInput && !examDateInput.disabled) return 'neo_rop_exam_date must be disabled when neo_rop_applicable is No';
+
+                    // Unfreeze on "Yes"
+                    ropAppSel.value = 'Yes';
+                    ropAppSel.dispatchEvent(new Event('change'));
+                    if (saveRopBtn && saveRopBtn.disabled) return 'btn-save-rop must be enabled when neo_rop_applicable is Yes';
                     if (saveRopBtn) {
                         saveRopBtn.click();
                     }
