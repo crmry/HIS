@@ -1985,17 +1985,7 @@
 
           <!-- Retinopathy of Prematurity -->
           <div class="section-card" id="section-card-rop">
-            <div class="section-card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-              <span><i class="icon-eye-close"></i> B. Retinopathy of Prematurity (ROP) &mdash; ROP Screening Module (CLMMRH-OPH.F.001)</span>
-              <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-                <button type="button" class="btn btn-small" id="btn-open-rop-screening" onclick="openRopScreeningModule()" title="Launch / Focus ROP Screening Module" style="font-size:11.5px; padding:4px 10px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; color:#1b4d3e; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.04);">
-                  <i class="icon-search"></i> ROP Screening
-                </button>
-                <button type="button" class="btn btn-small btn-primary" id="btn-open-rop-report" onclick="openRopReportModal()" title="View and Print Official Hospital ROP Form (PDF)" style="font-size:11.5px; padding:4px 12px; background:#1b4d3e; border:1px solid #14382d; border-radius:4px; color:#ffffff; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08);">
-                  <i class="icon-print"></i> Generate ROP Form (PDF)
-                </button>
-              </div>
-            </div>
+            <div class="section-card-title"><i class="icon-eye-close"></i> B. Retinopathy of Prematurity (ROP) &mdash; ROP Screening Module (CLMMRH-OPH.F.001)</div>
 
             <!-- Primary Parameters Strip -->
             <div class="form-grid-3" style="margin-bottom:12px;">
@@ -2299,7 +2289,7 @@
                   <button type="button" class="btn btn-secondary" onclick="syncPatientDataIntoRopForm()" style="font-size:11.5px; padding:4px 10px;">
                     <i class="icon-refresh"></i> Re-sync
                   </button>
-                  <button type="button" class="btn-primary" onclick="openRopReportModal()" style="font-size:11.5px; font-weight:700; padding:4px 12px; background:#1b4d3e; border:1px solid #14382d; color:#ffffff; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+                  <button type="button" class="btn-primary" id="btn-open-rop-report" onclick="openRopReportModal()" style="font-size:11.5px; font-weight:700; padding:4px 12px; background:#1b4d3e; border:1px solid #14382d; color:#ffffff; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
                     <i class="icon-print"></i> Generate / Print PDF Form
                   </button>
                 </div>

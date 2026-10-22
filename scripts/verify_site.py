@@ -1147,12 +1147,15 @@ async def scan_single_target(browser_ws, file_url):
                         saveRorBtn.click();
                     }
 
-                    // Verify ROP button under B. Retinopathy of Prematurity (ROP) and click save
+                    // Verify ROP section card exists and redundant header buttons are removed
                     const ropCard = document.getElementById('section-card-rop');
                     if (!ropCard) return 'Section card for ROP missing in Screening tab';
-                    const ropBtn = document.getElementById('btn-open-rop-screening');
-                    if (!ropBtn) return 'btn-open-rop-screening missing under B. Retinopathy of Prematurity';
-                    ropBtn.click();
+                    if (document.getElementById('btn-open-rop-screening')) {
+                        return 'btn-open-rop-screening duplicate button should be removed from ROP section title';
+                    }
+                    if (typeof window.openRopScreeningModule === 'function') {
+                        window.openRopScreeningModule();
+                    }
                     // Verify Applicable select options (strictly Yes/No, no "Not Done") and freeze behavior
                     const ropAppSel = document.getElementById('neo_rop_applicable');
                     if (!ropAppSel) return 'neo_rop_applicable select missing';
