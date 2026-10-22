@@ -3792,6 +3792,45 @@ function updateCranialApplicableState(isNo) {
 }
 window.updateCranialApplicableState = updateCranialApplicableState;
 
+function getRealtimeLocalDate() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+window.getRealtimeLocalDate = getRealtimeLocalDate;
+
+function getRealtimeLocalTime() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const mins = String(now.getMinutes()).padStart(2, '0');
+  return `${hours}:${mins}`;
+}
+window.getRealtimeLocalTime = getRealtimeLocalTime;
+
+const ropExamDateEl = document.getElementById('neo_rop_exam_date');
+if (ropExamDateEl) {
+  ropExamDateEl.addEventListener('input', () => {
+    ropExamDateEl.dataset.userEdited = 'true';
+    if (typeof calcRopPma === 'function') calcRopPma();
+  });
+  ropExamDateEl.addEventListener('change', () => {
+    ropExamDateEl.dataset.userEdited = 'true';
+    if (typeof calcRopPma === 'function') calcRopPma();
+  });
+}
+
+const ropTimeStartedEl = document.getElementById('neo_rop_time_started');
+if (ropTimeStartedEl) {
+  ropTimeStartedEl.addEventListener('input', () => {
+    ropTimeStartedEl.dataset.userEdited = 'true';
+  });
+  ropTimeStartedEl.addEventListener('change', () => {
+    ropTimeStartedEl.dataset.userEdited = 'true';
+  });
+}
+
 const ropApplicableSel = document.getElementById('neo_rop_applicable');
 if (ropApplicableSel) {
   ropApplicableSel.addEventListener('change', () => {
@@ -5694,8 +5733,16 @@ function populateNeonateData(data) {
     if (document.getElementById('neo_rop_schedule')) document.getElementById('neo_rop_schedule').value = sc.rop.schedule || '';
     if (document.getElementById('neo_rop_physician')) document.getElementById('neo_rop_physician').value = sc.rop.physician || '';
     
-    // Examination & Dilating
-    if (document.getElementById('neo_rop_exam_date')) document.getElementById('neo_rop_exam_date').value = sc.rop.examDate || '';
+    // Examination & Dilating (Pre-filled realtime)
+    const examDateInput = document.getElementById('neo_rop_exam_date');
+    if (examDateInput) {
+      const realToday = getRealtimeLocalDate();
+      if (sc.rop.examDate && sc.rop.examDate === realToday) {
+        examDateInput.value = sc.rop.examDate;
+      } else if (!examDateInput.dataset.userEdited || examDateInput.dataset.userEdited !== 'true') {
+        examDateInput.value = realToday;
+      }
+    }
     if (sc.rop.patientType) {
       const r = document.querySelector(`input[name="neo_rop_patient_type"][value="${sc.rop.patientType}"]`);
       if (r) r.checked = true;
@@ -5705,7 +5752,14 @@ function populateNeonateData(data) {
       if (rv) rv.checked = true;
     }
     if (document.getElementById('neo_rop_dilating_drops')) document.getElementById('neo_rop_dilating_drops').value = sc.rop.dilatingDrops || 'Tropicamide 0.5% + Phenylephrine 0.5%';
-    if (document.getElementById('neo_rop_time_started')) document.getElementById('neo_rop_time_started').value = sc.rop.timeStarted || '09:00';
+    const timeStartedInput = document.getElementById('neo_rop_time_started');
+    if (timeStartedInput) {
+      if (sc.rop.timeStarted && sc.rop.timeStarted !== '09:00') {
+        timeStartedInput.value = sc.rop.timeStarted;
+      } else if (!timeStartedInput.dataset.userEdited || timeStartedInput.dataset.userEdited !== 'true') {
+        timeStartedInput.value = getRealtimeLocalTime();
+      }
+    }
 
     // History
     if (sc.rop.history) {
@@ -6428,9 +6482,19 @@ function syncPatientDataIntoRopForm() {
   const rHrnDisp = document.getElementById('neo_rop_hospital_num_display');
   if (rHrnDisp) rHrnDisp.textContent = hospitalNum;
 
-  // 1. Examination Date
+  // 1. Examination Date (Realtime pre-fill)
+  const realtimeDate = getRealtimeLocalDate();
   const examDateEl = document.getElementById('neo_rop_exam_date');
-  if (examDateEl && !examDateEl.value) examDateEl.value = todayStr;
+  if (examDateEl) {
+    if (!examDateEl.value || examDateEl.dataset.userEdited !== 'true') {
+      examDateEl.value = realtimeDate;
+    }
+  }
+
+  const timeEl = document.getElementById('neo_rop_time_started');
+  if (timeEl && (!timeEl.value || timeEl.dataset.userEdited !== 'true')) {
+    timeEl.value = getRealtimeLocalTime();
+  }
 
   // 2. Patient Status (In-patient vs Out-Patient, New vs Follow-up)
   const caseType = (d.case_type || patient.case_type || '').toLowerCase();
@@ -6628,7 +6692,7 @@ function syncPatientDataIntoRopForm() {
 
 function calcRopPma() {
   const dobStr = document.getElementById('neo_rop_dob')?.value;
-  const examStr = document.getElementById('neo_rop_exam_date')?.value || new Date().toISOString().split('T')[0];
+  const examStr = document.getElementById('neo_rop_exam_date')?.value || getRealtimeLocalDate();
   const gaStr = document.getElementById('neo_rop_ga')?.value || '';
 
   let gaWeeks = 29;
@@ -6671,7 +6735,7 @@ function syncRopModalData() {
   const elHrn = document.getElementById('pdf-rop-hospital-num');
   if (elHrn) elHrn.textContent = hospitalNum;
 
-  const examDate = document.getElementById('neo_rop_exam_date')?.value || new Date().toISOString().split('T')[0];
+  const examDate = document.getElementById('neo_rop_exam_date')?.value || getRealtimeLocalDate();
   const elDate = document.getElementById('pdf-rop-exam-date');
   if (elDate) elDate.textContent = examDate;
 

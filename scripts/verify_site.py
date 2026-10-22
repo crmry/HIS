@@ -1177,6 +1177,7 @@ async def scan_single_target(browser_ws, file_url):
                     ropAppSel.value = 'Yes';
                     ropAppSel.dispatchEvent(new Event('change'));
                     if (saveRopBtn && saveRopBtn.disabled) return 'btn-save-rop must be enabled when neo_rop_applicable is Yes';
+                    if (!examDateInput || !examDateInput.value) return 'neo_rop_exam_date must be pre-filled';
                     if (saveRopBtn) {
                         saveRopBtn.click();
                     }
