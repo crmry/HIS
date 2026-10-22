@@ -1150,6 +1150,10 @@ async def scan_single_target(browser_ws, file_url):
                     // Verify ROP section card exists and redundant header buttons are removed
                     const ropCard = document.getElementById('section-card-rop');
                     if (!ropCard) return 'Section card for ROP missing in Screening tab';
+                    const ropTitle = ropCard.querySelector('.section-card-title');
+                    if (ropTitle && ropTitle.textContent.includes('CLMMRH-OPH.F.001')) {
+                        return 'ROP section card title must not contain redundant CLMMRH-OPH.F.001 suffix';
+                    }
                     if (document.getElementById('btn-open-rop-screening')) {
                         return 'btn-open-rop-screening duplicate button should be removed from ROP section title';
                     }
