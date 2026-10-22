@@ -1182,7 +1182,23 @@ async def scan_single_target(browser_ws, file_url):
                         saveRopBtn.click();
                     }
 
-                    // Verify ROP PDF Report Modal open and close and demographic auto-fill
+                    // Verify 4 ROP Perinatal Metrics auto-filled from patient EMR data
+                    const ropDob = document.getElementById('neo_rop_dob');
+                    if (!ropDob || !ropDob.value) return 'neo_rop_dob must be auto-filled';
+                    const ropGa = document.getElementById('neo_rop_ga');
+                    if (!ropGa || !ropGa.value) return 'neo_rop_ga must be auto-filled';
+                    if (ropGa.value.includes('Incomplete') || ropGa.value.includes('—') || ropGa.value.includes('0/12')) {
+                        return 'neo_rop_ga must not contain incomplete/partial Ballard text';
+                    }
+                    const ropBw = document.getElementById('neo_rop_bw');
+                    if (!ropBw || !ropBw.value) return 'neo_rop_bw must be auto-filled';
+                    const ropPma = document.getElementById('neo_rop_pma');
+                    if (!ropPma || !ropPma.value) return 'neo_rop_pma must be auto-filled';
+                    if (ropPma.value.includes('12 wks') && ropGa.value.includes('39')) {
+                        return 'neo_rop_pma calculated erroneous 12 wks from corrupt Ballard text';
+                    }
+
+                    // Verify ROP PDF Report Modal open and close and demographic/metrics auto-fill
                     const ropReportBtn = document.getElementById('btn-open-rop-report');
                     const ropModal = document.getElementById('ropScreeningReportModal');
                     if (ropReportBtn && ropModal) {
@@ -1193,6 +1209,10 @@ async def scan_single_target(browser_ws, file_url):
                         const pdfPtName = document.getElementById('pdf-rop-patient-name');
                         const pdfHrn = document.getElementById('pdf-rop-hospital-num');
                         const pdfExamDate = document.getElementById('pdf-rop-exam-date');
+                        const pdfDob = document.getElementById('pdf-rop-dob');
+                        const pdfGa = document.getElementById('pdf-rop-ga');
+                        const pdfBw = document.getElementById('pdf-rop-bw');
+                        const pdfPma = document.getElementById('pdf-rop-pma');
                         if (!pdfPtName || !pdfPtName.textContent.trim() || pdfPtName.textContent.trim() === '—') {
                             return 'pdf-rop-patient-name failed to auto-fill';
                         }
@@ -1201,6 +1221,18 @@ async def scan_single_target(browser_ws, file_url):
                         }
                         if (!pdfExamDate || !pdfExamDate.textContent.trim() || pdfExamDate.textContent.trim() === '—') {
                             return 'pdf-rop-exam-date failed to auto-fill';
+                        }
+                        if (!pdfDob || !pdfDob.textContent.trim() || pdfDob.textContent.trim() === '—') {
+                            return 'pdf-rop-dob failed to auto-fill';
+                        }
+                        if (!pdfGa || !pdfGa.textContent.trim() || pdfGa.textContent.trim() === '—' || pdfGa.textContent.includes('Incomplete')) {
+                            return 'pdf-rop-ga failed to auto-fill or contains Incomplete text';
+                        }
+                        if (!pdfBw || !pdfBw.textContent.trim() || pdfBw.textContent.trim() === '—') {
+                            return 'pdf-rop-bw failed to auto-fill';
+                        }
+                        if (!pdfPma || !pdfPma.textContent.trim() || pdfPma.textContent.trim() === '—' || pdfPma.textContent.includes('NaN')) {
+                            return 'pdf-rop-pma failed to auto-fill';
                         }
                         if (typeof window.closeRopReportModal === 'function') {
                             window.closeRopReportModal();
