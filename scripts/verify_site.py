@@ -1190,18 +1190,22 @@ async def scan_single_target(browser_ws, file_url):
                         saveRopBtn.click();
                     }
 
-                    // Verify 4 ROP Perinatal Metrics auto-filled from patient EMR data
+                    // Verify 4 ROP Perinatal Metrics auto-filled from patient EMR data (read-only / non-editable)
                     const ropDob = document.getElementById('neo_rop_dob');
                     if (!ropDob || !ropDob.value) return 'neo_rop_dob must be auto-filled';
+                    if (!ropDob.readOnly) return 'neo_rop_dob must be readOnly (fixed/non-editable)';
                     const ropGa = document.getElementById('neo_rop_ga');
                     if (!ropGa || !ropGa.value) return 'neo_rop_ga must be auto-filled';
+                    if (!ropGa.readOnly) return 'neo_rop_ga must be readOnly (fixed/non-editable)';
                     if (ropGa.value.includes('Incomplete') || ropGa.value.includes('—') || ropGa.value.includes('0/12')) {
                         return 'neo_rop_ga must not contain incomplete/partial Ballard text';
                     }
                     const ropBw = document.getElementById('neo_rop_bw');
                     if (!ropBw || !ropBw.value) return 'neo_rop_bw must be auto-filled';
+                    if (!ropBw.readOnly) return 'neo_rop_bw must be readOnly (fixed/non-editable)';
                     const ropPma = document.getElementById('neo_rop_pma');
                     if (!ropPma || !ropPma.value) return 'neo_rop_pma must be auto-filled';
+                    if (!ropPma.readOnly) return 'neo_rop_pma must be readOnly (fixed/non-editable)';
                     if (ropPma.value.includes('12 wks') && ropGa.value.includes('39')) {
                         return 'neo_rop_pma calculated erroneous 12 wks from corrupt Ballard text';
                     }
