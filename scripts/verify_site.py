@@ -1288,6 +1288,10 @@ async def scan_single_target(browser_ws, file_url):
                     if (ropResident.getAttribute('list') !== 'hospital-physicians-list') {
                         return 'neo_rop_resident must have list="hospital-physicians-list" attribute';
                     }
+                    const ropPhysicianLabel = document.querySelector('label[for="neo_rop_physician"]');
+                    if (!ropPhysicianLabel || ropPhysicianLabel.textContent.trim() !== 'Physician') {
+                        return 'neo_rop_physician label must be "Physician"';
+                    }
                     const ropPhysician = document.getElementById('neo_rop_physician');
                     if (ropPhysician && /^Dr\\.?\\s+.*,\\s*MD$/i.test(ropPhysician.value.trim())) {
                         return 'neo_rop_physician contains redundant duplicate Dr. and MD titles';
