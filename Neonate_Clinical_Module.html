@@ -2030,6 +2030,12 @@
                 <div style="font-size:11px; color:#64748b;">Corazon Locsin Montelibano Memorial Regional Hospital &bull; Department of Ophthalmology &bull; Form CLMMRH-OPH.F.001</div>
               </div>
 
+              <!-- Patient Demographics Header Strip (Auto-filled) -->
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:12px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; font-size:11.5px; line-height:1.6;">
+                <div style="flex:2;"><strong>NAME OF PATIENT:</strong> <span id="neo_rop_patient_name_display" style="font-weight:700; color:#0f172a; border-bottom:1px solid #94a3b8; display:inline-block; min-width:240px; padding:0 6px;">—</span></div>
+                <div style="flex:1;"><strong>HOSPITAL NUMBER:</strong> <span id="neo_rop_hospital_num_display" style="font-weight:700; color:#0f172a; border-bottom:1px solid #94a3b8; display:inline-block; min-width:130px; padding:0 6px;">—</span></div>
+              </div>
+
               <!-- Examination & Dilating Drops Strip -->
               <div class="form-grid-4" style="margin-bottom:12px;">
                 <div class="form-group">
@@ -6340,16 +6346,52 @@ function syncPatientDataIntoRopForm() {
   const d = patient.data || {};
   const todayStr = new Date().toISOString().split('T')[0];
 
+  // Derive Patient Name & HRN universally across all patient records
+  let patientName = '';
+  if (d.last_name || d.first_name) {
+    patientName = `${d.last_name || ''}, ${d.first_name || ''} ${d.middle_name || ''}`.replace(/\s+/g, ' ').trim();
+  }
+  if (!patientName) {
+    patientName = patient.name || document.getElementById('banner-patient-name')?.textContent?.trim() || 'SANTOS, BABY BOY';
+  }
+  const hospitalNum = d.hrn || patient.hrn || document.getElementById('banner-hrn')?.textContent?.trim() || '0000001926';
+
+  // Sync interactive ROP card demographic header displays
+  const rNameDisp = document.getElementById('neo_rop_patient_name_display');
+  if (rNameDisp) rNameDisp.textContent = patientName;
+  const rHrnDisp = document.getElementById('neo_rop_hospital_num_display');
+  if (rHrnDisp) rHrnDisp.textContent = hospitalNum;
+
   // 1. Examination Date
   const examDateEl = document.getElementById('neo_rop_exam_date');
   if (examDateEl && !examDateEl.value) examDateEl.value = todayStr;
 
   // 2. Patient Status (In-patient vs Out-Patient, New vs Follow-up)
-  const isIp = (d.case_type || '').toLowerCase().includes('inpatient') ||
-               (d.registration_type || '').toLowerCase().includes('inpatient') ||
-               (d.registration_type || '').toLowerCase().includes('newborn') ||
-               (d.ward_room || '').length > 0 ||
-               (currentPatientId && (currentPatientId.includes('neo') || currentPatientId.includes('er')));
+  const caseType = (d.case_type || patient.case_type || '').toLowerCase();
+  const regType = (d.registration_type || patient.registration_type || '').toLowerCase();
+  const encounterNo = (d.encounter_no || patient.encounter_no || '').toUpperCase();
+  const wardRoom = (d.ward_room || patient.ward_room || '').toLowerCase();
+
+  const isOp = caseType.includes('outpatient') ||
+               caseType.includes('op patient') ||
+               caseType.includes('opd') ||
+               regType.includes('outpatient') ||
+               regType.includes('opd') ||
+               encounterNo.startsWith('OP-') ||
+               (currentPatientId && currentPatientId.includes('_op_'));
+
+  const isIp = !isOp && (
+    caseType.includes('inpatient') ||
+    caseType.includes('in-patient') ||
+    caseType.includes('ward') ||
+    regType.includes('inpatient') ||
+    regType.includes('newborn') ||
+    encounterNo.startsWith('IP-') ||
+    encounterNo.startsWith('NB-') ||
+    (wardRoom.includes('ward') || wardRoom.includes('nursery') || wardRoom.includes('bassinet') || wardRoom.includes('rooming-in')) ||
+    (currentPatientId && (currentPatientId.includes('neo') || currentPatientId.includes('ob') || currentPatientId.includes('er')))
+  );
+
   const ipEl = document.getElementById('neo_rop_type_ip');
   const opEl = document.getElementById('neo_rop_type_op');
   if (ipEl && opEl) {
@@ -6362,10 +6404,19 @@ function syncPatientDataIntoRopForm() {
     }
   }
 
+  const chiefComp = (d.chief_complaint || '').toLowerCase();
+  const hxPres = (d.hx_present || '').toLowerCase();
+  const isFollowUp = chiefComp.includes('follow-up') || chiefComp.includes('follow up') || hxPres.includes('follow-up') || hxPres.includes('follow up');
   const newEl = document.getElementById('neo_rop_type_new');
   const fuEl = document.getElementById('neo_rop_type_fu');
-  if (newEl && fuEl && !newEl.checked && !fuEl.checked) {
-    newEl.checked = true;
+  if (newEl && fuEl) {
+    if (isFollowUp) {
+      fuEl.checked = true;
+      newEl.checked = false;
+    } else {
+      newEl.checked = true;
+      fuEl.checked = false;
+    }
   }
 
   // 3. Date of Birth (DOB)
@@ -6534,8 +6585,17 @@ function calcRopPma() {
 
 function syncRopModalData() {
   const patient = (typeof getPatients === 'function' ? getPatients().find(p => p.id === currentPatientId) : null) || {};
-  const patientName = patient.name || document.getElementById('neo_patient_banner_name')?.textContent || 'Santos, Baby Boy';
-  const hospitalNum = patient.hrn || patient.id || 'HRN-2026-NEO-001';
+  const d = patient.data || {};
+
+  // Derive Patient Name & HRN universally across all patient records
+  let patientName = '';
+  if (d.last_name || d.first_name) {
+    patientName = `${d.last_name || ''}, ${d.first_name || ''} ${d.middle_name || ''}`.replace(/\s+/g, ' ').trim();
+  }
+  if (!patientName) {
+    patientName = patient.name || document.getElementById('banner-patient-name')?.textContent?.trim() || 'SANTOS, BABY BOY';
+  }
+  const hospitalNum = d.hrn || patient.hrn || document.getElementById('banner-hrn')?.textContent?.trim() || '0000001926';
 
   // Demographics
   const elName = document.getElementById('pdf-rop-patient-name');
@@ -6549,8 +6609,9 @@ function syncRopModalData() {
 
   // Patient Status Radios
   const typeChecked = (document.querySelector('input[name="neo_rop_patient_type"]:checked') || {}).value || 'In-patient';
-  const isNew = Boolean(document.getElementById('neo_rop_type_new')?.checked);
-  const isFu = Boolean(document.getElementById('neo_rop_type_fu')?.checked);
+  const visitChecked = (document.querySelector('input[name="neo_rop_visit_type"]:checked') || {}).value || 'New';
+  const isNew = visitChecked === 'New';
+  const isFu = visitChecked === 'Follow-up';
   const elIp = document.getElementById('pdf-rop-type-ip');
   const elOp = document.getElementById('pdf-rop-type-op');
   const elNew = document.getElementById('pdf-rop-type-new');

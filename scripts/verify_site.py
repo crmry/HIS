@@ -1158,13 +1158,25 @@ async def scan_single_target(browser_ws, file_url):
                         saveRopBtn.click();
                     }
 
-                    // Verify ROP PDF Report Modal open and close
+                    // Verify ROP PDF Report Modal open and close and demographic auto-fill
                     const ropReportBtn = document.getElementById('btn-open-rop-report');
                     const ropModal = document.getElementById('ropScreeningReportModal');
                     if (ropReportBtn && ropModal) {
                         ropReportBtn.click();
                         if (window.getComputedStyle(ropModal).display === 'none') {
                             return 'ropScreeningReportModal failed to open on clicking btn-open-rop-report';
+                        }
+                        const pdfPtName = document.getElementById('pdf-rop-patient-name');
+                        const pdfHrn = document.getElementById('pdf-rop-hospital-num');
+                        const pdfExamDate = document.getElementById('pdf-rop-exam-date');
+                        if (!pdfPtName || !pdfPtName.textContent.trim() || pdfPtName.textContent.trim() === '—') {
+                            return 'pdf-rop-patient-name failed to auto-fill';
+                        }
+                        if (!pdfHrn || !pdfHrn.textContent.trim() || pdfHrn.textContent.trim() === '—') {
+                            return 'pdf-rop-hospital-num failed to auto-fill';
+                        }
+                        if (!pdfExamDate || !pdfExamDate.textContent.trim() || pdfExamDate.textContent.trim() === '—') {
+                            return 'pdf-rop-exam-date failed to auto-fill';
                         }
                         if (typeof window.closeRopReportModal === 'function') {
                             window.closeRopReportModal();
