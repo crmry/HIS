@@ -1246,12 +1246,42 @@ async def scan_single_target(browser_ws, file_url):
                         if (!pdfRec || !pdfRec.textContent.includes('Repeat retinal examination in 2 weeks')) {
                             return 'pdf-rop-recommendation failed to render doctor free-text recommendation';
                         }
+                        const pdfResName = document.getElementById('pdf-rop-resident-name');
+                        if (!pdfResName || !pdfResName.textContent.trim() || pdfResName.textContent.trim() === '—') {
+                            return 'pdf-rop-resident-name failed to auto-fill';
+                        }
+                        if (/^Dr\\.?\\s+.*,\\s*MD$/i.test(pdfResName.textContent.trim())) {
+                            return 'pdf-rop-resident-name contains redundant duplicate Dr. and MD titles';
+                        }
                         if (typeof window.closeRopReportModal === 'function') {
                             window.closeRopReportModal();
                             if (window.getComputedStyle(ropModal).display !== 'none') {
                                 return 'ropScreeningReportModal failed to close';
                             }
                         }
+                    }
+
+                    // Verify Resident-in-Charge auto-filled from active doctor account & credentials sanitized
+                    const ropResident = document.getElementById('neo_rop_resident');
+                    if (!ropResident || !ropResident.value.trim()) {
+                        return 'neo_rop_resident must be auto-filled from active doctor account';
+                    }
+                    if (/^Dr\\.?\\s+.*,\\s*MD$/i.test(ropResident.value.trim())) {
+                        return 'neo_rop_resident contains redundant duplicate Dr. and MD titles';
+                    }
+                    if (ropResident.getAttribute('list') !== 'hospital-physicians-list') {
+                        return 'neo_rop_resident must have list="hospital-physicians-list" attribute';
+                    }
+                    const ropPhysician = document.getElementById('neo_rop_physician');
+                    if (ropPhysician && /^Dr\\.?\\s+.*,\\s*MD$/i.test(ropPhysician.value.trim())) {
+                        return 'neo_rop_physician contains redundant duplicate Dr. and MD titles';
+                    }
+
+                    // Test auto-sanitization on blur
+                    ropResident.value = 'Dr. Andrea Reyes, MD';
+                    ropResident.dispatchEvent(new Event('blur'));
+                    if (ropResident.value !== 'Andrea Reyes, MD') {
+                        return 'neo_rop_resident blur event failed to auto-sanitize redundant titles';
                     }
 
                     // Verify Medical Futility dropdown has "Others" option

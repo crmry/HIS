@@ -2013,7 +2013,7 @@
               </div>
               <div class="form-group">
                 <label class="form-label" for="neo_rop_physician">Responsible Physician (Ophthalmologist)</label>
-                <input class="form-input" type="text" id="neo_rop_physician" name="neo_rop_physician" placeholder="Physician Full Name, MD">
+                <input class="form-input" type="text" id="neo_rop_physician" name="neo_rop_physician" list="hospital-physicians-list" placeholder="Physician Full Name, MD">
               </div>
               <div class="form-group" style="display:flex; justify-content:flex-end; align-items:flex-end;">
                 <button type="button" class="btn-primary" id="btn-save-rop" onclick="saveScreeningSub('rop', 'ROP Screening')" style="height:36px; width:100%; font-size:12px; font-weight:700; letter-spacing:0.3px; background:#1b4d3e; border:1px solid #14382d; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08); cursor:pointer;">
@@ -2292,7 +2292,7 @@
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="neo_rop_resident">Resident-In-Charge</label>
-                  <input type="text" class="form-input" id="neo_rop_resident" name="neo_rop_resident" placeholder="Physician Full Name, MD">
+                  <input type="text" class="form-input" id="neo_rop_resident" name="neo_rop_resident" list="hospital-physicians-list" placeholder="Physician Full Name, MD">
                 </div>
               </div>
 
@@ -3280,6 +3280,18 @@
 <!-- Toast -->
 <div class="neo-toast" id="neoToast">Neonate record saved successfully.</div>
 
+<!-- Hospital Physicians Directory Datalist -->
+<datalist id="hospital-physicians-list">
+  <option value="Andrea Reyes, MD">Pediatrics / Neonatology</option>
+  <option value="Miguel Santos, MD">General Medicine</option>
+  <option value="Maria Santos, MD">Internal Medicine</option>
+  <option value="Paolo Cruz, MD">Orthopedic Surgery</option>
+  <option value="Liza Garcia, MD">Obstetrics and Gynecology</option>
+  <option value="Roberto Lim, MD">Emergency Medicine</option>
+  <option value="Arthur Mahinay, MD">Pulmonary Medicine</option>
+  <option value="Elena Mahinay, MD">Cardiology</option>
+</datalist>
+
 <!-- Scripts -->
 <script src="js/data/patient_seeds.js"></script>
 <script>
@@ -3307,6 +3319,105 @@ const WEEKS_TO_MATURITY = {
 };
 
 let currentPatientId = window.NEO_PATIENT_ID || 'patient_neo_santos';
+
+/* ── Authenticated Physician Account Resolution & Credential Sanitization ── */
+function findPhysicianInDirectory(query) {
+  if (!query) return null;
+  const list = window.HOSPITAL_PHYSICIANS_DIRECTORY || [];
+  const q = String(query).trim().toLowerCase();
+  return list.find(d => 
+    !d.is_none && (
+      (d.id && d.id.toLowerCase() === q) ||
+      (d.legacy_id && d.legacy_id.toLowerCase() === q) ||
+      (d.name && d.name.toLowerCase() === q) ||
+      (d.title && d.title.toLowerCase() === q) ||
+      (d.name && d.name.toLowerCase().includes(q))
+    )
+  ) || null;
+}
+window.findPhysicianInDirectory = findPhysicianInDirectory;
+
+function sanitizePhysicianName(name) {
+  if (!name) return '';
+  let str = String(name).trim();
+  const dirMatch = findPhysicianInDirectory(str);
+  if (dirMatch && dirMatch.name) {
+    str = dirMatch.name;
+  }
+  // Enforce DOH AO 2021-0037 & PhilHealth standards: strictly eliminate redundant double titles (e.g. 'Dr. ... MD')
+  if (/^(Dr\.?|Doctor)\s+/i.test(str) && /,\s*M\.?D\.?/i.test(str)) {
+    str = str.replace(/^(Dr\.?|Doctor)\s+/i, '').trim();
+  }
+  return str;
+}
+window.sanitizePhysicianName = sanitizePhysicianName;
+
+function getActiveDoctorAccount(patient) {
+  // 1. URL search parameters: ?doctor=, ?physician=, ?resident=, or ?doc=
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const urlDoc = params.get('doctor') || params.get('physician') || params.get('resident') || params.get('doc');
+    if (urlDoc) {
+      const matchDir = findPhysicianInDirectory(urlDoc);
+      return sanitizePhysicianName(matchDir ? matchDir.name : urlDoc);
+    }
+  } catch (e) {}
+
+  // 2. Global runtime physician session context
+  if (window.CURRENT_PHYSICIAN_NAME && typeof window.CURRENT_PHYSICIAN_NAME === 'string' && window.CURRENT_PHYSICIAN_NAME.trim()) {
+    return sanitizePhysicianName(window.CURRENT_PHYSICIAN_NAME);
+  }
+  if (window.HIS_CURRENT_PHYSICIAN && typeof window.HIS_CURRENT_PHYSICIAN === 'string' && window.HIS_CURRENT_PHYSICIAN.trim()) {
+    return sanitizePhysicianName(window.HIS_CURRENT_PHYSICIAN);
+  }
+
+  // 3. Persistent authenticated physician session in browser storage
+  try {
+    const sessionDoc = sessionStorage.getItem('his_current_physician') ||
+                       sessionStorage.getItem('his_authenticated_physician') ||
+                       localStorage.getItem('his_current_physician') ||
+                       localStorage.getItem('his_authenticated_physician') ||
+                       localStorage.getItem('currentPhysician');
+    if (sessionDoc && sessionDoc.trim()) {
+      const matchDir = findPhysicianInDirectory(sessionDoc);
+      return sanitizePhysicianName(matchDir ? matchDir.name : sessionDoc);
+    }
+  } catch (e) {}
+
+  // 4. Form encoder credential stamp if available
+  const encInput = document.getElementById('neo_dx_encoded_by');
+  if (encInput && encInput.value) {
+    const parts = encInput.value.split('|');
+    if (parts[0] && parts[0].trim()) {
+      return sanitizePhysicianName(parts[0].trim());
+    }
+  }
+
+  // 5. Patient's assigned attending physician from seed/EHR record
+  const pt = patient || (typeof getPatients === 'function' ? getPatients().find(p => p.id === currentPatientId) : null);
+  const d = (pt && pt.data) || {};
+  const pDoc = (d.attending_physician && d.attending_physician.name) || (pt && pt.attendingPhysician);
+  if (pDoc && String(pDoc).trim()) {
+    return sanitizePhysicianName(pDoc);
+  }
+
+  // 6. Context-appropriate neonatal fallback
+  return 'Andrea Reyes, MD';
+}
+window.getActiveDoctorAccount = getActiveDoctorAccount;
+
+function populatePhysiciansDatalist() {
+  const dl = document.getElementById('hospital-physicians-list');
+  if (!dl) return;
+  const list = window.HOSPITAL_PHYSICIANS_DIRECTORY || [];
+  if (list.length > 0) {
+    dl.innerHTML = list
+      .filter(d => !d.is_none)
+      .map(d => `<option value="${d.name}">${d.specialty || d.department || ''}</option>`)
+      .join('');
+  }
+}
+window.populatePhysiciansDatalist = populatePhysiciansDatalist;
 
 function showNeonateToast(msg) {
   const t = document.getElementById('neoToast');
@@ -5715,7 +5826,12 @@ function populateNeonateData(data) {
   if (sc.rop) {
     if (ropApplicableSel) ropApplicableSel.value = sc.rop.applicable || '';
     if (document.getElementById('neo_rop_schedule')) document.getElementById('neo_rop_schedule').value = sc.rop.schedule || '';
-    if (document.getElementById('neo_rop_physician')) document.getElementById('neo_rop_physician').value = sc.rop.physician || '';
+    if (document.getElementById('neo_rop_physician')) {
+      const activeDoc = getActiveDoctorAccount();
+      const rawDoc = sc.rop.physician;
+      const cleanDoc = rawDoc ? sanitizePhysicianName(rawDoc) : '';
+      document.getElementById('neo_rop_physician').value = (cleanDoc && cleanDoc !== 'Dr. Andrea Reyes, MD') ? cleanDoc : activeDoc;
+    }
     
     // Examination & Dilating (Pre-filled realtime)
     const examDateInput = document.getElementById('neo_rop_exam_date');
@@ -5824,7 +5940,12 @@ function populateNeonateData(data) {
 
     // Incidental & Resident
     if (document.getElementById('neo_rop_incidental_findings')) document.getElementById('neo_rop_incidental_findings').value = sc.rop.incidentalFindings || '';
-    if (document.getElementById('neo_rop_resident')) document.getElementById('neo_rop_resident').value = sc.rop.residentInCharge || '';
+    if (document.getElementById('neo_rop_resident')) {
+      const activeDoc = getActiveDoctorAccount();
+      const rawRes = sc.rop.residentInCharge;
+      const cleanRes = rawRes ? sanitizePhysicianName(rawRes) : '';
+      document.getElementById('neo_rop_resident').value = (cleanRes && cleanRes !== 'Dr. Andrea Reyes, MD') ? cleanRes : activeDoc;
+    }
 
     // Legacy rounds
     const isNo = sc.rop.applicable === 'No';
@@ -5976,8 +6097,10 @@ function getFormattedEncoderCredentials(role) {
   const now = new Date();
   const dateStr = now.toISOString().slice(0, 10);
   if (role === 'physician') {
-    const doc = window.CURRENT_PHYSICIAN_NAME || 'Miguel Santos, MD';
-    return `${doc} | PRC No. 0094821 | ${dateStr}`;
+    const doc = sanitizePhysicianName(getActiveDoctorAccount() || window.CURRENT_PHYSICIAN_NAME || 'Miguel Santos, MD');
+    const dirMatch = findPhysicianInDirectory(doc);
+    const prc = (dirMatch && dirMatch.prc_no) ? dirMatch.prc_no : '0094821';
+    return `${doc} | PRC No. ${prc} | ${dateStr}`;
   } else {
     return `Elena M. Ramos, RN | PRC No. 0084321 | ${dateStr}`;
   }
@@ -6738,12 +6861,26 @@ function syncPatientDataIntoRopForm() {
     }
   }
 
-  // 9. Attending Physicians
+  // 9. Attending Physicians & Resident-in-Charge
+  const activeDoctor = getActiveDoctorAccount(patient);
   const docEl = document.getElementById('neo_rop_physician');
   const resEl = document.getElementById('neo_rop_resident');
-  const attendingVal = (d.attending_physician && d.attending_physician.name) || patient.attendingPhysician || docEl?.value || 'Andrea Reyes, MD';
-  if (docEl && !docEl.value) docEl.value = attendingVal;
-  if (resEl && !resEl.value) resEl.value = attendingVal;
+  const attendingVal = sanitizePhysicianName((d.attending_physician && d.attending_physician.name) || patient.attendingPhysician || activeDoctor);
+
+  if (docEl) {
+    if (!docEl.value || docEl.value === 'Dr. Andrea Reyes, MD') {
+      docEl.value = attendingVal;
+    } else {
+      docEl.value = sanitizePhysicianName(docEl.value);
+    }
+  }
+  if (resEl) {
+    if (!resEl.value || resEl.value === 'Dr. Andrea Reyes, MD') {
+      resEl.value = activeDoctor;
+    } else {
+      resEl.value = sanitizePhysicianName(resEl.value);
+    }
+  }
 }
 
 function calcRopPma() {
@@ -6904,7 +7041,12 @@ function syncRopModalData() {
   if (elInc) elInc.textContent = document.getElementById('neo_rop_incidental_findings')?.value || 'None';
 
   // Resident & Timestamp
-  const residentVal = document.getElementById('neo_rop_resident')?.value || document.getElementById('neo_rop_physician')?.value || 'Andrea Reyes, MD';
+  const activeDoc = getActiveDoctorAccount(window.currentPatientRecord);
+  const residentVal = sanitizePhysicianName(
+    document.getElementById('neo_rop_resident')?.value ||
+    document.getElementById('neo_rop_physician')?.value ||
+    activeDoc
+  );
   const elResName = document.getElementById('pdf-rop-resident-name');
   if (elResName) elResName.textContent = residentVal;
 
@@ -7292,7 +7434,21 @@ function initNeonateWorkspace() {
   }
 });
 
+// Auto-sanitize physician credentials upon manual edits or datalist selection
+['neo_rop_resident', 'neo_rop_physician', 'neo_ror_physician', 'neo_enbs_physician', 'neo_hearing_physician', 'neo_cranial_physician', 'neo_cchd_physician'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('blur', function() {
+      if (el.value) el.value = sanitizePhysicianName(el.value);
+    });
+    el.addEventListener('change', function() {
+      if (el.value) el.value = sanitizePhysicianName(el.value);
+    });
+  }
+});
+
 window.addEventListener('DOMContentLoaded', () => {
+  populatePhysiciansDatalist();
   initNeonateWorkspace();
 });
 </script>
