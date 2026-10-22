@@ -1179,6 +1179,11 @@ async def scan_single_target(browser_ws, file_url):
                     if (saveRopBtn && saveRopBtn.disabled) return 'btn-save-rop must be enabled when neo_rop_applicable is Yes';
                     if (!examDateInput || !examDateInput.value) return 'neo_rop_exam_date must be pre-filled';
                     if (saveRopBtn) {
+                        if (document.getElementById('rop-exam-table')) {
+                            if (!(saveRopBtn.compareDocumentPosition(document.getElementById('rop-exam-table')) & Node.DOCUMENT_POSITION_PRECEDING)) {
+                                return 'btn-save-rop must be placed below rop-exam-table at bottom of section card';
+                            }
+                        }
                         saveRopBtn.click();
                     }
 

@@ -1998,7 +1998,7 @@
             </div>
 
             <!-- Primary Parameters Strip -->
-            <div class="form-grid-4" style="margin-bottom:12px;">
+            <div class="form-grid-3" style="margin-bottom:12px;">
               <div class="form-group">
                 <label class="form-label" for="neo_rop_applicable">Applicable</label>
                 <select class="form-select" id="neo_rop_applicable" name="neo_rop_applicable">
@@ -2014,11 +2014,6 @@
               <div class="form-group">
                 <label class="form-label" for="neo_rop_physician">Responsible Physician (Ophthalmologist)</label>
                 <input class="form-input" type="text" id="neo_rop_physician" name="neo_rop_physician" list="hospital-physicians-list" placeholder="Physician Full Name, MD">
-              </div>
-              <div class="form-group" style="display:flex; justify-content:flex-end; align-items:flex-end;">
-                <button type="button" class="btn-primary" id="btn-save-rop" onclick="saveScreeningSub('rop', 'ROP Screening')" style="height:36px; width:100%; font-size:12px; font-weight:700; letter-spacing:0.3px; background:#1b4d3e; border:1px solid #14382d; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08); cursor:pointer;">
-                  <i class="icon-ok icon-white"></i> SAVE
-                </button>
               </div>
             </div>
 
@@ -2382,6 +2377,13 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <!-- Section Card Bottom Save Strip (Uniform with all screening modules) -->
+            <div style="display:flex; justify-content:flex-end; align-items:center; margin-top:14px; padding-top:10px;">
+              <button type="button" class="btn-primary" id="btn-save-rop" onclick="saveScreeningSub('rop', 'ROP Screening')" style="height:36px; min-width:140px; font-size:12px; font-weight:700; letter-spacing:0.3px; background:#1b4d3e; border:1px solid #14382d; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.08); cursor:pointer;">
+                <i class="icon-ok icon-white"></i> SAVE
+              </button>
             </div>
             </div><!-- /#neo_rop_content_body -->
           </div>
