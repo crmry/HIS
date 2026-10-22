@@ -398,14 +398,19 @@ async def scan_single_target(browser_ws, file_url):
                     const ropSpecialBtn = document.getElementById('btn-open-rop-screening');
                     if (ropSpecialBtn) return 'btn-open-rop-screening should not be present in specialized forms dashlet';
                 }
-                const openModBtn = document.getElementById('btn-open-obgyne-module');
-                if (openModBtn) {
-                    openModBtn.click();
+                if (isDashboardPage) {
                     const modModal = document.getElementById('clinical-module-action-modal');
-                    if (!modModal || window.getComputedStyle(modModal).display === 'none') return 'Clinical module action modal failed to open';
-                    const closeModBtn = document.getElementById('close-mod-modal');
-                    if (closeModBtn) closeModBtn.click();
-                    if (window.getComputedStyle(modModal).display !== 'none' && modModal.classList.contains('open')) return 'Clinical module action modal failed to close';
+                    if (modModal) return 'clinical-module-action-modal must be removed from DOM (direct navigation)';
+                    const obModBtn = document.getElementById('btn-open-obgyne-module');
+                    if (!obModBtn || !obModBtn.getAttribute('onclick') || !obModBtn.getAttribute('onclick').includes('openObGyneWorkspace')) {
+                        return 'btn-open-obgyne-module must directly call openObGyneWorkspace';
+                    }
+                    const neoModBtn = document.getElementById('btn-open-neonate-module');
+                    if (!neoModBtn || !neoModBtn.getAttribute('onclick') || !neoModBtn.getAttribute('onclick').includes('openNeonateWorkspace')) {
+                        return 'btn-open-neonate-module must directly call openNeonateWorkspace';
+                    }
+                    if (typeof window.openObGyneWorkspace !== 'function') return 'openObGyneWorkspace not defined on window';
+                    if (typeof window.openNeonateWorkspace !== 'function') return 'openNeonateWorkspace not defined on window';
                 }
 
                 // Test PMH Interviewed Medications Encoder Modal & Table
