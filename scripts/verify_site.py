@@ -1198,6 +1198,14 @@ async def scan_single_target(browser_ws, file_url):
                         return 'neo_rop_pma calculated erroneous 12 wks from corrupt Ballard text';
                     }
 
+                    // Verify ROP Free-Text Recommendation
+                    const ropRecInput = document.getElementById('neo_rop_recommendation');
+                    if (!ropRecInput || ropRecInput.tagName.toLowerCase() !== 'textarea') {
+                        return 'neo_rop_recommendation must be a free-text textarea';
+                    }
+                    ropRecInput.value = 'Repeat retinal examination in 2 weeks. Monitor SpO2.';
+                    ropRecInput.dispatchEvent(new Event('input'));
+
                     // Verify ROP PDF Report Modal open and close and demographic/metrics auto-fill
                     const ropReportBtn = document.getElementById('btn-open-rop-report');
                     const ropModal = document.getElementById('ropScreeningReportModal');
@@ -1213,6 +1221,7 @@ async def scan_single_target(browser_ws, file_url):
                         const pdfGa = document.getElementById('pdf-rop-ga');
                         const pdfBw = document.getElementById('pdf-rop-bw');
                         const pdfPma = document.getElementById('pdf-rop-pma');
+                        const pdfRec = document.getElementById('pdf-rop-recommendation');
                         if (!pdfPtName || !pdfPtName.textContent.trim() || pdfPtName.textContent.trim() === '—') {
                             return 'pdf-rop-patient-name failed to auto-fill';
                         }
@@ -1233,6 +1242,9 @@ async def scan_single_target(browser_ws, file_url):
                         }
                         if (!pdfPma || !pdfPma.textContent.trim() || pdfPma.textContent.trim() === '—' || pdfPma.textContent.includes('NaN')) {
                             return 'pdf-rop-pma failed to auto-fill';
+                        }
+                        if (!pdfRec || !pdfRec.textContent.includes('Repeat retinal examination in 2 weeks')) {
+                            return 'pdf-rop-recommendation failed to render doctor free-text recommendation';
                         }
                         if (typeof window.closeRopReportModal === 'function') {
                             window.closeRopReportModal();

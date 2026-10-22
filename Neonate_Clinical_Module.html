@@ -2215,16 +2215,9 @@
                       <td><select class="form-select rop-zone-sel" id="rop_norm_lz" style="font-size:11px; padding:2px 4px;"><option value="">—</option><option value="Zone I">Zone I</option><option value="Zone II">Zone II</option><option value="Zone III">Zone III</option></select></td>
                       <td><input type="text" class="form-input rop-clock-inp" id="rop_norm_lc" placeholder="hrs" style="font-size:11px; padding:2px 4px;"></td>
                       <td style="border-right:1.5px solid #cbd5e1; text-align:center;"><input type="checkbox" id="rop_norm_lp"></td>
-                      <td rowspan="7" style="vertical-align:top; background:#f8fafc; padding:10px; font-size:11px;">
-                        <strong style="color:#0f172a; display:block; margin-bottom:6px; border-bottom:1px solid #cbd5e1; padding-bottom:3px;">NEXT EXAMINATION</strong>
-                        <div style="display:flex; flex-direction:column; gap:5px;">
-                          <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;"><input type="radio" name="neo_rop_next_exam" id="neo_rop_next_1w" value="One week"> One week</label>
-                          <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;"><input type="radio" name="neo_rop_next_exam" id="neo_rop_next_2w" value="Two weeks" checked> Two weeks</label>
-                          <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;"><input type="radio" name="neo_rop_next_exam" id="neo_rop_next_4w" value="Four weeks"> Four weeks</label>
-                          <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;"><input type="radio" name="neo_rop_next_exam" id="neo_rop_next_4m" value="Four months"> Four months</label>
-                          <label style="margin:0; font-weight:normal; display:inline-flex; align-items:center; gap:4px;"><input type="radio" name="neo_rop_next_exam" id="neo_rop_next_other" value="Other"> Other:</label>
-                          <input type="text" id="neo_rop_next_other_text" class="form-input" placeholder="Custom interval" style="font-size:10.5px; padding:2px 6px; margin-top:2px;">
-                        </div>
+                      <td rowspan="7" style="vertical-align:top; background:#f8fafc; padding:8px; font-size:11px;">
+                        <label for="neo_rop_recommendation" style="color:#0f172a; font-weight:700; display:block; margin-bottom:6px; border-bottom:1px solid #cbd5e1; padding-bottom:3px; font-size:11px;">RECOMMENDATION</label>
+                        <textarea class="form-input" id="neo_rop_recommendation" name="neo_rop_recommendation" rows="9" placeholder="Enter clinical recommendation, next exam schedule, or follow-up plan..." style="width:100%; min-height:180px; font-size:11.5px; line-height:1.5; resize:vertical; padding:8px; box-sizing:border-box; background:#ffffff; border:1px solid #cbd5e1; border-radius:4px;"></textarea>
                       </td>
                     </tr>
                     <!-- Row 2: Stage 1 -->
@@ -3189,15 +3182,9 @@
             <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-normal-lz">—</td>
             <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-normal-lc">—</td>
             <td style="border-right:1px solid #000; text-align:center;" id="pdf-stage-normal-lp">—</td>
-            <td rowspan="7" style="vertical-align:top; padding:8px; font-size:11px; line-height:1.6;">
-              <div style="font-weight:700; margin-bottom:4px; text-decoration:underline;">NEXT EXAMINATION</div>
-              <div><span id="pdf-rop-next-1w">&#x25CB;</span> One week</div>
-              <div><span id="pdf-rop-next-2w">&#x25CB;</span> Two weeks</div>
-              <div><span id="pdf-rop-next-4w">&#x25CB;</span> Four weeks</div>
-              <div><span id="pdf-rop-next-4m">&#x25CB;</span> Four months</div>
-              <div style="margin-top:4px;">
-                <span id="pdf-rop-next-other-chk">&#x25CB;</span> Other: <span id="pdf-rop-next-other-val" style="border-bottom:1px solid #000; min-width:80px; display:inline-block;"></span>
-              </div>
+            <td rowspan="7" style="vertical-align:top; padding:8px; font-size:10.5px; line-height:1.5; background:#ffffff;">
+              <div style="font-weight:700; margin-bottom:6px; text-decoration:underline;">RECOMMENDATION:</div>
+              <div id="pdf-rop-recommendation" style="white-space:pre-wrap; min-height:140px; color:#0f172a; font-size:10.5px; font-family:system-ui, -apple-system, sans-serif;">—</div>
             </td>
           </tr>
           <!-- Row 2: Stage 1 -->
@@ -5489,10 +5476,7 @@ function collectNeonateData() {
           s5: { rz: document.getElementById('rop_s5_rz')?.value || '', rc: document.getElementById('rop_s5_rc')?.value || '', rp: Boolean(document.getElementById('rop_s5_rp')?.checked), lz: document.getElementById('rop_s5_lz')?.value || '', lc: document.getElementById('rop_s5_lc')?.value || '', lp: Boolean(document.getElementById('rop_s5_lp')?.checked) },
           reg: { rz: document.getElementById('rop_reg_rz')?.value || '', rc: document.getElementById('rop_reg_rc')?.value || '', rp: Boolean(document.getElementById('rop_reg_rp')?.checked), lz: document.getElementById('rop_reg_lz')?.value || '', lc: document.getElementById('rop_reg_lc')?.value || '', lp: Boolean(document.getElementById('rop_reg_lp')?.checked) }
         },
-        recommendation: {
-          nextExam: (document.querySelector('input[name="neo_rop_next_exam"]:checked') || {}).value || 'Two weeks',
-          nextExamOther: document.getElementById('neo_rop_next_other_text')?.value || ''
-        },
+        recommendation: document.getElementById('neo_rop_recommendation') ? document.getElementById('neo_rop_recommendation').value : '',
         incidentalFindings: document.getElementById('neo_rop_incidental_findings')?.value || '',
         residentInCharge: document.getElementById('neo_rop_resident')?.value || '',
         init: { date: document.getElementById('neo_rop_init_date') ? document.getElementById('neo_rop_init_date').value : '', findings: document.getElementById('neo_rop_init_findings') ? document.getElementById('neo_rop_init_findings').value : '', remarks: document.getElementById('neo_rop_init_remarks') ? document.getElementById('neo_rop_init_remarks').value : '' },
@@ -5824,10 +5808,18 @@ function populateNeonateData(data) {
     }
 
     // Recommendation
-    if (sc.rop.recommendation) {
-      const r = document.querySelector(`input[name="neo_rop_next_exam"][value="${sc.rop.recommendation.nextExam}"]`);
-      if (r) r.checked = true;
-      if (document.getElementById('neo_rop_next_other_text')) document.getElementById('neo_rop_next_other_text').value = sc.rop.recommendation.nextExamOther || '';
+    if (sc.rop.recommendation !== undefined) {
+      const recEl = document.getElementById('neo_rop_recommendation');
+      if (recEl) {
+        if (typeof sc.rop.recommendation === 'string') {
+          recEl.value = sc.rop.recommendation;
+        } else if (typeof sc.rop.recommendation === 'object' && sc.rop.recommendation !== null) {
+          recEl.value = sc.rop.recommendation.text || sc.rop.recommendation.nextExam || '';
+          if (sc.rop.recommendation.nextExamOther) {
+            recEl.value += (recEl.value ? ' - ' : '') + sc.rop.recommendation.nextExamOther;
+          }
+        }
+      }
     }
 
     // Incidental & Resident
@@ -6902,21 +6894,10 @@ function syncRopModalData() {
   syncRow('s5', 'rop_s5_rz', 'rop_s5_rc', 'rop_s5_rp', 'rop_s5_lz', 'rop_s5_lc', 'rop_s5_lp');
   syncRow('reg', 'rop_reg_rz', 'rop_reg_rc', 'rop_reg_rp', 'rop_reg_lz', 'rop_reg_lc', 'rop_reg_lp');
 
-  // Next Examination Recommendations
-  const nextChecked = (document.querySelector('input[name="neo_rop_next_exam"]:checked') || {}).value || 'Two weeks';
-  const el1w = document.getElementById('pdf-rop-next-1w');
-  const el2w = document.getElementById('pdf-rop-next-2w');
-  const el4w = document.getElementById('pdf-rop-next-4w');
-  const el4m = document.getElementById('pdf-rop-next-4m');
-  const elOth = document.getElementById('pdf-rop-next-other-chk');
-  const elOthVal = document.getElementById('pdf-rop-next-other-val');
-
-  if (el1w) el1w.innerHTML = nextChecked === 'One week' ? '&#x25CF;' : '&#x25CB;';
-  if (el2w) el2w.innerHTML = nextChecked === 'Two weeks' ? '&#x25CF;' : '&#x25CB;';
-  if (el4w) el4w.innerHTML = nextChecked === 'Four weeks' ? '&#x25CF;' : '&#x25CB;';
-  if (el4m) el4m.innerHTML = nextChecked === 'Four months' ? '&#x25CF;' : '&#x25CB;';
-  if (elOth) elOth.innerHTML = nextChecked === 'Other' ? '&#x25CF;' : '&#x25CB;';
-  if (elOthVal) elOthVal.textContent = document.getElementById('neo_rop_next_other_text')?.value || '';
+  // Recommendation Free-Text
+  const recVal = document.getElementById('neo_rop_recommendation')?.value || 'Repeat examination in 2 weeks or per clinical indication.';
+  const elRec = document.getElementById('pdf-rop-recommendation');
+  if (elRec) elRec.textContent = recVal;
 
   // Incidental Findings
   const elInc = document.getElementById('pdf-rop-incidental-findings');
