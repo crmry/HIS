@@ -1159,6 +1159,12 @@ async def scan_single_target(browser_ws, file_url):
                     const hasNotDone = Array.from(ropAppSel.options).some(o => o.value === 'Not Done' || o.text === 'Not Done');
                     if (hasNotDone) return 'neo_rop_applicable must not contain Not Done option';
 
+                    // Verify Schedule Date label
+                    const schedLabel = document.querySelector('label[for="neo_rop_schedule"]');
+                    if (!schedLabel || !schedLabel.textContent.includes('Schedule Date')) {
+                        return 'label for neo_rop_schedule must be Schedule Date';
+                    }
+
                     // Verify freeze on "No"
                     ropAppSel.value = 'No';
                     ropAppSel.dispatchEvent(new Event('change'));

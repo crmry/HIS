@@ -2008,7 +2008,7 @@
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label" for="neo_rop_schedule">OPD ROP Schedule</label>
+                <label class="form-label" for="neo_rop_schedule">Schedule Date</label>
                 <input class="form-input" type="date" id="neo_rop_schedule" name="neo_rop_schedule">
               </div>
               <div class="form-group">
@@ -6621,7 +6621,7 @@ function syncPatientDataIntoRopForm() {
   // 9. Attending Physicians
   const docEl = document.getElementById('neo_rop_physician');
   const resEl = document.getElementById('neo_rop_resident');
-  const attendingVal = (d.attending_physician && d.attending_physician.name) || patient.attendingPhysician || docEl?.value || 'Dr. Andrea Reyes, MD';
+  const attendingVal = (d.attending_physician && d.attending_physician.name) || patient.attendingPhysician || docEl?.value || 'Andrea Reyes, MD';
   if (docEl && !docEl.value) docEl.value = attendingVal;
   if (resEl && !resEl.value) resEl.value = attendingVal;
 }
