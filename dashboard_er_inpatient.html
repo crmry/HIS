@@ -4133,7 +4133,7 @@
                 <button type="button" id="btn-toggle-endcare-modal-cosig-dropdown" title="Toggle doctor list">▼</button>
               </div>
               <select id="endcare-modal-cosig-select" size="6" class="cosig-floating-dropdown">
-                <option value="NONE" selected>NONE (No pairing / Standard single-physician conclusion)</option>
+                <option value="NONE" selected>NONE</option>
               </select>
             </div>
           </div>
@@ -15393,7 +15393,8 @@
 
       function filterDoctors(query) {
         var q = (query || '').trim().toLowerCase();
-        var allList = [{ id: 'NONE', name: 'NONE (No pairing / Standard single-physician conclusion)' }].concat(doctors);
+        var allList = doctors.filter(function(d) { return d.id !== 'NONE'; });
+        allList.unshift({ id: 'NONE', name: 'NONE' });
         if (!q) {
           renderDoctorOptions(allList, select.value || activeSelectedId);
           return;
@@ -15458,7 +15459,7 @@
           var doc = findDoctor(val);
           if (val === 'NONE' || !doc) {
             searchInput.value = '';
-            searchInput.placeholder = 'NONE (No pairing / Standard single-physician conclusion)';
+            searchInput.placeholder = 'NONE';
             if (clearBtn) clearBtn.style.display = 'none';
           } else {
             searchInput.value = (typeof window.formatDoctorNameLastFirst === 'function') ? window.formatDoctorNameLastFirst(doc) : doc.name;
@@ -15488,7 +15489,7 @@
       } else {
         if (searchInput) {
           searchInput.value = '';
-          searchInput.placeholder = 'NONE (No pairing / Standard single-physician conclusion)';
+          searchInput.placeholder = 'NONE';
         }
         if (clearBtn) clearBtn.style.display = 'none';
       }
