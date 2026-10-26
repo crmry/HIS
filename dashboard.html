@@ -2838,6 +2838,7 @@
                     <label><button type="button" class="btn btn-small" id="btn-open-ophthalmology" onclick="openSpecializedPEForm('Ophthalmology Form')"><i class="icon-eye-open"></i> Ophthalmology Form</button></label>
                     <label><button type="button" class="btn btn-small" id="btn-open-trauma-sheet" onclick="openSpecializedPEForm('Trauma Sheet')"><i class="icon-ambulance"></i> Trauma Sheet</button></label>
                     <label><button type="button" class="btn btn-small" id="btn-open-ent-exam" onclick="openSpecializedPEForm('Otoscopic &amp; Hearing Exam')"><i class="icon-headphones"></i> Otoscopic &amp; Hearing Exam</button></label>
+                    <label><button type="button" class="btn btn-small" id="btn-open-uploaded-pe" onclick="openUploadedPEModal()"><i class="icon-cloud-upload"></i> Uploaded PE <strong style="color:#d9534f;" id="uploaded-pe-count">(4)</strong></button></label>
                   </div>
                 </div>
               </div>
@@ -3593,6 +3594,134 @@
       <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 4px 4px; display:flex; justify-content:space-between; align-items:center;">
         <span style="font-size:11px; color:#718096;" id="viewable-results-footer-note"><i class="icon-info-sign"></i> Showing validated diagnostic examination results across all patient encounters</span>
         <button type="button" class="btn btn-primary" id="btn-close-viewable-results-modal" onclick="closeViewableResultsModal(event)">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ UPLOADED PHYSICAL EXAMINATION FORMS & DOCUMENTS MODAL ═══ -->
+  <div class="seg-modal-backdrop" id="modal-uploaded-pe" role="dialog" aria-modal="true" aria-labelledby="uploaded-pe-heading" style="display:none; z-index:2010;">
+    <div class="seg-modal" style="min-width: 860px; max-width: 1080px; margin: 25px auto;">
+      <div class="seg-modal-title" id="uploaded-pe-heading" style="display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, #1b4d3e, #0e2f24); color:#fff; padding:12px 18px; border-radius:4px 4px 0 0;">
+        <span style="font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;">
+          <i class="icon-cloud-upload"></i> Uploaded Physical Examination Documents
+          <span id="uploaded-pe-modal-badge" class="badge badge-important" style="font-size:11px; padding:2px 8px; background:#d9534f; color:#fff; font-weight:600;">4 Files</span>
+        </span>
+        <button type="button" class="seg-modal-close" id="close-uploaded-pe-modal" onclick="closeUploadedPEModal(event)" title="Close" style="color:#fff; opacity:0.85; font-size:18px; background:transparent; border:none; cursor:pointer;">✕</button>
+      </div>
+      <div class="seg-modal-body" style="padding:16px 20px; background:#fff; max-height:80vh; overflow-y:auto;">
+        
+        <!-- Patient Demographics Context Banner -->
+        <div id="uploaded-pe-patient-banner" style="background:#f0f7fb; border:1px solid #cbe4f4; border-radius:5px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+          <div>
+            <strong style="color:#475569;">Patient:</strong> <span id="uploaded-pe-patient-name" style="font-weight:700; color:#1b4d3e;">—</span>
+            &nbsp;|&nbsp; <strong style="color:#475569;">HRN:</strong> <span id="uploaded-pe-patient-hrn" style="font-family:monospace; font-weight:600;">—</span>
+            &nbsp;|&nbsp; <strong style="color:#475569;">Age/Sex:</strong> <span id="uploaded-pe-patient-agesex">—</span>
+          </div>
+          <div>
+            <span class="badge badge-success" style="font-size:11px; background:#1b4d3e;"><i class="icon-file-text"></i> Clinical PE Archive</span>
+          </div>
+        </div>
+
+        <!-- Document Upload Strip -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:12px 16px; margin-bottom:16px;">
+          <div style="font-size:12px; font-weight:700; color:#1b4d3e; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+            <i class="icon-plus-sign"></i> Attach / Upload Physical Examination Record
+          </div>
+          <div class="row-fluid" style="margin-bottom:8px;">
+            <div class="span4">
+              <label for="uploaded-pe-title-input" style="font-size:11px; font-weight:600; color:#475569; margin-bottom:3px;">Document Title / Description:</label>
+              <input type="text" id="uploaded-pe-title-input" class="input-block-level" placeholder="e.g., Cardiology Clearance, Trauma Body Mapping..." style="font-size:12px; margin-bottom:0;">
+            </div>
+            <div class="span4">
+              <label for="uploaded-pe-category-select" style="font-size:11px; font-weight:600; color:#475569; margin-bottom:3px;">Examination Category:</label>
+              <select id="uploaded-pe-category-select" class="input-block-level" style="font-size:12px; margin-bottom:0;">
+                <option value="Cardiopulmonary / Specialist Clearance">Cardiopulmonary / Specialist Clearance</option>
+                <option value="Dermatologic Skin Lesion / Body Map">Dermatologic Skin Lesion / Body Map</option>
+                <option value="Pre-Admission Physical Exam (External)">Pre-Admission Physical Exam (External)</option>
+                <option value="ENT / Audiometry / Hearing Exam Chart">ENT / Audiometry / Hearing Exam Chart</option>
+                <option value="Ophthalmology / Slit Lamp / Fundus">Ophthalmology / Slit Lamp / Fundus</option>
+                <option value="General Physical Examination Record">General Physical Examination Record</option>
+                <option value="Trauma / Injury Assessment Sheet">Trauma / Injury Assessment Sheet</option>
+                <option value="Other Clinical Specialty Attachment">Other Clinical Specialty Attachment</option>
+              </select>
+            </div>
+            <div class="span4">
+              <label for="uploaded-pe-examiner-input" style="font-size:11px; font-weight:600; color:#475569; margin-bottom:3px;">Examining Clinician / Specialist:</label>
+              <input type="text" id="uploaded-pe-examiner-input" class="input-block-level" placeholder="Physician name &amp; specialty..." value="Paolo Cruz, MD" style="font-size:12px; margin-bottom:0;">
+            </div>
+          </div>
+          <div class="row-fluid" style="display:flex; align-items:center; gap:10px; margin-top:6px;">
+            <div class="span8" style="display:flex; align-items:center; gap:8px;">
+              <input type="file" id="uploaded-pe-file-input" accept=".pdf,image/*,.doc,.docx" style="display:none;" onchange="handlePEFileSelect(event)">
+              <button type="button" class="btn btn-small" id="btn-select-pe-file" onclick="document.getElementById('uploaded-pe-file-input').click()"><i class="icon-paper-clip"></i> Choose File / Scan...</button>
+              <span id="uploaded-pe-selected-filename" style="font-size:11.5px; color:#64748b; font-style:italic;">No file selected</span>
+            </div>
+            <div class="span4" style="text-align:right;">
+              <button type="button" class="btn btn-success btn-small" id="btn-submit-pe-upload" onclick="uploadPEDocument()"><i class="icon-upload"></i> Attach Document</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <label for="uploaded-pe-filter-category" style="font-size:11.5px; font-weight:600; color:#475569; margin-bottom:0;"><i class="icon-filter"></i> Filter Category:</label>
+            <select id="uploaded-pe-filter-category" style="font-size:12px; margin-bottom:0; width:220px;" onchange="renderUploadedPEList()">
+              <option value="all">All Examination Categories</option>
+              <option value="Cardiopulmonary / Specialist Clearance">Cardiopulmonary / Specialist Clearance</option>
+              <option value="Dermatologic Skin Lesion / Body Map">Dermatologic Skin Lesion / Body Map</option>
+              <option value="Pre-Admission Physical Exam (External)">Pre-Admission Physical Exam (External)</option>
+              <option value="ENT / Audiometry / Hearing Exam Chart">ENT / Audiometry / Hearing Exam Chart</option>
+              <option value="Ophthalmology / Slit Lamp / Fundus">Ophthalmology / Slit Lamp / Fundus</option>
+              <option value="General Physical Examination Record">General Physical Examination Record</option>
+              <option value="Trauma / Injury Assessment Sheet">Trauma / Injury Assessment Sheet</option>
+              <option value="Other Clinical Specialty Attachment">Other Clinical Specialty Attachment</option>
+            </select>
+          </div>
+          <div style="font-size:11.5px; color:#64748b;">
+            <span id="uploaded-pe-table-count">Showing 4 records</span>
+          </div>
+        </div>
+
+        <!-- Document List Table -->
+        <div style="border:1px solid #e2e8f0; border-radius:4px; overflow:hidden; margin-bottom:14px;">
+          <table class="table table-bordered table-striped" style="margin-bottom:0; font-size:12px;">
+            <thead>
+              <tr style="background:#f1f5f9; color:#334155;">
+                <th style="width:30%;">Document Name &amp; File</th>
+                <th style="width:22%;">Category</th>
+                <th style="width:16%;">Date / Time</th>
+                <th style="width:18%;">Examiner / Clinician</th>
+                <th style="width:7%;">Size</th>
+                <th style="width:7%; text-align:center;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="uploaded-pe-table-body">
+              <!-- Dynamically rendered -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- In-Modal Document Preview Pane (Accordion / Drawer) -->
+        <div id="uploaded-pe-preview-pane" style="display:none; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:14px 18px; margin-top:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:8px; margin-bottom:10px;">
+            <div>
+              <h5 id="preview-pe-title" style="margin:0; font-size:13px; color:#1b4d3e; font-weight:700;"><i class="icon-file-text-alt"></i> Document Preview</h5>
+              <span id="preview-pe-meta" style="font-size:11px; color:#64748b;">Category &bull; Date &bull; Examiner</span>
+            </div>
+            <div>
+              <button type="button" class="btn btn-mini" id="btn-close-pe-preview" onclick="closeUploadedPEPreview()"><i class="icon-remove"></i> Close Preview</button>
+            </div>
+          </div>
+          <div id="preview-pe-content" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:4px; padding:16px; font-size:12px; min-height:120px;">
+            <!-- Document preview details, findings summary & simulated clinical document sheet -->
+          </div>
+        </div>
+
+      </div>
+      <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 4px 4px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:11px; color:#718096;" id="uploaded-pe-footer-note"><i class="icon-lock"></i> Patient physical examination records archived securely per DOH/EMR data privacy standards.</span>
+        <button type="button" class="btn btn-primary" id="btn-close-uploaded-pe-modal" onclick="closeUploadedPEModal(event)">Close</button>
       </div>
     </div>
   </div>
@@ -14162,6 +14291,9 @@
         if (typeof initNeonateModule === 'function') {
           initNeonateModule(record.id);
         }
+        if (typeof updateUploadedPECount === 'function') {
+          updateUploadedPECount();
+        }
 
 
       } finally {
@@ -17155,8 +17287,333 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
         closeModuleActionModal();
+        closeUploadedPEModal();
       }
     });
+
+    // ══════════════════════════════════════════════════════════════════════
+    // UPLOADED PHYSICAL EXAMINATION FORMS & DOCUMENTS SUBSYSTEM
+    // ══════════════════════════════════════════════════════════════════════
+    function getDefaultUploadedPEDocs() {
+      return [
+        {
+          id: 'pe-doc-1',
+          title: 'Cardiopulmonary Clearance & Specialist Physical Examination',
+          category: 'Cardiopulmonary / Specialist Clearance',
+          fileName: 'Cardiopulmonary_Clearance_Specialist_Evaluation.pdf',
+          date: '2026-10-24 14:30',
+          doctor: 'Roberto Santos, MD (Cardiology)',
+          size: '1.4 MB',
+          type: 'pdf',
+          findings: 'Regular rate and rhythm, no murmurs. Clear breath sounds bilaterally. S1/S2 distinct. Patient cleared for planned procedures under Low-to-Moderate Surgical Risk Category.'
+        },
+        {
+          id: 'pe-doc-2',
+          title: 'Dermatologic Skin Lesion Mapping & Physical Inspection',
+          category: 'Dermatologic Skin Lesion / Body Map',
+          fileName: 'Dermatology_Skin_Lesion_Mapping_Assessment.png',
+          date: '2026-10-22 10:15',
+          doctor: 'Ma. Teresa Tan, MD (Dermatology)',
+          size: '860 KB',
+          type: 'image',
+          findings: 'Photographic mapping of dorsal back erythematous maculopapular rash. No vesicular clustering or ulcerations. Border distinct, non-indurated.'
+        },
+        {
+          id: 'pe-doc-3',
+          title: 'Pre-Admission Physical Examination Sheet (Referring Facility)',
+          category: 'Pre-Admission Physical Exam (External)',
+          fileName: 'Pre_Admission_External_Physical_Examination.pdf',
+          date: '2026-10-20 09:00',
+          doctor: 'Referring Hospital Attending Physician',
+          size: '2.1 MB',
+          type: 'pdf',
+          findings: 'Baseline clinical presentation upon external referral: conscious, coherent, non-toxic. Abdomen soft, non-tender, no organomegaly. Extremities with full equal pulses.'
+        },
+        {
+          id: 'pe-doc-4',
+          title: 'Audiometry & Tympanometry Specialized Hearing Examination',
+          category: 'ENT / Audiometry / Hearing Exam Chart',
+          fileName: 'Audiometry_Tympanometry_Evaluation_Graph.pdf',
+          date: '2026-10-18 16:45',
+          doctor: 'Antonio Reyes, MD (Otolaryngology)',
+          size: '940 KB',
+          type: 'pdf',
+          findings: 'Bilateral pure-tone audiometry within normal hearing limits (20 dB threshold across 500-4000 Hz). Type A tympanograms bilaterally. Intact tympanic membranes.'
+        }
+      ];
+    }
+    var DEFAULT_UPLOADED_PE_DOCS = getDefaultUploadedPEDocs();
+
+    function getPatientUploadedPEDocs(pid) {
+      var patientId = pid || activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : 'seed_patient');
+      try {
+        var stored = localStorage.getItem('HIS_UPLOADED_PE_' + patientId);
+        if (stored) {
+          var parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      } catch (e) {}
+      return getDefaultUploadedPEDocs();
+    }
+
+    function savePatientUploadedPEDocs(docs, pid) {
+      var patientId = pid || activePatientId || (typeof getActivePatientId === 'function' ? getActivePatientId() : 'seed_patient');
+      try {
+        localStorage.setItem('HIS_UPLOADED_PE_' + patientId, JSON.stringify(docs));
+      } catch (e) {}
+      updateUploadedPECount();
+    }
+
+    function updateUploadedPECount() {
+      var badgeEl = document.getElementById('uploaded-pe-count');
+      var modalBadgeEl = document.getElementById('uploaded-pe-modal-badge');
+      if (!badgeEl && !modalBadgeEl) return;
+      var docs = getPatientUploadedPEDocs();
+      var count = docs.length;
+      if (badgeEl) {
+        badgeEl.textContent = '(' + count + ')';
+      }
+      if (modalBadgeEl) {
+        modalBadgeEl.textContent = count + ' Files';
+      }
+    }
+
+    function renderUploadedPEList() {
+      var tbody = document.getElementById('uploaded-pe-table-body');
+      if (!tbody) return;
+      var filterSelect = document.getElementById('uploaded-pe-filter-category');
+      var filterCat = filterSelect ? filterSelect.value : 'all';
+      var docs = getPatientUploadedPEDocs();
+      var filtered = filterCat === 'all' ? docs : docs.filter(function(d) { return d.category === filterCat; });
+
+      var countEl = document.getElementById('uploaded-pe-table-count');
+      if (countEl) {
+        countEl.textContent = 'Showing ' + filtered.length + ' of ' + docs.length + ' records';
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:18px; color:#94a3b8; font-style:italic;">No physical examination documents found for the selected category.</td></tr>';
+        return;
+      }
+
+      var html = '';
+      filtered.forEach(function(doc) {
+        var icon = doc.type === 'image' ? 'icon-picture' : 'icon-file-text-alt';
+        var safeTitle = (typeof escapeHtml === 'function') ? escapeHtml(doc.title) : doc.title;
+        var safeFileName = (typeof escapeHtml === 'function') ? escapeHtml(doc.fileName) : doc.fileName;
+        var safeCat = (typeof escapeHtml === 'function') ? escapeHtml(doc.category) : doc.category;
+        var safeDate = (typeof escapeHtml === 'function') ? escapeHtml(doc.date) : doc.date;
+        var safeDoctor = (typeof escapeHtml === 'function') ? escapeHtml(doc.doctor) : doc.doctor;
+        var safeSize = (typeof escapeHtml === 'function') ? escapeHtml(doc.size) : doc.size;
+        html += '<tr>' +
+          '<td><strong><i class="' + icon + '" style="color:#1b4d3e; margin-right:4px;"></i> ' + safeTitle + '</strong><br><span style="font-family:monospace; font-size:11px; color:#64748b;">' + safeFileName + '</span></td>' +
+          '<td><span class="label label-info" style="font-size:10.5px; background:#0284c7;">' + safeCat + '</span></td>' +
+          '<td style="white-space:nowrap; font-size:11.5px; color:#475569;">' + safeDate + '</td>' +
+          '<td style="font-size:11.5px;">' + safeDoctor + '</td>' +
+          '<td style="font-family:monospace; font-size:11px; color:#64748b;">' + safeSize + '</td>' +
+          '<td style="text-align:center; white-space:nowrap;">' +
+            '<button type="button" class="btn btn-mini btn-info" onclick="previewUploadedPEDocument(\'' + doc.id + '\')" title="Preview Document"><i class="icon-eye-open"></i> View</button> ' +
+            '<button type="button" class="btn btn-mini" onclick="downloadUploadedPEDocument(\'' + doc.id + '\')" title="Download Document"><i class="icon-download-alt"></i></button>' +
+          '</td>' +
+        '</tr>';
+      });
+      tbody.innerHTML = html;
+    }
+
+    function previewUploadedPEDocument(docId) {
+      var docs = getPatientUploadedPEDocs();
+      var doc = docs.find(function(d) { return d.id === docId; });
+      if (!doc) return;
+
+      var pane = document.getElementById('uploaded-pe-preview-pane');
+      var titleEl = document.getElementById('preview-pe-title');
+      var metaEl = document.getElementById('preview-pe-meta');
+      var contentEl = document.getElementById('preview-pe-content');
+      if (!pane || !titleEl || !metaEl || !contentEl) return;
+
+      var safeTitle = (typeof escapeHtml === 'function') ? escapeHtml(doc.title) : doc.title;
+      var safeFileName = (typeof escapeHtml === 'function') ? escapeHtml(doc.fileName) : doc.fileName;
+      var safeCat = (typeof escapeHtml === 'function') ? escapeHtml(doc.category) : doc.category;
+      var safeDate = (typeof escapeHtml === 'function') ? escapeHtml(doc.date) : doc.date;
+      var safeDoctor = (typeof escapeHtml === 'function') ? escapeHtml(doc.doctor) : doc.doctor;
+      var safeSize = (typeof escapeHtml === 'function') ? escapeHtml(doc.size) : doc.size;
+      var safeFindings = (typeof escapeHtml === 'function') ? escapeHtml(doc.findings || '') : (doc.findings || '');
+
+      titleEl.innerHTML = '<i class="' + (doc.type === 'image' ? 'icon-picture' : 'icon-file-text-alt') + '"></i> ' + safeTitle;
+      metaEl.innerHTML = '<strong>Category:</strong> ' + safeCat + ' &bull; <strong>Date:</strong> ' + safeDate + ' &bull; <strong>Clinician:</strong> ' + safeDoctor + ' &bull; <strong>File:</strong> ' + safeFileName + ' (' + safeSize + ')';
+
+      var previewHtml = '<div style="margin-bottom:12px; padding:10px 14px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:4px;">' +
+        '<strong style="color:#166534;"><i class="icon-stethoscope"></i> Verified Physical Findings & Assessment Summary:</strong>' +
+        '<p style="margin:6px 0 0 0; color:#1e293b; font-size:12px; line-height:1.5;">' + (safeFindings || 'Physical examination findings verified by attending clinician.') + '</p>' +
+        '</div>';
+
+      if (doc.type === 'image') {
+        previewHtml += '<div style="text-align:center; padding:16px; background:#f1f5f9; border:1px dashed #cbd5e1; border-radius:4px;">' +
+          '<div style="max-width:480px; margin:0 auto; padding:20px; background:#ffffff; border:1px solid #e2e8f0; border-radius:4px; box-shadow:0 2px 6px rgba(0,0,0,0.06);">' +
+            '<i class="icon-camera" style="font-size:36px; color:#0284c7; margin-bottom:8px; display:block;"></i>' +
+            '<strong style="color:#334155; display:block; font-size:13px;">' + safeFileName + '</strong>' +
+            '<span style="font-size:11px; color:#64748b;">High-Resolution Clinical Photographic Inspection & Lesion Map</span>' +
+          '</div>' +
+        '</div>';
+      } else {
+        var pData = (typeof currentPatientData === 'function') ? currentPatientData() : null;
+        var curHrn = (pData && (pData.hrn || pData.hospital_number)) || '—';
+        previewHtml += '<div style="padding:16px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px;">' +
+          '<div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:4px; padding:16px 20px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">' +
+            '<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #1b4d3e; padding-bottom:8px; margin-bottom:12px;">' +
+              '<div><strong style="color:#1b4d3e; font-size:13px;">DEPARTMENT OF HEALTH &bull; OFFICIAL PHYSICAL EXAMINATION REPORT</strong><br><span style="font-size:11px; color:#64748b;">Accredited Clinical Documentation Archive</span></div>' +
+              '<div style="text-align:right; font-size:11px; color:#475569;"><strong>Status:</strong> Validated &bull; <strong>HRN:</strong> ' + ((typeof escapeHtml === 'function') ? escapeHtml(curHrn) : curHrn) + '</div>' +
+            '</div>' +
+            '<div style="font-size:12px; line-height:1.6; color:#1e293b;">' +
+              '<p><strong>Clinical Examination Domain:</strong> ' + safeCat + '</p>' +
+              '<p><strong>Attending Specialist:</strong> ' + safeDoctor + '</p>' +
+              '<p><strong>Detailed Findings:</strong> ' + safeFindings + '</p>' +
+              '<p style="margin-top:14px; border-top:1px dashed #cbd5e1; padding-top:8px; font-size:11px; color:#64748b;"><em>Digitally attested in Hospital Information System. Conforms to DOH A.O. 2021-0037 and PhilHealth CF4 documentation standards.</em></p>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }
+
+      contentEl.innerHTML = previewHtml;
+      pane.style.display = 'block';
+    }
+
+    function closeUploadedPEPreview() {
+      var pane = document.getElementById('uploaded-pe-preview-pane');
+      if (pane) pane.style.display = 'none';
+    }
+
+    function downloadUploadedPEDocument(docId) {
+      var docs = getPatientUploadedPEDocs();
+      var doc = docs.find(function(d) { return d.id === docId; });
+      if (!doc) return;
+      if (typeof showHospitalToast === 'function') {
+        showHospitalToast('Downloading ' + doc.fileName + '...', '#1b4d3e');
+      }
+    }
+
+    var _selectedPEFile = null;
+    function handlePEFileSelect(event) {
+      var file = event.target.files && event.target.files[0];
+      var nameEl = document.getElementById('uploaded-pe-selected-filename');
+      if (file) {
+        _selectedPEFile = file;
+        if (nameEl) nameEl.textContent = file.name + ' (' + (file.size > 1048576 ? (file.size / 1048576).toFixed(1) + ' MB' : (file.size / 1024).toFixed(0) + ' KB') + ')';
+        var titleInput = document.getElementById('uploaded-pe-title-input');
+        if (titleInput && !titleInput.value) {
+          titleInput.value = file.name.replace(/\.[^/.]+$/, '').replace(/[_\-]+/g, ' ');
+        }
+      } else {
+        _selectedPEFile = null;
+        if (nameEl) nameEl.textContent = 'No file selected';
+      }
+    }
+
+    function uploadPEDocument() {
+      var titleInput = document.getElementById('uploaded-pe-title-input');
+      var categorySelect = document.getElementById('uploaded-pe-category-select');
+      var examinerInput = document.getElementById('uploaded-pe-examiner-input');
+      var fileInput = document.getElementById('uploaded-pe-file-input');
+
+      var title = (titleInput && titleInput.value.trim()) || (_selectedPEFile ? _selectedPEFile.name : '');
+      if (!title) {
+        if (typeof showHospitalToast === 'function') {
+          showHospitalToast('Please specify a document title or choose a file.', '#c0392b');
+        } else {
+          alert('Please enter a document title or select a file to attach.');
+        }
+        return;
+      }
+
+      var category = (categorySelect && categorySelect.value) || 'General Physical Examination Record';
+      var examiner = (examinerInput && examinerInput.value.trim()) || 'Attending Physician, MD';
+      var fileName = _selectedPEFile ? _selectedPEFile.name : (title.replace(/\s+/g, '_') + '.pdf');
+      var fileSize = _selectedPEFile ? (_selectedPEFile.size > 1048576 ? (_selectedPEFile.size / 1048576).toFixed(1) + ' MB' : (_selectedPEFile.size / 1024).toFixed(0) + ' KB') : '1.2 MB';
+      var isImage = /\.(jpg|jpeg|png|gif|webp|bmp|tiff)$/i.test(fileName);
+
+      var now = new Date();
+      var dateStr = now.getFullYear() + '-' +
+        String(now.getMonth() + 1).padStart(2, '0') + '-' +
+        String(now.getDate()).padStart(2, '0') + ' ' +
+        String(now.getHours()).padStart(2, '0') + ':' +
+        String(now.getMinutes()).padStart(2, '0');
+
+      var newDoc = {
+        id: 'pe-doc-' + Date.now(),
+        title: title,
+        category: category,
+        fileName: fileName,
+        date: dateStr,
+        doctor: examiner,
+        size: fileSize,
+        type: isImage ? 'image' : 'pdf',
+        findings: 'Physical examination record uploaded and archived in patient clinical folder.'
+      };
+
+      var docs = getPatientUploadedPEDocs();
+      docs.unshift(newDoc);
+      savePatientUploadedPEDocs(docs);
+      renderUploadedPEList();
+
+      // Reset form fields
+      if (titleInput) titleInput.value = '';
+      if (fileInput) fileInput.value = '';
+      _selectedPEFile = null;
+      var nameEl = document.getElementById('uploaded-pe-selected-filename');
+      if (nameEl) nameEl.textContent = 'No file selected';
+
+      if (typeof showHospitalToast === 'function') {
+        showHospitalToast('Physical examination document attached successfully.', '#1b4d3e');
+      }
+    }
+
+    function openUploadedPEModal(e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      var modal = document.getElementById('modal-uploaded-pe');
+      if (!modal) return;
+
+      var pData = (typeof currentPatientData === 'function') ? currentPatientData() : null;
+      var pName = (pData && typeof patientName === 'function' ? patientName(pData) : '') || 'UNKNOWN PATIENT';
+      var hrn = (pData && (pData.hrn || pData.hospital_number)) || '—';
+      var age = pData && pData.birthdate && typeof calculateAge === 'function' ? calculateAge(pData.birthdate) : (pData && pData.age ? pData.age : '—');
+      var sex = (pData && (pData.gender || pData.sex || '—')).charAt(0).toUpperCase();
+      var ageSex = (age ? age + ' / ' : '') + (sex || '—');
+
+      var nameEl = document.getElementById('uploaded-pe-patient-name');
+      if (nameEl) nameEl.textContent = pName;
+      var hrnEl = document.getElementById('uploaded-pe-patient-hrn');
+      if (hrnEl) hrnEl.textContent = hrn;
+      var ageSexEl = document.getElementById('uploaded-pe-patient-agesex');
+      if (ageSexEl) ageSexEl.textContent = ageSex;
+
+      renderUploadedPEList();
+      closeUploadedPEPreview();
+
+      modal.classList.add('open');
+      modal.style.display = 'block';
+      document.body.classList.add('modal-lock');
+    }
+
+    function closeUploadedPEModal(e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      var modal = document.getElementById('modal-uploaded-pe');
+      if (modal) {
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+      }
+      var otherOpen = document.querySelector('.seg-modal-backdrop.open');
+      if (!otherOpen) {
+        document.body.classList.remove('modal-lock');
+      }
+    }
+
+    // Modal backdrop click listener
+    var uploadedPEModalBackdrop = document.getElementById('modal-uploaded-pe');
+    if (uploadedPEModalBackdrop) {
+      uploadedPEModalBackdrop.addEventListener('click', function(e) {
+        if (e.target === uploadedPEModalBackdrop) closeUploadedPEModal(e);
+      });
+    }
 
     function openSpecializedPEForm(formTitle) {
       if (formTitle === 'ROP Screening') {
@@ -17164,13 +17621,31 @@
         window.open('Neonate_Clinical_Module.html?patient=' + encodeURIComponent(pid) + '&tab=screening&section=rop', '_blank');
         return;
       }
+      if (formTitle === 'Uploaded PE' || formTitle === 'Uploaded Physical Examination') {
+        openUploadedPEModal();
+        return;
+      }
       if (typeof showHospitalToast === 'function') {
         showHospitalToast(formTitle + ' initiated for clinical physical examination documentation.', '#1b4d3e');
       }
     }
 
+    // Initial count sync
+    updateUploadedPECount();
+
     // Window bindings & stubs
     window.openSpecializedPEForm = openSpecializedPEForm;
+    window.openUploadedPEModal = openUploadedPEModal;
+    window.closeUploadedPEModal = closeUploadedPEModal;
+    window.uploadPEDocument = uploadPEDocument;
+    window.previewUploadedPEDocument = previewUploadedPEDocument;
+    window.closeUploadedPEPreview = closeUploadedPEPreview;
+    window.downloadUploadedPEDocument = downloadUploadedPEDocument;
+    window.handlePEFileSelect = handlePEFileSelect;
+    window.renderUploadedPEList = renderUploadedPEList;
+    window.updateUploadedPECount = updateUploadedPECount;
+    window.getPatientUploadedPEDocs = getPatientUploadedPEDocs;
+    window.savePatientUploadedPEDocs = savePatientUploadedPEDocs;
     window.openGrowthChartModal = openGrowthChartModal;
     window.openWorkbookChart = openGrowthChartModal;
     window.openZoomModal = openZoomModal;

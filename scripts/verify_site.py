@@ -238,6 +238,19 @@ async def scan_single_target(browser_ws, file_url):
                     if (window.getComputedStyle(clModal).display !== 'none' || clModal.classList.contains('open')) return 'Clinical modal failed to close via close button';
                 }
 
+                // Test Uploaded PE button and modal in Specialized Physical Examination Forms
+                const peUploadBtn = document.getElementById('btn-open-uploaded-pe');
+                if (peUploadBtn) {
+                    peUploadBtn.click();
+                    const peModal = document.getElementById('modal-uploaded-pe');
+                    if (!peModal || window.getComputedStyle(peModal).display === 'none') return 'Uploaded PE modal failed to open from button';
+                    const peBadge = document.getElementById('uploaded-pe-count');
+                    if (!peBadge || !peBadge.textContent.includes('4')) return 'Uploaded PE count badge missing or incorrect';
+                    const peCloseBtn = document.getElementById('close-uploaded-pe-modal');
+                    if (peCloseBtn) peCloseBtn.click();
+                    if (window.getComputedStyle(peModal).display !== 'none' || peModal.classList.contains('open')) return 'Uploaded PE modal failed to close via close button';
+                }
+
                 // Verify Examination Result dashlet was transferred from main dashboard body
                 const mainResultRow = document.getElementById('row-viewable-results');
                 if (mainResultRow) return 'row-viewable-results should be transferred from main dashboard body';
