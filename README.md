@@ -11,6 +11,7 @@ A web-based clinical dashboard and hospital information system designed for atte
 - **Doctor's Orders Form (ER &amp; Admission — MRS-F-032):** [https://crmry.github.io/HIS/doctors_order_er_admission.html](https://crmry.github.io/HIS/doctors_order_er_admission.html)
 - **OPD Record / Face Sheet (Initial Encounter — Form OPD.F.014):** [https://crmry.github.io/HIS/opd_record_patient.html](https://crmry.github.io/HIS/opd_record_patient.html)
 - **Progress Notes / Printable Sheet:** [https://crmry.github.io/HIS/index.html](https://crmry.github.io/HIS/index.html)
+- **Citizen's Charter Builder:** [https://crmry.github.io/CCmain/](https://crmry.github.io/CCmain/)
 
 ---
 
